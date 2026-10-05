@@ -63,7 +63,7 @@ return function(mode, api)
       { during = 0.8, each = function(p) if not p.onGround then airT = airT + 1 / 60 end end },
       { act = function(p) release(); report("stairs up stay on the ground", airT < 0.05 and math.abs(p.y - 184) < 1, ("air %.2f s, y %.0f"):format(airT, p.y)) end },
       -- 8 drop through the railing
-      { act = function() tp(300, 149) end }, { wait = 0.2 },
+      { act = function() tp(300, 152) end }, { wait = 0.2 },
       { act = function() hold("down"); love.keypressed("space") end }, { during = 0.8 },
       { act = function(p) release(); report("Down + A drops through the railing", math.abs(p.y - 184) < 1, ("y %.0f"):format(p.y)) end },
       -- 9 the pontoon carries Pepper
@@ -92,7 +92,7 @@ return function(mode, api)
       at(function(p) return true end, function() hold("right", "jump"); love.keypressed("space") end),
       at(function(p) return p.onGround and p.y <= 159 end, function() hold("right") end),            -- on the bin
       at(function(p) return p.x >= 212 end, function() hold("right", "jump"); love.keypressed("space") end),
-      at(function(p) return p.onGround and p.y <= 150 and p.x > 250 end, function() hold("right") end),
+      at(function(p) return p.onGround and p.y <= 153 and p.x > 250 end, function() hold("right") end),
       at(function(p) return p.x >= 778 and p.onGround and p.y >= 215 end, function() release() end, 14),
       at(function(p, s) return s.movers[1].x0 <= 802 end, function() hold("right") end, 9),
       at(function(p, s) return p.ground == s.movers[1] and p.x >= s.movers[1].x0 + 18 end, function() release() end),

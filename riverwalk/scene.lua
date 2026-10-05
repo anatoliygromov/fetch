@@ -21,6 +21,40 @@ Sc.C = {
 local C = Sc.C
 Sc.speeds = { clouds = 0.05, city = 0.08, shore = 0.3, water = 0.5 }
 
+-- the characters' 1 px dark outline around an image's silhouette, outside the art (the result is 1 px bigger on
+-- every side). Used on everything Pepper can use: bench, bin, railing.
+function Sc.outline(src)
+  local w, h = src:getDimensions()
+  local d = love.image.newImageData(w + 2, h + 2)
+  d:paste(src, 1, 1, 0, 0, w, h)
+  local function solid(x, y) if x < 0 or y < 0 or x >= w or y >= h then return false end local _, _, _, a = src:getPixel(x, y); return a > 0 end
+  for y = -1, h do
+    for x = -1, w do
+      if not solid(x, y) and (solid(x - 1, y) or solid(x + 1, y) or solid(x, y - 1) or solid(x, y + 1)) then
+        d:setPixel(x + 1, y + 1, 1 / 255, 1 / 255, 2 / 255, 1)
+      end
+    end
+  end
+  return d
+end
+
+-- the quay railing (SpriteCook, tools/make_railing.py): sections (left post + span) repeated to the width, then
+-- the closing post, assembled into one image and outlined as a whole (so the outline has no seams)
+local railCache = {}
+function Sc.railing(w)
+  if railCache[w] then return railCache[w] end
+  local seg = love.image.newImageData("art/scene/rail_seg.png")
+  local en = love.image.newImageData("art/scene/rail_end.png")
+  local sw, ew, h = seg:getWidth(), en:getWidth(), seg:getHeight()
+  local n = math.max(1, math.floor((w - ew) / sw))
+  local d = love.image.newImageData(n * sw + ew, h)
+  for i = 0, n - 1 do d:paste(seg, i * sw, 0, 0, 0, sw, h) end
+  d:paste(en, n * sw, 0, 0, 0, ew, h)
+  local im = lg.newImage(Sc.outline(d)); im:setFilter("nearest", "nearest")
+  railCache[w] = im
+  return im
+end
+
 -- art: loaded once. The images are used exactly as delivered; the two made here only rearrange their pixels
 -- or swap colours, so nothing is redrawn.
 local A
@@ -47,21 +81,7 @@ function Sc.art()
   -- obstacle course; decoration and background have none. The outline goes outside the art (image grows 1 px
   -- on every side), the art's own pixels are untouched.
   A.outlined = {}
-  for _, n in ipairs({ "bench", "bin" }) do
-    local src = love.image.newImageData("art/scene/" .. n .. ".png")
-    local w, h = src:getDimensions()
-    local d = love.image.newImageData(w + 2, h + 2)
-    d:paste(src, 1, 1, 0, 0, w, h)
-    local function solid(x, y) if x < 0 or y < 0 or x >= w or y >= h then return false end local _, _, _, a = src:getPixel(x, y); return a > 0 end
-    for y = -1, h do
-      for x = -1, w do
-        if not solid(x, y) and (solid(x - 1, y) or solid(x + 1, y) or solid(x, y - 1) or solid(x, y + 1)) then
-          d:setPixel(x + 1, y + 1, 1 / 255, 1 / 255, 2 / 255, 1)
-        end
-      end
-    end
-    A[n] = newImg(d); A.outlined[n] = true
-  end
+  for _, n in ipairs({ "bench", "bin" }) do A[n] = newImg(Sc.outline(love.image.newImageData("art/scene/" .. n .. ".png"))); A.outlined[n] = true end
   -- far shore: the 320 px strip ends inside the bridge, but the shore layer must cover 800 px. The strip is
   -- extended with its own columns: one arch and pier (columns 293-307) repeated 14 times (column 308 equals
   -- column 293, so the joins are invisible), then the strip's last arch (308-316), then the bridge's left end and
@@ -149,10 +169,9 @@ function Sc.drawProp(p, camx, layerColour)
     lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(x) - o, p.y1 - im:getHeight() + o)
     return
   end
-  if p.railing then
-    box(C.back, x, y, w, 3)                                         -- top bar
-    box(C.back, x, y + 14, w, 2)                                     -- lower bar
-    for px = 0, w - 3, 32 do box(C.back, x + px, y, 3, 184 - y) end  -- posts
+  if p.railing then                                                -- handrail top (art row 7) = where Pepper stands (y0);
+    local im = Sc.railing(w)                                       -- the posts stand on the pavement's back edge
+    lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(x) - 1, y - 7 - 1)
     return
   end
   if p.kind == "decor" then box(layerColour, x, y, w, h)

@@ -29,7 +29,7 @@ L.props = {
   { name = "BENCH",    kind = "solid",  layer = "play", x0 = 97,   x1 = 146,  y0 = 173, y1 = 184, art = "bench" },
   { name = "POT",      kind = "decor",  layer = "play", x0 = 168,  x1 = 185,  y0 = 147, y1 = 174, art = "pot" },
   { name = "BIN",      kind = "solid",  layer = "play", x0 = 201,  x1 = 218,  y0 = 158, y1 = 184, art = "bin" },
-  { name = "RAILING",  kind = "oneway", layer = "back", x0 = 256,  x1 = 680,  y0 = 149, y1 = 153, railing = true },
+  { name = "RAILING",  kind = "oneway", layer = "back", x0 = 256,  x1 = 672,  y0 = 152, y1 = 156, railing = true },
   -- 2 promenade
   { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 352,  x1 = 388,  y0 = 154, y1 = 184 },
   { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 560,  x1 = 596,  y0 = 154, y1 = 184 },
@@ -68,8 +68,8 @@ L.girl = { x = 1866, y = 184 }
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
   { x = 108, y = 173 }, { x = 122, y = 173 }, { x = 136, y = 173 }, { x = 210, y = 158 },
-  { x = 290, y = 149 }, { x = 330, y = 149 }, { x = 410, y = 149 }, { x = 450, y = 149 }, { x = 490, y = 149 },
-  { x = 530, y = 149 }, { x = 610, y = 149 }, { x = 370, y = 154 }, { x = 578, y = 154 },
+  { x = 290, y = 152 }, { x = 330, y = 152 }, { x = 410, y = 152 }, { x = 450, y = 152 }, { x = 490, y = 152 },
+  { x = 530, y = 152 }, { x = 610, y = 152 }, { x = 370, y = 154 }, { x = 578, y = 154 },
   { x = 420, y = 184 }, { x = 520, y = 184 },
   { x = 698, y = 194 }, { x = 740, y = 216 }, { x = 836, y = 192 }, { x = 872, y = 180 }, { x = 908, y = 192 },
   { x = 992, y = 206 }, { x = 1010, y = 206 }, { x = 1086, y = 150, super = true },

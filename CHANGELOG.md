@@ -21,6 +21,11 @@ Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
   - **On a key press:** the text blinks fast and the screen fades out to the level card.
 - **New bench and pot:** revised art, same sizes, so nothing else changed.
 - **Lamp posts and pot:** they stand on the back edge of the pavement by the water. Their bases are 10 px behind Pepper's walking line.
+- **Quay railing:** new SpriteCook railing (asset 2b178488), cleaned to 8 colours by `tools/make_railing.py`.
+  - **Tiling:** sections (left post and span) repeat along the railing and a closing post ends it.
+  - **Obstacle style:** Pepper uses it, so it is outlined like the bench and bin and never faded. The outline goes round the whole assembled railing, so it has no seams.
+  - **Position:** its posts stand on the pavement's back edge.
+  - **Height:** the handrail she stands on is now y 152 (was 149), still above the bikes (they reach up to y 158). The railing runs x 256 to 672, and the bones on it moved with it.
 - **Obstacles back on Pepper's line:** the bench and bin stand on Pepper's walking line again (seat top y 173, bin top y 158). Set back, they looked like things she could walk past.
 - **River:** a new water sprite from SpriteCook (asset d19d28b6) replaces the old river strip.
   - **Clean-up (`tools/make_water.py`):**

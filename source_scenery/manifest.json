@@ -65,5 +65,13 @@
   ],
   "spritecook_source_asset_id": "d19d28b6-604b-4b55-815f-635a5e532f86",
   "note": "SpriteCook water strip; tools/make_water.py turns it into riverwalk/art/scene/water.png"
+ },
+ "railing": {
+  "size": [
+   88,
+   28
+  ],
+  "spritecook_source_asset_id": "2b178488-3a25-46dd-b8b8-29b44b50dc5d",
+  "note": "tools/make_railing.py: 8 colours, cut into rail_seg (left post + span) and rail_end (right post)"
  }
 }
