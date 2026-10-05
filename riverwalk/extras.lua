@@ -9,6 +9,7 @@ Ex.on = {                       -- the switches, all on by default
   dust_land = true,             -- puffs at her paws when she lands from a real fall (12 px or more), bigger the higher
   dust_skid = true,             -- small puffs off her front paws while she skids
   dust_start = true,            -- one little kick of dust behind her when she breaks into a run from standing
+  splash = true,                -- a splash when she falls in the river: drops, a foam line at the surface, ripples
 }
 Ex.enabled = true               -- the master switch (E key, --noextras)
 function Ex.toggle() Ex.enabled = not Ex.enabled end
@@ -17,6 +18,8 @@ local function hex(h) return { tonumber(h:sub(1, 2), 16) / 255, tonumber(h:sub(3
 -- dust: the pavement's warm greys, a step or two lighter than its lightest stone (the kerb, e5ddda), so it reads
 -- as dust kicked off the paving and not as more paving
 local DUST = { hi = hex("f7f3f0"), body = hex("ebe5e1"), lo = hex("cdc7c5") }
+-- water: the river art's light tones (art/scene/water.png), lightest first
+local WATER = { hex("caecfc"), hex("acd5ee"), hex("98c4e5"), hex("78a7d1") }
 
 -- one effects state per run of the level; a small LCG of its own, so nothing else's random numbers change
 function Ex.new() return { parts = {}, seed = 12345, prev = nil, minY = nil } end
@@ -47,6 +50,22 @@ function Ex.update(fx, s, dt)
   local jumped = math.abs(now.x - was.x) > 20 or math.abs(now.y - was.y) > 40     -- a respawn or a test teleport
   if not now.onGround then fx.minY = math.min(fx.minY or now.y, now.y, was.y) end
   if not Ex.enabled or jumped then if now.onGround then fx.minY = nil end; return end
+
+  -- splash: she has just fallen in the river (Pepper's mode turns to "drown"; sfx.lua already plays the sound)
+  if Ex.on.splash and now.mode == "drown" and was.mode ~= "drown" then
+    local r = s.world:inWater(p.x, p.y)
+    local sy = r and r.y0 or math.floor(p.y)
+    add(fx, { kind = "foam", x = p.x, y = sy, life = 1.0, front = true })
+    for k = 1, 16 do                                            -- drops thrown up and out, falling back in:
+      local side = (k % 2 == 0) and 1 or -1                     -- the first six steep and chunky (the crown),
+      local crown = k <= 6                                      -- the rest flatter spray
+      local vy = crown and -rnd(fx, 105, 150) or -rnd(fx, 55, 105)
+      add(fx, { kind = "drop", x = p.x + side * (crown and rnd(fx, 3, 9) or rnd(fx, 2, 12)), y = sy,
+        vx = side * (crown and rnd(fx, 6, 22) or rnd(fx, 22, 60)), vy = vy, g = 460, life = -2 * vy / 460,
+        big = crown, c = (k % 4 == 0) and 2 or 1, front = true })
+    end
+    for side = -1, 1, 2 do add(fx, { kind = "ripple", x = p.x, y = sy, dir = side, life = 0.9, front = true }) end
+  end
 
   -- landing dust: she was in the air and is on the ground now (not the end of a scramble, not in the river)
   if Ex.on.dust_land and now.onGround and not was.onGround and (was.mode == "normal" or was.mode == "hurt")
@@ -118,11 +137,49 @@ local function drawPuff(q, cam)
   end
 end
 
+-- a drop: 2 x 2 for the crown's first moments, then 1 px, 2 px tall while it moves fast
+local function drawDrop(q, cam)
+  local t = q.t
+  local x = math.floor(q.x + q.vx * t - cam + 0.5)
+  local vy = q.vy + q.g * t
+  local y = math.floor(q.y + q.vy * t + 0.5 * q.g * t * t + 0.5)
+  if y > q.y then return end
+  lg.setColor(WATER[q.c])
+  if q.big and t < 0.16 then lg.rectangle("fill", x, y, 2, 2)
+  else lg.rectangle("fill", x, y, 1, math.abs(vy) > 60 and 2 or 1) end
+end
+-- the foam line where she broke the surface: broken 1 px dashes across her, that thin out
+local function drawFoam(q, cam)
+  local k = q.t / q.life
+  local cx, y = math.floor(q.x - cam + 0.5), q.y
+  local hw = (k < 0.1) and 16 or 13
+  for dx = -hw, hw do
+    local keep = (k < 0.5 and (dx + 40) % 5 ~= 0) or (k >= 0.5 and k < 0.8 and (dx + 40) % 2 == 0)
+      or (k >= 0.8 and (dx + 40) % 4 == 0)
+    if keep then lg.setColor(WATER[(math.abs(dx) > hw - 3 or k >= 0.5) and 2 or 1]); lg.rectangle("fill", cx + dx, y, 1, 1) end
+  end
+  if k < 0.12 then                                              -- the first moment: a burst of white water
+    lg.setColor(WATER[1]); lg.rectangle("fill", cx - 8, y - 1, 17, 1); lg.rectangle("fill", cx - 5, y - 2, 11, 1)
+    lg.setColor(WATER[2]); lg.rectangle("fill", cx - 3, y - 3, 7, 1)
+  end
+end
+-- a ripple sliding away along the surface, getting shorter and darker
+local function drawRipple(q, cam)
+  local k = q.t / q.life
+  local x = math.floor(q.x - cam + q.dir * (16 + 22 * k) + 0.5)
+  local len = k < 0.4 and 4 or (k < 0.75 and 3 or 2)
+  lg.setColor(WATER[k < 0.4 and 2 or (k < 0.75 and 3 or 4)])
+  lg.rectangle("fill", q.dir > 0 and x or x - len + 1, q.y + 1, len, 1)
+end
+
 local function draw(fx, cam, front)
   if not Ex.enabled then return end
   for _, q in ipairs(fx.parts) do
     if (q.front or false) == front then
-      if q.kind == "puff" then drawPuff(q, cam) end
+      if q.kind == "puff" then drawPuff(q, cam)
+      elseif q.kind == "drop" then drawDrop(q, cam)
+      elseif q.kind == "foam" then drawFoam(q, cam)
+      elseif q.kind == "ripple" then drawRipple(q, cam) end
     end
   end
   lg.setColor(1, 1, 1, 1)
