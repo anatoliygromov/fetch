@@ -119,16 +119,20 @@ function Sc.art()
   end
   -- far shore: the 320 px strip ends inside the bridge, but the shore layer (scrolled at 0.3) must cover
   -- 320 + 0.3 * (3200 - 320) = 1184 px. The strip is extended with its own columns (1196 px in all): one arch
-  -- and pier (columns 293-307) repeated 40 times (column 308 equals
-  -- column 293, so the joins are invisible), then the strip's last arch (308-316), then the bridge's left end and
-  -- the trees (columns 0-278) mirrored, which closes the bridge on the far side.
+  -- and pier (columns 293-307) repeated 4 times, so the bridge has 8 arches (column 308 equals column 293,
+  -- so the joins are invisible), then the strip's last arch (308-316), then the bridge's left end and the
+  -- trees (columns 0-278) mirrored, which closes the bridge on the far side, then the trees again
+  -- (0-271 forwards, then backwards) to the end. (The bridge used to repeat 40 arches.)
   local src = love.image.newImageData("art/scene/far_shore_bridge.png")
   local h = src:getHeight()
   local cols = {}
   for x = 0, 307 do cols[#cols + 1] = x end
-  for _ = 1, 40 do for x = 293, 307 do cols[#cols + 1] = x end end
+  for _ = 1, 4 do for x = 293, 307 do cols[#cols + 1] = x end end
   for x = 308, 316 do cols[#cols + 1] = x end
   for x = 278, 0, -1 do cols[#cols + 1] = x end
+  for x = 0, 271 do cols[#cols + 1] = x end
+  local x = 271
+  while #cols < 1196 do cols[#cols + 1] = x; x = x - 1 end
   local d = love.image.newImageData(#cols, h)
   for i, x in ipairs(cols) do for y = 0, h - 1 do d:setPixel(i - 1, y, src:getPixel(x, y)) end end
   A.shore = newImg(d)
