@@ -10,6 +10,7 @@ Ex.on = {                       -- the switches, all on by default
   dust_skid = true,             -- small puffs off her front paws while she skids
   dust_start = true,            -- one little kick of dust behind her when she breaks into a run from standing
   splash = true,                -- a splash when she falls in the river: drops, a foam line at the surface, ripples
+  bone_pop = true,              -- a twinkle and a small "+100" where a bone was picked up
 }
 Ex.enabled = true               -- the master switch (E key, --noextras)
 function Ex.toggle() Ex.enabled = not Ex.enabled end
@@ -18,6 +19,8 @@ local function hex(h) return { tonumber(h:sub(1, 2), 16) / 255, tonumber(h:sub(3
 -- dust: the pavement's warm greys, a step or two lighter than its lightest stone (the kerb, e5ddda), so it reads
 -- as dust kicked off the paving and not as more paving
 local DUST = { hi = hex("f7f3f0"), body = hex("ebe5e1"), lo = hex("cdc7c5") }
+-- the bones' colours (scene.lua): white, bone, gold for a super bone; dark for the points' 1 px shadow
+local BONE = { white = hex("ffffff"), bone = hex("efe8d8"), gold = hex("f2c94c"), dark = hex("141824") }
 -- water: the river art's light tones (art/scene/water.png), lightest first
 local WATER = { hex("caecfc"), hex("acd5ee"), hex("98c4e5"), hex("78a7d1") }
 
@@ -44,7 +47,15 @@ function Ex.update(fx, s, dt)
     local q = fx.parts[i]; q.t = q.t + dt
     if q.t >= q.life then table.remove(fx.parts, i) end
   end
-  if not was then return end
+  if not was then fx.popped = {}; for _, bn in ipairs(s.bones) do fx.popped[bn] = bn.taken end; return end
+  -- bone pop (tracked even while the extras are off): a bone taken this step twinkles where it was, and its points float up
+  for _, bn in ipairs(s.bones) do
+    if bn.taken and not fx.popped[bn] then
+      fx.popped[bn] = true
+      if Ex.enabled and Ex.on.bone_pop then add(fx, { kind = "pop", x = bn.x, y = bn.y - 9, super = bn.super, life = 0.75, front = true }) end
+    end
+  end
+
   if now.onGround and math.abs(now.vx) < 5 and now.mode == "normal" then fx.restT = 0
   else fx.restT = (fx.restT or 9) + dt end
   local jumped = math.abs(now.x - was.x) > 20 or math.abs(now.y - was.y) > 40     -- a respawn or a test teleport
@@ -172,6 +183,50 @@ local function drawRipple(q, cam)
   lg.rectangle("fill", q.dir > 0 and x or x - len + 1, q.y + 1, len, 1)
 end
 
+-- a tiny 3 x 5 font for the points
+local DIGIT = { ["+"] = { ".#.", "###", ".#." }, ["0"] = { "###", "#.#", "#.#", "#.#", "###" }, ["1"] = { ".#.", "##.", ".#.", ".#.", "###" } }
+local function tiny(text, x, y, c)
+  lg.setColor(c)
+  for i = 1, #text do
+    local g = DIGIT[text:sub(i, i)]
+    local oy = (#g == 3) and 1 or 0
+    for r, row in ipairs(g) do
+      for col = 1, 3 do if row:sub(col, col) == "#" then lg.rectangle("fill", x + (i - 1) * 4 + col - 1, y + oy + r - 1, 1, 1) end end
+    end
+  end
+end
+-- a bone pop: a 4-point twinkle that opens up and breaks into dots, and the points rising and blinking out
+local function drawPop(q, cam)
+  local t = q.t
+  local cx, cy = math.floor(q.x - cam + 0.5), math.floor(q.y + 0.5)
+  local hi = q.super and BONE.gold or BONE.bone
+  if t < 0.07 then
+    lg.setColor(BONE.white); lg.rectangle("fill", cx - 1, cy, 3, 1); lg.rectangle("fill", cx, cy - 1, 1, 3)
+  elseif t < 0.16 then
+    lg.setColor(hi); lg.rectangle("fill", cx - 3, cy, 7, 1); lg.rectangle("fill", cx, cy - 3, 1, 7)
+    lg.setColor(BONE.white); lg.rectangle("fill", cx - 1, cy, 3, 1); lg.rectangle("fill", cx, cy - 1, 1, 3)
+  elseif t < 0.26 then
+    lg.setColor(hi)
+    for _, d in ipairs({ 3, 4 }) do
+      lg.rectangle("fill", cx - d, cy, 1, 1); lg.rectangle("fill", cx + d, cy, 1, 1)
+      lg.rectangle("fill", cx, cy - d, 1, 1); lg.rectangle("fill", cx, cy + d, 1, 1)
+    end
+    lg.setColor(BONE.white)
+    for _, d in ipairs({ -2, 2 }) do lg.rectangle("fill", cx + d, cy + d, 1, 1); lg.rectangle("fill", cx + d, cy - d, 1, 1) end
+  elseif t < 0.34 then
+    lg.setColor(hi)
+    lg.rectangle("fill", cx - 5, cy, 1, 1); lg.rectangle("fill", cx + 5, cy, 1, 1)
+    lg.rectangle("fill", cx, cy - 5, 1, 1); lg.rectangle("fill", cx, cy + 5, 1, 1)
+  end
+  if t >= 0.08 and (t < 0.55 or math.floor(t * 20) % 2 == 0) then   -- the points: rise 11 px, then blink out
+    local text = q.super and "+1000" or "+100"
+    local w = #text * 4 - 1
+    local y = cy - 7 - math.floor(math.min(1, (t - 0.08) / 0.4) * 11)
+    local x = cx - math.floor(w / 2)
+    tiny(text, x + 1, y + 1, BONE.dark); tiny(text, x, y, hi)
+  end
+end
+
 local function draw(fx, cam, front)
   if not Ex.enabled then return end
   for _, q in ipairs(fx.parts) do
@@ -179,7 +234,8 @@ local function draw(fx, cam, front)
       if q.kind == "puff" then drawPuff(q, cam)
       elseif q.kind == "drop" then drawDrop(q, cam)
       elseif q.kind == "foam" then drawFoam(q, cam)
-      elseif q.kind == "ripple" then drawRipple(q, cam) end
+      elseif q.kind == "ripple" then drawRipple(q, cam)
+      elseif q.kind == "pop" then drawPop(q, cam) end
     end
   end
   lg.setColor(1, 1, 1, 1)
