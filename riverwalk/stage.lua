@@ -235,7 +235,8 @@ function St:draw(debug)
   -- shadows of the things standing on the pavement (drawn on the ground, under them)
   for _, pr in ipairs(self.def.props) do
     if (pr.art or pr.fence) and pr.layer == "play" and pr.x1 - cam > -10 and pr.x0 - cam < 330 then
-      Sc.shadow((pr.x0 + pr.x1) / 2 - cam, pr.y1 - 1, pr.x1 - pr.x0 + 4)
+      if pr.ax then local iw = art[pr.art]:getWidth(); Sc.shadow(pr.ax + iw / 2 - cam, (pr.ay or pr.y1) - 1, iw + 4)
+      else Sc.shadow((pr.x0 + pr.x1) / 2 - cam, pr.y1 - 1, pr.x1 - pr.x0 + 4) end
     end
   end
   for _, l in ipairs(self.lamps) do if l.x - cam > -20 and l.x - cam < 340 then Sc.shadow(l.x - cam, l.y - Sc.EDGE - 1, 14) end end

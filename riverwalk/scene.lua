@@ -112,7 +112,11 @@ function Sc.art()
   -- obstacle course; decoration and background have none. The outline goes outside the art (image grows 1 px
   -- on every side), the art's own pixels are untouched.
   A.outlined = {}
-  for _, n in ipairs({ "bench", "bin" }) do A[n] = newImg(Sc.outline(love.image.newImageData("art/scene/" .. n .. ".png"))); A.outlined[n] = true end
+  -- round 2 obstacles and buildings (tools/make_props.py): mid-tone SpriteCook art that already has its own 1 px
+  -- dark outline, so none is added here
+  for _, n in ipairs({ "bench", "bin", "flowerbox", "flowerbox_low", "planter_sq", "cafe", "gable" }) do
+    A[n] = newImg("art/scene/" .. n .. ".png")
+  end
   -- far shore: the 320 px strip ends inside the bridge, but the shore layer must cover 800 px. The strip is
   -- extended with its own columns: one arch and pier (columns 293-307) repeated 14 times (column 308 equals
   -- column 293, so the joins are invisible), then the strip's last arch (308-316), then the bridge's left end and
@@ -197,7 +201,9 @@ function Sc.drawProp(p, camx, layerColour)
   if p.art then
     local art = Sc.art(); local im = art[p.art]
     local o = art.outlined[p.art] and 1 or 0                       -- outlined art is 1 px bigger on every side
-    lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(x) - o, p.y1 - im:getHeight() + o)
+    -- ax, ay: where the art's bottom-left goes when it is bigger than the collision box (the bench's box is
+    -- only its seat; the legs and backrest are drawn but Pepper passes them)
+    lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor((p.ax or p.x0) - camx) - o, (p.ay or p.y1) - im:getHeight() + o)
     return
   end
   if p.railing then                                                -- decorative railing: posts on the pavement's back edge

@@ -10,21 +10,21 @@
  },
  "bench": {
   "size": [
-   49,
-   22
+   114,
+   56
   ],
-  "spritecook_source_asset_id": "36c97b1f-fb01-4412-9dae-b69d8d84ef47",
-  "colors": 5,
-  "sha12": "a6048673d759"
+  "spritecook_source_asset_id": "67ea0a20-d70c-40f1-8e95-ef4a54ab7211",
+  "source": "bench_v2_spritecook.png",
+  "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added)"
  },
  "bin": {
   "size": [
-   17,
-   26
+   44,
+   60
   ],
-  "spritecook_source_asset_id": "d6ab701a-0f2d-4ada-8d33-796fc0965bd8",
-  "colors": 6,
-  "sha12": "486d213032bd"
+  "spritecook_source_asset_id": "81774efe-1750-4442-badc-d7da46d67fed",
+  "source": "bin_v2_spritecook.png",
+  "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added)"
  },
  "lamp_post": {
   "size": [
@@ -81,5 +81,50 @@
   ],
   "spritecook_source_asset_id": "7d30bc38-449b-460d-ba0a-92d324452723",
   "note": "tools/make_bg_railing.py: shades mapped to the lamp post palette, cut into left post, unit, end"
+ },
+ "flowerbox": {
+  "size": [
+   104,
+   49
+  ],
+  "spritecook_source_asset_id": "fe03382b-6d46-4189-bc7f-eebb6f684039",
+  "source": "flowerbox_spritecook.png",
+  "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added)"
+ },
+ "flowerbox_low": {
+  "size": [
+   102,
+   40
+  ],
+  "spritecook_source_asset_id": "6e4ae7a5-244f-4c95-932c-1c0ccedadb44",
+  "source": "flowerbox_low_spritecook.png",
+  "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added)"
+ },
+ "planter_sq": {
+  "size": [
+   44,
+   48
+  ],
+  "spritecook_source_asset_id": "b8066d44-e63c-491b-8efe-9399c7a0a04a",
+  "source": "planter_sq_spritecook.png",
+  "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added)"
+ },
+ "cafe": {
+  "size": [
+   150,
+   205
+  ],
+  "spritecook_source_asset_id": "ee9b5359-d7b9-4556-867c-a8fd554aee54",
+  "source": "cafe_spritecook.png",
+  "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added); trimmed to the facade"
+ },
+ "gable": {
+  "size": [
+   70,
+   175
+  ],
+  "spritecook_source_asset_id": "7b28a806-ebb7-4ea7-b36b-87e7de9ce0b2",
+  "source": "gable_spritecook.png",
+  "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added)"
  }
 }
