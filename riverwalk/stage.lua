@@ -2,6 +2,7 @@
 local Wd = require("world")
 local Pp = require("pepper")
 local Sc = require("scene")
+local Rd = require("road")
 local S = require("sfx")
 local I = require("input")
 local St = {}
@@ -24,6 +25,7 @@ function St.new(def)
   local s = setmetatable({ def = def, t = 0, cam = 0, lead = 0, score = 0, hearts = 3, lives = 3, time = def.time,
     rings = {}, msg = nil, events = {}, bikeT = 2.5, bikes = {} }, St)
   s.world = Wd.load(def.map, def.props)
+  s.road = Rd.new(s.world)
   s.movers = {}
   for _, m in ipairs(def.movers) do
     local mv = { name = m.name, x0 = m.from, x1 = m.from + (m.x1 - m.x0), y0 = m.y0, y1 = m.y1, from = m.from, to = m.to, speed = m.speed, dir = 1, dx = 0, kind = "oneway" }
@@ -157,26 +159,33 @@ function St:update(dt, presses)
     end
   end
 
-  -- bikes: one rides through every few seconds while Pepper is on the promenade
-  local bk = self.def.bikes
-  local inZone = p.x > bk.zoneX0 and p.x < bk.zoneX1 and p.y <= 184
-  if inZone then
-    self.bikeT = self.bikeT - dt
-    if self.bikeT <= 0 and #self.bikes == 0 then
-      self.bikeT = bk.every
-      self.bikes[1] = { x = self.cam + 320 + bk.speed * 1.1, y = 184, warn = 1.1 }
-      S.play("bell")
+  -- bikes: one rides through every few seconds while Pepper is in a bike zone of the promenade.
+  -- def.bikes is one zone or a list of zones; each bike remembers its zone (speed, endX)
+  local zones = self.def.bikes
+  if zones.zoneX0 then zones = { zones } end
+  for _, bk in ipairs(zones) do
+    if p.x > bk.zoneX0 and p.x < bk.zoneX1 and p.y <= 184 then
+      self.bikeT = self.bikeT - dt
+      if self.bikeT <= 0 and #self.bikes == 0 then
+        self.bikeT = bk.every
+        self.bikes[1] = { x = self.cam + 320 + bk.speed * 1.1, y = 184, warn = 1.1, zone = bk }
+        S.play("bell")
+      end
     end
   end
   for i = #self.bikes, 1, -1 do
     local c = self.bikes[i]
+    local bk = c.zone or zones[1]
     c.x = c.x - bk.speed * dt; c.warn = c.warn - dt
+    c.y = w:groundAt(c.x) or c.y                                   -- it rides on the pavement, up and down the stairs
     if c.x < bk.endX or c.x < self.cam - 80 then table.remove(self.bikes, i)
     else
       local bx0, bx1, by0 = c.x - 24, c.x + 24, c.y - 26
-      if x1 > bx0 and x0 < bx1 and y1 > by0 and y0 < c.y and p:hurt(c.x) then self:loseHeart() end
+      if x1 > bx0 and x0 < bx1 and y1 > by0 and y0 < c.y and p:hurt(c.x, w) then self:loseHeart() end
     end
   end
+
+  self.road:update(dt, self.cam)                                   -- passing cars and cyclists on the road (scenery)
 
   -- bark rings
   if p.barked then p.barked = false; self.rings[#self.rings + 1] = { x = p.x + p.face * 22, y = p.y - 22, t = 0 }
@@ -287,12 +296,11 @@ function St:draw(debug)
     if b.state == "given" then bx, by = g.x + face * 8, g.y - 30 - math.abs(math.sin(g.t * 6)) * 14 end
     lg.draw(ballImg, math.floor(bx - cam - 3 + 0.5), math.floor(by - 6 + 0.5))
   end
-  -- bikes
+  -- bikes: a cyclist (art/scene/cyclist1.png, 49 x 50) over the 48 x 26 hit box, wheels on the pavement
+  local cyc = Rd.art().cyclists[1]
   for _, c in ipairs(self.bikes) do
     local x = c.x - cam
-    Sc.outlined(C.prop, C.propEdge, x - 24, c.y - 26, 48, 26)
-    Sc.outlined(C.prop, C.propEdge, x - 8, c.y - 62, 16, 36)
-    Sc.label("BIKE", x, c.y - 17)
+    lg.setColor(1, 1, 1, 1); lg.draw(cyc, math.floor(x - 24 + 0.5), math.floor(c.y - cyc:getHeight() + 0.5))
     if c.warn > 0 and x > 320 then lg.setColor(C.gold); lg.rectangle("fill", 312, 150, 6, 18); lg.rectangle("fill", 312, 170, 6, 6) end
   end
   -- Pepper
@@ -303,6 +311,7 @@ function St:draw(debug)
     lg.setColor(1, 1, 1, 1 - r.t / 0.4); lg.setLineWidth(1)
     lg.circle("line", math.floor(r.x - cam), math.floor(r.y), 6 + r.t * 70)
   end
+  self.road:draw(cam, self.t)                                      -- traffic in the near lane, in front of the promenade
   -- 8 foreground frame
   -- (scrolls 1.3x: a prop sits at its own x when it is mid-screen and slides faster than Pepper's layer)
   for _, pr in ipairs(self.def.props) do

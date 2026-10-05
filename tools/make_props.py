@@ -18,6 +18,8 @@ JOBS = [  # source, output, colours
     ('planter_sq_spritecook.png', 'planter_sq.png', 14),
     ('cafe_spritecook.png', 'cafe.png', 28),
     ('ferry_spritecook.png', 'ferry.png', 24),
+    ('tree_near_spritecook.png', 'tree_near.png', 20),
+    ('tree_far_spritecook.png', 'tree_far.png', 20),
     ('gable_spritecook.png', 'gable.png', 24),
 ]
 def half(a):
@@ -59,7 +61,39 @@ def grit_prep(a):
                 if c == '#': a[26 + dy, x + dx] = ink
         x += len(g[0]) + 1
     return a
-PREP = {'bench.png': bench_prep, 'gritbox.png': grit_prep}
+def deoutline(a):
+    # decoration has no dark outline (that is for things Pepper can use): each outline pixel on the silhouette's
+    # edge takes the colour of its brightest opaque neighbour inside the shape
+    a = a.copy(); H, W = a.shape[:2]
+    on = a[..., 3] > 0
+    L = a[..., :3].astype(int).sum(2)
+    edge = [(y, x) for y in range(H) for x in range(W) if on[y, x] and any(
+        not (0 <= y + dy < H and 0 <= x + dx < W and on[y + dy, x + dx]) for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)))]
+    es = set(edge); out = a.copy()
+    for y, x in edge:
+        if L[y, x] > 200: continue                                 # already light: not an outline pixel
+        best = None
+        for dy in (-1, 0, 1):
+            for dx in (-1, 0, 1):
+                yy, xx = y + dy, x + dx
+                if 0 <= yy < H and 0 <= xx < W and on[yy, xx] and (yy, xx) not in es and L[yy, xx] > L[y, x] + 60:
+                    if best is None or L[yy, xx] > L[best]: best = (yy, xx)
+        if best: out[y, x] = a[best]
+    return out
+def ferry_prep(a):
+    # "a little bigger" (user): the open decks get longer and the saloon windows, the white band and the hull taller,
+    # by repeating plain columns and rows (no seams): 222 x 84 becomes 252 x 93
+    def grow(a, spec, axis):
+        parts, prev = [], 0
+        for i in sorted(spec):
+            parts.append(np.take(a, range(prev, i + 1), axis=axis))
+            parts.append(np.repeat(np.take(a, [i], axis=axis), spec[i], axis=axis)); prev = i + 1
+        parts.append(np.take(a, range(prev, a.shape[axis]), axis=axis))
+        return np.concatenate(parts, axis=axis)
+    return grow(grow(a, {13: 4, 24: 6, 31: 5, 170: 5, 185: 6, 193: 4}, 1), {54: 4, 65: 2, 75: 3}, 0)
+PREP = {'bench.png': bench_prep, 'gritbox.png': grit_prep, 'ferry.png': ferry_prep,
+        'tree_far.png': lambda a: deoutline(half(a)), 'tree_near.png': deoutline,
+        'cafe.png': deoutline, 'gable.png': deoutline}
 def clean(src, k, solo=False, prep=None):
     a = np.array(Image.open(src).convert('RGBA'))
     if prep: a = prep(a)

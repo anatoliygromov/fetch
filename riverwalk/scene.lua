@@ -95,12 +95,12 @@ local function newImg(d) local i = lg.newImage(d); i:setFilter("nearest", "neare
 function Sc.art()
   if A then return A end
   A = {}
-  for _, n in ipairs({ "water", "skyline", "pavement", "building", "tree" }) do A[n] = newImg("art/scene/" .. n .. ".png") end
+  for _, n in ipairs({ "water", "skyline", "pavement", "road", "manhole", "drain" }) do A[n] = newImg("art/scene/" .. n .. ".png") end
   A.waterQ = {}                                                   -- one quad per row: each row of the river moves on its own
   for y = 0, A.water:getHeight() - 1 do A.waterQ[y] = lg.newQuad(0, y, A.water:getWidth(), 1, A.water:getDimensions()) end
-  -- decoration on the pavement (pot, lamp posts) is faded DECOR_FADE of the way towards the haze, so it sits back
+  -- decoration (pot, lamp posts, the houses and trees) is faded DECOR_FADE of the way towards the haze, so it sits back
   -- and the obstacle course stands out. The files are untouched; this is done to a copy when the game loads.
-  for _, n in ipairs({ "pot", "lamp_post" }) do
+  for _, n in ipairs({ "pot", "lamp_post", "building", "tree", "tree_near", "tree_far", "cafe", "gable" }) do
     local d = love.image.newImageData("art/scene/" .. n .. ".png")
     d:mapPixel(function(x, y, r, g, b, a)
       local k = Sc.DECOR_FADE
@@ -114,18 +114,19 @@ function Sc.art()
   A.outlined = {}
   -- round 2 obstacles and buildings (tools/make_props.py): mid-tone SpriteCook art that already has its own 1 px
   -- dark outline, so none is added here
-  for _, n in ipairs({ "bench", "bin", "flowerbox", "gritbox", "planter_sq", "cafe", "gable", "ferry" }) do
+  for _, n in ipairs({ "bench", "bin", "flowerbox", "gritbox", "planter_sq", "ferry" }) do
     A[n] = newImg("art/scene/" .. n .. ".png")
   end
-  -- far shore: the 320 px strip ends inside the bridge, but the shore layer must cover 800 px. The strip is
-  -- extended with its own columns: one arch and pier (columns 293-307) repeated 14 times (column 308 equals
+  -- far shore: the 320 px strip ends inside the bridge, but the shore layer (scrolled at 0.3) must cover
+  -- 320 + 0.3 * (3200 - 320) = 1184 px. The strip is extended with its own columns (1196 px in all): one arch
+  -- and pier (columns 293-307) repeated 40 times (column 308 equals
   -- column 293, so the joins are invisible), then the strip's last arch (308-316), then the bridge's left end and
   -- the trees (columns 0-278) mirrored, which closes the bridge on the far side.
   local src = love.image.newImageData("art/scene/far_shore_bridge.png")
   local h = src:getHeight()
   local cols = {}
   for x = 0, 307 do cols[#cols + 1] = x end
-  for _ = 1, 14 do for x = 293, 307 do cols[#cols + 1] = x end end
+  for _ = 1, 40 do for x = 293, 307 do cols[#cols + 1] = x end end
   for x = 308, 316 do cols[#cols + 1] = x end
   for x = 278, 0, -1 do cols[#cols + 1] = x end
   local d = love.image.newImageData(#cols, h)
@@ -182,12 +183,12 @@ function Sc.drawFar(L, camx, t)
     local x = (c.x - o) % (#L.clouds * 120 + 400) - 120
     if x < 330 then box(C.cloud, x, c.y, c.w, c.h); box(C.cloud, x + c.w * 0.2, c.y - 5, c.w * 0.5, 5) end
   end
-  -- 3 far city: the skyline, bottom at y 138 (its misty base is behind the far shore trees). It scrolls at 0.08,
-  -- so over the whole level it moves 128 px: the strip is followed by its own first 128 columns, which never
-  -- bring a second City Hall tower on screen.
+  -- 3 far city: the skyline, bottom at y 138 (its misty base is behind the far shore trees). Over the whole
+  -- level (3200 px, the camera moves 2880 px) it moves at most 128 px (factor 128 / 2880): the strip is followed
+  -- by its own first 128 columns, which never bring a second City Hall tower on screen.
   lg.setColor(1, 1, 1, 1)
   local sw = A.skyline:getWidth()
-  local sx = -math.floor(camx * 0.08)
+  local sx = -math.floor(math.min(128, camx * 128 / 2880))
   lg.draw(A.skyline, sx, 138 - A.skyline:getHeight()); lg.draw(A.skyline, sx + sw, 138 - A.skyline:getHeight())
   lg.setColor(1, 1, 1, 1)
   lg.draw(A.shore, -math.floor(camx * 0.3), 113)                   -- 4 far shore and bridge: bottom row = waterline
@@ -235,10 +236,14 @@ function Sc.paintGround(w)
   local pw, ph = pave:getDimensions()
   local q = {}
   for i = 0, pw - 1 do q[i] = lg.newQuad(i, 0, 1, ph, pw, ph) end
+  local road = art.road                                             -- the road under the paving (tools/make_road.py)
+  local rw, rh = road:getDimensions()
+  local rq = {}
+  for i = 0, rw - 1 do rq[i] = lg.newQuad(i, 0, 1, rh, rw, rh) end
   local cv = lg.newCanvas(w.width, 240)
   cv:setFilter("nearest", "nearest")
   lg.push("all"); lg.setCanvas(cv); lg.clear(0, 0, 0, 0); lg.origin()
-  local high = {}
+  local high, flat = {}, {}
   for x = 0, w.width - 1 do
     local runs = {}
     for _, r in ipairs(w.rects) do if r.terrain and x >= r.x0 and x < r.x1 then runs[#runs + 1] = { r.y0, r.y1 } end end
@@ -260,9 +265,26 @@ function Sc.paintGround(w)
         lg.setColor(1, 1, 1, 1)
         lg.setScissor(x, 0, 1, m[2])
         lg.draw(pave, q[x % pw], x, m[1] - 12)
+        lg.draw(road, rq[x % rw], x, m[1] + 15)                     -- rows 27+ of the paving art are the road
         lg.setScissor()
+        if m[1] == 184 then flat[x] = true end
       end
     end
+  end
+  -- manhole covers and kerb drains on the promenade road, at fixed pseudo-random spots where the road is flat
+  local function flatRun(x0, x1) for x = x0, x1 do if not flat[x] then return false end end return true end
+  lg.setColor(1, 1, 1, 1)
+  local x, k = 150, 0
+  while x < w.width - 30 do
+    k = k + 1
+    if flatRun(x - 2, x + 22) then lg.draw(art.manhole, x, 199 + ((k % 2 == 0) and 4 or 27)) end
+    x = x + 260 + (k * 97) % 160
+  end
+  x, k = 60, 0
+  while x < w.width - 20 do
+    k = k + 1
+    if flatRun(x - 2, x + 14) then lg.draw(art.drain, x, 200) end
+    x = x + 180 + (k * 53) % 90
   end
   for _, h in ipairs(high) do                                      -- greybox terrain drawn last, over the pavement
     lg.setColor(C.ground); lg.rectangle("fill", h[1], h[2], 1, h[3] - h[2])
