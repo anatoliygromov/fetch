@@ -8,6 +8,7 @@ local lg = love.graphics
 Ex.on = {                       -- the switches, all on by default
   dust_land = true,             -- puffs at her paws when she lands from a real fall (12 px or more), bigger the higher
   dust_skid = true,             -- small puffs off her front paws while she skids
+  dust_start = true,            -- one little kick of dust behind her when she breaks into a run from standing
 }
 Ex.enabled = true               -- the master switch (E key, --noextras)
 function Ex.toggle() Ex.enabled = not Ex.enabled end
@@ -41,6 +42,8 @@ function Ex.update(fx, s, dt)
     if q.t >= q.life then table.remove(fx.parts, i) end
   end
   if not was then return end
+  if now.onGround and math.abs(now.vx) < 5 and now.mode == "normal" then fx.restT = 0
+  else fx.restT = (fx.restT or 9) + dt end
   local jumped = math.abs(now.x - was.x) > 20 or math.abs(now.y - was.y) > 40     -- a respawn or a test teleport
   if not now.onGround then fx.minY = math.min(fx.minY or now.y, now.y, was.y) end
   if not Ex.enabled or jumped then if now.onGround then fx.minY = nil end; return end
@@ -73,6 +76,15 @@ function Ex.update(fx, s, dt)
         0.26 + rnd(fx, 0, 0.06), false)
     end
   else fx.skidN = 0 end
+
+  -- run-start kick: she reaches running speed (the gallop starts) within 0.3 s of standing still
+  local RUN = 70                                                -- Pepper's run clip starts above walk speed + 10
+  if Ex.on.dust_start and now.onGround and now.mode == "normal" and not p.crouch and fx.restT <= 0.3
+     and math.abs(now.vx) > RUN and math.abs(was.vx) <= RUN then
+    local dir = now.vx > 0 and 1 or -1
+    puff(fx, p.x - dir * 15, p.y, 2, -dir * 14, -6, 0.32, false)
+    puff(fx, p.x - dir * 21, p.y, 1, -dir * 20, -4, 0.26, false)
+  end
 end
 
 -- a puff, drawn pixel by pixel: it grows for the first quarter, holds, then breaks up into a checker dither
