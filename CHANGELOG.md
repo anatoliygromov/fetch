@@ -2,6 +2,24 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Night branch `night/riverwalk-art` (not merged, 6 Oct 2026)
+Built on the trial branch `try/scenery-v2`. Every greybox left in River Walk now has art. Pepper is untouched:
+`tools/check_pepper.sh` plays the level on autopilot and finds her position, speed, clip and frame identical on
+all 2,752 steps. No collision box changed. All art is made by `tools/make_night_art.py` (sources in `source_scenery/`).
+- **Bridge on screen 7:** a pale granite bridge abutment with a cornice and a balustrade (SpriteCook, 138 x 162)
+  replaces the grey pier. Pepper still crawls under its lintel (y 192). The passage under it is dark at the back
+  and the pavement inside is shaded, so it reads as a low way through.
+  - Fitted by cutting one brick period out of each side panel, so nothing was rescaled.
+- **Pontoon:** a plank deck on two float drums (54 x 12) replaces the PONTOON box. SpriteCook drew it 4x too big and
+  a 4x reduction came out muddy, so it is drawn by hand in the render's own colours.
+- **Clouds:** eight soft SpriteCook clouds replace the white boxes. They drift as before.
+- **Bones:** small hand-drawn bones (11 x 6) with an outline; super bones are gold.
+- **Foreground posts:** the two dark bars are now the tops of tarred mooring piles at the bottom edge of the screen
+  (three of them). Their tops are below every line Pepper stands on, so they never hide her.
+- **Far shore:** the far bridge has 8 arches instead of 40, and the trees continue after it.
+- **New check:** `tools/check_pepper.sh` with `love riverwalk --auto --trace` and the golden trace of the approved build.
+- **Credits:** 96 SpriteCook credits (4 generations x 2 variations).
+
 ## Trial branch `try/scenery-v2` (not merged)
 - **Longer level, reworked layout:** River Walk is now 3200 px (10 screens, 420 s).
   - Obstacles stand apart with clear pavement between them and repeat along the level: bench, flower box, bin, grit box, planter.

@@ -236,9 +236,11 @@ function St:draw(debug)
   for _, pr in ipairs(self.def.props) do if pr.layer == "back" then Sc.drawProp(pr, cam, C.back) end end
   -- 7 play layer: terrain (pavement art, painted once; see Sc.paintGround)
   local w = self.world
-  if not self.ground then self.ground = Sc.paintGround(w) end
+  if not self.ground then self.ground = Sc.paintGround(w, self.def.props) end
+  for _, ps in ipairs(self.def.passages or {}) do Sc.passageBack(ps, cam) end
   lg.setColor(1, 1, 1, 1)
   lg.draw(self.ground, -cam, 0)
+  for _, ps in ipairs(self.def.passages or {}) do Sc.passageFront(ps, cam) end
   -- the river Pepper can fall into is not drawn: it is a gap in the quay, and the river art shows through
   local art = Sc.art()
   -- shadows of the things standing on the pavement (drawn on the ground, under them)
@@ -260,13 +262,14 @@ function St:draw(debug)
     end
   end
   for _, pr in ipairs(self.def.props) do if pr.layer == "play" then Sc.drawProp(pr, cam, C.prop) end end
-  for _, m in ipairs(self.movers) do Sc.outlined(C.prop, C.propEdge, m.x0 - cam, m.y0, m.x1 - m.x0, m.y1 - m.y0) end
-  if self.movers[1] then local m = self.movers[1]; Sc.label("PONTOON", (m.x0 + m.x1) / 2 - cam, m.y0 + 8) end
-  for _, bn in ipairs(self.bones) do                               -- bones: small boxes, gold = super bone
+  for _, m in ipairs(self.movers) do                               -- the pontoon (art 54 x 12; its deck row 2 is the top)
+    lg.setColor(1, 1, 1, 1); lg.draw(art.pontoon, math.floor(m.x0 - cam + 0.5) - 3, m.y0 - 2)
+  end
+  lg.setColor(1, 1, 1, 1)
+  for _, bn in ipairs(self.bones) do                               -- bones (11 x 6), gold = super bone
     if not bn.taken then
       local bob = math.floor(math.sin(self.t * 3 + bn.x) * 1.5 + 0.5)
-      local wd = bn.super and 12 or 9
-      Sc.outlined(bn.super and C.gold or C.bone, C.boneEdge, bn.x - cam - wd / 2, bn.y - 11 + bob, wd, 5)
+      lg.draw(bn.super and art.bone_gold or art.bone, math.floor(bn.x - cam + 0.5) - 5, bn.y - 12 + bob)
     end
   end
   -- shadows of the girl, the ball and Pepper: on the floor right under them (smaller the higher they are)

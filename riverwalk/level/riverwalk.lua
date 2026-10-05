@@ -71,9 +71,21 @@ L.props = {
   { name = "GABLE",    kind = "decor",  layer = "back", x0 = 2986, x1 = 3056, y0 = -1,  y1 = 174, art = "gable" },
   { name = "CAFE",     kind = "decor",  layer = "back", x0 = 3050, x1 = 3200, y0 = -31, y1 = 174, art = "cafe" },
   { name = "BENCH",    kind = "solid",  layer = "play", x0 = 2908, x1 = 3004, y0 = 156, y1 = 165, art = "bench", ax = 2905, ay = 184, depth = 5 },
-  -- foreground frame
-  { name = "",         kind = "decor",  layer = "front", x0 = 1552, x1 = 1562, y0 = 60, y1 = 240 },
-  { name = "",         kind = "decor",  layer = "front", x0 = 2102, x1 = 2112, y0 = 60, y1 = 240 },
+  -- the bridge over the far quay (screen 7): granite abutment art (138 x 162) over the pier's collision
+  -- (riverwalk.map, x 1936-2072, y 0-192); Pepper crawls through the low passage under its lintel (y 192-216).
+  -- Drawing only: kind decor adds no collision. covers = true: the ground painter leaves the pier's greybox out.
+  { name = "",         kind = "decor",  layer = "play", x0 = 1935, x1 = 2073, y0 = 30,  y1 = 192, art = "pier", noshadow = true, covers = true },
+  -- foreground frame: the tops of dark mooring piles (art/scene/pile.png, 18 x 182) rising into the bottom of the
+  -- screen in front of everything. Their tops are at y 221, below every line Pepper stands on (lowest: the
+  -- quay, 216), so they never hide her.
+  { name = "",         kind = "decor",  layer = "front", x0 = 1548, x1 = 1566, y0 = 221, y1 = 403, art = "pile" },
+  { name = "",         kind = "decor",  layer = "front", x0 = 1572, x1 = 1590, y0 = 225, y1 = 407, art = "pile" },
+  { name = "",         kind = "decor",  layer = "front", x0 = 2098, x1 = 2116, y0 = 221, y1 = 403, art = "pile" },
+}
+
+-- dark passages drawn behind the pavement (the inside of the bridge, under the pier's lintel)
+L.passages = {
+  { x0 = 1936, x1 = 2072, y0 = 192, y1 = 216 },
 }
 
 -- lamp posts: every one is a checkpoint that lights up and saves Pepper's place when she passes

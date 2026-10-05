@@ -117,6 +117,14 @@ function Sc.art()
   for _, n in ipairs({ "bench", "bin", "flowerbox", "gritbox", "planter_sq", "ferry" }) do
     A[n] = newImg("art/scene/" .. n .. ".png")
   end
+  -- night branch (tools/make_night_art.py): the bridge abutment and the pontoon (things Pepper uses: crisp, with
+  -- their own outline), the bones, and the foreground mooring pile (dark, near the camera, not faded)
+  for _, n in ipairs({ "pier", "pontoon", "bone", "bone_gold", "pile" }) do A[n] = newImg("art/scene/" .. n .. ".png") end
+  A.clouds = {}                                                   -- sky clouds, widest first
+  for i = 1, 99 do
+    if not love.filesystem.getInfo("art/scene/cloud" .. i .. ".png") then break end
+    A.clouds[i] = newImg("art/scene/cloud" .. i .. ".png")
+  end
   -- far shore: the 320 px strip ends inside the bridge, but the shore layer (scrolled at 0.3) must cover
   -- 320 + 0.3 * (3200 - 320) = 1184 px. The strip is extended with its own columns (1196 px in all): one arch
   -- and pier (columns 293-307) repeated 4 times, so the bridge has 8 arches (column 308 equals column 293,
@@ -156,14 +164,18 @@ local function rng(seed) local s = seed return function(a, b) s = (s * 110351524
 function Sc.build(levelW)
   local L = {}
   local function span(speed) return 320 + (levelW - 320) * speed + 64 end
-  -- 2 clouds
+  -- 2 clouds: SpriteCook cloud sprites (art/scene/cloud*.png) spaced along the sky, high ones bigger
+  local A = Sc.art()
   local r = rng(11); L.clouds = {}
-  local x = -40
+  local x, k = -40, 0
   while x < span(0.05) + 200 do
-    local w = math.floor(r(40, 110)); L.clouds[#L.clouds + 1] = { x = x, y = math.floor(r(28, 92)), w = w, h = math.floor(r(9, 20)) }
-    x = x + w + math.floor(r(40, 120))
+    k = k + 1
+    local i = 1 + (k * 5) % #A.clouds                              -- every sprite in turn, in a mixed order
+    local im = A.clouds[i]
+    L.clouds[#L.clouds + 1] = { x = x, y = math.floor(r(14, 70)), img = im, w = im:getWidth() }
+    x = x + im:getWidth() + math.floor(r(50, 140))
   end
-  Sc.art()
+  L.cloudSpan = x + 120
   return L
 end
 
@@ -183,9 +195,10 @@ function Sc.drawFar(L, camx, t)
     lg.rectangle("fill", 0, y, 320, 1)
   end
   local o = camx * 0.05 - t * 3                                    -- 2 clouds drift
+  lg.setColor(1, 1, 1, 1)
   for _, c in ipairs(L.clouds) do
-    local x = (c.x - o) % (#L.clouds * 120 + 400) - 120
-    if x < 330 then box(C.cloud, x, c.y, c.w, c.h); box(C.cloud, x + c.w * 0.2, c.y - 5, c.w * 0.5, 5) end
+    local x = math.floor((c.x - o) % L.cloudSpan - 120)
+    if x < 330 and x + c.w > -10 then lg.draw(c.img, x, c.y) end
   end
   -- 3 far city: the skyline, bottom at y 138 (its misty base is behind the far shore trees). Over the whole
   -- level (3200 px, the camera moves 2880 px) it moves at most 128 px (factor 128 / 2880): the strip is followed
@@ -234,7 +247,7 @@ end
 -- the ground of the play layer, painted once into a canvas as wide as the level. Every walkable top at or below
 -- y 150 gets the pavement art, one column per pixel (it repeats every 320 px): its back edge is 12 px above the
 -- line Pepper walks on, then the kerb and the road. Higher terrain (the bridge pier) stays a greybox.
-function Sc.paintGround(w)
+function Sc.paintGround(w, props)
   local art = Sc.art()
   local pave = art.pavement
   local pw, ph = pave:getDimensions()
@@ -290,9 +303,15 @@ function Sc.paintGround(w)
     if flatRun(x - 2, x + 14) then lg.draw(art.drain, x, 200) end
     x = x + 180 + (k * 53) % 90
   end
+  local function covered(x)                                         -- under art that replaces the greybox (the pier)
+    for _, p in ipairs(props or {}) do if p.covers and x >= p.x0 and x < p.x1 then return true end end
+    return false
+  end
   for _, h in ipairs(high) do                                      -- greybox terrain drawn last, over the pavement
-    lg.setColor(C.ground); lg.rectangle("fill", h[1], h[2], 1, h[3] - h[2])
-    lg.setColor(C.groundEdge); lg.rectangle("fill", h[1], h[2], 1, 1)
+    if not covered(h[1]) then
+      lg.setColor(C.ground); lg.rectangle("fill", h[1], h[2], 1, h[3] - h[2])
+      lg.setColor(C.groundEdge); lg.rectangle("fill", h[1], h[2], 1, 1)
+    end
   end
   lg.pop()
   return cv
@@ -368,6 +387,26 @@ function Sc.drawWater(camx, t)
       if x + g[3] > ww then lg.rectangle("fill", x - ww, 146 + g[2], g[3], 1) end
     end
   end
+  lg.setColor(1, 1, 1, 1)
+end
+
+-- a low passage under the bridge: its back wall (dark, a little lighter low down) is drawn before the ground, so
+-- the pavement runs into it; then the pavement inside is shaded. Ends fade with a checker dither.
+local PASS1, PASS2 = { 21 / 255, 20 / 255, 31 / 255 }, { 38 / 255, 40 / 255, 56 / 255 }
+function Sc.passageBack(p, camx)
+  local x0, x1 = math.floor(p.x0 - camx), math.floor(p.x1 - camx)
+  if x1 < -2 or x0 > 322 then return end
+  lg.setColor(PASS1); lg.rectangle("fill", x0, p.y0, x1 - x0, p.y1 - p.y0)
+  lg.setColor(PASS2); lg.rectangle("fill", x0, p.y1 - 14, x1 - x0, 6)
+  for y = p.y1 - 15, p.y1 - 8, 2 do lg.rectangle("fill", x0, y, x1 - x0, 1) end
+  lg.setColor(1, 1, 1, 1)
+end
+function Sc.passageFront(p, camx)
+  local x0, x1 = math.floor(p.x0 - camx), math.floor(p.x1 - camx)
+  if x1 < -2 or x0 > 322 then return end
+  lg.setColor(PASS1[1], PASS1[2], PASS1[3], 0.45); lg.rectangle("fill", x0 + 2, p.y1 - 12, x1 - x0 - 4, 14)
+  lg.setColor(PASS1[1], PASS1[2], PASS1[3], 0.25)                -- softer at the two mouths
+  lg.rectangle("fill", x0 - 3, p.y1 - 12, 5, 14); lg.rectangle("fill", x1 - 2, p.y1 - 12, 5, 14)
   lg.setColor(1, 1, 1, 1)
 end
 
