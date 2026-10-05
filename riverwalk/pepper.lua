@@ -179,6 +179,17 @@ function Pp:update(dt, w, presses)
     self.vx = 0
   end
   nx = math.max(HW, math.min(w.width - HW, nx))
+  -- in the air, moving into the stairs below their surface: a little below, she is lifted onto the step (and lands
+  -- if falling); deeper, the stairs are a wall. Without this she could pass under the steps into the hillside.
+  if not self.onGround then
+    local sy, sl = w:slopeFloor(nx)
+    if sy and sy < self.y - 0.01 then
+      if self.y - sy <= 8 then
+        self.y = sy
+        if self.vy >= 0 then self.vy = 0; self.onGround = true; self.ground = sl end
+      else nx = self.x; self.vx = 0 end
+    end
+  end
   self.x = nx
 
   -- up and down
@@ -192,7 +203,8 @@ function Pp:update(dt, w, presses)
     self.vy = math.min(self.vy + g * dt, 420)
     if self.vy < 0 then
       local r = w:solidIn(self.x - HW + 1, self.x + HW - 1, ny - h, self.y - h)
-      if r then ny = r.y1 + h; self.vy = 0 end
+      -- a ceiling stops the rise; never push her down past where she already is (that put her in the pavement)
+      if r then ny = math.min(self.y, r.y1 + h); self.vy = 0 end
     else
       local f, surf = w:floor(self.x - FHW, self.x + FHW, self.x, self.y - 0.5, ny, self.y, self.dropT > 0)
       if f then
@@ -261,10 +273,14 @@ end
 
 function Pp:grab() self.grabT = 0.8 end
 
-function Pp:hurt(fromX)
+function Pp:hurt(fromX, w)
   if self.invuln > 0 or self.mode ~= "normal" then return false end
   self.invuln = 1.5; self.mode = "hurt"
   local dir = (self.x < fromX) and -1 or 1
+  -- crouched under something (the bench seat): no room to bounce up, so she is only pushed along, still crouched
+  if self.crouch and w and w:solidIn(self.x - HW + 1, self.x + HW - 1, self.y - H_STAND, self.y - 1) then
+    self.vx = dir * 90; S.play("hurt"); return true
+  end
   self.vx = dir * 150; self.vy = -170; self.onGround = false; self.ground = nil; self.crouch = false
   S.play("hurt"); return true
 end

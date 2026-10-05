@@ -51,6 +51,7 @@ function love.load(args)
   for _, a in ipairs(args or {}) do
     if a == "--test" or a == "--auto" or a == "--physics" then state = "intro" end      -- the checks skip the title
     if a == "--test" or a == "--auto" or a == "--physics" then require("tests")(a, { stage = function() return stage end, setState = function(s) state = s end, getState = function() return state end, newRun = newRun }) end
+    if a == "--qa" then require("qa")({ stage = function() return stage end }) end
   end
 end
 function love.joystickadded(j) if j:isGamepad() then I.pad = j end end

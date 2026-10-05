@@ -8,6 +8,7 @@ local Wd = {}
 Wd.__index = Wd
 local CELL = 8
 local STEP = 4            -- a ledge this low is walked onto without a jump
+local SLIP = 5            -- how far her body may hang over a box edge she slipped past (body 17 px, paws 13 px)
 
 function Wd.load(mapPath, props)
   local w = setmetatable({ rects = {}, slopes = {}, water = {}, movers = {} }, Wd)
@@ -58,6 +59,7 @@ function Wd:slopeAt(x)
   for _, s in ipairs(self.slopes) do if x >= s.x0 and x < s.x1 then return s end end
   return nil
 end
+function Wd:slopeFloor(x) local s = self:slopeAt(x); if s then return slopeY(s, x), s end end
 function Wd:slopeNear(a, b)
   for _, s in ipairs(self.slopes) do if s.x1 > a and s.x0 < b then return true end end
   return false
@@ -103,16 +105,27 @@ function Wd:wall(x, nx, hw, y, h, onGround)
   for _, r in ipairs(self.rects) do
     local l = (nearSlope and r.terrain) and (hw + 2) or lift
     if r.kind == "solid" and r.y0 < y - l - 0.01 and r.y1 > y - h + 0.01 and r.x1 > a and r.x0 < b then
-      if nx > x and r.x0 >= x + hw - 0.01 then
+      -- a box is a wall even when her body already overlaps its edge by up to SLIP px (she can slip past a box's
+      -- corner with her body over it, since she stands on her narrower paws): it pushes her back out
+      if nx > x and r.x0 >= x + hw - SLIP then
         local lim = r.x0 - hw
         if not hitX or lim < hitX then hitX, hitR = lim, r end
-      elseif nx < x and r.x1 <= x - hw + 0.01 then
+      elseif nx < x and r.x1 <= x - hw + SLIP then
         local lim = r.x1 + hw
         if not hitX or lim > hitX then hitX, hitR = lim, r end
       end
     end
   end
   return hitX, hitR
+end
+
+-- the ground under x, terrain only (pavement, quay, stairs; not the props): for the bikes
+function Wd:groundAt(x)
+  local sy = self:slopeFloor(x)
+  if sy then return sy end
+  local best
+  for _, r in ipairs(self.rects) do if r.terrain and x >= r.x0 and x < r.x1 and r.y0 >= 150 and (not best or r.y0 < best) then best = r.y0 end end
+  return best
 end
 
 function Wd:inWater(x, y)
