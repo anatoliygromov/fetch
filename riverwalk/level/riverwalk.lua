@@ -3,7 +3,7 @@
 -- Upper promenade feet y = 184, lower quay y = 216, river surface y = 224.
 --
 -- Screens (320 px each):
---   1 Home        jump onto the bench, crawl under it, the bin
+--   1 Home        hop onto the bench, over the bin
 --   2 Promenade   bikes ride through: get up onto the railing or a planter
 --   3 Steps       down to the quay, ride the pontoon over the river
 --   4 Boat        climb the cabin (scramble) and pick up the ball
@@ -11,6 +11,7 @@
 --   6 The girl    give her the ball: GOOD GIRL!
 --
 -- props: kind = solid | oneway | decor; layer = "back" (behind Pepper), "play", "front" (in front of Pepper)
+-- art = an image in art/scene, drawn bottom-left on the box (x0, y1); without it the prop is a greybox
 local L = {}
 L.name = "RIVER WALK"
 L.number = 3
@@ -22,10 +23,9 @@ L.props = {
   -- 1 home
   { name = "HOME",     kind = "decor",  layer = "back", x0 = 0,    x1 = 76,   y0 = 34,  y1 = 184 },
   { name = "DOOR",     kind = "decor",  layer = "back", x0 = 30,   x1 = 54,   y0 = 140, y1 = 184, sub = true },
-  { name = "BENCH",    kind = "solid",  layer = "play", x0 = 96,   x1 = 148,  y0 = 158, y1 = 162 },
-  { name = "",         kind = "decor",  layer = "play", x0 = 98,   x1 = 102,  y0 = 162, y1 = 184, sub = true },
-  { name = "",         kind = "decor",  layer = "play", x0 = 142,  x1 = 146,  y0 = 162, y1 = 184, sub = true },
-  { name = "BIN",      kind = "solid",  layer = "play", x0 = 200,  x1 = 220,  y0 = 147, y1 = 184 },
+  { name = "BENCH",    kind = "solid",  layer = "play", x0 = 97,   x1 = 146,  y0 = 173, y1 = 184, art = "bench" },
+  { name = "POT",      kind = "decor",  layer = "play", x0 = 168,  x1 = 185,  y0 = 157, y1 = 184, art = "pot" },
+  { name = "BIN",      kind = "solid",  layer = "play", x0 = 201,  x1 = 218,  y0 = 158, y1 = 184, art = "bin" },
   { name = "RAILING",  kind = "oneway", layer = "back", x0 = 256,  x1 = 680,  y0 = 149, y1 = 153, railing = true },
   -- 2 promenade
   { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 352,  x1 = 388,  y0 = 154, y1 = 184 },
@@ -36,11 +36,9 @@ L.props = {
   { name = "CABIN",    kind = "solid",  layer = "play", x0 = 1024, x1 = 1096, y0 = 150, y1 = 206 },
   { name = "",         kind = "decor",  layer = "back", x0 = 1112, x1 = 1115, y0 = 96,  y1 = 206, sub = true },
   -- 6 the girl
-  { name = "BENCH",    kind = "solid",  layer = "play", x0 = 1640, x1 = 1692, y0 = 158, y1 = 162 },
-  { name = "",         kind = "decor",  layer = "play", x0 = 1642, x1 = 1646, y0 = 162, y1 = 184, sub = true },
-  { name = "",         kind = "decor",  layer = "play", x0 = 1686, x1 = 1690, y0 = 162, y1 = 184, sub = true },
+  { name = "BENCH",    kind = "solid",  layer = "play", x0 = 1641, x1 = 1690, y0 = 173, y1 = 184, art = "bench" },
   { name = "BIKES",    kind = "decor",  layer = "back", x0 = 1716, x1 = 1772, y0 = 152, y1 = 184 },
-  { name = "BIN",      kind = "solid",  layer = "play", x0 = 1790, x1 = 1810, y0 = 147, y1 = 184 },
+  { name = "BIN",      kind = "solid",  layer = "play", x0 = 1791, x1 = 1808, y0 = 158, y1 = 184, art = "bin" },
   -- foreground frame
   { name = "",         kind = "decor",  layer = "front", x0 = 0,    x1 = 118,  y0 = 18, y1 = 70 },
   { name = "",         kind = "decor",  layer = "front", x0 = 930,  x1 = 940,  y0 = 60, y1 = 240 },
@@ -67,14 +65,14 @@ L.girl = { x = 1866, y = 184 }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
-  { x = 114, y = 184 }, { x = 130, y = 184 }, { x = 122, y = 158 }, { x = 210, y = 147 },
+  { x = 108, y = 173 }, { x = 122, y = 173 }, { x = 136, y = 173 }, { x = 210, y = 158 },
   { x = 290, y = 149 }, { x = 330, y = 149 }, { x = 410, y = 149 }, { x = 450, y = 149 }, { x = 490, y = 149 },
   { x = 530, y = 149 }, { x = 610, y = 149 }, { x = 370, y = 154 }, { x = 578, y = 154 },
   { x = 420, y = 184 }, { x = 520, y = 184 },
   { x = 698, y = 194 }, { x = 740, y = 216 }, { x = 836, y = 192 }, { x = 872, y = 180 }, { x = 908, y = 192 },
   { x = 992, y = 206 }, { x = 1010, y = 206 }, { x = 1086, y = 150, super = true },
   { x = 1240, y = 216 }, { x = 1330, y = 216 }, { x = 1372, y = 216 }, { x = 1414, y = 216 }, { x = 1490, y = 216 },
-  { x = 1606, y = 184 }, { x = 1658, y = 184 }, { x = 1676, y = 184 }, { x = 1666, y = 158 }, { x = 1800, y = 147 },
+  { x = 1606, y = 184 }, { x = 1652, y = 173 }, { x = 1666, y = 173 }, { x = 1680, y = 173 }, { x = 1800, y = 158 },
 }
 
 -- a cyclist rides right to left along the promenade while Pepper is in this zone
@@ -83,7 +81,6 @@ L.bikes = { zoneX0 = 280, zoneX1 = 590, minY = 150, every = 6.5, speed = 115, en
 -- prompt banner hints: first match wins; need = "ball" / "noball" / "nearball"
 L.hints = {
   { x0 = 0,    x1 = 92,   text = "HOLD A TO JUMP HIGHER" },
-  { x0 = 92,   x1 = 168,  text = "DOWN: CRAWL UNDER", maxY = 184 },
   { x0 = 290,  x1 = 600,  text = "BIKES! GET UP HIGH", bike = true },
   { x0 = 690,  x1 = 800,  text = "RIDE THE PONTOON" },
   { x0 = 940,  x1 = 1150, text = "X: PICK UP THE BALL", need = "nearball" },

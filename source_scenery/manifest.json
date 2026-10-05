@@ -1,0 +1,61 @@
+{
+ "pot": {
+  "size": [
+   17,
+   27
+  ],
+  "spritecook_source_asset_id": "d1b787a9-43ce-437a-8e37-4a7d5ccdcd80",
+  "colors": 8,
+  "sha12": "6746b8b046f9"
+ },
+ "bench": {
+  "size": [
+   49,
+   22
+  ],
+  "spritecook_source_asset_id": "36c97b1f-fb01-4412-9dae-b69d8d84ef47",
+  "colors": 5,
+  "sha12": "a6048673d759"
+ },
+ "bin": {
+  "size": [
+   17,
+   26
+  ],
+  "spritecook_source_asset_id": "d6ab701a-0f2d-4ada-8d33-796fc0965bd8",
+  "colors": 6,
+  "sha12": "486d213032bd"
+ },
+ "lamp_post": {
+  "size": [
+   14,
+   101
+  ],
+  "spritecook_source_asset_id": "4d829676-a9bd-4202-a8ae-b104f7e77f61",
+  "colors": 8,
+  "sha12": "224d6041d01d"
+ },
+ "river": {
+  "size": [
+   320,
+   94
+  ],
+  "spritecook_source_asset_id": "a95be2cc-6d9c-4cc5-b778-de3bf3d6f14a",
+  "colors": 6,
+  "sha12": "2b5e492c3c65"
+ },
+ "far_shore_bridge": {
+  "size": [
+   320,
+   33
+  ],
+  "spritecook_source_asset_id": "905dbefd-f036-4c8a-b1c9-b59ae15ae8a9",
+  "colors": 12,
+  "sha12": "38649f1eb1c7"
+ },
+ "_notes": {
+  "props": "same box as the old layer; bottom-aligned, same x,y. No dark outline (decoration only): edge pixels use the darkest neighbouring shade",
+  "far_shore_bridge": "bottom row is the waterline: draw at y 113 (old strip was at y 120 with 7 rows hidden under the river)",
+  "river": "drawn at y 146 as before; tiles left-right"
+ }
+}

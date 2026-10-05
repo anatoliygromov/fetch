@@ -239,9 +239,7 @@ function St:draw(debug)
       end
     end
   end
-  for _, r in ipairs(w.water) do
-    if r.x1 - cam > 0 and r.x0 - cam < 320 then Sc.box(C.river, r.x0 - cam, r.y0, r.x1 - r.x0, r.y1 - r.y0) end
-  end
+  -- the river Pepper can fall into is not drawn: it is a gap in the quay, and the river art shows through
   -- top edges of the terrain, so the walking surface reads
   if not self.edges then
     self.edges = {}
@@ -252,11 +250,13 @@ function St:draw(debug)
     end
   end
   for _, e in ipairs(self.edges) do if e.x - cam > -8 and e.x - cam < 320 then Sc.box(C.groundEdge, e.x - cam, e.y, 8, 1) end end
-  for _, l in ipairs(self.lamps) do                                -- lamp posts
+  local art = Sc.art()
+  lg.setColor(1, 1, 1, 1)
+  for _, l in ipairs(self.lamps) do                                -- lamp posts; a passed checkpoint glows warm
     local x = l.x - cam
     if x > -10 and x < 330 then
-      Sc.box(C.prop, x - 1, l.y - 104, 3, 104)
-      Sc.outlined(l.lit and C.gold or C.prop, C.propEdge, x - 5, l.y - 114, 11, 11)
+      local im = l.lit and art.lamp_lit or art.lamp_post
+      lg.draw(im, math.floor(x - im:getWidth() / 2), l.y - im:getHeight())
     end
   end
   for _, pr in ipairs(self.def.props) do if pr.layer == "play" then Sc.drawProp(pr, cam, C.prop) end end

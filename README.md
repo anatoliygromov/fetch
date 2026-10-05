@@ -5,7 +5,7 @@ The approved state of Level 3, River Walk, under git. Every delivered build is a
 ## What is in it (approved)
 
 - **Level design:**
-  - all six screens as a greybox
+  - all six screens; scenery is greybox except the pieces listed below
   - tuned physics
   - tutorial prompts, bikes, the pontoon, the boat and the bridge
 - **Pepper:** 14 whole SpriteCook clips, cleaned:
@@ -14,11 +14,14 @@ The approved state of Level 3, River Walk, under git. Every delivered build is a
   - hurt, sit, bark, sniff, ball pick-up
 - **The girl:** 5 clips made from her standing pose: idle, wave, call, cheer, pet.
 - **The ball.**
+- **Scenery (from `riverwalk_scenery_v1`):** far shore and bridge, river, bench, bin, pot and lamp post. They are used exactly as delivered, in `riverwalk/art/scene/`. Two things are made from them in code:
+  - **far shore:** extended to cover the whole level by repeating one of its own arches and closing the bridge with its own left end mirrored
+  - **lit lamp:** a passed checkpoint lamp's glass is recoloured warm
 - **Code-made parts:** the HUD, font and sounds.
 
 ## What was removed (not approved)
 
-- **Scenery art:** every piece is gone and the level draws plain grey boxes again. That covers:
+- **Old scenery art:** every piece is gone; scenery without approved art is still plain grey boxes. That covers:
   - the house, bench, bin, lamp posts, railing, canopy and tree band
   - pavement, quay wall, the city across the river and its reflection
   - sky, sun, clouds, skylines and the bone sprite
@@ -37,6 +40,7 @@ The approved state of Level 3, River Walk, under git. Every delivered build is a
 | `riverwalk/` | The game (LÖVE 11). Run `love riverwalk` |
 | `RIVERWALK.love` | The same game as one file (made by `build.sh`, not in git) |
 | `source_sheets/` | The 20 SpriteCook spritesheets the character art is built from |
+| `source_scenery/` | The manifest that came with the scenery art (SpriteCook source IDs) |
 | `tools/` | `build_pepper_clean.py` and `build_girl.py` rebuild `riverwalk/art/pepper.png`, `girl.png` and the frame tables from `source_sheets/`, through `clean.py`. The output matches the shipped art pixel for pixel. `decode.py` is the Chrome download route for new SpriteCook files |
 | `build.sh` | Builds `RIVERWALK.love` from `riverwalk/` |
 | `CHANGELOG.md` | What changed in each version |
@@ -45,7 +49,8 @@ The approved state of Level 3, River Walk, under git. Every delivered build is a
 
 - **Physics:** `love riverwalk --physics` runs 13 checks, and 13 of 13 pass.
   - jump heights
-  - crawling under the bench and the bridge
+  - the bench: it stops a walk, a hop lands on the seat
+  - crawling under the bridge
   - the scramble onto the cabin
   - stairs
   - drop-through
