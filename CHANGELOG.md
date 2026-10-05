@@ -31,6 +31,20 @@ all 2,752 steps. No collision box changed. All art is made by `tools/make_night_
 - **E key:** all extras off / on in the game, for comparing. `love riverwalk --noextras` starts with them off.
 - **Pepper unchanged:** her art, clips, frames, speeds, tuning and physics are untouched (`pepper.lua`, `pepper_frames.lua` and `pepper.png` not edited). The extras only watch her from `stage.lua` and draw. `tools/check_pepper.sh`: PEPPER UNCHANGED (2752 steps identical); 17 physics checks pass; `--qa` 0 problems.
 
+## Night branch `night/citypark` (not merged)
+- **Level 1, City Park (greybox):** 6 screens, 1920 px, 300 s. Beat sheet in `docs/citypark_beatsheet.md`.
+  - The gate: hop onto the log; a leaf pile hides bones.
+  - Benches: jump onto the bench or crawl under it; crawl through the hedge gap. A running jump from the seat reaches the hedge top (gold bone).
+  - The pond: stepping stones, then the duck boat (moving platform). Falling in costs a heart.
+  - Leaf cart: climb the bin (jump + scramble); the park keeper's cart drives through like the bikes. Get up on the picnic table.
+  - The big oak: the cat sits on the girl's ball. Bark near it (90 px): it startles, leaps off and runs away, the ball drops. Branches to climb for a gold bone.
+  - Playground: slide tower and slide, climbing frame, the girl. GOOD GIRL!
+  - 40 bones (2 gold), 5 lamp checkpoints.
+- **Choosing the level:** `love riverwalk --level citypark`. River Walk is still the default. `./build_citypark.sh` builds `CITYPARK_greybox.love`, where City Park is the default (`default_level.txt` in the zip). Best scores are kept per level.
+- **Greybox scenery for City Park:** misty boxes per parallax layer, flat grey ground with a 1 px edge, labelled boxes for props, greybox lamp posts and cat. River Walk draws exactly as before (its screenshots are pixel-identical to `night/base`).
+- **Engine additions (used by City Park only):** the cat (sit, scared, leap, run, gone), leaf piles drawn over bones that flatten when Pepper runs through, a cart kind for hazard zones, label placement for thin props, the mover's own name as its label.
+- **Checks:** City Park `--physics` 38/38, `--auto` plays to GOOD GIRL! (no hearts lost), `--qa` 0 problems. River Walk unchanged: `--physics` 17/17, `--qa` 0 problems, PEPPER UNCHANGED.
+
 ## Trial branch `try/scenery-v2` (not merged)
 - **Longer level, reworked layout:** River Walk is now 3200 px (10 screens, 420 s).
   - Obstacles stand apart with clear pavement between them and repeat along the level: bench, flower box, bin, grit box, planter.

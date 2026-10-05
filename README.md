@@ -33,6 +33,12 @@ The approved state of Level 3, River Walk, under git. Every delivered build is a
   - the girl clips made from her walking pose
 - **A bin collision change:** it only existed to fit the old bin art. The bin is back at its greybox height.
 
+## Level 1: City Park (greybox, branch `night/citypark`)
+
+- `love riverwalk --level citypark` plays it; the same flags work (`--physics`, `--auto`, `--test`, `--qa`).
+- `./build_citypark.sh` builds `CITYPARK_greybox.love` with City Park as the default.
+- Beat sheet: `docs/citypark_beatsheet.md`.
+
 ## Folders
 
 | Folder | What it is |
