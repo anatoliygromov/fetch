@@ -20,6 +20,16 @@ Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
     - PRESS ANY KEY TO START blinks
   - **On a key press:** the text blinks fast and the screen fades out to the level card.
 - **New bench and pot:** revised art, same sizes, so nothing else changed.
+- **Lamp posts and pot:** they stand on the back edge of the pavement by the water. Their bases are 10 px behind Pepper's walking line. The bench and bin stay 5 px back so their collision matches.
+- **River:** a new water sprite from SpriteCook (asset d19d28b6) replaces the old river strip.
+  - **Clean-up (`tools/make_water.py`):**
+    - the haze rows above the waterline are dropped
+    - the deepest rows repeat to the bottom of the screen
+    - 20 colours, despeckled
+  - **Animation:** each row scrolls on its own.
+    - The far water moves with the far shore and barely flows; the near water flows faster.
+    - Every row wobbles a pixel or two.
+    - The glints ride with their rows and twinkle.
 - **Props set back:** the bench, bin, pot and lamp posts stand 5 px behind Pepper's walking line, towards the water and the building, as in the concept.
   - The bench and bin collision boxes moved with them (seat top y 168, bin top y 153), so she lands where they are drawn.
 - **Shadows:** soft ground shadows under Pepper, the girl, the ball and the props. Pepper's shadow stays on the floor under her and shrinks as she jumps.

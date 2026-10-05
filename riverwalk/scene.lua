@@ -1,4 +1,4 @@
--- Scenery. Art in art/scene: far shore and bridge, river, bench, bin, pot, lamp post (riverwalk_scenery_v1),
+-- Scenery. Art in art/scene: far shore and bridge, bench, bin, pot, lamp post (riverwalk_scenery_v1), water (SpriteCook),
 -- skyline, pavement, building, tree (trial). Everything else is still wireframe: plain boxes in a misty grey-blue per layer, lighter the
 -- further back. Layers 2 to 5 scroll slower (parallax).
 local F = require("bigfont")
@@ -30,7 +30,9 @@ local function newImg(d) local i = lg.newImage(d); i:setFilter("nearest", "neare
 function Sc.art()
   if A then return A end
   A = {}
-  for _, n in ipairs({ "river", "skyline", "pavement", "building", "tree" }) do A[n] = newImg("art/scene/" .. n .. ".png") end
+  for _, n in ipairs({ "water", "skyline", "pavement", "building", "tree" }) do A[n] = newImg("art/scene/" .. n .. ".png") end
+  A.waterQ = {}                                                   -- one quad per row: each row of the river moves on its own
+  for y = 0, A.water:getHeight() - 1 do A.waterQ[y] = lg.newQuad(0, y, A.water:getWidth(), 1, A.water:getDimensions()) end
   -- decoration on the pavement (pot, lamp posts) is faded DECOR_FADE of the way towards the haze, so it sits back
   -- and the obstacle course stands out. The files are untouched; this is done to a copy when the game loads.
   for _, n in ipairs({ "pot", "lamp_post" }) do
@@ -134,8 +136,7 @@ function Sc.drawFar(L, camx, t)
   lg.draw(A.skyline, sx, 138 - A.skyline:getHeight()); lg.draw(A.skyline, sx + sw, 138 - A.skyline:getHeight())
   lg.setColor(1, 1, 1, 1)
   lg.draw(A.shore, -math.floor(camx * 0.3), 113)                   -- 4 far shore and bridge: bottom row = waterline
-  local rw = A.river:getWidth()                                    -- 5 river, y 146 to the bottom, tiles left-right
-  for x = -(math.floor(camx * 0.5) % rw), 319, rw do lg.draw(A.river, x, 146) end
+  Sc.drawWater(camx, t)                                            -- 5 river
 end
 
 -- a prop of the level; usable ones (solid / one-way) are outlined, decorations are flat
@@ -245,6 +246,34 @@ function Sc.lampLight(cx, cy, since, t)
   if since < 0.6 then
     local k = since / 0.6
     lg.setColor(1, 0.92, 0.65, 0.45 * (1 - k)); ellipse(cx, cy, 6 + 22 * k, 6 + 22 * k)
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+
+-- 5 the river (art/scene/water.png from the SpriteCook strip, y 146 to 240). Each row scrolls on its own:
+-- the far water near the shore moves with the far shore (0.3) and barely flows, the near water moves with the
+-- camera more (up to 0.55) and flows faster to the left, and every row wobbles a pixel or two (ripples).
+-- The glints (water_data.lua) ride with their row and twinkle.
+local GLINTS = require("water_data")
+function Sc.drawWater(camx, t)
+  local A = Sc.art()
+  local ww, wh = A.water:getDimensions()
+  local off = {}
+  lg.setColor(1, 1, 1, 1)
+  for y = 0, wh - 1 do
+    local depth = y / (wh - 1)
+    local rip = math.sin(t * 1.3 + y * 0.55) * (0.4 + depth * 1.4)
+    local o = math.floor(camx * (0.3 + 0.25 * depth) + t * (1 + 5 * depth) + rip + 0.5) % ww
+    off[y] = o
+    lg.draw(A.water, A.waterQ[y], -o, 146 + y); lg.draw(A.water, A.waterQ[y], ww - o, 146 + y)
+  end
+  for i, g in ipairs(GLINTS) do
+    if math.sin(t * (1.6 + (i % 4) * 0.3) + i * 1.7) > -0.25 then
+      lg.setColor(g[4] / 255, g[5] / 255, g[6] / 255, 1)
+      local x = (g[1] - off[g[2]]) % ww
+      lg.rectangle("fill", x, 146 + g[2], g[3], 1)
+      if x + g[3] > ww then lg.rectangle("fill", x - ww, 146 + g[2], g[3], 1) end
+    end
   end
   lg.setColor(1, 1, 1, 1)
 end
