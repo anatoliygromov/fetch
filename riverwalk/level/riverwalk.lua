@@ -12,8 +12,9 @@
 --
 -- props: kind = solid | oneway | decor; layer = "back" (behind Pepper), "play", "front" (in front of Pepper)
 -- art = an image in art/scene, drawn bottom-left on the box (x0, y1); without it the prop is a greybox.
--- Props with art stand 5 px behind Pepper's walking line (towards the water or the building, as in the concept):
--- their boxes end at y 179, not 184, so she lands exactly where the seat or lid is drawn.
+-- Obstacles with art (bench, bin) stand 5 px behind Pepper's walking line (towards the water or the building, as in the concept):
+-- their boxes end at y 179, not 184, so she lands exactly where the seat or lid is drawn. Decoration (the pot,
+-- the lamp posts) stands on the back edge of the pavement, 10 px behind her line (the pot's box ends at y 174).
 local L = {}
 L.name = "RIVER WALK"
 L.number = 3
@@ -26,7 +27,7 @@ L.props = {
   { name = "HOME",     kind = "decor",  layer = "back", x0 = 0,    x1 = 77,   y0 = 37,  y1 = 172, art = "building" },
   { name = "TREE",     kind = "decor",  layer = "back", x0 = 0,    x1 = 114,  y0 = 45,  y1 = 172, art = "tree" },
   { name = "BENCH",    kind = "solid",  layer = "play", x0 = 97,   x1 = 146,  y0 = 168, y1 = 179, art = "bench" },
-  { name = "POT",      kind = "decor",  layer = "play", x0 = 168,  x1 = 185,  y0 = 152, y1 = 179, art = "pot" },
+  { name = "POT",      kind = "decor",  layer = "play", x0 = 168,  x1 = 185,  y0 = 147, y1 = 174, art = "pot" },
   { name = "BIN",      kind = "solid",  layer = "play", x0 = 201,  x1 = 218,  y0 = 153, y1 = 179, art = "bin" },
   { name = "RAILING",  kind = "oneway", layer = "back", x0 = 256,  x1 = 680,  y0 = 149, y1 = 153, railing = true },
   -- 2 promenade

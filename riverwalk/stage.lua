@@ -239,13 +239,13 @@ function St:draw(debug)
       Sc.shadow((pr.x0 + pr.x1) / 2 - cam, pr.y1 - 1, pr.x1 - pr.x0 + 4)
     end
   end
-  for _, l in ipairs(self.lamps) do if l.x - cam > -20 and l.x - cam < 340 then Sc.shadow(l.x - cam, l.y - SB - 1, 14) end end
+  for _, l in ipairs(self.lamps) do if l.x - cam > -20 and l.x - cam < 340 then Sc.shadow(l.x - cam, l.y - Sc.EDGE - 1, 14) end end
   lg.setColor(1, 1, 1, 1)
   for _, l in ipairs(self.lamps) do                                -- lamp posts; a passed checkpoint lights up
     local x = l.x - cam
     if x > -20 and x < 340 then
       local im = l.lit and art.lamp_lit or art.lamp_post
-      local lx, top = math.floor(x - im:getWidth() / 2), l.y - SB - im:getHeight()
+      local lx, top = math.floor(x - im:getWidth() / 2), l.y - Sc.EDGE - im:getHeight()
       lg.draw(im, lx, top)
       if l.lit then Sc.lampLight(lx + im:getWidth() / 2, top + 17, self.t - (l.litAt or -9), self.t) end
     end
