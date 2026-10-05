@@ -1,4 +1,4 @@
--- love . --physics   checks jump heights, crawl gaps, bench, bin, flower box, scramble, stairs, pontoon; prints PASS / FAIL
+-- love . --physics   checks jump heights, crawl gaps, bench, bin, grit box, ferry, stairs, pontoon; prints PASS / FAIL
 -- love . --auto      plays the whole level on autopilot and saves every 3rd frame to rec/ (for the GIF)
 -- love . --test      a screenshot tour of every screen, the debug view and the tuning panel
 local I = require("input")
@@ -58,10 +58,15 @@ return function(mode, api)
       { during = 0.3 },
       { cond = function(p) return p.onGround end, act = function() release() end, limit = 2 },
       { act = function(p) release(); report("bin: scramble from the pavement on top", math.abs(p.y - 128) < 1 and p.onGround, ("x %.0f y %.0f"):format(p.x, p.y)) end },
-      -- 5 scramble onto the cabin roof (56 px above the deck)
-      { act = function() tp(1000, 206); hold("right", "jump"); love.keypressed("space") end },
-      { during = 1.2 },
-      { act = function(p) release(); report("scramble: deck to cabin roof", math.abs(p.y - 150) < 1 and p.onGround, ("y %.0f"):format(p.y)) end },
+      -- 5 the ferry: a hop from the deck to the saloon roof, a held jump up to the wheelhouse roof
+      { act = function() tp(985, 206); hold("right", "jump"); love.keypressed("space") end },
+      { during = 0.25 }, { act = function() hold("jump") end },
+      { cond = function(p) return p.onGround end, act = function() end, limit = 2 },
+      { act = function(p) release(); report("ferry: deck to saloon roof", math.abs(p.y - 188) < 1, ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      { act = function() tp(1014, 188); hold("right", "jump"); love.keypressed("space") end },
+      { during = 0.25 }, { act = function() hold("jump") end },
+      { cond = function(p) return p.onGround end, act = function() end, limit = 2 },
+      { act = function(p) release(); report("ferry: saloon roof to wheelhouse roof", math.abs(p.y - 158) < 1, ("x %.0f y %.0f"):format(p.x, p.y)) end },
       -- 6 stairs down without leaving the ground
       { act = function() tp(660, 184); airT = 0; hold("right") end },
       { during = 0.75, each = function(p) if not p.onGround then airT = airT + 1 / 60 end end },
@@ -70,10 +75,10 @@ return function(mode, api)
       { act = function() tp(1495, 216); airT = 0; hold("right") end },
       { during = 0.8, each = function(p) if not p.onGround then airT = airT + 1 / 60 end end },
       { act = function(p) release(); report("stairs up stay on the ground", airT < 0.05 and math.abs(p.y - 184) < 1, ("air %.2f s, y %.0f"):format(airT, p.y)) end },
-      -- 8 the low flower box on screen 2: it stops a walk, a held jump lands on top (above the bikes)
+      -- 8 the grit box on screen 2: it stops a walk, a held jump lands on top (above the bikes)
       { act = function() tp(498, 184); hold("right") end }, { during = 1.0 },
       { act = function(p) hold("right", "jump"); love.keypressed("space") end }, { during = 1.0 },
-      { act = function(p) release(); report("flower box: a held jump lands on top", math.abs(p.y - 157) < 1 and p.onGround, ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      { act = function(p) release(); report("grit box: a held jump lands on top", math.abs(p.y - 152) < 1 and p.onGround, ("x %.0f y %.0f"):format(p.x, p.y)) end },
       -- 9 the pontoon carries Pepper
       { act = function() local s = api.stage(); local m = s.movers[1]; tp((m.x0 + m.x1) / 2, m.y0); maxX = m.x0 end },
       { during = 1.0 },
@@ -103,14 +108,17 @@ return function(mode, api)
       at(function(p) return p.x >= 446 end, function() hold("jump") end),                             -- let go of right over the planter
       at(function(p) return p.onGround and p.y <= 155 and p.x > 434 end, function() hold("right") end),     -- on the planter
       at(function(p) return p.x >= 464 end, function() hold("right", "jump"); love.keypressed("space") end),
-      at(function(p) return p.onGround and p.y <= 158 and p.x > 519 end, function() hold("right") end),     -- on the low flower box
+      at(function(p) return p.onGround and p.y <= 158 and p.x > 519 end, function() hold("right") end),     -- on the grit box
       at(function(p) return p.x >= 778 and p.onGround and p.y >= 215 end, function() release() end, 14),
       at(function(p, s) return s.movers[1].x0 <= 802 end, function() hold("right") end, 9),
       at(function(p, s) return p.ground == s.movers[1] and p.x >= s.movers[1].x0 + 18 end, function() release() end),
       at(function(p, s) return s.movers[1].x0 >= 898 end, function() hold("right", "jump"); love.keypressed("space") end, 9),
-      at(function(p) return p.onGround and p.y <= 207 and p.x > 960 end, function() hold("right") end),
-      at(function(p) return p.x >= 1004 end, function() hold("right", "jump"); love.keypressed("space") end),
-      at(function(p) return p.onGround and p.y <= 151 end, function() release() end),
+      at(function(p) return p.onGround and p.y <= 207 and p.x > 958 end, function() hold("right") end),     -- on the ferry deck
+      at(function(p) return p.x >= 984 end, function() hold("right", "jump"); love.keypressed("space") end),
+      at(function(p) return p.onGround and p.y <= 189 end, function() hold("right") end),            -- on the saloon roof
+      at(function(p) return p.x >= 1022 end, function() hold("right", "jump"); love.keypressed("space") end),
+      at(function(p) return p.x >= 1036 end, function() hold("jump") end),
+      at(function(p) return p.onGround and p.y <= 159 end, function() release() end),             -- on the wheelhouse roof
       { wait = 0.2 }, { act = function() love.keypressed("x") end }, { wait = 0.4 },
       at(function(p) return true end, function() hold("right") end),
       at(function(p) return p.x >= 1124 and p.y >= 205 end, function() hold("right", "jump"); love.keypressed("space") end),

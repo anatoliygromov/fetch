@@ -14,9 +14,10 @@ JOBS = [  # source, output, colours
     ('bench_v2_spritecook.png', 'bench.png', 16),
     ('bin_v2_spritecook.png', 'bin.png', 14),
     ('flowerbox_spritecook.png', 'flowerbox.png', 16),
-    ('flowerbox_low_spritecook.png', 'flowerbox_low.png', 16),
+    ('gritbox_spritecook.png', 'gritbox.png', 14),
     ('planter_sq_spritecook.png', 'planter_sq.png', 14),
     ('cafe_spritecook.png', 'cafe.png', 28),
+    ('ferry_spritecook.png', 'ferry.png', 24),
     ('gable_spritecook.png', 'gable.png', 24),
 ]
 def half(a):
@@ -40,7 +41,25 @@ def bench_prep(a):
     # longer posts: post row 40 is repeated 3 times, so the seat top is 28 px up (y 156, above the bikes) and
     # Pepper has 19 px to crawl under it, as with the bench before
     return np.concatenate([a[:41], np.repeat(a[40:41], 3, axis=0), a[41:]], axis=0)
-PREP = {'bench.png': bench_prep}
+FONT = {'S': ['###', '#..', '###', '..#', '###'], 'A': ['.#.', '#.#', '###', '#.#', '#.#'],
+        'N': ['#..#', '##.#', '#.##', '#..#', '#..#'], 'D': ['##.', '#.#', '#.#', '#.#', '##.']}
+def grit_prep(a):
+    # the grit box (sandlåda) also came out at 2x; halved, its SAND label smears, so the label is repainted:
+    # the plank between the dark lines (rows 26-31) is cleared to its own colour and SAND is set in a 3x5 font
+    a = half(a)
+    plank = a[28, 40].copy(); ink = np.array([188, 200, 186, 255], np.uint8)
+    for y in range(26, 32):
+        for x in range(46, 66):
+            if a[y, x, 3]: a[y, x] = plank
+    x = 48
+    for ch in 'SAND':
+        g = FONT[ch]
+        for dy, row in enumerate(g):
+            for dx, c in enumerate(row):
+                if c == '#': a[26 + dy, x + dx] = ink
+        x += len(g[0]) + 1
+    return a
+PREP = {'bench.png': bench_prep, 'gritbox.png': grit_prep}
 def clean(src, k, solo=False, prep=None):
     a = np.array(Image.open(src).convert('RGBA'))
     if prep: a = prep(a)

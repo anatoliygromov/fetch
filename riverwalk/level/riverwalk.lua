@@ -4,9 +4,9 @@
 --
 -- Screens (320 px each):
 --   1 Home        crawl under the bench or jump onto its seat, then up onto the bin
---   2 Promenade   bikes ride through: get up onto the flower boxes and the planter
+--   2 Promenade   bikes ride through: get up onto the flower box, the planter and the grit box
 --   3 Steps       down to the quay, ride the pontoon over the river
---   4 Boat        climb the cabin (scramble) and pick up the ball
+--   4 Boat        the commuter ferry: deck, saloon roof, wheelhouse roof; pick up the ball up there
 --   5 Bridge      crawl under the bridge pier with the ball, steps back up
 --   6 The girl    give her the ball: GOOD GIRL!
 --
@@ -36,12 +36,14 @@ L.props = {
   -- 2 promenade
   { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 313,  x1 = 415,  y0 = 152, y1 = 184, art = "flowerbox", ax = 312, ay = 184 },
   { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 434,  x1 = 478,  y0 = 154, y1 = 184, art = "planter_sq" },
-  { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 519,  x1 = 619,  y0 = 157, y1 = 184, art = "flowerbox_low", ax = 518, ay = 184 },
+  { name = "SAND",     kind = "solid",  layer = "play", x0 = 525,  x1 = 611,  y0 = 152, y1 = 184, art = "gritbox", ax = 524, ay = 184 },   -- grit box: she stands half way up its sloping lid
   -- 3 steps and quay
   -- 4 boat
-  { name = "BOAT",     kind = "solid",  layer = "play", x0 = 968,  x1 = 1144, y0 = 206, y1 = 236 },
-  { name = "CABIN",    kind = "solid",  layer = "play", x0 = 1024, x1 = 1096, y0 = 150, y1 = 206 },
-  { name = "",         kind = "decor",  layer = "back", x0 = 1112, x1 = 1115, y0 = 96,  y1 = 206, sub = true },
+  -- the ferry (art/scene/ferry.png): one image; three hidden boxes give its deck (y 206), the saloon roof (y 188,
+  -- 18 px up: a hop) and the wheelhouse roof (y 158, 30 px up: a held jump). The hull sits 4 px into the river.
+  { name = "BOAT",     kind = "solid",  layer = "play", x0 = 960,  x1 = 1164, y0 = 206, y1 = 236, art = "ferry", ax = 958, ay = 228, noshadow = true },
+  { name = "SALOON",   kind = "solid",  layer = "play", x0 = 1006, x1 = 1120, y0 = 188, y1 = 206, hidden = true },
+  { name = "WHEELHOUSE", kind = "solid", layer = "play", x0 = 1038, x1 = 1088, y0 = 158, y1 = 188, hidden = true },
   -- 6 the girl
   { name = "GABLE",    kind = "decor",  layer = "back", x0 = 1706, x1 = 1776, y0 = -3,  y1 = 172, art = "gable" },
   { name = "CAFE",     kind = "decor",  layer = "back", x0 = 1770, x1 = 1920, y0 = -33, y1 = 172, art = "cafe" },
@@ -53,10 +55,10 @@ L.props = {
   { name = "",         kind = "decor",  layer = "front", x0 = 1470, x1 = 1480, y0 = 60, y1 = 240 },
 }
 
--- lamp posts; the ones marked checkpoint save Pepper's place when she passes
+-- lamp posts: every one is a checkpoint that lights up and saves Pepper's place when she passes
 L.lamps = {
   { x = 240,  y = 184, checkpoint = true },
-  { x = 498,  y = 184 },
+  { x = 498,  y = 184, checkpoint = true },
   { x = 652,  y = 184, checkpoint = true },
   { x = 1200, y = 216, checkpoint = true },
   { x = 1580, y = 184, checkpoint = true },
@@ -67,17 +69,17 @@ L.movers = {
   { name = "PONTOON", x0 = 800, x1 = 848, y0 = 214, y1 = 220, from = 800, to = 904, speed = 30 },
 }
 
-L.ball = { x = 1062, y = 150 }
+L.ball = { x = 1052, y = 158 }
 L.girl = { x = 1866, y = 184 }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
   { x = 116, y = 156 }, { x = 141, y = 156 }, { x = 166, y = 156 }, { x = 274, y = 128 },
-  { x = 336, y = 152 }, { x = 364, y = 152 }, { x = 392, y = 152 }, { x = 546, y = 157 }, { x = 570, y = 157 },
-  { x = 594, y = 157 }, { x = 630, y = 184 }, { x = 456, y = 154 }, { x = 230, y = 184 },
+  { x = 336, y = 152 }, { x = 364, y = 152 }, { x = 392, y = 152 }, { x = 546, y = 152 }, { x = 570, y = 152 },
+  { x = 594, y = 152 }, { x = 630, y = 184 }, { x = 456, y = 154 }, { x = 230, y = 184 },
   { x = 424, y = 184 }, { x = 498, y = 184 },
   { x = 698, y = 194 }, { x = 740, y = 216 }, { x = 836, y = 192 }, { x = 872, y = 180 }, { x = 908, y = 192 },
-  { x = 992, y = 206 }, { x = 1010, y = 206 }, { x = 1086, y = 150, super = true },
+  { x = 976, y = 206 }, { x = 1060, y = 188 }, { x = 1078, y = 158, super = true }, { x = 1142, y = 206 },
   { x = 1240, y = 216 }, { x = 1330, y = 216 }, { x = 1372, y = 216 }, { x = 1414, y = 216 }, { x = 1490, y = 216 },
   { x = 1590, y = 184 }, { x = 1646, y = 156 }, { x = 1671, y = 156 }, { x = 1696, y = 156 }, { x = 1774, y = 128 },
 }
@@ -91,7 +93,7 @@ L.hints = {
   { x0 = 290,  x1 = 600,  text = "BIKES! GET UP HIGH", bike = true },
   { x0 = 690,  x1 = 800,  text = "RIDE THE PONTOON" },
   { x0 = 940,  x1 = 1150, text = "X: PICK UP THE BALL", need = "nearball" },
-  { x0 = 940,  x1 = 1150, text = "JUMP UP ON THE CABIN", need = "noball" },
+  { x0 = 940,  x1 = 1150, text = "CLIMB UP TO THE WHEELHOUSE", need = "noball" },
   { x0 = 1236, x1 = 1304, text = "DOWN: CRAWL UNDER THE BRIDGE" },
   { x0 = 1780, x1 = 1920, text = "X: GIVE HER THE BALL", need = "ball" },
   { x0 = 1700, x1 = 1920, text = "FIND THE BALL ON THE BOAT", need = "noball" },

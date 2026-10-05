@@ -3,6 +3,10 @@
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
 ## Trial branch `try/scenery-v2` (not merged)
+- **Commuter ferry** (user pick, from their photos of the Djurgården ferry): one image on screen 4 with three hidden boxes: the deck (y 206), the saloon roof (y 188, a hop up) and the wheelhouse roof (y 158, a held jump up), where the ball lies. The old CABIN box and mast are gone.
+- **Grit box (SAND)** replaces the low flower box on screen 2 (top y 152, half way up its sloping lid). Halved from a 2x render; the label is repainted.
+- **Every lamp is a checkpoint** now, so every lamp lights up when Pepper passes (the one at x 498 never did).
+- **Checks:** 16 physics checks (the ferry's two climbs replace the cabin scramble). The autopilot plays to GOOD GIRL!
 - **Stockholm bench and bin** (from the user's photos):
   - **Bench (103x51):** green slats, black frame, ball-knob armrests, straight posts. It came out at twice the game scale, so `tools/make_props.py` halves it and lengthens the posts 3 px, keeping the seat at y 156 (crawl gap 19 px). A wider ground shadow fills the pavement under the seat so it no longer looks like it floats (`depth` on the prop, `Sc.shadow`).
   - **Bin (38x59):** the black city bin with gold bands and the shield. Same top (y 128).

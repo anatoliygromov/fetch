@@ -91,15 +91,6 @@
   "source": "flowerbox_spritecook.png",
   "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added)"
  },
- "flowerbox_low": {
-  "size": [
-   102,
-   40
-  ],
-  "spritecook_source_asset_id": "6e4ae7a5-244f-4c95-932c-1c0ccedadb44",
-  "source": "flowerbox_low_spritecook.png",
-  "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added)"
- },
  "planter_sq": {
   "size": [
    44,
@@ -126,5 +117,23 @@
   "spritecook_source_asset_id": "7b28a806-ebb7-4ea7-b36b-87e7de9ce0b2",
   "source": "gable_spritecook.png",
   "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added)"
+ },
+ "gritbox": {
+  "size": [
+   88,
+   41
+  ],
+  "spritecook_source_asset_id": "a7d02c8a-ab21-4be0-905c-cc5e0786e30b",
+  "source": "gritbox_spritecook.png",
+  "note": "Stockholm grit box (sandl\u00e5da). Drawn at 2x: make_props.py halves it, repaints the SAND label in a 3x5 font, palette + despeckle"
+ },
+ "ferry": {
+  "size": [
+   222,
+   84
+  ],
+  "spritecook_source_asset_id": "fdca0f15-d59b-4e23-8889-fb8cd04c57ff",
+  "source": "ferry_spritecook.png",
+  "note": "Stockholm commuter ferry, chunky proportions (user pick); make_props.py palette + despeckle"
  }
 }

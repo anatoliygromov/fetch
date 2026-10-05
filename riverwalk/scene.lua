@@ -114,7 +114,7 @@ function Sc.art()
   A.outlined = {}
   -- round 2 obstacles and buildings (tools/make_props.py): mid-tone SpriteCook art that already has its own 1 px
   -- dark outline, so none is added here
-  for _, n in ipairs({ "bench", "bin", "flowerbox", "flowerbox_low", "planter_sq", "cafe", "gable" }) do
+  for _, n in ipairs({ "bench", "bin", "flowerbox", "gritbox", "planter_sq", "cafe", "gable", "ferry" }) do
     A[n] = newImg("art/scene/" .. n .. ".png")
   end
   -- far shore: the 320 px strip ends inside the bridge, but the shore layer must cover 800 px. The strip is
@@ -198,6 +198,7 @@ end
 function Sc.drawProp(p, camx, layerColour)
   local x, y, w, h = p.x0 - camx, p.y0, p.x1 - p.x0, p.y1 - p.y0
   if x > 330 or x + w < -10 then return end
+  if p.hidden then return end                                      -- a collision box inside bigger art (the ferry)
   if p.art then
     local art = Sc.art(); local im = art[p.art]
     local o = art.outlined[p.art] and 1 or 0                       -- outlined art is 1 px bigger on every side
