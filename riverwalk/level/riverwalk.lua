@@ -13,7 +13,8 @@
 -- props: kind = solid | oneway | decor; layer = "back" (behind Pepper), "play", "front" (in front of Pepper)
 -- art = an image in art/scene, drawn bottom-left on the box (x0, y1), or on (ax, ay) when the art is bigger than
 -- the box; without it the prop is a greybox. The bench's box is only its seat (y 156-165): Pepper crawls under
--- it (19 px gap) or jumps onto it; its legs and backrest are drawn, not solid.
+-- it (19 px gap) or jumps onto it; its posts and backrest are drawn, not solid. depth = 5: its shadow fills the
+-- ground under the seat, so it stands on the pavement.
 -- Obstacles (bench, bin) stand on Pepper's walking line (y 184), so they read as things in her way.
 -- Decoration (the pot, the lamp posts) stands on the back edge of the pavement by the water, 10 px behind her
 -- line (the pot's box ends at y 174), so it reads as scenery she passes.
@@ -29,8 +30,8 @@ L.props = {
   { name = "HOME",     kind = "decor",  layer = "back", x0 = 0,    x1 = 77,   y0 = 37,  y1 = 172, art = "building" },
   { name = "TREE",     kind = "decor",  layer = "back", x0 = 0,    x1 = 114,  y0 = 45,  y1 = 172, art = "tree" },
   { name = "POT",      kind = "decor",  layer = "play", x0 = 214,  x1 = 231,  y0 = 147, y1 = 174, art = "pot" },
-  { name = "BENCH",    kind = "solid",  layer = "play", x0 = 97,   x1 = 204,  y0 = 156, y1 = 165, art = "bench", ax = 90, ay = 184 },
-  { name = "BIN",      kind = "solid",  layer = "play", x0 = 255,  x1 = 293,  y0 = 128, y1 = 184, art = "bin", ax = 252, ay = 184 },
+  { name = "BENCH",    kind = "solid",  layer = "play", x0 = 93,   x1 = 189,  y0 = 156, y1 = 165, art = "bench", ax = 90, ay = 184, depth = 5 },
+  { name = "BIN",      kind = "solid",  layer = "play", x0 = 253,  x1 = 288,  y0 = 128, y1 = 184, art = "bin", ax = 252, ay = 184 },
   { name = "",         kind = "decor",  layer = "back", x0 = 80,   x1 = 688,  y0 = 144, y1 = 174, railing = true },   -- decorative railing by the water
   -- 2 promenade
   { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 313,  x1 = 415,  y0 = 152, y1 = 184, art = "flowerbox", ax = 312, ay = 184 },
@@ -44,8 +45,8 @@ L.props = {
   -- 6 the girl
   { name = "GABLE",    kind = "decor",  layer = "back", x0 = 1706, x1 = 1776, y0 = -3,  y1 = 172, art = "gable" },
   { name = "CAFE",     kind = "decor",  layer = "back", x0 = 1770, x1 = 1920, y0 = -33, y1 = 172, art = "cafe" },
-  { name = "BENCH",    kind = "solid",  layer = "play", x0 = 1627, x1 = 1734, y0 = 156, y1 = 165, art = "bench", ax = 1620, ay = 184 },
-  { name = "BIN",      kind = "solid",  layer = "play", x0 = 1759, x1 = 1797, y0 = 128, y1 = 184, art = "bin", ax = 1756, ay = 184 },
+  { name = "BENCH",    kind = "solid",  layer = "play", x0 = 1623, x1 = 1719, y0 = 156, y1 = 165, art = "bench", ax = 1620, ay = 184, depth = 5 },
+  { name = "BIN",      kind = "solid",  layer = "play", x0 = 1757, x1 = 1792, y0 = 128, y1 = 184, art = "bin", ax = 1756, ay = 184 },
   { name = "",         kind = "decor",  layer = "back", x0 = 1608, x1 = 1706, y0 = 144, y1 = 174, railing = true },   -- decorative railing by the water
   -- foreground frame
   { name = "",         kind = "decor",  layer = "front", x0 = 930,  x1 = 940,  y0 = 60, y1 = 240 },
@@ -71,14 +72,14 @@ L.girl = { x = 1866, y = 184 }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
-  { x = 124, y = 156 }, { x = 150, y = 156 }, { x = 176, y = 156 }, { x = 274, y = 128 },
+  { x = 116, y = 156 }, { x = 141, y = 156 }, { x = 166, y = 156 }, { x = 274, y = 128 },
   { x = 336, y = 152 }, { x = 364, y = 152 }, { x = 392, y = 152 }, { x = 546, y = 157 }, { x = 570, y = 157 },
   { x = 594, y = 157 }, { x = 630, y = 184 }, { x = 456, y = 154 }, { x = 230, y = 184 },
   { x = 424, y = 184 }, { x = 498, y = 184 },
   { x = 698, y = 194 }, { x = 740, y = 216 }, { x = 836, y = 192 }, { x = 872, y = 180 }, { x = 908, y = 192 },
   { x = 992, y = 206 }, { x = 1010, y = 206 }, { x = 1086, y = 150, super = true },
   { x = 1240, y = 216 }, { x = 1330, y = 216 }, { x = 1372, y = 216 }, { x = 1414, y = 216 }, { x = 1490, y = 216 },
-  { x = 1590, y = 184 }, { x = 1654, y = 156 }, { x = 1680, y = 156 }, { x = 1706, y = 156 }, { x = 1778, y = 128 },
+  { x = 1590, y = 184 }, { x = 1646, y = 156 }, { x = 1671, y = 156 }, { x = 1696, y = 156 }, { x = 1774, y = 128 },
 }
 
 -- a cyclist rides right to left along the promenade while Pepper is in this zone

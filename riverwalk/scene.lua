@@ -289,9 +289,16 @@ Sc.ellipse = ellipse
 
 -- a soft shadow on the ground: a flat ellipse centred on the feet line (2 shades: rim and core)
 local SHADOW = { 24 / 255, 28 / 255, 44 / 255 }
-function Sc.shadow(cx, y, w)
+function Sc.shadow(cx, y, w, depth)
   if w < 4 then return end
   local rx = math.floor(w / 2)
+  if depth then                                                    -- something with back and front feet (the bench):
+    local ry = math.floor(depth / 2) + 1                           -- the shadow fills the ground between them, so it
+    lg.setColor(SHADOW[1], SHADOW[2], SHADOW[3], 0.26); ellipse(cx, y - ry + 1, rx, ry)   -- stands on the pavement
+    lg.setColor(SHADOW[1], SHADOW[2], SHADOW[3], 0.18); ellipse(cx, y - ry + 1, math.max(1, rx - 4), math.max(0, ry - 1))
+    lg.setColor(1, 1, 1, 1)
+    return
+  end
   lg.setColor(SHADOW[1], SHADOW[2], SHADOW[3], 0.30); ellipse(cx, y, rx, 1)
   lg.setColor(SHADOW[1], SHADOW[2], SHADOW[3], 0.22); ellipse(cx, y, math.max(1, rx - 3), 0)
   lg.setColor(1, 1, 1, 1)

@@ -19,8 +19,31 @@ JOBS = [  # source, output, colours
     ('cafe_spritecook.png', 'cafe.png', 28),
     ('gable_spritecook.png', 'gable.png', 24),
 ]
-def clean(src, k, solo=False):
+def half(a):
+    # the Stockholm bench came out at twice the game's pixel scale: each 2x2 block becomes one pixel, keeping the
+    # darkest pixel where the block holds outline (so 1 px lines survive) and the median colour elsewhere
+    a = a.astype(int)
+    H, W = a.shape[:2]
+    p = np.zeros(((H + 1) // 2 * 2, (W + 1) // 2 * 2, 4), int); p[:H, :W] = a
+    out = np.zeros((p.shape[0] // 2, p.shape[1] // 2, 4), np.uint8)
+    for y in range(out.shape[0]):
+        for x in range(out.shape[1]):
+            blk = p[2 * y:2 * y + 2, 2 * x:2 * x + 2].reshape(4, 4)
+            on = blk[blk[:, 3] > 20]
+            if len(on) < 2: continue
+            L = on[:, :3].sum(1)
+            c = on[np.argmin(L)] if L.min() < 120 else np.median(on, axis=0)
+            out[y, x, :3] = c[:3]; out[y, x, 3] = 255
+    return out
+def bench_prep(a):
+    a = half(a)                                                    # 103 x 48
+    # longer posts: post row 40 is repeated 3 times, so the seat top is 28 px up (y 156, above the bikes) and
+    # Pepper has 19 px to crawl under it, as with the bench before
+    return np.concatenate([a[:41], np.repeat(a[40:41], 3, axis=0), a[41:]], axis=0)
+PREP = {'bench.png': bench_prep}
+def clean(src, k, solo=False, prep=None):
     a = np.array(Image.open(src).convert('RGBA'))
+    if prep: a = prep(a)
     H, W = a.shape[:2]
     on = a[..., 3] > 20
     rgb = a[..., :3]
@@ -53,7 +76,7 @@ def clean(src, k, solo=False):
     return o
 if __name__ == '__main__':
     for s, d, k in JOBS:
-        o = clean(os.path.join(ROOT, 'source_scenery', s), k, d in ('cafe.png', 'gable.png'))
+        o = clean(os.path.join(ROOT, 'source_scenery', s), k, d in ('cafe.png', 'gable.png'), PREP.get(d))
         if d == 'cafe.png':                                        # side balconies and a wall plant stick out past
             o[32:, :6] = 0; o[32:, 149:] = 0                       # the facade below the roof: trim to the wall
             o = o[:, :150]

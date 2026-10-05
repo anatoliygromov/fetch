@@ -10,21 +10,21 @@
  },
  "bench": {
   "size": [
-   114,
-   56
+   103,
+   51
   ],
-  "spritecook_source_asset_id": "67ea0a20-d70c-40f1-8e95-ef4a54ab7211",
+  "spritecook_source_asset_id": "b64db2e5-2cf5-45b8-9e4b-64f164a7f129",
   "source": "bench_v2_spritecook.png",
-  "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added)"
+  "note": "Stockholm park bench (user reference photo). Drawn at 2x: make_props.py halves it (darkest pixel per 2x2 block where outline, else median), repeats post row 40 three times, then palette + despeckle"
  },
  "bin": {
   "size": [
-   44,
-   60
+   38,
+   59
   ],
-  "spritecook_source_asset_id": "81774efe-1750-4442-badc-d7da46d67fed",
+  "spritecook_source_asset_id": "56743d6f-cde8-4ae4-86d8-1cc0f08b3189",
   "source": "bin_v2_spritecook.png",
-  "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added)"
+  "note": "Stockholm city litter bin (user reference photo): black, gold bands, shield; make_props.py palette + despeckle"
  },
  "lamp_post": {
   "size": [
