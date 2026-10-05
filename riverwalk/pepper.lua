@@ -80,10 +80,14 @@ end
 
 function Pp:height() return self.crouch and H_CROUCH or H_STAND end
 function Pp:box() local h = self:height(); return self.x - HW, self.y - h, self.x + HW, self.y end
+-- Pepper is drawn 1 px lower than her collision box, so her paws sit in the ground line
+-- instead of on top of it (she looked like she was floating). Drawing only, physics unchanged.
+local SINK = 1
+
 function Pp:mouthPos()
   local a = ANIM[self.anim]; local f = a[math.min(self.frame, #a)]
   local m = mouth[f[1]][f[2]]
-  return self.x + self.face * m.x, self.y + m.y
+  return self.x + self.face * m.x, self.y + m.y + SINK
 end
 
 local function setAnim(self, n) if self.anim ~= n then self.anim, self.frame, self.at = n, 1, 0 end end
@@ -271,7 +275,7 @@ function Pp:draw(camx)
   local a = ANIM[self.anim]; local f = a[math.min(self.frame, #a)]
   local q, b = quads[f[1]][f[2]], base[f[1]][f[2]]
   local x, y = math.floor(self.x + 0.5), math.floor(self.y + 0.5)
-  love.graphics.draw(sheet, q, x - camx, y, 0, self.face, 1, b.x, b.y)
+  love.graphics.draw(sheet, q, x - camx, y + SINK, 0, self.face, 1, b.x, b.y)
 end
 
 Pp.HW, Pp.H_STAND, Pp.H_CROUCH, Pp.GRAV = HW, H_STAND, H_CROUCH, GRAV

@@ -1,6 +1,6 @@
-# River Walk: handoff build (5 Oct 2026)
+# FETCH! Level 3: River Walk
 
-The approved state of Level 3, River Walk. Use it as the starting point in a new chat: attach this zip and ask Claude to read the project doc `claude/riverwalk-handoff.md`.
+The approved state of Level 3, River Walk, under git. Every delivered build is a tag; see `CHANGELOG.md`.
 
 ## What is in it (approved)
 
@@ -35,10 +35,11 @@ The approved state of Level 3, River Walk. Use it as the starting point in a new
 | Folder | What it is |
 | --- | --- |
 | `riverwalk/` | The game (LÖVE 11). Run `love riverwalk` |
-| `RIVERWALK.love` | The same game as one file |
+| `RIVERWALK.love` | The same game as one file (made by `build.sh`, not in git) |
 | `source_sheets/` | The 20 SpriteCook spritesheets the character art is built from |
 | `tools/` | `build_pepper_clean.py` and `build_girl.py` rebuild `riverwalk/art/pepper.png`, `girl.png` and the frame tables from `source_sheets/`, through `clean.py`. The output matches the shipped art pixel for pixel. `decode.py` is the Chrome download route for new SpriteCook files |
-| `riverwalk_girl_standing.gif` | A playthrough of this build |
+| `build.sh` | Builds `RIVERWALK.love` from `riverwalk/` |
+| `CHANGELOG.md` | What changed in each version |
 
 ## Checks (all pass on this build)
 
