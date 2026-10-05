@@ -13,10 +13,10 @@ The first level. Autumn park: trees, paths, benches, a pond, leaves. Gentle: eve
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | The gate (0-320) | Run. Tap A for a hop onto the log. Leaf piles hide bones. | Park gate, leaf pile (bones inside), LOG 40x16 (top y 168) | none | 7 | lamp x 296 |
 | 2 | Benches and hedge (320-640) | Hold A to jump higher (bench seat, 28 px up), or crawl under it. Down: crawl through the hedge gap (19 px). Harder route: run and jump from the seat onto the hedge top for a gold bone. | BENCH (seat y 156-165), HEDGE (y 112-165, 64 wide), front-layer trunk | none | 8 (1 gold) | lamp x 656 |
-| 3 | The pond (640-960) | Hop from the bank to the stepping stones, then wait for the duck boat and ride it, hop up the far bank (18 px). | Pond (water from y 208, x 704-944), 2 STONES (top y 192), DUCK BOAT (moving, y 202) | water: a heart | 7 | lamp x 976 |
+| 3 | The pond (640-960) | Step down onto the first stepping stone, hop to the second (40 px gap), wait for the duck boat and ride it, jump up the far bank (18 px). | Pond (water from y 208, x 704-944), 2 STONES (top y 188), DUCK BOAT (moving, deck y 202) | water: a heart | 7 | lamp x 976 |
 | 4 | Leaf cart (960-1280) | Hold A and push to climb the bin (56 px: jump + scramble). Leaf cart zone: get up on the picnic table, or run and jump over the cart. | BIN (top y 128), PICNIC TABLE (top y 156) | the park keeper's LEAF CART (48x26, like River Walk's bikes) | 7 | lamp x 1304 |
-| 5 | The big oak (1280-1600) | The cat sits on the ball on a high branch. Y: bark near it (within 90 px), the cat runs off, the ball drops. X: pick it up. Optional: climb the branches (one-way) for a gold bone. | OAK trunk and crown, 4 BRANCHES (y 156, 128, 100, cat branch 104), CAT | none | 6 (1 gold) | none |
-| 6 | Playground (1600-1920) | Jump up the slide tower (32 px), slide down (slope), hop the climbing frame, X: give the ball to the girl. | SLIDE (tower top y 152, 45 degree slide), CLIMBING FRAME (one-way bars y 160, 136), the girl | none | 5 | lamp x 1616 |
+| 5 | The big oak (1280-1600) | The cat sits on the ball on a high branch. Y: bark near it (within 90 px), the cat runs off, the ball drops. X: pick it up. Optional: climb the branches (one-way, held jumps) for a gold bone, Down + A drops back through. | OAK trunk and crown, 4 BRANCHES (y 156, 128, 100, cat branch 104), CAT | none | 6 (1 gold) | none |
+| 6 | Playground (1600-1920) | Jump up the slide tower (32 px: held jump), run down the slide (slope), hop up the climbing frame, X: give the ball to the girl. | SLIDE (tower top y 152, 45 degree slide, x 1696-1728), CLIMBING FRAME (one-way bars y 160, 136), SWINGS, the girl | none | 5 | lamp x 1616 |
 
 Total: 40 bones, 2 of them gold super bones (hedge top, oak top branch).
 
@@ -25,7 +25,7 @@ Every screen keeps about 100 px of open path. One or two characters per screen a
 ## The cat and the ball
 
 1. **Sit:** the cat (greybox 22x16, label CAT) sits on the ball on the cat branch, 80 px above the path. The ball cannot be picked up. Hint near the oak: "Y: BARK AT THE CAT!".
-2. **Bark:** a bark scares the cat when Pepper's middle is within 90 px of the cat's middle. That works from the path right under the branch, or from any branch.
+2. **Bark:** a bark scares the cat when Pepper's middle is within 90 px of the cat's middle. That works from the path right under the cat's branch (x 1340-1415), or from the branches. A bark from further away (up to 180 px) only makes the cat look up ("?"), so the player sees it heard her.
 3. **Scared:** the cat jumps up with a "!" (0.35 s), leaps off away from Pepper and runs off screen. The ball is knocked off the branch and drops to the path below the oak.
 4. **Gone:** the cat is out of the level. "THE CAT RAN OFF! GET THE BALL".
 5. **Fetch:** X picks up the ball ("BRING IT TO THE GIRL!"), X near the girl gives it: GOOD GIRL!, 2000 points, then the tally.
@@ -33,7 +33,7 @@ Every screen keeps about 100 px of open path. One or two characters per screen a
 
 ## Estimated play time
 
-- A straight run: about 70 s (the autopilot, which also takes both gold bones).
+- A straight run: about 37 s (the autopilot: no hearts lost, 36 of 40 bones, waits once for the duck boat and once for the leaf cart, climbs the oak).
 - A first play, with a few falls and reading the hints: 2 to 3 minutes.
 
 ## Art needed later (sizes in game px)
@@ -45,7 +45,7 @@ Obstacles (Pepper uses them: outlined, mid-tone, never faded)
 | Log | 40x16 | lies on the path, a hop up |
 | Park bench | about 110x50, seat 96 wide at y 156-165 | crawl gap 19 px under the seat. Could reuse River Walk's bench |
 | Hedge with an arch | 64x72 (gap 19 px under it) | autumn colours, the arch must read as a crawl gap |
-| Stepping stone | 24x16 above the water (x2) | |
+| Stepping stone | 24x20 above the water (x2) | tops 4 px below the path |
 | Duck boat | about 52x20, deck 48 wide | moving platform; a pedal boat shaped like a duck |
 | Litter bin | 35x56 | could reuse River Walk's bin |
 | Picnic table | 72x28 | solid block, top y 156 |
@@ -75,3 +75,16 @@ Characters
 | --- | --- | --- |
 | Cat | 22x16 cell | sit (on the ball), startle, leap, run |
 | Girl, ball | existing | real art already |
+
+## Running it
+
+| Command | Does |
+| --- | --- |
+| `love riverwalk --level citypark` | plays City Park (River Walk stays the default without the flag) |
+| `./build_citypark.sh` | builds `CITYPARK_greybox.love`, where City Park is the default (a `default_level.txt` inside the zip) |
+| `... --level citypark --physics` | 38 checks: every set piece (heights, gaps, the pond, the cart, the oak, the cat and ball, the slide) |
+| `... --level citypark --auto` | the autopilot plays to GOOD GIRL! and saves every 3rd frame to `rec/` |
+| `... --level citypark --test` | screenshots: the card, the 6 screens, the cat beat, two debug views, the tally |
+| `... --level citypark --qa` | the collision QA sweep (0 problems) |
+
+The greybox look is chosen by the level (`scenery = "greybox"` in `level/citypark.lua`): sky and clouds as in River Walk, then flat misty boxes per parallax layer (far city 0.08, far trees 0.25, near trees 0.5), flat grey ground with a 1 px edge, the pond as a flat box, outlined labelled boxes for everything Pepper uses, flat boxes for decoration. Pepper, the girl and the ball are the real art.
