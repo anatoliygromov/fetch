@@ -7,6 +7,7 @@ local lg = love.graphics
 
 Ex.on = {                       -- the switches, all on by default
   dust_land = true,             -- puffs at her paws when she lands from a real fall (12 px or more), bigger the higher
+  dust_skid = true,             -- small puffs off her front paws while she skids
 }
 Ex.enabled = true               -- the master switch (E key, --noextras)
 function Ex.toggle() Ex.enabled = not Ex.enabled end
@@ -33,7 +34,7 @@ end
 function Ex.update(fx, s, dt)
   local p = s.pepper
   local was = fx.prev
-  local now = { x = p.x, y = p.y, vx = p.vx, vy = p.vy, onGround = p.onGround, mode = p.mode }
+  local now = { x = p.x, y = p.y, vx = p.vx, vy = p.vy, onGround = p.onGround, mode = p.mode, skid = p.skid }
   fx.prev = now
   for i = #fx.parts, 1, -1 do
     local q = fx.parts[i]; q.t = q.t + dt
@@ -61,6 +62,17 @@ function Ex.update(fx, s, dt)
     end
   end
   if now.onGround then fx.minY = nil end
+
+  -- skid dust: a small puff off her braced front paws on the first step of a skid and every 3rd step after; the
+  -- puffs stay where they were kicked up, so they trail behind her as she slides
+  if now.skid and now.onGround and now.mode == "normal" then
+    fx.skidN = (fx.skidN or 0) + 1
+    if Ex.on.dust_skid and fx.skidN % 3 == 1 then
+      local dir = now.vx >= 0 and 1 or -1
+      puff(fx, p.x + dir * (11 + rnd(fx, 0, 3)), p.y, (fx.skidN == 1) and 2 or 1, dir * rnd(fx, 6, 12), -rnd(fx, 4, 9),
+        0.26 + rnd(fx, 0, 0.06), false)
+    end
+  else fx.skidN = 0 end
 end
 
 -- a puff, drawn pixel by pixel: it grows for the first quarter, holds, then breaks up into a checker dither
