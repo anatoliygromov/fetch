@@ -153,7 +153,7 @@ function St:update(dt, presses)
   -- lamp posts: passing a checkpoint lamp saves Pepper's place
   for _, l in ipairs(self.lamps) do
     if l.checkpoint and not l.lit and p.x >= l.x - 6 and p.x <= l.x + 40 and p.y <= l.y + 2 and p.y >= l.y - 90 and p.mode == "normal" then
-      l.lit = true; self.check = { x = l.x, y = l.y }; S.play("checkpoint")
+      l.lit = true; l.litAt = self.t; self.check = { x = l.x, y = l.y }; S.play("checkpoint")
     end
   end
 
@@ -232,12 +232,22 @@ function St:draw(debug)
   lg.draw(self.ground, -cam, 0)
   -- the river Pepper can fall into is not drawn: it is a gap in the quay, and the river art shows through
   local art = Sc.art()
+  local SB = Sc.SETBACK
+  -- shadows of the things standing on the pavement (drawn on the ground, under them)
+  for _, pr in ipairs(self.def.props) do
+    if pr.art and pr.layer == "play" and pr.x1 - cam > -10 and pr.x0 - cam < 330 then
+      Sc.shadow((pr.x0 + pr.x1) / 2 - cam, pr.y1 - 1, pr.x1 - pr.x0 + 4)
+    end
+  end
+  for _, l in ipairs(self.lamps) do if l.x - cam > -20 and l.x - cam < 340 then Sc.shadow(l.x - cam, l.y - SB - 1, 14) end end
   lg.setColor(1, 1, 1, 1)
-  for _, l in ipairs(self.lamps) do                                -- lamp posts; a passed checkpoint glows warm
+  for _, l in ipairs(self.lamps) do                                -- lamp posts; a passed checkpoint lights up
     local x = l.x - cam
-    if x > -10 and x < 330 then
+    if x > -20 and x < 340 then
       local im = l.lit and art.lamp_lit or art.lamp_post
-      lg.draw(im, math.floor(x - im:getWidth() / 2), l.y - im:getHeight())
+      local lx, top = math.floor(x - im:getWidth() / 2), l.y - SB - im:getHeight()
+      lg.draw(im, lx, top)
+      if l.lit then Sc.lampLight(lx + im:getWidth() / 2, top + 17, self.t - (l.litAt or -9), self.t) end
     end
   end
   for _, pr in ipairs(self.def.props) do if pr.layer == "play" then Sc.drawProp(pr, cam, C.prop) end end
@@ -250,8 +260,20 @@ function St:draw(debug)
       Sc.outlined(bn.super and C.gold or C.bone, C.boneEdge, bn.x - cam - wd / 2, bn.y - 11 + bob, wd, 5)
     end
   end
-  -- the girl (real art)
+  -- shadows of the girl, the ball and Pepper: on the floor right under them (smaller the higher they are)
   local g = self.girl
+  Sc.shadow(g.x - cam, g.y, 22)
+  local b = self.ball
+  if b.state == "rest" or b.state == "air" then
+    local fy = w:floor(b.x - 2, b.x + 2, b.x, b.y - 0.5, 240, b.y - 0.5)
+    if fy then Sc.shadow(b.x - cam, fy, 8 - math.min(4, (fy - b.y) / 8)) end
+  end
+  local p = self.pepper
+  if p.mode ~= "gone" and p.mode ~= "drown" then
+    local fy = w:floor(p.x - 4, p.x + 4, p.x, p.y - 0.5, 240, p.y - 0.5)
+    if fy then Sc.shadow(p.x - cam, fy, 32 * (1 - math.min(48, fy - p.y) / 96)) end
+  end
+  -- the girl (real art)
   local gr = GIRL_ROW[g.state] or GIRL_ROW.idle                    -- "happy" (after petting) shows the idle clip
   local rw = GF.rows[gr]
   local fr = 1 + math.floor(g.t * GIRL_FPS[rw.name]) % rw.n
@@ -260,7 +282,6 @@ function St:draw(debug)
   lg.setColor(1, 1, 1, 1)
   lg.draw(girlImg, girlQ[gr][fr], math.floor(g.x - cam + 0.5), g.y, 0, face, 1, rw.x, rw.y)
   -- the ball (real art), unless Pepper carries it (drawn after her)
-  local b = self.ball
   if b.state == "rest" or b.state == "air" or (b.state == "given" and g.state ~= "pet" and g.state ~= "happy") then
     local bx, by = b.x, b.y
     if b.state == "given" then bx, by = g.x + face * 8, g.y - 30 - math.abs(math.sin(g.t * 6)) * 14 end

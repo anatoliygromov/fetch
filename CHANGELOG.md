@@ -2,6 +2,27 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Trial branch `try/scenery-v2` (not merged)
+- **Skyline, pavement, building and tree** from four 4x images, saved at 1x (exact 4x pixel blocks, nothing lost).
+  - **Skyline:** it replaces the grey city. It scrolls at 0.08 and is followed by its own first 128 columns, so only one City Hall tower ever shows.
+  - **Pavement:** it is painted along every walkable top, with its back edge 12 px behind Pepper's walking line, then the kerb and road. The bridge pier stays greybox.
+  - **Building and tree:** they replace Pepper's home box, the door box and the top-left foreground box. They stand on the pavement's back edge.
+- **Title screen:** shown when the game starts; any key goes on to the level card.
+  - `art/title.png` (320x240) is made from `source_title/title_original.png` by `tools/make_title.py`.
+  - Each game pixel takes the median colour of its cell.
+- **Props set back:** the bench, bin, pot and lamp posts stand 5 px behind Pepper's walking line, towards the water and the building, as in the concept.
+  - The bench and bin collision boxes moved with them (seat top y 168, bin top y 153), so she lands where they are drawn.
+- **Shadows:** soft ground shadows under Pepper, the girl, the ball and the props. Pepper's shadow stays on the floor under her and shrinks as she jumps.
+- **Checkpoint lamps:** a lit lamp has a warm glow with a slight flicker, and a flash of light when it lights up.
+- **Obstacle course vs decoration:**
+  - Things Pepper can use (bench, bin) get the characters' 1 px dark outline.
+  - Decoration (pot, lamp posts) is faded 28% towards the haze.
+  - Both are done in code; the art files are untouched.
+- **Checks:**
+  - 13 of 13 physics checks pass.
+  - The autopilot finishes the level.
+  - The checks skip the title.
+
 ## v0.3 (5 Oct 2026)
 - Scenery art from `riverwalk_scenery_v1`: far shore and bridge, river, bench, bin, pot, lamp post. The files are unaltered.
 - **Far shore:** the 320 px strip is extended to the 800 px the layer needs. One of its arches is repeated and the bridge closes with its own left end mirrored.

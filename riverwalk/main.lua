@@ -35,11 +35,16 @@ do
 end
 
 local function newRun() stage = St.new(def); state, t, tally = "intro", 0, nil end
+local titleImg                                                  -- the title screen, shown once when the game starts
+local function leaveTitle() if state == "title" then if t > 0.4 then S.play("select"); state, t = "intro", 0 end; return true end end
 function love.load(args)
   S.load(); S.music(musicOn)
   local ok, s = pcall(love.filesystem.read, "best.txt"); best = ok and tonumber(s or "") or 0
   newRun()
+  titleImg = love.graphics.newImage("art/title.png"); titleImg:setFilter("nearest", "nearest")
+  state = "title"
   for _, a in ipairs(args or {}) do
+    if a == "--test" or a == "--auto" or a == "--physics" then state = "intro" end      -- the checks skip the title
     if a == "--test" or a == "--auto" or a == "--physics" then require("tests")(a, { stage = function() return stage end, setState = function(s) state = s end, getState = function() return state end, newRun = newRun }) end
   end
 end
@@ -64,6 +69,7 @@ function love.keypressed(k)
   if k == "m" then musicOn = not musicOn; S.music(musicOn); return end
   if k == "g" then debugView = not debugView; return end
   if k == "tab" then tuning = not tuning; return end
+  if leaveTitle() then return end
   if tuning and state == "play" then
     local n = tonumber(k) or tonumber((k:gsub("kp", "")))
     if n and TUNE[n] then tuneRow = n; return end
@@ -80,6 +86,7 @@ function love.keypressed(k)
 end
 function love.gamepadpressed(j, b)
   I.pad = j
+  if leaveTitle() then return end
   if b == "back" then debugView = not debugView; return end
   if b == "start" then
     if state == "play" then state = "pause"; S.music(false) elseif state == "pause" then state = "play"; S.music(musicOn) end
@@ -137,6 +144,15 @@ end
 
 function love.draw()
   love.graphics.setCanvas(canvas); love.graphics.clear(0, 0, 0)
+  if state == "title" then
+    love.graphics.setColor(1, 1, 1, 1); love.graphics.draw(titleImg, 0, 0)
+    love.graphics.setCanvas()
+    local ww, wh = love.graphics.getDimensions()
+    local s = math.max(1, math.floor(math.min(ww / W, wh / H)))
+    love.graphics.clear(0, 0, 0)
+    love.graphics.draw(canvas, math.floor((ww - W * s) / 2), math.floor((wh - H * s) / 2), 0, s, s)
+    return
+  end
   stage:draw(debugView)
   local st = stage:stats()
   U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score })

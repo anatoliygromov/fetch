@@ -24,11 +24,42 @@ Sc.speeds = { clouds = 0.05, city = 0.08, shore = 0.3, water = 0.5 }
 -- art: loaded once. The images are used exactly as delivered; the two made here only rearrange their pixels
 -- or swap colours, so nothing is redrawn.
 local A
+Sc.DECOR_FADE = 0.28
+local HAZE = { 200 / 255, 210 / 255, 222 / 255 }
 local function newImg(d) local i = lg.newImage(d); i:setFilter("nearest", "nearest"); return i end
 function Sc.art()
   if A then return A end
   A = {}
-  for _, n in ipairs({ "bench", "bin", "pot", "lamp_post", "river", "skyline", "pavement", "building", "tree" }) do A[n] = newImg("art/scene/" .. n .. ".png") end
+  for _, n in ipairs({ "river", "skyline", "pavement", "building", "tree" }) do A[n] = newImg("art/scene/" .. n .. ".png") end
+  -- decoration on the pavement (pot, lamp posts) is faded DECOR_FADE of the way towards the haze, so it sits back
+  -- and the obstacle course stands out. The files are untouched; this is done to a copy when the game loads.
+  for _, n in ipairs({ "pot", "lamp_post" }) do
+    local d = love.image.newImageData("art/scene/" .. n .. ".png")
+    d:mapPixel(function(x, y, r, g, b, a)
+      local k = Sc.DECOR_FADE
+      return r + (HAZE[1] - r) * k, g + (HAZE[2] - g) * k, b + (HAZE[3] - b) * k, a
+    end)
+    A[n] = newImg(d)
+  end
+  -- things Pepper can use (stand on, jump onto) get the characters' 1 px dark outline, so they read as part of the
+  -- obstacle course; decoration and background have none. The outline goes outside the art (image grows 1 px
+  -- on every side), the art's own pixels are untouched.
+  A.outlined = {}
+  for _, n in ipairs({ "bench", "bin" }) do
+    local src = love.image.newImageData("art/scene/" .. n .. ".png")
+    local w, h = src:getDimensions()
+    local d = love.image.newImageData(w + 2, h + 2)
+    d:paste(src, 1, 1, 0, 0, w, h)
+    local function solid(x, y) if x < 0 or y < 0 or x >= w or y >= h then return false end local _, _, _, a = src:getPixel(x, y); return a > 0 end
+    for y = -1, h do
+      for x = -1, w do
+        if not solid(x, y) and (solid(x - 1, y) or solid(x + 1, y) or solid(x, y - 1) or solid(x, y + 1)) then
+          d:setPixel(x + 1, y + 1, 1 / 255, 1 / 255, 2 / 255, 1)
+        end
+      end
+    end
+    A[n] = newImg(d); A.outlined[n] = true
+  end
   -- far shore: the 320 px strip ends inside the bridge, but the shore layer must cover 800 px. The strip is
   -- extended with its own columns: one arch and pier (columns 293-307) repeated 14 times (column 308 equals
   -- column 293, so the joins are invisible), then the strip's last arch (308-316), then the bridge's left end and
@@ -43,16 +74,17 @@ function Sc.art()
   local d = love.image.newImageData(#cols, h)
   for i, x in ipairs(cols) do for y = 0, h - 1 do d:setPixel(i - 1, y, src:getPixel(x, y)) end end
   A.shore = newImg(d)
-  -- lit lamp (a checkpoint Pepper has passed): the lantern glass glows warm. Only the glass rows are recoloured.
+  -- lit lamp (a checkpoint Pepper has passed): the lantern glass (rows 12-23) glows warm.
   local lp = love.image.newImageData("art/scene/lamp_post.png")
   local function is(r, g, b, R, G, B) return math.abs(r * 255 - R) < 1 and math.abs(g * 255 - G) < 1 and math.abs(b * 255 - B) < 1 end
-  for y = 12, 23 do
-    for x = 0, lp:getWidth() - 1 do
-      local r, g, b, a = lp:getPixel(x, y)
-      if a > 0 and is(r, g, b, 187, 211, 233) then lp:setPixel(x, y, 250 / 255, 214 / 255, 120 / 255, 1)
-      elseif a > 0 and is(r, g, b, 88, 109, 134) then lp:setPixel(x, y, 201 / 255, 150 / 255, 72 / 255, 1) end
+  lp:mapPixel(function(x, y, r, g, b, a)                           -- lit lamp: warm glass (exact colours), the rest faded
+    if y >= 12 and y <= 23 and a > 0 then
+      if is(r, g, b, 187, 211, 233) then return 250 / 255, 214 / 255, 120 / 255, a          -- the light is not faded
+      elseif is(r, g, b, 88, 109, 134) then return 201 / 255, 150 / 255, 72 / 255, a end
     end
-  end
+    local k = Sc.DECOR_FADE
+    return r + (HAZE[1] - r) * k, g + (HAZE[2] - g) * k, b + (HAZE[3] - b) * k, a
+  end)
   A.lamp_lit = newImg(lp)
   return A
 end
@@ -111,8 +143,9 @@ function Sc.drawProp(p, camx, layerColour)
   local x, y, w, h = p.x0 - camx, p.y0, p.x1 - p.x0, p.y1 - p.y0
   if x > 330 or x + w < -10 then return end
   if p.art then
-    local im = Sc.art()[p.art]
-    lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(x), p.y1 - im:getHeight())
+    local art = Sc.art(); local im = art[p.art]
+    local o = art.outlined[p.art] and 1 or 0                       -- outlined art is 1 px bigger on every side
+    lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(x) - o, p.y1 - im:getHeight() + o)
     return
   end
   if p.railing then
@@ -174,6 +207,43 @@ function Sc.paintGround(w)
   end
   lg.pop()
   return cv
+end
+
+-- Props stand SETBACK px behind the line Pepper walks on (towards the water or the building), as in the concept.
+-- Their collision boxes in the level file are set back by the same amount, so she lands where the seat is drawn.
+Sc.SETBACK = 5
+
+-- pixel-exact filled ellipse (rx, ry in px), drawn row by row so the edges stay crisp at 1x
+local function ellipse(cx, cy, rx, ry)
+  cx, cy = math.floor(cx + 0.5), math.floor(cy + 0.5)
+  for dy = -ry, ry do
+    local k = ry == 0 and 1 or math.sqrt(math.max(0, 1 - (dy / (ry + 0.5)) ^ 2))
+    local hw = math.floor(rx * k + 0.5)
+    if hw > 0 then lg.rectangle("fill", cx - hw, cy + dy, hw * 2, 1) end
+  end
+end
+Sc.ellipse = ellipse
+
+-- a soft shadow on the ground: a flat ellipse centred on the feet line (2 shades: rim and core)
+local SHADOW = { 24 / 255, 28 / 255, 44 / 255 }
+function Sc.shadow(cx, y, w)
+  if w < 4 then return end
+  local rx = math.floor(w / 2)
+  lg.setColor(SHADOW[1], SHADOW[2], SHADOW[3], 0.30); ellipse(cx, y, rx, 1)
+  lg.setColor(SHADOW[1], SHADOW[2], SHADOW[3], 0.22); ellipse(cx, y, math.max(1, rx - 3), 0)
+  lg.setColor(1, 1, 1, 1)
+end
+
+-- the warm light of a lit lamp: a steady glow around the lantern, and a flash that spreads out when it lights up
+function Sc.lampLight(cx, cy, since, t)
+  local f = 0.92 + 0.08 * math.sin(t * 7 + cx)                    -- a slight flicker
+  lg.setColor(1, 0.86, 0.5, 0.10 * f); ellipse(cx, cy, 12, 12)
+  lg.setColor(1, 0.86, 0.5, 0.14 * f); ellipse(cx, cy, 8, 8)
+  if since < 0.6 then
+    local k = since / 0.6
+    lg.setColor(1, 0.92, 0.65, 0.45 * (1 - k)); ellipse(cx, cy, 6 + 22 * k, 6 + 22 * k)
+  end
+  lg.setColor(1, 1, 1, 1)
 end
 
 function Sc.label(text, x, y)

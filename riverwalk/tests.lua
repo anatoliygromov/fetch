@@ -40,14 +40,14 @@ return function(mode, api)
       { act = function(p) report("standing: blocked at the bridge pier", p.x < 1290, ("x %.0f"):format(p.x)); hold("right", "down") end },
       { during = 6.0 },
       { act = function(p) report("crawling: passes under the bridge pier", p.x > 1458, ("x %.0f"):format(p.x)); release() end },
-      -- 4 the bench (11 px seat): it stops a walk, a hop lands on the seat, and she walks off the far end
+      -- 4 the bench (seat top 16 px above the walking line): it stops a walk, a hop lands on the seat, and she walks off the far end
       { act = function() tp(60, 184); hold("right") end }, { during = 1.0 },
       { act = function(p) report("walking: stopped by the bench", p.x < 82, ("x %.0f"):format(p.x)); release() end },
       { wait = 0.2 },
       { act = function() hold("right", "jump"); love.keypressed("space") end }, { wait = 1 / 60 },
       { act = function() hold("right") end },
       { cond = function(p) return p.onGround end, act = function() end, limit = 2 },
-      { act = function(p) release(); report("a hop lands on the bench seat", math.abs(p.y - 173) < 1, ("y %.0f"):format(p.y)); hold("right") end },
+      { act = function(p) release(); report("a hop lands on the bench seat", math.abs(p.y - 168) < 1, ("y %.0f"):format(p.y)); hold("right") end },
       { during = 1.0 },
       { act = function(p) release(); report("walks off the seat to the pavement", p.x > 150 and math.abs(p.y - 184) < 1, ("x %.0f y %.0f"):format(p.x, p.y)) end },
       -- 5 scramble onto the cabin roof (56 px above the deck)
@@ -86,11 +86,11 @@ return function(mode, api)
       { wait = 1.2 }, { act = function() love.keypressed("space") end }, { wait = 0.4 },
       at(function(p) return true end, function() hold("right") end),
       at(function(p) return p.x >= 72 end, function() hold("right", "jump"); love.keypressed("space") end),
-      at(function(p) return p.onGround and p.y <= 174 end, function() hold("right") end),            -- on the bench seat
+      at(function(p) return p.onGround and p.y <= 169 end, function() hold("right") end),            -- on the bench seat
       at(function(p) return p.onGround and p.y >= 183 and p.x >= 156 end, function() release() end, 8),
       { wait = 0.25 },
       at(function(p) return true end, function() hold("right", "jump"); love.keypressed("space") end),
-      at(function(p) return p.onGround and p.y <= 159 end, function() hold("right") end),            -- on the bin
+      at(function(p) return p.onGround and p.y <= 154 end, function() hold("right") end),            -- on the bin
       at(function(p) return p.x >= 212 end, function() hold("right", "jump"); love.keypressed("space") end),
       at(function(p) return p.onGround and p.y <= 150 and p.x > 250 end, function() hold("right") end),
       at(function(p) return p.x >= 778 and p.onGround and p.y >= 215 end, function() release() end, 14),
@@ -115,7 +115,8 @@ return function(mode, api)
     }
   else  -- --test
     local function shot(name) return { act = function() love.graphics.captureScreenshot(name .. ".png") end } end
-    steps = { { wait = 0.6 }, shot("00_intro"), { act = function() love.keypressed("space") end }, { wait = 0.3 } }
+    steps = { { act = function() api.setState("title") end }, { wait = 0.2 }, shot("00_title"), { act = function() api.setState("intro") end },
+      { wait = 0.6 }, shot("00_intro"), { act = function() love.keypressed("space") end }, { wait = 0.3 } }
     for i, x in ipairs({ 150, 470, 790, 1110, 1430, 1750 }) do
       local y = ({ 184, 184, 216, 206, 216, 184 })[i]
       steps[#steps + 1] = { act = function() tp(x, y) end }
