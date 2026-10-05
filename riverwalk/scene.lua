@@ -21,6 +21,10 @@ Sc.C = {
 local C = Sc.C
 Sc.speeds = { clouds = 0.05, city = 0.08, shore = 0.3, water = 0.5 }
 
+-- decoration is faded DECOR_FADE of the way towards the haze, so it sits back and the obstacle course stands out
+Sc.DECOR_FADE = 0.28
+local HAZE = { 200 / 255, 210 / 255, 222 / 255 }
+
 -- the characters' 1 px dark outline around an image's silhouette, outside the art (the result is 1 px bigger on
 -- every side). Used on everything Pepper can use: bench, bin, railing.
 function Sc.outline(src)
@@ -38,28 +42,55 @@ function Sc.outline(src)
   return d
 end
 
--- the quay railing (SpriteCook, tools/make_railing.py): sections (left post + span) repeated to the width, then
--- the closing post, assembled into one image and outlined as a whole (so the outline has no seams)
+-- railings, assembled into one image to the width. Two kinds, which must never look alike:
+--   "decor": the open tube railing along the water's edge (tools/make_bg_railing.py, in the lamp posts' colours).
+--            Faded like all decoration, no outline; Pepper cannot use it.
+--   "fence": the iron fence with balusters (tools/make_railing.py), a short section on Pepper's line that she
+--            climbs. Crisp and outlined like every obstacle;
+--            its balusters are longer (row 15, a plain baluster row, repeated) so its top is high enough
+--            to be safe from the bikes. Outlined as a whole, so the outline has no seams.
 local railCache = {}
-function Sc.railing(w)
-  if railCache[w] then return railCache[w] end
-  local seg = love.image.newImageData("art/scene/rail_seg.png")
-  local en = love.image.newImageData("art/scene/rail_end.png")
-  local sw, ew, h = seg:getWidth(), en:getWidth(), seg:getHeight()
-  local n = math.max(1, math.floor((w - ew) / sw))
-  local d = love.image.newImageData(n * sw + ew, h)
-  for i = 0, n - 1 do d:paste(seg, i * sw, 0, 0, 0, sw, h) end
-  d:paste(en, n * sw, 0, 0, 0, ew, h)
-  local im = lg.newImage(Sc.outline(d)); im:setFilter("nearest", "nearest")
-  railCache[w] = im
+function Sc.railing(w, kind, h)
+  local key = kind .. w .. "x" .. (h or 0)
+  if railCache[key] then return railCache[key] end
+  local function piece(n) return love.image.newImageData("art/scene/" .. n .. ".png") end
+  local d
+  if kind == "fence" then                                         -- the iron fence: left post + span, repeated, then the end post
+    local seg, en = piece("rail_seg"), piece("rail_end")
+    local sw, ew, rh = seg:getWidth(), en:getWidth(), seg:getHeight()
+    local n = math.max(1, math.floor((w - ew) / sw))
+    d = love.image.newImageData(n * sw + ew, rh)
+    for i = 0, n - 1 do d:paste(seg, i * sw, 0, 0, 0, sw, rh) end
+    d:paste(en, n * sw, 0, 0, 0, ew, rh)
+  else                                                             -- the open tube railing: left post, spans, end
+    local l, u, en = piece("rail_bg_left"), piece("rail_bg_unit"), piece("rail_bg_end")
+    local lw, uw, ew, rh = l:getWidth(), u:getWidth(), en:getWidth(), l:getHeight()
+    local n = math.max(0, math.floor((w - lw - ew) / uw))
+    d = love.image.newImageData(lw + n * uw + ew, rh)
+    d:paste(l, 0, 0, 0, 0, lw, rh)
+    for i = 0, n - 1 do d:paste(u, lw + i * uw, 0, 0, 0, uw, rh) end
+    d:paste(en, lw + n * uw, 0, 0, 0, ew, rh)
+  end
+  local rh = d:getHeight()
+  if kind == "fence" then
+    local extra = math.max(0, h - rh)                             -- taller: repeat baluster row 15
+    local t = love.image.newImageData(d:getWidth(), rh + extra)
+    t:paste(d, 0, 0, 0, 0, d:getWidth(), 16)
+    for k = 0, extra - 1 do t:paste(d, 0, 16 + k, 0, 15, d:getWidth(), 1) end
+    t:paste(d, 0, 16 + extra, 0, 16, d:getWidth(), rh - 16)
+    d = Sc.outline(t)
+  else
+    local k = Sc.DECOR_FADE
+    d:mapPixel(function(x, y, r, g, b, a) return r + (HAZE[1] - r) * k, g + (HAZE[2] - g) * k, b + (HAZE[3] - b) * k, a end)
+  end
+  local im = lg.newImage(d); im:setFilter("nearest", "nearest")
+  railCache[key] = im
   return im
 end
 
 -- art: loaded once. The images are used exactly as delivered; the two made here only rearrange their pixels
 -- or swap colours, so nothing is redrawn.
 local A
-Sc.DECOR_FADE = 0.28
-local HAZE = { 200 / 255, 210 / 255, 222 / 255 }
 local function newImg(d) local i = lg.newImage(d); i:setFilter("nearest", "nearest"); return i end
 function Sc.art()
   if A then return A end
@@ -169,8 +200,13 @@ function Sc.drawProp(p, camx, layerColour)
     lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(x) - o, p.y1 - im:getHeight() + o)
     return
   end
-  if p.railing then                                                -- handrail top (art row 7) = where Pepper stands (y0);
-    local im = Sc.railing(w)                                       -- the posts stand on the pavement's back edge
+  if p.railing then                                                -- decorative railing: posts on the pavement's back edge
+    local im = Sc.railing(w, "decor")
+    lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(x), p.y1 - im:getHeight())
+    return
+  end
+  if p.fence then                                                  -- a fence Pepper climbs: handrail top = y0, posts on her line
+    local im = Sc.railing(w, "fence", h + 7)                       -- (+7: the post caps rise above the handrail)
     lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(x) - 1, y - 7 - 1)
     return
   end

@@ -4,7 +4,7 @@
 --
 -- Screens (320 px each):
 --   1 Home        hop onto the bench, over the bin
---   2 Promenade   bikes ride through: get up onto the railing or a planter
+--   2 Promenade   bikes ride through: get up onto a fence or a planter
 --   3 Steps       down to the quay, ride the pontoon over the river
 --   4 Boat        climb the cabin (scramble) and pick up the ball
 --   5 Bridge      crawl under the bridge pier with the ball, steps back up
@@ -29,9 +29,11 @@ L.props = {
   { name = "BENCH",    kind = "solid",  layer = "play", x0 = 97,   x1 = 146,  y0 = 173, y1 = 184, art = "bench" },
   { name = "POT",      kind = "decor",  layer = "play", x0 = 168,  x1 = 185,  y0 = 147, y1 = 174, art = "pot" },
   { name = "BIN",      kind = "solid",  layer = "play", x0 = 201,  x1 = 218,  y0 = 158, y1 = 184, art = "bin" },
-  { name = "RAILING",  kind = "oneway", layer = "back", x0 = 256,  x1 = 672,  y0 = 152, y1 = 156, railing = true },
+  { name = "",         kind = "decor",  layer = "back", x0 = 80,   x1 = 688,  y0 = 144, y1 = 174, railing = true },   -- decorative railing by the water
   -- 2 promenade
+  { name = "FENCE",    kind = "solid",  layer = "play", x0 = 256,  x1 = 344,  y0 = 152, y1 = 184, fence = true },
   { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 352,  x1 = 388,  y0 = 154, y1 = 184 },
+  { name = "FENCE",    kind = "solid",  layer = "play", x0 = 448,  x1 = 536,  y0 = 152, y1 = 184, fence = true },
   { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 560,  x1 = 596,  y0 = 154, y1 = 184 },
   -- 3 steps and quay
   -- 4 boat
@@ -42,6 +44,7 @@ L.props = {
   { name = "BENCH",    kind = "solid",  layer = "play", x0 = 1641, x1 = 1690, y0 = 173, y1 = 184, art = "bench" },
   { name = "BIKES",    kind = "decor",  layer = "back", x0 = 1716, x1 = 1772, y0 = 152, y1 = 184 },
   { name = "BIN",      kind = "solid",  layer = "play", x0 = 1791, x1 = 1808, y0 = 158, y1 = 184, art = "bin" },
+  { name = "",         kind = "decor",  layer = "back", x0 = 1608, x1 = 1920, y0 = 144, y1 = 174, railing = true },   -- decorative railing by the water
   -- foreground frame
   { name = "",         kind = "decor",  layer = "front", x0 = 930,  x1 = 940,  y0 = 60, y1 = 240 },
   { name = "",         kind = "decor",  layer = "front", x0 = 1470, x1 = 1480, y0 = 60, y1 = 240 },
@@ -68,8 +71,8 @@ L.girl = { x = 1866, y = 184 }
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
   { x = 108, y = 173 }, { x = 122, y = 173 }, { x = 136, y = 173 }, { x = 210, y = 158 },
-  { x = 290, y = 152 }, { x = 330, y = 152 }, { x = 410, y = 152 }, { x = 450, y = 152 }, { x = 490, y = 152 },
-  { x = 530, y = 152 }, { x = 610, y = 152 }, { x = 370, y = 154 }, { x = 578, y = 154 },
+  { x = 290, y = 152 }, { x = 330, y = 152 }, { x = 310, y = 152 }, { x = 466, y = 152 }, { x = 492, y = 152 },
+  { x = 518, y = 152 }, { x = 630, y = 184 }, { x = 370, y = 154 }, { x = 578, y = 154 },
   { x = 420, y = 184 }, { x = 520, y = 184 },
   { x = 698, y = 194 }, { x = 740, y = 216 }, { x = 836, y = 192 }, { x = 872, y = 180 }, { x = 908, y = 192 },
   { x = 992, y = 206 }, { x = 1010, y = 206 }, { x = 1086, y = 150, super = true },

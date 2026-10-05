@@ -73,5 +73,13 @@
   ],
   "spritecook_source_asset_id": "2b178488-3a25-46dd-b8b8-29b44b50dc5d",
   "note": "tools/make_railing.py: 8 colours, cut into rail_seg (left post + span) and rail_end (right post)"
+ },
+ "railing_bg": {
+  "size": [
+   175,
+   30
+  ],
+  "spritecook_source_asset_id": "7d30bc38-449b-460d-ba0a-92d324452723",
+  "note": "tools/make_bg_railing.py: shades mapped to the lamp post palette, cut into left post, unit, end"
  }
 }

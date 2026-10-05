@@ -1,4 +1,4 @@
--- love . --physics   checks jump heights, crawl gaps, scramble, stairs, drop-through, pontoon; prints PASS / FAIL
+-- love . --physics   checks jump heights, crawl gaps, bench, fence, scramble, stairs, pontoon; prints PASS / FAIL
 -- love . --auto      plays the whole level on autopilot and saves every 3rd frame to rec/ (for the GIF)
 -- love . --test      a screenshot tour of every screen, the debug view and the tuning panel
 local I = require("input")
@@ -24,12 +24,12 @@ return function(mode, api)
       { wait = 0.6 }, { act = function() love.keypressed("space") end },      -- leave the intro
       { wait = 0.3 },
       -- 1 held jump
-      { act = function() tp(450, 184); startY = 184; minY = 184 end }, { wait = 0.2 },
+      { act = function() tp(620, 184); startY = 184; minY = 184 end }, { wait = 0.2 },
       { act = function() hold("jump"); love.keypressed("space") end },
       { during = 1.0, each = function(p) minY = math.min(minY, p.y) end },
       { act = function() release(); report("held jump reaches 46 px", math.abs(startY - minY - 46) <= 1, ("%.1f px"):format(startY - minY)) end },
       -- 2 tap
-      { act = function() tp(450, 184); minY = 184 end }, { wait = 0.2 },
+      { act = function() tp(620, 184); minY = 184 end }, { wait = 0.2 },
       { act = function() hold("jump"); love.keypressed("space") end }, { wait = 1 / 60 },
       { act = function() release() end },
       { during = 1.0, each = function(p) minY = math.min(minY, p.y) end },
@@ -62,10 +62,10 @@ return function(mode, api)
       { act = function() tp(1495, 216); airT = 0; hold("right") end },
       { during = 0.8, each = function(p) if not p.onGround then airT = airT + 1 / 60 end end },
       { act = function(p) release(); report("stairs up stay on the ground", airT < 0.05 and math.abs(p.y - 184) < 1, ("air %.2f s, y %.0f"):format(airT, p.y)) end },
-      -- 8 drop through the railing
-      { act = function() tp(300, 152) end }, { wait = 0.2 },
-      { act = function() hold("down"); love.keypressed("space") end }, { during = 0.8 },
-      { act = function(p) release(); report("Down + A drops through the railing", math.abs(p.y - 184) < 1, ("y %.0f"):format(p.y)) end },
+      -- 8 a fence on screen 2: it stops a walk, a held jump lands on top (above the bikes)
+      { act = function() tp(410, 184); hold("right") end }, { during = 1.0 },
+      { act = function(p) hold("right", "jump"); love.keypressed("space") end }, { during = 1.0 },
+      { act = function(p) release(); report("fence: a held jump lands on top", math.abs(p.y - 152) < 1 and p.onGround, ("x %.0f y %.0f"):format(p.x, p.y)) end },
       -- 9 the pontoon carries Pepper
       { act = function() local s = api.stage(); local m = s.movers[1]; tp((m.x0 + m.x1) / 2, m.y0); maxX = m.x0 end },
       { during = 1.0 },
@@ -92,7 +92,9 @@ return function(mode, api)
       at(function(p) return true end, function() hold("right", "jump"); love.keypressed("space") end),
       at(function(p) return p.onGround and p.y <= 159 end, function() hold("right") end),            -- on the bin
       at(function(p) return p.x >= 212 end, function() hold("right", "jump"); love.keypressed("space") end),
-      at(function(p) return p.onGround and p.y <= 153 and p.x > 250 end, function() hold("right") end),
+      at(function(p) return p.onGround and p.y <= 153 and p.x > 250 end, function() hold("right") end),     -- on the first fence
+      at(function(p) return p.onGround and p.y >= 183 and p.x >= 392 end, function() hold("right", "jump"); love.keypressed("space") end),
+      at(function(p) return p.onGround and p.y <= 153 and p.x > 448 end, function() hold("right") end),     -- on the second fence
       at(function(p) return p.x >= 778 and p.onGround and p.y >= 215 end, function() release() end, 14),
       at(function(p, s) return s.movers[1].x0 <= 802 end, function() hold("right") end, 9),
       at(function(p, s) return p.ground == s.movers[1] and p.x >= s.movers[1].x0 + 18 end, function() release() end),
@@ -117,7 +119,7 @@ return function(mode, api)
     local function shot(name) return { act = function() love.graphics.captureScreenshot(name .. ".png") end } end
     steps = { { act = function() api.setState("title") end }, { wait = 0.2 }, shot("00_title"), { act = function() api.setState("intro") end },
       { wait = 0.6 }, shot("00_intro"), { act = function() love.keypressed("space") end }, { wait = 0.3 } }
-    for i, x in ipairs({ 150, 470, 790, 1110, 1430, 1750 }) do
+    for i, x in ipairs({ 150, 420, 790, 1110, 1430, 1750 }) do
       local y = ({ 184, 184, 216, 206, 216, 184 })[i]
       steps[#steps + 1] = { act = function() tp(x, y) end }
       steps[#steps + 1] = { wait = 0.6 }

@@ -21,6 +21,12 @@ Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
   - **On a key press:** the text blinks fast and the screen fades out to the level card.
 - **New bench and pot:** revised art, same sizes, so nothing else changed.
 - **Lamp posts and pot:** they stand on the back edge of the pavement by the water. Their bases are 10 px behind Pepper's walking line.
+- **Railings split, preview for review (may be reverted):**
+  - **Decoration by the water:** an open tube railing from SpriteCook (asset 7d30bc38). Its shades are mapped onto the lamp post's palette by `tools/make_bg_railing.py`, then faded like the lamps. No outline; Pepper cannot stand on it. It runs along the water on screens 1 to 2 and screen 6.
+  - **Obstacles on screen 2:** two short sections of the iron fence on Pepper's line (x 256-344 and 448-536), chained with the two planters for dodging the bikes.
+    - They are crisp and outlined, and they block her.
+    - Their balusters are longer (a plain baluster row repeated), so the top at y 152 is above the bikes.
+  - **Removed:** standing on the long railing, and the Down + A drop-through check (replaced by a fence check).
 - **Quay railing:** new SpriteCook railing (asset 2b178488), cleaned to 8 colours by `tools/make_railing.py`.
   - **Tiling:** sections (left post and span) repeat along the railing and a closing post ends it.
   - **Obstacle style:** Pepper uses it, so it is outlined like the bench and bin and never faded. The outline goes round the whole assembled railing, so it has no seams.
