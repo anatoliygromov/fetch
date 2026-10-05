@@ -210,9 +210,7 @@ function Sc.paintGround(w)
   return cv
 end
 
--- Props stand SETBACK px behind the line Pepper walks on (towards the water or the building), as in the concept.
--- Their collision boxes in the level file are set back by the same amount, so she lands where the seat is drawn.
-Sc.SETBACK = 5
+-- Obstacles stand on the line Pepper walks on, so they read as in her way.
 -- Decoration (lamp posts, the pot) stands further back, on the back edge of the pavement by the water:
 -- its base is EDGE px above Pepper's walking line (the pavement's back edge is 12 px above it).
 Sc.EDGE = 10

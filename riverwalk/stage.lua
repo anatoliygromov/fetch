@@ -232,7 +232,6 @@ function St:draw(debug)
   lg.draw(self.ground, -cam, 0)
   -- the river Pepper can fall into is not drawn: it is a gap in the quay, and the river art shows through
   local art = Sc.art()
-  local SB = Sc.SETBACK
   -- shadows of the things standing on the pavement (drawn on the ground, under them)
   for _, pr in ipairs(self.def.props) do
     if pr.art and pr.layer == "play" and pr.x1 - cam > -10 and pr.x0 - cam < 330 then
