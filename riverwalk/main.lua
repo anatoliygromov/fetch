@@ -35,13 +35,18 @@ do
 end
 
 local function newRun() stage = St.new(def); state, t, tally = "intro", 0, nil end
-local titleImg                                                  -- the title screen, shown once when the game starts
-local function leaveTitle() if state == "title" then if t > 0.4 then S.play("select"); state, t = "intro", 0 end; return true end end
+local Title = require("title")                                  -- the title screen, shown once when the game starts
+local titleLeaving                                              -- seconds since a key was pressed on the title
+local function leaveTitle()
+  if state ~= "title" then return false end
+  if t > 0.5 and not titleLeaving then S.play("select"); titleLeaving = 0 end
+  return true
+end
 function love.load(args)
   S.load(); S.music(musicOn)
   local ok, s = pcall(love.filesystem.read, "best.txt"); best = ok and tonumber(s or "") or 0
   newRun()
-  titleImg = love.graphics.newImage("art/title.png"); titleImg:setFilter("nearest", "nearest")
+  Title.load()
   state = "title"
   for _, a in ipairs(args or {}) do
     if a == "--test" or a == "--auto" or a == "--physics" then state = "intro" end      -- the checks skip the title
@@ -99,6 +104,10 @@ end
 
 function love.update(dt)
   dt = math.min(dt, 0.1); t = t + dt
+  if titleLeaving then
+    titleLeaving = titleLeaving + dt
+    if titleLeaving >= Title.LEAVE then titleLeaving = nil; state, t = "intro", 0 end
+  end
   fps = love.timer.getFPS()
   local t0 = love.timer.getTime()
   if state == "play" then
@@ -145,7 +154,7 @@ end
 function love.draw()
   love.graphics.setCanvas(canvas); love.graphics.clear(0, 0, 0)
   if state == "title" then
-    love.graphics.setColor(1, 1, 1, 1); love.graphics.draw(titleImg, 0, 0)
+    Title.draw(t, titleLeaving)
     love.graphics.setCanvas()
     local ww, wh = love.graphics.getDimensions()
     local s = math.max(1, math.floor(math.min(ww / W, wh / H)))

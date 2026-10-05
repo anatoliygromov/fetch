@@ -7,9 +7,19 @@ Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
   - **Skyline:** it replaces the grey city. It scrolls at 0.08 and is followed by its own first 128 columns, so only one City Hall tower ever shows.
   - **Pavement:** it is painted along every walkable top, with its back edge 12 px behind Pepper's walking line, then the kerb and road. The bridge pier stays greybox.
   - **Building and tree:** they replace Pepper's home box, the door box and the top-left foreground box. They stand on the pavement's back edge.
-- **Title screen:** shown when the game starts; any key goes on to the level card.
-  - `art/title.png` (320x240) is made from `source_title/title_original.png` by `tools/make_title.py`.
-  - Each game pixel takes the median colour of its cell.
+- **Title screen:** shown when the game starts, cleaned up and animated. `tools/make_title.py` builds it from `source_title/title_original.png`.
+  - **Clean-up:** the painting is brought down to the game's 320x240 (each pixel takes the median colour of its cell), reduced to a 64-colour palette and despeckled.
+  - **Layers:** it is cut into layers in `art/title/`, with positions in `title_data.lua`.
+  - **Animation (`title.lua`):**
+    - the screen fades in
+    - the river's sparkles twinkle
+    - both lamps glow and flicker
+    - Pepper blinks her open eye, sometimes twice
+    - the bird flaps, glides and drifts
+    - a shine sweeps across the logo
+    - PRESS ANY KEY TO START blinks
+  - **On a key press:** the text blinks fast and the screen fades out to the level card.
+- **New bench and pot:** revised art, same sizes, so nothing else changed.
 - **Props set back:** the bench, bin, pot and lamp posts stand 5 px behind Pepper's walking line, towards the water and the building, as in the concept.
   - The bench and bin collision boxes moved with them (seat top y 168, bin top y 153), so she lands where they are drawn.
 - **Shadows:** soft ground shadows under Pepper, the girl, the ball and the props. Pepper's shadow stays on the floor under her and shrinks as she jumps.
