@@ -1,5 +1,5 @@
--- Scenery. Approved art (art/scene, from riverwalk_scenery_v1): far shore and bridge, river, bench, bin, pot,
--- lamp post. Everything else is still wireframe: plain boxes in a misty grey-blue per layer, lighter the
+-- Scenery. Art in art/scene: far shore and bridge, river, bench, bin, pot, lamp post (riverwalk_scenery_v1),
+-- skyline, pavement, building, tree (trial). Everything else is still wireframe: plain boxes in a misty grey-blue per layer, lighter the
 -- further back. Layers 2 to 5 scroll slower (parallax).
 local F = require("bigfont")
 local Sc = {}
@@ -19,7 +19,7 @@ Sc.C = {
   label = hex("e4eaf0"), bone = hex("efe8d8"), boneEdge = hex("8a7f68"), gold = hex("f2c94c"),
 }
 local C = Sc.C
-Sc.speeds = { clouds = 0.05, city = 0.15, shore = 0.3, water = 0.5 }
+Sc.speeds = { clouds = 0.05, city = 0.08, shore = 0.3, water = 0.5 }
 
 -- art: loaded once. The images are used exactly as delivered; the two made here only rearrange their pixels
 -- or swap colours, so nothing is redrawn.
@@ -28,7 +28,7 @@ local function newImg(d) local i = lg.newImage(d); i:setFilter("nearest", "neare
 function Sc.art()
   if A then return A end
   A = {}
-  for _, n in ipairs({ "bench", "bin", "pot", "lamp_post", "river" }) do A[n] = newImg("art/scene/" .. n .. ".png") end
+  for _, n in ipairs({ "bench", "bin", "pot", "lamp_post", "river", "skyline", "pavement", "building", "tree" }) do A[n] = newImg("art/scene/" .. n .. ".png") end
   -- far shore: the 320 px strip ends inside the bridge, but the shore layer must cover 800 px. The strip is
   -- extended with its own columns: one arch and pier (columns 293-307) repeated 14 times (column 308 equals
   -- column 293, so the joins are invisible), then the strip's last arch (308-316), then the bridge's left end and
@@ -69,16 +69,6 @@ function Sc.build(levelW)
     local w = math.floor(r(40, 110)); L.clouds[#L.clouds + 1] = { x = x, y = math.floor(r(28, 92)), w = w, h = math.floor(r(9, 20)) }
     x = x + w + math.floor(r(40, 120))
   end
-  -- 3 far city: towers of different sizes standing on the far shore line (y 150)
-  r = rng(23); L.city = {}
-  x = 0
-  while x < span(0.15) do
-    local w = math.floor(r(12, 34)); local h = math.floor(r(24, 78))
-    L.city[#L.city + 1] = { x = x, y = 150 - h, w = w, h = h }
-    x = x + w + math.floor(r(0, 10))
-  end
-  L.city[#L.city + 1] = { x = 150, y = 46, w = 22, h = 104 }     -- the spire tower (landmark)
-  L.city[#L.city + 1] = { x = 157, y = 24, w = 8, h = 22 }
   Sc.art()
   return L
 end
@@ -103,8 +93,13 @@ function Sc.drawFar(L, camx, t)
     local x = (c.x - o) % (#L.clouds * 120 + 400) - 120
     if x < 330 then box(C.cloud, x, c.y, c.w, c.h); box(C.cloud, x + c.w * 0.2, c.y - 5, c.w * 0.5, 5) end
   end
-  o = camx * 0.15                                                  -- 3 far city
-  for _, b in ipairs(L.city) do local x = b.x - o; if x > -40 and x < 330 then box(C.city, x, b.y, b.w, b.h) end end
+  -- 3 far city: the skyline, bottom at y 138 (its misty base is behind the far shore trees). It scrolls at 0.08,
+  -- so over the whole level it moves 128 px: the strip is followed by its own first 128 columns, which never
+  -- bring a second City Hall tower on screen.
+  lg.setColor(1, 1, 1, 1)
+  local sw = A.skyline:getWidth()
+  local sx = -math.floor(camx * 0.08)
+  lg.draw(A.skyline, sx, 138 - A.skyline:getHeight()); lg.draw(A.skyline, sx + sw, 138 - A.skyline:getHeight())
   lg.setColor(1, 1, 1, 1)
   lg.draw(A.shore, -math.floor(camx * 0.3), 113)                   -- 4 far shore and bridge: bottom row = waterline
   local rw = A.river:getWidth()                                    -- 5 river, y 146 to the bottom, tiles left-right
@@ -133,6 +128,52 @@ function Sc.drawProp(p, camx, layerColour)
     local tw = F.width(p.name, 1)
     if tw <= w + 30 then F.print(p.name, math.floor(x + w / 2 - tw / 2), math.floor(y + math.min(h, 40) / 2 - 3), 1) end
   end
+end
+
+-- the ground of the play layer, painted once into a canvas as wide as the level. Every walkable top at or below
+-- y 150 gets the pavement art, one column per pixel (it repeats every 320 px): its back edge is 12 px above the
+-- line Pepper walks on, then the kerb and the road. Higher terrain (the bridge pier) stays a greybox.
+function Sc.paintGround(w)
+  local art = Sc.art()
+  local pave = art.pavement
+  local pw, ph = pave:getDimensions()
+  local q = {}
+  for i = 0, pw - 1 do q[i] = lg.newQuad(i, 0, 1, ph, pw, ph) end
+  local cv = lg.newCanvas(w.width, 240)
+  cv:setFilter("nearest", "nearest")
+  lg.push("all"); lg.setCanvas(cv); lg.clear(0, 0, 0, 0); lg.origin()
+  local high = {}
+  for x = 0, w.width - 1 do
+    local runs = {}
+    for _, r in ipairs(w.rects) do if r.terrain and x >= r.x0 and x < r.x1 then runs[#runs + 1] = { r.y0, r.y1 } end end
+    for _, sl in ipairs(w.slopes) do
+      if x >= sl.x0 and x < sl.x1 then
+        local i = x - sl.x0
+        runs[#runs + 1] = { sl.dir < 0 and (sl.y0 + i) or (sl.y1 - i - 1), sl.y1 }
+      end
+    end
+    table.sort(runs, function(a, b) return a[1] < b[1] end)
+    local merged = {}
+    for _, r in ipairs(runs) do
+      local m = merged[#merged]
+      if m and r[1] <= m[2] then m[2] = math.max(m[2], r[2]) else merged[#merged + 1] = { r[1], r[2] } end
+    end
+    for _, m in ipairs(merged) do
+      if m[1] < 150 then high[#high + 1] = { x, m[1], m[2] }
+      else
+        lg.setColor(1, 1, 1, 1)
+        lg.setScissor(x, 0, 1, m[2])
+        lg.draw(pave, q[x % pw], x, m[1] - 12)
+        lg.setScissor()
+      end
+    end
+  end
+  for _, h in ipairs(high) do                                      -- greybox terrain drawn last, over the pavement
+    lg.setColor(C.ground); lg.rectangle("fill", h[1], h[2], 1, h[3] - h[2])
+    lg.setColor(C.groundEdge); lg.rectangle("fill", h[1], h[2], 1, 1)
+  end
+  lg.pop()
+  return cv
 end
 
 function Sc.label(text, x, y)

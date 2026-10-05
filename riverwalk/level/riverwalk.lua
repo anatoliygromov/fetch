@@ -21,8 +21,8 @@ L.start = { x = 52, y = 184 }
 
 L.props = {
   -- 1 home
-  { name = "HOME",     kind = "decor",  layer = "back", x0 = 0,    x1 = 76,   y0 = 34,  y1 = 184 },
-  { name = "DOOR",     kind = "decor",  layer = "back", x0 = 30,   x1 = 54,   y0 = 140, y1 = 184, sub = true },
+  { name = "HOME",     kind = "decor",  layer = "back", x0 = 0,    x1 = 77,   y0 = 37,  y1 = 172, art = "building" },
+  { name = "TREE",     kind = "decor",  layer = "back", x0 = 0,    x1 = 114,  y0 = 45,  y1 = 172, art = "tree" },
   { name = "BENCH",    kind = "solid",  layer = "play", x0 = 97,   x1 = 146,  y0 = 173, y1 = 184, art = "bench" },
   { name = "POT",      kind = "decor",  layer = "play", x0 = 168,  x1 = 185,  y0 = 157, y1 = 184, art = "pot" },
   { name = "BIN",      kind = "solid",  layer = "play", x0 = 201,  x1 = 218,  y0 = 158, y1 = 184, art = "bin" },
@@ -40,7 +40,6 @@ L.props = {
   { name = "BIKES",    kind = "decor",  layer = "back", x0 = 1716, x1 = 1772, y0 = 152, y1 = 184 },
   { name = "BIN",      kind = "solid",  layer = "play", x0 = 1791, x1 = 1808, y0 = 158, y1 = 184, art = "bin" },
   -- foreground frame
-  { name = "",         kind = "decor",  layer = "front", x0 = 0,    x1 = 118,  y0 = 18, y1 = 70 },
   { name = "",         kind = "decor",  layer = "front", x0 = 930,  x1 = 940,  y0 = 60, y1 = 240 },
   { name = "",         kind = "decor",  layer = "front", x0 = 1470, x1 = 1480, y0 = 60, y1 = 240 },
   { name = "",         kind = "decor",  layer = "front", x0 = 1730, x1 = 1880, y0 = 18, y1 = 66 },

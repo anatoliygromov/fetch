@@ -225,31 +225,12 @@ function St:draw(debug)
   Sc.drawFar(self.layers, cam, self.t)
   -- 6 quay back: railing and things behind Pepper
   for _, pr in ipairs(self.def.props) do if pr.layer == "back" then Sc.drawProp(pr, cam, C.back) end end
-  -- 7 play layer: terrain from the map
+  -- 7 play layer: terrain (pavement art, painted once; see Sc.paintGround)
   local w = self.world
-  for _, r in ipairs(w.rects) do
-    if r.terrain and r.x1 - cam > 0 and r.x0 - cam < 320 then Sc.box(C.ground, r.x0 - cam, r.y0, r.x1 - r.x0, r.y1 - r.y0) end
-  end
-  for _, s in ipairs(w.slopes) do
-    local x = s.x0 - cam
-    if x > -8 and x < 320 then
-      for i = 0, 7 do
-        local top = s.dir < 0 and (s.y0 + i) or (s.y1 - i - 1)
-        Sc.box(C.ground, x + i, top, 1, s.y1 - top)
-      end
-    end
-  end
+  if not self.ground then self.ground = Sc.paintGround(w) end
+  lg.setColor(1, 1, 1, 1)
+  lg.draw(self.ground, -cam, 0)
   -- the river Pepper can fall into is not drawn: it is a gap in the quay, and the river art shows through
-  -- top edges of the terrain, so the walking surface reads
-  if not self.edges then
-    self.edges = {}
-    for r, line in ipairs(w.map) do
-      for c = 1, #line do
-        if line:sub(c, c) == '#' and (r == 1 or w.map[r - 1]:sub(c, c) ~= '#') then self.edges[#self.edges + 1] = { x = (c - 1) * 8, y = (r - 1) * 8 } end
-      end
-    end
-  end
-  for _, e in ipairs(self.edges) do if e.x - cam > -8 and e.x - cam < 320 then Sc.box(C.groundEdge, e.x - cam, e.y, 8, 1) end end
   local art = Sc.art()
   lg.setColor(1, 1, 1, 1)
   for _, l in ipairs(self.lamps) do                                -- lamp posts; a passed checkpoint glows warm
