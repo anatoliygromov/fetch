@@ -5,6 +5,7 @@ local Sc = require("scene")
 local Rd = require("road")
 local S = require("sfx")
 local I = require("input")
+local Ex = require("extras")                  -- visual extras around Pepper (drawing only, E toggles them)
 local St = {}
 St.__index = St
 local lg = love.graphics
@@ -43,6 +44,7 @@ function St.new(def)
   s.ball = { x = def.ball.x, y = def.ball.y, home = { x = def.ball.x, y = def.ball.y }, state = "rest", vy = 0 }
   s.girl = { x = def.girl.x, y = def.girl.y, state = "idle", t = 0, callT = 0 }
   s.cam = 0
+  s.fx = Ex.new()
   return s
 end
 
@@ -186,6 +188,7 @@ function St:update(dt, presses)
   end
 
   self.road:update(dt, self.cam)                                   -- passing cars and cyclists on the road (scenery)
+  Ex.update(self.fx, self, dt)                                     -- dust and splashes: they only watch Pepper
 
   -- bark rings
   if p.barked then p.barked = false; self.rings[#self.rings + 1] = { x = p.x + p.face * 22, y = p.y - 22, t = 0 }
@@ -307,9 +310,11 @@ function St:draw(debug)
     if c.warn > 0 and x > 320 then lg.setColor(C.gold); lg.rectangle("fill", 312, 150, 6, 18); lg.rectangle("fill", 312, 170, 6, 6) end
   end
   -- Pepper
+  Ex.drawBehind(self.fx, cam)                                      -- dust behind her
   lg.setColor(1, 1, 1, 1)
   self.pepper:draw(cam)
   if b.state == "carried" and self.pepper.anim ~= "grab" then lg.setColor(1, 1, 1, 1); lg.draw(ballImg, math.floor(b.x - cam - 3 + 0.5), math.floor(b.y - 3 + 0.5)) end
+  Ex.drawFront(self.fx, cam)                                       -- and the extras in front of her
   for _, r in ipairs(self.rings) do
     lg.setColor(1, 1, 1, 1 - r.t / 0.4); lg.setLineWidth(1)
     lg.circle("line", math.floor(r.x - cam), math.floor(r.y), 6 + r.t * 70)

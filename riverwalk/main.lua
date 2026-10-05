@@ -6,7 +6,7 @@
 --   A / Space        jump (hold for higher);  Down + A: drop through a railing or deck
 --   B / Shift        walk          X / X key   pick up, drop, give the ball        Y / Z key   bark
 --   Start / Enter    pause         Select / G  debug view        Tab  tuning panel (keyboard)
---   F fullscreen, M music, Esc quits from the pause menu
+--   F fullscreen, M music, Esc quits from the pause menu, E visual extras off / on (dust, splash; extras.lua)
 function love.errorhandler(msg) io.stderr:write("ERROR: " .. tostring(msg) .. "\n" .. debug.traceback() .. "\n"); io.stderr:flush(); os.exit(1) end
 love.graphics.setDefaultFilter("nearest", "nearest")
 local W, H = 320, 240
@@ -16,6 +16,7 @@ local U = require("hud")
 local I = require("input")
 local St = require("stage")
 local Pp = require("pepper")
+local Ex = require("extras")
 local def = require("level.riverwalk")
 
 local canvas = love.graphics.newCanvas(W, H)
@@ -51,6 +52,7 @@ function love.load(args)
   for _, a in ipairs(args or {}) do
     if a == "--test" or a == "--auto" or a == "--physics" then state = "intro" end      -- the checks skip the title
     if a == "--test" or a == "--auto" or a == "--physics" then require("tests")(a, { stage = function() return stage end, setState = function(s) state = s end, getState = function() return state end, newRun = newRun }) end
+    if a == "--noextras" then Ex.enabled = false end                                    -- start with the extras off
     if a == "--qa" then require("qa")({ stage = function() return stage end }) end
   end
 end
@@ -75,6 +77,7 @@ function love.keypressed(k)
   if k == "m" then musicOn = not musicOn; S.music(musicOn); return end
   if k == "g" then debugView = not debugView; return end
   if k == "tab" then tuning = not tuning; return end
+  if k == "e" then Ex.toggle(); return end
   if leaveTitle() then return end
   if tuning and state == "play" then
     local n = tonumber(k) or tonumber((k:gsub("kp", "")))

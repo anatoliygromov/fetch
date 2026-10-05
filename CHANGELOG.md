@@ -20,6 +20,17 @@ all 2,752 steps. No collision box changed. All art is made by `tools/make_night_
 - **New check:** `tools/check_pepper.sh` with `love riverwalk --auto --trace` and the golden trace of the approved build.
 - **Credits:** 96 SpriteCook credits (4 generations x 2 variations).
 
+## Night branch `night/pepper-extras` (not merged)
+- **Visual extras around Pepper** (`riverwalk/extras.lua`), small and pixel-hard, 90s console style. Each has its own switch in `Ex.on`, all on:
+  - **Landing dust (`dust_land`):** after a fall of 12 px or more, little puffs roll out from her paws, 1 to 3 each side by fall height. Not on small steps.
+  - **Skid dust (`dust_skid`):** while she skids, a small puff kicks off her front paws every few steps and stays behind as she slides.
+  - **Run-start kick (`dust_start`):** when she breaks into a gallop from standing, one small puff behind her back paws.
+  - **Splash (`splash`):** when she falls in the river: a white burst, a crown of drops, a broken foam line across her that thins out, two ripples sliding away.
+  - **Bone pop (`bone_pop`):** a picked-up bone twinkles where it was and a tiny +100 (gold +1000 for a super bone) floats up and blinks out.
+- **Colours:** dust is the pavement's warm greys a step lighter than its lightest stone, so it reads as dust off the paving; the splash uses the river art's light blues. Puffs grow, then break up into a dither and thin out (palette steps, no alpha). Everything scrolls with the level.
+- **E key:** all extras off / on in the game, for comparing. `love riverwalk --noextras` starts with them off.
+- **Pepper unchanged:** her art, clips, frames, speeds, tuning and physics are untouched (`pepper.lua`, `pepper_frames.lua` and `pepper.png` not edited). The extras only watch her from `stage.lua` and draw. `tools/check_pepper.sh`: PEPPER UNCHANGED (2752 steps identical); 17 physics checks pass; `--qa` 0 problems.
+
 ## Trial branch `try/scenery-v2` (not merged)
 - **Longer level, reworked layout:** River Walk is now 3200 px (10 screens, 420 s).
   - Obstacles stand apart with clear pavement between them and repeat along the level: bench, flower box, bin, grit box, planter.
