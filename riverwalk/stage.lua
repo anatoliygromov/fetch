@@ -25,13 +25,13 @@ function St.new(def)
   local s = setmetatable({ def = def, t = 0, cam = 0, lead = 0, score = 0, hearts = 3, lives = 3, time = def.time,
     rings = {}, msg = nil, events = {}, bikeT = 2.5, bikes = {} }, St)
   s.world = Wd.load(def.map, def.props)
-  s.road = Rd.new(s.world)
+  if def.scenery ~= "greybox" then s.road = Rd.new(s.world) end    -- the greybox park has no road and no traffic
   s.movers = {}
   for _, m in ipairs(def.movers) do
     local mv = { name = m.name, x0 = m.from, x1 = m.from + (m.x1 - m.x0), y0 = m.y0, y1 = m.y1, from = m.from, to = m.to, speed = m.speed, dir = 1, dx = 0, kind = "oneway" }
     s.world:addMover(mv); s.movers[#s.movers + 1] = mv
   end
-  s.layers = Sc.build(s.world.width)
+  s.layers = def.scenery == "greybox" and Sc.buildGrey(s.world.width) or Sc.build(s.world.width)
   s.pepper = Pp.new(def.start.x, def.start.y)
   s.check = { x = def.start.x, y = def.start.y }
   s.bones = {}
@@ -42,6 +42,9 @@ function St.new(def)
   for i, l in ipairs(def.lamps) do s.lamps[i] = { x = l.x, y = l.y, checkpoint = l.checkpoint, lit = false } end
   s.ball = { x = def.ball.x, y = def.ball.y, home = { x = def.ball.x, y = def.ball.y }, state = "rest", vy = 0 }
   s.girl = { x = def.girl.x, y = def.girl.y, state = "idle", t = 0, callT = 0 }
+  -- the cat (City Park): it sits on the ball until a bark scares it off; then the ball drops
+  if def.cat then s.cat = { x = def.cat.x, y = def.cat.y, state = "sit", t = 0, vx = 0, vy = 0, dir = 1 }; s.ball.state = "cat" end
+  s.kicked = {}                                                   -- leaf piles Pepper has run through
   s.cam = 0
   return s
 end
@@ -133,14 +136,14 @@ function St:update(dt, presses)
   elseif b.state == "air" then
     b.vy = math.min(b.vy + 520 * dt, 400)
     local ny = b.y + b.vy * dt; b.x = b.x + (b.vx or 0) * dt
-    local f = w:floor(b.x - 3, b.x + 3, b.x, b.y - 0.5, ny, b.y)
-    if f then b.y = f; b.state = "rest"; if nearGirl(self) or math.abs(b.x - self.girl.x) < 30 then self:giveBall() end
+    local f = w:floor(b.x - 3, b.x + 3, b.x, b.y - 0.5, ny, b.y, b.drop)    -- drop: knocked off a branch, falls through
+    if f then b.y = f; b.state = "rest"; b.drop = nil; if nearGirl(self) or math.abs(b.x - self.girl.x) < 30 then self:giveBall() end
     else b.y = ny end
     if w:inWater(b.x, b.y) then b.state = "home"; self.ballBackT = 1.2; S.play("splash") end
   end
   if b.state == "home" then
     self.ballBackT = (self.ballBackT or 0) - dt
-    if self.ballBackT <= 0 then b.x, b.y, b.state = b.home.x, b.home.y, "rest"; self:say("THE BALL IS BACK ON THE BOAT", 2.2) end
+    if self.ballBackT <= 0 then b.x, b.y, b.state = b.home.x, b.home.y, "rest"; self:say(self.def.ballBack or "THE BALL IS BACK ON THE BOAT", 2.2) end
   end
 
   -- bones
@@ -169,7 +172,7 @@ function St:update(dt, presses)
       if self.bikeT <= 0 and #self.bikes == 0 then
         self.bikeT = bk.every
         self.bikes[1] = { x = self.cam + 320 + bk.speed * 1.1, y = 184, warn = 1.1, zone = bk }
-        S.play("bell")
+        S.play(bk.kind == "cart" and "honk" or "bell")
       end
     end
   end
@@ -185,11 +188,16 @@ function St:update(dt, presses)
     end
   end
 
-  self.road:update(dt, self.cam)                                   -- passing cars and cyclists on the road (scenery)
+  if self.road then self.road:update(dt, self.cam) end                                   -- passing cars and cyclists on the road (scenery)
 
   -- bark rings
   if p.barked then p.barked = false; self.rings[#self.rings + 1] = { x = p.x + p.face * 22, y = p.y - 22, t = 0 }
     if math.abs(p.x - self.girl.x) < 110 and self.girl.state == "idle" then self.girl.state = "wave"; self.girl.t = 0 end
+    if self.cat then self:barkAtCat() end
+  end
+  if self.cat then self:updateCat(dt) end
+  for _, pr in ipairs(self.def.props) do                           -- leaf piles flatten when Pepper runs through
+    if pr.leaves and not self.kicked[pr] and x1 > pr.x0 and x0 < pr.x1 and y1 > pr.y0 then self.kicked[pr] = true end
   end
   for i = #self.rings, 1, -1 do local r = self.rings[i]; r.t = r.t + dt; if r.t > 0.4 then table.remove(self.rings, i) end end
 
@@ -212,6 +220,43 @@ function St:update(dt, presses)
   self.cam = math.max(0, math.min(w.width - 320, self.cam))
 end
 
+-- the cat: a bark close enough (def.cat.range between Pepper's middle and the cat's) scares it. It jumps up,
+-- leaps off away from Pepper and runs out of the level; the ball is knocked off and drops to the ground.
+function St:barkAtCat()
+  local c, p, b = self.cat, self.pepper, self.ball
+  if c.state ~= "sit" then return end
+  local dx, dy = c.x - p.x, (c.y - 8) - (p.y - p:height() / 2)
+  local range = self.def.cat.range or 90
+  if dx * dx + dy * dy > range * range then
+    if dx * dx + dy * dy < (range * 2) ^ 2 then c.heard = 0.7 end      -- too far: it only looks up ("?")
+    return
+  end
+  c.state, c.t = "scared", 0
+  c.dir = (c.x >= p.x) and 1 or -1
+  b.state, b.vx, b.vy, b.drop = "air", -c.dir * 20, -60, true
+  b.home = { x = b.x - c.dir * 12, y = self.world:groundAt(b.x - c.dir * 12) or b.y }
+  S.play("spring")
+end
+
+function St:updateCat(dt)
+  local c, w = self.cat, self.world
+  c.t = c.t + dt
+  if c.heard then c.heard = c.heard - dt; if c.heard <= 0 then c.heard = nil end end
+  if c.state == "scared" and c.t >= 0.35 then                     -- the startle is over: leap
+    c.state, c.vx, c.vy = "leap", c.dir * 80, -150
+  elseif c.state == "leap" then
+    c.vy = c.vy + 560 * dt; c.x = c.x + c.vx * dt
+    local ny = c.y + c.vy * dt
+    local g = w:groundAt(c.x)
+    if c.vy > 0 and g and ny >= g then c.y = g; c.state = "run"; self:say("THE CAT RAN OFF! GET THE BALL", 2.4)
+    else c.y = ny end
+  elseif c.state == "run" then
+    c.x = c.x + c.dir * 170 * dt
+    c.y = w:groundAt(c.x) or c.y
+    if c.x < self.cam - 60 or c.x > self.cam + 380 then c.state = "gone" end
+  end
+end
+
 function St:hint()
   if self.msg then return self.msg.text end
   local p = self.pepper
@@ -220,7 +265,8 @@ function St:hint()
       local ok = true
       if h.need == "ball" then ok = p.carrying ~= nil
       elseif h.need == "noball" then ok = p.carrying == nil and self.ball.state ~= "given"
-      elseif h.need == "nearball" then ok = nearBall(self) end
+      elseif h.need == "nearball" then ok = nearBall(self)
+      elseif h.need == "cat" then ok = self.cat ~= nil and self.cat.state == "sit" end
       if h.bike then ok = true end
       if ok then return h.text end
     end
@@ -231,12 +277,13 @@ end
 function St:draw(debug)
   local cam = math.floor(self.cam + 0.5)
   local C = Sc.C
-  Sc.drawFar(self.layers, cam, self.t)
+  local grey = self.def.scenery == "greybox"
+  if grey then Sc.drawFarGrey(self.layers, cam, self.t) else Sc.drawFar(self.layers, cam, self.t) end
   -- 6 quay back: railing and things behind Pepper
   for _, pr in ipairs(self.def.props) do if pr.layer == "back" then Sc.drawProp(pr, cam, C.back) end end
   -- 7 play layer: terrain (pavement art, painted once; see Sc.paintGround)
   local w = self.world
-  if not self.ground then self.ground = Sc.paintGround(w) end
+  if not self.ground then self.ground = grey and Sc.paintGroundGrey(w) or Sc.paintGround(w) end
   lg.setColor(1, 1, 1, 1)
   lg.draw(self.ground, -cam, 0)
   -- the river Pepper can fall into is not drawn: it is a gap in the quay, and the river art shows through
@@ -248,6 +295,9 @@ function St:draw(debug)
       else Sc.shadow((pr.x0 + pr.x1) / 2 - cam, pr.y1 - 1, pr.x1 - pr.x0 + 4) end
     end
   end
+  if grey then                                                     -- greybox lamp posts on the path
+    for _, l in ipairs(self.lamps) do if l.x - cam > -20 and l.x - cam < 340 then Sc.lampGrey(l.x - cam, l.y, l.lit, self.t - (l.litAt or -9), self.t) end end
+  else
   for _, l in ipairs(self.lamps) do if l.x - cam > -20 and l.x - cam < 340 then Sc.shadow(l.x - cam, l.y - Sc.EDGE - 1, 14) end end
   lg.setColor(1, 1, 1, 1)
   for _, l in ipairs(self.lamps) do                                -- lamp posts; a passed checkpoint lights up
@@ -259,9 +309,10 @@ function St:draw(debug)
       if l.lit then Sc.lampLight(lx + im:getWidth() / 2, top + 17, self.t - (l.litAt or -9), self.t) end
     end
   end
-  for _, pr in ipairs(self.def.props) do if pr.layer == "play" then Sc.drawProp(pr, cam, C.prop) end end
+  end
+  for _, pr in ipairs(self.def.props) do if pr.layer == "play" and not pr.over then Sc.drawProp(pr, cam, C.prop) end end
   for _, m in ipairs(self.movers) do Sc.outlined(C.prop, C.propEdge, m.x0 - cam, m.y0, m.x1 - m.x0, m.y1 - m.y0) end
-  if self.movers[1] then local m = self.movers[1]; Sc.label("PONTOON", (m.x0 + m.x1) / 2 - cam, m.y0 + 8) end
+  if self.movers[1] then local m = self.movers[1]; Sc.label(m.name or "PONTOON", (m.x0 + m.x1) / 2 - cam, m.y0 + 8) end
   for _, bn in ipairs(self.bones) do                               -- bones: small boxes, gold = super bone
     if not bn.taken then
       local bob = math.floor(math.sin(self.t * 3 + bn.x) * 1.5 + 0.5)
@@ -269,12 +320,18 @@ function St:draw(debug)
       Sc.outlined(bn.super and C.gold or C.bone, C.boneEdge, bn.x - cam - wd / 2, bn.y - 11 + bob, wd, 5)
     end
   end
+  for _, pr in ipairs(self.def.props) do                           -- props drawn over the bones (leaf piles)
+    if pr.layer == "play" and pr.over then
+      if self.kicked[pr] then Sc.drawProp({ x0 = pr.x0 - 3, x1 = pr.x1 + 3, y0 = pr.y1 - 4, y1 = pr.y1, kind = "decor" }, cam, C.leaves)
+      else Sc.drawProp(pr, cam, C.leaves) end
+    end
+  end
   -- shadows of the girl, the ball and Pepper: on the floor right under them (smaller the higher they are)
   local g = self.girl
   Sc.shadow(g.x - cam, g.y, 22)
   local b = self.ball
   if b.state == "rest" or b.state == "air" then
-    local fy = w:floor(b.x - 2, b.x + 2, b.x, b.y - 0.5, 240, b.y - 0.5)
+    local fy = w:floor(b.x - 2, b.x + 2, b.x, b.y - 0.5, 240, b.y - 0.5, b.drop)
     if fy then Sc.shadow(b.x - cam, fy, 8 - math.min(4, (fy - b.y) / 8)) end
   end
   local p = self.pepper
@@ -291,16 +348,18 @@ function St:draw(debug)
   lg.setColor(1, 1, 1, 1)
   lg.draw(girlImg, girlQ[gr][fr], math.floor(g.x - cam + 0.5), g.y, 0, face, 1, rw.x, rw.y)
   -- the ball (real art), unless Pepper carries it (drawn after her)
-  if b.state == "rest" or b.state == "air" or (b.state == "given" and g.state ~= "pet" and g.state ~= "happy") then
+  if b.state == "rest" or b.state == "air" or b.state == "cat" or (b.state == "given" and g.state ~= "pet" and g.state ~= "happy") then
     local bx, by = b.x, b.y
     if b.state == "given" then bx, by = g.x + face * 8, g.y - 30 - math.abs(math.sin(g.t * 6)) * 14 end
     lg.draw(ballImg, math.floor(bx - cam - 3 + 0.5), math.floor(by - 6 + 0.5))
   end
   -- bikes: a cyclist (art/scene/cyclist1.png, 49 x 50) over the 48 x 26 hit box, wheels on the pavement
+  if self.cat and self.cat.state ~= "gone" then Sc.catGrey(self.cat, cam, self.t) end
   local cyc = Rd.art().cyclists[1]
   for _, c in ipairs(self.bikes) do
     local x = c.x - cam
-    lg.setColor(1, 1, 1, 1); lg.draw(cyc, math.floor(x - 24 + 0.5), math.floor(c.y - cyc:getHeight() + 0.5))
+    if grey then Sc.outlined(C.prop, C.propEdge, math.floor(x - 24 + 0.5), c.y - 26, 48, 26); Sc.label(c.zone and c.zone.kind == "cart" and "CART" or "BIKE", x, c.y - 17)
+    else lg.setColor(1, 1, 1, 1); lg.draw(cyc, math.floor(x - 24 + 0.5), math.floor(c.y - cyc:getHeight() + 0.5)) end
     if c.warn > 0 and x > 320 then lg.setColor(C.gold); lg.rectangle("fill", 312, 150, 6, 18); lg.rectangle("fill", 312, 170, 6, 6) end
   end
   -- Pepper
@@ -311,7 +370,7 @@ function St:draw(debug)
     lg.setColor(1, 1, 1, 1 - r.t / 0.4); lg.setLineWidth(1)
     lg.circle("line", math.floor(r.x - cam), math.floor(r.y), 6 + r.t * 70)
   end
-  self.road:draw(cam, self.t)                                      -- traffic in the near lane, in front of the promenade
+  if self.road then self.road:draw(cam, self.t) end                                      -- traffic in the near lane, in front of the promenade
   -- 8 foreground frame
   -- (scrolls 1.3x: a prop sits at its own x when it is mid-screen and slides faster than Pepper's layer)
   for _, pr in ipairs(self.def.props) do

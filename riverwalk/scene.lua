@@ -18,6 +18,13 @@ Sc.C = {
   front = hex("3c4857"),                           -- 8 foreground frame
   label = hex("e4eaf0"), bone = hex("efe8d8"), boneEdge = hex("8a7f68"), gold = hex("f2c94c"),
 }
+-- greybox park (City Park): two more misty layers between the far city and the play layer, the leaf piles,
+-- the cat, the pond
+Sc.C.trees = hex("a5b3c1")                         -- 4 far trees
+Sc.C.bushes = hex("90a0b1")                        -- 5 near trees and bushes
+Sc.C.leaves = hex("8494a6")                        --   play layer: leaf piles (decoration over the bones)
+Sc.C.cat, Sc.C.catEdge = hex("3f4654"), hex("1d222b")
+Sc.C.pond, Sc.C.pondTop = hex("8a9cb0"), hex("b9c6d3")
 local C = Sc.C
 Sc.speeds = { clouds = 0.05, city = 0.08, shore = 0.3, water = 0.5 }
 
@@ -171,6 +178,153 @@ local function outlined(c, e, x, y, w, h)
 end
 Sc.box, Sc.outlined = box, outlined
 
+-- greybox park: the same sky and clouds, then plain boxes per layer, lighter the further back:
+--   3 far city   (0.08) low blocks beyond the park
+--   4 far trees  (0.25) round-ish crowns on trunks
+--   5 near trees (0.5)  darker, bigger crowns and bushes
+-- Deterministic (seeded), built once per level.
+function Sc.buildGrey(levelW)
+  local L = Sc.build(levelW)
+  local function span(speed) return 320 + (levelW - 320) * speed + 64 end
+  local r = rng(23); L.city = {}
+  local x = -20
+  while x < span(0.08) do
+    local w = math.floor(r(24, 60)); L.city[#L.city + 1] = { x = x, w = w, h = math.floor(r(18, 54)) }
+    x = x + w + math.floor(r(0, 18))
+  end
+  r = rng(31); L.trees = {}
+  x = -10
+  while x < span(0.25) do
+    local w = math.floor(r(30, 56)); L.trees[#L.trees + 1] = { x = x, w = w, h = math.floor(r(22, 40)), trunk = math.floor(r(8, 16)) }
+    x = x + w + math.floor(r(6, 30))
+  end
+  r = rng(47); L.bushes = {}
+  x = -10
+  while x < span(0.5) do
+    local w = math.floor(r(40, 80)); L.bushes[#L.bushes + 1] = { x = x, w = w, h = math.floor(r(26, 46)), trunk = math.floor(r(14, 30)) }
+    x = x + w + math.floor(r(40, 110))
+  end
+  return L
+end
+
+function Sc.drawFarGrey(L, camx, t)
+  for y = 0, 239 do                                                -- 1 sky
+    local k = math.min(1, y / 170)
+    lg.setColor(C.sky1[1] + (C.sky2[1] - C.sky1[1]) * k, C.sky1[2] + (C.sky2[2] - C.sky1[2]) * k, C.sky1[3] + (C.sky2[3] - C.sky1[3]) * k)
+    lg.rectangle("fill", 0, y, 320, 1)
+  end
+  local o = camx * 0.05 - t * 3                                    -- 2 clouds drift
+  for _, c in ipairs(L.clouds) do
+    local x = (c.x - o) % (#L.clouds * 120 + 400) - 120
+    if x < 330 then box(C.cloud, x, c.y, c.w, c.h); box(C.cloud, x + c.w * 0.2, c.y - 5, c.w * 0.5, 5) end
+  end
+  local base = 172                                                 -- the far edge of the park lawn
+  local ox = math.floor(camx * 0.08)                               -- 3 far city
+  for _, b in ipairs(L.city) do
+    local x = b.x - ox
+    if x < 330 and x + b.w > -10 then box(C.city, x, base - 20 - b.h, b.w, b.h + 20) end
+  end
+  ox = math.floor(camx * 0.25)                                     -- 4 far trees
+  for _, tr in ipairs(L.trees) do
+    local x = tr.x - ox
+    if x < 330 and x + tr.w > -10 then
+      local top = base - 6 - tr.trunk - tr.h
+      box(C.trees, x + tr.w / 2 - 2, top + tr.h, 4, tr.trunk + 6)
+      box(C.trees, x, top + 4, tr.w, tr.h - 4); box(C.trees, x + 4, top, tr.w - 8, 4)
+    end
+  end
+  box(C.trees, 0, base - 6, 320, 240 - base + 6)                   -- the far lawn
+  ox = math.floor(camx * 0.5)                                      -- 5 near trees and bushes
+  for _, tr in ipairs(L.bushes) do
+    local x = tr.x - ox
+    if x < 330 and x + tr.w > -10 then
+      local top = base + 2 - tr.trunk - tr.h
+      box(C.bushes, x + tr.w / 2 - 3, top + tr.h, 6, tr.trunk)
+      box(C.bushes, x, top + 5, tr.w, tr.h - 5); box(C.bushes, x + 5, top, tr.w - 10, 5)
+    end
+  end
+  box(C.bushes, 0, base + 2, 320, 240 - base - 2)                  -- the near lawn, up to the path
+end
+
+-- the greybox ground: every terrain column flat grey with a 1 px edge on top; the pond's water as a flat box
+-- with a light surface line. Painted once into a canvas as wide as the level.
+function Sc.paintGroundGrey(w)
+  local cv = lg.newCanvas(w.width, 240)
+  cv:setFilter("nearest", "nearest")
+  lg.push("all"); lg.setCanvas(cv); lg.clear(0, 0, 0, 0); lg.origin()
+  for _, r in ipairs(w.water) do
+    box(C.pond, r.x0, r.y0, r.x1 - r.x0, r.y1 - r.y0)
+  end
+  for _, r in ipairs(w.water) do                                   -- the surface: top row of the water only
+    local top = true
+    for _, q in ipairs(w.water) do if q ~= r and q.y1 == r.y0 and q.x0 < r.x1 and q.x1 > r.x0 then top = false end end
+    if top then box(C.pondTop, r.x0, r.y0, r.x1 - r.x0, 1) end
+  end
+  for x = 0, w.width - 1 do
+    local runs = {}
+    for _, r in ipairs(w.rects) do if r.terrain and x >= r.x0 and x < r.x1 then runs[#runs + 1] = { r.y0, r.y1 } end end
+    for _, sl in ipairs(w.slopes) do
+      if x >= sl.x0 and x < sl.x1 then
+        local i = x - sl.x0
+        runs[#runs + 1] = { sl.dir < 0 and (sl.y0 + i) or (sl.y1 - i - 1), sl.y1 }
+      end
+    end
+    table.sort(runs, function(a, b) return a[1] < b[1] end)
+    local merged = {}
+    for _, r in ipairs(runs) do
+      local m = merged[#merged]
+      if m and r[1] <= m[2] then m[2] = math.max(m[2], r[2]) else merged[#merged + 1] = { r[1], r[2] } end
+    end
+    for _, m in ipairs(merged) do
+      lg.setColor(C.ground); lg.rectangle("fill", x, m[1], 1, m[2] - m[1])
+      lg.setColor(C.groundEdge); lg.rectangle("fill", x, m[1], 1, 1)
+    end
+  end
+  -- the sides of terrain steps (the pond banks, the slide tower) get the edge colour too
+  for _, r in ipairs(w.rects) do
+    if r.terrain then
+      for _, side in ipairs({ { r.x0 - 1, r.x0 }, { r.x1, r.x1 - 1 } }) do
+        local open = true
+        for _, q in ipairs(w.rects) do if q ~= r and q.terrain and side[1] >= q.x0 and side[1] < q.x1 and q.y0 <= r.y0 and q.y1 >= r.y1 then open = false end end
+        if open and side[1] >= 0 and side[1] < w.width and not w:slopeAt(side[1]) then lg.setColor(C.groundEdge); lg.rectangle("fill", side[2], r.y0, 1, r.y1 - r.y0) end
+      end
+    end
+  end
+  lg.pop()
+  return cv
+end
+
+-- a greybox lamp post standing on the path at (x, y): a post and a lantern; lit = a passed checkpoint
+function Sc.lampGrey(x, y, lit, since, t)
+  x = math.floor(x)
+  Sc.shadow(x, y - 1, 12)
+  box(C.back, x - 2, y - 70, 4, 70)
+  box(C.back, x - 4, y - 4, 8, 4)
+  outlined(lit and C.gold or C.sky2, C.back, x - 5, y - 82, 10, 12)
+  box(C.back, x - 6, y - 84, 12, 3)
+  if lit then Sc.lampLight(x, y - 76, since, t) end
+end
+
+-- the greybox cat (22 x 16) at its feet; it sits on the ball, startles ("!"), leaps and runs
+function Sc.catGrey(c, camx, t)
+  local x, y = math.floor(c.x - camx + 0.5), math.floor(c.y + 0.5)
+  if x < -30 or x > 350 then return end
+  local lift = 0
+  if c.state == "sit" then lift = (math.floor(t * 1.5) % 4 == 0) and 1 or 0     -- breathing
+  elseif c.state == "scared" then lift = math.floor(math.min(1, c.t / 0.12) * 4) end
+  if c.state == "run" then lift = math.floor(t * 12) % 2 end
+  local top = y - 16 - lift
+  outlined(C.cat, C.catEdge, x - 11, top, 22, 16)
+  local ear = c.dir or 1                                           -- ears on the side it faces
+  if c.state == "sit" then ear = -1 end
+  box(C.catEdge, x + ear * 7 - 2, top - 3, 2, 3); box(C.catEdge, x + ear * 7 + 1, top - 3, 2, 3)
+  box(C.catEdge, x - ear * 11 - (ear > 0 and 3 or 0), top + 3, 3, 2)   -- tail
+  lg.setColor(C.label); F.print("CAT", x - 8, top + 5, 1)
+  if c.state == "scared" or c.state == "leap" then lg.setColor(C.gold); F.print("!", x - 2, top - 12, 1)
+  elseif c.state == "sit" and c.heard then lg.setColor(C.label); F.print("?", x - 2, top - 12, 1) end
+  lg.setColor(1, 1, 1, 1)
+end
+
 -- layers 1 to 5 (everything behind the quay)
 function Sc.drawFar(L, camx, t)
   for y = 0, 239 do                                                -- 1 sky
@@ -223,7 +377,10 @@ function Sc.drawProp(p, camx, layerColour)
   if p.name and p.name ~= "" and w >= 14 then
     lg.setColor(C.label)
     local tw = F.width(p.name, 1)
-    if tw <= w + 30 then F.print(p.name, math.floor(x + w / 2 - tw / 2), math.floor(y + math.min(h, 40) / 2 - 3), 1) end
+    local ly = y + math.min(h, 40) / 2 - 3
+    if p.label == "top" then ly = y + 3                            -- label placement (City Park): near the top,
+    elseif p.label == "below" then ly = y + h + 2; lg.setColor(C.propEdge) end   -- or under a thin bar, dark
+    if tw <= w + 30 then F.print(p.name, math.floor(x + w / 2 - tw / 2), math.floor(ly), 1) end
   end
 end
 

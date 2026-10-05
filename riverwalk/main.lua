@@ -1,4 +1,4 @@
--- Pepper: Level 3, River Walk (greybox). Pepper, the girl and the ball are real art; everything else is
+-- Pepper: Level 3, River Walk (greybox), and Level 1, City Park (greybox). Pepper, the girl and the ball are real art; everything else is
 -- wireframe boxes, one misty grey-blue per layer. 320 x 240, drawn 2x on the RG35XX's 640 x 480 screen.
 -- Game logic steps at a fixed 1/60 s, so jumps are the same on every machine.
 --
@@ -7,6 +7,9 @@
 --   B / Shift        walk          X / X key   pick up, drop, give the ball        Y / Z key   bark
 --   Start / Enter    pause         Select / G  debug view        Tab  tuning panel (keyboard)
 --   F fullscreen, M music, Esc quits from the pause menu
+--
+-- Which level: River Walk unless --level <name> is given (love riverwalk --level citypark), or a file
+-- default_level.txt next to main.lua names another one (the City Park build has one; see build_citypark.sh).
 function love.errorhandler(msg) io.stderr:write("ERROR: " .. tostring(msg) .. "\n" .. debug.traceback() .. "\n"); io.stderr:flush(); os.exit(1) end
 love.graphics.setDefaultFilter("nearest", "nearest")
 local W, H = 320, 240
@@ -16,7 +19,15 @@ local U = require("hud")
 local I = require("input")
 local St = require("stage")
 local Pp = require("pepper")
-local def = require("level.riverwalk")
+local levelName, def                                            -- chosen in love.load
+local function pickLevel(args)
+  for i, a in ipairs(args or {}) do if a == "--level" and args[i + 1] then return args[i + 1] end end
+  local ok, txt = pcall(love.filesystem.read, "default_level.txt")
+  local name = ok and txt and txt:match("[%w_]+")
+  if name and love.filesystem.getInfo("level/" .. name .. ".lua") then return name end
+  return "riverwalk"
+end
+local function bestFile() return levelName == "riverwalk" and "best.txt" or ("best_" .. levelName .. ".txt") end
 
 local canvas = love.graphics.newCanvas(W, H)
 local stage, state, t = nil, "intro", 0
@@ -43,14 +54,17 @@ local function leaveTitle()
   return true
 end
 function love.load(args)
+  levelName = pickLevel(args)
+  def = require("level." .. levelName)
+  if def.title then love.window.setTitle(def.title) end
   S.load(); S.music(musicOn)
-  local ok, s = pcall(love.filesystem.read, "best.txt"); best = ok and tonumber(s or "") or 0
+  local ok, s = pcall(love.filesystem.read, bestFile()); best = ok and tonumber(s or "") or 0
   newRun()
   Title.load()
   state = "title"
   for _, a in ipairs(args or {}) do
     if a == "--test" or a == "--auto" or a == "--physics" then state = "intro" end      -- the checks skip the title
-    if a == "--test" or a == "--auto" or a == "--physics" then require("tests")(a, { stage = function() return stage end, setState = function(s) state = s end, getState = function() return state end, newRun = newRun }) end
+    if a == "--test" or a == "--auto" or a == "--physics" then require(levelName == "riverwalk" and "tests" or ("tests_" .. levelName))(a, { stage = function() return stage end, setState = function(s) state = s end, getState = function() return state end, newRun = newRun }) end
     if a == "--qa" then require("qa")({ stage = function() return stage end }) end
   end
 end
@@ -122,7 +136,7 @@ function love.update(dt)
         local st = stage:stats(); local left = math.max(0, math.floor(st.time))
         tally = { t = 0, shown = 0, lines = { { "BONES", st.bones .. "/" .. st.total }, { "FETCH", "2000" }, { "TIME BONUS", tostring(left * 10) } } }
         tally.score = st.score + left * 10
-        if tally.score > best then best = tally.score; tally.newBest = true; pcall(love.filesystem.write, "best.txt", tostring(best)) end
+        if tally.score > best then best = tally.score; tally.newBest = true; pcall(love.filesystem.write, bestFile(), tostring(best)) end
         break
       end
     end
