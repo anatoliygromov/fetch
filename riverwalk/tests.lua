@@ -1,9 +1,11 @@
 -- love . --physics   checks jump heights, crawl gaps, bench, bin, grit box, ferry, stairs, pontoon; prints PASS / FAIL
 -- love . --auto      plays the whole level on autopilot and saves every 3rd frame to rec/ (for the GIF)
+-- love . --auto --trace   the same run, printing Pepper's position, speed, clip and frame every step instead
 -- love . --test      a screenshot tour of every screen, the debug view and the tuning panel
 local I = require("input")
 return function(mode, api)
   I.testing = true
+  for _, a in ipairs(arg or {}) do if a == "--trace" then TRACE = true end end
   local function hold(...) I.force = {}; for _, k in ipairs({ ... }) do I.force[k] = true end end
   local function release() I.force = {} end
   local frame, n = 0, 0
@@ -179,11 +181,14 @@ return function(mode, api)
   love.update = function(dt)
     dt = 1 / 60; T = T + dt; since = since + dt
     old(dt)
+    local s = api.stage(); local p = s and s.pepper
     if mode == "--auto" then
       frame = frame + 1
-      if frame % 3 == 0 then n = n + 1; love.graphics.captureScreenshot(("rec/%04d.png"):format(n)) end
+      if TRACE then                                    -- --auto --trace: Pepper's state every step, no screenshots
+        if p then print(("T %d %.3f %.3f %.3f %.3f %s %d %d %s %s %s"):format(frame, p.x, p.y, p.vx, p.vy, p.anim, p.frame, p.face,
+          p.mode, tostring(p.onGround), tostring(p.crouch))) end
+      elseif frame % 3 == 0 then n = n + 1; love.graphics.captureScreenshot(("rec/%04d.png"):format(n)) end
     end
-    local s = api.stage(); local p = s and s.pepper
     local st = steps[i]
     if not st then return end
     if st.wait then if since >= st.wait then i, since = i + 1, 0 end
