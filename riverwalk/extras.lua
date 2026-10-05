@@ -48,11 +48,12 @@ function Ex.update(fx, s, dt)
     if q.t >= q.life then table.remove(fx.parts, i) end
   end
   if not was then fx.popped = {}; for _, bn in ipairs(s.bones) do fx.popped[bn] = bn.taken end; return end
-  -- bone pop (tracked even while the extras are off): a bone taken this step twinkles where it was, and its points float up
+  -- bone pop (tracked even while the extras are off): a bone taken this step twinkles where it was, and its points float up.
+  -- Drawn behind Pepper, so it never covers her: the points show as they rise above her head
   for _, bn in ipairs(s.bones) do
     if bn.taken and not fx.popped[bn] then
       fx.popped[bn] = true
-      if Ex.enabled and Ex.on.bone_pop then add(fx, { kind = "pop", x = bn.x, y = bn.y - 9, super = bn.super, life = 0.75, front = true }) end
+      if Ex.enabled and Ex.on.bone_pop then add(fx, { kind = "pop", x = bn.x, y = bn.y - 9, super = bn.super, life = 0.75, front = false }) end
     end
   end
 
