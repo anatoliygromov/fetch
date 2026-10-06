@@ -2,6 +2,21 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `multilevel`: three levels, one story
+Built on `night/all` (the night's River Walk art, Pepper's extras and the City Park greybox). Not merged yet.
+- **The story over three levels:** 1 City Park, the girl throws the ball too far and Pepper chases it out of the
+  park. 2 Downtown, a cat sits on it on the plaza; Pepper barks it away and carries the ball to the river. 3 River
+  Walk, the ball has bounced onto a ferry; Pepper brings it back to the girl.
+- **levels.lua:** the play order.
+- **Engine (stage.lua):**
+  - Score and lives carry over from level to level; hearts refill.
+  - A level can have no girl (Downtown).
+  - `L.exit`: reaching it clears the level, with `needBall` only while carrying the ball (+1000 BALL).
+  - `L.ballRun`: the runaway ball waits at each point, hops on when Pepper comes within 90 px and finally leaves the level.
+- **City Park is now the chase:** the girl stands by the gate, the ball bounces ahead through the park, and the far
+  gate ends the level. The cat moved to Downtown. 36 physics checks (new: the runaway ball, the gate).
+- Pepper is unchanged: `tools/check_pepper.sh` still finds all 2,752 steps identical.
+
 ## Branch `multilevel`: game flow
 - **Menus:** after the title screen's PRESS ANY KEY a small menu opens over the title picture (dimmed, the logo stays bright): START GAME and LEVEL SELECT. Up and down move, A, Space or Enter chooses, B or Esc goes back.
 - **START GAME** plays the levels of `levels.lua` in order: 1 City Park, 2 Downtown, 3 River Walk.
