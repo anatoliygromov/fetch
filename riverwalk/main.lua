@@ -137,7 +137,7 @@ function love.update(dt)
       if stage.events.clear then
         state, t = "clear", 0; S.music(false); S.play("clear")
         local st = stage:stats(); local left = math.max(0, math.floor(st.time))
-        tally = { t = 0, shown = 0, lines = { { "BONES", st.bones .. "/" .. st.total }, { "FETCH", "2000" }, { "TIME BONUS", tostring(left * 10) } } }
+        tally = { t = 0, shown = 0, lines = { { "BONES", st.bones .. "/" .. st.total }, { st.bonus and st.bonus[1] or "FETCH", tostring(st.bonus and st.bonus[2] or 2000) }, { "TIME BONUS", tostring(left * 10) } } }
         tally.score = st.score + left * 10
         if tally.score > best then best = tally.score; tally.newBest = true; pcall(love.filesystem.write, bestFile(), tostring(best)) end
         break

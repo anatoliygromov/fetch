@@ -34,7 +34,7 @@ function St.new(def, carry)
     local mv = { name = m.name, x0 = m.from, x1 = m.from + (m.x1 - m.x0), y0 = m.y0, y1 = m.y1, from = m.from, to = m.to, speed = m.speed, dir = 1, dx = 0, kind = "oneway" }
     s.world:addMover(mv); s.movers[#s.movers + 1] = mv
   end
-  s.layers = def.scenery == "greybox" and Sc.buildGrey(s.world.width) or Sc.build(s.world.width)
+  s.layers = def.scenery == "greybox" and Sc.buildGrey(s.world.width, def.greyStyle) or Sc.build(s.world.width)
   s.pepper = Pp.new(def.start.x, def.start.y)
   s.check = { x = def.start.x, y = def.start.y }
   s.bones = {}
@@ -229,10 +229,11 @@ function St:update(dt, presses)
     local c = self.bikes[i]
     local bk = c.zone or zones[1]
     c.x = c.x - bk.speed * dt; c.warn = c.warn - dt
-    c.y = w:groundAt(c.x) or c.y                                   -- it rides on the pavement, up and down the stairs
+    if not bk.rail then c.y = w:groundAt(c.x) or c.y end            -- it rides on the pavement, up and down the stairs
+    local hw, h = (bk.w or 48) / 2, bk.h or 26                     -- (rail: a tram stays on its line)
     if c.x < bk.endX or c.x < self.cam - 80 then table.remove(self.bikes, i)
     else
-      local bx0, bx1, by0 = c.x - 24, c.x + 24, c.y - 26
+      local bx0, bx1, by0 = c.x - hw, c.x + hw, c.y - h
       if x1 > bx0 and x0 < bx1 and y1 > by0 and y0 < c.y and p:hurt(c.x, w) then self:loseHeart() end
     end
   end
@@ -410,12 +411,16 @@ function St:draw(debug)
     if b.state == "given" then bx, by = g.x + face * 8, g.y - 30 - math.abs(math.sin(g.t * 6)) * 14 end
     lg.draw(ballImg, math.floor(bx - cam - 3 + 0.5), math.floor(by - 6 + 0.5))
   end
-  -- bikes: a cyclist (art/scene/cyclist1.png, 49 x 50) over the 48 x 26 hit box, wheels on the pavement
+  -- bikes: a cyclist (art/scene/cyclist1.png, 49 x 50) over the 48 x 26 hit box, wheels on the pavement; greybox:
+  -- a box the size of the zone's hit box (w, h), labelled with its kind (CART, TRAM) or BIKE
   if self.cat and self.cat.state ~= "gone" then Sc.catGrey(self.cat, cam, self.t) end
   local cyc = Rd.art().cyclists[1]
   for _, c in ipairs(self.bikes) do
     local x = c.x - cam
-    if grey then Sc.outlined(C.prop, C.propEdge, math.floor(x - 24 + 0.5), c.y - 26, 48, 26); Sc.label(c.zone and c.zone.kind == "cart" and "CART" or "BIKE", x, c.y - 17)
+    if grey then
+      local z = c.zone or {}
+      local bw, bh = z.w or 48, z.h or 26
+      Sc.outlined(C.prop, C.propEdge, math.floor(x - bw / 2 + 0.5), c.y - bh, bw, bh); Sc.label(z.kind and z.kind:upper() or "BIKE", x, c.y - 17)
     else lg.setColor(1, 1, 1, 1); lg.draw(cyc, math.floor(x - 24 + 0.5), math.floor(c.y - cyc:getHeight() + 0.5)) end
     if c.warn > 0 and x > 320 then lg.setColor(C.gold); lg.rectangle("fill", 312, 150, 6, 18); lg.rectangle("fill", 312, 170, 6, 6) end
   end
