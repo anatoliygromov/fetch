@@ -14,6 +14,7 @@
 -- story card -> the next level ... -> the ending -> title. GAME OVER -> title.
 -- love riverwalk --level <name> starts a run at that level (no menus). The test flags (--physics, --auto,
 -- --test, --qa) play one level alone, River Walk unless --level names another; --flowtest checks the flow.
+-- --playtest <persona> and --log: the playtest lab (playtest.lua, docs/playtest/method.md).
 function love.errorhandler(msg) io.stderr:write("ERROR: " .. tostring(msg) .. "\n" .. debug.traceback() .. "\n"); io.stderr:flush(); os.exit(1) end
 love.graphics.setDefaultFilter("nearest", "nearest")
 local W, H = 320, 240
@@ -62,7 +63,7 @@ end
 function love.load(args)
   local lv, test = argLevel(args), nil
   for _, a in ipairs(args or {}) do
-    if a == "--test" or a == "--auto" or a == "--physics" or a == "--qa" or a == "--flowtest" then test = a end
+    if a == "--test" or a == "--auto" or a == "--physics" or a == "--qa" or a == "--flowtest" or a == "--playtest" then test = a end
   end
   S.load(); S.music(musicOn)
   Title.load()
@@ -84,6 +85,7 @@ function love.load(args)
     if a == "--noextras" then Ex.enabled = false end                                    -- start with the extras off
     if a == "--qa" then require("qa")({ stage = function() return stage end }) end
     if a == "--flowtest" then require("tests_flow")(api) end
+    if a == "--playtest" or a == "--log" then require("playtest")(a, api, args) end            -- the playtest lab
   end
 end
 function love.joystickadded(j) if j:isGamepad() then I.pad = j end end
