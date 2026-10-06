@@ -6,6 +6,7 @@ local Rd = require("road")
 local S = require("sfx")
 local I = require("input")
 local Ex = require("extras")                  -- visual extras around Pepper (drawing only, E toggles them)
+local Sp = require("setpieces")               -- hard mode, rope ferries, traffic warnings, secrets, code-drawn pieces
 local St = {}
 St.__index = St
 local lg = love.graphics
@@ -54,6 +55,7 @@ function St.new(def, carry)
   s.kicked = {}                                                   -- leaf piles Pepper has run through
   s.cam = 0
   s.fx = Ex.new()
+  Sp.init(s, def, carry)                                          -- hard mode (carry.hard), rope ferries, secrets
   return s
 end
 
@@ -84,7 +86,7 @@ function St:updateMagpie(dt)
     m.dir = (p.x < m.x) and -1 or 1                                -- it keeps an eye on Pepper
     local dist = math.abs(p.x - m.x)
     local running = math.abs(p.vx) > Pp.P.walk + 5 and p.mode == "normal"
-    if m.i < #d.perches and dist < (running and d.flee or d.fleeWalk) then
+    if m.i < #d.perches and dist < (running and (d.perches[m.i].flee or d.flee) or d.fleeWalk) then
       local n = d.perches[m.i + 1]
       m.i = m.i + 1
       m.fly = { x0 = m.x, y0 = m.y, x1 = n.x, y1 = n.y, dur = math.max(0.6, math.abs(n.x - m.x) / 200), peak = 30, after = "perch" }
@@ -128,7 +130,7 @@ end
 function St:loseHeart()
   self.hearts = self.hearts - 1
   if self.hearts <= 0 then
-    self.lives = self.lives - 1; self.hearts = 3
+    self.lives = self.lives - 1; self.hearts = self.maxHearts
     if self.lives <= 0 then self.events.over = true; return end
     self:say("OUCH! BACK TO THE LAMP POST", 2)
     self.deadT = 0.6
@@ -160,15 +162,17 @@ function St:update(dt, presses)
   if self.clearT then self.clearT = self.clearT - dt; if self.clearT <= 0 then self.events.clear = true; self.clearT = nil end end
   if not self.clearT and not self.events.clear then self.time = self.time - dt end
   if self.time <= 0 then
-    self.time = self.def.time; self.lives = self.lives - 1; self.hearts = 3
+    self.time = self.def.time; self.lives = self.lives - 1; self.hearts = self.maxHearts
     if self.lives <= 0 then self.events.over = true else self:say("TIME UP!", 2); self:respawn() end
   end
 
   -- moving platforms
   for _, m in ipairs(self.movers) do
+    if m.call then Sp.updateFerry(self, m, dt) else                -- a rope ferry: it comes when Pepper is near
     local nx = m.x0 + m.dir * m.speed * dt
     if nx > m.to then nx = m.to; m.dir = -1 elseif nx < m.from then nx = m.from; m.dir = 1 end
     m.dx = nx - m.x0; m.x1 = m.x1 + m.dx; m.x0 = nx
+    end
   end
 
   -- Pepper
@@ -224,6 +228,7 @@ function St:update(dt, presses)
       self.score = self.score + (bn.super and 1000 or 100); S.play(bn.super and "superbone" or "bone")
     end
   end
+  Sp.updateSecrets(self)
 
   -- lamp posts: passing a checkpoint lamp saves Pepper's place
   for _, l in ipairs(self.lamps) do
@@ -237,19 +242,20 @@ function St:update(dt, presses)
   local zones = self.def.bikes
   if zones.zoneX0 then zones = { zones } end
   for _, bk in ipairs(zones) do
-    if p.x > bk.zoneX0 and p.x < bk.zoneX1 and p.y <= 184 then
+    local inside = p.x > bk.zoneX0 and p.x < bk.zoneX1 and p.y <= 184
+    Sp.enterZone(self, bk, inside)                                 -- start = "enter": the first one comes now
+    if inside then
       self.bikeT = self.bikeT - dt
       if self.bikeT <= 0 and #self.bikes == 0 then
         self.bikeT = bk.every
-        self.bikes[1] = { x = self.cam + 320 + bk.speed * 1.1, y = 184, warn = 1.1, zone = bk }
-        S.play(bk.kind == "cart" and "honk" or "bell")
+        self.bikes[1] = Sp.spawn(self, bk)                          -- 1 s off screen, with a bell (and a sign)
       end
     end
   end
   for i = #self.bikes, 1, -1 do
     local c = self.bikes[i]
     local bk = c.zone or zones[1]
-    c.x = c.x - bk.speed * dt; c.warn = c.warn - dt
+    c.x = c.x - (c.speed or bk.speed) * dt; c.warn = c.warn - dt
     if not bk.rail then c.y = w:groundAt(c.x) or c.y end            -- it rides on the pavement, up and down the stairs
     local hw, h = (bk.w or 48) / 2, bk.h or 26                     -- (rail: a tram stays on its line)
     if c.x < bk.endX or c.x < self.cam - 80 then table.remove(self.bikes, i)
@@ -355,6 +361,7 @@ function St:draw(debug)
   if grey then Sc.drawFarGrey(self.layers, cam, self.t) else Sc.drawFar(self.layers, cam, self.t) end
   -- 6 quay back: railing and things behind Pepper
   for _, pr in ipairs(self.def.props) do if pr.layer == "back" then Sc.drawProp(pr, cam, C.back) end end
+  Sp.drawBack(self, cam)                                           -- code-drawn decoration (kiosks)
   -- 7 play layer: terrain (pavement art, painted once; see Sc.paintGround)
   local w = self.world
   if not self.ground then self.ground = grey and Sc.paintGroundGrey(w) or Sc.paintGround(w, self.def.props) end
@@ -387,6 +394,7 @@ function St:draw(debug)
   end
   end
   for _, pr in ipairs(self.def.props) do if pr.layer == "play" and not pr.over then Sc.drawProp(pr, cam, C.prop) end end
+  Sp.drawRopes(self, cam)                                          -- the ropes the ferries run on
   for _, m in ipairs(self.movers) do
     if grey then                                                   -- greybox level: labelled boxes (the duck boat)
       Sc.outlined(C.prop, C.propEdge, m.x0 - cam, m.y0, m.x1 - m.x0, m.y1 - m.y0); Sc.label(m.name or "PONTOON", (m.x0 + m.x1) / 2 - cam, m.y0 + 8)
@@ -407,6 +415,7 @@ function St:draw(debug)
       else Sc.drawProp(pr, cam, C.leaves) end
     end
   end
+  Sp.drawPlay(self, cam)                                           -- code-drawn obstacles (kennel, hollow log, awnings)
   -- shadows of the girl, the ball and Pepper: on the floor right under them (smaller the higher they are)
   local g = self.girl
   if not g.hidden then Sc.shadow(g.x - cam, g.y, 22) end
@@ -446,8 +455,8 @@ function St:draw(debug)
       local bw, bh = z.w or 48, z.h or 26
       Sc.outlined(C.prop, C.propEdge, math.floor(x - bw / 2 + 0.5), c.y - bh, bw, bh); Sc.label(z.kind and z.kind:upper() or "BIKE", x, c.y - 17)
     else lg.setColor(1, 1, 1, 1); lg.draw(cyc, math.floor(x - 24 + 0.5), math.floor(c.y - cyc:getHeight() + 0.5)) end
-    if c.warn > 0 and x > 320 then lg.setColor(C.gold); lg.rectangle("fill", 312, 150, 6, 18); lg.rectangle("fill", 312, 170, 6, 6) end
   end
+  Sp.drawWarnings(self, cam)                                       -- a sign at the edge a bike or tram comes from
   -- Pepper
   Ex.drawBehind(self.fx, cam)                                      -- dust behind her
   lg.setColor(1, 1, 1, 1)
@@ -490,5 +499,6 @@ function St:drawDebug(cam)
 end
 
 function St:stats() return { bones = self.taken, total = self.total, time = self.time, score = self.score, hearts = self.hearts,
-  lives = self.lives, levelScore = self.score - self.startScore, bonus = self.bonus } end
+  lives = self.lives, levelScore = self.score - self.startScore, bonus = self.bonus,
+  secrets = self.secretsFound, secretsTotal = #self.secrets } end
 return St
