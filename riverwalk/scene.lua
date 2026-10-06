@@ -673,4 +673,411 @@ end
 function Sc.label(text, x, y)
   lg.setColor(C.label); local tw = F.width(text, 1); F.print(text, math.floor(x - tw / 2), math.floor(y), 1)
 end
+-- ===================================================================================================================
+-- Art for City Park and Downtown (def.art = "park" / "town"; the images come from tools/make_town_art.py). The
+-- levels keep scenery = "greybox" for the game rules (no road, no traffic); only the drawing changes. Every piece is
+-- placed from its prop's collision box, so a box and its art stay together.
+--   obstacles (things Pepper stands on, bumps into, crawls under): crisp, mid-tone, their own 1 px dark outline,
+--             standing on her line (y 184)
+--   decoration: faded DECOR_FADE towards the haze, no outline, its base on the back edge (y 174)
+--   foreground: dark, only below her lowest line (tops at y 221+), never over her
+-- ===================================================================================================================
+local TA = {}
+local function fadeImg(n)
+  local d = love.image.newImageData("art/scene/" .. n .. ".png")
+  local k = Sc.DECOR_FADE
+  d:mapPixel(function(x, y, r, g, b, a) return r + (HAZE[1] - r) * k, g + (HAZE[2] - g) * k, b + (HAZE[3] - b) * k, a end)
+  return newImg(d)
+end
+local function img(n) return newImg("art/scene/" .. n .. ".png") end
+local function colQuads(im)
+  local w, h = im:getDimensions()
+  local q = {}
+  for i = 0, w - 1 do q[i] = lg.newQuad(i, 0, 1, h, w, h) end
+  return q
+end
+function Sc.townArt(style)
+  if TA[style] then return TA[style] end
+  local T = {}
+  if style == "park" then
+    for _, n in ipairs({ "ground", "treeline", "bush", "log", "leaves", "leaves_flat", "table", "hedge", "stone", "boat", "cart", "slide", "frame" }) do T[n] = img("park_" .. n) end
+    for _, n in ipairs({ "tree1", "tree2", "gate", "swings", "oak" }) do T[n] = fadeImg("park_" .. n) end
+  else
+    for _, n in ipairs({ "ground", "roofs", "crate", "parasol", "table", "stall", "awning80", "awning64", "statue", "pedestal", "tram", "shelter", "kiosk", "shopsign", "rim", "bowl", "bollard" }) do T[n] = img("town_" .. n) end
+    for _, n in ipairs({ "facades", "door", "sign", "spout" }) do T[n] = fadeImg("town_" .. n) end
+  end
+  T.groundQ = colQuads(T.ground)
+  local gw, gd = T.ground:getWidth(), { T.ground:getDimensions() }
+  T.bankTop = lg.newQuad(0, 0, gw, style == "park" and 9 or 10, gd[1], gd[2])   -- the lawn / pavement's back edge
+  T.bankEarth = lg.newQuad(0, 44, gw, 20, gd[1], gd[2])                        -- earth rows (the pond's far bank)
+  TA[style] = T
+  return T
+end
+
+-- the sky and the drifting clouds (as River Walk and the greybox)
+local function skyAndClouds(L, camx, t)
+  for y = 0, 239 do
+    local k = math.min(1, y / 170)
+    lg.setColor(C.sky1[1] + (C.sky2[1] - C.sky1[1]) * k, C.sky1[2] + (C.sky2[2] - C.sky1[2]) * k, C.sky1[3] + (C.sky2[3] - C.sky1[3]) * k)
+    lg.rectangle("fill", 0, y, 320, 1)
+  end
+  local o = camx * 0.05 - t * 3
+  lg.setColor(1, 1, 1, 1)
+  for _, c in ipairs(L.clouds) do
+    local x = math.floor((c.x - o) % L.cloudSpan - 120)
+    if x < 330 and x + c.w > -10 then lg.draw(c.img, x, c.y) end
+  end
+end
+
+-- a strip that repeats sideways, scrolled at factor f, bottom at y
+local function strip(im, camx, f, y)
+  local w = im:getWidth()
+  local ox = math.floor(camx * f) % w
+  for x = -ox, 320, w do lg.draw(im, x, y - im:getHeight()) end
+end
+
+-- the water's surface areas: runs of columns with their top (the world's water boxes are per map cell)
+local function pools(w)
+  if w.pools then return w.pools end
+  local top = {}
+  for _, r in ipairs(w.water) do for x = r.x0, r.x1 - 1 do top[x] = math.min(top[x] or 999, r.y0) end end
+  local P, x = {}, 0
+  while x < w.width do
+    if top[x] then
+      local x1 = x
+      while top[x1 + 1] == top[x] do x1 = x1 + 1 end
+      P[#P + 1] = { x0 = x, x1 = x1 + 1, y0 = top[x] }
+      x = x1 + 1
+    else x = x + 1 end
+  end
+  w.pools = P
+  return P
+end
+
+function Sc.buildArt(levelW, style)
+  local L = Sc.build(levelW)
+  L.style = style
+  if style == "park" then                                         -- near trees (parallax 0.5), deterministic
+    local r = rng(47); L.trees = {}
+    local x = -30
+    while x < 320 + (levelW - 320) * 0.5 + 64 do
+      L.trees[#L.trees + 1] = { x = x, i = 1 + #L.trees % 2 }
+      x = x + 90 + math.floor(r(10, 90))
+    end
+  end
+  return L
+end
+
+-- layers 1 to 5 of an art level, and the water of its pond or fountain basin with the far bank behind it
+function Sc.drawFarArt(L, camx, t, w)
+  local T, A = Sc.townArt(L.style), Sc.art()
+  skyAndClouds(L, camx, t)
+  lg.setColor(1, 1, 1, 1)                                         -- 3 far city: River Walk's skyline, moved at
+  local sx = -math.floor(math.min(128, camx * 128 / math.max(1, w.width - 320)))   -- most 128 px (one City Hall)
+  lg.draw(A.skyline, sx, 150 - A.skyline:getHeight()); lg.draw(A.skyline, sx + A.skyline:getWidth(), 150 - A.skyline:getHeight())
+  if L.style == "park" then
+    strip(T.treeline, camx, 0.25, 177)                            -- 4 the far tree line
+    local ox = math.floor(camx * 0.5)                             -- 5 near trees (faded)
+    for _, tr in ipairs(L.trees) do
+      local im = T["tree" .. tr.i]
+      local x = tr.x - ox
+      if x < 330 and x + im:getWidth() > -10 then lg.draw(im, x, 180 - im:getHeight()) end
+    end
+  else
+    strip(T.roofs, camx, 0.25, 160)                               -- 4 far roofs and spires
+    strip(T.facades, camx, 0.5, 178)                              -- 5 old town facades (faded)
+  end
+  -- the pond / basin: its far bank, then the water (rows of the river art, each moving on its own)
+  local gw = T.ground:getWidth()
+  for _, p in ipairs(pools(w)) do
+    local x0, x1 = math.floor(p.x0 - camx), math.floor(p.x1 - camx)
+    if x1 > -2 and x0 < 322 then
+      lg.setScissor(math.max(0, x0), 0, math.max(0, math.min(320, x1) - math.max(0, x0)), 240)
+      local ox = math.floor(camx) % gw
+      if L.style == "park" then                                   -- the lawn goes on behind, then an earth bank
+        for x = -ox - gw, 320, gw do
+          lg.draw(T.ground, T.bankTop, x, 172); lg.draw(T.ground, T.bankEarth, x, 181); lg.draw(T.ground, T.bankEarth, x, 201)
+        end
+      else                                                        -- the pavement's back, then the basin's granite
+        for x = -ox - gw, 320, gw do lg.draw(T.ground, T.bankTop, x, 172) end
+        lg.setColor(0.62, 0.59, 0.56); lg.rectangle("fill", x0, 182, x1 - x0, p.y0 - 182)
+        lg.setColor(0.76, 0.73, 0.69); lg.rectangle("fill", x0, 182, x1 - x0, 2)
+        lg.setColor(0.45, 0.42, 0.40)
+        for x = x0 - (x0 % 18), x1, 18 do lg.rectangle("fill", x, 184, 1, p.y0 - 184) end
+      end
+      lg.setColor(0.18, 0.2, 0.22); lg.rectangle("fill", x0, p.y0 - 1, x1 - x0, 1)   -- the water's edge
+      local tint = L.style == "park" and { 0.80, 0.93, 0.86 } or { 0.92, 1, 1 }
+      local ww, wh = A.water:getDimensions()
+      for y = p.y0, 239 do
+        local row = math.min(wh - 1, 20 + (y - p.y0))
+        local depth = (y - p.y0) / 32
+        local o = math.floor(camx + math.sin(t * 1.3 + y * 0.55) * (0.6 + depth) + t * (1 + 2 * depth) + 0.5) % ww
+        lg.setColor(tint)
+        lg.draw(A.water, A.waterQ[row], -o, y); lg.draw(A.water, A.waterQ[row], ww - o, y)
+      end
+      lg.setScissor()
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+
+-- the ground of an art level, painted once: the path / pavement strip on every walkable top (its back edge 12 px
+-- above Pepper's line), dark edges on the cut faces (the pond's banks); Downtown's river stairs as stone steps.
+function Sc.paintGroundArt(w, style)
+  local T = Sc.townArt(style)
+  local gw, gh = T.ground:getDimensions()
+  local cv = lg.newCanvas(w.width, 240)
+  cv:setFilter("nearest", "nearest")
+  lg.push("all"); lg.setCanvas(cv); lg.clear(0, 0, 0, 0); lg.origin()
+  local cover = {}
+  for x = 0, w.width - 1 do
+    local runs = {}
+    for _, r in ipairs(w.rects) do if r.terrain and x >= r.x0 and x < r.x1 then runs[#runs + 1] = { r.y0, r.y1 } end end
+    local sl = w:slopeAt(x)
+    if sl then local i = x - sl.x0; runs[#runs + 1] = { sl.dir < 0 and (sl.y0 + i) or (sl.y1 - i - 1), sl.y1 } end
+    table.sort(runs, function(a, b) return a[1] < b[1] end)
+    local merged = {}
+    for _, r in ipairs(runs) do
+      local m = merged[#merged]
+      if m and r[1] <= m[2] then m[2] = math.max(m[2], r[2]) else merged[#merged + 1] = { r[1], r[2] } end
+    end
+    cover[x] = merged
+    for _, m in ipairs(merged) do
+      local top = m[1]
+      if top < 184 then top = 184 end                             -- the slide tower: the path goes on behind it
+      local stair = sl and style == "town"
+      if stair then top = 184 + math.floor((top - 184) / 4) * 4 end   -- the river stairs: 4 px steps
+      lg.setColor(1, 1, 1, 1)
+      lg.setScissor(x, 0, 1, m[2])
+      lg.draw(T.ground, T.groundQ[x % gw], x, top - 12)
+      if top - 12 + gh < 240 then lg.draw(T.ground, T.groundQ[x % gw], x, top - 12 + gh) end
+      lg.setScissor()
+      if stair then                                               -- each step: a light granite nosing
+        lg.setColor(0.78, 0.75, 0.70); lg.rectangle("fill", x, top, 1, 1)
+        lg.setColor(0.36, 0.34, 0.33); lg.rectangle("fill", x, top + 3, 1, 1)
+      end
+    end
+  end
+  local function solid(x, y)
+    for _, m in ipairs(cover[x] or {}) do if y >= m[1] and y < m[2] then return true end end
+    return false
+  end
+  lg.setColor(0.16, 0.13, 0.11)                                   -- cut faces (the banks): a dark edge
+  for x = 0, w.width - 1 do
+    if not w:slopeAt(x) then
+      for _, m in ipairs(cover[x]) do
+        for y = math.max(m[1], 184), m[2] - 1 do
+          if (x > 0 and not solid(x - 1, y) and not w:slopeAt(x - 1)) or (x < w.width - 1 and not solid(x + 1, y) and not w:slopeAt(x + 1)) then
+            lg.rectangle("fill", x, y, 1, 1)
+          end
+        end
+      end
+    end
+  end
+  lg.pop()
+  return cv
+end
+
+-- an oak branch over its one-way box: 6 px thick by the trunk, 4 at the tip, its top row the ledge; between the
+-- box and the trunk it dips down (it is no ledge there). Autumn leaves hang under the tip.
+local BARK = { hex("7a5536"), hex("a3774c"), hex("523823") }
+local INK = { 29 / 255, 24 / 255, 22 / 255 }
+local LEAF = { hex("d9822b"), hex("b8551f"), hex("e2a53a") }
+local function drawBranch(p, trunk, camx)
+  local side = ((p.x0 + p.x1) / 2 < (trunk.x0 + trunk.x1) / 2) and -1 or 1
+  local cols = {}                                                 -- x -> top, thickness
+  local len = p.x1 - p.x0
+  for x = p.x0, p.x1 - 1 do
+    local d = side > 0 and (x - p.x0) or (p.x1 - 1 - x)           -- distance from the trunk end
+    cols[#cols + 1] = { x, p.y0, 6 - math.floor(2 * d / len + 0.5) }
+  end
+  local a, b = side > 0 and trunk.x1 - 3 or p.x1, side > 0 and p.x0 - 1 or trunk.x0 + 2   -- the dip to the trunk
+  local n = b - a + 1
+  for x = a, b do
+    local d = side > 0 and (b - x) or (x - a)
+    local up = n > 6 and math.floor(6 * d / n + 0.5) or 0
+    cols[#cols + 1] = { x, p.y0 + up, 6 }
+  end
+  local ox = math.floor(camx)
+  lg.setColor(INK)
+  for _, c in ipairs(cols) do lg.rectangle("fill", c[1] - 1 - ox, c[2] - 1, 3, c[3] + 2) end
+  for _, c in ipairs(cols) do
+    local x = c[1] - ox
+    lg.setColor(BARK[1]); lg.rectangle("fill", x, c[2], 1, c[3])
+    lg.setColor(BARK[2]); lg.rectangle("fill", x, c[2], 1, 1)
+    lg.setColor(BARK[3]); lg.rectangle("fill", x, c[2] + c[3] - 1, 1, 1)
+  end
+  for k = 1, 3 do                                                 -- bark knots
+    local x = math.floor(p.x0 + len * k / 4) - ox
+    lg.setColor(BARK[3]); lg.rectangle("fill", x, p.y0 + 2, 2, 1)
+  end
+  -- a twig past the tip, rising out and away (no ledge), with a few autumn leaves on it
+  local tx = (side > 0 and p.x1 or p.x0 - 1) - ox
+  local pts = { { 0, 1 }, { 1, 0 }, { 2, -1 }, { 3, -2 }, { 4, -2 } }
+  lg.setColor(INK)
+  for _, q in ipairs(pts) do lg.rectangle("fill", tx + side * q[1] - 1, p.y0 + q[2] - 1, 3, 3) end
+  for _, q in ipairs({ { 2, -4 }, { 5, -4 }, { 4, -6 }, { 1, -1 } }) do lg.rectangle("fill", tx + side * q[1] - 1, p.y0 + q[2] - 1, 3, 3) end
+  lg.setColor(BARK[1])
+  for _, q in ipairs(pts) do lg.rectangle("fill", tx + side * q[1], p.y0 + q[2], 1, 1) end
+  for i, q in ipairs({ { 2, -4 }, { 5, -4 }, { 4, -6 }, { 1, -1 } }) do
+    lg.setColor(LEAF[1 + i % 3]); lg.rectangle("fill", tx + side * q[1] - (side < 0 and 1 or 0), p.y0 + q[2], 2, 1)
+    lg.rectangle("fill", tx + side * q[1], p.y0 + q[2] - 1, 1, 1)
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+
+local function named(def, name) for _, q in ipairs(def.props) do if q.name == name then return q end end end
+-- the named prop nearest to an unnamed one (it belongs to that set piece)
+local function owner(def, p)
+  local best, bd = nil, 1e9
+  local cx = (p.x0 + p.x1) / 2
+  for _, q in ipairs(def.props) do
+    if q.name and q.name ~= "" and q.layer ~= "front" then
+      local d = math.max(0, q.x0 - cx, cx - q.x1)
+      if d < bd then best, bd = q, d end
+    end
+  end
+  return best
+end
+local function shadowUnder(p, camx, depth) Sc.shadow((p.x0 + p.x1) / 2 - camx, p.y1 - 1, p.x1 - p.x0 + 4, depth) end
+local function at(im, x, y) lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(x), math.floor(y)) end
+
+-- one prop of an art level. kicked: a leaf pile Pepper has run through.
+function Sc.drawPropArt(p, camx, def, kicked)
+  local style = def.art
+  local T, A = Sc.townArt(style), Sc.art()
+  local x, w = p.x0 - camx, p.x1 - p.x0
+  if x > 360 or x + w < -120 then return end
+  if p.layer == "front" then                                      -- the foreground frame: below Pepper's lines only
+    local im = style == "park" and T.bush or T.bollard
+    at(im, x + w / 2 - im:getWidth() / 2, 221)
+    return
+  end
+  local n = p.name
+  if p.hidden then return end
+  if not n or n == "" then
+    local o = owner(def, p)
+    if p.kind == "decor" or not o then return end                 -- posts, legs, crowns: drawn with their set piece
+    n = o.name
+    if style == "park" and (n == "OAK" or n == "BRANCH") then drawBranch(p, named(def, "OAK"), camx); return end
+    if n ~= "CRATES" then return end                              -- the hat (statue), the frame's top bar (FRAME)
+  end
+  if style == "park" then
+    if n == "GATE" then at(T.gate, x, 175 - T.gate:getHeight())
+    elseif n == "LEAVES" then
+      local im = kicked and T.leaves_flat or T.leaves
+      at(im, x + w / 2 - im:getWidth() / 2, p.y1 - im:getHeight())
+    elseif n == "LOG" then shadowUnder(p, camx); at(T.log, x, p.y0 - 4)
+    elseif n == "BENCH" then Sc.shadow(x + w / 2, 183, w + 10, 5); at(A.bench, x - 3, 184 - A.bench:getHeight())
+    elseif n == "HEDGE" then Sc.shadow(x + w / 2, 183, w + 4, 5); at(T.hedge, x, p.y0)
+    elseif n == "STONE" then
+      at(T.stone, x - 1, p.y0 - 1)
+      local water = 208                                           -- under the surface: the pond's colour over it
+      lg.setColor(0.33, 0.47, 0.52, 0.55); lg.rectangle("fill", math.floor(x) - 1, water, T.stone:getWidth(), 240 - water)
+    elseif n == "BIN" then shadowUnder(p, camx); at(A.bin, x - 1, 184 - A.bin:getHeight())
+    elseif n == "PICNIC TABLE" then shadowUnder(p, camx); at(T.table, x, p.y0)
+    elseif n == "OAK" then at(T.oak, x + w / 2 - 94, 175 - T.oak:getHeight())
+    elseif n == "BRANCH" then drawBranch(p, named(def, "OAK"), camx)
+    elseif n == "SLIDE" or n == "FRAME" then
+      if n == "FRAME" then at(T.frame, x - 1, 119) end            -- (the slide: Sc.drawTerrainArt, over the path)
+    elseif n == "SWINGS" then at(T.swings, x + w / 2 - T.swings:getWidth() / 2, 175 - T.swings:getHeight())
+    else Sc.drawProp(p, camx, C.prop) end
+  else
+    if n == "DOOR" then at(T.door, x, 175 - T.door:getHeight())
+    elseif n == "CRATES" then                                     -- a stack of apple crates, 16 px each
+      local k = math.max(1, math.floor((p.y1 - p.y0) / 16 + 0.5))
+      shadowUnder(p, camx)
+      for i = 1, k do at(T.crate, x, p.y1 - 16 * i - 12) end
+    elseif n == "TABLE" then Sc.shadow(x + w / 2, 183, w + 4, 5); at(T.table, x - 1, p.y0)
+    elseif n == "PARASOL" then
+      local tb                                                     -- its pole, down to the table under it
+      for _, q in ipairs(def.props) do if q.name == "TABLE" and q.x0 >= p.x0 and q.x1 <= p.x1 then tb = q end end
+      local px = math.floor(x + w / 2) - 1
+      lg.setColor(INK); lg.rectangle("fill", px - 1, p.y1, 4, (tb and tb.y0 or 184) - p.y1)
+      lg.setColor(0.55, 0.57, 0.6); lg.rectangle("fill", px, p.y1, 2, (tb and tb.y0 or 184) - p.y1)
+      at(T.parasol, x, p.y0 - 1)
+    elseif n == "SIGN" then at(T.shopsign, x - 1, p.y0 - 6)
+    elseif n == "STALL" then shadowUnder(p, camx); at(T.stall, x - 1, p.y0 - 15)
+    elseif n == "AWNING" then
+      for _, q in ipairs(def.props) do                            -- its posts (thin decoration boxes under it)
+        if q.kind == "decor" and q.x1 - q.x0 <= 6 and q.y0 == p.y0 and q.x0 >= p.x0 - 2 and q.x1 <= p.x1 + 2 then
+          local qx = math.floor(q.x0 - camx)
+          lg.setColor(INK); lg.rectangle("fill", qx - 1, q.y0, q.x1 - q.x0 + 2, q.y1 - q.y0)
+          lg.setColor(0.42, 0.29, 0.18); lg.rectangle("fill", qx, q.y0, q.x1 - q.x0, q.y1 - q.y0)
+          lg.setColor(0.58, 0.42, 0.27); lg.rectangle("fill", qx, q.y0, 1, q.y1 - q.y0)
+        end
+      end
+      local im = w >= 72 and T.awning80 or T.awning64
+      at(im, x + w / 2 - im:getWidth() / 2, p.y0 - 1)
+    elseif n == "STATUE" then at(T.statue, x - 1, p.y0 - 4)
+    elseif n == "PEDESTAL" then shadowUnder(p, camx); at(T.pedestal, x, p.y0)
+    elseif n == "ARM" then return
+    elseif n == "RIM" then at(T.rim, x - 1, p.y0 - 1)
+    elseif n == "FOUNTAIN" then
+      at(T.bowl, x - 1, p.y0 - 1)
+      lg.setColor(0.33, 0.47, 0.52, 0.45); lg.rectangle("fill", math.floor(x) + 8, 193, w - 16, 47)
+    elseif n == "KIOSK" then shadowUnder(p, camx); at(T.kiosk, x - 1, p.y0 - 1)
+    elseif n == "SHELTER" then shadowUnder({ x0 = p.x0, x1 = p.x1, y1 = 184 }, camx); at(T.shelter, x, p.y0)
+    elseif n == "RIVER" then at(T.sign, x + w / 2 - T.sign:getWidth() / 2, 175 - T.sign:getHeight())
+    else Sc.drawProp(p, camx, C.prop) end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+
+-- terrain set pieces drawn over the path (after the ground): City Park's slide, Downtown's fountain spout and jets
+function Sc.drawTerrainArt(def, camx, t)
+  local T = Sc.townArt(def.art)
+  if def.art == "park" then
+    local s = named(def, "SLIDE")
+    if s and s.x1 - camx > -40 and s.x0 - camx < 360 then at(T.slide, s.x0 - camx - 1, s.y0 - 1) end
+  else
+    local f = named(def, "FOUNTAIN")
+    if f and f.x1 - camx > -40 and f.x0 - camx < 360 then
+      local cx = math.floor((f.x0 + f.x1) / 2 - camx)
+      lg.setColor(1, 1, 1, 1)
+      local A = Sc.art()
+      for i = 0, 5 do                                             -- water jets: two arcs of drops from the spout
+        local k = ((t * 1.6 + i / 6) % 1)
+        for _, dir in ipairs({ -1, 1 }) do
+          local dx = dir * (2 + k * 13)
+          local dy = -14 + 34 * (k - 0.35) ^ 2 * 2.2
+          lg.setColor(0.86, 0.94, 1, 0.9 - 0.5 * k)
+          lg.rectangle("fill", math.floor(cx + dx), math.floor(f.y0 - 10 + dy), 1, 2)
+        end
+      end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+function Sc.drawSpout(def, camx)
+  if def.art ~= "town" then return end
+  local f = named(def, "FOUNTAIN")
+  if f and f.x1 - camx > -40 and f.x0 - camx < 360 then
+    local T = Sc.townArt("town")
+    at(T.spout, (f.x0 + f.x1) / 2 - camx - 6, f.y0 - 12)
+  end
+end
+
+-- the duck boat (a mover): the duck faces the way it paddles; its hull sits in the pond
+function Sc.drawMoverArt(m, camx, style)
+  local T = Sc.townArt(style)
+  local im = T.boat
+  local x = math.floor(m.x0 - camx + 0.5) - 3
+  lg.setColor(1, 1, 1, 1)
+  if m.dir and m.dir > 0 then lg.draw(im, x + im:getWidth(), m.y0 - 18, 0, -1, 1) else lg.draw(im, x, m.y0 - 18) end
+  lg.setColor(0.33, 0.47, 0.52, 0.5); lg.rectangle("fill", x, 209, im:getWidth(), m.y0 - 18 + im:getHeight() - 209)
+  lg.setColor(0.86, 0.94, 0.95, 0.8); lg.rectangle("fill", x + 2, 208, im:getWidth() - 4, 1)   -- the ripple line
+  lg.setColor(1, 1, 1, 1)
+end
+
+-- the hazards: the leaf cart (City Park) and the tram (Downtown), wheels on the line, centred on the hit box
+function Sc.drawHazardArt(c, camx, style)
+  local T = Sc.townArt(style)
+  local im = style == "park" and T.cart or T.tram
+  local x = c.x - camx
+  Sc.shadow(x, c.y - 1, im:getWidth() - 6)
+  lg.setColor(1, 1, 1, 1)
+  lg.draw(im, math.floor(x - im:getWidth() / 2 + 0.5), math.floor(c.y - im:getHeight() + 0.5))
+end
+
 return Sc

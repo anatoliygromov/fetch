@@ -20,8 +20,9 @@
 -- away and carries the ball to the girl, who waits at the stairs down to the river. Level 3 (River Walk): by the
 -- river she throws it again and it lands on a ferry.
 --
--- Everything but Pepper and the ball is greybox (scenery = "greybox"; greyStyle = "town": far rooftops and spires,
--- near facades with window rows instead of the park's trees; see Sc.drawFarGrey).
+-- scenery = "greybox" keeps the greybox rules (no road, no traffic); L.art = "town" draws the scenery art over the
+-- boxes (Sc.drawPropArt, Sc.drawFarArt; tools/make_town_art.py). Without L.art it is drawn as boxes again
+-- (greyStyle = "town": far rooftops and spires, near facades; see Sc.drawFarGrey).
 -- props: kind = solid | oneway | decor; layer = "back", "play", "front"; label = "top" / "below" places the name.
 -- Secrets (L.secrets, counted on the tally): the shop sign, the statue's hat, the fountain's top tier (the
 -- rooftop route).
@@ -31,6 +32,7 @@ L.number = 2
 L.title = "Pepper: Downtown (greybox)"
 L.scenery = "greybox"
 L.greyStyle = "town"
+L.art = "town"                -- scenery art (tools/make_town_art.py; drawn by Sc.drawPropArt from the boxes)
 L.map = "level/downtown.map"
 L.time = 300
 L.start = { x = 60, y = 184 }

@@ -1,216 +1,281 @@
 {
-  "pot": {
-    "size": [
-      17,
-      27
-    ],
-    "spritecook_source_asset_id": "d1b787a9-43ce-437a-8e37-4a7d5ccdcd80",
-    "colors": 8,
-    "sha12": "6746b8b046f9"
-  },
-  "bench": {
-    "size": [
-      103,
-      51
-    ],
-    "spritecook_source_asset_id": "b64db2e5-2cf5-45b8-9e4b-64f164a7f129",
-    "source": "bench_v2_spritecook.png",
-    "note": "Stockholm park bench (user reference photo). Drawn at 2x: make_props.py halves it (darkest pixel per 2x2 block where outline, else median), repeats post row 40 three times, then palette + despeckle"
-  },
-  "bin": {
-    "size": [
-      38,
-      59
-    ],
-    "spritecook_source_asset_id": "56743d6f-cde8-4ae4-86d8-1cc0f08b3189",
-    "source": "bin_v2_spritecook.png",
-    "note": "Stockholm city litter bin (user reference photo): black, gold bands, shield; make_props.py palette + despeckle"
-  },
-  "lamp_post": {
-    "size": [
-      14,
-      101
-    ],
-    "spritecook_source_asset_id": "4d829676-a9bd-4202-a8ae-b104f7e77f61",
-    "colors": 8,
-    "sha12": "224d6041d01d"
-  },
-  "river": {
-    "size": [
-      320,
-      94
-    ],
-    "spritecook_source_asset_id": "a95be2cc-6d9c-4cc5-b778-de3bf3d6f14a",
-    "colors": 6,
-    "sha12": "2b5e492c3c65"
-  },
-  "far_shore_bridge": {
-    "size": [
-      320,
-      33
-    ],
-    "spritecook_source_asset_id": "905dbefd-f036-4c8a-b1c9-b59ae15ae8a9",
-    "colors": 12,
-    "sha12": "38649f1eb1c7"
-  },
-  "_notes": {
-    "props": "same box as the old layer; bottom-aligned, same x,y. No dark outline (decoration only): edge pixels use the darkest neighbouring shade",
-    "far_shore_bridge": "bottom row is the waterline: draw at y 113 (old strip was at y 120 with 7 rows hidden under the river)",
-    "river": "drawn at y 146 as before; tiles left-right"
-  },
-  "water": {
-    "size": [
-      320,
-      94
-    ],
-    "spritecook_source_asset_id": "d19d28b6-604b-4b55-815f-635a5e532f86",
-    "note": "SpriteCook water strip; tools/make_water.py turns it into riverwalk/art/scene/water.png"
-  },
-  "railing": {
-    "size": [
-      88,
-      28
-    ],
-    "spritecook_source_asset_id": "2b178488-3a25-46dd-b8b8-29b44b50dc5d",
-    "note": "tools/make_railing.py: 8 colours, cut into rail_seg (left post + span) and rail_end (right post)"
-  },
-  "railing_bg": {
-    "size": [
-      175,
-      30
-    ],
-    "spritecook_source_asset_id": "7d30bc38-449b-460d-ba0a-92d324452723",
-    "note": "tools/make_bg_railing.py: shades mapped to the lamp post palette, cut into left post, unit, end"
-  },
-  "flowerbox": {
-    "size": [
-      104,
-      49
-    ],
-    "spritecook_source_asset_id": "fe03382b-6d46-4189-bc7f-eebb6f684039",
-    "source": "flowerbox_spritecook.png",
-    "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added)"
-  },
-  "planter_sq": {
-    "size": [
-      44,
-      48
-    ],
-    "spritecook_source_asset_id": "b8066d44-e63c-491b-8efe-9399c7a0a04a",
-    "source": "planter_sq_spritecook.png",
-    "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added)"
-  },
-  "cafe": {
-    "size": [
-      150,
-      205
-    ],
-    "spritecook_source_asset_id": "ee9b5359-d7b9-4556-867c-a8fd554aee54",
-    "source": "cafe_spritecook.png",
-    "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added); trimmed to the facade; decoration: outline removed, faded in game"
-  },
-  "gable": {
-    "size": [
-      70,
-      175
-    ],
-    "spritecook_source_asset_id": "7b28a806-ebb7-4ea7-b36b-87e7de9ce0b2",
-    "source": "gable_spritecook.png",
-    "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added); decoration: outline removed, faded in game"
-  },
-  "gritbox": {
-    "size": [
-      88,
-      41
-    ],
-    "spritecook_source_asset_id": "a7d02c8a-ab21-4be0-905c-cc5e0786e30b",
-    "source": "gritbox_spritecook.png",
-    "note": "Stockholm grit box (sandl\u00e5da). Drawn at 2x: make_props.py halves it, repaints the SAND label in a 3x5 font, palette + despeckle"
-  },
-  "ferry": {
-    "size": [
-      252,
-      93
-    ],
-    "spritecook_source_asset_id": "fdca0f15-d59b-4e23-8889-fb8cd04c57ff",
-    "source": "ferry_spritecook.png",
-    "note": "Stockholm commuter ferry (user pick). make_props.py makes it \"a little bigger\" by repeating plain columns (open decks) and rows (saloon windows, hull): 222x84 becomes 252x93; palette + despeckle"
-  },
-  "tree_near": {
-    "size": [
-      108,
-      135
-    ],
-    "spritecook_source_asset_id": "d9073db2-54ff-4431-9d0b-bfb83c137c55",
-    "source": "tree_near_spritecook.png",
-    "note": "decoration: outline removed (make_props.deoutline), faded in game"
-  },
-  "tree_far": {
-    "size": [
-      101,
-      100
-    ],
-    "spritecook_source_asset_id": "157bcd60-190c-4af6-824e-bc898af6268e",
-    "source": "tree_far_spritecook.png",
-    "note": "the original tree completed by SpriteCook (edit of the padded original, asset c4547a25), halved, outline removed, faded in game"
-  },
-  "cars": {
-    "spritecook_source_asset_id": "050dc075-0d2c-49a7-9dfe-3c25f2c6bc52",
-    "source": "cars_spritecook.png",
-    "note": "tools/make_traffic.py cuts car1-5 out of the sheet"
-  },
-  "cyclist1": {
-    "spritecook_source_asset_id": "72f95e17-f203-46eb-8fa6-f6719265d700",
-    "source": "cyclist1_spritecook.png",
-    "note": "make_traffic.py: 3x3 block downscale to 49x50, palette + despeckle; also the promenade bikes"
-  },
-  "cyclist2": {
-    "spritecook_source_asset_id": "71c07429-e56d-4895-a2fd-f33d85c297f6",
-    "source": "cyclist2_spritecook.png",
-    "note": "as cyclist1"
-  },
-  "road": {
-    "note": "tools/make_road.py draws road.png (640x41), manhole.png and drain.png in code"
-  },
-  "pier": {
-    "size": [
-      138,
-      162
-    ],
-    "spritecook_source_asset_id": "42fdd3e9-4f37-482c-8289-e0709bd6c077",
-    "source": "pier_spritecook.png",
-    "note": "tools/make_night_art.py: one 25 px brick period cut from each side panel (188 -> 138 wide), 12-colour palette, cut at the lintel; the passage under it is drawn in code (Sc.passageBack/Front). Alternative render: a621f010-3a00-4216-ba3d-645fbf11941b"
-  },
-  "pontoon": {
-    "size": [
-      54,
-      12
-    ],
-    "spritecook_source_asset_id": "2873586c-c326-4665-afb9-ab74c9a736c6",
-    "source": "pontoon_spritecook.png",
-    "note": "rendered ~4x too big; a block reduction was muddy, so tools/make_night_art.py draws it by hand at 54 x 12 in the render's sampled colours. Alternative render: 90dde06c-1c9e-48c3-b3da-b9d53b2fe625"
-  },
-  "pile": {
-    "size": [
-      18,
-      182
-    ],
-    "spritecook_source_asset_id": "041821d2-b7a3-46e4-803d-0949f79ca285",
-    "source": "pile_spritecook.png",
-    "note": "tools/make_night_art.py: 8 colours, halved (36 -> 18 wide), lengthened by repeating plain rows. Foreground; only its top shows (y 221+)"
-  },
-  "clouds": {
-    "spritecook_source_asset_id": [
-      "c14fff0d-0cb0-4c4d-a155-49e18b06a973",
-      "3729844e-c12b-4b97-adfe-b5cfde6f44aa"
-    ],
-    "source": [
-      "clouds_a_spritecook.png",
-      "clouds_b_spritecook.png"
-    ],
-    "note": "tools/make_night_art.py: 5 colours, split into separate clouds (cloud1..8.png, widest first)"
-  },
-  "bones": {
-    "note": "drawn by hand in tools/make_night_art.py (bone.png, bone_gold.png, 11 x 6, own outline: Pepper collects them)"
-  }
+ "pot": {
+  "size": [
+   17,
+   27
+  ],
+  "spritecook_source_asset_id": "d1b787a9-43ce-437a-8e37-4a7d5ccdcd80",
+  "colors": 8,
+  "sha12": "6746b8b046f9"
+ },
+ "bench": {
+  "size": [
+   103,
+   51
+  ],
+  "spritecook_source_asset_id": "b64db2e5-2cf5-45b8-9e4b-64f164a7f129",
+  "source": "bench_v2_spritecook.png",
+  "note": "Stockholm park bench (user reference photo). Drawn at 2x: make_props.py halves it (darkest pixel per 2x2 block where outline, else median), repeats post row 40 three times, then palette + despeckle"
+ },
+ "bin": {
+  "size": [
+   38,
+   59
+  ],
+  "spritecook_source_asset_id": "56743d6f-cde8-4ae4-86d8-1cc0f08b3189",
+  "source": "bin_v2_spritecook.png",
+  "note": "Stockholm city litter bin (user reference photo): black, gold bands, shield; make_props.py palette + despeckle"
+ },
+ "lamp_post": {
+  "size": [
+   14,
+   101
+  ],
+  "spritecook_source_asset_id": "4d829676-a9bd-4202-a8ae-b104f7e77f61",
+  "colors": 8,
+  "sha12": "224d6041d01d"
+ },
+ "river": {
+  "size": [
+   320,
+   94
+  ],
+  "spritecook_source_asset_id": "a95be2cc-6d9c-4cc5-b778-de3bf3d6f14a",
+  "colors": 6,
+  "sha12": "2b5e492c3c65"
+ },
+ "far_shore_bridge": {
+  "size": [
+   320,
+   33
+  ],
+  "spritecook_source_asset_id": "905dbefd-f036-4c8a-b1c9-b59ae15ae8a9",
+  "colors": 12,
+  "sha12": "38649f1eb1c7"
+ },
+ "_notes": {
+  "props": "same box as the old layer; bottom-aligned, same x,y. No dark outline (decoration only): edge pixels use the darkest neighbouring shade",
+  "far_shore_bridge": "bottom row is the waterline: draw at y 113 (old strip was at y 120 with 7 rows hidden under the river)",
+  "river": "drawn at y 146 as before; tiles left-right"
+ },
+ "water": {
+  "size": [
+   320,
+   94
+  ],
+  "spritecook_source_asset_id": "d19d28b6-604b-4b55-815f-635a5e532f86",
+  "note": "SpriteCook water strip; tools/make_water.py turns it into riverwalk/art/scene/water.png"
+ },
+ "railing": {
+  "size": [
+   88,
+   28
+  ],
+  "spritecook_source_asset_id": "2b178488-3a25-46dd-b8b8-29b44b50dc5d",
+  "note": "tools/make_railing.py: 8 colours, cut into rail_seg (left post + span) and rail_end (right post)"
+ },
+ "railing_bg": {
+  "size": [
+   175,
+   30
+  ],
+  "spritecook_source_asset_id": "7d30bc38-449b-460d-ba0a-92d324452723",
+  "note": "tools/make_bg_railing.py: shades mapped to the lamp post palette, cut into left post, unit, end"
+ },
+ "flowerbox": {
+  "size": [
+   104,
+   49
+  ],
+  "spritecook_source_asset_id": "fe03382b-6d46-4189-bc7f-eebb6f684039",
+  "source": "flowerbox_spritecook.png",
+  "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added)"
+ },
+ "planter_sq": {
+  "size": [
+   44,
+   48
+  ],
+  "spritecook_source_asset_id": "b8066d44-e63c-491b-8efe-9399c7a0a04a",
+  "source": "planter_sq_spritecook.png",
+  "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added)"
+ },
+ "cafe": {
+  "size": [
+   150,
+   205
+  ],
+  "spritecook_source_asset_id": "ee9b5359-d7b9-4556-867c-a8fd554aee54",
+  "source": "cafe_spritecook.png",
+  "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added); trimmed to the facade; decoration: outline removed, faded in game"
+ },
+ "gable": {
+  "size": [
+   70,
+   175
+  ],
+  "spritecook_source_asset_id": "7b28a806-ebb7-4ea7-b36b-87e7de9ce0b2",
+  "source": "gable_spritecook.png",
+  "note": "tools/make_props.py: k-means palette in Lab + despeckle; keeps its own 1 px outline (none added); decoration: outline removed, faded in game"
+ },
+ "gritbox": {
+  "size": [
+   88,
+   41
+  ],
+  "spritecook_source_asset_id": "a7d02c8a-ab21-4be0-905c-cc5e0786e30b",
+  "source": "gritbox_spritecook.png",
+  "note": "Stockholm grit box (sandlåda). Drawn at 2x: make_props.py halves it, repaints the SAND label in a 3x5 font, palette + despeckle"
+ },
+ "ferry": {
+  "size": [
+   252,
+   93
+  ],
+  "spritecook_source_asset_id": "fdca0f15-d59b-4e23-8889-fb8cd04c57ff",
+  "source": "ferry_spritecook.png",
+  "note": "Stockholm commuter ferry (user pick). make_props.py makes it \"a little bigger\" by repeating plain columns (open decks) and rows (saloon windows, hull): 222x84 becomes 252x93; palette + despeckle"
+ },
+ "tree_near": {
+  "size": [
+   108,
+   135
+  ],
+  "spritecook_source_asset_id": "d9073db2-54ff-4431-9d0b-bfb83c137c55",
+  "source": "tree_near_spritecook.png",
+  "note": "decoration: outline removed (make_props.deoutline), faded in game"
+ },
+ "tree_far": {
+  "size": [
+   101,
+   100
+  ],
+  "spritecook_source_asset_id": "157bcd60-190c-4af6-824e-bc898af6268e",
+  "source": "tree_far_spritecook.png",
+  "note": "the original tree completed by SpriteCook (edit of the padded original, asset c4547a25), halved, outline removed, faded in game"
+ },
+ "cars": {
+  "spritecook_source_asset_id": "050dc075-0d2c-49a7-9dfe-3c25f2c6bc52",
+  "source": "cars_spritecook.png",
+  "note": "tools/make_traffic.py cuts car1-5 out of the sheet"
+ },
+ "cyclist1": {
+  "spritecook_source_asset_id": "72f95e17-f203-46eb-8fa6-f6719265d700",
+  "source": "cyclist1_spritecook.png",
+  "note": "make_traffic.py: 3x3 block downscale to 49x50, palette + despeckle; also the promenade bikes"
+ },
+ "cyclist2": {
+  "spritecook_source_asset_id": "71c07429-e56d-4895-a2fd-f33d85c297f6",
+  "source": "cyclist2_spritecook.png",
+  "note": "as cyclist1"
+ },
+ "road": {
+  "note": "tools/make_road.py draws road.png (640x41), manhole.png and drain.png in code"
+ },
+ "pier": {
+  "size": [
+   138,
+   162
+  ],
+  "spritecook_source_asset_id": "42fdd3e9-4f37-482c-8289-e0709bd6c077",
+  "source": "pier_spritecook.png",
+  "note": "tools/make_night_art.py: one 25 px brick period cut from each side panel (188 -> 138 wide), 12-colour palette, cut at the lintel; the passage under it is drawn in code (Sc.passageBack/Front). Alternative render: a621f010-3a00-4216-ba3d-645fbf11941b"
+ },
+ "pontoon": {
+  "size": [
+   54,
+   12
+  ],
+  "spritecook_source_asset_id": "2873586c-c326-4665-afb9-ab74c9a736c6",
+  "source": "pontoon_spritecook.png",
+  "note": "rendered ~4x too big; a block reduction was muddy, so tools/make_night_art.py draws it by hand at 54 x 12 in the render's sampled colours. Alternative render: 90dde06c-1c9e-48c3-b3da-b9d53b2fe625"
+ },
+ "pile": {
+  "size": [
+   18,
+   182
+  ],
+  "spritecook_source_asset_id": "041821d2-b7a3-46e4-803d-0949f79ca285",
+  "source": "pile_spritecook.png",
+  "note": "tools/make_night_art.py: 8 colours, halved (36 -> 18 wide), lengthened by repeating plain rows. Foreground; only its top shows (y 221+)"
+ },
+ "clouds": {
+  "spritecook_source_asset_id": [
+   "c14fff0d-0cb0-4c4d-a155-49e18b06a973",
+   "3729844e-c12b-4b97-adfe-b5cfde6f44aa"
+  ],
+  "source": [
+   "clouds_a_spritecook.png",
+   "clouds_b_spritecook.png"
+  ],
+  "note": "tools/make_night_art.py: 5 colours, split into separate clouds (cloud1..8.png, widest first)"
+ },
+ "bones": {
+  "note": "drawn by hand in tools/make_night_art.py (bone.png, bone_gold.png, 11 x 6, own outline: Pepper collects them)"
+ },
+ "cp_props1": {
+  "source": "cp_props1_spritecook.png",
+  "spritecook_source_asset_id": "6642bb68-6035-4a47-9b7a-c9d77b2b92bd",
+  "note": "fix 11 (City Park / Downtown art): log, leaf pile, flat leaves, picnic table. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py cuts, quantises (5-12 colours) and despeckles it"
+ },
+ "cp_props2": {
+  "source": "cp_props2_spritecook.png",
+  "spritecook_source_asset_id": "8b0ac2d8-643b-45d9-8062-785b33089cd7",
+  "note": "fix 11 (City Park / Downtown art): hedge, leaf cart, duck boat, stepping stone. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py cuts, quantises (5-12 colours) and despeckles it"
+ },
+ "cp_oak": {
+  "source": "cp_oak_spritecook.png",
+  "spritecook_source_asset_id": "1749deca-084d-45a2-aa6a-e43147f2651b",
+  "note": "fix 11 (City Park / Downtown art): the big oak. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py cuts, quantises (5-12 colours) and despeckles it"
+ },
+ "cp_treeline": {
+  "source": "cp_treeline_spritecook.png",
+  "spritecook_source_asset_id": "c7e6528e-5cb1-4ee2-92c8-eb648cc221f8",
+  "note": "fix 11 (City Park / Downtown art): far autumn tree line strip. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py cuts, quantises (5-12 colours) and despeckles it"
+ },
+ "cp_ground": {
+  "source": "cp_ground_spritecook.png",
+  "spritecook_source_asset_id": "9027c8b7-0781-40a8-83ba-934b7c0c65bb",
+  "note": "fix 11 (City Park / Downtown art): park path and grass strip. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py cuts, quantises (5-12 colours) and despeckles it"
+ },
+ "cp_bgset": {
+  "source": "cp_bgset_spritecook.png",
+  "spritecook_source_asset_id": "c1dd11ff-d27a-4580-8b2a-8c8fca203034",
+  "note": "fix 11 (City Park / Downtown art): two autumn trees, swing set, park gate, bush. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py cuts, quantises (5-12 colours) and despeckles it"
+ },
+ "dt_props1": {
+  "source": "dt_props1_spritecook.png",
+  "spritecook_source_asset_id": "3c90a0c6-22a7-492a-b94d-4d5353e61f98",
+  "note": "fix 11 (City Park / Downtown art): awning, apple crates, parasol, market stall, cafe table. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py cuts, quantises (5-12 colours) and despeckles it"
+ },
+ "dt_statue": {
+  "source": "dt_statue_spritecook.png",
+  "spritecook_source_asset_id": "2f6ae1a9-d91e-4054-a94a-c3f80e9fd930",
+  "note": "fix 11 (City Park / Downtown art): bronze statue, granite pedestal. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py cuts, quantises (5-12 colours) and despeckles it"
+ },
+ "dt_tram": {
+  "source": "dt_tram_spritecook.png",
+  "spritecook_source_asset_id": "f8c0c0c8-1310-4d86-aa66-e4b0a7873b46",
+  "note": "fix 11 (City Park / Downtown art): vintage Stockholm tram. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py cuts, quantises (5-12 colours) and despeckles it"
+ },
+ "dt_kioskset": {
+  "source": "dt_kioskset_spritecook.png",
+  "spritecook_source_asset_id": "f51ec410-8aad-4696-983c-4e013208bc81",
+  "note": "fix 11 (City Park / Downtown art): doorway, tram shelter, kiosk, RIVER sign. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py cuts, quantises (5-12 colours) and despeckles it"
+ },
+ "dt_facades": {
+  "source": "dt_facades_spritecook.png",
+  "spritecook_source_asset_id": "59189681-3368-447c-a619-90bc57e66cb8",
+  "note": "fix 11 (City Park / Downtown art): old town facades strip. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py cuts, quantises (5-12 colours) and despeckles it"
+ },
+ "dt_roofs": {
+  "source": "dt_roofs_spritecook.png",
+  "spritecook_source_asset_id": "dd602f8e-f06a-4df9-9ba8-7af1099db024",
+  "note": "fix 11 (City Park / Downtown art): far roofs and spires strip. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py cuts, quantises (5-12 colours) and despeckles it"
+ },
+ "dt_ground": {
+  "source": "dt_ground_spritecook.png",
+  "spritecook_source_asset_id": "aeab1c5d-ae7e-4092-a470-400d7dba219b",
+  "note": "fix 11 (City Park / Downtown art): cobbled pavement and street strip. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py cuts, quantises (5-12 colours) and despeckles it"
+ }
 }

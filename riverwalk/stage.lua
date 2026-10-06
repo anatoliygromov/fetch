@@ -36,6 +36,7 @@ function St.new(def, carry)
     s.world:addMover(mv); s.movers[#s.movers + 1] = mv
   end
   s.layers = def.scenery == "greybox" and Sc.buildGrey(s.world.width, def.greyStyle) or Sc.build(s.world.width)
+  if def.art then s.layers = Sc.buildArt(s.world.width, def.art) end   -- art for a greybox level (City Park, Downtown)
   s.pepper = Pp.new(def.start.x, def.start.y)
   s.check = { x = def.start.x, y = def.start.y }
   s.bones = {}
@@ -393,18 +394,28 @@ end
 function St:draw(debug)
   local cam = math.floor(self.cam + 0.5)
   local C = Sc.C
-  local grey = self.def.scenery == "greybox"
-  if grey then Sc.drawFarGrey(self.layers, cam, self.t) else Sc.drawFar(self.layers, cam, self.t) end
+  local style = self.def.art                                      -- "park" / "town": a greybox level with its art
+  local grey = self.def.scenery == "greybox" and not style
+  local function prop(pr, c, colour, kicked)
+    if style then Sc.drawPropArt(pr, c, self.def, kicked) else Sc.drawProp(pr, c, colour) end
+  end
+  if style then Sc.drawFarArt(self.layers, cam, self.t, self.world)
+  elseif grey then Sc.drawFarGrey(self.layers, cam, self.t) else Sc.drawFar(self.layers, cam, self.t) end
   -- 6 quay back: railing and things behind Pepper
-  for _, pr in ipairs(self.def.props) do if pr.layer == "back" then Sc.drawProp(pr, cam, C.back) end end
+  for _, pr in ipairs(self.def.props) do if pr.layer == "back" then prop(pr, cam, C.back) end end
+  if style then Sc.drawSpout(self.def, cam) end
   Sp.drawBack(self, cam)                                           -- code-drawn decoration (kiosks)
   -- 7 play layer: terrain (pavement art, painted once; see Sc.paintGround)
   local w = self.world
-  if not self.ground then self.ground = grey and Sc.paintGroundGrey(w) or Sc.paintGround(w, self.def.props) end
+  if not self.ground then
+    if style then self.ground = Sc.paintGroundArt(w, style)
+    else self.ground = grey and Sc.paintGroundGrey(w) or Sc.paintGround(w, self.def.props) end
+  end
   for _, ps in ipairs(self.def.passages or {}) do Sc.passageBack(ps, cam) end
   lg.setColor(1, 1, 1, 1)
   lg.draw(self.ground, -cam, 0)
   for _, ps in ipairs(self.def.passages or {}) do Sc.passageFront(ps, cam) end
+  if style then Sc.drawTerrainArt(self.def, cam, self.t) end         -- the slide, the fountain's jets
   -- the river Pepper can fall into is not drawn: it is a gap in the quay, and the river art shows through
   local art = Sc.art()
   -- shadows of the things standing on the pavement (drawn on the ground, under them)
@@ -429,10 +440,11 @@ function St:draw(debug)
     end
   end
   end
-  for _, pr in ipairs(self.def.props) do if pr.layer == "play" and not pr.over then Sc.drawProp(pr, cam, C.prop) end end
+  for _, pr in ipairs(self.def.props) do if pr.layer == "play" and not pr.over then prop(pr, cam, C.prop) end end
   Sp.drawRopes(self, cam)                                          -- the ropes the ferries run on
   for _, m in ipairs(self.movers) do
-    if grey then                                                   -- greybox level: labelled boxes (the duck boat)
+    if style then Sc.drawMoverArt(m, cam, style)                       -- the duck boat
+    elseif grey then                                                   -- greybox level: labelled boxes (the duck boat)
       Sc.outlined(C.prop, C.propEdge, m.x0 - cam, m.y0, m.x1 - m.x0, m.y1 - m.y0); Sc.label(m.name or "PONTOON", (m.x0 + m.x1) / 2 - cam, m.y0 + 8)
     else                                                           -- the pontoon (art 54 x 12; its deck row 2 is the top)
       lg.setColor(1, 1, 1, 1); lg.draw(art.pontoon, math.floor(m.x0 - cam + 0.5) - 3, m.y0 - 2)
@@ -447,7 +459,8 @@ function St:draw(debug)
   end
   for _, pr in ipairs(self.def.props) do                           -- props drawn over the bones (leaf piles)
     if pr.layer == "play" and pr.over then
-      if self.kicked[pr] then Sc.drawProp({ x0 = pr.x0 - 3, x1 = pr.x1 + 3, y0 = pr.y1 - 4, y1 = pr.y1, kind = "decor" }, cam, C.leaves)
+      if style then prop(pr, cam, C.leaves, self.kicked[pr])
+      elseif self.kicked[pr] then Sc.drawProp({ x0 = pr.x0 - 3, x1 = pr.x1 + 3, y0 = pr.y1 - 4, y1 = pr.y1, kind = "decor" }, cam, C.leaves)
       else Sc.drawProp(pr, cam, C.leaves) end
     end
   end
@@ -486,7 +499,8 @@ function St:draw(debug)
   local cyc = Rd.art().cyclists[1]
   for _, c in ipairs(self.bikes) do
     local x = c.x - cam
-    if grey then
+    if style then Sc.drawHazardArt(c, cam, style)                        -- the leaf cart, the tram
+    elseif grey then
       local z = c.zone or {}
       local bw, bh = z.w or 48, z.h or 26
       Sc.outlined(C.prop, C.propEdge, math.floor(x - bw / 2 + 0.5), c.y - bh, bw, bh); Sc.label(z.kind and z.kind:upper() or "BIKE", x, c.y - 17)
@@ -507,7 +521,7 @@ function St:draw(debug)
   -- 8 foreground frame
   -- (scrolls 1.3x: a prop sits at its own x when it is mid-screen and slides faster than Pepper's layer)
   for _, pr in ipairs(self.def.props) do
-    if pr.layer == "front" then Sc.drawProp(pr, math.floor(cam + (cam + 160 - (pr.x0 + pr.x1) / 2) * 0.3), C.front) end
+    if pr.layer == "front" then prop(pr, math.floor(cam + (cam + 160 - (pr.x0 + pr.x1) / 2) * 0.3), C.front) end
   end
   lg.setColor(1, 1, 1, 1)
   if debug then self:drawDebug(cam) end
