@@ -7,11 +7,12 @@
 --   B / Shift        walk          X / X key   pick up, drop, give the ball        Y / Z key   bark
 --   Start / Enter    pause         Select / G  debug view        Tab  tuning panel (keyboard)
 --   F fullscreen, M music, E visual extras off / on (dust, splash; extras.lua)
---   Menus: up / down move, A / Space / Enter choose, B / Esc back. In the pause: Start / Enter go on, B / Esc
---   quit to the title. On the title screen Esc quits the game.
+--   Menus: up / down move, A / Space / Enter choose, B / Esc back. In the pause: Start / Enter go on; QUIT asks
+--   first (B / Esc only ever go back). On the title screen Esc quits the game.
 --
 -- The flow (flow.lua): title -> menu (START GAME or LEVEL SELECT) -> each level: intro card, play, tally ->
--- story card -> the next level ... -> the ending -> title. GAME OVER -> title.
+-- story card -> the next level ... -> the ending -> title. GAME OVER -> TRY AGAIN (the same level) or the menu.
+-- Hints and story lines are said in the talk panel (talk.lua); the tally shows times and medals (flow.lua).
 -- love riverwalk --level <name> starts a run at that level (no menus). The test flags (--physics, --auto,
 -- --test, --qa) play one level alone, River Walk unless --level names another; --flowtest checks the flow.
 function love.errorhandler(msg) io.stderr:write("ERROR: " .. tostring(msg) .. "\n" .. debug.traceback() .. "\n"); io.stderr:flush(); os.exit(1) end
@@ -25,6 +26,7 @@ local St = require("stage")
 local Pp = require("pepper")
 local Ex = require("extras")
 local Flow = require("flow")
+local Talk = require("talk")
 local levelName, def                                            -- the level being played
 local function argLevel(args)
   for i, a in ipairs(args or {}) do if a == "--level" and args[i + 1] then return args[i + 1] end end
@@ -40,15 +42,18 @@ local fps, frameMs = 60, 0
 local tally
 local run                                                       -- the run (Flow.newRun): its levels, score, lives
 local story, ending                                             -- the story card's lines; the ending's numbers
+local over, pz = { sel = 1 }, { sel = 1 }                       -- the GAME OVER card's and the pause's cursors
+local clearAt, hit, hl                                          -- the level's clear time; a heart lost in it
 
 local function setLevel(name) levelName = name; def = require("level." .. name) end
 -- the current level from the start, alone (the test modes, api.newRun)
-local function newRun() stage = St.new(def); state, t, tally = "intro", 0, nil end
+local function fresh() Talk.reset(); clearAt, hit, hl = nil, false, nil; over.sel, pz.sel, pz.confirm = 1, 1, nil end
+local function newRun() stage = St.new(def); state, t, tally = "intro", 0, nil; fresh() end
 -- the run's current level: its intro card; it starts with the run's score and lives
 local function startLevel()
   setLevel(run.names[run.k])
-  stage = St.new(def, { score = run.score, lives = run.lives }); state, t, tally = "intro", 0, nil
-  S.music(musicOn)
+  stage = St.new(def, { score = run.score, lives = run.lives, hard = Flow.hard or nil }); state, t, tally = "intro", 0, nil
+  fresh(); S.music(musicOn)
 end
 local function startRun(i) run = Flow.newRun(i); if #run.names > 0 then startLevel() end end
 local Title = require("title")                                  -- the title screen: PRESS ANY KEY, then the menu
@@ -73,12 +78,13 @@ function love.load(args)
     newRun()
   else
     love.window.setTitle("FETCH!")
-    if test then Flow.prefix = "flowtest_"; for _, n in ipairs({ "progress.txt", "best_run.txt", "best_citypark.txt", "best_downtown.txt", "best_riverwalk.txt" }) do love.filesystem.remove("flowtest_" .. n) end end
+    if test then Flow.prefix = "flowtest_"; Flow.wipe() end
     Flow.load()
     if lv and Flow.index(lv) and not test then startRun(Flow.index(lv)) else state, t = "title", 0 end
   end
   local api = { stage = function() return stage end, setState = function(s) state = s end, getState = function() return state end, newRun = newRun,
-    run = function() return run end, tally = function() return tally end, flow = Flow }
+    run = function() return run end, tally = function() return tally end, flow = Flow, talk = Talk,
+    over = function() return over end, pause = function() return pz end }
   for _, a in ipairs(args or {}) do
     if a == "--test" or a == "--auto" or a == "--physics" then require(levelName == "riverwalk" and "tests" or ("tests_" .. levelName))(a, api) end
     if a == "--noextras" then Ex.enabled = false end                                    -- start with the extras off
@@ -111,10 +117,33 @@ local function nextLevel()
     state, t = "ending", 0
   end
 end
+-- GAME OVER: TRY AGAIN plays the same level again with 3 lives and the score it started with; MENU
+local function toMenu() state, t, run = "menu", 0, nil; Flow.menu.sel = 1; S.music(musicOn) end
+local function tryAgain() if run then run.lives = 3; startLevel() else newRun() end end
+local function overAction(a)
+  if t < Flow.OVER_WAIT then return end
+  local r = Flow.cursor(over, a, #Flow.overItems)
+  if r == 1 then tryAgain() elseif r == 2 then toMenu() end
+end
+-- the pause: GO ON or QUIT; QUIT asks first. Back (B / Esc) goes one step back: from the question to the pause,
+-- from the pause to the game. B is also sneak, so it never quits.
+local function resume() state = "play"; pz.sel, pz.confirm = 1, nil; S.music(musicOn) end
+local function pauseAction(a)
+  if pz.confirm then
+    if a == "back" then pz.confirm = nil; S.play("tick"); return end
+    local c = { sel = pz.confirm }
+    local r = Flow.cursor(c, a, #Flow.confirmItems); pz.confirm = c.sel
+    if r == 1 then pz.confirm = nil elseif r == 2 then S.play("tick"); toMenu() end
+    return
+  end
+  if a == "back" then resume(); return end
+  local r = Flow.cursor(pz, a, #Flow.pauseItems)
+  if r == 1 then resume() elseif r == 2 then pz.confirm = 1 end
+end
+-- the story card: only A goes on, after Flow.CARD_WAIT seconds (time to read it aloud)
+local function storyA() if state == "story" and t >= Flow.CARD_WAIT then S.play("select"); startLevel() end end
 local function anyKey()
-  if state == "over" and t > 1.2 then S.play("select"); toTitle()
-  elseif state == "clear" and tally and tally.done then S.play("select"); nextLevel()
-  elseif state == "story" and t > 0.5 then S.play("select"); startLevel()
+  if state == "clear" and tally and tally.done then S.play("select"); nextLevel()
   elseif state == "ending" and t > Flow.ENDING_WAIT then S.play("select"); toTitle() end
 end
 -- the main menu and the level select
@@ -130,7 +159,6 @@ local function menuAction(a)
     if r == "play" then startRun(i) elseif r == "back" then state = "menu" end
   end
 end
-local function quitToTitle() S.play("tick"); toTitle() end
 function love.keypressed(k)
   if k == "f" then love.window.setFullscreen(not love.window.getFullscreen()); return end
   if k == "m" then musicOn = not musicOn; S.music(musicOn); return end
@@ -147,9 +175,11 @@ function love.keypressed(k)
     if d ~= 0 then local r = TUNE[tuneRow]; Pp.P[r[1]] = math.max(0, math.floor((Pp.P[r[1]] + d * r[3]) * 100 + 0.5) / 100); Pp.saveTuning(); return end
   end
   if state == "pause" then
-    if k == "return" or k == "p" then state = "play"; S.music(musicOn) elseif k == "escape" then quitToTitle() end
+    if k == "return" or k == "p" then resume() else pauseAction(Flow.action(k)) end
     return
   end
+  if state == "over" then overAction(Flow.action(k)); return end
+  if state == "story" then if k == "space" then storyA() end; return end
   if (k == "return" or k == "p" or k == "escape") and state == "play" then state = "pause"; S.play("tick"); S.music(false); return end
   if state == "intro" and t > 0.5 then state = "play"; return end
   press(I.keyName(k)); anyKey()
@@ -160,10 +190,12 @@ function love.gamepadpressed(j, b)
   if b == "back" then debugView = not debugView; return end
   if state == "menu" or state == "select" then menuAction(Flow.action(nil, b)); return end
   if b == "start" and (state == "play" or state == "pause") then
-    if state == "play" then state = "pause"; S.music(false) else state = "play"; S.music(musicOn) end
+    if state == "play" then state = "pause"; S.music(false) else resume() end
     return
   end
-  if state == "pause" then if b == "b" then quitToTitle() end; return end
+  if state == "pause" then pauseAction(Flow.action(nil, b ~= "start" and b or nil)); return end
+  if state == "over" then overAction(Flow.action(nil, b ~= "start" and b or nil)); return end
+  if state == "story" then if b == "a" then storyA() end; return end
   if state == "intro" and t > 0.5 then state = "play"; return end
   press(I.padName(b)); anyKey()
 end
@@ -172,7 +204,10 @@ local stickY = 0
 function love.gamepadaxis(j, axis, v)
   if axis ~= "lefty" then return end
   local d = v > 0.6 and 1 or (v < -0.6 and -1 or (math.abs(v) < 0.3 and 0 or stickY))
-  if d ~= stickY then stickY = d; if d ~= 0 and (state == "menu" or state == "select") then menuAction(d < 0 and "up" or "down") end end
+  if d ~= stickY then stickY = d; if d ~= 0 then
+    local a = d < 0 and "up" or "down"
+    if state == "menu" or state == "select" then menuAction(a) elseif state == "pause" then pauseAction(a) elseif state == "over" then overAction(a) end
+  end end
 end
 
 function love.update(dt)
@@ -187,8 +222,11 @@ function love.update(dt)
     acc = acc + dt
     local steps = 0
     while acc >= DT - 1e-9 and steps < 4 do
-      stage:update(DT, presses); presses = {}; acc = acc - DT; steps = steps + 1
-      if stage.events.over then state, t = "over", 0; S.music(false); S.play("over"); if run then Flow.runOver(stage.score) end; break end
+      stage:update(DT, presses); Talk.watch(stage, presses, DT); presses = {}; acc = acc - DT; steps = steps + 1
+      local now = stage.lives * 10 + stage.hearts                 -- a heart (or a life) lost: no NO HIT medal
+      if hl and now < hl then hit = true end; hl = now
+      if stage.clearT and not clearAt then clearAt = stage.t end                -- the ball given: the clear time
+      if stage.events.over then state, t = "over", 0; over.sel = 1; S.music(false); S.play("over"); if run then Flow.runOver(stage.score) end; break end
       if stage.events.clear then
         state, t = "clear", 0; S.music(false); S.play("clear")
         -- the tally: bones, the level's bonus (if any) and the time bonus make the level's points; the run's
@@ -201,6 +239,15 @@ function love.update(dt)
         tally.from = st.score - st.levelScore
         tally.score = st.score + left * 10
         tally.newBest = Flow.levelPoints(levelName, tally.points)
+        -- the clear time, the best time and the medals (NO HIT, ALL BONES, PAR TIME); SECRETS if the level has them
+        local lv = Flow.levels[Flow.index(levelName) or 0] or {}
+        tally.time = math.floor((clearAt or stage.t) * 100 + 0.5) / 100
+        tally.par = lv.par or 60
+        tally.best, tally.newBestTime = Flow.levelTime(levelName, tally.time)
+        tally.medals = { nohit = not hit, bones = st.bones >= st.total, par = tally.time <= tally.par }
+        Flow.addMedals(levelName, tally.medals)
+        tally.hard = stage.hard
+        if st.secrets and st.secretsTotal then table.insert(tally.lines, #tally.lines, { "SECRETS", st.secrets .. "/" .. st.secretsTotal }) end
         Flow.cleared(levelName)
         if run then run.score, run.lives = tally.score, st.lives end
         break
@@ -216,6 +263,7 @@ function love.update(dt)
     end
     if tally.shown >= tally.points and tally.t > 1.8 then tally.done = true end
   end
+  if state == "play" then Talk.update(dt, stage) end
   frameMs = (love.timer.getTime() - t0) * 1000
 end
 
@@ -248,43 +296,29 @@ function love.draw()
   end
   stage:draw(debugView)
   local st = stage:stats()
-  U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score })
+  U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard })
   if state == "intro" then
     U.dim()
+    love.graphics.push(); love.graphics.translate(0, Flow.placeY(60, 200, 70, 76, { Talk.pepperRect(stage) }) - 70)
     U.box(60, 70, 200, 76)
     U.center(def.intro[1], 160, 78, 2, U.GOLD); U.center(def.intro[2], 160, 96, 2, U.GOLD)
     U.center(def.intro[3], 160, 118, 1); U.center(def.intro[4], 160, 130, 1)
+    love.graphics.pop()
     if t > 0.5 and (t % 1.1) < 0.75 then U.prompt("PRESS ANY BUTTON") end
   elseif state == "play" then
-    local h = stage:hint(); if h then U.prompt(h) end
+    Talk.draw(stage)
     drawTuning()
   elseif state == "pause" then
-    U.dim(); U.box(88, 80, 144, 70)
-    U.center("PAUSED", 160, 87, 2)
-    U.center(("LEVEL %d  %s"):format(def.number or 1, def.name or ""), 160, 106, 1, U.GOLD)
-    U.center("START  GO ON", 160, 122, 1); U.center("B  QUIT TO TITLE", 160, 134, 1)
+    Flow.drawPause(pz, def, { Talk.pepperRect(stage) })
   elseif state == "over" then
-    U.dim(); U.box(90, 92, 140, 40); U.center("GAME OVER", 160, 100, 2)
-    if t > 1.2 and (t % 1.1) < 0.75 then U.center("PRESS ANY BUTTON", 160, 119, 1) end
+    Flow.drawOver(over, t, { Talk.pepperRect(stage) })
   elseif state == "clear" then
-    U.dim(); U.box(70, 50, 180, 118)
-    local bounce = (tally.t < 0.6) and math.floor(math.sin(tally.t * 20) * 2) or 0
-    U.center("GOOD GIRL!", 160, 58 + bounce, 2, U.GOLD)
-    for i, l in ipairs(tally.lines) do
-      if tally.t > 0.3 + i * 0.25 then U.text(l[1], 84, 70 + i * 12); U.text(l[2], 236 - 6 * #l[2], 70 + i * 12) end
-    end
-    if tally.t > 1.3 then
-      love.graphics.setColor(U.RIM); love.graphics.rectangle("fill", 84, 120, 152, 1); love.graphics.setColor(1, 1, 1, 1)
-      local pts, sc = tostring(tally.shown), tostring(tally.from + tally.shown)
-      U.text("POINTS", 84, 126); U.text(pts, 236 - 6 * #pts, 126)
-      U.text("SCORE", 84, 140, U.GOLD); U.text(sc, 236 - 6 * #sc, 140, U.GOLD)
-    end
-    if tally.done then
-      if tally.newBest and math.floor(tally.t * 3) % 2 == 0 then U.center("NEW BEST!", 160, 154, 1) end
-      if (tally.t % 1.1) < 0.75 then U.prompt("PRESS ANY BUTTON") end
-    end
+    Flow.drawTally(tally, { Talk.pepperRect(stage) })
   elseif state == "story" then
-    Flow.drawStory(story, t)
+    Flow.drawStory(story, t, { Talk.pepperRect(stage) })
+  end
+  if state ~= "play" then                                         -- the cards dim the level, never Pepper
+    love.graphics.setColor(1, 1, 1, 1); stage.pepper:draw(math.floor(stage.cam + 0.5))
   end
   if debugView then
     U.text(("%d FPS  %.1f MS"):format(fps, frameMs), 4, 228, { 1, 1, 0.4 })

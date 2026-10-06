@@ -89,7 +89,7 @@ L.movers = {
 -- try comes straight away: walk up to the log and bark from there (bark range 95 px, it flees from a running
 -- Pepper at 110 px, from a walking one only at 40 px)
 L.ball = { x = 240, y = 184 }
-L.magpie = { flee = 110, fleeWalk = 40, bark = 95, dropSay = "IT DROPPED THE BALL! X: PICK IT UP",
+L.magpie = { flee = 110, fleeWalk = 40, bark = 95, dropSay = "IT DROPPED THE BALL!",
   perches = {
     { x = 240,  y = 184 },     -- the path past the log
     { x = 400,  y = 138 },     -- the bench's backrest (the ball lands on the seat)
@@ -131,20 +131,23 @@ L.bikes = {
   { zoneX0 = 1056, zoneX1 = 1240, minY = 150, every = 6.0, speed = 100, endX = 960, kind = "cart" },
 }
 
--- prompt banner hints: first match wins; need = "ball" / "noball" / "nearball" / "cat"
+-- hints (St:hint, drawn by talk.lua): first match wins. With btn ("a", "b", "x", "y", "down") it is Pepper's
+-- control hint: a button picture and 1 to 3 words. Without, it is the girl's line. need: see St:zoneHint.
 L.hints = {
-  { x0 = 0,    x1 = 172,  text = "SNEAK UP (HOLD B), THEN BARK!", need = "magpie" },
-  { x0 = 0,    x1 = 172,  text = "TAP A TO HOP ONTO THE LOG" },
-  { x0 = 288,  x1 = 352,  text = "HOLD A TO JUMP HIGHER" },
-  { x0 = 456,  x1 = 528,  text = "DOWN: CRAWL UNDER THE HEDGE" },
-  { x0 = 660,  x1 = 736,  text = "HOP ON THE STEPPING STONES" },
-  { x0 = 800,  x1 = 860,  text = "RIDE THE DUCK BOAT", maxY = 196 },
-  { x0 = 960,  x1 = 1008, text = "HOLD A AND PUSH TO CLIMB" },
-  { x0 = 1056, x1 = 1240, text = "LEAF CART! GET UP HIGH", bike = true },
-  { x0 = 0,    x1 = 1920, text = "X: PICK UP THE BALL", need = "nearball" },
-  { x0 = 1800, x1 = 1920, text = "X: GIVE HER THE BALL", need = "ball" },
-  { x0 = 1560, x1 = 1920, text = "BRING THE BALL TO THE GIRL", need = "ball" },
-  { x0 = 1560, x1 = 1920, text = "THE MAGPIE STILL HAS THE BALL", need = "magpie" },
+  { x0 = 0,    x1 = 1920, btn = "y",    text = "BARK!",              need = "magpienear" },
+  { x0 = 0,    x1 = 1920, btn = "x",    text = "PICK UP",            need = "nearball" },
+  { x0 = 1800, x1 = 1920, btn = "x",    text = "GIVE",               need = "ball" },
+  { x0 = 288,  x1 = 352,  btn = "a",    text = "HOLD: BIG JUMP" },
+  { x0 = 456,  x1 = 528,  btn = "down", text = "CRAWL" },
+  { x0 = 660,  x1 = 736,  btn = "a",    text = "TAP: HOP" },
+  { x0 = 900,  x1 = 1008, btn = "a",    text = "HOLD + PUSH: CLIMB" },
+  { x0 = 0,    x1 = 1920, btn = "b",    text = "HOLD: SNEAK",        need = "magpieahead" },
+  { x0 = 100,  x1 = 176,  btn = "a",    text = "TAP: HOP" },            -- onto the log (once she sneaks)
+  { x0 = 800,  x1 = 860,  text = "RIDE THE DUCK BOAT!", maxY = 196 },
+  { x0 = 1056, x1 = 1240, text = "CART! GET UP HIGH!", bike = true },
+  { x0 = 300,  x1 = 1920, text = "THE MAGPIE STILL HAS MY BALL!", need = "magpie" },
+  { x0 = 1560, x1 = 1920, text = "BRING ME THE BALL!", need = "ball" },
+  { x0 = 1560, x1 = 1920, text = "GO BACK FOR THE BALL!", need = "noball" },
 }
 
 L.intro = { "LEVEL 1", "CITY PARK", "A MAGPIE STOLE THE GIRL'S BALL!", "SNEAK UP AND BARK, PEPPER!" }

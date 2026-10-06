@@ -137,18 +137,20 @@ L.bikes = {
   { zoneX0 = 2400, zoneX1 = 2830, minY = 150, every = 6.0, speed = 115, endX = 2250 },
 }
 
--- prompt banner hints: first match wins; need = "ball" / "noball" / "nearball"
+-- hints (St:hint, drawn by talk.lua): first match wins. With btn ("a", "b", "x", "y", "down") it is Pepper's
+-- control hint: a button picture and 1 to 3 words. Without, it is the girl's line. need: see St:zoneHint.
 L.hints = {
-  { x0 = 0,    x1 = 92,   text = "HOLD A TO JUMP HIGHER" },
-  { x0 = 560,  x1 = 641,  text = "HOLD A AND PUSH TO CLIMB" },
-  { x0 = 790,  x1 = 1228, text = "BIKES! GET UP HIGH", bike = true },
-  { x0 = 1290, x1 = 1400, text = "RIDE THE PONTOON" },
-  { x0 = 1550, x1 = 1800, text = "X: PICK UP THE BALL", need = "nearball" },
-  { x0 = 1550, x1 = 1800, text = "CLIMB UP TO THE WHEELHOUSE", need = "noball" },
-  { x0 = 1868, x1 = 1936, text = "DOWN: CRAWL UNDER THE BRIDGE" },
-  { x0 = 2400, x1 = 2830, text = "BIKES! GET UP HIGH", bike = true },
-  { x0 = 3050, x1 = 3200, text = "X: GIVE HER THE BALL", need = "ball" },
-  { x0 = 2980, x1 = 3200, text = "FIND THE BALL ON THE BOAT", need = "noball" },
+  { x0 = 1550, x1 = 1800, btn = "x",    text = "PICK UP",            need = "nearball" },
+  { x0 = 3050, x1 = 3200, btn = "x",    text = "GIVE",               need = "ball" },
+  { x0 = 0,    x1 = 92,   btn = "a",    text = "HOLD: BIG JUMP" },
+  { x0 = 560,  x1 = 641,  btn = "a",    text = "HOLD + PUSH: CLIMB" },
+  { x0 = 1868, x1 = 1936, btn = "down", text = "CRAWL" },
+  { x0 = 790,  x1 = 1228, text = "BIKES! GET UP HIGH!", bike = true },
+  { x0 = 1290, x1 = 1400, text = "RIDE THE PONTOON!" },
+  { x0 = 1550, x1 = 1800, text = "CLIMB UP TO THE WHEELHOUSE!", need = "noball" },
+  { x0 = 2400, x1 = 2830, text = "BIKES! GET UP HIGH!", bike = true },
+  { x0 = 2980, x1 = 3200, text = "BRING ME THE BALL!", need = "ball" },
+  { x0 = 2980, x1 = 3200, text = "FIND THE BALL ON THE BOAT!", need = "noball" },
 }
 
 L.intro = { "LEVEL 3", "RIVER WALK", "THE BALL LANDED ON A BOAT.", "FETCH IT FOR THE GIRL!" }

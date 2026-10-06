@@ -105,7 +105,7 @@ L.movers = {}
 L.ball = { x = 1188, y = 108 }
 L.cat = { x = 1188, y = 102, range = 90 }
 L.ballBack = "THE BALL IS BACK BY THE STATUE"
-L.pickupSay = "BRING THE BALL TO THE GIRL!"
+L.pickupSay = "BRING ME THE BALL!"
 -- the girl waits at the top of the stairs down to the river
 L.girl = { x = 1860, y = 184 }
 L.outro = { "BY THE RIVER SHE THREW IT", "AGAIN. IT LANDED ON A FERRY..." }
@@ -138,19 +138,22 @@ L.bikes = {
   { zoneX0 = 1610, zoneX1 = 1800, minY = 150, every = 6.0, speed = 110, endX = 1580, kind = "tram", w = 80, h = 26, rail = true },
 }
 
--- prompt banner hints: first match wins; need = "ball" / "noball" / "nearball" / "cat"
+-- hints (St:hint, drawn by talk.lua): first match wins. With btn ("a", "b", "x", "y", "down") it is Pepper's
+-- control hint: a button picture and 1 to 3 words. Without, it is the girl's line. need: see St:zoneHint.
 L.hints = {
-  { x0 = 0,    x1 = 152,  text = "TAP A TO HOP UP THE CRATES" },
-  { x0 = 300,  x1 = 368,  text = "DOWN: CRAWL UNDER THE TABLES" },
-  { x0 = 640,  x1 = 688,  text = "HOLD A TO JUMP ONTO THE STALL" },
-  { x0 = 1040, x1 = 1280, text = "Y: BARK AT THE CAT!", need = "cat" },
-  { x0 = 1040, x1 = 1400, text = "X: PICK UP THE BALL", need = "nearball" },
-  { x0 = 1280, x1 = 1920, text = "GO BACK: BARK AT THE CAT", need = "cat" },
-  { x0 = 1280, x1 = 1920, text = "GO BACK FOR THE BALL", need = "noball" },
-  { x0 = 1340, x1 = 1400, text = "TAP A: HOP OVER THE FOUNTAIN" },
-  { x0 = 1610, x1 = 1800, text = "TRAM! GET UP HIGH", bike = true },
-  { x0 = 1800, x1 = 1920, text = "X: GIVE HER THE BALL", need = "ball" },
-  { x0 = 1400, x1 = 1920, text = "BRING THE BALL TO THE GIRL", need = "ball" },
+  { x0 = 0,    x1 = 1920, btn = "y",    text = "BARK!",              need = "catnear" },
+  { x0 = 0,    x1 = 1920, btn = "x",    text = "PICK UP",            need = "nearball" },
+  { x0 = 1800, x1 = 1920, btn = "x",    text = "GIVE",               need = "ball" },
+  { x0 = 0,    x1 = 152,  btn = "a",    text = "TAP: HOP" },            -- up the crates
+  { x0 = 300,  x1 = 368,  btn = "down", text = "CRAWL" },
+  { x0 = 640,  x1 = 688,  btn = "a",    text = "HOLD: BIG JUMP" },      -- onto the stall
+  { x0 = 1064, x1 = 1120, btn = "a",    text = "HOLD: BIG JUMP" },      -- onto the pedestal
+  { x0 = 1340, x1 = 1400, btn = "a",    text = "TAP: HOP" },            -- over the fountain
+  { x0 = 960,  x1 = 1240, text = "THE CAT IS ON MY BALL!",    need = "cat" },
+  { x0 = 1240, x1 = 1920, text = "GO BACK: BARK AT THE CAT!", need = "cat" },
+  { x0 = 1280, x1 = 1920, text = "GO BACK FOR THE BALL!",     need = "noball" },
+  { x0 = 1610, x1 = 1800, text = "TRAM! GET UP HIGH!", bike = true },
+  { x0 = 1400, x1 = 1920, text = "BRING ME THE BALL!", need = "ball" },
 }
 
 L.intro = { "LEVEL 2", "DOWNTOWN", "A CAT IS SITTING ON THE BALL!", "BARK IT AWAY. BRING THE BALL!" }

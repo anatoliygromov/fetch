@@ -54,10 +54,16 @@ function St.new(def, carry)
   s.kicked = {}                                                   -- leaf piles Pepper has run through
   s.cam = 0
   s.fx = Ex.new()
+  s.hard = carry and carry.hard or false                         -- hard mode (the menu's HARD MODE): no hints
   return s
 end
 
-function St:say(text, t) self.msg = { text = text, t = t or 2.2 } end
+-- a message: a string is the girl's line; a table { btn, text } is Pepper's control hint (see St:hint)
+function St:say(text, t)
+  local l = type(text) == "table" and { who = "pepper", btn = text.btn, text = text.text, teach = text.btn ~= nil, msg = true }
+    or { who = "girl", text = text, msg = true }
+  self.msg = { text = l.text, t = t or 2.2, line = l }
+end
 
 -- the magpie (City Park) has the girl's ball in its beak. It sits on a perch, and flies on to the next perch
 -- when Pepper comes near: from far off if she runs (def.magpie.flee px), only close up if she walks (fleeWalk).
@@ -90,7 +96,7 @@ function St:updateMagpie(dt)
       m.fly = { x0 = m.x, y0 = m.y, x1 = n.x, y1 = n.y, dur = math.max(0.6, math.abs(n.x - m.x) / 200), peak = 30, after = "perch" }
       m.state, m.t = "fly", 0; m.dir = n.x > m.x and 1 or -1
       S.play("flap"); m.heard = nil
-      if not self.magpieSaid then self.magpieSaid = true; self:say("TOO FAST! SNEAK UP: HOLD B TO WALK", 2.6) end
+      if not self.magpieSaid then self.magpieSaid = true; self:say({ btn = "b", text = "HOLD: SNEAK" }, 2.6) end
     end
   end
   if b.state == "magpie" then b.x, b.y = self:beak() end
@@ -196,7 +202,7 @@ function St:update(dt, presses)
       if nearGirl(self) then self:giveBall() else self:dropBall() end
     elseif nearBall(self) then
       self.ball.state = "carried"; p.carrying = self.ball; p:grab(); S.play("key")
-      self:say(self.def.pickupSay or "BRING IT TO THE GIRL!", 2.4)
+      self:say(self.def.pickupSay or "BRING ME THE BALL!", 2.4)
     end
   end
   local b = self.ball
@@ -330,8 +336,29 @@ function St:updateCat(dt)
   end
 end
 
-function St:hint()
-  if self.msg then return self.msg.text end
+-- what is being said now (talk.lua draws it): nil or a line { who = "pepper" | "girl", btn, text, teach, msg }.
+-- The level's L.hints, first match wins: { x0, x1, text, btn, need, maxY, bike }. A hint with a button (btn: "a",
+-- "b", "x", "y", "down") is Pepper's: it teaches a control, in 1 to 3 words. One without is the girl's (a goal or
+-- a story line). need: "ball" (Pepper carries it), "noball", "nearball" (she can pick it up), "cat" (it sits on
+-- the ball), "catnear" (a bark would scare it), "magpie" (it has the ball), "magpienear" (a bark would make it
+-- drop the ball), "magpieahead" (it has the ball and sits within 230 px, and she is not sneaking).
+-- A teaching hint wins over the other messages (St:say); in hard mode there are only the messages.
+local function catNear(s)
+  local c, p = s.cat, s.pepper
+  if not c or c.state ~= "sit" then return false end
+  local dx, dy = c.x - p.x, (c.y - 8) - (p.y - p:height() / 2)
+  local r = s.def.cat.range or 90
+  return dx * dx + dy * dy <= r * r
+end
+local function magpie(s, near)
+  local m, d, p = s.magpie, s.def.magpie, s.pepper
+  if not m or m.state ~= "perch" or s.ball.state ~= "magpie" then return false end
+  local dx = math.abs(p.x - m.x)
+  local inRange = dx <= d.bark and math.abs(p.y - m.y) < 110
+  if near then return inRange end
+  return not inRange and dx < 230 and not I.down("walk")
+end
+function St:zoneHint()
   local p = self.pepper
   for _, h in ipairs(self.def.hints) do
     if p.x >= h.x0 and p.x < h.x1 and (not h.maxY or p.y <= h.maxY) then
@@ -340,12 +367,22 @@ function St:hint()
       elseif h.need == "noball" then ok = p.carrying == nil and self.ball.state ~= "given"
       elseif h.need == "nearball" then ok = nearBall(self)
       elseif h.need == "cat" then ok = self.cat ~= nil and self.cat.state == "sit"
-      elseif h.need == "magpie" then ok = self.ball.state == "magpie" end
+      elseif h.need == "catnear" then ok = catNear(self)
+      elseif h.need == "magpie" then ok = self.ball.state == "magpie"
+      elseif h.need == "magpienear" then ok = magpie(self, true)
+      elseif h.need == "magpieahead" then ok = magpie(self, false) end
       if h.bike then ok = true end
-      if ok then return h.text end
+      if ok then return { who = h.btn and "pepper" or "girl", btn = h.btn, text = h.text, teach = h.btn ~= nil } end
     end
   end
-  return nil
+end
+function St:hint()
+  local msg = self.msg and self.msg.line
+  if self.hard then return msg and not msg.teach and msg or nil end
+  if msg and msg.teach then return msg end
+  local zone = self:zoneHint()
+  if zone and zone.teach then return zone end
+  return msg or zone
 end
 
 function St:draw(debug)
