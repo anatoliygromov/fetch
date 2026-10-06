@@ -20,6 +20,9 @@ local dogIcon = bitmap({ "........##", "#......###", ".########.", ".#######..",
 local boneIcon = bitmap({ "##.....##", "#########", "#########", "##.....##" })
 local heart = bitmap({ "##.##", "#####", "#####", ".###.", "..#.." })
 local lockIcon = bitmap({ ".###.", "#...#", "#...#", "#####", "##.##", "##.##", "#####" })
+local clockIcon = bitmap({ ".###.", "#.#.#", "#.#.#", "#.###", "#...#", ".###." })
+local bigHeart = bitmap({ ".#.#.", "#####", "#####", ".###.", "..#.." })
+local smallBone = bitmap({ "#...#", "#####", "#...#" })
 local checker                                                   -- every other pixel dark: dims what is under it
 
 -- a sign: body w wide (plus a 5 px point on the right), 12 rows tall
@@ -44,9 +47,10 @@ function U.status(g)
   U.sign(72, y, 66)
   lg.setColor(1, 1, 1, 1); lg.draw(boneIcon, 77, y + 4)
   txt(("%02d/%02d"):format(g.bones, g.total), 90, y + 3)
-  U.sign(146, y, 62)
+  U.sign(146, y, g.hard and 56 or 62)                           -- hard mode: a shorter sign, the HARD tag after it
   local low = g.time < 30 and math.floor(love.timer.getTime() * 4) % 2 == 0
   txt(("TIME %03d"):format(math.max(0, math.ceil(g.time))), 152, y + 3, low and U.RIM or U.WHITE)
+  if g.hard then U.hardTag(208, y + 1) end
   U.sign(238, y, 74)
   txt(("SCORE %06d"):format(g.score), 243, y + 3)
 end
@@ -90,5 +94,26 @@ end
 function U.dog(x, y, col, scale)
   lg.setColor(U.SHADE); lg.draw(dogIcon, x + 1, y + 1, 0, scale or 1)
   lg.setColor(col or U.WHITE); lg.draw(dogIcon, x, y, 0, scale or 1); lg.setColor(1, 1, 1, 1)
+end
+-- the HARD tag (hard mode): gold letters on a dark red plate, 29 x 10
+U.RED = { 170/255, 30/255, 52/255 }
+function U.hardTag(x, y)
+  lg.setColor(U.SHADE); lg.rectangle("fill", x + 1, y + 1, 29, 10)
+  lg.setColor(U.RED); lg.rectangle("fill", x, y, 29, 10)
+  txt("HARD", x + 3, y + 2, U.GOLD)
+end
+-- a medal, 11 x 11 at x, y: a gold disc with its picture (nohit: a heart, bones: a bone, par: a clock); not won
+-- yet: a dark disc with the picture in the rim colour
+local medalPic = { nohit = bigHeart, bones = smallBone, par = clockIcon }
+local medalDisc
+function U.medal(kind, x, y, won)
+  if not medalDisc then medalDisc = bitmap({ "...#####...", ".#########.", ".#########.", "###########", "###########",
+    "###########", "###########", "###########", ".#########.", ".#########.", "...#####..." }) end
+  lg.setColor(U.SHADE); lg.draw(medalDisc, x + 1, y + 1)
+  lg.setColor(won and U.GOLD or U.EDGE); lg.draw(medalDisc, x, y)
+  local pic = medalPic[kind]
+  lg.setColor(won and { 120/255, 70/255, 10/255 } or U.RIM)
+  lg.draw(pic, x + math.floor((11 - pic:getWidth()) / 2), y + math.floor((11 - pic:getHeight()) / 2))
+  lg.setColor(1, 1, 1, 1)
 end
 return U

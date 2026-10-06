@@ -1,11 +1,15 @@
 -- love riverwalk --flowtest   drives the real menus with key presses through a whole run and checks the flow:
 --   title -> menu -> level select (locks, COMING SOON) -> START GAME -> each level: intro, play (the level is
 --   finished through the stage: Pepper is put at the exit or gives the ball), tally, story card -> the ending ->
---   title; then a level from the level select, the pause's quit to title, and GAME OVER.
--- Checks: lives and score carry over, hearts refill, unlocks are saved, missing level files are skipped.
+--   title; then a level from the level select (with its medals), the pause's QUIT and its question, GAME OVER
+--   with TRY AGAIN and MENU, and HARD MODE.
+-- Checks: lives and score carry over, hearts refill, unlocks are saved, missing level files are skipped, the
+-- talk panel (who says what, the hints that used to be hidden, teaching hints first), the stuck nudge, the story
+-- card's wait, best times and medals saved, and that every hint fits the panel.
 -- It uses its own save files (flowtest_*.txt). Prints PASS / FAIL lines and "n of m passed", saves a screenshot
 -- of every screen (flow_*.png) and all of them on one sheet, flow_screens.png, in the save folder.
 local I = require("input")
+local St = require("stage")
 return function(api)
   I.testing = true
   local F = api.flow
@@ -26,6 +30,13 @@ return function(api)
   local function state(want, limit) return { cond = function() return api.getState() == want end, act = function() end, limit = limit or 8, what = want } end
   local function stats() return api.stage():stats() end
   local function readSave(n) return love.filesystem.read("flowtest_" .. n) or "" end
+  local T = api.talk
+  local function said() local c = T.cur; return c and c.line end
+  local function tp(x, y) local s = api.stage(); local p = s.pepper
+    p.x, p.y, p.vx, p.vy, p.onGround, p.ground, p.mode, p.crouch, p.invuln = x, y, 0, 0, true, nil, "normal", false, 0
+    s.cam = math.max(0, math.min(s.world.width - 320, x - 140)); s.bikes = {}; s.bikeT = 99
+  end
+  local function hold(...) I.force = {}; for _, k in ipairs({ ... }) do I.force[k] = true end end
 
   -- finish the level being played, through the stage: at the exit (with the ball if it needs it), or the
   -- ball given to the girl
@@ -56,6 +67,48 @@ return function(api)
     local r, real = F.newRun(1, fake), 0
     for _, l in ipairs(F.levels) do if l.exists then real = real + 1 end end
     return #r.names == 2 and r.names[2] == "c" and #names == real, ("made-up: %s; real run: %s"):format(table.concat(r.names, " "), table.concat(names, " "))
+  end))
+
+  -- the hints: every one fits the panel; Pepper's have a known button and 1 to 3 words
+  add(check("hints: all fit the panel, Pepper's are 1 to 3 words", function()
+    local bad, n = {}, 0
+    for _, l in ipairs(F.levels) do
+      if l.exists then
+        for _, h in ipairs(require("level." .. l.name).hints) do
+          n = n + 1
+          local who = h.btn and "pepper" or "girl"
+          local L = T.layout({ who = who, btn = h.btn, text = h.text }, "bottom")
+          local words = select(2, h.text:gsub("%a+", ""))                  -- "+" is not a word
+          if L.x0 < 0 or L.x1 > 320 or #L.rows > 2 or L.scale < 2 or (h.btn and (words > 3 or #L.rows > 1))
+            or (h.btn and not ({ a = 1, b = 1, x = 1, y = 1, down = 1 })[h.btn]) or h.text:find("\226\128\148") then bad[#bad + 1] = l.name .. ": " .. h.text end
+        end
+      end
+    end
+    return #bad == 0, #bad == 0 and (n .. " hints") or table.concat(bad, "; ")
+  end))
+  -- the hints that never showed before, and who wins the panel (on stages of their own)
+  add(check("hints: the log hop shows once Pepper sneaks (City Park)", function()
+    local s = St.new(require("level.citypark")); local p = s.pepper
+    p.x = 120; hold("walk"); local h = s:hint(); I.force = {}
+    local h2 = (function() p.x = 60; return s:hint() end)()
+    return h and h.btn == "a" and h.text == "TAP: HOP" and h2 and h2.btn == "b", ("walking at 120: %s; running at 60: %s"):format(h and h.text or "-", h2 and h2.text or "-")
+  end))
+  add(check("hints: the magpie line shows (City Park)", function()
+    local s = St.new(require("level.citypark")); s:resetMagpie(6); s.pepper.x = 1300
+    local h = s:hint(); return h and h.who == "girl" and h.text:find("MAGPIE") ~= nil, h and h.text or "-"
+  end))
+  add(check("hints: GO BACK: BARK AT THE CAT shows (Downtown)", function()
+    local s = St.new(require("level.downtown")); s.pepper.x = 1300
+    local h = s:hint(); return h and h.who == "girl" and h.text:find("BARK AT THE CAT") ~= nil, h and h.text or "-"
+  end))
+  add(check("hints: a teaching hint wins over a message", function()
+    local s = St.new(require("level.citypark")); s.pepper.x = 500; s:say("IT DROPPED THE BALL!")
+    local h = s:hint(); return h and h.btn == "down" and h.text == "CRAWL", h and h.text or "-"
+  end))
+  add(check("hints: hard mode has messages but no hints", function()
+    local s = St.new(require("level.citypark"), { hard = true }); s.pepper.x = 500
+    local h1 = s:hint(); s:say("IT DROPPED THE BALL!"); local h2 = s:hint()
+    return s.hard and h1 == nil and h2 and h2.who == "girl", ("%s / %s"):format(h1 and h1.text or "none", h2 and h2.text or "none")
   end))
 
   -- title and menu
@@ -96,6 +149,33 @@ return function(api)
       add(check(("run %d: %s unlocked and saved"):format(k, name), function() return F.unlocked[name] and readSave("progress.txt"):find(name) ~= nil, (readSave("progress.txt"):gsub("\n", " ")) end))
     end
     add(wait(0.6), key("space"), state("play", 1), wait(0.2))
+    if k == 1 and name == "citypark" then
+      -- the talk panel: Pepper says the control hint at the start (the magpie is ahead: sneak)
+      add(wait(0.4), check("talk: Pepper says [B] HOLD: SNEAK at the start", function()
+        local l = said(); return l and l.who == "pepper" and l.btn == "b" and l.text == "HOLD: SNEAK", l and l.text or "nothing" end), shot("u1_pepper"))
+      add(check("talk: the panel never covers Pepper", function()
+        local L = T.placed(api.stage()); local x0, y0, x1, y1 = T.pepperRect(api.stage())
+        return L and not (L.x0 < x1 and L.x1 > x0 and L.y0 < y1 and L.y1 > y0), L and ("panel y %d-%d, Pepper y %d-%d"):format(L.y0, L.y1, y0, y1) or "no panel" end))
+      -- idle 3 s where a hint applies: the button bounces above her head; a press ends it
+      add(wait(3.1), check("nudge: idle 3 s shows the B button above Pepper", function()
+        local n = T.nudge; return n.btn == "b" and n.why == "idle", tostring(n.btn) end), wait(0.25), shot("u3_nudge"))
+      add(key("z"), wait(0.05), check("nudge: a button press ends it", function() return T.nudge.btn == nil, tostring(T.nudge.btn) end))
+      -- pushing against the hedge for 2 s: the Down button
+      add({ act = function() tp(500, 184); api.stage().pepper.face = 1; hold("right") end }, wait(2.4),
+        check("nudge: 2 s pushing at the hedge shows Down", function() local n = T.nudge; return n.btn == "down" and n.why == "push", tostring(n.btn) end),
+        { act = function() I.force = {} end })
+      -- the girl's line: the magpie still has the ball, far off
+      add({ act = function() tp(1300, 184) end }, wait(0.5), check("talk: the girl says the magpie line", function()
+        local l = said(); return l and l.who == "girl" and l.text:find("MAGPIE") ~= nil, l and l.text or "nothing" end), shot("u2_girl"))
+      add({ act = function() tp(1600, 216) end }, wait(0.1))
+    end
+    if name == "riverwalk" then
+      -- low on the quay the bottom panel would cover Pepper: it moves to the top
+      add({ act = function() tp(1340, 216) end }, wait(0.4), check("talk: Pepper low on the quay: the panel goes to the top", function()
+        local L = T.placed(api.stage()); local x0, y0, x1, y1 = T.pepperRect(api.stage())
+        return L and L.by < 100 and not (L.x0 < x1 and L.x1 > x0 and L.y0 < y1 and L.y1 > y0), L and ("panel y %d-%d, Pepper y %d-%d"):format(L.y0, L.y1, y0, y1) or "no panel" end),
+        shot("u10_top"))
+    end
     add({ act = function() local s = api.stage(); s.lives, s.hearts, s.score = 2, 1, s.score + 1200; finish() end })
     add(state("clear", 6), { cond = function() local tl = api.tally(); return tl and tl.done end, act = function() end, limit = 8, what = "the tally" })
     add(check(("run %d: the tally adds up"):format(k), function()
@@ -104,17 +184,28 @@ return function(api)
       local tb = tonumber(tl.lines[#tl.lines][2])
       local ok = tl.lines[1][1] == "BONES" and tl.lines[#tl.lines][1] == "TIME BONUS" and tl.points == st.levelScore + tb
         and tl.score == st.score + tb and api.run().score == tl.score
-      if st.bonus then ok = ok and tl.lines[2][1] == st.bonus[1] and #tl.lines == 3 else ok = ok and #tl.lines == 2 end
+      local n = 2 + (st.bonus and 1 or 0) + (st.secrets and st.secretsTotal and 1 or 0)    -- SECRETS: when the level has them
+      if st.bonus then ok = ok and tl.lines[2][1] == st.bonus[1] end
+      ok = ok and #tl.lines == n
       local d = {}; for _, l in ipairs(tl.lines) do d[#d + 1] = l[1] .. " " .. l[2] end
       return ok, table.concat(d, ", ") .. (", points %d, score %d"):format(tl.points, tl.score)
     end))
     add({ act = function() prev = api.tally() end })
-    if k == #names then add(shot("5_tally")) end
+    add(check(("run %d: clear time and best time saved"):format(k), function()
+      local tl = api.tally(); local saved = tonumber(readSave("time_" .. name .. ".txt"))
+      return tl.time > 0 and saved and math.abs(saved - tl.time) < 0.01 and tl.best == saved and tl.newBestTime, ("time %.2f, saved %s"):format(tl.time, tostring(saved))
+    end))
+    add(check(("run %d: medals (a heart lost: no NO HIT) saved"):format(k), function()
+      local tl = api.tally(); local m = F.medals(name)
+      return not tl.medals.nohit and tl.medals.par and not tl.medals.bones and m.par and not m.nohit, readSave("medals_" .. name .. ".txt"):gsub("\n", "")
+    end))
     add(key("space"))
     if k < #names then
       if require("level." .. name).outro then
-        add(state("story", 1), wait(0.6), shot("4_story"),
-          check(("run %d: story card with %s's outro"):format(k, name), function() return api.getState() == "story", api.getState() end), key("space"))
+        add(state("story", 1), wait(0.6), key("space"), key("x"),
+          check(("run %d: story card with %s's outro waits 2 s"):format(k, name), function() return api.getState() == "story", api.getState() end),
+          wait(1.6), key("x"), key("lshift"), check(("run %d: story card: only A goes on"):format(k), function() return api.getState() == "story", api.getState() end),
+          shot("4_story"), key("space"))
       end
       add(state("intro", 1))
     end
@@ -138,23 +229,66 @@ return function(api)
     local st, r = stats(), api.run()
     return r.names[1] == names[#names] and #r.names == 1 and st.lives == 3 and st.score == 0, ("%s, lives %d, score %d"):format(r.names[1], st.lives, st.score)
   end))
-  -- pause: quit to the title
-  add(wait(0.6), key("space"), state("play", 1), wait(0.2), key("return"), state("pause", 1), wait(0.1), shot("7_pause"))
-  add(key("escape"), check("pause: Esc quits to the title", function() return api.getState() == "title" and api.run() == nil, api.getState() end))
-  -- GAME OVER: back to the title, the unlocks stay
-  add(wait(0.8), key("space"), state("menu", 2), key("space"), state("intro", 1), wait(0.6), key("space"), state("play", 1))
-  add({ act = function() local s = api.stage(); s.lives, s.hearts = 1, 1; s:loseHeart() end }, state("over", 1), wait(1.4), shot("8_gameover"))
-  add(key("space"), state("title", 1), check("game over: back to the title, unlocks kept", function()
-    F.load(); local ok = api.getState() == "title"
+  -- a clean clear (every bone, no heart lost, fast): all three medals, a new best time
+  local last = names[#names]
+  add(wait(0.6), key("space"), state("play", 1), wait(0.3))
+  add({ act = function() local s = api.stage(); for _, bn in ipairs(s.bones) do bn.taken = true end; s.taken = s.total; finish() end })
+  add(state("clear", 6), { cond = function() local tl = api.tally(); return tl and tl.done end, act = function() end, limit = 8, what = "the tally" })
+  add(check("medals: NO HIT, ALL BONES, PAR TIME won and saved", function()
+    local tl, m = api.tally(), F.medals(last)
+    return tl.medals.nohit and tl.medals.bones and tl.medals.par and m.nohit and m.bones and m.par, readSave("medals_" .. last .. ".txt"):gsub("\n", "")
+  end))
+  add(check("best time: the faster of the two clears is kept", function()
+    local tl = api.tally(); local b = math.min(tl.time, prev.time)
+    return tl.best == b and tl.newBestTime == (tl.time < prev.time) and F.levelTimeBest(last) == b,
+      ("%.2f then %.2f, best %.2f"):format(prev.time, tl.time, tl.best) end), shot("5_tally"), shot("u4_tally"))
+  add(key("space"), state("ending", 1), wait(2.3), key("space"), state("title", 1))
+  add(wait(0.8), key("space"), state("menu", 2), key("down"), key("space"), state("select", 1), wait(0.3), shot("u6_select"),
+    check("level select: medals shown from the saves", function() local m = F.medals(last); return m.nohit and m.bones and m.par, "" end))
+  add(key("escape"), state("menu", 1))
+
+  -- pause: B never quits, QUIT asks first
+  add(key("up"), key("space"), state("intro", 1), wait(0.6), key("space"), state("play", 1), wait(0.2), key("return"), state("pause", 1), wait(0.1), shot("7_pause"))
+  add(key("lshift"), check("pause: B does nothing", function() return api.getState() == "pause", api.getState() end))
+  add(key("escape"), check("pause: Esc (back) goes on playing", function() return api.getState() == "play", api.getState() end))
+  add(key("return"), state("pause", 1), key("down"), key("space"),
+    check("pause: QUIT asks first", function() return api.getState() == "pause" and api.pause().confirm == 1, api.getState() end), shot("u7_pause"))
+  add(key("space"), check("pause: NO keeps the game", function() return api.getState() == "pause" and not api.pause().confirm, api.getState() end))
+  add(key("down"), key("space"), key("escape"), check("pause: back from the question", function() return api.getState() == "pause" and not api.pause().confirm, api.getState() end))
+  add(key("down"), key("space"), key("down"), key("space"),
+    check("pause: YES, QUIT goes to the menu", function() return api.getState() == "menu" and api.run() == nil, api.getState() end))
+
+  -- GAME OVER: TRY AGAIN (the same level, 3 lives, the score it started with), then MENU
+  add(key("space"), state("intro", 1), wait(0.6), key("space"), state("play", 1))
+  add({ act = function() local s = api.stage(); s.score = s.score + 500; s.lives, s.hearts = 1, 1; s:loseHeart() end }, state("over", 1))
+  add(key("space"), check("game over: no key for the first 1.2 s", function() return api.getState() == "over", api.getState() end))
+  add(wait(1.4), shot("8_gameover"), shot("u5_over"), key("space"), state("intro", 1), check("game over: TRY AGAIN restarts the level", function()
+    local st, r = stats(), api.run()
+    return r and r.names[r.k] == names[1] and st.lives == 3 and st.score == 0 and st.hearts == 3, ("%s, lives %d, score %d"):format(r and r.names[r.k] or "-", st.lives, st.score)
+  end))
+  add(wait(0.6), key("space"), state("play", 1))
+  add({ act = function() local s = api.stage(); s.lives, s.hearts = 1, 1; s:loseHeart() end }, state("over", 1), wait(1.4), key("down"), key("space"),
+    state("menu", 1), check("game over: MENU, unlocks kept", function()
+    F.load(); local ok = api.getState() == "menu" and api.run() == nil
     for i, l in ipairs(F.levels) do if l.exists then ok = ok and F.isOpen(i) end end
     return ok, api.getState()
   end))
+
+  -- HARD MODE: the menu's third item, saved; the stage gets it, says no hints, shows the tag
+  add(key("down"), key("down"), key("space"), check("hard mode: on and saved", function()
+    return F.hard and readSave("hard.txt"):find("1") ~= nil, readSave("hard.txt"):gsub("\n", "") end), wait(0.2), shot("u8_menu"))
+  add(key("up"), key("up"), key("space"), state("intro", 1), wait(0.6), key("space"), state("play", 1), wait(0.5),
+    check("hard mode: the stage is hard, no hints, no nudge", function()
+      local s = api.stage(); return s.hard == true and s:hint() == nil and T.cur == nil, tostring(s.hard) end))
+  add(wait(3.2), check("hard mode: no idle nudge", function() return T.nudge.btn == nil, tostring(T.nudge.btn) end), shot("u9_hard"))
+  add(key("return"), state("pause", 1), key("down"), key("space"), key("down"), key("space"), state("menu", 1),
+    key("down"), key("down"), key("space"), check("hard mode: off again", function() return not F.hard and readSave("hard.txt"):find("0") ~= nil, "" end))
 
   -- the summary and the contact sheet (4 x 2, the screens at 2x)
   add(wait(0.2), { act = function()
     table.sort(shots, function(a, b) return a.name < b.name end)
     local keep = {}
-    for _, s in ipairs(shots) do if s.name ~= "0_title" then keep[#keep + 1] = s end end
+    for _, s in ipairs(shots) do if s.name ~= "0_title" and s.name:match("^%d") then keep[#keep + 1] = s end end
     local w, h, gap = 640, 480, 8
     local sheet = love.image.newImageData(4 * w + 5 * gap, 2 * h + 3 * gap)
     sheet:mapPixel(function() return 0.1, 0.1, 0.12, 1 end)
