@@ -287,5 +287,40 @@
   "source": "cp_willow_spritecook.png",
   "spritecook_source_asset_id": "a0cb4683-03c6-4dc6-931b-03348daf1c9f",
   "note": "preview/art set pieces: weeping willow. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py quantises and fits it"
+ },
+ "rc_volvo": {
+  "source": "rc_volvo_spritecook.png",
+  "spritecook_source_asset_id": "31e08857-2870-4812-969d-c4050f05ca9c",
+  "note": "near-lane traffic at perspective size: Volvo estate (road_car1, road_car5 in silver). Downloaded pre-reduced to 24 colours; tools/make_traffic.py makes the road_*.png files"
+ },
+ "rc_van": {
+  "source": "rc_van_spritecook.png",
+  "spritecook_source_asset_id": "d3ee18e5-9b8a-457e-9dfe-a27723b4e17a",
+  "note": "near-lane traffic at perspective size: delivery van (road_car2). Downloaded pre-reduced to 24 colours; tools/make_traffic.py makes the road_*.png files"
+ },
+ "rc_taxi": {
+  "source": "rc_taxi_spritecook.png",
+  "spritecook_source_asset_id": "6057616b-60ba-4ba6-8a29-ef3a8da8f6fe",
+  "note": "near-lane traffic at perspective size: taxi (road_car3). Downloaded pre-reduced to 24 colours; tools/make_traffic.py makes the road_*.png files"
+ },
+ "rc_hatch": {
+  "source": "rc_hatch_spritecook.png",
+  "spritecook_source_asset_id": "523af17f-71d3-4114-87ca-f514a5e37a0a",
+  "note": "near-lane traffic at perspective size: red hatchback (road_car4). Downloaded pre-reduced to 24 colours; tools/make_traffic.py makes the road_*.png files"
+ },
+ "rc_cyclist": {
+  "source": "rc_cyclist_spritecook.png",
+  "spritecook_source_asset_id": "5efe458f-cd8f-419b-92eb-145c7dd8b115",
+  "note": "near-lane traffic at perspective size: commuter cyclist (not used: style reference for the two below). Downloaded pre-reduced to 24 colours; tools/make_traffic.py makes the road_*.png files"
+ },
+ "rc_cyclist2": {
+  "source": "rc_cyclist2_spritecook.png",
+  "spritecook_source_asset_id": "ebaddb83-9a23-47c6-ac06-83dfff915ea5",
+  "note": "near-lane traffic at perspective size: cyclist in green (road_cyclist2). Downloaded pre-reduced to 24 colours; tools/make_traffic.py makes the road_*.png files"
+ },
+ "rc_cyclist3": {
+  "source": "rc_cyclist3_spritecook.png",
+  "spritecook_source_asset_id": "d7428333-25e1-4bb7-963a-86a061f9140d",
+  "note": "near-lane traffic at perspective size: cyclist in a red coat (road_cyclist1). Downloaded pre-reduced to 24 colours; tools/make_traffic.py makes the road_*.png files"
  }
 }
