@@ -1,6 +1,6 @@
 -- The checks for Level 2, Downtown (love riverwalk --level downtown <flag>). Same flags as tests_citypark.lua:
 --   --physics   checks every set piece: hop, held jump, crates, cafe tables and parasols, the shop sign, market
---               stall and awnings, the statue, the cat and the ball, the fountain, the tram, the exit
+--               stall and awnings, the statue, the cat and the ball, the fountain, the tram, the girl
 --   --auto      plays the whole level on autopilot and saves every 3rd frame to rec/ (for the GIF)
 --   --test      a screenshot tour of the 6 screens, the cat beat, the tram, the debug view and the tally
 local I = require("input")
@@ -177,13 +177,14 @@ return function(mode, api)
       { act = function(p) local s = api.stage(); report("shelter: safe from the tram", near(p.y, 136) and s.hearts == hearts, ("y %.0f hearts %d"):format(p.y, s.hearts)) end },
       { act = function() tp(1660, 184); tram(1900) end }, { during = 0.5 },
       { act = function() local c = api.stage().bikes[1]; report("tram: stays on its rail over the stairs", c and near(c.y, 184), c and ("x %.0f y %.0f"):format(c.x, c.y) or "none") end },
-      -- 10 the stairs down to the river: without the ball they do not end the level, with it they do
-      { act = function() local s = api.stage(); s.ball.state = "rest"; s.pepper.carrying = nil; tp(1840, 184); hold("right") end },
+      -- 10 the girl at the stairs: reaching her without the ball does nothing, giving her the ball clears
+      { act = function() local s = api.stage(); s.ball.state = "rest"; s.pepper.carrying = nil; tp(1800, 184); hold("right") end },
       { wait = 3.0 },
-      { act = function() release(); report("exit: without the ball it does not clear", api.getState() == "play" and not api.stage().clearT, api.getState()) end },
-      { act = function() tp(1840, 184); carry(); hold("right") end }, { wait = 3.0 },
-      { act = function() release(); local st = api.stage():stats()
-          report("exit: with the ball it clears (+1000 BALL)", api.getState() == "clear" and st.bonus and st.bonus[1] == "BALL" and st.bonus[2] == 1000, api.getState()) end },
+      { act = function() release(); report("girl: without the ball the level goes on", api.getState() == "play" and not api.stage().clearT, api.getState()) end },
+      { act = function() local s = api.stage(); carry(); tp(s.girl.x - 30, 184); s.pepper.face = 1 end }, { wait = 0.1 },
+      { act = function() love.keypressed("x") end }, { wait = 3.0 },
+      { act = function() local st = api.stage():stats()
+          report("girl: giving her the ball clears (FETCH 2000)", api.getState() == "clear" and st.bonus and st.bonus[1] == "FETCH", api.getState()) end },
       { act = function()
           local ok = 0; for _, r in ipairs(results) do if r then ok = ok + 1 end end
           print(("%d of %d passed"):format(ok, #results)); love.event.quit() end },
@@ -275,7 +276,9 @@ return function(mode, api)
       at(function(p) return p.vy > 0 end, function() release() end),
       at(function(p) return p.onGround and p.y <= 137 end, function() release() end),
       at(function(p, s) return s.bikes[1] and s.bikes[1].x < p.x - 60 end, function() hold("right") end, 12),
-      at(function() return api.getState() == "clear" end, function() release() end, 9),
+      at(function(p, s) return p.onGround and p.y >= 183 and p.x >= s.girl.x - 40 end, function() release() end, 9),
+      { wait = 0.3 }, { act = function() love.keypressed("x") end },
+      at(function() return api.getState() == "clear" end, function() end, 9),
       { wait = 9 }, { act = function(p, s)
           local st = s:stats()
           print(("AUTOPILOT %s: bones %d/%d, lives %d hearts %d, %.1f s played"):format(api.getState() == "clear" and "GOOD GIRL!" or api.getState(),
@@ -313,10 +316,10 @@ return function(mode, api)
     steps[#steps + 1] = { act = function() tp(1668, 148) end }; steps[#steps + 1] = { wait = 0.3 }
     steps[#steps + 1] = shot("dt_15_debug_screen6", 1600)
     steps[#steps + 1] = { act = function() love.keypressed("g") end }
-    -- down the stairs with the ball: the tally
-    steps[#steps + 1] = { act = function() carry(); tp(1830, 184); I.force = { right = true } end }
-    steps[#steps + 1] = { wait = 0.8 }; steps[#steps + 1] = shot("dt_16_exit")
-    steps[#steps + 1] = { act = function() I.force = {} end }
+    -- give the girl the ball: the tally
+    steps[#steps + 1] = { act = function() local s = api.stage(); carry(); tp(s.girl.x - 30, 184); s.pepper.face = 1 end }
+    steps[#steps + 1] = { wait = 0.2 }; steps[#steps + 1] = { act = function() love.keypressed("x") end }
+    steps[#steps + 1] = { wait = 0.8 }; steps[#steps + 1] = shot("dt_16_give")
     steps[#steps + 1] = { wait = 4.5 }; steps[#steps + 1] = shot("dt_17_tally")
     steps[#steps + 1] = { wait = 0.3 }; steps[#steps + 1] = { act = function() love.event.quit() end }
   end

@@ -47,9 +47,8 @@ function St.new(def, carry)
   -- the girl: not in every level (Downtown has none); a level without her keeps one far off the map, hidden
   if def.girl then s.girl = { x = def.girl.x, y = def.girl.y, state = "idle", t = 0, callT = 0 }
   else s.girl = { x = -9999, y = -9999, state = "idle", t = 0, callT = 0, hidden = true } end
-  -- the runaway ball (City Park): it waits at a waypoint and hops on to the next one when Pepper comes close;
-  -- after the last one it is gone (out of the level)
-  if def.ballRun then s.ball.state = "run"; s.ball.wp = 1; s.ball.x, s.ball.y = def.ballRun[1].x, def.ballRun[1].y end
+  -- the magpie (City Park): it has the ball in its beak (see St:updateMagpie)
+  if def.magpie then s:resetMagpie(1) end
   -- the cat (City Park): it sits on the ball until a bark scares it off; then the ball drops
   if def.cat then s.cat = { x = def.cat.x, y = def.cat.y, state = "sit", t = 0, vx = 0, vy = 0, dir = 1 }; s.ball.state = "cat" end
   s.kicked = {}                                                   -- leaf piles Pepper has run through
@@ -60,30 +59,52 @@ end
 
 function St:say(text, t) self.msg = { text = text, t = t or 2.2 } end
 
--- the runaway ball: hop to the next waypoint along an arc (higher for longer hops); the last waypoint is off the
--- level, so the ball leaves it
-function St:updateBallRun(dt)
-  local b, p, run = self.ball, self.pepper, self.def.ballRun
-  if b.hop then
-    local h = b.hop
-    h.t = h.t + dt
-    local k = math.min(1, h.t / h.dur)
-    b.x = h.x0 + (h.x1 - h.x0) * k
-    b.y = h.y0 + (h.y1 - h.y0) * k - h.peak * 4 * k * (1 - k)
-    if k >= 1 then
-      b.hop = nil
-      if b.wp >= #run then b.state = "gone" else S.play("land") end
+-- the magpie (City Park) has the girl's ball in its beak. It sits on a perch, and flies on to the next perch
+-- when Pepper comes near: from far off if she runs (def.magpie.flee px), only close up if she walks (fleeWalk).
+-- A bark within its range (bark px) startles it: it drops the ball and flies away. So: sneak up, then bark.
+-- On its last perch it stays put.
+function St:resetMagpie(i)
+  local d, b = self.def.magpie, self.ball
+  local pr = d.perches[i]
+  self.magpie = { i = i, x = pr.x, y = pr.y, state = "perch", t = 0, dir = -1 }
+  b.state, b.drop = "magpie", nil
+  b.x, b.y = self:beak()
+end
+function St:beak() local m = self.magpie; return m.x + m.dir * 7, m.y - 6 end
+function St:updateMagpie(dt)
+  local m, d, p, b = self.magpie, self.def.magpie, self.pepper, self.ball
+  m.t = m.t + dt
+  if m.state == "fly" then
+    local f = m.fly
+    local k = math.min(1, m.t / f.dur)
+    m.x = f.x0 + (f.x1 - f.x0) * k
+    m.y = f.y0 + (f.y1 - f.y0) * k - f.peak * 4 * k * (1 - k)
+    if k >= 1 then m.state, m.t = f.after, 0; if f.after == "gone" then m.x = -999 end end
+  elseif m.state == "perch" then
+    m.dir = (p.x < m.x) and -1 or 1                                -- it keeps an eye on Pepper
+    local dist = math.abs(p.x - m.x)
+    local running = math.abs(p.vx) > Pp.P.walk + 5 and p.mode == "normal"
+    if m.i < #d.perches and dist < (running and d.flee or d.fleeWalk) then
+      local n = d.perches[m.i + 1]
+      m.i = m.i + 1
+      m.fly = { x0 = m.x, y0 = m.y, x1 = n.x, y1 = n.y, dur = math.max(0.6, math.abs(n.x - m.x) / 200), peak = 30, after = "perch" }
+      m.state, m.t = "fly", 0; m.dir = n.x > m.x and 1 or -1
+      S.play("flap"); m.heard = nil
+      if not self.magpieSaid then self.magpieSaid = true; self:say("TOO FAST! SNEAK UP: HOLD B TO WALK", 2.6) end
     end
-    return
   end
-  local trig = run.trigger or 90
-  if b.wp < #run and p.x > b.x - trig and p.mode == "normal" then
-    local a, n = run[b.wp], run[b.wp + 1]
-    b.wp = b.wp + 1
-    local d = math.abs(n.x - a.x)
-    b.hop = { t = 0, dur = math.max(0.5, d / 260), x0 = b.x, y0 = b.y, x1 = n.x, y1 = n.y, peak = n.peak or (24 + d * 0.12) }
-    if b.wp == 2 and run.say then self:say(run.say, 2.4) end
-  end
+  if b.state == "magpie" then b.x, b.y = self:beak() end
+end
+function St:barkAtMagpie()
+  local m, d, p, b = self.magpie, self.def.magpie, self.pepper, self.ball
+  if m.state ~= "perch" or b.state ~= "magpie" then return end
+  if math.abs(p.x - m.x) <= d.bark and math.abs(p.y - m.y) < 110 then
+    b.state, b.vx, b.vy = "air", 0, -20                            -- it lets go: the ball falls
+    b.home = { x = self.check.x + 24, y = self.check.y }           -- if it falls in the pond: back by the last lamp
+    m.fly = { x0 = m.x, y0 = m.y, x1 = m.x - 260, y1 = m.y - 140, dur = 1.2, peak = 10, after = "gone" }
+    m.state, m.t = "fly", 0; m.dir = -1
+    S.play("flap"); self:say(d.dropSay or "IT DROPPED THE BALL!", 2.2)
+  else m.heard = self.t end
 end
 
 -- the level's exit (goal = "exit"): reaching it clears the level; with needBall only while carrying the ball
@@ -179,7 +200,7 @@ function St:update(dt, presses)
     end
   end
   local b = self.ball
-  if b.state == "run" then self:updateBallRun(dt) end
+  if self.magpie then self:updateMagpie(dt) end
   self:checkExit()
   if b.state == "carried" then b.x, b.y = p:mouthPos()
   elseif b.state == "air" then
@@ -245,6 +266,7 @@ function St:update(dt, presses)
   if p.barked then p.barked = false; self.rings[#self.rings + 1] = { x = p.x + p.face * 22, y = p.y - 22, t = 0 }
     if math.abs(p.x - self.girl.x) < 110 and self.girl.state == "idle" then self.girl.state = "wave"; self.girl.t = 0 end
     if self.cat then self:barkAtCat() end
+    if self.magpie then self:barkAtMagpie() end
   end
   if self.cat then self:updateCat(dt) end
   for _, pr in ipairs(self.def.props) do                           -- leaf piles flatten when Pepper runs through
@@ -317,7 +339,8 @@ function St:hint()
       if h.need == "ball" then ok = p.carrying ~= nil
       elseif h.need == "noball" then ok = p.carrying == nil and self.ball.state ~= "given"
       elseif h.need == "nearball" then ok = nearBall(self)
-      elseif h.need == "cat" then ok = self.cat ~= nil and self.cat.state == "sit" end
+      elseif h.need == "cat" then ok = self.cat ~= nil and self.cat.state == "sit"
+      elseif h.need == "magpie" then ok = self.ball.state == "magpie" end
       if h.bike then ok = true end
       if ok then return h.text end
     end
@@ -388,7 +411,7 @@ function St:draw(debug)
   local g = self.girl
   if not g.hidden then Sc.shadow(g.x - cam, g.y, 22) end
   local b = self.ball
-  if b.state == "rest" or b.state == "air" or b.state == "run" then
+  if b.state == "rest" or b.state == "air" then
     local fy = w:floor(b.x - 2, b.x + 2, b.x, b.y - 0.5, 240, b.y - 0.5, b.drop)
     if fy then Sc.shadow(b.x - cam, fy, 8 - math.min(4, (fy - b.y) / 8)) end
   end
@@ -406,7 +429,7 @@ function St:draw(debug)
   lg.setColor(1, 1, 1, 1)
   if not g.hidden then lg.draw(girlImg, girlQ[gr][fr], math.floor(g.x - cam + 0.5), g.y, 0, face, 1, rw.x, rw.y) end
   -- the ball (real art), unless Pepper carries it (drawn after her)
-  if b.state == "rest" or b.state == "air" or b.state == "cat" or b.state == "run" or (b.state == "given" and g.state ~= "pet" and g.state ~= "happy") then
+  if b.state == "rest" or b.state == "air" or b.state == "cat" or b.state == "magpie" or (b.state == "given" and g.state ~= "pet" and g.state ~= "happy") then
     local bx, by = b.x, b.y
     if b.state == "given" then bx, by = g.x + face * 8, g.y - 30 - math.abs(math.sin(g.t * 6)) * 14 end
     lg.draw(ballImg, math.floor(bx - cam - 3 + 0.5), math.floor(by - 6 + 0.5))
@@ -414,6 +437,7 @@ function St:draw(debug)
   -- bikes: a cyclist (art/scene/cyclist1.png, 49 x 50) over the 48 x 26 hit box, wheels on the pavement; greybox:
   -- a box the size of the zone's hit box (w, h), labelled with its kind (CART, TRAM) or BIKE
   if self.cat and self.cat.state ~= "gone" then Sc.catGrey(self.cat, cam, self.t) end
+  if self.magpie and self.magpie.state ~= "gone" then Sc.magpie(self.magpie, cam, self.t) end
   local cyc = Rd.art().cyclists[1]
   for _, c in ipairs(self.bikes) do
     local x = c.x - cam

@@ -403,6 +403,47 @@ function Sc.catGrey(c, camx, t)
   lg.setColor(1, 1, 1, 1)
 end
 
+-- the magpie (City Park), drawn in code: black head and back, white belly and wing patch, a long blue-black tail.
+-- 14 x 10 px, feet at (x, y), facing m.dir. Sitting it bobs its tail now and then; flying it flaps.
+local MAGPIE = {
+  "..........kk..",
+  ".........kkkk.",
+  "........kkkkkb",
+  "uuu.....kkkk..",
+  ".uuukkkkkwwk..",
+  "...uukkwwwwk..",
+  ".....kkwwwk...",
+  ".......kkk....",
+  "........g.....",
+  "........gg....",
+}
+local MAGPIE_WING = { "....kkkk......", "...wwkk......." }       -- wings up (flying), drawn above the back
+local MCOL = { k = { 0.10, 0.11, 0.15 }, u = { 0.16, 0.26, 0.45 }, w = { 0.95, 0.96, 0.97 }, b = { 0.25, 0.25, 0.27 }, g = { 0.30, 0.30, 0.33 } }
+function Sc.magpie(m, camx, t)
+  local x, y = math.floor(m.x - camx + 0.5), math.floor(m.y + 0.5)
+  if x < -30 or x > 350 then return end
+  local flying = m.state == "fly"
+  local flap = flying and (math.floor(t * 12) % 2 == 0)
+  local bob = (not flying and math.floor(t * 0.8) % 3 == 0 and (t * 0.8) % 1 < 0.25) and 1 or 0   -- tail flick
+  local function px(col, row, ch)
+    local c = MCOL[ch]; if not c then return end
+    local dx = m.dir > 0 and (col - 7) or (6 - col)
+    lg.setColor(c); lg.rectangle("fill", x + dx, y - 10 + row + ((ch == "u" and row <= 4) and bob or 0), 1, 1)
+  end
+  for row, line in ipairs(MAGPIE) do
+    if not (flying and row >= 9) then                             -- legs tucked in when flying
+      for col = 1, #line do px(col, row - 1, line:sub(col, col)) end
+    end
+  end
+  if flying then
+    local wing = flap and MAGPIE_WING[1] or MAGPIE_WING[2]
+    for col = 1, #wing do px(col, flap and 1 or 3, wing:sub(col, col)) end
+    if flap then for col = 1, #wing do px(col, 2, wing:sub(col, col)) end end
+  end
+  if m.heard and t - m.heard < 0.8 then lg.setColor(C.label); F.print("?", x - 2, y - 22, 1) end
+  lg.setColor(1, 1, 1, 1)
+end
+
 -- layers 1 to 5 (everything behind the quay)
 function Sc.drawFar(L, camx, t)
   for y = 0, 239 do                                                -- 1 sky

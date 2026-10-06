@@ -1,8 +1,8 @@
 -- The checks for Level 1, City Park (love riverwalk --level citypark <flag>). Same flags as tests.lua:
 --   --physics   checks every set piece: hop, held jump, log, bench, hedge, stepping stones, duck boat, pond,
---               bin, picnic table, leaf cart, the oak's branches, the runaway ball, slide, climbing frame, the gate
+--               bin, picnic table, leaf cart, the oak's branches, the magpie and the ball, slide, climbing frame, the girl
 --   --auto      plays the whole level on autopilot and saves every 3rd frame to rec/ (for the GIF)
---   --test      a screenshot tour of the 6 screens, the ball chase, the debug view and the tally
+--   --test      a screenshot tour of the 6 screens, the magpie, the debug view and the tally
 local I = require("input")
 local Pp = require("pepper")
 return function(mode, api)
@@ -116,18 +116,25 @@ return function(mode, api)
       { act = function(p) release(); report("oak: low branch to the middle branch", near(p.y, 128), ("y %.0f"):format(p.y)) end },
       { act = function() tp(1460, 128); jump("jump") end }, { during = 0.2 }, landed(),
       { act = function(p) release(); report("oak: middle branch to the top branch", near(p.y, 100), ("y %.0f"):format(p.y)) end },
-      -- the runaway ball: it hops on when Pepper comes near, waits for her, and leaves the park at the end
-      { act = function() local s = api.stage(); local b, run = s.ball, s.def.ballRun
-          b.state, b.wp, b.hop, b.x, b.y = "run", 2, nil, run[2].x, run[2].y; tp(run[2].x - 200, 184) end }, { wait = 0.3 },
-      { act = function() local b = api.stage().ball; report("ball: it waits while Pepper is far", b.wp == 2 and not b.hop, ("wp %d"):format(b.wp)); tp(b.x - 60, 184) end },
-      { wait = 0.1 },
-      { act = function() local b = api.stage().ball; report("ball: it hops on when Pepper comes near", b.wp == 3 and b.hop ~= nil, ("wp %d"):format(b.wp)); tp(140, 184) end },
-      { wait = 2.0 },
-      { act = function() local s = api.stage(); local b, run = s.ball, s.def.ballRun
-          report("ball: it lands on the next point", not b.hop and near(b.x, run[3].x) and near(b.y, run[3].y), ("x %.0f y %.0f"):format(b.x, b.y))
-          b.wp, b.x, b.y = #run - 1, run[#run - 1].x, run[#run - 1].y; tp(b.x - 60, 184) end },
-      { wait = 2.0 },
-      { act = function() local b = api.stage().ball; report("ball: it leaves the park after the last point", b.state == "gone", b.state) end },
+      -- the magpie: it flees a running Pepper, lets a walking one come close, drops the ball when she barks
+      { act = function() local s = api.stage(); s:resetMagpie(1); tp(40, 184); hold("right") end }, { during = 1.5 },
+      { act = function() release(); local m = api.stage().magpie; report("magpie: it flies on when Pepper runs at it", m.i == 2, ("perch %d"):format(m.i)) end },
+      { act = function() local s = api.stage(); s:resetMagpie(1); tp(40, 184); s.pepper.face = 1; love.keypressed("z") end }, { wait = 0.3 },
+      { act = function() local s = api.stage(); report("magpie: a bark from far away does not work", s.ball.state == "magpie" and s.magpie.i == 1, s.ball.state); hold("right", "walk") end },
+      { cond = function(p) return p.x >= 150 or p.vx < 1 and p.x > 100 end, act = function() release() end, limit = 3 }, { wait = 0.3 },
+      { act = function(p) local s = api.stage(); report("magpie: a walking Pepper can come close", s.magpie.i == 1 and s.ball.state == "magpie", ("x %.0f perch %d"):format(p.x, s.magpie.i))
+          p.face = 1; love.keypressed("z") end }, { wait = 0.1 },
+      { act = function() local s = api.stage(); report("magpie: a bark close up makes it drop the ball", s.ball.state == "air" or s.ball.state == "rest", s.ball.state) end },
+      { during = 1.5 },
+      { act = function() local s = api.stage(); local b = s.ball
+          report("ball: it falls to the path", b.state == "rest" and near(b.y, 184), ("%s x %.0f y %.0f"):format(b.state, b.x, b.y))
+          report("magpie: it flies away", s.magpie.state == "gone", s.magpie.state) end },
+      { act = function() local b = api.stage().ball; tp(b.x - 18, 184); api.stage().pepper.face = 1 end }, { wait = 0.1 },
+      { act = function() love.keypressed("x") end }, { wait = 0.2 },
+      { act = function(p) report("ball: Pepper picks it up", p.carrying ~= nil, tostring(p.carrying ~= nil)) end },
+      -- each perch: where the ball lands when she barks there, and that she can reach it
+      { act = function() local s = api.stage(); s:resetMagpie(5); s.pepper.carrying = nil; tp(1376 - 80, 184); s.pepper.face = 1; love.keypressed("z") end }, { during = 1.5 },
+      { act = function() local b = api.stage().ball; report("oak: the ball lands on the low branch", b.state == "rest" and near(b.y, 104), ("%s y %.0f"):format(b.state, b.y)) end },
       -- 9 the playground: up the slide tower, down the slide on the ground, the climbing frame's bars
       { act = function() tp(1630, 184); jump("right", "jump") end }, { during = 0.3 }, landed(),
       { act = function(p) release(); report("slide: a held jump onto the tower", near(p.y, 152), ("x %.0f y %.0f"):format(p.x, p.y)) end },
@@ -149,9 +156,10 @@ return function(mode, api)
       { act = function(p) report("climbing frame: a hop onto the low bar", near(p.y, 160), ("y %.0f"):format(p.y)) end },
       { act = function() tp(1784, 160); jump("jump") end }, { wait = 1 / 60 }, { act = function() release() end }, { during = 0.1 }, landed(),
       { act = function(p) report("climbing frame: a hop onto the top bar", near(p.y, 136), ("y %.0f"):format(p.y)) end },
-      -- 10 out through the far gate
-      { act = function() tp(1850, 184); hold("right") end }, { wait = 3.0 },
-      { act = function() release(); report("gate: reaching it clears the level", api.getState() == "clear", api.getState()) end },
+      -- 10 give the ball to the girl by the swings
+      { act = function() local s = api.stage(); s.ball.state = "carried"; s.pepper.carrying = s.ball; tp(s.girl.x - 30, 184); s.pepper.face = 1 end },
+      { wait = 0.1 }, { act = function() love.keypressed("x") end }, { wait = 3.0 },
+      { act = function() report("girl: giving her the ball clears the level", api.getState() == "clear", api.getState()) end },
       { act = function()
           local ok = 0; for _, r in ipairs(results) do if r then ok = ok + 1 end end
           print(("%d of %d passed"):format(ok, #results)); love.event.quit() end },
@@ -161,11 +169,24 @@ return function(mode, api)
     local function at(cond, act, limit) return { cond = cond, act = act, limit = limit or 6 } end
     steps = {
       { wait = 1.2 }, { act = function() love.keypressed("space") end }, { wait = 0.4 },
-      at(function() return true end, function() hold("right") end),
-      -- 1 the gate: through the leaves, a hop onto the log
-      at(function(p) return p.x >= 146 end, function() jump("right", "jump") end),
-      at(function() return true end, function() hold("right") end),
-      at(function(p) return p.onGround and p.y <= 169 end, function() hold("right") end),
+      -- 1 the gate: sneak up to the log (walk), bark, the magpie drops the ball; hop onto the log, pick it up
+      at(function() return true end, function() hold("right", "walk") end),
+      at(function(p) return p.x >= 158 or (p.x > 140 and p.vx < 1) end, function() release() end, 9),
+      { wait = 0.3 }, { act = function() love.keypressed("z") end }, { wait = 1.4 },
+      at(function(p, s) return s.ball.state == "rest" end, function() jump("right", "jump") end),
+      at(function(p) return p.onGround and p.y <= 169 end, function() hold("right", "walk") end),
+      at(function(p, s) return p.onGround and p.y >= 183 end, function() end),
+      at(function(p, s)                                                                       -- walk up to the ball
+        local b = s.ball
+        local want = p.x < b.x and 1 or -1
+        if p.face == want and math.abs(p.x + p.face * 18 - b.x) < 20 and math.abs(p.vx) < 1 then return true end
+        local tx = b.x - want * 18
+        if p.face ~= want then hold(want > 0 and "right" or "left", "walk")
+        elseif p.x < tx - 3 then hold("right", "walk") elseif p.x > tx + 3 then hold("left", "walk") else release() end
+        return false
+      end, function() release() end),
+      { wait = 0.2 }, { act = function() love.keypressed("x") end }, { wait = 0.6 },
+      at(function(p) return p.carrying ~= nil end, function() hold("right") end, 2),
       -- 2 a held jump onto the bench, then crawl under the hedge
       at(function(p) return p.x >= 300 and p.onGround and p.y > 183 end, function() jump("right", "jump") end),
       at(function(p) return p.onGround and p.y <= 157 end, function() hold("right") end),
@@ -206,7 +227,8 @@ return function(mode, api)
       { wait = 0.3 }, { act = function() jump("jump") end }, { wait = 1 / 60 }, { act = function() release() end },
       at(function(p) return p.onGround and p.y <= 137 end, function() release() end),
       { wait = 0.2 }, { act = function() hold("right") end },
-      at(function() return api.getState() == "clear" end, function() release() end, 9),
+      at(function(p, s) return p.onGround and p.y >= 183 and p.x >= s.girl.x - 40 end, function() release() end, 9),
+      { wait = 0.3 }, { act = function() love.keypressed("x") end },
       { wait = 9 }, { act = function(p, s)
           local st = s:stats()
           print(("AUTOPILOT %s: bones %d/%d, lives %d hearts %d, %.1f s played"):format(api.getState() == "clear" and "GOOD GIRL!" or api.getState(),
@@ -225,20 +247,23 @@ return function(mode, api)
       steps[#steps + 1] = { wait = i == 4 and 0.25 or 0.6 }
       steps[#steps + 1] = shot(("cp_%02d_screen%d"):format(i, i), (i - 1) * 320)
     end
-    -- the runaway ball: Pepper comes near, it hops on
-    steps[#steps + 1] = { act = function() local s = api.stage(); local b, run = s.ball, s.def.ballRun
-      b.state, b.wp, b.hop, b.x, b.y = "run", 1, nil, run[1].x, run[1].y; tp(40, 184); s.pepper.face = 1 end }
-    steps[#steps + 1] = { wait = 0.35 }; steps[#steps + 1] = shot("cp_07_chase", 0)
-    steps[#steps + 1] = { wait = 0.35 }; steps[#steps + 1] = shot("cp_08_chase", 0)
+    -- the magpie: Pepper sneaks up to the log and barks; it drops the ball and flies away
+    steps[#steps + 1] = { act = function() local s = api.stage(); s:resetMagpie(1); tp(150, 184); s.pepper.face = 1 end }
+    steps[#steps + 1] = { wait = 0.4 }; steps[#steps + 1] = shot("cp_07_magpie", 0)
+    steps[#steps + 1] = { act = function() love.keypressed("z") end }
+    steps[#steps + 1] = { wait = 0.25 }; steps[#steps + 1] = shot("cp_08_drop", 0)
+    steps[#steps + 1] = { wait = 0.5 }; steps[#steps + 1] = shot("cp_09_flyaway", 0)
+    steps[#steps + 1] = { act = function() local s = api.stage(); s:resetMagpie(5); tp(1250, 184); s.pepper.face = 1 end }
+    steps[#steps + 1] = { wait = 0.4 }; steps[#steps + 1] = shot("cp_10_oak", 1200)
     steps[#steps + 1] = { act = function() love.keypressed("g") end }; steps[#steps + 1] = { wait = 0.1 }
     steps[#steps + 1] = shot("cp_11_debug_screen5", 1280)
     steps[#steps + 1] = { act = function() tp(1700, 160) end }; steps[#steps + 1] = { wait = 0.3 }
     steps[#steps + 1] = shot("cp_12_debug_screen6", 1600)
     steps[#steps + 1] = { act = function() love.keypressed("g") end }
-    -- out through the far gate: the tally
-    steps[#steps + 1] = { act = function() tp(1860, 184); I.force = { right = true } end }
-    steps[#steps + 1] = { wait = 1.0 }; steps[#steps + 1] = shot("cp_13_gate")
-    steps[#steps + 1] = { act = function() I.force = {} end }
+    -- give the ball: the tally
+    steps[#steps + 1] = { act = function() local s = api.stage(); s.ball.state = "carried"; s.pepper.carrying = s.ball; tp(s.girl.x - 30, 184); s.pepper.face = 1 end }
+    steps[#steps + 1] = { wait = 0.2 }; steps[#steps + 1] = { act = function() love.keypressed("x") end }
+    steps[#steps + 1] = { wait = 1.0 }; steps[#steps + 1] = shot("cp_13_give")
     steps[#steps + 1] = { wait = 4.5 }; steps[#steps + 1] = shot("cp_14_tally")
     steps[#steps + 1] = { wait = 0.3 }; steps[#steps + 1] = { act = function() love.event.quit() end }
   end

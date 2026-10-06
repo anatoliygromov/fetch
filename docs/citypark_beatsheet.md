@@ -4,7 +4,7 @@ The first level. Autumn park: trees, paths, benches, a pond, leaves. Gentle: eve
 
 - **Size:** 6 screens, 1920 px (240 x 30 cells of 8 px). Walking line (feet) y 184, like River Walk.
 - **Time limit:** 300 s.
-- **Story:** the girl lost her ball in the park. A cat is sitting on it, up in the big oak. Pepper barks the cat off, the ball drops, she carries it to the girl at the playground. GOOD GIRL!
+- **Story:** a magpie has stolen the girl's ball. It sits on a perch and flies on when Pepper comes near. Pepper sneaks up (walks), barks, the magpie drops the ball, and she carries it to the girl waiting by the swings. GOOD GIRL!
 - **Moves taught, in order:** run, tap hop, held jump, crawl, hop over water, ride a moving platform, ledge scramble, dodge a hazard, bark, pick up, give.
 
 ## Screens
@@ -15,21 +15,20 @@ The first level. Autumn park: trees, paths, benches, a pond, leaves. Gentle: eve
 | 2 | Benches and hedge (320-640) | Hold A to jump higher (bench seat, 28 px up), or crawl under it. Down: crawl through the hedge gap (19 px). Harder route: run and jump from the seat onto the hedge top for a gold bone. | BENCH (seat y 156-165), HEDGE (y 112-165, 64 wide), front-layer trunk | none | 8 (1 gold) | lamp x 656 |
 | 3 | The pond (640-960) | Step down onto the first stepping stone, hop to the second (40 px gap), wait for the duck boat and ride it, jump up the far bank (18 px). | Pond (water from y 208, x 704-944), 2 STONES (top y 188), DUCK BOAT (moving, deck y 202) | water: a heart | 7 | lamp x 976 |
 | 4 | Leaf cart (960-1280) | Hold A and push to climb the bin (56 px: jump + scramble). Leaf cart zone: get up on the picnic table, or run and jump over the cart. | BIN (top y 128), PICNIC TABLE (top y 156) | the park keeper's LEAF CART (48x26, like River Walk's bikes) | 7 | lamp x 1304 |
-| 5 | The big oak (1280-1600) | The cat sits on the ball on a high branch. Y: bark near it (within 90 px), the cat runs off, the ball drops. X: pick it up. Optional: climb the branches (one-way, held jumps) for a gold bone, Down + A drops back through. | OAK trunk and crown, 4 BRANCHES (y 156, 128, 100, cat branch 104), CAT | none | 6 (1 gold) | none |
+| 5 | The big oak (1280-1600) | If the magpie still has the ball it may sit on the low left branch: bark from the path, the ball lands on the branch, climb up for it. Optional: climb the branches (one-way, held jumps) for a gold bone, Down + A drops back through. | OAK trunk and crown, 4 BRANCHES (y 156, 128, 100, low left branch 104), MAGPIE | none | 6 (1 gold) | none |
 | 6 | Playground (1600-1920) | Jump up the slide tower (32 px: held jump), run down the slide (slope), hop up the climbing frame, X: give the ball to the girl. | SLIDE (tower top y 152, 45 degree slide, x 1696-1728), CLIMBING FRAME (one-way bars y 160, 136), SWINGS, the girl | none | 5 | lamp x 1616 |
 
 Total: 40 bones, 2 of them gold super bones (hedge top, oak top branch).
 
-Every screen keeps about 100 px of open path. One or two characters per screen at most: the cat on screen 5, the girl on screen 6, the cart on screen 4.
+Every screen keeps about 100 px of open path. One or two characters per screen at most: the magpie (anywhere along the path), the girl on screen 6, the cart on screen 4.
 
-## The cat and the ball
+## The magpie and the ball
 
-1. **Sit:** the cat (greybox 22x16, label CAT) sits on the ball on the cat branch, 80 px above the path. The ball cannot be picked up. Hint near the oak: "Y: BARK AT THE CAT!".
-2. **Bark:** a bark scares the cat when Pepper's middle is within 90 px of the cat's middle. That works from the path right under the cat's branch (x 1340-1415), or from the branches. A bark from further away (up to 180 px) only makes the cat look up ("?"), so the player sees it heard her.
-3. **Scared:** the cat jumps up with a "!" (0.35 s), leaps off away from Pepper and runs off screen. The ball is knocked off the branch and drops to the path below the oak.
-4. **Gone:** the cat is out of the level. "THE CAT RAN OFF! GET THE BALL".
-5. **Fetch:** X picks up the ball ("BRING IT TO THE GIRL!"), X near the girl gives it: GOOD GIRL!, 2000 points, then the tally.
-6. If Pepper falls in the pond with the ball, it goes back under the oak.
+1. **Perched:** the magpie (14x10, drawn in code) holds the ball in its beak on a perch: the path past the log, the bench's backrest, the lamp by the hedge, the bin, the oak's low branch, the slide tower's rail, the climbing frame (its last perch). It always faces Pepper.
+2. **Wary:** it flies on to the next perch when Pepper comes within 110 px running, or within 40 px walking (hold B). The first time: "TOO FAST! SNEAK UP: HOLD B TO WALK". On its last perch it stays.
+3. **Bark:** a bark within 95 px startles it: it drops the ball and flies away for good ("IT DROPPED THE BALL! X: PICK IT UP"). A bark from further off only gets a "?".
+4. **The ball falls** with gravity onto whatever is under the perch: the path, the bench seat, the bin top, the oak branch, the slide tower, the frame's top bar. In the pond it comes back by the last lamp.
+5. **Fetch:** X picks it up, X near the girl by the swings gives it: GOOD GIRL!, FETCH 2000, then the tally.
 
 ## Estimated play time
 
@@ -73,7 +72,7 @@ Characters
 
 | Asset | Size | Notes |
 | --- | --- | --- |
-| Cat | 22x16 cell | sit (on the ball), startle, leap, run |
+| Magpie | 16x12 cell | perch (tail flick), fly (2-frame flap), with and without the ball |
 | Girl, ball | existing | real art already |
 
 ## Running it
@@ -82,9 +81,9 @@ Characters
 | --- | --- |
 | `love riverwalk --level citypark` | plays City Park (River Walk stays the default without the flag) |
 | `./build_citypark.sh` | builds `CITYPARK_greybox.love`, where City Park is the default (a `default_level.txt` inside the zip) |
-| `... --level citypark --physics` | 38 checks: every set piece (heights, gaps, the pond, the cart, the oak, the cat and ball, the slide) |
+| `... --level citypark --physics` | 40 checks: every set piece (heights, gaps, the pond, the cart, the oak, the magpie and the ball, the slide, the girl) |
 | `... --level citypark --auto` | the autopilot plays to GOOD GIRL! and saves every 3rd frame to `rec/` |
-| `... --level citypark --test` | screenshots: the card, the 6 screens, the cat beat, two debug views, the tally |
+| `... --level citypark --test` | screenshots: the card, the 6 screens, the magpie (sneak, bark, drop, fly away, on the oak), two debug views, giving the ball, the tally |
 | `... --level citypark --qa` | the collision QA sweep (0 problems) |
 
 The greybox look is chosen by the level (`scenery = "greybox"` in `level/citypark.lua`): sky and clouds as in River Walk, then flat misty boxes per parallax layer (far city 0.08, far trees 0.25, near trees 0.5), flat grey ground with a 1 px edge, the pond as a flat box, outlined labelled boxes for everything Pepper uses, flat boxes for decoration. Pepper, the girl and the ball are the real art.

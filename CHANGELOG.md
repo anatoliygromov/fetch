@@ -4,17 +4,27 @@ Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
 ## Branch `multilevel`: three levels, one story
 Built on `night/all` (the night's River Walk art, Pepper's extras and the City Park greybox). Not merged yet.
-- **The story over three levels:** 1 City Park, the girl throws the ball too far and Pepper chases it out of the
-  park. 2 Downtown, a cat sits on it on the plaza; Pepper barks it away and carries the ball to the river. 3 River
-  Walk, the ball has bounced onto a ferry; Pepper brings it back to the girl.
+- **Game logic rules:** every level ends with a real fetch: Pepper picks up the ball (X) and gives it to the girl (X),
+  who waits at the level's end. The ball only moves when someone moves it (a throw, a fall, an animal).
+- **The story over three levels:**
+  1. City Park: a magpie has stolen the girl's ball; she waits by the swings.
+  2. Downtown: in town the ball rolled across the plaza and a cat sat on it; she waits at the stairs to the river.
+  3. River Walk: by the river she throws it again and it lands on a ferry; she waits by the cafe.
 - **levels.lua:** the play order.
 - **Engine (stage.lua):**
   - Score and lives carry over from level to level; hearts refill.
-  - A level can have no girl (Downtown).
-  - `L.exit`: reaching it clears the level, with `needBall` only while carrying the ball (+1000 BALL).
-  - `L.ballRun`: the runaway ball waits at each point, hops on when Pepper comes within 90 px and finally leaves the level.
-- **City Park is now the chase:** the girl stands by the gate, the ball bounces ahead through the park, and the far
-  gate ends the level. The cat moved to Downtown. 36 physics checks (new: the runaway ball, the gate).
+  - The magpie (`L.magpie`): it sits on a perch with the ball in its beak and flies to the next perch when Pepper comes
+    near: at 110 px if she runs, only at 40 px if she walks (hold B). A bark within 95 px startles it: it drops the
+    ball, which falls with gravity onto whatever is below (path, bench seat, bin, branch, tower), and flies away. On
+    its last perch (the climbing frame) it stays. If the ball falls in the pond it comes back by the last lamp.
+  - The magpie is drawn in code (14 x 10 px, black and white, blue tail); it flaps when it flies.
+  - `L.exit` (reach a point to clear, optionally with the ball) stays in the engine but no level uses it now.
+- **City Park:** the magpie replaces the cat in the oak; the first perch is just past the log, so the level opens with
+  the lesson: sneak up, bark. 40 physics checks (new: the magpie flees a running Pepper, lets a walking one come
+  close, ignores a far bark, drops the ball on a near bark, the ball falls to the path or onto the oak's branch).
+- **Downtown:** the girl waits at the top of the stairs down to the river; giving her the ball clears the level
+  (FETCH 2000), the stairs alone do not.
+- **Font:** an apostrophe and brackets.
 - Pepper is unchanged: `tools/check_pepper.sh` still finds all 2,752 steps identical.
 
 ## Branch `multilevel`: game flow
@@ -23,13 +33,13 @@ Built on `night/all` (the night's River Walk art, Pepper's extras and the City P
 - **Level select:** all three levels. Level 1 is always open; a level opens when the one before it is cleared. Locked levels are dimmed with a padlock. A level whose file is missing says COMING SOON and a run skips it (so Downtown can be added later without other changes). Choosing a level plays from it to the end, with fresh lives and score.
 - **One run:** one score for the whole run, lives carry from level to level, hearts refill and the timer starts again in every level.
 - **Tally per level:** BONES, the level's bonus (FETCH 2000, or BALL from an exit level), TIME BONUS, then the level's POINTS and the run's SCORE. The points still count up with ticks.
-- **Story card:** after the tally, the cleared level's outro lines (City Park: the ball bounced out into town), then the next level's intro card.
+- **Story card:** after the tally, the cleared level's outro lines, then the next level's intro card.
 - **Ending:** after the last level, GOOD GIRL! with the final score, the best run, THE END and THANKS FOR PLAYING. A button press after 2 s goes back to the title.
 - **GAME OVER** goes back to the title. Unlocked levels stay open.
 - **Pause:** shows the level's number and name. Start or Enter goes on; B or Esc quits to the title (no longer quits the game). Esc on the title screen quits the game.
 - **Saved:** `progress.txt` (open levels) and `best_run.txt` (best run). The best per level stays in `best.txt` (River Walk) and `best_<level>.txt`, now the level's own points.
 - **`default_level.txt` and `build_citypark.sh` are gone:** the level select replaces them. `love riverwalk --level <name>` starts a run at that level without the menus. The test flags still play one level alone, River Walk unless `--level` names another.
-- **Font:** a comma (CHASE IT, PEPPER!).
+- **Font:** a comma.
 - **New check:** `love riverwalk --flowtest` (or `tools/check_flow.sh`) drives the real menus with key presses through a whole run and checks the carry-over, the refilled hearts, the saved unlocks, the locks and the skipped missing level: 26 of 26 pass. It saves a screenshot of every screen and one sheet of them, `flow_screens.png`. It uses its own save files.
 - **Checks unchanged:** PEPPER UNCHANGED (2752 steps identical), River Walk `--physics` 17/17 and `--qa` 0 problems, City Park `--physics` 36/36 and `--qa` 0 problems.
 
@@ -41,8 +51,8 @@ Built on `ml/downtown` from the multilevel engine (ef6e8b3). Beat sheet in `docs
   - Market: onto the stall's counter and up onto its awning; a crate stack up to a second awning.
   - The plaza: the cat sits on the ball on the statue's arm. Bark near it (90 px): it startles, leaps off and runs away, the ball drops to the street. Pick it up. The pedestal, arm and hat are a climb (gold bone).
   - The fountain: carry the ball over the basin, rim to bowl to rim. Falling in costs a heart, and the ball goes back by the statue.
-  - Tram street: the tram drives through like the bikes; wait on the kiosk or the tram stop roof. The stairs down to the river end the level, only with the ball (BALL bonus 1,000). No girl in this level.
-- **Story text:** intro "A CAT IS SITTING ON THE BALL!", pickup "TAKE THE BALL DOWN TO THE RIVER!", outro "THE BALL SLIPPED AND BOUNCED / ONTO A FERRY ON THE RIVER...".
+  - Tram street: the tram drives through like the bikes; wait on the kiosk or the tram stop roof. The girl waits at the stairs down to the river (changed later: see the top section).
+- **Story text:** intro "A CAT IS SITTING ON THE BALL!", pickup "BRING THE BALL TO THE GIRL!", outro "BY THE RIVER SHE THREW IT / AGAIN. IT LANDED ON A FERRY...".
 - **Greybox town:** `greyStyle = "town"` swaps the park's far trees and bushes for far roofs with church spires and near old town facades (stepped gables, rows of windows, doors). City Park and River Walk draw exactly as before: their `--test` screenshots are pixel-identical to ef6e8b3.
 - **Engine (small, generic):** a hazard zone can set its hit box (`w`, `h`) and `rail = true` (it keeps to the street's line, so the tram does not drive down the river stairs); the greybox label is the zone's kind (CART, TRAM); the tally shows the level's own bonus (BALL 1000 here, FETCH 2000 otherwise).
 - **Checks:** `love riverwalk --level downtown --physics` 45/45, `--auto` plays to GOOD GIRL! (no hearts lost, 37/40 bones, about 33 s), `--test` screenshot tour, `--qa` 0 problems. Unchanged: River Walk `--physics` 17/17 and `--qa` 0 problems, City Park `--physics` 36/36 and `--qa` 0 problems, PEPPER UNCHANGED.

@@ -4,7 +4,7 @@ The second level. A Stockholm old town street and its plaza: cafe tables with pa
 
 - **Size:** 6 screens, 1920 px (240 x 30 cells of 8 px). Walking line (feet) y 184, like City Park.
 - **Time limit:** 300 s.
-- **Story (level 2 of 3):** the ball bounced out of the park into town. On the plaza a cat sits on it. Pepper barks the cat away, picks the ball up and carries it to the stairs down to the river. There the ball slips and bounces onto a ferry (outro), which is where Level 3, River Walk, starts. No girl in this level.
+- **Story (level 2 of 3):** in town the ball rolled away across the plaza and a cat sat on it. Pepper barks the cat away, picks the ball up and carries it to the girl, who waits at the stairs down to the river. Outro: by the river she throws it again and it lands on a ferry, which is where Level 3, River Walk, starts.
 - **Moves used:** run, tap hop, held jump, crawl, ledge scramble, one-way tops (jump up through, Down + A drops through), bark, pick up, carry, dodge a hazard from a perch.
 
 ## Screens
@@ -16,7 +16,7 @@ The second level. A Stockholm old town street and its plaza: cafe tables with pa
 | 3 | Market (640-960) | Hold A: onto the stall's counter (28 px), up onto its awning (40 px). Down + A drops back through. Hop up the crate stack (16 px, 16 px), a held jump onto the second awning (40 px). The street under it is clear. | STALL (counter 64x28, top y 156), AWNING (one-way, y 116), CRATES (32x16, 32x32), AWNING 2 (one-way, y 112) | none | 7 | lamp x 960 |
 | 4 | The plaza (960-1280) | The cat sits on the ball on the statue's arm. Y: bark near it, the cat runs off, the ball drops to the street. X: pick it up. Optional climb: pedestal (40 px, held jump), arm (36 px), hat (32 px, gold bone). | PEDESTAL 48x40 (top y 144), STATUE, ARM (one-way, y 108), hat (one-way, y 76), CAT | none | 7 (1 gold) | none |
 | 5 | The fountain (1280-1600) | Carry the ball over the basin: tap A onto the rim (16 px), hop to the fountain bowl (40 px gap), hop to the far rim. Falling in costs a heart and the ball goes back by the statue. | RIM x2 (16x16), basin water x 1416-1528 (from y 192), FOUNTAIN bowl 32 wide (top y 160) | water: a heart | 7 | lamp x 1300 |
-| 6 | Tram street (1600-1920) | The tram drives through while she is in the zone (x 1610-1800). Get up on the kiosk (36 px, held jump), jump onto the shelter roof (12 px up, 40 px across), wait for the tram to pass, then run to the stairs down to the river. Reaching them with the ball clears the level; without it the hint says "GO BACK FOR THE BALL". | KIOSK 40x36 (top y 148), SHELTER roof (one-way, y 136), RIVER sign, stairs (terrain slope, x 1888-1920, down to y 216) | the TRAM (80x26 hit box, every 6 s, 110 px/s) | 5 | lamp x 1600 |
+| 6 | Tram street (1600-1920) | The tram drives through while she is in the zone (x 1610-1800). Get up on the kiosk (36 px, held jump), jump onto the shelter roof (12 px up, 40 px across), wait for the tram to pass, then run to the girl at the stairs down to the river and give her the ball (X). Without it the hint says "GO BACK FOR THE BALL". | KIOSK 40x36 (top y 148), SHELTER roof (one-way, y 136), RIVER sign, the girl (x 1860), stairs (terrain slope, x 1888-1920, down to y 216) | the TRAM (80x26 hit box, every 6 s, 110 px/s) | 5 | lamp x 1600 |
 
 Total: 40 bones, 2 of them gold super bones (the shop sign, the statue's hat).
 
@@ -30,7 +30,7 @@ Every screen keeps about 100 px of open street (screen 4 and 5 more, around the 
 4. **Gone:** "THE CAT RAN OFF! GET THE BALL".
 5. **Fetch:** X picks up the ball ("TAKE THE BALL DOWN TO THE RIVER!"). She carries it in her mouth; every move still works (checked: crawl under a table, held jump onto the kiosk with the ball).
 6. **Fountain:** if Pepper falls in the fountain with the ball, she loses a heart and the ball goes back by the statue ("THE BALL IS BACK BY THE STATUE"); she restarts at the lamp before the fountain and walks back for it.
-7. **Exit:** at the stairs down to the river with the ball: "DOWN TO THE RIVER! GOOD GIRL!", BALL bonus 1,000 points, then the tally (BONES, BALL 1000, TIME BONUS). Outro: "THE BALL SLIPPED AND BOUNCED / ONTO A FERRY ON THE RIVER...".
+7. **Fetch:** X near the girl at the stairs gives her the ball: GOOD GIRL!, FETCH 2000, then the tally (BONES, FETCH 2000, TIME BONUS). Outro: "BY THE RIVER SHE THREW IT / AGAIN. IT LANDED ON A FERRY...".
 
 ## Estimated play time
 
@@ -86,9 +86,9 @@ Characters
 | Command | Does |
 | --- | --- |
 | `love riverwalk --level downtown` | plays Downtown |
-| `... --level downtown --physics` | 45 checks: every set piece (heights, gaps, one-way tops, the statue climb), the cat and the ball, moves while carrying the ball, the fountain, the tram, the exit with and without the ball |
+| `... --level downtown --physics` | 45 checks: every set piece (heights, gaps, one-way tops, the statue climb), the cat and the ball, moves while carrying the ball, the fountain, the tram, the girl with and without the ball |
 | `... --level downtown --auto` | the autopilot plays to GOOD GIRL! and saves every 3rd frame to `rec/` |
-| `... --level downtown --test` | screenshots: the card, the 6 screens, the cat beat (sit, bark, leap, run, ball down, pick up), three debug views, the exit, the tally |
+| `... --level downtown --test` | screenshots: the card, the 6 screens, the cat beat (sit, bark, leap, run, ball down, pick up), three debug views, giving the ball, the tally |
 | `... --level downtown --qa` | the collision QA sweep (0 problems) |
 
 The greybox look: `scenery = "greybox"` and `greyStyle = "town"` in `level/downtown.lua`. Sky, clouds and far city as in City Park; layer 4 is far roofs with church spires, layer 5 old town facades with stepped gables and rows of windows. Flat grey street with a 1 px edge, the basin water as a flat box, outlined labelled boxes for everything Pepper uses, flat boxes for decoration. Pepper and the ball are the real art.

@@ -12,12 +12,12 @@
 --                     the arm and the hat are a climb (gold bone on the hat)
 --   5  The fountain   carry the ball over the basin: hop from rim to fountain bowl to rim. Falling in costs a heart, and the
 --                     ball goes back to the plaza
---   6  Tram street    the tram zone: up on the kiosk and the shelter roof while the tram passes, then the stairs
---                     down to the river: reaching them with the ball clears the level
+--   6  Tram street    the tram zone: up on the kiosk and the shelter roof while the tram passes, then the girl
+--                     waiting at the stairs down to the river: give her the ball (X), GOOD GIRL!
 --
--- Story (level 2 of 3): the ball bounced out of the park into town; on the plaza a cat sits on it. Pepper barks
--- the cat away and carries the ball to the stairs down to the river (L.exit, needBall). Level 3 (River Walk)
--- picks the story up: the ball bounced onto a ferry.
+-- Story (level 2 of 3): in town the ball rolled away across the plaza and a cat sat on it. Pepper barks the cat
+-- away and carries the ball to the girl, who waits at the stairs down to the river. Level 3 (River Walk): by the
+-- river she throws it again and it lands on a ferry.
 --
 -- Everything but Pepper and the ball is greybox (scenery = "greybox"; greyStyle = "town": far rooftops and spires,
 -- near facades with window rows instead of the park's trees; see Sc.drawFarGrey).
@@ -105,10 +105,10 @@ L.movers = {}
 L.ball = { x = 1188, y = 108 }
 L.cat = { x = 1188, y = 102, range = 90 }
 L.ballBack = "THE BALL IS BACK BY THE STATUE"
-L.pickupSay = "TAKE THE BALL DOWN TO THE RIVER!"
--- no girl in Downtown (L.girl is nil). The stairs down to the river end the level, only with the ball.
-L.exit = { x = 1872, needBall = true, bonus = 1000, bonusName = "BALL", say = "DOWN TO THE RIVER! GOOD GIRL!" }
-L.outro = { "THE BALL SLIPPED AND BOUNCED", "ONTO A FERRY ON THE RIVER..." }
+L.pickupSay = "BRING THE BALL TO THE GIRL!"
+-- the girl waits at the top of the stairs down to the river
+L.girl = { x = 1860, y = 184 }
+L.outro = { "BY THE RIVER SHE THREW IT", "AGAIN. IT LANDED ON A FERRY..." }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
@@ -149,7 +149,8 @@ L.hints = {
   { x0 = 1280, x1 = 1920, text = "GO BACK FOR THE BALL", need = "noball" },
   { x0 = 1340, x1 = 1400, text = "TAP A: HOP OVER THE FOUNTAIN" },
   { x0 = 1610, x1 = 1800, text = "TRAM! GET UP HIGH", bike = true },
-  { x0 = 1800, x1 = 1920, text = "DOWN THE STAIRS TO THE RIVER!" },
+  { x0 = 1800, x1 = 1920, text = "X: GIVE HER THE BALL", need = "ball" },
+  { x0 = 1400, x1 = 1920, text = "BRING THE BALL TO THE GIRL", need = "ball" },
 }
 
 L.intro = { "LEVEL 2", "DOWNTOWN", "A CAT IS SITTING ON THE BALL!", "BARK IT AWAY. BRING THE BALL!" }

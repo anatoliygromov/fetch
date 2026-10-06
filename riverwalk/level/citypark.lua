@@ -10,11 +10,12 @@
 --   3  The pond      hop onto the stepping stones, ride the duck boat, hop up the far bank
 --   4  Leaf cart     climb the bin (jump + scramble); the leaf cart zone: get up on the picnic table
 --   5  The big oak   climb the branches for a gold bone
---   6  Playground    up the slide tower, down the slide, the climbing frame, out through the far gate
+--   6  Playground    up the slide tower, down the slide, the climbing frame, give the girl her ball
 --
--- Story (level 1 of 3): the girl throws the ball too far. It bounces away through the park ahead of Pepper
--- (L.ballRun: it waits at each point and hops on when she comes close) and out of the far gate into town.
--- Reaching the gate clears the level (L.exit). Level 2 (Downtown) picks the story up: a cat sits on it.
+-- Story (level 1 of 3): a magpie has stolen the girl's ball. It sits on a perch and flies on to the next one when
+-- Pepper comes near: from far off if she runs, only close up if she walks (hold B). Sneak up and bark (Y): it
+-- drops the ball. Pick it up (X) and bring it to the girl, who waits by the swings (X again: GOOD GIRL!).
+-- If Pepper never gets it to drop the ball, the magpie ends up on the climbing frame, its last perch.
 --
 -- Everything but Pepper, the girl and the ball is greybox (scenery = "greybox": see Sc.drawFarGrey).
 -- props: kind = solid | oneway | decor; layer = "back", "play", "front"; over = true draws a play prop over
@@ -64,8 +65,7 @@ L.props = {
   { name = "",         kind = "decor",  layer = "back", x0 = 1812, x1 = 1816, y0 = 120, y1 = 184 },
   { name = "FRAME",    kind = "oneway", layer = "play", x0 = 1752, x1 = 1800, y0 = 160, y1 = 164, label = "below" },
   { name = "",         kind = "oneway", layer = "play", x0 = 1768, x1 = 1816, y0 = 136, y1 = 140 },
-  { name = "SWINGS",   kind = "decor",  layer = "back", x0 = 1800, x1 = 1860, y0 = 104, y1 = 184 },
-  { name = "GATE",     kind = "decor",  layer = "back", x0 = 1888, x1 = 1920, y0 = 112, y1 = 184 },
+  { name = "SWINGS",   kind = "decor",  layer = "back", x0 = 1844, x1 = 1916, y0 = 104, y1 = 184 },
   -- foreground frame
   { name = "",         kind = "decor",  layer = "front", x0 = 620,  x1 = 632,  y0 = 56, y1 = 240 },
   { name = "",         kind = "decor",  layer = "front", x0 = 1580, x1 = 1592, y0 = 56, y1 = 240 },
@@ -85,18 +85,24 @@ L.movers = {
   { name = "DUCK BOAT", x0 = 840, x1 = 888, y0 = 202, y1 = 208, from = 840, to = 888, speed = 24 },
 }
 
--- the ball runs away: it waits at each point and hops on to the next when Pepper is within 90 px; the last
--- point is past the level's end, so it leaves through the far gate
-L.ball = { x = 150, y = 184 }
-L.ballRun = { trigger = 90, say = "CHASE THE BALL, PEPPER!",
-  { x = 150, y = 184 }, { x = 300, y = 184 }, { x = 500, y = 184 }, { x = 620, y = 184, peak = 90 }, { x = 696, y = 184 },
-  { x = 960, y = 184 }, { x = 1250, y = 184 }, { x = 1370, y = 184 }, { x = 1600, y = 184 }, { x = 1744, y = 184 },
-  { x = 1900, y = 184 }, { x = 2010, y = 150 } }
--- the girl threw it: she stands by the gate where the level starts
-L.girl = { x = 24, y = 184 }
--- the level ends at the far gate: reaching it clears the level
-L.exit = { x = 1880, say = "THE BALL BOUNCED OUT INTO TOWN!" }
-L.outro = { "THE BALL BOUNCED OUT", "OF THE PARK AND INTO TOWN..." }
+-- the magpie and the ball: perches in order (x, feet y). It starts on the path just past the log, so the first
+-- try comes straight away: walk up to the log and bark from there (bark range 95 px, it flees from a running
+-- Pepper at 110 px, from a walking one only at 40 px)
+L.ball = { x = 240, y = 184 }
+L.magpie = { flee = 110, fleeWalk = 40, bark = 95, dropSay = "IT DROPPED THE BALL! X: PICK IT UP",
+  perches = {
+    { x = 240,  y = 184 },     -- the path past the log
+    { x = 400,  y = 138 },     -- the bench's backrest (the ball lands on the seat)
+    { x = 656,  y = 120 },     -- the lamp post by the hedge
+    { x = 1025, y = 128 },     -- the bin (the ball stays on top: climb it)
+    { x = 1376, y = 104 },     -- the oak's low left branch
+    { x = 1680, y = 124 },     -- the slide tower's rail (the ball lands on the tower)
+    { x = 1792, y = 136 },     -- the climbing frame's top bar: its last perch
+  } }
+L.ballBack = "THE BALL IS BACK BY THE LAMP"
+-- the girl waits by the swings at the far end of the park
+L.girl = { x = 1880, y = 184 }
+L.outro = { "OFF TO TOWN! BUT THE BALL", "ROLLED AWAY ACROSS THE PLAZA..." }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
@@ -127,6 +133,7 @@ L.bikes = {
 
 -- prompt banner hints: first match wins; need = "ball" / "noball" / "nearball" / "cat"
 L.hints = {
+  { x0 = 0,    x1 = 172,  text = "SNEAK UP (HOLD B), THEN BARK!", need = "magpie" },
   { x0 = 0,    x1 = 172,  text = "TAP A TO HOP ONTO THE LOG" },
   { x0 = 288,  x1 = 352,  text = "HOLD A TO JUMP HIGHER" },
   { x0 = 456,  x1 = 528,  text = "DOWN: CRAWL UNDER THE HEDGE" },
@@ -134,8 +141,11 @@ L.hints = {
   { x0 = 800,  x1 = 860,  text = "RIDE THE DUCK BOAT", maxY = 196 },
   { x0 = 960,  x1 = 1008, text = "HOLD A AND PUSH TO CLIMB" },
   { x0 = 1056, x1 = 1240, text = "LEAF CART! GET UP HIGH", bike = true },
-  { x0 = 1800, x1 = 1920, text = "OUT THROUGH THE GATE!" },
+  { x0 = 0,    x1 = 1920, text = "X: PICK UP THE BALL", need = "nearball" },
+  { x0 = 1800, x1 = 1920, text = "X: GIVE HER THE BALL", need = "ball" },
+  { x0 = 1560, x1 = 1920, text = "BRING THE BALL TO THE GIRL", need = "ball" },
+  { x0 = 1560, x1 = 1920, text = "THE MAGPIE STILL HAS THE BALL", need = "magpie" },
 }
 
-L.intro = { "LEVEL 1", "CITY PARK", "THE GIRL THREW THE BALL TOO FAR!", "CHASE IT, PEPPER!" }
+L.intro = { "LEVEL 1", "CITY PARK", "A MAGPIE STOLE THE GIRL'S BALL!", "SNEAK UP AND BARK, PEPPER!" }
 return L
