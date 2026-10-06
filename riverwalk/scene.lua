@@ -199,7 +199,9 @@ Sc.box, Sc.outlined = box, outlined
 --   4 far trees  (0.25) round-ish crowns on trunks
 --   5 near trees (0.5)  darker, bigger crowns and bushes
 -- Deterministic (seeded), built once per level.
-function Sc.buildGrey(levelW)
+-- style = "town" (Downtown): layers 4 and 5 are a town instead of a park (see Sc.buildTown); the sky, clouds and
+-- far city are the same.
+function Sc.buildGrey(levelW, style)
   local L = Sc.build(levelW)
   local function span(speed) return 320 + (levelW - 320) * speed + 64 end
   local r = rng(23); L.city = {}
@@ -208,6 +210,7 @@ function Sc.buildGrey(levelW)
     local w = math.floor(r(24, 60)); L.city[#L.city + 1] = { x = x, w = w, h = math.floor(r(18, 54)) }
     x = x + w + math.floor(r(0, 18))
   end
+  if style == "town" then return Sc.buildTown(L, span) end
   r = rng(31); L.trees = {}
   x = -10
   while x < span(0.25) do
@@ -221,6 +224,63 @@ function Sc.buildGrey(levelW)
     x = x + w + math.floor(r(40, 110))
   end
   return L
+end
+
+-- greybox town (Downtown), layers 4 and 5:
+--   4 far roofs   (0.25) pitched roofs as stepped boxes, now and then a church spire
+--   5 near houses (0.5)  old town facades: stepped gables, rows of windows, a door
+function Sc.buildTown(L, span)
+  L.town = true
+  local r = rng(31); L.roofs = {}
+  local x = -10
+  while x < span(0.25) do
+    local w = math.floor(r(26, 52))
+    L.roofs[#L.roofs + 1] = { x = x, w = w, h = math.floor(r(14, 30)), spire = r(0, 1) < 0.18 and math.floor(r(30, 52)) or nil }
+    x = x + w + math.floor(r(0, 10))
+  end
+  r = rng(47); L.houses = {}
+  x = -10
+  while x < span(0.5) do
+    local w = math.floor(r(34, 58))
+    L.houses[#L.houses + 1] = { x = x, w = w, h = math.floor(r(44, 78)), gable = r(0, 1) < 0.5 }
+    x = x + w + math.floor(r(2, 26))
+  end
+  return L
+end
+
+-- layers 4 and 5 of the greybox town (base: the far edge of the street)
+local function drawTown(L, camx, base)
+  local ox = math.floor(camx * 0.25)                               -- 4 far roofs and spires
+  for _, b in ipairs(L.roofs) do
+    local x = b.x - ox
+    if x < 330 and x + b.w > -10 then
+      local top = base - 22 - b.h
+      box(C.trees, x, top, b.w, b.h + 22)
+      box(C.trees, x + 4, top - 5, b.w - 8, 5); box(C.trees, x + 10, top - 9, b.w - 20, 4)      -- the roof
+      if b.spire then
+        local sx = x + math.floor(b.w / 2) - 5
+        box(C.trees, sx, top - b.spire, 10, b.spire); box(C.trees, sx + 2, top - b.spire - 10, 6, 10)
+        box(C.trees, sx + 4, top - b.spire - 22, 2, 12)
+      end
+    end
+  end
+  box(C.trees, 0, base - 6, 320, 240 - base + 6)
+  ox = math.floor(camx * 0.5)                                      -- 5 near houses
+  for _, h in ipairs(L.houses) do
+    local x = h.x - ox
+    if x < 330 and x + h.w > -10 then
+      local top = base + 2 - h.h
+      box(C.bushes, x, top, h.w, h.h)
+      if h.gable then                                              -- a stepped gable
+        box(C.bushes, x + 6, top - 6, h.w - 12, 6); box(C.bushes, x + 12, top - 12, h.w - 24, 6)
+      else box(C.bushes, x + 3, top - 4, h.w - 6, 4) end           -- or a plain roof edge
+      for wy = top + 8, base - 22, 14 do                           -- rows of windows
+        for wx = x + 6, x + h.w - 10, 11 do box(C.leaves, wx, wy, 5, 8) end
+      end
+      box(C.leaves, x + math.floor(h.w / 2) - 4, base - 12, 8, 14) -- the door
+    end
+  end
+  box(C.bushes, 0, base + 2, 320, 240 - base - 2)                  -- the pavement's back edge, up to the street
 end
 
 function Sc.drawFarGrey(L, camx, t)
@@ -241,6 +301,7 @@ function Sc.drawFarGrey(L, camx, t)
     local x = b.x - ox
     if x < 330 and x + b.w > -10 then box(C.city, x, base - 20 - b.h, b.w, b.h + 20) end
   end
+  if L.town then return drawTown(L, camx, base) end
   ox = math.floor(camx * 0.25)                                     -- 4 far trees
   for _, tr in ipairs(L.trees) do
     local x = tr.x - ox
