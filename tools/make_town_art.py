@@ -17,9 +17,12 @@
 #   dt_facades_spritecook.png  old town facades strip (halved)
 #   dt_roofs_spritecook.png    far roofs and spires strip (halved)
 #   dt_ground_spritecook.png   cobbled pavement and street strip (halved, mirrored)
+#   cp_willow_spritecook.png   weeping willow (halved), dt_houses_spritecook.png: the three houses of the rooftop
+#                              route (1x). The Downtown tub is River Walk's planter, cut.
 # Drawn here by hand: the hedge's stems, the playground slide and climbing frame, the cafe
 # table legs and parasol pole, the shop sign, the fountain (rims, bowl, spout), the foreground bollards.
-# The oak's branches are drawn in scene.lua, from their one-way boxes.
+# The oak's branches, the willows' boughs and the balconies are drawn in scene.lua, from their one-way boxes.
+# Also by hand: the winch, the hollow log, the fountain's top tier.
 #
 # Nothing is resampled smoothly: sizes change only by cutting or repeating whole rows/columns, or by an exact 2x
 # block reduction (half()).
@@ -504,6 +507,86 @@ def town_bollard():
     rect(o, 2, 8, 13, 8, std)
     return o
 
+# ---------------------------------------------------------------- set pieces added by the level fixes (preview/art)
+def park_willow(extra=0):
+    # weeping willow 130 x 168 (1x), halved (65 x 84); extra rows of trunk for a taller one. Decoration.
+    a = half(trim(sheet('cp_willow')))
+    if extra: a = rep(a, 70, extra, 0)
+    return deoutline(palette(a, 10))
+
+def park_winch():
+    # the park keeper's rope winch on the far bank (20 x 14, decoration): a wooden drum with rope coils on two
+    # A-frame legs, a crank handle. By hand.
+    o = canvas(20, 14)
+    wood, woodd, woodl = hexc('8a5a34'), hexc('5e3d22'), hexc('b07a4a')
+    rope, roped, iron = hexc('d8c79a'), hexc('a8956a'), hexc('4a4d52')
+    for i in range(10):                                           # A-frame legs
+        put(o, 3 + i // 3, 13 - i, woodd); put(o, 16 - i // 3, 13 - i, woodd)
+    rect(o, 4, 4, 15, 9, wood); rect(o, 4, 4, 15, 4, woodl); rect(o, 4, 9, 15, 9, woodd)   # the drum
+    for x in range(5, 15, 2): rect(o, x, 5, x, 8, rope)           # rope coils
+    for x in range(6, 15, 2): rect(o, x, 5, x, 8, roped)
+    rect(o, 2, 6, 3, 7, iron); rect(o, 0, 2, 1, 7, iron); rect(o, 0, 1, 2, 2, iron)   # the crank
+    rect(o, 2, 13, 17, 13, woodd)                                 # the footing
+    return o
+
+def park_hollowlog():
+    # the hollow log (42 x 27: level 1244-1286, y 158-184): a fallen trunk with rounded bark (Pepper stands on its
+    # top), both cut ends showing light wood rings round a dark hole low down (she crawls through it). The body hides
+    # what is inside. Colours from the log art. By hand, then the 1 px outline.
+    W, H = 40, 25
+    o = canvas(W, H)
+    bark, barkd, barkl = hexc('7b4f30'), hexc('54341f'), hexc('9c6a43')
+    cutw, cutd = hexc('d9b483'), hexc('a9824f')
+    dark = hexc('21160f')
+    for y in range(H):
+        inset = 2 if y in (0, H - 1) else (1 if y in (1, H - 2) else 0)
+        for x in range(inset, W - inset): put(o, x, y, bark)
+    rect(o, 2, 0, W - 3, 0, barkl); rect(o, 1, 1, W - 2, 1, barkl)
+    for i, y in enumerate(range(5, H - 3, 4)):                    # bark grooves, broken
+        for x in range(4 + (i * 5) % 7, W - 6, 9): rect(o, x, y, x + 4, y, barkd)
+    rect(o, 2, H - 2, W - 3, H - 2, barkd)
+    for cx in (4, W - 5):                                         # the cut ends: rings and the hole
+        for y in range(H):
+            for x in range(cx - 4, cx + 5):
+                dx, dy = (x - cx) / 4.6, (y - 12) / 12.6
+                r = dx * dx + dy * dy
+                if r <= 1:
+                    hx, hy = (x - cx) / 3.2, (y - 15) / 8.6
+                    if hx * hx + hy * hy <= 1 and y >= 8: put(o, x, y, dark)
+                    elif r > 0.72: put(o, x, y, cutd)
+                    else: put(o, x, y, cutw)
+    return outline(o)
+
+def town_tub():
+    # the flower tub before the pedestal (32 wide, top y 156, 28 tall): River Walk's square planter, 12 columns
+    # cut out of its middle and 2 rows out of its planks (its rim stays row 18)
+    a = np.array(Image.open(os.path.join(OUT, 'planter_sq.png')).convert('RGBA'))
+    a = cut(a, 14, 28, 12)
+    a = cut(a, 26, 40, 2, axis=0)
+    return a
+
+def town_house(i):
+    # the three houses of the rooftop route (crisp obstacles: their balconies are ledges). 1x, natural widths, the
+    # heights fitted to the boxes: 118 (grey), 126 (red, 2 rows cut), 118 (ochre, 13 rows cut between floors)
+    if i == 0: return palette(piece('dt_houses', 147, 45, 200, 162), 11)
+    if i == 1:
+        a = piece('dt_houses', 70, 35, 127, 162)
+        return palette(cut(a, 90, 100, 2, axis=0), 11)
+    a = piece('dt_houses', 0, 36, 51, 166)
+    return palette(cut(a, 62, 82, 13, axis=0), 11)
+
+def town_tier():
+    # the fountain's top tier: a stone dish 48 wide (its top the ledge, y 104) on a column down to the bowl (y 160),
+    # the column wider at its foot (the old spout). Origin = level (1447, 103). By hand, then the outline.
+    W, H = 48, 56
+    o = canvas(W, H)
+    st, stl, std = hexc('a29a92'), hexc('c9c1b8'), hexc('6f6862')
+    rect(o, 0, 0, W - 1, 1, stl); rect(o, 0, 2, W - 1, 3, st); rect(o, 3, 4, W - 4, 4, std); rect(o, 8, 5, W - 9, 6, std)
+    rect(o, 20, 7, 27, H - 1, st); rect(o, 20, 7, 20, H - 1, stl); rect(o, 27, 7, 27, H - 1, std)
+    for y in range(12, H - 6, 9): rect(o, 20, y, 27, y, std)
+    rect(o, 18, H - 8, 29, H - 1, st); rect(o, 18, H - 8, 29, H - 8, stl); rect(o, 29, H - 8, 29, H - 1, std)
+    return outline(o)
+
 if __name__ == '__main__':
     import sys
     def save(a, n):
@@ -525,6 +608,10 @@ if __name__ == '__main__':
         'town_shelter.png': town_shelter, 'town_kiosk.png': town_kiosk, 'town_sign.png': town_sign,
         'town_shopsign.png': town_shopsign, 'town_rim.png': town_rim, 'town_bowl.png': town_bowl,
         'town_spout.png': town_spout, 'town_bollard.png': town_bollard,
+        'park_willow.png': park_willow, 'park_willow_tall.png': lambda: park_willow(8),
+        'park_winch.png': park_winch, 'park_hollowlog.png': park_hollowlog,
+        'town_tub.png': town_tub, 'town_house1.png': lambda: town_house(0), 'town_house2.png': lambda: town_house(1),
+        'town_house3.png': lambda: town_house(2), 'town_tier.png': town_tier,
     }
     only = sys.argv[1:]
     for n, f in jobs.items():

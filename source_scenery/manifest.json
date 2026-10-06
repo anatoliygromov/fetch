@@ -277,5 +277,15 @@
   "source": "dt_ground_spritecook.png",
   "spritecook_source_asset_id": "aeab1c5d-ae7e-4092-a470-400d7dba219b",
   "note": "fix 11 (City Park / Downtown art): cobbled pavement and street strip. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py cuts, quantises (5-12 colours) and despeckles it"
+ },
+ "dt_houses": {
+  "source": "dt_houses_spritecook.png",
+  "spritecook_source_asset_id": "2a185e6a-e23a-45c7-8908-d413ee017244",
+  "note": "preview/art set pieces: the three houses of the rooftop route. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py quantises and fits it"
+ },
+ "cp_willow": {
+  "source": "cp_willow_spritecook.png",
+  "spritecook_source_asset_id": "a0cb4683-03c6-4dc6-931b-03348daf1c9f",
+  "note": "preview/art set pieces: weeping willow. Downloaded through the browser pre-reduced to 24 colours (median cut); tools/make_town_art.py quantises and fits it"
  }
 }
