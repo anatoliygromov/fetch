@@ -9,9 +9,12 @@
 --                    a running jump from the bench seat reaches the hedge top (gold bone)
 --   3  The pond      hop onto the stepping stones, ride the duck boat, hop up the far bank
 --   4  Leaf cart     climb the bin (jump + scramble); the leaf cart zone: get up on the picnic table
---   5  The big oak   the cat sits on the ball up in the oak: bark it off, pick up the ball;
---                    climb the branches for a gold bone
---   6  Playground    up the slide tower, down the slide, the climbing frame, give the girl her ball
+--   5  The big oak   climb the branches for a gold bone
+--   6  Playground    up the slide tower, down the slide, the climbing frame, out through the far gate
+--
+-- Story (level 1 of 3): the girl throws the ball too far. It bounces away through the park ahead of Pepper
+-- (L.ballRun: it waits at each point and hops on when she comes close) and out of the far gate into town.
+-- Reaching the gate clears the level (L.exit). Level 2 (Downtown) picks the story up: a cat sits on it.
 --
 -- Everything but Pepper, the girl and the ball is greybox (scenery = "greybox": see Sc.drawFarGrey).
 -- props: kind = solid | oneway | decor; layer = "back", "play", "front"; over = true draws a play prop over
@@ -23,7 +26,7 @@ L.title = "Pepper: City Park (greybox)"
 L.scenery = "greybox"
 L.map = "level/citypark.map"
 L.time = 300
-L.start = { x = 44, y = 184 }
+L.start = { x = 60, y = 184 }
 
 L.props = {
   -- screen 1: the gate
@@ -61,7 +64,8 @@ L.props = {
   { name = "",         kind = "decor",  layer = "back", x0 = 1812, x1 = 1816, y0 = 120, y1 = 184 },
   { name = "FRAME",    kind = "oneway", layer = "play", x0 = 1752, x1 = 1800, y0 = 160, y1 = 164, label = "below" },
   { name = "",         kind = "oneway", layer = "play", x0 = 1768, x1 = 1816, y0 = 136, y1 = 140 },
-  { name = "SWINGS",   kind = "decor",  layer = "back", x0 = 1844, x1 = 1916, y0 = 104, y1 = 184 },
+  { name = "SWINGS",   kind = "decor",  layer = "back", x0 = 1800, x1 = 1860, y0 = 104, y1 = 184 },
+  { name = "GATE",     kind = "decor",  layer = "back", x0 = 1888, x1 = 1920, y0 = 112, y1 = 184 },
   -- foreground frame
   { name = "",         kind = "decor",  layer = "front", x0 = 620,  x1 = 632,  y0 = 56, y1 = 240 },
   { name = "",         kind = "decor",  layer = "front", x0 = 1580, x1 = 1592, y0 = 56, y1 = 240 },
@@ -81,11 +85,18 @@ L.movers = {
   { name = "DUCK BOAT", x0 = 840, x1 = 888, y0 = 202, y1 = 208, from = 840, to = 888, speed = 24 },
 }
 
--- the cat sits on the ball on the cat branch; a bark within 90 px scares it off and the ball drops
-L.ball = { x = 1376, y = 104 }
-L.cat = { x = 1376, y = 98, range = 90 }
-L.ballBack = "THE BALL IS BACK BY THE OAK"
-L.girl = { x = 1880, y = 184 }
+-- the ball runs away: it waits at each point and hops on to the next when Pepper is within 90 px; the last
+-- point is past the level's end, so it leaves through the far gate
+L.ball = { x = 150, y = 184 }
+L.ballRun = { trigger = 90, say = "CHASE THE BALL, PEPPER!",
+  { x = 150, y = 184 }, { x = 300, y = 184 }, { x = 500, y = 184 }, { x = 620, y = 184, peak = 90 }, { x = 696, y = 184 },
+  { x = 960, y = 184 }, { x = 1250, y = 184 }, { x = 1370, y = 184 }, { x = 1600, y = 184 }, { x = 1744, y = 184 },
+  { x = 1900, y = 184 }, { x = 2010, y = 150 } }
+-- the girl threw it: she stands by the gate where the level starts
+L.girl = { x = 24, y = 184 }
+-- the level ends at the far gate: reaching it clears the level
+L.exit = { x = 1880, say = "THE BALL BOUNCED OUT INTO TOWN!" }
+L.outro = { "THE BALL BOUNCED OUT", "OF THE PARK AND INTO TOWN..." }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
@@ -123,13 +134,8 @@ L.hints = {
   { x0 = 800,  x1 = 860,  text = "RIDE THE DUCK BOAT", maxY = 196 },
   { x0 = 960,  x1 = 1008, text = "HOLD A AND PUSH TO CLIMB" },
   { x0 = 1056, x1 = 1240, text = "LEAF CART! GET UP HIGH", bike = true },
-  { x0 = 1270, x1 = 1540, text = "Y: BARK AT THE CAT!", need = "cat" },
-  { x0 = 1270, x1 = 1600, text = "X: PICK UP THE BALL", need = "nearball" },
-  { x0 = 1800, x1 = 1920, text = "X: GIVE HER THE BALL", need = "ball" },
-  { x0 = 1560, x1 = 1920, text = "BRING THE BALL TO THE GIRL", need = "ball" },
-  { x0 = 1560, x1 = 1920, text = "HER BALL IS UP IN THE OAK", need = "cat" },
-  { x0 = 1560, x1 = 1920, text = "GO BACK FOR THE BALL", need = "noball" },
+  { x0 = 1800, x1 = 1920, text = "OUT THROUGH THE GATE!" },
 }
 
-L.intro = { "LEVEL 1", "CITY PARK", "THE GIRL LOST HER BALL.", "FIND IT AND FETCH IT!" }
+L.intro = { "LEVEL 1", "CITY PARK", "THE GIRL THREW THE BALL TOO FAR!", "CHASE IT, PEPPER!" }
 return L

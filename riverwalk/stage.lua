@@ -15,7 +15,8 @@ local GF = require("girl_frames")             -- the girl's SpriteCook animation
 local GIRL_ROW, GIRL_FPS = {}, { idle = 6, wave = 9, cheer = 9, call = 8, pet = 7 }
 for i, r in ipairs(GF.rows) do GIRL_ROW[r.name] = i end
 
-function St.new(def)
+-- def: the level (level/*.lua). carry (optional): { score, lives } carried over from the level before.
+function St.new(def, carry)
   if not girlImg then
     girlImg, ballImg, girlQ = img("art/girl.png"), img("art/ball.png"), {}
     for r, rw in ipairs(GF.rows) do
@@ -23,7 +24,8 @@ function St.new(def)
       for c = 1, rw.n do girlQ[r][c] = lg.newQuad((c - 1) * GF.CW, (r - 1) * GF.CH, GF.CW, GF.CH, girlImg:getDimensions()) end
     end
   end
-  local s = setmetatable({ def = def, t = 0, cam = 0, lead = 0, score = 0, hearts = 3, lives = 3, time = def.time,
+  local s = setmetatable({ def = def, t = 0, cam = 0, lead = 0, score = carry and carry.score or 0, hearts = 3,
+    lives = carry and carry.lives or 3, time = def.time, startScore = carry and carry.score or 0,
     rings = {}, msg = nil, events = {}, bikeT = 2.5, bikes = {} }, St)
   s.world = Wd.load(def.map, def.props)
   if def.scenery ~= "greybox" then s.road = Rd.new(s.world) end    -- the greybox park has no road and no traffic
@@ -42,7 +44,12 @@ function St.new(def)
   s.lamps = {}
   for i, l in ipairs(def.lamps) do s.lamps[i] = { x = l.x, y = l.y, checkpoint = l.checkpoint, lit = false } end
   s.ball = { x = def.ball.x, y = def.ball.y, home = { x = def.ball.x, y = def.ball.y }, state = "rest", vy = 0 }
-  s.girl = { x = def.girl.x, y = def.girl.y, state = "idle", t = 0, callT = 0 }
+  -- the girl: not in every level (Downtown has none); a level without her keeps one far off the map, hidden
+  if def.girl then s.girl = { x = def.girl.x, y = def.girl.y, state = "idle", t = 0, callT = 0 }
+  else s.girl = { x = -9999, y = -9999, state = "idle", t = 0, callT = 0, hidden = true } end
+  -- the runaway ball (City Park): it waits at a waypoint and hops on to the next one when Pepper comes close;
+  -- after the last one it is gone (out of the level)
+  if def.ballRun then s.ball.state = "run"; s.ball.wp = 1; s.ball.x, s.ball.y = def.ballRun[1].x, def.ballRun[1].y end
   -- the cat (City Park): it sits on the ball until a bark scares it off; then the ball drops
   if def.cat then s.cat = { x = def.cat.x, y = def.cat.y, state = "sit", t = 0, vx = 0, vy = 0, dir = 1 }; s.ball.state = "cat" end
   s.kicked = {}                                                   -- leaf piles Pepper has run through
@@ -52,6 +59,43 @@ function St.new(def)
 end
 
 function St:say(text, t) self.msg = { text = text, t = t or 2.2 } end
+
+-- the runaway ball: hop to the next waypoint along an arc (higher for longer hops); the last waypoint is off the
+-- level, so the ball leaves it
+function St:updateBallRun(dt)
+  local b, p, run = self.ball, self.pepper, self.def.ballRun
+  if b.hop then
+    local h = b.hop
+    h.t = h.t + dt
+    local k = math.min(1, h.t / h.dur)
+    b.x = h.x0 + (h.x1 - h.x0) * k
+    b.y = h.y0 + (h.y1 - h.y0) * k - h.peak * 4 * k * (1 - k)
+    if k >= 1 then
+      b.hop = nil
+      if b.wp >= #run then b.state = "gone" else S.play("land") end
+    end
+    return
+  end
+  local trig = run.trigger or 90
+  if b.wp < #run and p.x > b.x - trig and p.mode == "normal" then
+    local a, n = run[b.wp], run[b.wp + 1]
+    b.wp = b.wp + 1
+    local d = math.abs(n.x - a.x)
+    b.hop = { t = 0, dur = math.max(0.5, d / 260), x0 = b.x, y0 = b.y, x1 = n.x, y1 = n.y, peak = n.peak or (24 + d * 0.12) }
+    if b.wp == 2 and run.say then self:say(run.say, 2.4) end
+  end
+end
+
+-- the level's exit (goal = "exit"): reaching it clears the level; with needBall only while carrying the ball
+function St:checkExit()
+  local e, p = self.def.exit, self.pepper
+  if not e or self.clearT or self.events.clear then return end
+  if p.x >= e.x and p.mode == "normal" and (not e.needBall or p.carrying) then
+    if e.needBall then self.score = self.score + (e.bonus or 1000); self.bonus = { e.bonusName or "BALL", e.bonus or 1000 } end
+    S.play("heart"); self:say(e.say or "GOOD GIRL, PEPPER!", 3)
+    self.clearT = e.wait or 1.6
+  end
+end
 
 function St:respawn()
   local p = self.pepper
@@ -84,6 +128,7 @@ function St:giveBall()
   local b = self.ball
   b.state = "given"; self.pepper.carrying = nil; self.girl.state = "cheer"; self.girl.t = 0
   self.score = self.score + 2000; S.play("heart"); self:say("GOOD GIRL, PEPPER!", 3)
+  self.bonus = { "FETCH", 2000 }
   self.clearT = 2.2
 end
 
@@ -130,10 +175,12 @@ function St:update(dt, presses)
       if nearGirl(self) then self:giveBall() else self:dropBall() end
     elseif nearBall(self) then
       self.ball.state = "carried"; p.carrying = self.ball; p:grab(); S.play("key")
-      self:say("BRING IT TO THE GIRL!", 2.4)
+      self:say(self.def.pickupSay or "BRING IT TO THE GIRL!", 2.4)
     end
   end
   local b = self.ball
+  if b.state == "run" then self:updateBallRun(dt) end
+  self:checkExit()
   if b.state == "carried" then b.x, b.y = p:mouthPos()
   elseif b.state == "air" then
     b.vy = math.min(b.vy + 520 * dt, 400)
@@ -338,9 +385,9 @@ function St:draw(debug)
   end
   -- shadows of the girl, the ball and Pepper: on the floor right under them (smaller the higher they are)
   local g = self.girl
-  Sc.shadow(g.x - cam, g.y, 22)
+  if not g.hidden then Sc.shadow(g.x - cam, g.y, 22) end
   local b = self.ball
-  if b.state == "rest" or b.state == "air" then
+  if b.state == "rest" or b.state == "air" or b.state == "run" then
     local fy = w:floor(b.x - 2, b.x + 2, b.x, b.y - 0.5, 240, b.y - 0.5, b.drop)
     if fy then Sc.shadow(b.x - cam, fy, 8 - math.min(4, (fy - b.y) / 8)) end
   end
@@ -356,9 +403,9 @@ function St:draw(debug)
   if rw.name == "pet" then fr = math.min(rw.n, 1 + math.floor(g.t * GIRL_FPS.pet)) end    -- plays once and holds
   local face = (self.pepper.x < g.x) and -1 or 1
   lg.setColor(1, 1, 1, 1)
-  lg.draw(girlImg, girlQ[gr][fr], math.floor(g.x - cam + 0.5), g.y, 0, face, 1, rw.x, rw.y)
+  if not g.hidden then lg.draw(girlImg, girlQ[gr][fr], math.floor(g.x - cam + 0.5), g.y, 0, face, 1, rw.x, rw.y) end
   -- the ball (real art), unless Pepper carries it (drawn after her)
-  if b.state == "rest" or b.state == "air" or b.state == "cat" or (b.state == "given" and g.state ~= "pet" and g.state ~= "happy") then
+  if b.state == "rest" or b.state == "air" or b.state == "cat" or b.state == "run" or (b.state == "given" and g.state ~= "pet" and g.state ~= "happy") then
     local bx, by = b.x, b.y
     if b.state == "given" then bx, by = g.x + face * 8, g.y - 30 - math.abs(math.sin(g.t * 6)) * 14 end
     lg.draw(ballImg, math.floor(bx - cam - 3 + 0.5), math.floor(by - 6 + 0.5))
@@ -413,5 +460,6 @@ function St:drawDebug(cam)
   lg.setColor(1, 1, 1, 1)
 end
 
-function St:stats() return { bones = self.taken, total = self.total, time = self.time, score = self.score, hearts = self.hearts, lives = self.lives } end
+function St:stats() return { bones = self.taken, total = self.total, time = self.time, score = self.score, hearts = self.hearts,
+  lives = self.lives, levelScore = self.score - self.startScore, bonus = self.bonus } end
 return St

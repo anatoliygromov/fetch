@@ -1,8 +1,8 @@
 -- The checks for Level 1, City Park (love riverwalk --level citypark <flag>). Same flags as tests.lua:
 --   --physics   checks every set piece: hop, held jump, log, bench, hedge, stepping stones, duck boat, pond,
---               bin, picnic table, leaf cart, the oak's branches, the cat and the ball, slide, climbing frame
+--               bin, picnic table, leaf cart, the oak's branches, the runaway ball, slide, climbing frame, the gate
 --   --auto      plays the whole level on autopilot and saves every 3rd frame to rec/ (for the GIF)
---   --test      a screenshot tour of the 6 screens, the cat beat, the debug view and the tally
+--   --test      a screenshot tour of the 6 screens, the ball chase, the debug view and the tally
 local I = require("input")
 local Pp = require("pepper")
 return function(mode, api)
@@ -116,21 +116,18 @@ return function(mode, api)
       { act = function(p) release(); report("oak: low branch to the middle branch", near(p.y, 128), ("y %.0f"):format(p.y)) end },
       { act = function() tp(1460, 128); jump("jump") end }, { during = 0.2 }, landed(),
       { act = function(p) release(); report("oak: middle branch to the top branch", near(p.y, 100), ("y %.0f"):format(p.y)) end },
-      { act = function() tp(1200, 184) end }, { wait = 0.1 },
-      { act = function(p) p.face = 1; love.keypressed("z") end }, { wait = 0.6 },
-      { act = function() local s = api.stage(); report("cat: a bark from far away does not scare it", s.cat.state == "sit" and s.ball.state == "cat", s.cat.state) end },
-      { act = function() local s = api.stage(); tp(1380, 184); hold("left", "down") end }, { wait = 0.2 },
-      { act = function(p) release(); local s = api.stage(); report("cat: the ball cannot be picked up under it", s.ball.state == "cat", s.ball.state); tp(1404, 184) end },
-      { wait = 0.1 }, { act = function(p) p.face = -1; love.keypressed("z") end }, { wait = 0.1 },
-      { act = function() local s = api.stage(); report("cat: a bark from the path under the oak scares it", s.cat.state ~= "sit", s.cat.state) end },
-      { during = 1.5 },
-      { act = function() local s = api.stage(); local b = s.ball
-          report("cat: the ball drops to the path", b.state == "rest" and near(b.y, 184), ("ball %s x %.0f y %.0f"):format(b.state, b.x, b.y)) end },
-      { during = 2.0 },
-      { act = function() local s = api.stage(); report("cat: it runs off and is gone", s.cat.state == "gone", s.cat.state) end },
-      { act = function() local b = api.stage().ball; tp(b.x + 18, 184); api.stage().pepper.face = -1 end }, { wait = 0.1 },
-      { act = function() love.keypressed("x") end }, { wait = 0.2 },
-      { act = function(p) report("ball: Pepper picks it up", p.carrying ~= nil, tostring(p.carrying ~= nil)) end },
+      -- the runaway ball: it hops on when Pepper comes near, waits for her, and leaves the park at the end
+      { act = function() local s = api.stage(); local b, run = s.ball, s.def.ballRun
+          b.state, b.wp, b.hop, b.x, b.y = "run", 2, nil, run[2].x, run[2].y; tp(run[2].x - 200, 184) end }, { wait = 0.3 },
+      { act = function() local b = api.stage().ball; report("ball: it waits while Pepper is far", b.wp == 2 and not b.hop, ("wp %d"):format(b.wp)); tp(b.x - 60, 184) end },
+      { wait = 0.1 },
+      { act = function() local b = api.stage().ball; report("ball: it hops on when Pepper comes near", b.wp == 3 and b.hop ~= nil, ("wp %d"):format(b.wp)); tp(140, 184) end },
+      { wait = 2.0 },
+      { act = function() local s = api.stage(); local b, run = s.ball, s.def.ballRun
+          report("ball: it lands on the next point", not b.hop and near(b.x, run[3].x) and near(b.y, run[3].y), ("x %.0f y %.0f"):format(b.x, b.y))
+          b.wp, b.x, b.y = #run - 1, run[#run - 1].x, run[#run - 1].y; tp(b.x - 60, 184) end },
+      { wait = 2.0 },
+      { act = function() local b = api.stage().ball; report("ball: it leaves the park after the last point", b.state == "gone", b.state) end },
       -- 9 the playground: up the slide tower, down the slide on the ground, the climbing frame's bars
       { act = function() tp(1630, 184); jump("right", "jump") end }, { during = 0.3 }, landed(),
       { act = function(p) release(); report("slide: a held jump onto the tower", near(p.y, 152), ("x %.0f y %.0f"):format(p.x, p.y)) end },
@@ -152,10 +149,9 @@ return function(mode, api)
       { act = function(p) report("climbing frame: a hop onto the low bar", near(p.y, 160), ("y %.0f"):format(p.y)) end },
       { act = function() tp(1784, 160); jump("jump") end }, { wait = 1 / 60 }, { act = function() release() end }, { during = 0.1 }, landed(),
       { act = function(p) report("climbing frame: a hop onto the top bar", near(p.y, 136), ("y %.0f"):format(p.y)) end },
-      -- 10 give the ball to the girl
-      { act = function() local s = api.stage(); s.ball.state = "carried"; s.pepper.carrying = s.ball; tp(s.girl.x - 30, 184); s.pepper.carrying = s.ball end },
-      { wait = 0.1 }, { act = function() love.keypressed("x") end }, { wait = 3.0 },
-      { act = function() report("girl: giving her the ball clears the level", api.getState() == "clear", api.getState()) end },
+      -- 10 out through the far gate
+      { act = function() tp(1850, 184); hold("right") end }, { wait = 3.0 },
+      { act = function() release(); report("gate: reaching it clears the level", api.getState() == "clear", api.getState()) end },
       { act = function()
           local ok = 0; for _, r in ipairs(results) do if r then ok = ok + 1 end end
           print(("%d of %d passed"):format(ok, #results)); love.event.quit() end },
@@ -192,32 +188,15 @@ return function(mode, api)
       at(function(p) return p.onGround and p.y <= 157 and p.x > 1100 end, function() release() end),
       at(function(p) return p.x >= 1124 or p.vx < 1 end, function() release() end),
       at(function(p, s) return s.bikes[1] and s.bikes[1].x < p.x - 40 end, function() hold("right") end, 12),
-      -- 5 the oak: up the branches to the top (gold bone), bark at the cat, down, pick up the ball
+      -- 5 the oak: up the branches to the top (gold bone), then off the branches to the right
       at(function(p) return p.x >= 1446 end, function() jump("jump") end, 9),
       at(function(p) return p.onGround and p.y <= 157 end, function() release() end),
       { wait = 0.15 }, { act = function() jump("jump") end },
       at(function(p) return p.onGround and p.y <= 129 end, function() release() end),
       { wait = 0.15 }, { act = function() jump("jump") end },
-      at(function(p) return p.onGround and p.y <= 101 end, function() hold("left") end),
-      at(function(p) return p.x <= 1440 end, function() release() end),
-      { wait = 0.3 }, { act = function() love.keypressed("z") end }, { wait = 0.5 },
-      { act = function() love.keypressed("z") end }, { wait = 1.2 },
-      at(function(p, s) return s.ball.state == "rest" end, function() hold("left") end),
-      at(function(p, s) return p.x <= 1398 end, function() release() end),                     -- on the cat's branch
-      { wait = 0.3 }, { act = function() jump("down", "jump") end },                             -- Down + A: drop through
-      at(function(p, s) return p.onGround and p.y >= 183 end, function() release() end),
-      at(function(p, s)                                                                       -- walk up to the ball
-        local b = s.ball
-        local want = p.x < b.x and 1 or -1                                                    -- face the ball
-        if p.face == want and math.abs(p.x + p.face * 18 - b.x) < 20 and math.abs(p.vx) < 1 then return true end
-        local tx = b.x - want * 18
-        if p.face ~= want then hold(want > 0 and "right" or "left", "walk")
-        elseif p.x < tx - 3 then hold("right", "walk") elseif p.x > tx + 3 then hold("left", "walk") else release() end
-        return false
-      end, function() release() end),
-      { wait = 0.2 }, { act = function() love.keypressed("x") end }, { wait = 0.6 },
+      at(function(p) return p.onGround and p.y <= 101 end, function() hold("right") end),
+      at(function(p) return p.onGround and p.y >= 183 and p.x > 1480 end, function() hold("right") end, 9),
       -- 6 the playground: up the slide tower, down the slide, the climbing frame, the girl
-      at(function(p) return p.carrying ~= nil end, function() hold("right") end, 2),
       at(function(p) return p.x >= 1628 end, function() jump("right", "jump") end, 9),
       at(function(p) return p.onGround and p.y <= 153 end, function() hold("right") end),
       at(function(p) return p.onGround and p.y >= 183 and p.x > 1728 end, function() hold("right") end),
@@ -227,8 +206,7 @@ return function(mode, api)
       { wait = 0.3 }, { act = function() jump("jump") end }, { wait = 1 / 60 }, { act = function() release() end },
       at(function(p) return p.onGround and p.y <= 137 end, function() release() end),
       { wait = 0.2 }, { act = function() hold("right") end },
-      at(function(p, s) return p.onGround and p.y >= 183 and p.x >= s.girl.x - 40 end, function() release() end, 9),
-      { wait = 0.3 }, { act = function() love.keypressed("x") end },
+      at(function() return api.getState() == "clear" end, function() release() end, 9),
       { wait = 9 }, { act = function(p, s)
           local st = s:stats()
           print(("AUTOPILOT %s: bones %d/%d, lives %d hearts %d, %.1f s played"):format(api.getState() == "clear" and "GOOD GIRL!" or api.getState(),
@@ -247,24 +225,20 @@ return function(mode, api)
       steps[#steps + 1] = { wait = i == 4 and 0.25 or 0.6 }
       steps[#steps + 1] = shot(("cp_%02d_screen%d"):format(i, i), (i - 1) * 320)
     end
-    -- the cat beat: bark from the low branch, the cat startles, leaps off, the ball on the path
-    local beatCam = 1240
-    steps[#steps + 1] = { act = function() tp(1446, 156); api.stage().pepper.face = -1 end }
-    steps[#steps + 1] = { wait = 0.5 }
-    steps[#steps + 1] = { act = function() love.keypressed("z") end }
-    steps[#steps + 1] = { wait = 0.15 }; steps[#steps + 1] = shot("cp_07_bark", beatCam)
-    steps[#steps + 1] = { wait = 0.4 }; steps[#steps + 1] = shot("cp_08_leap", beatCam)
-    steps[#steps + 1] = { wait = 0.5 }; steps[#steps + 1] = shot("cp_09_run", beatCam)
-    steps[#steps + 1] = { wait = 1.5 }; steps[#steps + 1] = shot("cp_10_ball", beatCam)
+    -- the runaway ball: Pepper comes near, it hops on
+    steps[#steps + 1] = { act = function() local s = api.stage(); local b, run = s.ball, s.def.ballRun
+      b.state, b.wp, b.hop, b.x, b.y = "run", 1, nil, run[1].x, run[1].y; tp(40, 184); s.pepper.face = 1 end }
+    steps[#steps + 1] = { wait = 0.35 }; steps[#steps + 1] = shot("cp_07_chase", 0)
+    steps[#steps + 1] = { wait = 0.35 }; steps[#steps + 1] = shot("cp_08_chase", 0)
     steps[#steps + 1] = { act = function() love.keypressed("g") end }; steps[#steps + 1] = { wait = 0.1 }
     steps[#steps + 1] = shot("cp_11_debug_screen5", 1280)
     steps[#steps + 1] = { act = function() tp(1700, 160) end }; steps[#steps + 1] = { wait = 0.3 }
     steps[#steps + 1] = shot("cp_12_debug_screen6", 1600)
     steps[#steps + 1] = { act = function() love.keypressed("g") end }
-    -- give the ball: the tally
-    steps[#steps + 1] = { act = function() local s = api.stage(); s.ball.state = "carried"; s.pepper.carrying = s.ball; tp(s.girl.x - 30, 184) end }
-    steps[#steps + 1] = { wait = 0.2 }; steps[#steps + 1] = { act = function() love.keypressed("x") end }
-    steps[#steps + 1] = { wait = 1.0 }; steps[#steps + 1] = shot("cp_13_give")
+    -- out through the far gate: the tally
+    steps[#steps + 1] = { act = function() tp(1860, 184); I.force = { right = true } end }
+    steps[#steps + 1] = { wait = 1.0 }; steps[#steps + 1] = shot("cp_13_gate")
+    steps[#steps + 1] = { act = function() I.force = {} end }
     steps[#steps + 1] = { wait = 4.5 }; steps[#steps + 1] = shot("cp_14_tally")
     steps[#steps + 1] = { wait = 0.3 }; steps[#steps + 1] = { act = function() love.event.quit() end }
   end
