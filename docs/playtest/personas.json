@@ -1,0 +1,21 @@
+{
+  "_about": "Synthetic players for FETCH! playtests (6 Oct 2026). Numbers drive the persona bots in the playtest lab; the text drives the persona reviews. reads: none = cannot read the hints or cards; short = reads hints of up to 4 words, skips longer ones and the story cards; all = reads everything. reaction_ms: delay before an intended press. timing_sd_ms: spread of when a press lands around the right moment. hold_error: chance a press needs a held A but gets a tap (or the other way round). discovery_s: mean seconds of trying buttons before finding a mechanic nobody told them about. patience: failed tries at the same spot before they quit (kids, Anna) or ask for help. explore: chance to go for an optional bone route or a gold bone. rush: skips optional things and hates waiting.",
+  "personas": [
+    {"id": "elsa6",  "group": "kids",    "name": "Elsa", "age": 6,  "reads": "none",  "reaction_ms": 480, "timing_sd_ms": 160, "hold_error": 0.40, "discovery_s": 25, "patience": 4,  "explore": 0.2, "rush": false,
+     "bio": "Plays on the family RG35XX after watching her dad. Cannot read the hints yet. Loves dogs, barks along with Pepper, presses Y just for fun. Gets upset when Pepper gets hurt. Plays 10 minutes."},
+    {"id": "liam8",  "group": "kids",    "name": "Liam", "age": 8,  "reads": "short", "reaction_ms": 380, "timing_sd_ms": 120, "hold_error": 0.25, "discovery_s": 15, "patience": 6,  "explore": 0.6, "rush": false,
+     "bio": "Reads short words, skips long sentences and story cards. Collector: wants every bone. Tries every button. Proud when he beats a hard bit."},
+    {"id": "maja10", "group": "kids",    "name": "Maja", "age": 10, "reads": "all",   "reaction_ms": 300, "timing_sd_ms": 80,  "hold_error": 0.12, "discovery_s": 10, "patience": 8,  "explore": 0.8, "rush": false,
+     "bio": "Confident, has played Mario on a Switch. Wants a challenge and secrets, gets bored in empty stretches, says 'too easy' a lot. Likes the story."},
+    {"id": "anna38", "group": "parents", "name": "Anna", "age": 38, "reads": "all",   "reaction_ms": 420, "timing_sd_ms": 130, "hold_error": 0.28, "discovery_s": 20, "patience": 3,  "explore": 0.2, "rush": false,
+     "bio": "Rarely plays games. Plays a level with her daughter, hands the console back when stuck. Wants it calm, kind and clear; dislikes timers and getting hurt."},
+    {"id": "johan41","group": "parents", "name": "Johan", "age": 41, "reads": "all",   "reaction_ms": 300, "timing_sd_ms": 90,  "hold_error": 0.12, "discovery_s": 10, "patience": 6,  "explore": 0.4, "rush": false,
+     "bio": "Grew up on Super Mario World. Plays first to see if it suits his kids, then helps them through hard parts. Cares that it is fair, readable and age-appropriate."},
+    {"id": "mikael37","group": "retro",  "name": "Mikael", "age": 37, "reads": "none", "reaction_ms": 200, "timing_sd_ms": 40,  "hold_error": 0.04, "discovery_s": 8,  "patience": 30, "explore": 0.0, "rush": true,
+     "bio": "Speedrunner with an RG35XX. Ignores text, mashes through cards. Wants tight controls, momentum and skips; hates forced waits (boat, tram, magpie)."},
+    {"id": "sara34", "group": "retro",   "name": "Sara", "age": 34, "reads": "all",   "reaction_ms": 250, "timing_sd_ms": 60,  "hold_error": 0.08, "discovery_s": 8,  "patience": 30, "explore": 1.0, "rush": false,
+     "bio": "Completionist. Checks every corner for bones and secrets, wants 100% and a reason to replay. Notices when optional routes are not rewarded."},
+    {"id": "tomas44","group": "retro",   "name": "Tomas", "age": 44, "reads": "all",   "reaction_ms": 300, "timing_sd_ms": 80,  "hold_error": 0.10, "discovery_s": 12, "patience": 12, "explore": 0.5, "rush": false,
+     "bio": "Plays his RG35XX in bed, nostalgic for 16-bit platformers. Judges game feel, sound, readability on a 3.5 inch screen and whether it feels authentically 90s."}
+  ]
+}
