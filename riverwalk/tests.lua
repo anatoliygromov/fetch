@@ -242,6 +242,32 @@ return function(mode, api)
           { wait = 0.3 }, shot("16_bike_warning", 700),
           { act = function() tp(1330, 216) end }, { wait = 2.2 }, shot("17_pontoon_at_quay", 1230),
           { act = function() tp(2754, 154) end }, { wait = 0.4 }, shot("18_planter_step", 2580) })
+    -- the near lane's traffic, at its perspective size: cars and cyclists put on the road for the shots
+    local function traffic(list)
+      local s = api.stage(); local Rd = require("road"); local A = Rd.art()
+      s.road.list = {}
+      for _, v in ipairs(list) do
+        local car = v[1] == "car"
+        local im = car and A.cars[v[2]] or (A.riders or A.cyclists)[v[2]]
+        local sp = { 0, s.world.width }
+        for _, q in ipairs(s.road.spans) do if v[3] >= q[1] and v[3] < q[2] then sp = q end end
+        local e = { im = im, x = v[3], w = im:getWidth(), vx = (v[4] and 1 or -1) * 0.01, sp = sp, bob = 0,
+          flip = car and v[4] or (not car and not v[4]) }
+        if car then e.top = Rd.CAR_TOP; if not e.top then e.base = 239 end
+        else e.top = Rd.RIDER_TOP; if not e.top then e.base = 236 end end
+        s.road.list[#s.road.list + 1] = e
+      end
+      s.road.t = 99
+    end
+    add({ { act = function() tp(150, 184) end }, { wait = 0.3 },
+          { act = function() traffic({ { "car", 1, 10, true }, { "rider", 1, 250, false } }) end }, { wait = 0.05 }, shot("19_traffic_home", 0),
+          { act = function() tp(700, 184) end }, { wait = 0.3 },
+          { act = function() traffic({ { "car", 2, 690, true }, { "car", 3, 450, true } }) end }, { wait = 0.05 }, shot("20_traffic_bin", 520),
+          { act = function() tp(2312, 154) end }, { wait = 0.3 },
+          { act = function() traffic({ { "car", 4, 2150, true }, { "rider", 2, 2380, false } }) end }, { wait = 0.05 }, shot("21_traffic_planter", 2120),
+          { act = function() tp(140, 184); api.stage().pepper.face = 1; hold("down") end }, { wait = 0.4 },
+          { act = function() traffic({ { "car", 5, 60, true } }) end }, { wait = 0.05 }, shot("22_traffic_crawl", 0),
+          { act = function() release() end } })
     steps[#steps + 1] = { wait = 0.3 }; steps[#steps + 1] = { act = function() love.event.quit() end }
   end
 

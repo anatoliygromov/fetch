@@ -1,8 +1,13 @@
 -- Passing traffic on the road in front of the promenade: cars and cyclists in the near lane (the road band is
 -- y 199-240 under the promenade). Pure scenery: nothing here touches Pepper. Vehicles appear only where there is
 -- road (flat promenade at y 184) and are clipped to it, so none drives over the river or the quay.
---   cars drive to the right (Swedish right-hand traffic, near lane), wheels on y 239, 110-170 px/s
---   cyclists use the bike lane next to the kerb in either direction, wheels on y 236, 45-70 px/s
+-- The near lane is closer to the camera than the promenade, so its traffic is drawn bigger than things on it
+-- (Mia is about 60 px tall, about 44 px a metre): cars about 190-235 x 70-92 px, cyclists about 95 px tall.
+-- Their tops are at y 192 / 190, below Pepper's feet (y 184), so they never cover her; the frame crops their
+-- lower part (the wheels), as the near lane would be.
+--   cars drive to the right (Swedish right-hand traffic, near lane), 110-170 px/s (art: road_car1-5, facing left)
+--   cyclists use the bike lane next to the kerb in either direction, 45-70 px/s (art: road_cyclist1-2, facing right)
+-- The promenade bikes (stage.lua) keep the small cyclist1.png: they ride on Pepper's line.
 local Sc = require("scene")
 local lg = love.graphics
 local Rd = {}
@@ -11,12 +16,15 @@ Rd.__index = Rd
 local art
 local function load()
   if art then return art end
-  art = { cars = {}, cyclists = {} }
-  for i = 1, 5 do local im = lg.newImage("art/scene/car" .. i .. ".png"); im:setFilter("nearest", "nearest"); art.cars[i] = im end
-  for i = 1, 2 do local im = lg.newImage("art/scene/cyclist" .. i .. ".png"); im:setFilter("nearest", "nearest"); art.cyclists[i] = im end
+  art = { cars = {}, cyclists = {}, riders = {} }
+  local function img(n) local im = lg.newImage("art/scene/" .. n .. ".png"); im:setFilter("nearest", "nearest"); return im end
+  for i = 1, 5 do art.cars[i] = img("road_car" .. i) end
+  for i = 1, 2 do art.cyclists[i] = img("cyclist" .. i) end       -- the promenade bikes (stage.lua)
+  for i = 1, 2 do art.riders[i] = img("road_cyclist" .. i) end    -- the road's cyclists
   return art
 end
 Rd.art = load
+Rd.CAR_TOP, Rd.RIDER_TOP = 192, 190                                -- below Pepper's feet (y 184)
 
 function Rd.new(world)
   load()
@@ -54,13 +62,13 @@ function Rd:update(dt, cam)
     local w = im:getWidth()
     local x = cam - w - 20
     if x < sp[1] - w then x = sp[1] - w end
-    self.list[#self.list + 1] = { im = im, x = x, w = w, vx = 110 + rng:random() * 60, base = 239, flip = true, sp = sp, bob = 0 }
+    self.list[#self.list + 1] = { im = im, x = x, w = w, vx = 110 + rng:random() * 60, top = Rd.CAR_TOP, flip = true, sp = sp, bob = 0 }
   else                                                              -- a cyclist, either way
-    local im = art.cyclists[rng:random(1, #art.cyclists)]
+    local im = art.riders[rng:random(1, #art.riders)]
     local w = im:getWidth()
     local right = rng:random() < 0.5
     local x = right and (cam - w - 10) or (cam + 330)
-    self.list[#self.list + 1] = { im = im, x = x, w = w, vx = (right and 1 or -1) * (45 + rng:random() * 25), base = 236, flip = not right, sp = sp, bob = 1 }   -- cyclist art faces right
+    self.list[#self.list + 1] = { im = im, x = x, w = w, vx = (right and 1 or -1) * (45 + rng:random() * 25), top = Rd.RIDER_TOP, flip = not right, sp = sp, bob = 1 }   -- cyclist art faces right
   end
 end
 
@@ -71,8 +79,7 @@ function Rd:draw(cam, t)
     local a, b = math.max(v.sp[1], cam) - cam, math.min(v.sp[2], cam + 320) - cam
     if b > a then
       lg.setScissor(a, 0, b - a, 240)                                 -- clip to its stretch of road
-      local h = v.im:getHeight()
-      local y = v.base - h
+      local y = v.top or (v.base - v.im:getHeight())
       local x = math.floor(v.x - cam + 0.5)
       if v.flip then lg.draw(v.im, x + v.w, y, 0, -1, 1) else lg.draw(v.im, x, y) end
       lg.setScissor()

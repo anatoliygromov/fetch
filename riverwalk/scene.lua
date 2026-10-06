@@ -1025,7 +1025,7 @@ function Sc.drawPropArt(p, camx, def, kicked)
   if x > 360 or x + w < -120 then return end
   if p.layer == "front" then                                      -- the foreground frame: below Pepper's lines only
     local im = style == "park" and T.bush or T.bollard
-    at(im, x + w / 2 - im:getWidth() / 2, 221)
+    at(im, x + w / 2 - im:getWidth() / 2, math.max(221, p.y0))
     return
   end
   local n = p.name
@@ -1189,7 +1189,9 @@ function Sc.drawHazardArt(c, camx, style)
   local x = c.x - camx
   Sc.shadow(x, c.y - 1, im:getWidth() - 6)
   lg.setColor(1, 1, 1, 1)
-  lg.draw(im, math.floor(x - im:getWidth() / 2 + 0.5), math.floor(c.y - im:getHeight() + 0.5))
+  local x0, y0 = math.floor(x - im:getWidth() / 2 + 0.5), math.floor(c.y - im:getHeight() + 0.5)
+  -- they drive right to left: the tram's art faces left; the cart's faces right (its wheel leads), so it is mirrored
+  if style == "park" then lg.draw(im, x0 + im:getWidth(), y0, 0, -1, 1) else lg.draw(im, x0, y0) end
 end
 
 return Sc
