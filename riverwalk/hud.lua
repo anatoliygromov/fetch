@@ -103,14 +103,14 @@ function U.hardTag(x, y)
   txt("HARD", x + 3, y + 2, U.GOLD)
 end
 -- a medal, 11 x 11 at x, y: a gold disc with its picture (nohit: a heart, bones: a bone, par: a clock); not won
--- yet: a dark disc with the picture in the rim colour
+-- yet: a dark disc (visible on the selected row too) with the picture in the rim colour
 local medalPic = { nohit = bigHeart, bones = smallBone, par = clockIcon }
 local medalDisc
 function U.medal(kind, x, y, won)
   if not medalDisc then medalDisc = bitmap({ "...#####...", ".#########.", ".#########.", "###########", "###########",
     "###########", "###########", "###########", ".#########.", ".#########.", "...#####..." }) end
   lg.setColor(U.SHADE); lg.draw(medalDisc, x + 1, y + 1)
-  lg.setColor(won and U.GOLD or U.EDGE); lg.draw(medalDisc, x, y)
+  lg.setColor(won and U.GOLD or U.SHADE); lg.draw(medalDisc, x, y)
   local pic = medalPic[kind]
   lg.setColor(won and { 120/255, 70/255, 10/255 } or U.RIM)
   lg.draw(pic, x + math.floor((11 - pic:getWidth()) / 2), y + math.floor((11 - pic:getHeight()) / 2))
