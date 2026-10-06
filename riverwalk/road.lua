@@ -60,7 +60,7 @@ function Rd:update(dt, cam)
     local w = im:getWidth()
     local right = rng:random() < 0.5
     local x = right and (cam - w - 10) or (cam + 330)
-    self.list[#self.list + 1] = { im = im, x = x, w = w, vx = (right and 1 or -1) * (45 + rng:random() * 25), base = 236, flip = right, sp = sp, bob = 1 }
+    self.list[#self.list + 1] = { im = im, x = x, w = w, vx = (right and 1 or -1) * (45 + rng:random() * 25), base = 236, flip = not right, sp = sp, bob = 1 }   -- cyclist art faces right
   end
 end
 

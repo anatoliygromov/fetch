@@ -3,7 +3,8 @@
 #     out by its connected silhouette, left to right, top to bottom
 #   * cyclists: SpriteCook draws them about 3x too big and on no pixel grid, so each 3 x 3 block becomes one pixel
 #     (the darkest pixel where the block holds outline, otherwise the median), then palette + despeckle
-#   * all of them face left in the files; the game flips them for traffic going right
+#   * the cars face left in the files and the game flips them for traffic going right; the cyclists face right
+#     and the game flips them for bikes going left
 import os, sys, numpy as np
 from PIL import Image
 from scipy import ndimage

@@ -193,5 +193,5 @@ L.hints = {
   { x0 = 1560, x1 = 1920, text = "GO BACK FOR THE BALL!", need = "noball" },
 }
 
-L.intro = { "LEVEL 1", "CITY PARK", "A MAGPIE STOLE THE GIRL'S BALL!", "SNEAK UP AND BARK, PEPPER!" }
+L.intro = { "LEVEL 1", "CITY PARK", "A MAGPIE STOLE MIA'S BALL!", "SNEAK UP AND BARK, PEPPER!" }
 return L
