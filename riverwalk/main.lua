@@ -90,6 +90,7 @@ function love.load(args)
     if a == "--noextras" then Ex.enabled = false end                                    -- start with the extras off
     if a == "--qa" then require("qa")({ stage = function() return stage end }) end
     if a == "--flowtest" then require("tests_flow")(api) end
+    if a == "--pepperlab" then require("pepperlab")() end                              -- Pepper alone in a test room
   end
 end
 function love.joystickadded(j) if j:isGamepad() then I.pad = j end end

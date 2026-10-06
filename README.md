@@ -79,6 +79,10 @@ The approved state of Level 3, River Walk, under git. Every delivered build is a
   - falling in the river
 - **Autopilot:** `love riverwalk --auto` plays the whole level and reaches GOOD GIRL!
 - **Screenshots:** `love riverwalk --test` saves screenshots.
+- **Pepper unchanged:** `tools/check_pepper_lab.sh` (a test room built in code, no level: PEPPER UNCHANGED) and
+  `tools/check_pepper_files.sh` (her five files against aa38be5, the approved build); `tools/check_pepper.sh`
+  compares a River Walk autopilot run with its recorded trace.
+- **Hard mode:** add `--hard` to `--auto` (1 heart, traffic 25% faster).
 - **Game flow:** `tools/check_flow.sh` runs `love riverwalk --flowtest`: it drives the menus through a whole run
   (26 checks) and puts a screenshot of every screen on one sheet, `flow_screens.png`.
 

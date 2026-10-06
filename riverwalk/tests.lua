@@ -3,6 +3,7 @@
 -- love . --auto --trace   the same run, printing Pepper's position, speed, clip and frame every step instead
 -- love . --test      a screenshot tour of every screen, the debug view and the tuning panel
 local I = require("input")
+local Sp = require("setpieces")
 return function(mode, api)
   I.testing = true
   for _, a in ipairs(arg or {}) do if a == "--trace" then TRACE = true end end
@@ -11,9 +12,13 @@ return function(mode, api)
   local frame, n = 0, 0
   local results = {}
   local function report(name, ok, detail)
+    ok = ok and true or false                                     -- (a nil result must count as a failure)
     results[#results + 1] = ok
     print(("%-46s %s  %s"):format(name, ok and "PASS" or "FAIL", detail or "")); io.stdout:flush()
   end
+  local function jump(...) hold(...); love.keypressed("space") end           -- press A and keep holding it
+  local function landed() return { cond = function(p) return p.onGround and p.mode == "normal" end, act = function() end, limit = 3 } end
+  local function near(a, b) return math.abs(a - b) < 1 end
   local function tp(x, y) local s = api.stage(); local p = s.pepper
     p.x, p.y, p.vx, p.vy, p.onGround, p.ground, p.mode, p.crouch, p.invuln = x, y, 0, 0, true, nil, "normal", false, 0
     s.cam = math.max(0, math.min(s.world.width - 320, x - 140)); s.bikes = {}; s.bikeT = 99
@@ -98,6 +103,48 @@ return function(mode, api)
       { act = function() tp(1793, 216) end },
       { during = 2.5 },
       { act = function() local s = api.stage(); report("falling in the river costs a heart", s.hearts == 2, ("hearts %d"):format(s.hearts)) end },
+      -- 11 bike zone 2: the planter is a step up to the bin (a tapped hop and a scramble each)
+      { act = function() tp(2706, 184); hold("right") end }, { during = 0.6 },
+      { act = function(p) report("planter step: stops a walk", p.x < 2716 and near(p.y, 184), ("x %.0f"):format(p.x)); jump("right", "jump") end },
+      { wait = 1 / 60 }, { act = function() hold("right") end },
+      { cond = function(p) return p.onGround and p.mode == "normal" and p.y < 183 end, act = function() release() end, limit = 2 },
+      { act = function(p) report("planter step: a tapped hop and a scramble", near(p.y, 154), ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
+      { during = 0.15 }, { act = function() jump("right", "jump") end }, { wait = 1 / 60 }, { act = function() hold("right") end },
+      { cond = function(p) return p.onGround and p.mode == "normal" and p.y < 153 end, act = function() release() end, limit = 2 },
+      { act = function(p) report("bin: a tapped hop and a scramble from the step", near(p.y, 128), ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      -- 12 the pontoon (a rope ferry): it waits by the ferry, comes to the quay when Pepper is near, takes her across
+      { act = function() local m = api.stage().movers[1]; m.x0, m.x1 = m.to, m.to + 48; tp(1850, 216) end }, { during = 1.0 },
+      { act = function() local m = api.stage().movers[1]; report("pontoon: waits by the ferry", near(m.x0, m.to), ("x %.0f"):format(m.x0)); tp(1160, 184) end },
+      { during = 2.0 },
+      { act = function() local m = api.stage().movers[1]; report("pontoon: Pepper near: it comes to the quay", near(m.x0, m.from), ("x %.0f in 2 s"):format(m.x0)) end },
+      { act = function() local m = api.stage().movers[1]; tp(m.x0 + 22, m.y0) end }, { during = 4.5 },
+      { act = function(p) local m = api.stage().movers[1]; report("pontoon: carries her across to the ferry", near(m.x0, m.to) and p.ground == m, ("x %.0f, on it %s"):format(m.x0, tostring(p.ground == m))) end },
+      -- 13 the high route over bike zone 1: from the bin onto the kiosks' awnings, down onto the planter
+      { act = function() tp(660, 128); hold("right") end },
+      { cond = function(p) return p.x >= 678 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
+      { act = function(p) report("kiosks: from the bin onto the first awning", near(p.y, 112) and p.x > 722, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
+      { cond = function(p) return p.x >= 820 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
+      { act = function(p) report("kiosks: onto the second awning (gold bone)", near(p.y, 112) and p.x > 875, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
+      { cond = function(p) return p.x >= 975 end, act = function() release() end, limit = 2 },
+      { cond = function(p) return p.onGround and p.y > 150 end, act = function() end, limit = 2 },
+      { act = function(p) local s = api.stage()
+          report("kiosks: down onto the planter (route done)", near(p.y, 154) and p.x > 976 and p.x < 1048, ("x %.0f y %.0f"):format(p.x, p.y))
+          report("secret: KIOSK ROOFS counted", s.secrets[2].found, ("%d of %d"):format(s:stats().secrets, s:stats().secretsTotal)) end },
+      -- 14 Pepper's kennel: it stops a walk; crawling in finds the gold bone (a secret)
+      { act = function() tp(60, 184); api.stage().pepper.face = -1; hold("left") end }, { during = 0.6 },
+      { act = function(p) report("kennel: stops a walk", p.x >= 50.9 and near(p.y, 184), ("x %.1f"):format(p.x)); hold("left", "down") end }, { during = 1.5 },
+      { act = function(p) release(); local s = api.stage(); local got
+          for _, bn in ipairs(s.bones) do if bn.x == 16 then got = bn.taken end end
+          report("kennel: crawl in, the gold bone is inside", p.x < 22 and got, ("x %.0f, bone %s"):format(p.x, tostring(got)))
+          report("secret: KENNEL counted (2 of 2)", s.secrets[1].found and s:stats().secrets == 2 and s:stats().secretsTotal == 2, ("%d of %d"):format(s:stats().secrets, s:stats().secretsTotal)) end },
+      { act = function() hold("right", "down") end }, { during = 1.2 },
+      { act = function(p) release(); report("kennel: crawl back out", p.x > 50 and near(p.y, 184), ("x %.0f"):format(p.x)) end },
+      -- 15 traffic: a bike is sent 1 s before it reaches the screen edge (its bell rings then); hard mode
+      { act = function() local s = api.stage(); local c = Sp.spawn(s, s.def.bikes[1]); local lead = (c.x - 24 - (s.cam + 320)) / c.speed
+          report("bike: sent 1 s before the screen edge (bell)", math.abs(lead - 1) < 0.01, ("%.2f s"):format(lead))
+          local St = require("stage"); local h = St.new(s.def, { hard = true })
+          report("hard mode: 1 heart, bikes 25% faster", h.hearts == 1 and Sp.speed(h, h.def.bikes[1]) == h.def.bikes[1].speed * 1.25,
+            ("hearts %d, speed %.2f"):format(h.hearts, Sp.speed(h, h.def.bikes[1]))) end },
       { act = function()
           local ok = 0; for _, r in ipairs(results) do if r then ok = ok + 1 end end
           print(("%d of %d passed"):format(ok, #results)); love.event.quit() end },
@@ -126,8 +173,15 @@ return function(mode, api)
       at(function(p) return p.onGround and p.y <= 157 end, function() hold("right") end),            -- on the bench seat
       onto(401, 152),                                                                                -- the flower box
       onto(641, 128),                                                                                -- the bin: jump and scramble
-      -- bike zone 1: grit box, planter, flower box; the perches keep her above the bikes
-      onto(831, 152), onto(990, 154, 917), onto(1113, 152, 1034),
+      -- bike zone 1 by the high route (a secret): from the bin onto the two kiosk awnings, down onto the planter,
+      -- then the flower box; up there the bikes pass under her
+      at(function(p) return p.x >= 678 end, function() jump("right", "jump") end),
+      at(function(p) return p.onGround and p.y <= 113 and p.x > 722 end, function() hold("right") end),
+      at(function(p) return p.x >= 820 end, function() jump("right", "jump") end),
+      at(function(p) return p.onGround and p.y <= 113 and p.x > 875 end, function() hold("right") end),
+      at(function(p) return p.x >= 975 end, function() release() end),
+      at(function(p) return p.onGround and p.y > 150 end, function() hold("right") end),
+      onto(1113, 152, 1034),
       -- down the steps to the quay, then the pontoon
       at(function(p) return p.x >= 1378 and p.onGround and p.y >= 215 end, function() release() end, 14),
       at(function(p, s) return s.movers[1].x0 <= 1402 end, function() hold("right") end, 9),
@@ -148,11 +202,15 @@ return function(mode, api)
       at(function(p) return p.x >= 2200 and p.y <= 185 end, function() hold("right") end, 9),           -- up the steps
       onto(2290, 154),                                                                               -- the planter
       -- bike zone 2: flower box, grit box, bin
-      onto(2441, 152), onto(2616, 152, 2543), onto(2776, 128, 2702),
+      onto(2441, 152), onto(2600, 152, 2543), onto(2776, 128, 2686),                -- (a held jump from the grit box clears the planter step)
       onto(2908, 156),                                                                               -- the last bench
       at(function(p) return p.x >= 3100 and p.onGround end, function() release() end, 9),
       { wait = 0.3 }, { act = function() love.keypressed("x") end },
-      { wait = 9 }, { act = function() love.event.quit() end },
+      { wait = 9 }, { act = function(p, s)
+          local st = s:stats()
+          print(("AUTOPILOT %s: bones %d/%d, secrets %d/%d, lives %d hearts %d, %.1f s played%s"):format(api.getState() == "clear" and "GOOD GIRL!" or api.getState(),
+            st.bones, st.total, st.secrets or 0, st.secretsTotal or 0, st.lives, st.hearts, s.def.time - st.time, s.hard and " (hard)" or "")); io.stdout:flush()
+          love.event.quit() end },
     }
   else  -- --test
     local function shot(name, cam) return { act = function() if cam then api.stage().cam = cam end; love.graphics.captureScreenshot(name .. ".png") end } end
@@ -173,10 +231,21 @@ return function(mode, api)
     steps[#steps + 1] = { act = function() love.keypressed("g"); love.keypressed("tab") end }; steps[#steps + 1] = { wait = 0.1 }
     steps[#steps + 1] = shot("13_tuning")
     steps[#steps + 1] = { act = function() love.keypressed("tab") end }
+    -- the new spots: the kennel, the kiosk roofs over a bike, a bike's warning sign, the pontoon waiting at the
+    -- quay, the planter step before the bin
+    local function add(t) for _, st in ipairs(t) do steps[#steps + 1] = st end end
+    add({ { act = function() tp(60, 184); api.stage().pepper.face = -1; hold("left", "down") end }, { wait = 1.3 },
+          shot("14_kennel", 0), { act = function() release() end },
+          { act = function() local s = api.stage(); tp(800, 112); s.bikes = { { x = 905, y = 184, warn = 0, zone = s.def.bikes[1], speed = 115 } } end },
+          { wait = 0.4 }, shot("15_kiosk_roofs", 640),
+          { act = function() local s = api.stage(); tp(860, 184); s.bikes = { Sp.spawn(s, s.def.bikes[1]) } end },
+          { wait = 0.3 }, shot("16_bike_warning", 700),
+          { act = function() tp(1330, 216) end }, { wait = 2.2 }, shot("17_pontoon_at_quay", 1230),
+          { act = function() tp(2754, 154) end }, { wait = 0.4 }, shot("18_planter_step", 2580) })
     steps[#steps + 1] = { wait = 0.3 }; steps[#steps + 1] = { act = function() love.event.quit() end }
   end
 
-  local i, since, T = 1, 0, 0
+  local i, since, T, lastHearts = 1, 0, 0, nil
   local old = love.update
   love.update = function(dt)
     dt = 1 / 60; T = T + dt; since = since + dt
@@ -188,13 +257,17 @@ return function(mode, api)
         if p then print(("T %d %.3f %.3f %.3f %.3f %s %d %d %s %s %s"):format(frame, p.x, p.y, p.vx, p.vy, p.anim, p.frame, p.face,
           p.mode, tostring(p.onGround), tostring(p.crouch))) end
       elseif frame % 3 == 0 then n = n + 1; love.graphics.captureScreenshot(("rec/%04d.png"):format(n)) end
+      if s and not TRACE and s.hearts ~= (lastHearts or s.maxHearts) then print(("  lost a heart at x %.0f y %.0f (step %d)"):format(p.x, p.y, i)) end
+      lastHearts = s and s.hearts
     end
     local st = steps[i]
     if not st then return end
     if st.wait then if since >= st.wait then i, since = i + 1, 0 end
     elseif st.during then if st.each and p then st.each(p) end; if since >= st.during then i, since = i + 1, 0 end
     elseif st.cond then
-      if st.cond(p, s) then st.act(p, s); i, since = i + 1, 0
+      if st.cond(p, s) then
+        if os.getenv("AUTO_DEBUG") then print(("step %d at x %.1f y %.1f vx %.0f %s"):format(i, p.x, p.y, p.vx, p.onGround and "G" or "A")) end
+        st.act(p, s); i, since = i + 1, 0
       elseif since > st.limit then print(("AUTOPILOT STUCK at step %d: x %.0f y %.0f %s"):format(i, p.x, p.y, p.onGround and "ground" or "air")); io.stdout:flush(); love.event.quit() end
     else st.act(p, s); i, since = i + 1, 0 end
   end

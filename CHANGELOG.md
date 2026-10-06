@@ -29,6 +29,59 @@ Built on `ml/fixes` (dad26c3), from the synthetic playtest: kids could not read 
 - Flow test: 67 checks (was 32). Physics 17/40/45, QA 0 problems on all three levels.
 - Pepper is unchanged: `tools/check_pepper.sh` still finds all 2,752 steps identical.
 
+## Branch `ml/levels`: kinder spots, no waiting, traffic warnings, secrets, hard mode (level side)
+Built on `ml/fixes` (dad26c3), from the persona playtest (kids quit at a few spots and waited too long). The hint
+UI, the tally drawing and the menu are on a sibling branch; this branch gives them `stats().secrets`,
+`stats().secretsTotal` and `self.hard`.
+- **Pepper is frozen, and proven so without a level:**
+  - `love riverwalk --pepperlab` builds a small test room in code (28 and 56 px blocks, a low bar, a one-way
+    ledge, a moving deck, a water pit, stairs) and plays a fixed 1,401-step script (stand, walk, run, tap and
+    held jumps with scrambles, falls and landings, crawl, skid, turn, bark, pick up, up and down through the
+    ledge, a ride, a jump over the pit, stairs, a walk into the water), printing her state every step.
+    `tools/check_pepper_lab.sh` compares it with `tools/pepper_lab_golden.txt` (recorded before any other change):
+    PEPPER UNCHANGED.
+  - `tools/check_pepper_files.sh`: pepper.lua, pepper_frames.lua, art/pepper.png, input.lua and world.lua are
+    byte-identical to aa38be5.
+  - `tools/pepper_golden_trace.txt` (River Walk on autopilot) was recorded again because the level changed: the
+    first 459 steps are identical; at step 460 the autopilot, standing on the bin, jumps for the new kiosk awning
+    instead of running off the bin. 2,717 steps now (2,752 before).
+- **Engine (`setpieces.lua`, called from small hooks in `stage.lua`):**
+  - Hard mode: `St.new(def, { hard = true })` (or `--hard` for the checks): 1 heart (also after a lost life),
+    bikes, the leaf cart and the tram 25% faster.
+  - Rope ferries (a mover with `call`): they wait at their far end, are winched to the near end when Pepper comes
+    near and wait there for her, and carry her across when she stands on them. Their rope is drawn.
+  - Traffic: a bike, cart or tram is sent so that its front reaches the screen edge 1 s later; its bell rings
+    then (new `ding` for the tram, made in code like the other sounds), and a small warning sign (13x13 yellow
+    diamond with "!" and an arrow) shows at the right edge at the lane's height until it is on screen, above
+    Pepper's head if she stands there. The old gold bars are gone. `start = "enter"`: a zone sends its first
+    vehicle as soon as Pepper walks in.
+  - Secrets (`L.secrets`): reaching one plays a jingle (`secret`) and says "SECRET! NAME n/N"; `stats()` returns
+    `secrets` and `secretsTotal`.
+  - Code-drawn pieces (`L.pieces`): Pepper's kennel, the kiosks and their awnings, the hollow log. Their
+    collision is an ordinary hidden prop with the same box.
+  - The magpie can have a calmer perch (`flee` per perch).
+- **City Park:** the first magpie perch flees a running Pepper only at 80 px (bark range 95; the log stops a
+  running kid at 81 px). The oak's high left branch is no longer a perch; the magpie sits on the lamp post
+  before the oak instead, and every perch now drops the ball on the path or on a top of the main route (checked
+  for all seven). Stepping-stone gaps 32 px (were 40). The duck boat is a rope ferry (the park keeper's winch)
+  and waits at the stone. The leaf cart sets off when Pepper walks into its zone. New: the high route over the
+  pond along three willows' branches (from the hedge top), a hollow log on the path (hop over or crawl through,
+  a gold bone hidden inside). Secrets: WILLOWS, HOLLOW LOG, OAK TOP. 44 bones (4 gold).
+- **Downtown:** a flower tub (28 px) as a step before the 40 px pedestal. The tram sets off when Pepper walks into
+  its zone. New: the rooftop route with the ball, from the statue's arm along three balconies and over the
+  fountain's top tier, down by the lamp before tram street. Secrets: SHOP SIGN, STATUE HAT, ROOFTOPS. 45 bones
+  (3 gold).
+- **River Walk:** a planter as a step before the bin in bike zone 2 (the grit box and the pot moved a little).
+  The pontoon is a rope ferry and waits at the quay. New: the high route over bike zone 1 on two kiosks' striped
+  awnings (the checkpoint lamp moved from 954 to 1074), Pepper's kennel by the house at the left edge (crawl in
+  for a gold bone). Secrets: KENNEL, KIOSK ROOFS. 51 bones (3 gold). See `docs/riverwalk_notes.md`.
+- **Checks:** `--physics` River Walk 33/33, City Park 64/64, Downtown 57/57 (each secret reachable, each second
+  route completed, the ferries, the traffic start and its 1 s warning, hard mode); a test result of nil now
+  counts as a failure. `--qa` 0 problems on all three. `--auto` clears all three, also with `--hard`, and prints
+  bones, secrets, hearts and time. `--test` has shots of every new spot. `--flowtest` 32/32.
+- **Docs:** `docs/citypark_beatsheet.md` and `docs/downtown_beatsheet.md` updated (secrets, second routes, no
+  waiting, hard mode, checks); `docs/riverwalk_notes.md` is new.
+
 ## Branch `multilevel`: three levels, one story
 Built on `night/all` (the night's River Walk art, Pepper's extras and the City Park greybox). Not merged yet.
 - **Game logic rules:** every level ends with a real fetch: Pepper picks up the ball (X) and gives it to the girl (X),

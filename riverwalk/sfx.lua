@@ -144,6 +144,12 @@ function S.load()
     sounds.bell = src(render(0.5, function(t)
       return (square(t * 2093, 0.5) * 0.5 + square(t * 2637, 0.5) * 0.5) * 0.1 * math.exp(-t * 7) * (((t * 14) % 1) < 0.85 and 1 or 0.3)
     end))
+    -- the tram's warning bell: two quick strikes of a bright bell (a square with a fifth over it, ringing out)
+    sounds.ding = src(render(0.34, function(t)
+      local k = t < 0.15 and t or t - 0.15
+      return (square(t * 1568, 0.5) * 0.6 + square(t * 2349, 0.5) * 0.4) * 0.12 * math.exp(-k * 18)
+    end))
+    sounds.secret = src(arp({ { 784, 0.05 }, { 1047, 0.05 }, { 1319, 0.05 }, { 1568, 0.05 }, { 2093, 0.14 } }, 0.18))
     sounds.splash = src(render(0.45, function(t)
       seed = (seed * 1103515245 + 12345) % 2147483648
       local n = (seed / 2147483648) * 2 - 1

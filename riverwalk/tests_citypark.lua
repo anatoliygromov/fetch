@@ -5,6 +5,7 @@
 --   --test      a screenshot tour of the 6 screens, the magpie, the debug view and the tally
 local I = require("input")
 local Pp = require("pepper")
+local Sp = require("setpieces")
 return function(mode, api)
   I.testing = true
   local function hold(...) I.force = {}; for _, k in ipairs({ ... }) do I.force[k] = true end end
@@ -12,6 +13,7 @@ return function(mode, api)
   local frame, n = 0, 0
   local results = {}
   local function report(name, ok, detail)
+    ok = ok and true or false                                     -- (a nil result must count as a failure)
     results[#results + 1] = ok
     print(("%-50s %s  %s"):format(name, ok and "PASS" or "FAIL", detail or "")); io.stdout:flush()
   end
@@ -76,20 +78,28 @@ return function(mode, api)
       { act = function() tp(690, 184); hold("right") end },
       { cond = function(p) return p.x > 740 or p.mode ~= "normal" end, act = function() release() end, limit = 3 }, { during = 0.4 },
       { act = function(p) report("pond: walk off the bank onto the first stone", near(p.y, 188) and p.onGround, ("x %.0f y %.0f"):format(p.x, p.y)) end },
-      { act = function() tp(752, 188); hold("right") end },
-      { cond = function(p) return p.x >= 766 end, act = function() jump("right", "jump") end, limit = 2 }, { wait = 1 / 60 },
+      { act = function()
+          local a, b = prop("STONE", 1), prop("STONE", 2)
+          report("pond: the stepping-stone gaps are 32 px", a.x0 - 704 == 32 and b.x0 - a.x1 == 32, ("bank-stone %d, stone-stone %d px"):format(a.x0 - 704, b.x0 - a.x1)) end },
+      { act = function() tp(744, 188); hold("right") end },
+      { cond = function(p) return p.x >= 758 end, act = function() jump("right", "jump") end, limit = 2 }, { wait = 1 / 60 },
       { act = function() hold("right") end },
-      { cond = function(p) return p.x >= 816 or p.mode ~= "normal" end, act = function() release() end, limit = 3 }, { during = 0.5 },
-      { act = function(p) report("pond: hop from stone to stone", near(p.y, 188) and p.onGround, ("x %.0f y %.0f"):format(p.x, p.y)) end },
-      { act = function() local m = api.stage().movers[1]; m.x0, m.x1, m.dir = m.from, m.from + 48, 1; tp(822, 188); hold("right") end },
+      { cond = function(p) return p.x >= 800 or p.mode ~= "normal" end, act = function() release() end, limit = 3 }, { during = 0.5 },
+      { act = function(p) report("pond: hop from stone to stone", near(p.y, 188) and p.onGround and p.x > 790, ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      -- the duck boat (a rope ferry) waits by the far bank and comes to the stone when Pepper comes near
+      { act = function() local m = api.stage().movers[1]; m.x0, m.x1 = m.to, m.to + 48; tp(1000, 184) end }, { during = 1.0 },
+      { act = function() local m = api.stage().movers[1]; report("pond: the duck boat waits by the far bank", near(m.x0, m.to), ("x %.0f"):format(m.x0)); tp(640, 184) end },
+      { during = 1.6 },
+      { act = function() local m = api.stage().movers[1]; report("pond: Pepper near: the boat comes to the stone", near(m.x0, m.from), ("x %.0f in 1.6 s"):format(m.x0)) end },
+      { act = function() local m = api.stage().movers[1]; m.x0, m.x1, m.dir = m.from, m.from + 48, 1; tp(806, 188); hold("right") end },
       { during = 0.5 }, { act = function() release() end }, { during = 0.3 },
       { act = function(p) local m = api.stage().movers[1]; report("pond: walk off the stone onto the duck boat", p.ground == m, ("y %.0f, on it: %s"):format(p.y, tostring(p.ground == m))) end },
       { during = 1.0 },
-      { act = function(p) local m = api.stage().movers[1]; report("pond: the duck boat carries Pepper", p.ground == m and math.abs(p.x - (m.x0 + m.x1) / 2) < 14, ("x %.0f boat %.0f-%.0f"):format(p.x, m.x0, m.x1)) end },
+      { act = function(p) local m = api.stage().movers[1]; report("pond: the duck boat carries Pepper", p.ground == m and m.x0 > m.from + 10 and p.x > m.x0 and p.x < m.x1, ("x %.0f boat %.0f-%.0f"):format(p.x, m.x0, m.x1)) end },
       { act = function() local m = api.stage().movers[1]; m.x0, m.x1, m.dir = m.to, m.to + 48, -1; tp(m.x0 + 30, 202); hold("right") end },
       { during = 0.05 }, { act = function() jump("right", "jump") end }, { during = 0.2 }, landed(),
       { act = function(p) release(); report("pond: a jump from the boat up the far bank", near(p.y, 184) and p.x > 944, ("x %.0f y %.0f"):format(p.x, p.y)) end },
-      { act = function() tp(786, 188); hearts = api.stage().hearts end }, { during = 2.5 },
+      { act = function() tp(776, 188); hearts = api.stage().hearts end }, { during = 2.5 },
       { act = function() local s = api.stage(); report("pond: falling in costs a heart", s.hearts == hearts - 1, ("hearts %d"):format(s.hearts)) end },
       -- 6 the bin (56 px): a held jump and a scramble
       { act = function() tp(980, 184); jump("right", "jump") end }, { during = 0.3 },
@@ -117,9 +127,16 @@ return function(mode, api)
       { act = function() tp(1460, 128); jump("jump") end }, { during = 0.2 }, landed(),
       { act = function(p) release(); report("oak: middle branch to the top branch", near(p.y, 100), ("y %.0f"):format(p.y)) end },
       -- the magpie: it flees a running Pepper, lets a walking one come close, drops the ball when she barks
+      { act = function() local s = api.stage(); s:resetMagpie(2); tp(250, 184); hold("right") end }, { during = 1.0 },
+      { act = function() release(); local m = api.stage().magpie; report("magpie: it flies on when Pepper runs at it", m.i == 3, ("perch %d"):format(m.i)) end },
+      -- the first perch is kinder: a kid who runs straight at it is stopped by the log inside bark range
       { act = function() local s = api.stage(); s:resetMagpie(1); tp(40, 184); hold("right") end }, { during = 1.5 },
-      { act = function() release(); local m = api.stage().magpie; report("magpie: it flies on when Pepper runs at it", m.i == 2, ("perch %d"):format(m.i)) end },
-      { act = function() local s = api.stage(); s:resetMagpie(1); tp(40, 184); s.pepper.face = 1; love.keypressed("z") end }, { wait = 0.3 },
+      { act = function(p) local s = api.stage(); local m = s.magpie
+          report("magpie 1: running at it, it stays (log stops her)", m.i == 1 and math.abs(p.x - m.x) <= s.def.magpie.bark, ("perch %d, %.0f px away"):format(m.i, math.abs(p.x - m.x)))
+          release(); p.face = 1; love.keypressed("z") end }, { wait = 0.1 },
+      { act = function() local s = api.stage(); report("magpie 1: a bark from there drops the ball", s.ball.state == "air" or s.ball.state == "rest", s.ball.state) end },
+      { during = 1.5 },
+      { act = function() local s = api.stage(); s:resetMagpie(1); tp(40, 184); s.pepper.face = 1; s.pepper.barkT = 0; love.keypressed("z") end }, { wait = 0.3 },
       { act = function() local s = api.stage(); report("magpie: a bark from far away does not work", s.ball.state == "magpie" and s.magpie.i == 1, s.ball.state); hold("right", "walk") end },
       { cond = function(p) return p.x >= 150 or p.vx < 1 and p.x > 100 end, act = function() release() end, limit = 3 }, { wait = 0.3 },
       { act = function(p) local s = api.stage(); report("magpie: a walking Pepper can come close", s.magpie.i == 1 and s.ball.state == "magpie", ("x %.0f perch %d"):format(p.x, s.magpie.i))
@@ -132,9 +149,20 @@ return function(mode, api)
       { act = function() local b = api.stage().ball; tp(b.x - 18, 184); api.stage().pepper.face = 1 end }, { wait = 0.1 },
       { act = function() love.keypressed("x") end }, { wait = 0.2 },
       { act = function(p) report("ball: Pepper picks it up", p.carrying ~= nil, tostring(p.carrying ~= nil)) end },
-      -- each perch: where the ball lands when she barks there, and that she can reach it
-      { act = function() local s = api.stage(); s:resetMagpie(5); s.pepper.carrying = nil; tp(1376 - 80, 184); s.pepper.face = 1; love.keypressed("z") end }, { during = 1.5 },
-      { act = function() local b = api.stage().ball; report("oak: the ball lands on the low branch", b.state == "rest" and near(b.y, 104), ("%s y %.0f"):format(b.state, b.y)) end },
+      -- each perch: a bark from the path makes it drop the ball, and the ball lands where a small child can get it:
+      -- the path, or a top on the main route at most 56 px up (bench seat, bin top, slide tower, climbing frame)
+    }
+    local spots = { 150, 320, 610, 960, 1225, 1620, 1740 }                     -- where Pepper barks from, per perch
+    for k, x in ipairs(spots) do
+      steps[#steps + 1] = { act = function() local s = api.stage(); s:resetMagpie(k); s.pepper.carrying = nil; tp(x, 184); s.pepper.face = 1 end }
+      steps[#steps + 1] = { wait = 0.1 }
+      steps[#steps + 1] = { act = function() love.keypressed("z") end }
+      steps[#steps + 1] = { during = 1.5 }
+      steps[#steps + 1] = { act = function() local s = api.stage(); local b, pr = s.ball, s.def.magpie.perches[k]
+          report(("magpie perch %d (x %d): the ball is easy to reach"):format(k, pr.x), b.state == "rest" and 184 - b.y <= 56,
+            ("%s at x %.0f y %.0f (%d px up)"):format(b.state, b.x, b.y, 184 - b.y)) end }
+    end
+    for _, st in ipairs({
       -- 9 the playground: up the slide tower, down the slide on the ground, the climbing frame's bars
       { act = function() tp(1630, 184); jump("right", "jump") end }, { during = 0.3 }, landed(),
       { act = function(p) release(); report("slide: a held jump onto the tower", near(p.y, 152), ("x %.0f y %.0f"):format(p.x, p.y)) end },
@@ -156,14 +184,48 @@ return function(mode, api)
       { act = function(p) report("climbing frame: a hop onto the low bar", near(p.y, 160), ("y %.0f"):format(p.y)) end },
       { act = function() tp(1784, 160); jump("jump") end }, { wait = 1 / 60 }, { act = function() release() end }, { during = 0.1 }, landed(),
       { act = function(p) report("climbing frame: a hop onto the top bar", near(p.y, 136), ("y %.0f"):format(p.y)) end },
-      -- 10 give the ball to the girl by the swings
+      -- the high route over the pond: hedge top, the three willows' branches, down on the far bank
+      { act = function() tp(560, 112); hold("right") end },
+      { cond = function(p) return p.x >= 590 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
+      { act = function(p) report("willows: from the hedge top onto the first branch", near(p.y, 120) and p.x > 660, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
+      { cond = function(p) return p.x >= 724 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
+      { act = function(p) report("willows: onto the middle branch (gold bone)", near(p.y, 112) and p.x > 770, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
+      { cond = function(p) return p.x >= 828 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
+      { act = function(p) report("willows: onto the last branch", near(p.y, 120) and p.x > 870, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
+      { cond = function(p) return p.x >= 950 end, act = function() end, limit = 2 }, landed(),
+      { act = function(p) release(); local s = api.stage()
+          report("willows: down onto the far bank (route done)", near(p.y, 184) and p.x > 944, ("x %.0f y %.0f"):format(p.x, p.y))
+          report("secret: WILLOWS counted", s.secrets[1].found, ("%d of %d"):format(s:stats().secrets, s:stats().secretsTotal)) end },
+      -- the hollow log: stops a walk, a held jump onto it, crawling through finds the gold bone (a secret)
+      { act = function() local s = api.stage(); tp(1215, 184); s.zoneIn[s.def.bikes[1]] = true; hold("right") end }, { during = 0.8 },
+      { act = function(p) hearts = api.stage().hearts; report("hollow log: stops a walk", p.x < 1228, ("x %.0f"):format(p.x)); jump("right", "jump") end }, { during = 0.2 }, landed(),
+      { act = function(p) release(); report("hollow log: a held jump lands on top", near(p.y, 158), ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      { act = function() local s = api.stage(); tp(1215, 184); s.zoneIn[s.def.bikes[1]] = true; hold("right", "down") end }, { during = 2.5 },
+      { act = function(p) release(); local s = api.stage()
+          report("hollow log: crawl through it", p.x > 1300 and p.x < 1330 and near(p.y, 184) and s.hearts == hearts, ("x %.0f"):format(p.x))
+          report("secret: HOLLOW LOG counted (gold bone inside)", s.secrets[2].found and (function() for _, bn in ipairs(s.bones) do if bn.x == 1265 then return bn.taken end end end)(), ("found %s"):format(tostring(s.secrets[2].found))) end },
+      -- the oak's top branch (the third secret)
+      { act = function() tp(1460, 128); jump("jump") end }, { during = 0.2 }, landed(),
+      { act = function(p) release(); local s = api.stage()
+          report("secret: OAK TOP counted", s.secrets[3].found and s:stats().secrets == 3 and s:stats().secretsTotal == 3, ("%d of %d"):format(s:stats().secrets, s:stats().secretsTotal)) end },
+      -- the leaf cart sets off when Pepper walks into its zone, 1 s before it is on screen
+      { act = function() tp(1030, 184); hold("right") end },
+      { cond = function(p, s) return #s.bikes > 0 end, act = function(p, s) release(); local c = s.bikes[1]
+          local lead = (c.x - 24 - (s.cam + 320)) / c.speed
+          report("leaf cart: sets off as Pepper enters its zone", p.x > 1056 and p.x < 1070, ("x %.0f"):format(p.x))
+          report("leaf cart: 1 s from the screen edge (bell)", math.abs(lead - 1) < 0.05, ("%.2f s"):format(lead)) end, limit = 2 },
+      -- hard mode: one heart, the cart 25% faster
+      { act = function() local St = require("stage"); local h = St.new(api.stage().def, { hard = true })
+          report("hard mode: 1 heart, the cart 25% faster", h.hearts == 1 and h.maxHearts == 1 and Sp.speed(h, h.def.bikes[1]) == h.def.bikes[1].speed * 1.25,
+            ("hearts %d, speed %.0f"):format(h.hearts, Sp.speed(h, h.def.bikes[1]))) end },
+      -- last: give the ball to the girl by the swings
       { act = function() local s = api.stage(); s.ball.state = "carried"; s.pepper.carrying = s.ball; tp(s.girl.x - 30, 184); s.pepper.face = 1 end },
       { wait = 0.1 }, { act = function() love.keypressed("x") end }, { wait = 3.0 },
       { act = function() report("girl: giving her the ball clears the level", api.getState() == "clear", api.getState()) end },
       { act = function()
           local ok = 0; for _, r in ipairs(results) do if r then ok = ok + 1 end end
           print(("%d of %d passed"):format(ok, #results)); love.event.quit() end },
-    }
+    }) do steps[#steps + 1] = st end
   elseif mode == "--auto" then
     love.filesystem.createDirectory("rec")
     local function at(cond, act, limit) return { cond = cond, act = act, limit = limit or 6 } end
@@ -193,12 +255,12 @@ return function(mode, api)
       at(function(p) return p.x >= 490 and p.onGround and p.y > 183 end, function() hold("right", "down") end),
       at(function(p) return p.x >= 612 end, function() hold("right") end, 9),
       -- 3 the pond: onto the first stone, a hop to the second, wait for the duck boat, ride it, up the bank
-      at(function(p) return p.onGround and p.y >= 187 and p.x > 735 end, function() hold("right") end),
-      at(function(p) return p.x >= 766 end, function() jump("right", "jump") end),             -- a tapped hop
+      at(function(p) return p.onGround and p.y >= 187 and p.x > 727 end, function() hold("right") end),
+      at(function(p) return p.x >= 758 end, function() jump("right", "jump") end),             -- a tapped hop
       at(function() return true end, function() hold("right") end),
-      at(function(p) return p.x >= 794 end, function() release() end),                          -- brake in the air
-      at(function(p) return p.onGround and p.x >= 800 end, function() release() end),
-      at(function(p, s) return s.movers[1].x0 <= 842 and s.movers[1].dir < 0 or s.movers[1].x0 <= 841 end, function() hold("right") end, 9),
+      at(function(p) return p.x >= 786 end, function() release() end),                          -- brake in the air
+      at(function(p) return p.onGround and p.x >= 790 end, function() release() end),
+      at(function(p, s) return s.movers[1].x0 <= s.movers[1].from + 0.5 end, function() hold("right") end, 9),   -- the boat is there
       at(function(p, s) return p.ground == s.movers[1] and p.x >= s.movers[1].x0 + 26 end, function() release() end),
       at(function(p, s) return s.movers[1].x0 >= 884 end, function() jump("right", "jump") end, 9),
       at(function(p) return p.onGround and p.y <= 185 and p.x > 944 end, function() hold("right") end),
@@ -209,6 +271,9 @@ return function(mode, api)
       at(function(p) return p.onGround and p.y <= 157 and p.x > 1100 end, function() release() end),
       at(function(p) return p.x >= 1124 or p.vx < 1 end, function() release() end),
       at(function(p, s) return s.bikes[1] and s.bikes[1].x < p.x - 40 end, function() hold("right") end, 12),
+      -- 5 crawl through the hollow log (the gold bone inside: a secret)
+      at(function(p) return p.x >= 1222 and p.onGround end, function() hold("right", "down") end, 9),
+      at(function(p) return p.x >= 1300 end, function() hold("right") end, 9),
       -- 5 the oak: up the branches to the top (gold bone), then off the branches to the right
       at(function(p) return p.x >= 1446 end, function() jump("jump") end, 9),
       at(function(p) return p.onGround and p.y <= 157 end, function() release() end),
@@ -231,8 +296,8 @@ return function(mode, api)
       { wait = 0.3 }, { act = function() love.keypressed("x") end },
       { wait = 9 }, { act = function(p, s)
           local st = s:stats()
-          print(("AUTOPILOT %s: bones %d/%d, lives %d hearts %d, %.1f s played"):format(api.getState() == "clear" and "GOOD GIRL!" or api.getState(),
-            st.bones, st.total, st.lives, st.hearts, s.def.time - st.time)); io.stdout:flush()
+          print(("AUTOPILOT %s: bones %d/%d, secrets %d/%d, lives %d hearts %d, %.1f s played%s"):format(api.getState() == "clear" and "GOOD GIRL!" or api.getState(),
+            st.bones, st.total, st.secrets or 0, st.secretsTotal or 0, st.lives, st.hearts, s.def.time - st.time, s.hard and " (hard)" or "")); io.stdout:flush()
           love.event.quit() end },
     }
   else  -- --test
@@ -240,7 +305,7 @@ return function(mode, api)
     steps = { { act = function() api.setState("intro") end }, { wait = 0.6 }, shot("cp_00_intro"),
       { act = function() love.keypressed("space") end }, { wait = 0.3 } }
     -- one shot per screen (camera on the screen's left edge), Pepper standing in it
-    local spots = { { 60, 184 }, { 476, 184 }, { 820, 188 }, { 1132, 156 }, { 1300, 184 }, { 1640, 184 } }
+    local spots = { { 60, 184 }, { 476, 184 }, { 820, 188 }, { 1132, 156 }, { 1320, 184 }, { 1640, 184 } }
     for i, sp in ipairs(spots) do
       steps[#steps + 1] = { act = function() tp(sp[1], sp[2]) end }
       if i == 4 then steps[#steps + 1] = { act = function() local s = api.stage(); s.bikes = { { x = 1250, y = 184, warn = 0, zone = s.def.bikes[1] } }; s.bikeT = 99 end } end
@@ -253,13 +318,24 @@ return function(mode, api)
     steps[#steps + 1] = { act = function() love.keypressed("z") end }
     steps[#steps + 1] = { wait = 0.25 }; steps[#steps + 1] = shot("cp_08_drop", 0)
     steps[#steps + 1] = { wait = 0.5 }; steps[#steps + 1] = shot("cp_09_flyaway", 0)
-    steps[#steps + 1] = { act = function() local s = api.stage(); s:resetMagpie(5); tp(1250, 184); s.pepper.face = 1 end }
+    steps[#steps + 1] = { act = function() local s = api.stage(); s:resetMagpie(5); tp(1222, 184); s.pepper.face = 1 end }
     steps[#steps + 1] = { wait = 0.4 }; steps[#steps + 1] = shot("cp_10_oak", 1200)
     steps[#steps + 1] = { act = function() love.keypressed("g") end }; steps[#steps + 1] = { wait = 0.1 }
     steps[#steps + 1] = shot("cp_11_debug_screen5", 1280)
     steps[#steps + 1] = { act = function() tp(1700, 160) end }; steps[#steps + 1] = { wait = 0.3 }
     steps[#steps + 1] = shot("cp_12_debug_screen6", 1600)
     steps[#steps + 1] = { act = function() love.keypressed("g") end }
+    -- the new spots: running at the magpie (the log stops her in bark range), the duck boat waiting at the stone,
+    -- the willows, inside the hollow log, the leaf cart's warning sign
+    local function add(t) for _, st in ipairs(t) do steps[#steps + 1] = st end end
+    add({ { act = function() local s = api.stage(); s:resetMagpie(1); tp(40, 184); hold("right") end }, { wait = 1.4 },
+          shot("cp_15_run_at_magpie", 0), { act = function() release() end },
+          { act = function() tp(752, 188) end }, { wait = 1.6 }, shot("cp_16_boat_waits", 640),
+          { act = function() tp(804, 112) end }, { wait = 0.4 }, shot("cp_17_willows", 640),
+          { act = function() local s = api.stage(); tp(1215, 184); s.zoneIn[s.def.bikes[1]] = true; hold("right", "down") end }, { wait = 1.3 },
+          shot("cp_18_hollow_log", 1120), { act = function() release() end },
+          { act = function() local s = api.stage(); tp(1130, 156); s.bikes = { Sp.spawn(s, s.def.bikes[1]) } end },
+          { wait = 0.3 }, shot("cp_19_cart_warning", 960) })
     -- give the ball: the tally
     steps[#steps + 1] = { act = function() local s = api.stage(); s.ball.state = "carried"; s.pepper.carrying = s.ball; tp(s.girl.x - 30, 184); s.pepper.face = 1 end }
     steps[#steps + 1] = { wait = 0.2 }; steps[#steps + 1] = { act = function() love.keypressed("x") end }
@@ -276,7 +352,7 @@ return function(mode, api)
     local s = api.stage(); local p = s and s.pepper
     if mode == "--auto" then
       frame = frame + 1
-      if s and s.hearts ~= (lastHearts or 3) then print(("  lost a heart at x %.0f y %.0f (step %d)"):format(p.x, p.y, i)) end
+      if s and s.hearts ~= (lastHearts or s.maxHearts) then print(("  lost a heart at x %.0f y %.0f (step %d)"):format(p.x, p.y, i)) end
       lastHearts = s and s.hearts
       if frame % 3 == 0 then n = n + 1; love.graphics.captureScreenshot(("rec/%04d.png"):format(n)) end
     end

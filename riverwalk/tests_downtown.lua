@@ -5,6 +5,7 @@
 --   --test      a screenshot tour of the 6 screens, the cat beat, the tram, the debug view and the tally
 local I = require("input")
 local Pp = require("pepper")
+local Sp = require("setpieces")
 return function(mode, api)
   I.testing = true
   local function hold(...) I.force = {}; for _, k in ipairs({ ... }) do I.force[k] = true end end
@@ -12,6 +13,7 @@ return function(mode, api)
   local frame, n = 0, 0
   local results = {}
   local function report(name, ok, detail)
+    ok = ok and true or false                                     -- (a nil result must count as a failure)
     results[#results + 1] = ok
     print(("%-50s %s  %s"):format(name, ok and "PASS" or "FAIL", detail or "")); io.stdout:flush()
   end
@@ -106,8 +108,17 @@ return function(mode, api)
       { cond = function(p) return p.vy > 0 end, act = function() release() end, limit = 2 }, landed(),
       { act = function(p) report("awning 2: a held jump from the crates onto it", near(p.y, 112), ("x %.0f y %.0f"):format(p.x, p.y)) end },
       -- 5 the statue: the pedestal, the arm, the hat
-      { act = function() tp(1090, 184); jump("right", "jump") end }, { during = 0.2 }, landed(),
-      { act = function(p) release(); report("pedestal: a held jump onto it", near(p.y, 144), ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      -- the flower tub before the pedestal (28 px): a tapped hop and a scramble, then a hop onto the pedestal
+      { act = function() tp(1050, 184); hold("right") end }, { during = 0.2 },
+      { act = function() jump("right", "jump") end }, { wait = 1 / 60 }, { act = function() hold("right") end },
+      { cond = function(p) return p.onGround and p.mode == "normal" and p.y < 183 end, act = function() release() end, limit = 2 },
+      { act = function(p) report("tub: a tapped hop and a scramble onto it", near(p.y, 156) and p.x < 1122, ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      { act = function() tp(1100, 156); hold("right") end }, { during = 0.05 },
+      { act = function() jump("right", "jump") end }, { wait = 1 / 60 }, { act = function() hold("right") end },
+      { during = 0.1 }, landed(),
+      { act = function(p) release(); report("pedestal: a tapped hop from the tub onto it", near(p.y, 144), ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      { act = function() tp(1060, 184); jump("right", "jump") end }, { during = 0.2 }, landed(),
+      { act = function(p) release(); report("pedestal: a held jump from the street gets up", p.y <= 156.5, ("x %.0f y %.0f"):format(p.x, p.y)) end },
       { act = function() tp(1158, 144); jump("right", "jump") end }, { during = 0.15 },
       { cond = function(p) return p.vy > 0 end, act = function() release() end, limit = 2 }, landed(),
       { act = function(p) report("arm: a held jump from the pedestal onto it", near(p.y, 108), ("x %.0f y %.0f"):format(p.x, p.y)) end },
@@ -177,7 +188,35 @@ return function(mode, api)
       { act = function(p) local s = api.stage(); report("shelter: safe from the tram", near(p.y, 136) and s.hearts == hearts, ("y %.0f hearts %d"):format(p.y, s.hearts)) end },
       { act = function() tp(1660, 184); tram(1900) end }, { during = 0.5 },
       { act = function() local c = api.stage().bikes[1]; report("tram: stays on its rail over the stairs", c and near(c.y, 184), c and ("x %.0f y %.0f"):format(c.x, c.y) or "none") end },
-      -- 10 the girl at the stairs: reaching her without the ball does nothing, giving her the ball clears
+      -- 10 the rooftops (the high route): from the statue's arm along the balconies and the fountain's top tier,
+      --    carrying the ball, down to the street by the lamp before tram street
+      { act = function() tp(1180, 108); carry(); hold("right") end },
+      { cond = function(p) return p.x >= 1194 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
+      { act = function(p) report("rooftops: from the arm onto the first balcony", near(p.y, 104) and p.x > 1225, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
+      { cond = function(p) return p.x >= 1284 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
+      { act = function(p) report("rooftops: onto the second balcony", near(p.y, 96) and p.x > 1330, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
+      { cond = function(p) return p.x >= 1388 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
+      { act = function(p) report("rooftops: onto the fountain's top tier (gold)", near(p.y, 104) and p.x > 1440, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
+      { cond = function(p) return p.x >= 1492 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
+      { act = function(p) report("rooftops: onto the last balcony", near(p.y, 104) and p.x > 1515, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
+      { cond = function(p) return p.x >= 1585 end, act = function() release() end, limit = 2 }, landed(),
+      { act = function(p) local s = api.stage()
+          report("rooftops: down to the street, ball still carried", near(p.y, 184) and p.x > 1576 and p.carrying ~= nil, ("x %.0f y %.0f"):format(p.x, p.y))
+          report("secret: ROOFTOPS counted", s.secrets[3].found, ("%d of %d"):format(s:stats().secrets, s:stats().secretsTotal)) end },
+      -- the other two secrets: the shop sign and the statue's hat (reached by the climbs checked above)
+      { act = function() local s = api.stage()
+          report("secrets: SHOP SIGN and STATUE HAT counted", s.secrets[1].found and s.secrets[2].found and s:stats().secrets == 3 and s:stats().secretsTotal == 3,
+            ("%d of %d"):format(s:stats().secrets, s:stats().secretsTotal)) end },
+      -- the tram sets off when Pepper walks into its zone, its front 1 s from the screen edge
+      { act = function() tp(1590, 184); hold("right") end },
+      { cond = function(p, s) return #s.bikes > 0 end, act = function(p, s) release(); local c = s.bikes[1]
+          local lead = (c.x - 40 - (s.cam + 320)) / c.speed
+          report("tram: sets off as Pepper enters its zone", p.x > 1610 and p.x < 1625, ("x %.0f"):format(p.x))
+          report("tram: 1 s from the screen edge (bell)", math.abs(lead - 1) < 0.05, ("%.2f s"):format(lead)) end, limit = 2 },
+      { act = function() local St = require("stage"); local h = St.new(api.stage().def, { hard = true })
+          report("hard mode: 1 heart, the tram 25% faster", h.hearts == 1 and Sp.speed(h, h.def.bikes[1]) == h.def.bikes[1].speed * 1.25,
+            ("hearts %d, speed %.1f"):format(h.hearts, Sp.speed(h, h.def.bikes[1]))) end },
+      -- 11 the girl at the stairs: reaching her without the ball does nothing, giving her the ball clears
       { act = function() local s = api.stage(); s.ball.state = "rest"; s.pepper.carrying = nil; tp(1800, 184); hold("right") end },
       { wait = 3.0 },
       { act = function() release(); report("girl: without the ball the level goes on", api.getState() == "play" and not api.stage().clearT, api.getState()) end },
@@ -235,7 +274,7 @@ return function(mode, api)
       at(function(p) return p.onGround and p.y <= 113 end, function() hold("right") end),
       at(function(p) return p.onGround and p.y >= 183 end, function() hold("right") end),
       -- 4 the plaza: onto the pedestal, bark the cat off, up the arm to the hat (gold bone), down, pick up the ball
-      at(function(p) return p.x >= 1092 end, function() jump("right", "jump") end),
+      at(function(p) return p.x >= 1060 end, function() jump("right", "jump") end),             -- over the tub
       at(function(p) return p.onGround and p.y <= 145 end, function() release() end),
       at(function(p) return math.abs(p.vx) < 1 end, function() love.keypressed("z") end),
       { wait = 0.6 },
@@ -281,8 +320,8 @@ return function(mode, api)
       at(function() return api.getState() == "clear" end, function() end, 9),
       { wait = 9 }, { act = function(p, s)
           local st = s:stats()
-          print(("AUTOPILOT %s: bones %d/%d, lives %d hearts %d, %.1f s played"):format(api.getState() == "clear" and "GOOD GIRL!" or api.getState(),
-            st.bones, st.total, st.lives, st.hearts, s.def.time - st.time)); io.stdout:flush()
+          print(("AUTOPILOT %s: bones %d/%d, secrets %d/%d, lives %d hearts %d, %.1f s played%s"):format(api.getState() == "clear" and "GOOD GIRL!" or api.getState(),
+            st.bones, st.total, st.secrets or 0, st.secretsTotal or 0, st.lives, st.hearts, s.def.time - st.time, s.hard and " (hard)" or "")); io.stdout:flush()
           love.event.quit() end },
     }
   else  -- --test
@@ -316,6 +355,12 @@ return function(mode, api)
     steps[#steps + 1] = { act = function() tp(1668, 148) end }; steps[#steps + 1] = { wait = 0.3 }
     steps[#steps + 1] = shot("dt_15_debug_screen6", 1600)
     steps[#steps + 1] = { act = function() love.keypressed("g") end }
+    -- the new spots: the tub before the pedestal, the rooftop route, the tram's warning sign
+    local function add(t) for _, st in ipairs(t) do steps[#steps + 1] = st end end
+    add({ { act = function() tp(1104, 156) end }, { wait = 0.4 }, shot("dt_18_tub", 990),
+          { act = function() tp(1472, 104); carry() end }, { wait = 0.4 }, shot("dt_19_rooftops", 1260),
+          { act = function() local s = api.stage(); s.pepper.carrying = nil; s.ball.state = "rest"; tp(1668, 148); s.bikes = { Sp.spawn(s, s.def.bikes[1]) } end },
+          { wait = 0.1 }, shot("dt_20_tram_warning", 1600) })
     -- give the girl the ball: the tally
     steps[#steps + 1] = { act = function() local s = api.stage(); carry(); tp(s.girl.x - 30, 184); s.pepper.face = 1 end }
     steps[#steps + 1] = { wait = 0.2 }; steps[#steps + 1] = { act = function() love.keypressed("x") end }
@@ -332,7 +377,7 @@ return function(mode, api)
     local s = api.stage(); local p = s and s.pepper
     if mode == "--auto" then
       frame = frame + 1
-      if s and s.hearts ~= (lastHearts or 3) then print(("  lost a heart at x %.0f y %.0f (step %d)"):format(p.x, p.y, i)) end
+      if s and s.hearts ~= (lastHearts or s.maxHearts) then print(("  lost a heart at x %.0f y %.0f (step %d)"):format(p.x, p.y, i)) end
       lastHearts = s and s.hearts
       if frame % 3 == 0 then n = n + 1; love.graphics.captureScreenshot(("rec/%04d.png"):format(n)) end
     end
