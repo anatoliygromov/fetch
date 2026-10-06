@@ -82,6 +82,16 @@ UI, the tally drawing and the menu are on a sibling branch; this branch gives th
 - **Docs:** `docs/citypark_beatsheet.md` and `docs/downtown_beatsheet.md` updated (secrets, second routes, no
   waiting, hard mode, checks); `docs/riverwalk_notes.md` is new.
 
+## Branch `preview/art`: art for the new set pieces
+- **City Park:** the three willows over the pond (faded trees, crisp boughs on their ledges), the keeper's winch on
+  the far bank, the hollow log (a fallen trunk with hollow ends; it hides the gold bone inside).
+- **Downtown:** the flower tub before the pedestal, the three houses of the rooftop route (crisp and outlined, with
+  iron balconies as their ledges), the fountain's top tier with water falling from its rims.
+- **Far layers:** Downtown's facades and roofs are faded further (40% and 45%, as River Walk's far shore), so the
+  obstacles and the climbable houses stand out.
+- **Window titles:** "(greybox)" dropped for City Park and Downtown.
+- 2 SpriteCook renders (24 credits; 204 for the art in all). No box moved; all checks pass.
+
 ## Branch `ml/art`: City Park and Downtown art (fix 11)
 Built on `ml/fixes`. Not merged yet: the before/after sheets are for approval first.
 - **Art instead of the greyboxes** in levels 1 and 2, in the River Walk style. A level flag `L.art = "park"` /
