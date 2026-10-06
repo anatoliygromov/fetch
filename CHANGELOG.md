@@ -2,6 +2,20 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `multilevel`: Level 2 Downtown greybox
+Built on `ml/downtown` from the multilevel engine (ef6e8b3). Beat sheet in `docs/downtown_beatsheet.md`.
+- **Level 2, Downtown (greybox):** a Stockholm old town street and plaza. 6 screens, 1920 px, 300 s, 40 bones (2 gold), 5 lamp checkpoints.
+  - Old town lane: hop up the crate steps.
+  - Cafe terrace: crawl under the cafe tables or jump on them; their parasols are one-way tops; from the second parasol a jump reaches the shop sign (gold bone).
+  - Market: onto the stall's counter and up onto its awning; a crate stack up to a second awning.
+  - The plaza: the cat sits on the ball on the statue's arm. Bark near it (90 px): it startles, leaps off and runs away, the ball drops to the street. Pick it up. The pedestal, arm and hat are a climb (gold bone).
+  - The fountain: carry the ball over the basin, rim to bowl to rim. Falling in costs a heart, and the ball goes back by the statue.
+  - Tram street: the tram drives through like the bikes; wait on the kiosk or the tram stop roof. The stairs down to the river end the level, only with the ball (BALL bonus 1,000). No girl in this level.
+- **Story text:** intro "A CAT IS SITTING ON THE BALL!", pickup "TAKE THE BALL DOWN TO THE RIVER!", outro "THE BALL SLIPPED AND BOUNCED / ONTO A FERRY ON THE RIVER...".
+- **Greybox town:** `greyStyle = "town"` swaps the park's far trees and bushes for far roofs with church spires and near old town facades (stepped gables, rows of windows, doors). City Park and River Walk draw exactly as before: their `--test` screenshots are pixel-identical to ef6e8b3.
+- **Engine (small, generic):** a hazard zone can set its hit box (`w`, `h`) and `rail = true` (it keeps to the street's line, so the tram does not drive down the river stairs); the greybox label is the zone's kind (CART, TRAM); the tally shows the level's own bonus (BALL 1000 here, FETCH 2000 otherwise).
+- **Checks:** `love riverwalk --level downtown --physics` 45/45, `--auto` plays to GOOD GIRL! (no hearts lost, 37/40 bones, about 33 s), `--test` screenshot tour, `--qa` 0 problems. Unchanged: River Walk `--physics` 17/17 and `--qa` 0 problems, City Park `--physics` 36/36 and `--qa` 0 problems, PEPPER UNCHANGED.
+
 ## Night branch `night/riverwalk-art` (not merged, 6 Oct 2026)
 Built on the trial branch `try/scenery-v2`. Every greybox left in River Walk now has art. Pepper is untouched:
 `tools/check_pepper.sh` plays the level on autopilot and finds her position, speed, clip and frame identical on
