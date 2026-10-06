@@ -1,7 +1,10 @@
 #!/bin/sh
-# Proves Pepper moves exactly as in the build the user approved (try/scenery-v2 at aa38be5):
-# plays the level on autopilot and compares her position, speed, clip and frame on every step
-# with tools/pepper_golden_trace.txt. Run from the repo root; needs LÖVE (headless: xvfb-run).
+# Plays River Walk on autopilot and compares Pepper's position, speed, clip and frame on every step with
+# tools/pepper_golden_trace.txt. The trace was first recorded from the build the user approved (aa38be5); it was
+# recorded again on ml/levels because River Walk itself changed (the first difference, step 460, is the autopilot
+# jumping for the new kiosk awning; see docs/riverwalk_notes.md). Level changes legitimately change this trace:
+# Pepper herself is proven unchanged by tools/check_pepper_lab.sh (a test room, no level) and
+# tools/check_pepper_files.sh (her files against aa38be5). Run from the repo root; needs LÖVE (headless: xvfb-run).
 cd "$(dirname "$0")/.."
 T="$(mktemp)"; E="$(mktemp)"
 SDL_AUDIODRIVER=dummy xvfb-run -a love riverwalk --auto --trace 2>"$E" | grep '^T ' > "$T"
