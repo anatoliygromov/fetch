@@ -683,9 +683,9 @@ end
 --   foreground: dark, only below her lowest line (tops at y 221+), never over her
 -- ===================================================================================================================
 local TA = {}
-local function fadeImg(n)
+local function fadeImg(n, k)
   local d = love.image.newImageData("art/scene/" .. n .. ".png")
-  local k = Sc.DECOR_FADE
+  k = k or Sc.DECOR_FADE
   d:mapPixel(function(x, y, r, g, b, a) return r + (HAZE[1] - r) * k, g + (HAZE[2] - g) * k, b + (HAZE[3] - b) * k, a end)
   return newImg(d)
 end
@@ -700,11 +700,15 @@ function Sc.townArt(style)
   if TA[style] then return TA[style] end
   local T = {}
   if style == "park" then
-    for _, n in ipairs({ "ground", "treeline", "bush", "log", "leaves", "leaves_flat", "table", "hedge", "stone", "boat", "cart", "slide", "frame" }) do T[n] = img("park_" .. n) end
-    for _, n in ipairs({ "tree1", "tree2", "gate", "swings", "oak" }) do T[n] = fadeImg("park_" .. n) end
+    for _, n in ipairs({ "ground", "treeline", "bush", "log", "leaves", "leaves_flat", "table", "hedge", "stone", "boat", "cart", "slide", "frame", "hollowlog" }) do T[n] = img("park_" .. n) end
+    for _, n in ipairs({ "tree1", "tree2", "gate", "swings", "oak", "willow", "willow_tall", "winch" }) do T[n] = fadeImg("park_" .. n) end
   else
-    for _, n in ipairs({ "ground", "roofs", "crate", "parasol", "table", "stall", "awning80", "awning64", "statue", "pedestal", "tram", "shelter", "kiosk", "shopsign", "rim", "bowl", "bollard" }) do T[n] = img("town_" .. n) end
-    for _, n in ipairs({ "facades", "door", "sign", "spout" }) do T[n] = fadeImg("town_" .. n) end
+    for _, n in ipairs({ "ground", "crate", "parasol", "table", "stall", "awning80", "awning64", "statue", "pedestal", "tram", "shelter", "kiosk", "shopsign", "rim", "bowl", "bollard", "tub", "house1", "house2", "house3", "tier" }) do T[n] = img("town_" .. n) end
+    for _, n in ipairs({ "door", "sign", "spout" }) do T[n] = fadeImg("town_" .. n) end
+    -- the two far layers sit further back than the back-edge decoration: faded more (as River Walk's far shore),
+    -- so the street's obstacles and the climbable houses stand out against them
+    T.facades = fadeImg("town_facades", 0.40)
+    T.roofs = fadeImg("town_roofs", 0.45)
   end
   T.groundQ = colQuads(T.ground)
   local gw, gd = T.ground:getWidth(), { T.ground:getDimensions() }
@@ -942,6 +946,77 @@ end
 local function shadowUnder(p, camx, depth) Sc.shadow((p.x0 + p.x1) / 2 - camx, p.y1 - 1, p.x1 - p.x0 + 4, depth) end
 local function at(im, x, y) lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(x), math.floor(y)) end
 
+-- City Park's willows: the crown boxes (the WILLOWS prop and the unnamed decoration boxes of its size), each with
+-- its bough (the one-way box right under the crown)
+local function willowCrowns(def)
+  if def._crowns then return def._crowns end
+  local wl = named(def, "WILLOWS")
+  local L = {}
+  if wl then
+    for _, q in ipairs(def.props) do
+      if q.kind == "decor" and q.layer == "back" and (q == wl or ((not q.name or q.name == "") and q.x1 - q.x0 == wl.x1 - wl.x0
+        and q.y1 - q.y0 == wl.y1 - wl.y0 and math.abs(q.x0 - wl.x0) < 200)) then L[#L + 1] = q end
+    end
+  end
+  def._crowns = L
+  return L
+end
+local function underCrown(def, p)
+  for _, c in ipairs(willowCrowns(def)) do if p.kind == "oneway" and p.y0 == c.y1 and p.x0 >= c.x0 and p.x1 <= c.x1 then return c end end
+end
+-- a willow bough over its one-way box: 5 px thick in the middle, thinner at both ends, the trunk behind it; willow
+-- twigs hang from its ends (past the box, below its top)
+local WLEAF = { hex("c9a93c"), hex("a8892a"), hex("dcc35a") }
+local function drawBough(p, camx)
+  local ox = math.floor(camx)
+  local x0, x1, y = p.x0 - ox, p.x1 - ox, p.y0
+  local len = x1 - x0
+  lg.setColor(INK)
+  for x = x0, x1 - 1 do
+    local d = math.abs((x - x0) - len / 2) / (len / 2)
+    lg.rectangle("fill", x - 1, y - 1, 3, (d > 0.7 and 4 or 5) + 2)
+  end
+  for x = x0, x1 - 1 do
+    local d = math.abs((x - x0) - len / 2) / (len / 2)
+    local t = d > 0.7 and 4 or 5
+    lg.setColor(BARK[1]); lg.rectangle("fill", x, y, 1, t)
+    lg.setColor(BARK[2]); lg.rectangle("fill", x, y, 1, 1)
+    lg.setColor(BARK[3]); lg.rectangle("fill", x, y + t - 1, 1, 1)
+  end
+  for _, e in ipairs({ { x0 + 2, 1 }, { x1 - 3, -1 } }) do           -- willow strands hanging from both ends
+    for k = 0, 3 do
+      local tx = e[1] + e[2] * k * 2
+      lg.setColor(WLEAF[1 + k % 3]); lg.rectangle("fill", tx, y + 4, 1, 5 + (k * 3) % 7)
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+-- a balcony (Downtown's rooftop route) over its one-way box: an iron railing at its back, the stone slab (its top
+-- the ledge), two brackets under it
+local function drawBalcony(p, camx)
+  local ox = math.floor(camx)
+  local x0, x1, y = p.x0 - ox, p.x1 - ox, p.y0
+  local w = x1 - x0
+  lg.setColor(INK); lg.rectangle("fill", x0 + 1, y - 9, w - 2, 9)    -- the railing (behind Pepper)
+  lg.setColor(0.30, 0.32, 0.36)
+  lg.rectangle("fill", x0 + 2, y - 8, w - 4, 1)
+  for x = x0 + 2, x1 - 3, 3 do lg.rectangle("fill", x, y - 8, 1, 8) end
+  lg.setColor(INK); lg.rectangle("fill", x0 - 1, y - 1, w + 2, 6)     -- the slab
+  lg.setColor(0.79, 0.76, 0.72); lg.rectangle("fill", x0, y, w, 1)
+  lg.setColor(0.64, 0.61, 0.57); lg.rectangle("fill", x0, y + 1, w, 2)
+  lg.setColor(0.44, 0.41, 0.39); lg.rectangle("fill", x0, y + 3, w, 1)
+  for _, bx in ipairs({ x0 + 5, x1 - 9 }) do                          -- brackets
+    lg.setColor(INK); lg.rectangle("fill", bx - 1, y + 4, 6, 5); lg.rectangle("fill", bx, y + 9, 4, 2)
+    lg.setColor(0.58, 0.55, 0.51); lg.rectangle("fill", bx, y + 4, 4, 4); lg.rectangle("fill", bx + 1, y + 8, 2, 2)
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+local function houseIndex(def, p)
+  local i = 0
+  for _, q in ipairs(def.props) do if q.name == "HOUSE" then i = i + 1; if q == p then return i end end end
+  return 1
+end
+
 -- one prop of an art level. kicked: a leaf pile Pepper has run through.
 function Sc.drawPropArt(p, camx, def, kicked)
   local style = def.art
@@ -956,6 +1031,7 @@ function Sc.drawPropArt(p, camx, def, kicked)
   local n = p.name
   if p.hidden then return end
   if not n or n == "" then
+    if style == "park" and underCrown(def, p) then drawBough(p, camx); return end
     local o = owner(def, p)
     if p.kind == "decor" or not o then return end                 -- posts, legs, crowns: drawn with their set piece
     n = o.name
@@ -981,6 +1057,14 @@ function Sc.drawPropArt(p, camx, def, kicked)
     elseif n == "SLIDE" or n == "FRAME" then
       if n == "FRAME" then at(T.frame, x - 1, 119) end            -- (the slide: Sc.drawTerrainArt, over the path)
     elseif n == "SWINGS" then at(T.swings, x + w / 2 - T.swings:getWidth() / 2, 175 - T.swings:getHeight())
+    elseif n == "WILLOWS" then                                    -- all three willows (decoration, base y 174)
+      for i, c in ipairs(willowCrowns(def)) do
+        local im = c.y1 < 120 and T.willow_tall or T.willow
+        local cx = math.floor((c.x0 + c.x1) / 2 - camx)
+        lg.setColor(1, 1, 1, 1)
+        if i % 2 == 0 then lg.draw(im, cx + 33, 175 - im:getHeight(), 0, -1, 1) else lg.draw(im, cx - 32, 175 - im:getHeight()) end
+      end
+    elseif n == "WINCH" then at(T.winch, x, 175 - T.winch:getHeight())
     else Sc.drawProp(p, camx, C.prop) end
   else
     if n == "DOOR" then at(T.door, x, 175 - T.door:getHeight())
@@ -1019,6 +1103,12 @@ function Sc.drawPropArt(p, camx, def, kicked)
     elseif n == "KIOSK" then shadowUnder(p, camx); at(T.kiosk, x - 1, p.y0 - 1)
     elseif n == "SHELTER" then shadowUnder({ x0 = p.x0, x1 = p.x1, y1 = 184 }, camx); at(T.shelter, x, p.y0)
     elseif n == "RIVER" then at(T.sign, x + w / 2 - T.sign:getWidth() / 2, 175 - T.sign:getHeight())
+    elseif n == "TUB" then shadowUnder(p, camx); at(T.tub, x, p.y0 - 18)
+    elseif n == "HOUSE" then                                      -- crisp and outlined: their balconies are ledges
+      local im = T["house" .. ((houseIndex(def, p) - 1) % 3 + 1)]
+      at(im, x + w / 2 - im:getWidth() / 2, 175 - im:getHeight())
+    elseif n == "BALCONY" then drawBalcony(p, camx)
+    elseif n == "TIER" then at(T.tier, x - 1, p.y0 - 1)
     else Sc.drawProp(p, camx, C.prop) end
   end
   lg.setColor(1, 1, 1, 1)
@@ -1036,13 +1126,24 @@ function Sc.drawTerrainArt(def, camx, t)
       local cx = math.floor((f.x0 + f.x1) / 2 - camx)
       lg.setColor(1, 1, 1, 1)
       local A = Sc.art()
-      for i = 0, 5 do                                             -- water jets: two arcs of drops from the spout
-        local k = ((t * 1.6 + i / 6) % 1)
-        for _, dir in ipairs({ -1, 1 }) do
-          local dx = dir * (2 + k * 13)
-          local dy = -14 + 34 * (k - 0.35) ^ 2 * 2.2
-          lg.setColor(0.86, 0.94, 1, 0.9 - 0.5 * k)
-          lg.rectangle("fill", math.floor(cx + dx), math.floor(f.y0 - 10 + dy), 1, 2)
+      local tier = named(def, "TIER")
+      if tier then                                                -- water falls from the top tier's rims to the basin
+        for i = 0, 7 do
+          local k = (t * 1.1 + i / 8) % 1
+          for _, e in ipairs({ { tier.x0 - camx, -1 }, { tier.x1 - camx, 1 } }) do
+            lg.setColor(0.86, 0.94, 1, 0.85 - 0.4 * k)
+            lg.rectangle("fill", math.floor(e[1] + e[2] * (1 + k * 4)), math.floor(tier.y0 + 4 + k * (190 - tier.y0 - 4)), 1, 2)
+          end
+        end
+      else
+        for i = 0, 5 do                                           -- water jets: two arcs of drops from the spout
+          local k = ((t * 1.6 + i / 6) % 1)
+          for _, dir in ipairs({ -1, 1 }) do
+            local dx = dir * (2 + k * 13)
+            local dy = -14 + 34 * (k - 0.35) ^ 2 * 2.2
+            lg.setColor(0.86, 0.94, 1, 0.9 - 0.5 * k)
+            lg.rectangle("fill", math.floor(cx + dx), math.floor(f.y0 - 10 + dy), 1, 2)
+          end
         end
       end
     end
@@ -1050,12 +1151,23 @@ function Sc.drawTerrainArt(def, camx, t)
   lg.setColor(1, 1, 1, 1)
 end
 function Sc.drawSpout(def, camx)
-  if def.art ~= "town" then return end
+  if def.art ~= "town" or named(def, "TIER") then return end         -- (the top tier's column replaces it)
   local f = named(def, "FOUNTAIN")
   if f and f.x1 - camx > -40 and f.x0 - camx < 360 then
     local T = Sc.townArt("town")
     at(T.spout, (f.x0 + f.x1) / 2 - camx - 6, f.y0 - 12)
   end
+end
+
+-- code-drawn pieces (setpieces.lua) that have art in an art level: City Park's hollow log. Returns true if drawn.
+function Sc.drawPieceArt(pc, camx, def)
+  if def.art == "park" and pc.kind == "hollowlog" then
+    local T = Sc.townArt("park")
+    Sc.shadow((pc.x0 + pc.x1) / 2 - camx, 183, pc.x1 - pc.x0 + 4, 5)
+    at(T.hollowlog, pc.x0 - camx - 1, pc.y0 - 1)
+    return true
+  end
+  return false
 end
 
 -- the duck boat (a mover): the duck faces the way it paddles; its hull sits in the pond

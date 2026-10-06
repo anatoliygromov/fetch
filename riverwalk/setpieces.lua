@@ -195,7 +195,9 @@ local PLAY = { kennel = kennel, kiosk = kioskAwning, hollowlog = hollowLog }
 local function each(s, cam, list)
   for _, pc in ipairs(s.def.pieces or {}) do
     local f = list[pc.kind]
-    if f and pc.x1 - cam > -20 and pc.x0 - cam < 340 then f(pc, cam) end
+    if f and pc.x1 - cam > -20 and pc.x0 - cam < 340 then
+      if not (s.def.art and Sc.drawPieceArt(pc, cam, s.def)) then f(pc, cam) end   -- art levels: scene.lua's art
+    end
   end
 end
 function Sp.drawBack(s, cam) each(s, cam, BACK) end                -- behind Pepper's line (after the back props)

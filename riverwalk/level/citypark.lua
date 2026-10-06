@@ -28,7 +28,7 @@
 local L = {}
 L.name = "CITY PARK"
 L.number = 1
-L.title = "Pepper: City Park (greybox)"
+L.title = "Pepper: City Park"
 L.scenery = "greybox"
 L.art = "park"                -- scenery art (tools/make_town_art.py; drawn by Sc.drawPropArt from the boxes)
 L.map = "level/citypark.map"

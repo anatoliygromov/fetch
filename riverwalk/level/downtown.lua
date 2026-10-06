@@ -29,7 +29,7 @@
 local L = {}
 L.name = "DOWNTOWN"
 L.number = 2
-L.title = "Pepper: Downtown (greybox)"
+L.title = "Pepper: Downtown"
 L.scenery = "greybox"
 L.greyStyle = "town"
 L.art = "town"                -- scenery art (tools/make_town_art.py; drawn by Sc.drawPropArt from the boxes)
