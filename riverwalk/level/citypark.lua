@@ -17,7 +17,8 @@
 -- drops the ball. Pick it up (X) and bring it to the girl, who waits by the swings (X again: GOOD GIRL!).
 -- If Pepper never gets it to drop the ball, the magpie ends up on the climbing frame, its last perch.
 --
--- Everything but Pepper, the girl and the ball is greybox (scenery = "greybox": see Sc.drawFarGrey).
+-- scenery = "greybox" keeps the greybox rules (no road, no traffic); L.art = "park" draws the scenery art over the
+-- boxes (Sc.drawPropArt, Sc.drawFarArt; tools/make_town_art.py). Without L.art the level is drawn as boxes again.
 -- props: kind = solid | oneway | decor; layer = "back", "play", "front"; over = true draws a play prop over
 -- the bones (the leaf piles); leaves = true: it flattens when Pepper runs through it.
 local L = {}
@@ -25,6 +26,7 @@ L.name = "CITY PARK"
 L.number = 1
 L.title = "Pepper: City Park (greybox)"
 L.scenery = "greybox"
+L.art = "park"                -- scenery art (tools/make_town_art.py; drawn by Sc.drawPropArt from the boxes)
 L.map = "level/citypark.map"
 L.time = 300
 L.start = { x = 60, y = 184 }
