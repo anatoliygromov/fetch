@@ -101,8 +101,8 @@ L.props = {
   { name = "RIVER",    kind = "decor",  layer = "back", x0 = 1856, x1 = 1884, y0 = 120, y1 = 140 },     -- sign
   { name = "",         kind = "decor",  layer = "back", x0 = 1868, x1 = 1872, y0 = 140, y1 = 184 },
   -- foreground frame: arcade pillars
-  { name = "",         kind = "decor",  layer = "front", x0 = 620,  x1 = 632,  y0 = 56, y1 = 240 },
-  { name = "",         kind = "decor",  layer = "front", x0 = 1580, x1 = 1592, y0 = 56, y1 = 240 },
+  { name = "",         kind = "decor",  layer = "front", x0 = 620,  x1 = 632,  y0 = 221, y1 = 240 },
+  { name = "",         kind = "decor",  layer = "front", x0 = 1580, x1 = 1592, y0 = 221, y1 = 240 },
 }
 
 -- lamp posts: every one is a checkpoint

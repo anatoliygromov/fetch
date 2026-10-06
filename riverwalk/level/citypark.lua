@@ -88,8 +88,8 @@ L.props = {
   { name = "",         kind = "oneway", layer = "play", x0 = 1768, x1 = 1816, y0 = 136, y1 = 140 },
   { name = "SWINGS",   kind = "decor",  layer = "back", x0 = 1844, x1 = 1916, y0 = 104, y1 = 184 },
   -- foreground frame
-  { name = "",         kind = "decor",  layer = "front", x0 = 620,  x1 = 632,  y0 = 56, y1 = 240 },
-  { name = "",         kind = "decor",  layer = "front", x0 = 1580, x1 = 1592, y0 = 56, y1 = 240 },
+  { name = "",         kind = "decor",  layer = "front", x0 = 620,  x1 = 632,  y0 = 221, y1 = 240 },
+  { name = "",         kind = "decor",  layer = "front", x0 = 1580, x1 = 1592, y0 = 221, y1 = 240 },
 }
 
 -- lamp posts: every one is a checkpoint
