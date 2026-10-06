@@ -3,3 +3,5 @@
 *.gif
 __pycache__/
 .DS_Store
+# made by tools/check_flow.sh
+flow_screens.png
