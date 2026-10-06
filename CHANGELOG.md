@@ -2,6 +2,33 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `ml/ui`: talk panel, nudges, medals, shared play
+Built on `ml/fixes` (dad26c3), from the synthetic playtest: kids could not read the long hints and got stuck.
+- **Talk panel (talk.lua):** the text banner hints are now short dialogue lines. Pepper (bottom left) says the
+  control hints as a drawn button picture plus 1 to 3 words: [B] HOLD: SNEAK, [DOWN] CRAWL, [Y] BARK!, [X] PICK UP,
+  [X] GIVE, [A] HOLD: BIG JUMP, [A] HOLD + PUSH: CLIMB, [A] TAP: HOP. The girl (bottom right) says the goal and story
+  lines (BRING ME THE BALL!, IT DROPPED THE BALL!). The portraits play their talking loops at 9 fps while the line
+  is said, then rest on frame 1. The buttons are drawn in code (RG35XX: A right, B bottom, X top, Y left; the d-pad
+  for Down). The panel never covers Pepper: when she is low (the quay, the duck boat) it moves to the top of the
+  screen, or is not drawn. Teaching hints win over other messages; a girl's zone line goes away after 4.5 s.
+- **Hints that never showed:** the log hop (the magpie hint always matched first: now sneak while running at the
+  magpie, the hop once she sneaks, BARK! in range), the magpie line (it started at x 1560, where nobody still lacked
+  the ball: now from x 300) and GO BACK: BARK AT THE CAT (it now starts where a bark stops reaching the cat). The
+  City Park climb hint starts at x 900. New hint needs: `catnear`, `magpienear`, `magpieahead`.
+- **Stuck nudge:** 2 s pushing without getting anywhere, or 3 s idle where a control hint applies: the needed
+  button bounces above Pepper's head (Down if she fits through crouching, else A, when no hint applies) until a
+  button is pressed. It only reads Pepper's position, speed and the buttons.
+- **Tally:** clear time, best time per level (`time_<name>.txt`), medals NO HIT, ALL BONES, PAR TIME (par in
+  levels.lua: 60, 55, 60 s), kept in `medals_<name>.txt` and shown on the level select. SECRETS n/m when the stage
+  reports `secrets` and `secretsTotal`. The tally sits where it misses Pepper.
+- **Shared play:** GAME OVER offers TRY AGAIN (the same level, 3 lives, the score it started with) or MENU. Story
+  cards wait 2 s, then only A goes on (a blinking A shows). The pause has GO ON and QUIT, and QUIT asks (NO first);
+  B and Esc only go back, never quit. Cards move to miss Pepper, and she is drawn again over the dim.
+- **HARD MODE:** a main menu item, saved in `hard.txt`, passed to the stage as `carry.hard` (`self.hard`). A HARD tag
+  on the HUD, tally and level select; no hints and no nudges. (The gameplay side is on the sibling branch.)
+- Flow test: 67 checks (was 32). Physics 17/40/45, QA 0 problems on all three levels.
+- Pepper is unchanged: `tools/check_pepper.sh` still finds all 2,752 steps identical.
+
 ## Branch `multilevel`: three levels, one story
 Built on `night/all` (the night's River Walk art, Pepper's extras and the City Park greybox). Not merged yet.
 - **Game logic rules:** every level ends with a real fetch: Pepper picks up the ball (X) and gives it to the girl (X),
