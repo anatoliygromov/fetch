@@ -82,6 +82,15 @@ UI, the tally drawing and the menu are on a sibling branch; this branch gives th
 - **Docs:** `docs/citypark_beatsheet.md` and `docs/downtown_beatsheet.md` updated (secrets, second routes, no
   waiting, hard mode, checks); `docs/riverwalk_notes.md` is new.
 
+## Branch `preview/art`: near-lane traffic at its perspective size
+- **Cars and cyclists on the road** (River Walk) are drawn for the near lane, which is closer to the camera than the
+  promenade: cars about 180-235 x 70-92 px (a Volvo estate in blue and in silver, a delivery van, a taxi, a red
+  hatchback), cyclists 73 x 75. Their tops are at y 192, below Pepper's feet, and the frame crops their wheels.
+  The promenade bikes keep their size (their hit box is fixed).
+- **Facing:** every moving thing faces the way it moves: cars (right), road cyclists (either way), promenade bikes,
+  the tram and the leaf cart (left; the cart is now mirrored, its wheel leading), the duck boat, the magpie.
+- 7 SpriteCook renders (84 credits; 288 for the art in all). All checks pass.
+
 ## Branch `preview/art`: art for the new set pieces
 - **City Park:** the three willows over the pond (faded trees, crisp boughs on their ledges), the keeper's winch on
   the far bank, the hollow log (a fallen trunk with hollow ends; it hides the gold bone inside).
