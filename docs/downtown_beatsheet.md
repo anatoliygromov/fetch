@@ -46,7 +46,7 @@ Every screen keeps about 100 px of open street (screen 4 and 5 more, around the 
 4. **Gone:** "THE CAT RAN OFF! GET THE BALL".
 5. **Fetch:** X picks up the ball ("TAKE THE BALL DOWN TO THE RIVER!"). She carries it in her mouth; every move still works (checked: crawl under a table, held jump onto the kiosk with the ball).
 6. **Fountain:** if Pepper falls in the fountain with the ball, she loses a heart and the ball goes back by the statue ("THE BALL IS BACK BY THE STATUE"); she restarts at the lamp before the fountain and walks back for it.
-7. **Fetch:** X near the girl at the stairs gives her the ball: GOOD GIRL!, FETCH 2000, then the tally (BONES, FETCH 2000, TIME BONUS). Outro: "BY THE RIVER SHE THREW IT / AGAIN. IT LANDED ON A FERRY...".
+7. **Fetch:** X near the girl at the stairs gives her the ball: GOOD GIRL!, FETCH 2000, then the tally (BONES, FETCH 2000, TIME BONUS). Outro: "BY THE RIVER MIA THREW IT / AGAIN. IT LANDED ON A FERRY...".
 
 ## Estimated play time
 

@@ -126,7 +126,7 @@ L.ballBack = "THE BALL IS BACK BY THE STATUE"
 L.pickupSay = "BRING ME THE BALL!"
 -- the girl waits at the top of the stairs down to the river
 L.girl = { x = 1860, y = 184 }
-L.outro = { "BY THE RIVER SHE THREW IT", "AGAIN. IT LANDED ON A FERRY..." }
+L.outro = { "BY THE RIVER MIA THREW IT", "AGAIN. IT LANDED ON A FERRY..." }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {

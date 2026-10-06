@@ -185,5 +185,5 @@ L.hints = {
   { x0 = 2980, x1 = 3200, text = "FIND THE BALL ON THE BOAT!", need = "noball" },
 }
 
-L.intro = { "LEVEL 3", "RIVER WALK", "THE BALL LANDED ON A BOAT.", "FETCH IT FOR THE GIRL!" }
+L.intro = { "LEVEL 3", "RIVER WALK", "THE BALL LANDED ON A BOAT.", "FETCH IT FOR MIA!" }
 return L

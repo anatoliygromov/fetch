@@ -504,7 +504,7 @@ function St:draw(debug)
       local z = c.zone or {}
       local bw, bh = z.w or 48, z.h or 26
       Sc.outlined(C.prop, C.propEdge, math.floor(x - bw / 2 + 0.5), c.y - bh, bw, bh); Sc.label(z.kind and z.kind:upper() or "BIKE", x, c.y - 17)
-    else lg.setColor(1, 1, 1, 1); lg.draw(cyc, math.floor(x - 24 + 0.5), math.floor(c.y - cyc:getHeight() + 0.5)) end
+    else lg.setColor(1, 1, 1, 1); lg.draw(cyc, math.floor(x + 25 + 0.5), math.floor(c.y - cyc:getHeight() + 0.5), 0, -1, 1) end   -- the art faces right; bikes ride left
   end
   Sp.drawWarnings(self, cam)                                       -- a sign at the edge a bike or tram comes from
   -- Pepper
