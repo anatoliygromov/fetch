@@ -9,6 +9,7 @@ U.RIM   = { 80/255, 160/255, 238/255 }
 U.EDGE  = { 2/255, 60/255, 150/255 }
 U.WHITE = { 1, 1, 1 }
 U.SHADE = { 20/255, 24/255, 36/255 }
+U.GOLD  = { 252/255, 214/255, 60/255 }
 
 local function bitmap(rows)
   local d = love.image.newImageData(#rows[1], #rows)
@@ -18,6 +19,8 @@ end
 local dogIcon = bitmap({ "........##", "#......###", ".########.", ".#######..", ".##...##..", ".#.....#.." })
 local boneIcon = bitmap({ "##.....##", "#########", "#########", "##.....##" })
 local heart = bitmap({ "##.##", "#####", "#####", ".###.", "..#.." })
+local lockIcon = bitmap({ ".###.", "#...#", "#...#", "#####", "##.##", "##.##", "#####" })
+local checker                                                   -- every other pixel dark: dims what is under it
 
 -- a sign: body w wide (plus a 5 px point on the right), 12 rows tall
 function U.sign(x, y, w)
@@ -68,4 +71,24 @@ function U.center(s, cx, y, scale, col)
   lg.setColor(1, 1, 1, 1)
 end
 function U.text(s, x, y, col) txt(s, x, y, col) end
+-- dims the whole screen with a 1 px checker of the shade colour (behind boxes and cards)
+function U.dim()
+  if not checker then
+    local d = love.image.newImageData(320, 240)
+    for y = 0, 239 do for x = (y % 2), 319, 2 do d:setPixel(x, y, U.SHADE[1], U.SHADE[2], U.SHADE[3], 1) end end
+    checker = lg.newImage(d)
+  end
+  lg.setColor(1, 1, 1, 1); lg.draw(checker, 0, 0)
+end
+-- a padlock as tall as a letter (5 x 7 at scale 1), with the same 1 px shadow
+function U.lock(x, y, col, scale)
+  lg.setColor(U.SHADE); lg.draw(lockIcon, x + 1, y + 1, 0, scale or 1)
+  lg.setColor(col or U.WHITE); lg.draw(lockIcon, x, y, 0, scale or 1)
+  lg.setColor(1, 1, 1, 1)
+end
+-- the dog from the lives sign (10 x 6), at scale (1 or 2)
+function U.dog(x, y, col, scale)
+  lg.setColor(U.SHADE); lg.draw(dogIcon, x + 1, y + 1, 0, scale or 1)
+  lg.setColor(col or U.WHITE); lg.draw(dogIcon, x, y, 0, scale or 1); lg.setColor(1, 1, 1, 1)
+end
 return U

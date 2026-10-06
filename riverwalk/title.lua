@@ -1,6 +1,6 @@
 -- The title screen, animated. The painting is cut into layers by tools/make_title.py; everything moves by time t:
 -- the river sparkles twinkle, the lamps glow, Pepper blinks, the bird flaps, a shine sweeps across the logo,
--- and PRESS ANY KEY blinks (fast once a key is pressed, then the screen fades out).
+-- and PRESS ANY KEY blinks (fast once a key is pressed; then the menu opens over the same picture, see flow.lua).
 local D = require("title_data")
 local T = {}
 local lg = love.graphics
@@ -10,6 +10,21 @@ local function img(n) local i = lg.newImage("art/title/" .. n .. ".png"); i:setF
 function T.load()
   if I then return end
   I = { base = img("base"), press_off = img("press_off"), eye = img("eye_closed"), bird = img("bird"), logo = img("logo_hi") }
+  -- the logo as it is in the painting (letters, outline and paw), to draw it bright over the dimmed menus:
+  -- the brightened letters' pixels plus the dark outline pixels within 3 px of them
+  local base, hi = love.image.newImageData("art/title/base.png"), love.image.newImageData("art/title/logo_hi.png")
+  local L, w, h = D.logo, hi:getWidth(), hi:getHeight()
+  local d = love.image.newImageData(w, h)
+  local function inLogo(x, y) return x >= 0 and y >= 0 and x < w and y < h and select(4, hi:getPixel(x, y)) > 0 end
+  for y = 0, h - 1 do for x = 0, w - 1 do
+    local r, g, b = base:getPixel(L.x + x, L.y + y)
+    local keep = inLogo(x, y)
+    if not keep and 0.3 * r + 0.59 * g + 0.11 * b < 90 / 255 then
+      for dy = -3, 3 do for dx = -3, 3 do if not keep and inLogo(x + dx, y + dy) then keep = true end end end
+    end
+    if keep then d:setPixel(x, y, r, g, b, 1) end
+  end end
+  I.logoFull = lg.newImage(d); I.logoFull:setFilter("nearest", "nearest")
   I.birdQ = {}
   for f = 0, 2 do I.birdQ[f] = lg.newQuad(f * D.bird.w, 0, D.bird.w, D.bird.h, I.bird:getDimensions()) end
 end
@@ -23,8 +38,9 @@ local function ellipse(cx, cy, rx, ry)
   end
 end
 
--- t: seconds on the title; leaving: seconds since a key was pressed (nil before)
-function T.draw(t, leaving)
+-- t: seconds on the title; leaving: seconds since a key was pressed (nil before);
+-- plain: only the animated picture (the menus' background): no PRESS ANY KEY, no logo shine, no fade
+function T.draw(t, leaving, plain)
   T.load()
   lg.setColor(1, 1, 1, 1)
   lg.draw(I.base, 0, 0)
@@ -52,7 +68,18 @@ function T.draw(t, leaving)
   local bx = D.bird.x + math.floor(math.sin(t * 0.35) * 4 + 0.5)
   local by = D.bird.y + math.floor(math.sin(t * 0.9) * 1.2 + 0.5)
   lg.draw(I.bird, I.birdQ[f], bx, by)
-  -- a shine sweeps across the logo: a slanted band, drawn as 2-row strips through a scissor
+  if plain then lg.draw(I.press_off, D.press.x, D.press.y); return end
+  T.shine(t)
+  -- PRESS ANY KEY TO START blinks (fast once pressed)
+  local on = leaving and (math.floor(leaving / 0.07) % 2 == 0) or (not leaving and (t % 1.1) < 0.75)
+  if not on then lg.draw(I.press_off, D.press.x, D.press.y) end
+  -- fade in at the start
+  if t < 0.5 then lg.setColor(0, 0, 0, 1 - t / 0.5); lg.rectangle("fill", 0, 0, 320, 240) end
+  lg.setColor(1, 1, 1, 1)
+end
+
+-- a shine sweeps across the logo every 3.6 s: a slanted band, drawn as 2-row strips through a scissor
+function T.shine(t)
   local st = t % 3.6
   if st < 0.8 then
     local L = D.logo
@@ -66,15 +93,20 @@ function T.draw(t, leaving)
     end
     lg.setScissor()
   end
-  -- PRESS ANY KEY TO START blinks (fast once pressed)
-  local on = leaving and (math.floor(leaving / 0.07) % 2 == 0) or (not leaving and (t % 1.1) < 0.75)
-  if not on then lg.draw(I.press_off, D.press.x, D.press.y) end
-  -- fade in at the start, fade out after the key press
-  local black = 0
-  if t < 0.5 then black = 1 - t / 0.5 end
-  if leaving and leaving > T.LEAVE - 0.25 then black = math.max(black, (leaving - (T.LEAVE - 0.25)) / 0.25) end
-  if black > 0 then lg.setColor(0, 0, 0, math.min(1, black)); lg.rectangle("fill", 0, 0, 320, 240) end
-  lg.setColor(1, 1, 1, 1)
 end
-T.LEAVE = 0.6       -- seconds from the key press to the level card
+
+-- the logo at full brightness, with its shine (drawn over U.dim() on the main menu)
+function T.drawLogo(t)
+  T.load()
+  lg.setColor(1, 1, 1, 1); lg.draw(I.logoFull, D.logo.x, D.logo.y)
+  T.shine(t)
+end
+-- the PRESS ANY KEY box at full brightness, with other words in it (the main menu's buttons)
+function T.drawBanner(text)
+  T.load()
+  local P = D.press
+  lg.setColor(1, 1, 1, 1); lg.draw(I.press_off, P.x, P.y)
+  require("hud").center(text, P.x + I.press_off:getWidth() / 2, P.y + 5, 1)
+end
+T.LEAVE = 0.45      -- seconds from the key press to the menu
 return T
