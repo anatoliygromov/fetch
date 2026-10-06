@@ -2,6 +2,32 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `ml/art`: City Park and Downtown art (fix 11)
+Built on `ml/fixes`. Not merged yet: the before/after sheets are for approval first.
+- **Art instead of the greyboxes** in levels 1 and 2, in the River Walk style. A level flag `L.art = "park"` /
+  `"town"` turns it on; without it the level is drawn as boxes again. No collision box, map, hint, hazard or flow
+  changed: every piece is drawn from its prop's box, so box and art stay together.
+- **City Park:** the far city (River Walk's skyline), an autumn tree line, near autumn trees, a sandy path with grass
+  and earth, the park gate, the leaf piles (they flatten when Pepper runs through), the log, the bench and the bin
+  (River Walk's), the hedge on two stems (the crawl gap reads as a gap), the pond with its far bank, mossy stepping
+  stones and the duck boat (it faces the way it paddles, its hull in the water), the picnic table (boarded under its
+  top: it is solid), the leaf cart, the big oak with branches drawn on its ledges, the slide, the climbing frame,
+  the swings, dark bush tops in the foreground below Pepper's line.
+- **Downtown:** the far city, old town roofs and spires, a row of Gamla stan facades, a cobbled pavement and street,
+  the doorway, apple crates as steps, cafe tables (two legs, so the crawl gap shows) under market parasols, the
+  bakers' sign, the market stall and its awnings on posts, the bronze statue (hat and pointing arm on their ledges)
+  on its granite pedestal, the fountain (rims, bowl, water jets, its basin), the kiosk, the tram shelter, the tram,
+  the RIVER sign, the stone stairs down to the river, granite bollard tops in the foreground.
+- **Rules kept:** obstacles are crisp, mid-tone, with their own 1 px dark outline, on Pepper's line; decoration is
+  faded 28% with no outline, its base at y 174; nothing is drawn over Pepper (foreground only from y 221 down). The
+  magpie and the cat are still drawn in code (the cat is still its labelled box).
+- **Making it:** 13 SpriteCook renders (180 credits) in `source_scenery/`, turned into `art/scene/park_*.png` and
+  `town_*.png` by `tools/make_town_art.py` (cuts and repeats of whole rows and columns, exact 2x reductions,
+  palettes of 5-12 colours, despeckle). The slide, the climbing frame, the oak's branches, the table legs, the shop
+  sign, the fountain and the bollards are drawn by hand.
+- Pepper is unchanged (`tools/check_pepper.sh`: 2,752 steps identical); physics 17/17, 40/40, 45/45; QA 0 problems
+  in all three levels.
+
 ## Branch `multilevel`: three levels, one story
 Built on `night/all` (the night's River Walk art, Pepper's extras and the City Park greybox). Not merged yet.
 - **Game logic rules:** every level ends with a real fetch: Pepper picks up the ball (X) and gives it to the girl (X),
