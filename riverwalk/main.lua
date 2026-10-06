@@ -12,6 +12,7 @@
 --
 -- The flow (flow.lua): title -> menu (START GAME or LEVEL SELECT) -> each level: intro card, play, tally ->
 -- story card -> the next level ... -> the ending -> title. GAME OVER -> title.
+-- Hints and story lines are said in the talk panel (talk.lua).
 -- love riverwalk --level <name> starts a run at that level (no menus). The test flags (--physics, --auto,
 -- --test, --qa) play one level alone, River Walk unless --level names another; --flowtest checks the flow.
 function love.errorhandler(msg) io.stderr:write("ERROR: " .. tostring(msg) .. "\n" .. debug.traceback() .. "\n"); io.stderr:flush(); os.exit(1) end
@@ -25,6 +26,7 @@ local St = require("stage")
 local Pp = require("pepper")
 local Ex = require("extras")
 local Flow = require("flow")
+local Talk = require("talk")
 local levelName, def                                            -- the level being played
 local function argLevel(args)
   for i, a in ipairs(args or {}) do if a == "--level" and args[i + 1] then return args[i + 1] end end
@@ -43,12 +45,12 @@ local story, ending                                             -- the story car
 
 local function setLevel(name) levelName = name; def = require("level." .. name) end
 -- the current level from the start, alone (the test modes, api.newRun)
-local function newRun() stage = St.new(def); state, t, tally = "intro", 0, nil end
+local function newRun() stage = St.new(def); state, t, tally = "intro", 0, nil; Talk.reset() end
 -- the run's current level: its intro card; it starts with the run's score and lives
 local function startLevel()
   setLevel(run.names[run.k])
   stage = St.new(def, { score = run.score, lives = run.lives }); state, t, tally = "intro", 0, nil
-  S.music(musicOn)
+  Talk.reset(); S.music(musicOn)
 end
 local function startRun(i) run = Flow.newRun(i); if #run.names > 0 then startLevel() end end
 local Title = require("title")                                  -- the title screen: PRESS ANY KEY, then the menu
@@ -78,7 +80,7 @@ function love.load(args)
     if lv and Flow.index(lv) and not test then startRun(Flow.index(lv)) else state, t = "title", 0 end
   end
   local api = { stage = function() return stage end, setState = function(s) state = s end, getState = function() return state end, newRun = newRun,
-    run = function() return run end, tally = function() return tally end, flow = Flow }
+    run = function() return run end, tally = function() return tally end, flow = Flow, talk = Talk }
   for _, a in ipairs(args or {}) do
     if a == "--test" or a == "--auto" or a == "--physics" then require(levelName == "riverwalk" and "tests" or ("tests_" .. levelName))(a, api) end
     if a == "--noextras" then Ex.enabled = false end                                    -- start with the extras off
@@ -187,7 +189,7 @@ function love.update(dt)
     acc = acc + dt
     local steps = 0
     while acc >= DT - 1e-9 and steps < 4 do
-      stage:update(DT, presses); presses = {}; acc = acc - DT; steps = steps + 1
+      stage:update(DT, presses); Talk.watch(stage, presses, DT); presses = {}; acc = acc - DT; steps = steps + 1
       if stage.events.over then state, t = "over", 0; S.music(false); S.play("over"); if run then Flow.runOver(stage.score) end; break end
       if stage.events.clear then
         state, t = "clear", 0; S.music(false); S.play("clear")
@@ -216,6 +218,7 @@ function love.update(dt)
     end
     if tally.shown >= tally.points and tally.t > 1.8 then tally.done = true end
   end
+  if state == "play" then Talk.update(dt, stage) end
   frameMs = (love.timer.getTime() - t0) * 1000
 end
 
@@ -256,7 +259,7 @@ function love.draw()
     U.center(def.intro[3], 160, 118, 1); U.center(def.intro[4], 160, 130, 1)
     if t > 0.5 and (t % 1.1) < 0.75 then U.prompt("PRESS ANY BUTTON") end
   elseif state == "play" then
-    local h = stage:hint(); if h then U.prompt(h) end
+    Talk.draw(stage)
     drawTuning()
   elseif state == "pause" then
     U.dim(); U.box(88, 80, 144, 70)
