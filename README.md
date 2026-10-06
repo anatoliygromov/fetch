@@ -35,9 +35,24 @@ The approved state of Level 3, River Walk, under git. Every delivered build is a
 
 ## Level 1: City Park (greybox, branch `night/citypark`)
 
-- `love riverwalk --level citypark` plays it; the same flags work (`--physics`, `--auto`, `--test`, `--qa`).
-- `./build_citypark.sh` builds `CITYPARK_greybox.love` with City Park as the default.
+- `love riverwalk --level citypark` starts a run at City Park (no menus); the test flags work with it too
+  (`--physics`, `--auto`, `--test`, `--qa`).
 - Beat sheet: `docs/citypark_beatsheet.md`.
+
+## Game flow (branch `ml/flow`)
+
+- **Title screen**, then a menu: START GAME plays the levels in order (1 City Park, 2 Downtown, 3 River Walk);
+  LEVEL SELECT plays from the chosen level to the end.
+- **Level select:** level 1 is always open, a level opens when the one before it is cleared. Locked levels are
+  dimmed with a padlock; a level whose file is missing says COMING SOON and is skipped in a run.
+- **One run:** one score for the whole run, lives carry from level to level, hearts refill and the timer starts
+  again in every level.
+- **Between levels:** the tally (bones, the level's bonus, time bonus, points, score), then a story card, then the
+  next level's intro card. After the last level: the ending (GOOD GIRL!, final score, best run, THE END).
+- **GAME OVER** goes back to the title; unlocked levels stay open.
+- **Saved** in LÖVE's save folder: `progress.txt` (open levels), `best_run.txt` (best run score),
+  `best.txt` / `best_<level>.txt` (best points per level).
+- The code is in `riverwalk/flow.lua`; `love riverwalk --flowtest` (or `tools/check_flow.sh`) checks it.
 
 ## Folders
 
@@ -64,6 +79,8 @@ The approved state of Level 3, River Walk, under git. Every delivered build is a
   - falling in the river
 - **Autopilot:** `love riverwalk --auto` plays the whole level and reaches GOOD GIRL!
 - **Screenshots:** `love riverwalk --test` saves screenshots.
+- **Game flow:** `tools/check_flow.sh` runs `love riverwalk --flowtest`: it drives the menus through a whole run
+  (26 checks) and puts a screenshot of every screen on one sheet, `flow_screens.png`.
 
 ## Controls
 
@@ -76,10 +93,14 @@ The approved state of Level 3, River Walk, under git. Every delivered build is a
 | B | Shift | Walk |
 | X | X | Pick up, drop, give the ball |
 | Y | Z | Bark |
-| Start | Enter | Pause |
+| Start | Enter | Pause; in the pause, go on |
+| B (in the pause) | Esc (in the pause) | Quit to the title |
 | Select | G | Debug view |
 
-Tab opens the tuning panel (keyboard only).
+In the menus: D-pad or the left stick up and down (arrows) move, A or Start (Space or Enter) chooses,
+B (Esc) goes back. Any button moves on from the title, the level cards, the tally, the ending and GAME OVER.
+On the title screen Esc quits the game. Tab opens the tuning panel (keyboard only); F fullscreen, M music,
+E visual extras.
 
 ## Still placeholders
 
