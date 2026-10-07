@@ -107,9 +107,9 @@ function F.newRun(i, list)
 end
 
 -- menu buttons: a key or a pad button -> "up", "down", "ok", "back" (or nil)
-local KEYS = { up = "up", w = "up", down = "down", s = "down", space = "ok", ["return"] = "ok", kpenter = "ok", x = "ok",
+local KEYS = { up = "up", w = "up", down = "down", s = "down", left = "left", a = "left", right = "right", d = "right", space = "ok", ["return"] = "ok", kpenter = "ok", x = "ok",
   escape = "back", backspace = "back" }
-local PADS = { dpup = "up", dpdown = "down", a = "ok", start = "ok", b = "back" }
+local PADS = { dpup = "up", dpdown = "down", dpleft = "left", dpright = "right", a = "ok", start = "ok", b = "back" }
 function F.action(key, pad) if key then return KEYS[key] end; return PADS[pad] end
 
 -- the main menu and the level select: the cursor moves; returns what was chosen
@@ -276,25 +276,35 @@ function F.cursor(o, a, n)
   elseif a == "ok" then S.play("select"); return o.sel end
 end
 
--- the pause: pz = { sel (1 GO ON, 2 QUIT), confirm (nil, or the QUIT? card's sel: 1 NO, 2 YES) }
-F.pauseItems, F.confirmItems = { "GO ON", "QUIT" }, { "NO", "YES, QUIT" }
+-- the pause: pz = { sel (1 GO ON, 2 SOUND, 3 QUIT), confirm (nil, or the QUIT? card's sel: 1 NO, 2 YES) }
+-- SOUND: left / right turn the game's volume down or up (0 is off), A steps it up and wraps round to off
+F.pauseItems, F.confirmItems = { "GO ON", "SOUND", "QUIT" }, { "NO", "YES, QUIT" }
+F.PAUSE_SOUND, F.PAUSE_QUIT = 2, 3
 function F.drawPause(pz, def, avoid)
-  U.dim(); shifted(F.placeY(82, 156, 68, 108, avoid) - 68, function() F.pauseCard(pz, def) end)
+  U.dim(); shifted(F.placeY(82, 156, 60, 124, avoid) - 60, function() F.pauseCard(pz, def) end)
 end
 function F.pauseCard(pz, def)
-  U.box(82, 68, 156, 108)
-  U.center("PAUSED", 160, 75, 2)
-  U.center(("LEVEL %d  %s"):format(def.number or 1, def.name or ""), 160, 93, 1, U.GOLD)
+  local Se = require("settings")
+  U.box(82, 60, 156, 124)
+  U.center("PAUSED", 160, 67, 2)
+  U.center(("LEVEL %d  %s"):format(def.number or 1, def.name or ""), 160, 85, 1, U.GOLD)
   local items, sel = F.pauseItems, pz.sel
-  if pz.confirm then U.center("QUIT TO THE MENU?", 160, 106, 1); items, sel = F.confirmItems, pz.confirm end
+  if pz.confirm then U.center("QUIT TO THE MENU?", 160, 104, 1); items, sel = F.confirmItems, pz.confirm end
   for i, it in ipairs(items) do
-    local iy = (pz.confirm and 120 or 112) + (i - 1) * 19
+    local iy = (pz.confirm and 120 or 104) + (i - 1) * 19
     local on = sel == i
     if on then lg.setColor(U.EDGE); lg.rectangle("fill", 88, iy - 3, 144, 17); lg.setColor(1, 1, 1, 1) end
-    U.center(it, 160, iy, 2, on and U.GOLD or U.WHITE)
+    if not pz.confirm and i == F.PAUSE_SOUND then
+      lg.setColor(U.SHADE); require("bigfont").print("SOUND", 97, iy + 1, 2)
+      lg.setColor(on and U.GOLD or U.WHITE); require("bigfont").print("SOUND", 96, iy, 2); lg.setColor(1, 1, 1, 1)
+      U.volumeBar(166, iy + 1, Se.volume, Se.MAX, 9)
+      if on then U.text("<", 160, iy + 2, U.GOLD); U.text(">", 219, iy + 2, U.GOLD) end
+    else
+      U.center(it, 160, iy, 2, on and U.GOLD or U.WHITE)
+    end
   end
-  Talk.glyph("a", 108, 164, "small"); U.text("OK", 118, 161)
-  Talk.glyph("b", 166, 164, "small"); U.text("BACK", 176, 161)
+  Talk.glyph("a", 108, 172, "small"); U.text("OK", 118, 169)
+  Talk.glyph("b", 166, 172, "small"); U.text("BACK", 176, 169)
 end
 
 -- after the last level: e = { score, best, newBest, lines (the last level's outro, optional) }

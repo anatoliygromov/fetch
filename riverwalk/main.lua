@@ -7,6 +7,8 @@
 --   B / Shift        walk          X / X key   pick up, drop, give the ball        Y / Z key   bark
 --   Start / Enter    pause         Select / G  debug view        Tab  tuning panel (keyboard)
 --   F fullscreen, M music, E visual extras off / on (dust, splash; extras.lua)
+--   Volume buttons (keys volumeup / volumedown / mute): the game's sound level, saved (settings.lua). The pause
+--   has a SOUND row too (left / right). Select (pad) toggles the debug view only with --dev or a test flag.
 --   Menus: up / down move, A / Space / Enter choose, B / Esc back. In the pause: Start / Enter go on; QUIT asks
 --   first (B / Esc only ever go back). On the title screen Esc quits the game.
 --
@@ -27,6 +29,8 @@ local Pp = require("pepper")
 local Ex = require("extras")
 local Flow = require("flow")
 local Talk = require("talk")
+local Se = require("settings")
+local devMode = false                                           -- --dev or a test flag: Select shows the debug view
 local levelName, def                                            -- the level being played
 local function argLevel(args)
   for i, a in ipairs(args or {}) do if a == "--level" and args[i + 1] then return args[i + 1] end end
@@ -37,7 +41,7 @@ local stage, state, t = nil, "intro", 0
 local acc = 0
 local presses = {}
 local debugView, tuning, tuneRow = false, false, 1
-local musicOn = true
+local musicOn = true                                           -- from settings.txt (Se.music) once loaded
 local fps, frameMs = 60, 0
 local tally
 local run                                                       -- the run (Flow.newRun): its levels, score, lives
@@ -69,6 +73,10 @@ function love.load(args)
   for _, a in ipairs(args or {}) do
     if a == "--test" or a == "--auto" or a == "--physics" or a == "--qa" or a == "--flowtest" then test = a end
   end
+  Se.save = not test
+  for _, a in ipairs(args or {}) do if a == "--dev" then devMode = true end end
+  devMode = devMode or test ~= nil
+  Se.load(); musicOn = Se.music
   S.load(); S.music(musicOn)
   Title.load()
   if test and test ~= "--flowtest" then                           -- the checks play one level alone, from its intro
@@ -93,7 +101,14 @@ function love.load(args)
     if a == "--pepperlab" then require("pepperlab")() end                              -- Pepper alone in a test room
   end
 end
-function love.joystickadded(j) if j:isGamepad() then I.pad = j end end
+function love.joystickadded(j)
+  print(("[input] joystick added: %s, gamepad %s, %d buttons, %d hats"):format(j:getName(), tostring(j:isGamepad()), j:getButtonCount(), j:getHatCount()))
+  if j:isGamepad() then I.pad = j end
+end
+-- raw buttons that are not mapped as gamepad buttons (the volume rocker can arrive as one of these)
+function love.joystickpressed(j, n)
+  if not (j:isGamepad() and I.pad == j) then print(("[input] joystick %s button %d"):format(j:getName(), n)) else print(("[input] raw button %d"):format(n)) end
+end
 
 local TUNE = {
   { "run", "run speed", 10, " PX/S" }, { "walk", "walk speed", 5, " PX/S" }, { "crawl", "crawl speed", 5, " PX/S" },
@@ -138,8 +153,13 @@ local function pauseAction(a)
     return
   end
   if a == "back" then resume(); return end
+  if pz.sel == Flow.PAUSE_SOUND and (a == "left" or a == "right") then
+    if Se.step(a == "right" and 1 or -1) then S.play("tick") end; return
+  end
   local r = Flow.cursor(pz, a, #Flow.pauseItems)
-  if r == 1 then resume() elseif r == 2 then pz.confirm = 1 end
+  if r == 1 then resume()
+  elseif r == Flow.PAUSE_SOUND then if Se.volume >= Se.MAX then Se.step(-Se.MAX) else Se.step(1) end; S.play("tick")
+  elseif r == Flow.PAUSE_QUIT then pz.confirm = 1 end
 end
 -- the story card: only A goes on, after Flow.CARD_WAIT seconds (time to read it aloud)
 local function storyA() if state == "story" and t >= Flow.CARD_WAIT then S.play("select"); startLevel() end end
@@ -160,9 +180,20 @@ local function menuAction(a)
     if r == "play" then startRun(i) elseif r == "back" then state = "menu" end
   end
 end
-function love.keypressed(k)
+-- the handheld's volume buttons: the game's own sound level (never "any key", never a game button)
+local function volumeKey(k)
+  if k == "volumeup" or k == "volumedown" then Se.step(k == "volumeup" and 1 or -1); return true end
+  if k == "mute" or k == "audiomute" then Se.toggleMute(); return true end
+  return false
+end
+-- every press is written to stdout (the handheld's launcher keeps it in ports/fetch/log.txt), so a console test
+-- shows what the firmware really sends for the volume buttons, the d-pad and the face buttons
+local function logInput(kind, what) print(("[input] %s %s (%s)"):format(kind, tostring(what), state)); io.stdout:flush() end
+function love.keypressed(k, sc)
+  logInput("key", k .. (sc and sc ~= k and (" sc=" .. sc) or ""))
+  if volumeKey(k) then return end
   if k == "f" then love.window.setFullscreen(not love.window.getFullscreen()); return end
-  if k == "m" then musicOn = not musicOn; S.music(musicOn); return end
+  if k == "m" then musicOn = not musicOn; Se.setMusic(musicOn); S.music(musicOn and state ~= "pause"); return end
   if k == "g" then debugView = not debugView; return end
   if k == "tab" then tuning = not tuning; return end
   if k == "e" then Ex.toggle(); return end
@@ -186,9 +217,10 @@ function love.keypressed(k)
   press(I.keyName(k)); anyKey()
 end
 function love.gamepadpressed(j, b)
+  logInput("pad", b)
   I.pad = j
   if leaveTitle() then return end
-  if b == "back" then debugView = not debugView; return end
+  if b == "back" then if devMode then debugView = not debugView end; return end
   if state == "menu" or state == "select" then menuAction(Flow.action(nil, b)); return end
   if b == "start" and (state == "play" or state == "pause") then
     if state == "play" then state = "pause"; S.music(false) else resume() end
@@ -202,7 +234,13 @@ function love.gamepadpressed(j, b)
 end
 -- the left stick moves the menu cursor too (one step each time it is pushed past half way)
 local stickY = 0
+local stickX = 0
 function love.gamepadaxis(j, axis, v)
+  if axis == "leftx" then                                       -- left / right: the pause's SOUND row
+    local d = v > 0.6 and 1 or (v < -0.6 and -1 or (math.abs(v) < 0.3 and 0 or stickX))
+    if d ~= stickX then stickX = d; if d ~= 0 and state == "pause" then pauseAction(d < 0 and "left" or "right") end end
+    return
+  end
   if axis ~= "lefty" then return end
   local d = v > 0.6 and 1 or (v < -0.6 and -1 or (math.abs(v) < 0.3 and 0 or stickY))
   if d ~= stickY then stickY = d; if d ~= 0 then
@@ -288,6 +326,7 @@ function love.draw()
     or (state == "ending" and function() Flow.drawEnding(ending, t) end)
   if screen then                                                  -- the screens drawn without a level behind them
     screen()
+    if Se.showing() then U.volumeToast(Se.volume, Se.MAX) end
     love.graphics.setCanvas()
     local ww, wh = love.graphics.getDimensions()
     local s = math.max(1, math.floor(math.min(ww / W, wh / H)))
@@ -321,6 +360,7 @@ function love.draw()
   if state ~= "play" then                                         -- the cards dim the level, never Pepper
     love.graphics.setColor(1, 1, 1, 1); stage.pepper:draw(math.floor(stage.cam + 0.5))
   end
+  if Se.showing() then U.volumeToast(Se.volume, Se.MAX) end
   if debugView then
     U.text(("%d FPS  %.1f MS"):format(fps, frameMs), 4, 228, { 1, 1, 0.4 })
     local p = stage.pepper

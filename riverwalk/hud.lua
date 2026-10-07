@@ -116,4 +116,20 @@ function U.medal(kind, x, y, won)
   lg.draw(pic, x + math.floor((11 - pic:getWidth()) / 2), y + math.floor((11 - pic:getHeight()) / 2))
   lg.setColor(1, 1, 1, 1)
 end
+-- the sound level: 10 cells, 4 x h each with a 1 px gap (52 px wide), lit up to the level; "OFF" at 0
+function U.volumeBar(x, y, level, max, h)
+  h = h or 7
+  if level == 0 then txt("OFF", x, y + math.floor((h - 7) / 2), U.GOLD); return end
+  for i = 1, max do
+    lg.setColor(U.SHADE); lg.rectangle("fill", x + (i - 1) * 5 + 1, y + 1, 4, h)
+    lg.setColor(i <= level and U.GOLD or U.EDGE); lg.rectangle("fill", x + (i - 1) * 5, y, 4, h)
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+-- shown for a moment when the volume buttons are pressed: a small box under the status signs
+function U.volumeToast(level, max)
+  U.box(110, 20, 100, 17)
+  txt("SOUND", 116, 25)
+  U.volumeBar(150, 25, level, max)
+end
 return U

@@ -10,6 +10,7 @@
 -- of every screen (flow_*.png) and all of them on one sheet, flow_screens.png, in the save folder.
 local I = require("input")
 local St = require("stage")
+local Se = require("settings")
 return function(api)
   I.testing = true
   local F = api.flow
@@ -113,6 +114,7 @@ return function(api)
 
   -- title and menu
   add(wait(0.8), shot("0_title"), check("starts on the title screen", function() return api.getState() == "title", api.getState() end))
+  add(key("volumeup"), wait(0.6), check("title: a volume button is not 'any key'", function() return api.getState() == "title", api.getState() end), shot("u11_title_volume"))
   add(key("space"), state("menu", 2), wait(0.7), shot("1_menu"))
   add(check("menu: START GAME is selected", function() return F.menu.sel == 1, F.menu.items[F.menu.sel] end))
   -- level select: fresh progress, only level 1 open
@@ -251,11 +253,19 @@ return function(api)
   add(key("up"), key("space"), state("intro", 1), wait(0.6), key("space"), state("play", 1), wait(0.2), key("return"), state("pause", 1), wait(0.1), shot("7_pause"))
   add(key("lshift"), check("pause: B does nothing", function() return api.getState() == "pause", api.getState() end))
   add(key("escape"), check("pause: Esc (back) goes on playing", function() return api.getState() == "play", api.getState() end))
-  add(key("return"), state("pause", 1), key("down"), key("space"),
+  -- SOUND (the second row): left / right change the game's volume, A steps it up; the volume buttons work anywhere
+  add(key("return"), state("pause", 1), key("down"), { act = function() Se.volume = 8 end }, key("left"), key("left"),
+    check("pause: SOUND left turns the volume down", function() return Se.volume == 6 and api.getState() == "pause", "volume " .. Se.volume end),
+    key("right"), key("space"), check("pause: SOUND right and A turn it up", function() return Se.volume == 8, "volume " .. Se.volume end),
+    key("volumedown"), check("volume button down: quieter, still paused", function() return Se.volume == 7 and api.getState() == "pause", "volume " .. Se.volume end),
+    key("mute"), check("mute button: sound off", function() return Se.volume == 0, "volume " .. Se.volume end),
+    key("mute"), check("mute button again: sound back", function() return Se.volume == 7, "volume " .. Se.volume end),
+    wait(0.05), shot("u10_pause_sound"), key("escape"), state("play", 1))
+  add(key("return"), state("pause", 1), key("down"), key("down"), key("space"),
     check("pause: QUIT asks first", function() return api.getState() == "pause" and api.pause().confirm == 1, api.getState() end), shot("u7_pause"))
   add(key("space"), check("pause: NO keeps the game", function() return api.getState() == "pause" and not api.pause().confirm, api.getState() end))
   add(key("down"), key("space"), key("escape"), check("pause: back from the question", function() return api.getState() == "pause" and not api.pause().confirm, api.getState() end))
-  add(key("down"), key("space"), key("down"), key("space"),
+  add(key("down"), key("down"), key("space"), key("down"), key("space"),
     check("pause: YES, QUIT goes to the menu", function() return api.getState() == "menu" and api.run() == nil, api.getState() end))
 
   -- GAME OVER: TRY AGAIN (the same level, 3 lives, the score it started with), then MENU
@@ -281,7 +291,7 @@ return function(api)
     check("hard mode: the stage is hard, no hints, no nudge", function()
       local s = api.stage(); return s.hard == true and s:hint() == nil and T.cur == nil, tostring(s.hard) end))
   add(wait(3.2), check("hard mode: no idle nudge", function() return T.nudge.btn == nil, tostring(T.nudge.btn) end), shot("u9_hard"))
-  add(key("return"), state("pause", 1), key("down"), key("space"), key("down"), key("space"), state("menu", 1),
+  add(key("return"), state("pause", 1), key("down"), key("down"), key("space"), key("down"), key("space"), state("menu", 1),
     key("down"), key("down"), key("space"), check("hard mode: off again", function() return not F.hard and readSave("hard.txt"):find("0") ~= nil, "" end))
 
   -- the summary and the contact sheet (4 x 2, the screens at 2x)
