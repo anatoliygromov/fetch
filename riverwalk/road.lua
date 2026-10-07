@@ -21,7 +21,26 @@ local function load()
   for i = 1, 5 do art.cars[i] = img("road_car" .. i) end
   for i = 1, 2 do art.cyclists[i] = img("cyclist" .. i) end       -- the promenade bikes (stage.lua)
   for i = 1, 2 do art.riders[i] = img("road_cyclist" .. i) end    -- the road's cyclists
+  -- rolling wheels (tools/make_wheels.py): the same art in 4 frames, the spokes a quarter of a gap further each;
+  -- px = how far the bike rolls per frame (wheel radius x spoke gap / 4)
+  art.roll = {}
+  local function roll(still, name, r, spokes)
+    local im = img(name .. "_roll")
+    local w, h = still:getWidth(), still:getHeight()
+    local q = {}
+    for f = 0, 3 do q[f] = lg.newQuad(f * w, 0, w, h, im:getWidth(), im:getHeight()) end
+    art.roll[still] = { im = im, q = q, px = r * (2 * math.pi / spokes) / 4 }
+  end
+  for i = 1, 2 do roll(art.cyclists[i], "cyclist" .. i, 9.5, 8); roll(art.riders[i], "road_cyclist" .. i, 14.5, 12) end
   return art
+end
+-- draws a bike's art with its wheels turned for the distance it has ridden (dist grows whichever way it goes);
+-- flip: mirrored (riding left). Other art is drawn as it is.
+function Rd.drawBike(still, dist, x, y, flip)
+  local r = load().roll[still]
+  local sx, ox = flip and -1 or 1, flip and still:getWidth() or 0
+  if not r then lg.draw(still, x + ox, y, 0, sx, 1); return end
+  lg.draw(r.im, r.q[math.floor(dist / r.px) % 4], x + ox, y, 0, sx, 1)
 end
 Rd.art = load
 Rd.CAR_TOP, Rd.RIDER_TOP = 192, 190                                -- below Pepper's feet (y 184)
@@ -81,7 +100,8 @@ function Rd:draw(cam, t)
       lg.setScissor(a, 0, b - a, 240)                                 -- clip to its stretch of road
       local y = v.top or (v.base - v.im:getHeight())
       local x = math.floor(v.x - cam + 0.5)
-      if v.flip then lg.draw(v.im, x + v.w, y, 0, -1, 1) else lg.draw(v.im, x, y) end
+      if v.bob == 1 then Rd.drawBike(v.im, v.vx > 0 and v.x or -v.x, x, y, v.flip)   -- a cyclist: wheels roll
+      elseif v.flip then lg.draw(v.im, x + v.w, y, 0, -1, 1) else lg.draw(v.im, x, y) end
       lg.setScissor()
     end
   end
