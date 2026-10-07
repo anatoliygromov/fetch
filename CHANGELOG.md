@@ -2,6 +2,24 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `fix/console`: after the first RG35XX test (7 Oct)
+Built on `preview/art` (884b87e).
+- **Sound volume on the handheld:** the game has its own volume (0 = off to 10), saved in `settings.txt`.
+  - The volume buttons work in the game if the firmware passes them on as the keys `volumeup` / `volumedown` / `mute`;
+    a small SOUND bar shows for 1.6 s. They never count as "any button" on the title or the cards.
+  - The pause has a SOUND row: left / right (d-pad or stick) turn it down or up, A steps it up and wraps round to OFF.
+    This works whatever the firmware does with the volume buttons.
+  - Select only toggles the debug view with `--dev` or a test flag (it showed by accident on the handheld).
+  - Every key and button press is printed as `[input] ...` (and joysticks when they connect). PortMaster's launcher
+    keeps the output in `ports/fetch/log.txt`, so the next console test shows what the volume buttons really send.
+- **Rolling wheels:** the promenade bikes and the road's cyclists turn their wheels as they ride. `tools/make_wheels.py`
+  clears each wheel's inside (the old spoke pattern never moved) and redraws a hub and spokes (8 on the small bikes,
+  12 on the road's) in 4 steps, keeping legs, shoes and the frame's light tubes in front; output `*_roll.png` next to
+  the still art. `Rd.drawBike` picks the step from the distance ridden (wheel radius x spoke gap / 4 per step), so the
+  wheels turn at the bike's real speed, forwards in both directions. Riders' legs still do not pedal.
+- Checks: flow 73/73, physics 33/64/57, QA 0 problems on all three levels, autopilot clears all three,
+  PEPPER UNCHANGED (trace, lab and files).
+
 ## Branch `ml/ui`: talk panel, nudges, medals, shared play
 Built on `ml/fixes` (dad26c3), from the synthetic playtest: kids could not read the long hints and got stuck.
 - **Talk panel (talk.lua):** the text banner hints are now short dialogue lines. Pepper (bottom left) says the
