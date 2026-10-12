@@ -714,9 +714,11 @@ function Sc.townArt(style)
   if style == "park" then
     for _, n in ipairs({ "ground", "treeline", "bush", "log", "leaves", "leaves_flat", "table", "hedge", "stone", "boat", "cart", "slide", "frame", "hollowlog" }) do T[n] = img("park_" .. n) end
     for _, n in ipairs({ "tree1", "tree2", "gate", "swings", "oak", "willow", "willow_tall", "winch" }) do T[n] = fadeImg("park_" .. n) end
+    T.boat = img("park_boat_front")                               -- front-on (tools/make_front_view.py)
   else
     for _, n in ipairs({ "ground", "crate", "parasol", "table", "stall", "awning80", "awning64", "statue", "pedestal", "tram", "shelter", "kiosk", "shopsign", "rim", "bowl", "bollard", "tub", "house1", "house2", "house3", "tier" }) do T[n] = img("town_" .. n) end
     for _, n in ipairs({ "door", "sign", "spout" }) do T[n] = fadeImg("town_" .. n) end
+    T.crate, T.table = img("town_crate_front"), img("town_table_front")   -- front-on (tools/make_front_view.py)
     -- the two far layers sit further back than the back-edge decoration: faded more (as River Walk's far shore),
     -- so the street's obstacles and the climbable houses stand out against them
     T.facades = fadeImg("town_facades", 0.40)
@@ -732,12 +734,15 @@ end
 
 -- the sky and the drifting clouds (as River Walk and the greybox)
 local function skyAndClouds(L, camx, t)
+  if Look.on then Look.sky() else                                  -- (look.lua: the level's banded, dithered sky)
   for y = 0, 239 do
     local k = math.min(1, y / 170)
     lg.setColor(C.sky1[1] + (C.sky2[1] - C.sky1[1]) * k, C.sky1[2] + (C.sky2[2] - C.sky1[2]) * k, C.sky1[3] + (C.sky2[3] - C.sky1[3]) * k)
     lg.rectangle("fill", 0, y, 320, 1)
   end
+  end
   local o = camx * 0.05 - t * 3
+  Look.use("clouds")
   lg.setColor(1, 1, 1, 1)
   for _, c in ipairs(L.clouds) do
     local x = math.floor((c.x - o) % L.cloudSpan - 120)
@@ -788,11 +793,14 @@ end
 function Sc.drawFarArt(L, camx, t, w)
   local T, A = Sc.townArt(L.style), Sc.art()
   skyAndClouds(L, camx, t)
+  Look.use("city")
   lg.setColor(1, 1, 1, 1)                                         -- 3 far city: River Walk's skyline, moved at
   local sx = -math.floor(math.min(128, camx * 128 / math.max(1, w.width - 320)))   -- most 128 px (one City Hall)
   lg.draw(A.skyline, sx, 150 - A.skyline:getHeight()); lg.draw(A.skyline, sx + A.skyline:getWidth(), 150 - A.skyline:getHeight())
   if L.style == "park" then
+    Look.use("shore")
     strip(T.treeline, camx, 0.25, 177)                            -- 4 the far tree line
+    Look.use("mid")
     local ox = math.floor(camx * 0.5)                             -- 5 near trees (faded)
     for _, tr in ipairs(L.trees) do
       local im = T["tree" .. tr.i]
@@ -800,10 +808,13 @@ function Sc.drawFarArt(L, camx, t, w)
       if x < 330 and x + im:getWidth() > -10 then lg.draw(im, x, 180 - im:getHeight()) end
     end
   else
+    Look.use("shore")
     strip(T.roofs, camx, 0.25, 160)                               -- 4 far roofs and spires
+    Look.use("mid")
     strip(T.facades, camx, 0.5, 178)                              -- 5 old town facades (faded)
   end
   -- the pond / basin: its far bank, then the water (rows of the river art, each moving on its own)
+  Look.use("ground")
   local gw = T.ground:getWidth()
   for _, p in ipairs(pools(w)) do
     local x0, x1 = math.floor(p.x0 - camx), math.floor(p.x1 - camx)
@@ -822,6 +833,7 @@ function Sc.drawFarArt(L, camx, t, w)
         for x = x0 - (x0 % 18), x1, 18 do lg.rectangle("fill", x, 184, 1, p.y0 - 184) end
       end
       lg.setColor(0.18, 0.2, 0.22); lg.rectangle("fill", x0, p.y0 - 1, x1 - x0, 1)   -- the water's edge
+      Look.use("water")
       local tint = L.style == "park" and { 0.80, 0.93, 0.86 } or { 0.92, 1, 1 }
       local ww, wh = A.water:getDimensions()
       for y = p.y0, 239 do
@@ -832,8 +844,10 @@ function Sc.drawFarArt(L, camx, t, w)
         lg.draw(A.water, A.waterQ[row], -o, y); lg.draw(A.water, A.waterQ[row], ww - o, y)
       end
       lg.setScissor()
+      Look.use("ground")
     end
   end
+  Look.off()
   lg.setColor(1, 1, 1, 1)
 end
 

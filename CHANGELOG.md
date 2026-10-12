@@ -2,6 +2,28 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `lk/look`, part 2: City Park and Downtown (12 Oct)
+- **A colour script per level** (`Look.scripts` in look.lua), as Lion King gives every level its own light:
+  River Walk a summer morning (as before), **City Park a golden autumn afternoon** (blue-violet sky to an amber
+  horizon, the skyline dusty lilac, the far tree line and near trees hazed warm), **Downtown a bright midday**
+  (deep blue sky to a pale horizon, the roofs and facades hazed cool so the street stands out). The art levels' sky,
+  clouds, skyline, far and near layers, pond/basin, props and ground go through the same split-tone shader;
+  Pepper, Mia, the ball, the bones, the cat and the magpie do not.
+- **No foreground band in City Park and Downtown:** their bottom band (the earth, the quay wall) is already dark,
+  and dark shapes on it did not read. The foreground now finds the flat ground at Pepper's line itself (River Walk's
+  clumps are the same as before), and a script can also use chain fences.
+- **More front-on props** (`tools/make_front_view.py`, collision boxes and sizes unchanged, originals kept):
+  - `town_crate_front`: the slanted rim corners removed, the apples heaped behind the straight front edge.
+  - `town_table_front`: the round top seen from above becomes a 5-row slab at the same top row; the legs reach it.
+  - `park_boat_front`: the duck boat's floor and seats no longer show; the near side of the hull rises to the deck
+    line Pepper stands on, with the far side's inside as a pale band above it.
+- Not changed, for the user to decide: the picnic table (drawn three-quarter, needs a redraw), the hollow log (both
+  open ends show, which a side view cannot, but they tell you it can be crawled through). The stone posts, the
+  market stall and the log read fine front-on.
+- `--lookshots` works on every level (`--level citypark|downtown`).
+- Checks: flow 73/73, physics 33/64/57, QA 0 problems on all three levels, autopilot clears all three with no
+  foreground overlap, PEPPER UNCHANGED (trace, lab and files).
+
 ## Branch `lk/look`: the Lion King look (12 Oct)
 Built on `fix/console` (8e28369). River Walk only; City Park and Downtown are unchanged. L (keyboard) or L1 / R1
 (handheld) switches the look off and on to compare; `--classic` starts with it off. Code in `riverwalk/look.lua`.

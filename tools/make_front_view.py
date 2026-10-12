@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Front-on versions of two River Walk obstacles whose art was drawn from above (branch lk/look).
+"""Front-on versions of props whose art was drawn from above (branch lk/look).
 
 The scene is seen from the front, at about Pepper's height: the bench, the bin and the square planter show only
 their front, with a thin cap on top. Two SpriteCook props did not match:
@@ -12,8 +12,16 @@ their front, with a thin cap on top. Two SpriteCook props did not match:
                 almost edge-on), the side face is dropped, and plain plank columns are repeated so the box keeps its
                 88 px width (collision 86 wide). It is 32 rows high, so its top is the collision top (y 152).
                 The SAND lettering stays centred.
-Only pixels of the art itself are moved or repeated, plus the leaf bed and outline in the art's own colours.
-Writes art/scene/flowerbox_front.png and art/scene/gritbox_front.png; the originals are untouched.
+  town_crate (Downtown): the apples showed inside a slanted rim -> the rim corners go, the apples are heaped
+             behind the crate's straight front edge (rows 12+ kept). Same 32 x 28 size.
+  town_table (Downtown): the round top was a big blue ellipse seen from above -> a 5-row slab (its own colours)
+             at the same top row, so Pepper stands where she did; the legs reach up to it. Same 50 x 26 size.
+  park_boat (City Park): the duck boat's inside (floor, seats) showed from above -> the near side of the hull
+             rises to row 18, the deck line Pepper stands on (the boat is drawn 18 px above its deck), with the
+             inside of the far side showing above it as a pale band. So she stands in the boat, nothing covers her.
+             Same 54 x 33 size and silhouette.
+Only pixels of the art itself are moved or repeated, plus fills and outlines in the art's own colours.
+Writes art/scene/<name>_front.png; the originals are untouched.
 """
 import os
 from PIL import Image
@@ -104,6 +112,103 @@ def gritbox():
     return out
 
 
+def ring_outline(o, w, h, rows, OUT):
+    """a 1 px outline outside the coloured pixels in the given rows (not doubling an existing outline)"""
+    colour = lambda x, y: 0 <= x < w and 0 <= y < h and o[x, y][3] > 0 and o[x, y] != OUT
+    ring = [(x, y) for y in rows for x in range(w)
+            if o[x, y][3] == 0 and any(colour(x + dx, y + dy) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))]
+    for x, y in ring:
+        o[x, y] = OUT
+
+
+def crate():
+    im = load('town_crate.png')
+    w, h = im.size
+    px = im.load()
+    OUT = (3, 1, 0, 255)
+    apple = {(113, 44, 43, 255), (157, 46, 52, 255), (201, 69, 59, 255), (88, 84, 69, 255)}
+    dark = (45, 28, 31, 255)                                       # apple shading, but also the rim's corners
+    TOP = 12                                                       # the crate's straight front edge (kept)
+    out = Image.new('RGBA', (w, h), CLEAR)
+    o = out.load()
+    for y in range(TOP, h):
+        for x in range(w):
+            o[x, y] = px[x, y]
+
+    def near_apple(x, y):
+        return any(0 <= x + dx < w and 0 <= y + dy < TOP and px[x + dx, y + dy] in apple
+                   for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))
+    for y in range(TOP):
+        for x in range(w):
+            c = px[x, y]
+            if c in apple or (c == dark and 6 <= x <= 25) or (c == OUT and near_apple(x, y) and 4 <= x <= 27):
+                o[x, y] = c
+    reds = [(113, 44, 43, 255), (157, 46, 52, 255), (201, 69, 59, 255)]
+    for y in range(9, TOP):                                        # the heap's base fills the crate's width
+        inset = 2 + max(0, 10 - y) * 2
+        for x in range(inset, w - inset):
+            if o[x, y][3] == 0 or (o[x, y] == OUT and not near_apple(x, y)):
+                o[x, y] = reds[0] if y == TOP - 1 else reds[(x // 2 + y) % 2 + 1]
+    ring_outline(o, w, h, range(TOP), OUT)
+    out.save(os.path.join(ART, 'town_crate_front.png'))
+    return out
+
+
+def table():
+    im = load('town_table.png')
+    w, h = im.size
+    px = im.load()
+    OUT = (1, 1, 0, 255)
+    top = (64, 80, 112, 255)
+    light = (121, 145, 119, 255)                                   # (the art's lightest rim colour)
+    under = (45, 28, 31, 255)
+    out = Image.new('RGBA', (w, h), CLEAR)
+    o = out.load()
+    for y in range(8, h):
+        for x in range(w):
+            o[x, y] = px[x, y]
+    hi = tuple(min(255, int(c * 1.35)) for c in top[:3]) + (255,)   # a lit front edge, the top's own blue lighter
+    slab = [OUT, hi, top, top, under]                              # rows 0-4: the table top seen edge-on
+    for y, c in enumerate(slab):
+        x0 = 1 if y in (0, 4) else 0
+        for x in range(x0, w - x0):
+            o[x, y] = c
+        if y not in (0, 4):
+            o[0, y] = OUT; o[w - 1, y] = OUT
+    for x in range(w):                                             # the legs reach up to the slab (rows 5-7)
+        c = px[x, 8]
+        if c[3]:
+            for y in range(5, 8):
+                o[x, y] = c
+    out.save(os.path.join(ART, 'town_table_front.png'))
+    return out
+
+
+def boat():
+    im = load('park_boat.png')
+    w, h = im.size
+    px = im.load()
+    OUT = (2, 2, 1, 255)
+    white, shade, pale = (237, 234, 221, 255), (189, 184, 178, 255), (162, 150, 136, 255)
+    out = im.copy()
+    o = out.load()
+    X0, X1, DECK = 16, 45, 18
+    for x in range(X0, X1 + 1):
+        for y in range(14, 25):
+            if px[x, y][3] == 0:
+                continue
+            if y < DECK:                                           # the inside of the far side, above the deck line
+                o[x, y] = shade if y == 14 else pale
+            elif y == DECK:
+                o[x, y] = shade                                    # the near gunwale's top edge
+            elif y == DECK + 1:
+                o[x, y] = white                                    # the gunwale, lit
+            else:
+                o[x, y] = white if y < 24 else shade               # the hull's near side
+    out.save(os.path.join(ART, 'park_boat_front.png'))
+    return out
+
+
 if __name__ == '__main__':
-    f, g = flowerbox(), gritbox()
-    print('flowerbox_front', f.size, 'gritbox_front', g.size)
+    for fn in (flowerbox, gritbox, crate, table, boat):
+        print(fn.__name__, fn().size)

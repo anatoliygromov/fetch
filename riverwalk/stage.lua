@@ -397,7 +397,8 @@ function St:draw(debug)
   local C = Sc.C
   local style = self.def.art                                      -- "park" / "town": a greybox level with its art
   local grey = self.def.scenery == "greybox" and not style
-  local lk = Look.on and not style and not grey                   -- the Lion King look (look.lua): River Walk only
+  local lk = Look.on and (style or not grey)                       -- the Lion King look (look.lua): the art levels
+  Look.level(self.def)                                             -- (this level's colour script)
   local function use(n) if lk then Look.use(n) end end
   local function prop(pr, c, colour, kicked)
     if style then Sc.drawPropArt(pr, c, self.def, kicked) else Sc.drawProp(pr, c, colour) end
@@ -466,6 +467,7 @@ function St:draw(debug)
       lg.draw(bn.super and art.bone_gold or art.bone, math.floor(bn.x - cam + 0.5) - 5, bn.y - 12 + bob)
     end
   end
+  use("play")                                                      -- (the leaf piles are part of the park, the bones are not)
   for _, pr in ipairs(self.def.props) do                           -- props drawn over the bones (leaf piles)
     if pr.layer == "play" and pr.over then
       if style then prop(pr, cam, C.leaves, self.kicked[pr])

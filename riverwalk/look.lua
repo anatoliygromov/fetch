@@ -1,32 +1,68 @@
--- The Lion King look (branch lk/look, River Walk only; L / a shoulder button switches it off and on to compare).
+-- The Lion King look (branch lk/look; L / a shoulder button switches it off and on to compare).
 -- What the 1994 game does, done here in code. Pepper, Mia, the ball, the bones and the HUD are never touched.
---   1 a colour script: the level has one key light (summer morning, warm) and one haze colour per distance,
---     instead of one cool grey haze for everything
+--   1 a colour script per level, as Lion King gives every level its own light: River Walk a summer morning,
+--     City Park a golden autumn afternoon, Downtown a bright midday. Each has one key light and one haze colour
+--     per distance, instead of one cool grey haze for everything (Look.scripts)
 --   2 split toning per layer (a shader): light colours lean warm, dark ones lean blue-violet, colours a bit
 --     richer; the further back a layer is, the more it turns into its haze colour. Each colour in maps to one
 --     colour out, so an asset keeps its number of colours. The art files are untouched.
 --   3 a painted sky in bands, joined by 2 x 2 ordered dither rows (the 16-bit way to do a gradient)
---   4 the road recedes: each road row scrolls a little faster the nearer it is (row scrolling, like the river),
---     and the near-lane traffic slides with its row
---   5 a dark foreground band at the bottom (shrubs, grass, bollards) that scrolls 1.4x, only in front of the road.
---     Its tops are at y 218 or lower (under Pepper's lowest walking line, the lower quay at y 216), or y 206 deep
---     inside a stretch of road, where she walks at y 184. It never covers her.
+--   4 River Walk's road recedes: each road row scrolls a little faster the nearer it is (row scrolling, like the
+--     river), and the near-lane traffic slides with its row
+--   5 a dark foreground band at the bottom that scrolls 1.4x, only in front of the flat ground Pepper walks at
+--     y 184 (River Walk: grass verges, shrubs, bollards; a script can also have chain fences). City Park and
+--     Downtown have none: their bottom band (earth, quay wall) is already dark, and shapes there did not read.
+--     Its tops are at y 218 or lower (under her lowest walking line, the lower quay at y 216), or y 206 deep
+--     inside a stretch of flat ground. It never covers her.
 local Look = { on = true, CHECK = os.getenv("LOOK_CHECK") ~= nil }
 local lg = love.graphics
 local function hex(h) return { tonumber(h:sub(1, 2), 16) / 255, tonumber(h:sub(3, 4), 16) / 255, tonumber(h:sub(5, 6), 16) / 255 } end
 
 -- per layer: warm = how far light colours lean to warm, cool = how far dark ones lean to blue-violet,
--- sat = colour richness (1 = as drawn), haze / k = the layer's distance colour and how much of it
-Look.layers = {
-  clouds = { warm = 0.9, cool = 1.6, sat = 1.0, haze = hex("f7ead2"), k = 0.10 },
-  city   = { warm = 0.2, cool = 1.8, sat = 0.70, haze = hex("aaa6d0"), k = 0.46 },
-  shore  = { warm = 0.5, cool = 1.5, sat = 1.05, haze = hex("9fb3cc"), k = 0.30 },
-  water  = { warm = 0.5, cool = 1.2, sat = 1.35, haze = hex("8fb4d8"), k = 0.06 },
-  back   = { warm = 1.0, cool = 1.2, sat = 1.35, haze = hex("f0e0c6"), k = 0.10 },
-  ground = { warm = 0.75, cool = 1.3, sat = 1.20, haze = hex("000000"), k = 0 },
-  play   = { warm = 0.7, cool = 0.8, sat = 1.18, haze = hex("000000"), k = 0 },
-  front  = { warm = 0.0, cool = 1.8, sat = 1.10, haze = hex("1b1934"), k = 0.40 },
+-- sat = colour richness (1 = as drawn), haze / k = the layer's distance colour and how much of it.
+-- Layers back to front: clouds, city (the far skyline), shore (River Walk's far shore; the far tree line or roofs),
+-- mid (City Park's near trees, Downtown's facades), water, back (decoration behind Pepper's line), ground,
+-- play (obstacles, the things Pepper uses), front (foreground props). bands = the sky, fg = the foreground's
+-- colours (dark, mid, rim, warm rim, how often the rim is warm), kinds = what the foreground clumps are.
+local function L(warm, cool, sat, haze, k) return { warm = warm, cool = cool, sat = sat, haze = hex(haze), k = k } end
+Look.scripts = {
+  riverwalk = {                                                    -- summer morning
+    layers = { clouds = L(0.9, 1.6, 1.0, "f7ead2", 0.10), city = L(0.2, 1.8, 0.70, "aaa6d0", 0.46),
+               shore = L(0.5, 1.5, 1.05, "9fb3cc", 0.30), mid = L(0.8, 1.3, 1.2, "c9d0d8", 0.15),
+               water = L(0.5, 1.2, 1.35, "8fb4d8", 0.06), back = L(1.0, 1.2, 1.35, "f0e0c6", 0.10),
+               ground = L(0.75, 1.3, 1.20, "000000", 0), play = L(0.7, 0.8, 1.18, "000000", 0),
+               front = L(0.0, 1.8, 1.10, "1b1934", 0.40) },
+    bands = { { 0, "4b7ec2" }, { 16, "5a8aca" }, { 32, "6b98d1" }, { 48, "80a8d7" }, { 62, "98b8db" },
+              { 76, "b2c6da" }, { 89, "cbd1d4" }, { 101, "dfd7c9" }, { 112, "ecdabd" }, { 122, "f4dcb3" } },
+    fg = { dark = hex("161c2c"), mid = hex("1f2b42"), rim = hex("4c5d7c"), warm = hex("9a8174"), warmK = 0.05 },
+    kinds = { verge = 0.78, bollards = 0.22 },
+  },
+  citypark = {                                                     -- golden autumn afternoon
+    layers = { clouds = L(1.2, 1.7, 1.0, "f9e0c0", 0.14), city = L(0.2, 1.9, 0.60, "b8a0c2", 0.52),
+               shore = L(0.6, 1.5, 1.05, "c8a6ae", 0.30), mid = L(1.0, 1.3, 1.25, "ecccae", 0.14),
+               water = L(0.6, 1.3, 1.30, "86a2bc", 0.06), back = L(1.1, 1.3, 1.30, "f0d2b0", 0.10),
+               ground = L(0.8, 1.0, 1.10, "000000", 0), play = L(0.8, 0.9, 1.18, "000000", 0),
+               front = L(0.0, 1.8, 1.10, "1e1626", 0.40) },
+    bands = { { 0, "6a83b8" }, { 18, "7b91bf" }, { 36, "8f9fc3" }, { 54, "a6adc3" }, { 72, "bebac0" },
+              { 89, "d4c3b7" }, { 104, "e5c9a9" }, { 118, "efcb9b" }, { 131, "f4cc8e" }, { 143, "f7cd86" } },
+    fg = { dark = hex("1d1525"), mid = hex("2b1f33"), rim = hex("594257"), warm = hex("b5793f"), warmK = 0.22 },
+    kinds = {},                                                    -- (the earth band is already the dark frame)
+  },
+  downtown = {                                                     -- bright midday
+    layers = { clouds = L(0.5, 1.4, 1.0, "ffffff", 0.04), city = L(0.2, 1.7, 0.70, "a7bad6", 0.50),
+               shore = L(0.4, 1.4, 1.00, "b2c3d9", 0.34), mid = L(0.7, 1.3, 1.15, "d6dee8", 0.18),
+               water = L(0.4, 1.2, 1.35, "7fb0d8", 0.05), back = L(0.8, 1.2, 1.25, "efe6da", 0.08),
+               ground = L(0.9, 0.7, 1.10, "000000", 0), play = L(0.7, 0.8, 1.15, "000000", 0),
+               front = L(0.0, 1.8, 1.10, "141a26", 0.40) },
+    bands = { { 0, "3e72c3" }, { 16, "4d7fc9" }, { 32, "5f8ecf" }, { 48, "75a0d5" }, { 64, "8db2da" },
+              { 80, "a7c3de" }, { 96, "c0d3e0" }, { 112, "d5e0e2" }, { 126, "e3e9e3" }, { 140, "ebefe5" } },
+    fg = { dark = hex("141a26"), mid = hex("1e2838"), rim = hex("4a5a72"), warm = hex("8e8070"), warmK = 0.04 },
+    kinds = {},                                                    -- (the quay wall is already the dark frame)
+  },
 }
+Look.key = "riverwalk"
+function Look.level(def) Look.key = ({ park = "citypark", town = "downtown" })[def.art] or "riverwalk" end
+local function S() return Look.scripts[Look.key] end
 
 local SRC = [[
 extern vec3 haze; extern float k; extern float warm; extern float cool; extern float sat;
@@ -44,21 +80,20 @@ local shader
 function Look.use(name)
   if not Look.on then return end
   shader = shader or lg.newShader(SRC)
-  local p = Look.layers[name]
+  local p = S().layers[name] or S().layers.play
   shader:send("haze", p.haze); shader:send("k", p.k); shader:send("warm", p.warm); shader:send("cool", p.cool); shader:send("sat", p.sat)
   lg.setShader(shader)
 end
 function Look.off() lg.setShader() end
 function Look.toggle() Look.on = not Look.on; print("[look] " .. (Look.on and "lion king" or "as before")); io.stdout:flush() end
 
--- 3 the sky: bands from deep summer blue at the top to warm cream at the horizon (behind the skyline, y 138).
--- Between two bands, 3 rows of 2 x 2 ordered dither (25 %, 50 %, 75 %). Painted once, screen-fixed.
-local BANDS = { { 0, "4b7ec2" }, { 16, "5a8aca" }, { 32, "6b98d1" }, { 48, "80a8d7" }, { 62, "98b8db" },
-                { 76, "b2c6da" }, { 89, "cbd1d4" }, { 101, "dfd7c9" }, { 112, "ecdabd" }, { 122, "f4dcb3" } }
+-- 3 the sky: bands from the script's top colour to its horizon colour. Between two bands, 3 rows of 2 x 2 ordered
+-- dither (25 %, 50 %, 75 %). Painted once per level, screen-fixed.
 local BAYER = { [0] = { [0] = 0, 2 }, { [0] = 3, 1 } }               -- 2 x 2 order: 0 .. 3
-local skyImg
+local skies = {}
 local function sky()
-  if skyImg then return skyImg end
+  if skies[Look.key] then return skies[Look.key] end
+  local BANDS = S().bands
   local d = love.image.newImageData(320, 240)
   local cols = {}
   for i, b in ipairs(BANDS) do cols[i] = hex(b[2]) end
@@ -73,8 +108,9 @@ local function sky()
       d:setPixel(x, y, c[1], c[2], c[3], 1)
     end
   end
-  skyImg = lg.newImage(d); skyImg:setFilter("nearest", "nearest")
-  return skyImg
+  local im = lg.newImage(d); im:setFilter("nearest", "nearest")
+  skies[Look.key] = im
+  return im
 end
 function Look.sky() lg.setColor(1, 1, 1, 1); lg.draw(sky(), 0, 0) end
 
@@ -119,14 +155,14 @@ function Look.road(stage, cam, Sc)
 end
 
 -- 5 the foreground band: dark shapes near the camera, back-lit (a 1 px lighter rim on their tops): grass verges
--- with shrubs, and pairs of bollards. Each clump belongs to a spot on the road (never in front of the river or the
--- quay) and is exactly there when it is mid-screen; it moves 1.4x, like the foreground props. Built once from a
--- fixed seed, with open road between the clumps.
+-- with shrubs, pairs of bollards, chain fences (the script's kinds). Each clump belongs to a spot on flat ground at
+-- Pepper's line (never in front of the river, a pond or the quay) and is exactly there when it is mid-screen; it
+-- moves 1.4x, like the foreground props. Built once per level from a fixed seed, with open ground between clumps.
 Look.FRONT_SPEED, Look.FRONT_TOP, Look.FRONT_TALL = 1.4, 218, 206
-local FG = { dark = hex("161c2c"), mid = hex("1f2b42"), rim = hex("4c5d7c"), warm = hex("9a8174") }
 local function rng(seed) local s = seed return function(a, b) s = (s * 1103515245 + 12345) % 2147483648; return a + (s % 100000) / 100000 * (b - a) end end
 
 local function clump(r, kind, w, h)
+  local FG = S().fg
   local d = love.image.newImageData(w, h)
   local function put(x, y, c) if x >= 0 and x < w and y >= 0 and y < h then d:setPixel(x, y, c[1], c[2], c[3], 1) end end
   local function solid(x, y) if x < 0 or x >= w or y < 0 or y >= h then return false end local _, _, _, a = d:getPixel(x, y); return a > 0 end
@@ -156,6 +192,20 @@ local function clump(r, kind, w, h)
     put(x + 1, h - 13, FG.mid); put(x + 1, h - 12, FG.mid)
   end
   if kind == "bollards" then bollard(1); bollard(w - 6)
+  elseif kind == "chain" then                                      -- low posts with a chain sagging between them
+    local n = math.max(2, math.floor((w - 4) / 18))
+    local gap = (w - 4) / n
+    for i = 0, n do
+      local x = math.floor(2 + i * gap + 0.5)
+      for y = h - 13, h - 1 do put(x - 1, y, FG.dark); put(x, y, FG.dark); put(x + 1, y, FG.dark) end
+      put(x - 1, h - 14, FG.dark); put(x, h - 14, FG.dark); put(x + 1, h - 14, FG.dark); put(x, h - 15, FG.dark)
+      if i < n then
+        for dx = 2, math.floor(gap) - 2 do
+          local u = dx / gap
+          put(x + dx, math.floor(h - 11 + 4 * 4 * u * (1 - u) + 0.5), FG.dark)
+        end
+      end
+    end
   else                                                             -- a verge: a low bank of grass, shrubs on it
     for x = 0, w - 1 do
       local e = math.min(x, w - 1 - x)                              -- the bank's ends slope down
@@ -169,28 +219,49 @@ local function clump(r, kind, w, h)
   end
   for x = 0, w - 1 do                                              -- back light: the top pixel of each column
     for y = 0, h - 1 do
-      if solid(x, y) then put(x, y, (r(0, 1) < 0.05) and FG.warm or FG.rim); break end
+      if solid(x, y) then put(x, y, (r(0, 1) < FG.warmK) and FG.warm or FG.rim); break end
     end
   end
   local im = lg.newImage(d); im:setFilter("nearest", "nearest")
   return im
 end
 
+-- the stretches of flat ground at Pepper's line (terrain top y 184), found as the road's traffic finds them
+local function flatSpans(world)
+  local spans, s = {}, nil
+  for x = 0, world.width - 1, 4 do
+    local flat = false
+    for _, b in ipairs(world.rects) do if b.terrain and b.y0 == 184 and x >= b.x0 and x < b.x1 then flat = true; break end end
+    if flat and not s then s = x elseif not flat and s then spans[#spans + 1] = { s, x }; s = nil end
+  end
+  if s then spans[#spans + 1] = { s, world.width } end
+  return spans
+end
+local function pick(r, kinds)
+  local u, acc, last = r(0, 1), 0, nil
+  for _, k in ipairs({ "bollards", "chain", "verge" }) do
+    if kinds[k] then acc = acc + kinds[k]; last = k; if u < acc then return k end end
+  end
+  return last
+end
 local function buildFront(stage)
   local r, list = rng(1994), {}
-  for _, sp in ipairs(stage.road and stage.road.spans or {}) do
+  local kinds = S().kinds
+  if next(kinds) == nil then return list end                       -- this level has no foreground band
+  for _, sp in ipairs(flatSpans(stage.world)) do
     local x = sp[1] + math.floor(r(20, 120))
     while true do
-      local bol = r(0, 1) < 0.22
-      local w = bol and math.floor(r(30, 38)) or math.floor(r(60, 170))
+      local kind = pick(r, kinds)
+      local w = (kind == "bollards") and math.floor(r(30, 38)) or (kind == "chain" and math.floor(r(60, 110)) or math.floor(r(60, 170)))
       if x + w > sp[2] - 10 then break end
-      -- deep inside a stretch of road Pepper only walks at y 184, so a clump may stand taller there (top y 206):
-      -- wherever the 1.4x layer puts it on screen (at most 0.4 x (160 + w / 2) px from its spot) the road is under it
+      -- deep inside a stretch of flat ground Pepper only walks at y 184, so a clump may stand taller there (top
+      -- y 206): wherever the 1.4x layer puts it on screen (at most 0.4 x (160 + w / 2) px from its spot) the
+      -- flat ground is under it
       local m = 0.4 * (160 + w / 2) + 6
-      local tall = not bol and x - m > sp[1] and x + w + m < sp[2] and r(0, 1) < 0.6
+      local tall = kind == "verge" and x - m > sp[1] and x + w + m < sp[2] and r(0, 1) < 0.6
       local h = tall and (240 - Look.FRONT_TALL) or (240 - Look.FRONT_TOP)
-      list[#list + 1] = { x = x, w = w, h = h, img = clump(r, bol and "bollards" or "verge", w, h) }
-      x = x + w + math.floor(r(110, 260))                          -- open road between them
+      list[#list + 1] = { x = x, w = w, h = h, img = clump(r, kind, w, h) }
+      x = x + w + math.floor(r(110, 260))                          -- open ground between them
     end
   end
   return list
