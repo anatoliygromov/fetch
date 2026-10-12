@@ -91,7 +91,9 @@ function Rd:update(dt, cam)
   end
 end
 
-function Rd:draw(cam, t)
+-- rowFactor (look.lua, optional): the road rows scroll faster the nearer they are, so a vehicle slides with the
+-- row it drives on. Only the camera movement since it appeared counts, so it still comes in from the screen's edge.
+function Rd:draw(cam, t, rowFactor)
   if #self.list == 0 then return end
   lg.setColor(1, 1, 1, 1)
   for _, v in ipairs(self.list) do
@@ -99,7 +101,12 @@ function Rd:draw(cam, t)
     if b > a then
       lg.setScissor(a, 0, b - a, 240)                                 -- clip to its stretch of road
       local y = v.top or (v.base - v.im:getHeight())
-      local x = math.floor(v.x - cam + 0.5)
+      local x = v.x - cam
+      if rowFactor then
+        v.cam0 = v.cam0 or cam
+        x = x - (rowFactor(y + v.im:getHeight() * 0.6) - 1) * (cam - v.cam0)
+      end
+      x = math.floor(x + 0.5)
       if v.bob == 1 then Rd.drawBike(v.im, v.vx > 0 and v.x or -v.x, x, y, v.flip)   -- a cyclist: wheels roll
       elseif v.flip then lg.draw(v.im, x + v.w, y, 0, -1, 1) else lg.draw(v.im, x, y) end
       lg.setScissor()

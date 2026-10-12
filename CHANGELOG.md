@@ -2,6 +2,32 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `lk/look`: the Lion King look (12 Oct)
+Built on `fix/console` (8e28369). River Walk only; City Park and Downtown are unchanged. L (keyboard) or L1 / R1
+(handheld) switches the look off and on to compare; `--classic` starts with it off. Code in `riverwalk/look.lua`.
+- **Colour script:** one key light for the level (summer morning) and a haze colour per distance, instead of one cool
+  grey haze for everything.
+- **Split toning per layer (a shader, art files untouched):** light colours lean warm, dark ones lean blue-violet,
+  colours a little richer. The further back a layer is, the more it turns into its haze: the skyline lavender against
+  a warm horizon, the far shore blue-green, the water deeper. Each colour in maps to one colour out. Pepper, Mia, the
+  ball, the bones, the warning signs and the HUD are drawn without it.
+- **Sky:** 10 painted bands from deep blue to warm cream at the horizon, joined by 3 rows of 2 x 2 ordered dither.
+- **The road recedes:** the road rows scroll 1x at the kerb to 1.3x at the bottom of the screen, in 5 bands chosen so
+  the lane markings, manhole covers and drains never shear. Near-lane cars and cyclists slide with their row (only the
+  camera movement since they appeared counts, so they still drive in from the edge). The pavement Pepper walks on
+  stays at 1x.
+- **Foreground band:** dark, back-lit grass verges with shrubs and pairs of bollards, 1.4x, only in front of the road.
+  Tops at y 218 (y 206 deep inside a stretch of road, where Pepper only walks at y 184). Never over Pepper: checked on
+  every frame of the autopilot run with `LOOK_CHECK=1` (0 overlaps).
+- **Front-on boxes (user note: the flower box and the grit box were drawn from above, unlike the bench, bin and square
+  planter):** `tools/make_front_view.py` makes `flowerbox_front.png` (the slanted rim and the soil removed, the flowers
+  on a bed of leaves behind the rim's straight front edge) and `gritbox_front.png` (front face only, the lid a thin
+  band, the side face dropped, plain plank columns repeated to keep the 88 px width; 32 rows, so its top is the
+  collision top). Collision boxes unchanged. The originals are kept.
+- `--lookshots`: before / after shots of the 10 screens without HUD (tests_look.lua).
+- Checks: flow 73/73, physics 33/64/57, QA 0 problems on all three levels, autopilot clears all three,
+  PEPPER UNCHANGED (trace, lab and files); Pepper's pixels identical with the look on and off.
+
 ## Branch `fix/console`: after the first RG35XX test (7 Oct)
 Built on `preview/art` (884b87e).
 - **Sound volume on the handheld:** the game has its own volume (0 = off to 10), saved in `settings.txt`.

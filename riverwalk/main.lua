@@ -30,6 +30,7 @@ local Ex = require("extras")
 local Flow = require("flow")
 local Talk = require("talk")
 local Se = require("settings")
+local Look = require("look")
 local devMode = false                                           -- --dev or a test flag: Select shows the debug view
 local levelName, def                                            -- the level being played
 local function argLevel(args)
@@ -71,7 +72,7 @@ end
 function love.load(args)
   local lv, test = argLevel(args), nil
   for _, a in ipairs(args or {}) do
-    if a == "--test" or a == "--auto" or a == "--physics" or a == "--qa" or a == "--flowtest" then test = a end
+    if a == "--test" or a == "--auto" or a == "--physics" or a == "--qa" or a == "--flowtest" or a == "--lookshots" then test = a end
   end
   Se.save = not test
   for _, a in ipairs(args or {}) do if a == "--dev" then devMode = true end end
@@ -95,7 +96,9 @@ function love.load(args)
     over = function() return over end, pause = function() return pz end }
   for _, a in ipairs(args or {}) do
     if a == "--test" or a == "--auto" or a == "--physics" then require(levelName == "riverwalk" and "tests" or ("tests_" .. levelName))(a, api) end
-    if a == "--noextras" then Ex.enabled = false end                                    -- start with the extras off
+    if a == "--noextras" then Ex.enabled = false end
+    if a == "--classic" then Look.on = false end                                        -- start with the look as before
+    if a == "--lookshots" then require("tests_look")(api) end                                    -- start with the extras off
     if a == "--qa" then require("qa")({ stage = function() return stage end }) end
     if a == "--flowtest" then require("tests_flow")(api) end
     if a == "--pepperlab" then require("pepperlab")() end                              -- Pepper alone in a test room
@@ -197,6 +200,7 @@ function love.keypressed(k, sc)
   if k == "g" then debugView = not debugView; return end
   if k == "tab" then tuning = not tuning; return end
   if k == "e" then Ex.toggle(); return end
+  if k == "l" then Look.toggle(); return end                     -- the Lion King look off / on (look.lua)
   if state == "title" and k == "escape" then love.event.quit(); return end
   if leaveTitle() then return end
   if state == "menu" or state == "select" then menuAction(Flow.action(k)); return end
@@ -219,6 +223,7 @@ end
 function love.gamepadpressed(j, b)
   logInput("pad", b)
   I.pad = j
+  if b == "leftshoulder" or b == "rightshoulder" then Look.toggle(); return end   -- the look off / on (L1 / R1)
   if leaveTitle() then return end
   if b == "back" then if devMode then debugView = not debugView end; return end
   if state == "menu" or state == "select" then menuAction(Flow.action(nil, b)); return end

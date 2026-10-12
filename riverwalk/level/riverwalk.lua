@@ -52,13 +52,13 @@ L.props = {
   { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 0,    x1 = 34,   y0 = 148, y1 = 165, hidden = true },
   -- promenade A
   { name = "",         kind = "decor",  layer = "back", x0 = 520,  x1 = 621,  y0 = 74,  y1 = 174, art = "tree_far" },
-  { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 401,  x1 = 503,  y0 = 152, y1 = 184, art = "flowerbox", ax = 400, ay = 184 },
+  { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 401,  x1 = 503,  y0 = 152, y1 = 184, art = "flowerbox_front", ax = 400, ay = 184 },
   { name = "BIN",      kind = "solid",  layer = "play", x0 = 641,  x1 = 676,  y0 = 128, y1 = 184, art = "bin", ax = 640, ay = 184 },
   -- bike zone 1: three perches with clear pavement between them
   { name = "",         kind = "decor",  layer = "back", x0 = 1056, x1 = 1164, y0 = 39,  y1 = 174, art = "tree_near" },
-  { name = "SAND",     kind = "solid",  layer = "play", x0 = 831,  x1 = 917,  y0 = 152, y1 = 184, art = "gritbox", ax = 830, ay = 184 },
+  { name = "SAND",     kind = "solid",  layer = "play", x0 = 831,  x1 = 917,  y0 = 152, y1 = 184, art = "gritbox_front", ax = 830, ay = 184 },
   { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 990,  x1 = 1034, y0 = 154, y1 = 184, art = "planter_sq" },
-  { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 1113, x1 = 1215, y0 = 152, y1 = 184, art = "flowerbox", ax = 1112, ay = 184 },
+  { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 1113, x1 = 1215, y0 = 152, y1 = 184, art = "flowerbox_front", ax = 1112, ay = 184 },
   -- the high route over bike zone 1: two kiosks at the back of the pavement; their awnings (one-way, top y 112,
   -- drawn in code) reach out over Pepper's line, high above the bikes
   { name = "AWNING",   kind = "oneway", layer = "play", x0 = 736,  x1 = 824,  y0 = 112, y1 = 116, hidden = true },
@@ -76,8 +76,8 @@ L.props = {
   { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 2290, x1 = 2334, y0 = 154, y1 = 184, art = "planter_sq" },
   -- bike zone 2
   { name = "POT",      kind = "decor",  layer = "play", x0 = 2548, x1 = 2565, y0 = 147, y1 = 174, art = "pot" },
-  { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 2441, x1 = 2543, y0 = 152, y1 = 184, art = "flowerbox", ax = 2440, ay = 184 },
-  { name = "SAND",     kind = "solid",  layer = "play", x0 = 2600, x1 = 2686, y0 = 152, y1 = 184, art = "gritbox", ax = 2599, ay = 184 },
+  { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 2441, x1 = 2543, y0 = 152, y1 = 184, art = "flowerbox_front", ax = 2440, ay = 184 },
+  { name = "SAND",     kind = "solid",  layer = "play", x0 = 2600, x1 = 2686, y0 = 152, y1 = 184, art = "gritbox_front", ax = 2599, ay = 184 },
   -- a planter right before the bin: a step (30 px: a tap hop and a scramble), then 26 px more up to the bin top
   { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 2732, x1 = 2776, y0 = 154, y1 = 184, art = "planter_sq" },
   { name = "BIN",      kind = "solid",  layer = "play", x0 = 2776, x1 = 2811, y0 = 128, y1 = 184, art = "bin", ax = 2775, ay = 184 },

@@ -2,6 +2,7 @@
 -- skyline, pavement, building, tree (trial). Everything else is still wireframe: plain boxes in a misty grey-blue per layer, lighter the
 -- further back. Layers 2 to 5 scroll slower (parallax).
 local F = require("bigfont")
+local Look = require("look")
 local Sc = {}
 local lg = love.graphics
 local function hex(h) return { tonumber(h:sub(1, 2), 16) / 255, tonumber(h:sub(3, 4), 16) / 255, tonumber(h:sub(5, 6), 16) / 255 } end
@@ -121,7 +122,7 @@ function Sc.art()
   A.outlined = {}
   -- round 2 obstacles and buildings (tools/make_props.py): mid-tone SpriteCook art that already has its own 1 px
   -- dark outline, so none is added here
-  for _, n in ipairs({ "bench", "bin", "flowerbox", "gritbox", "planter_sq", "ferry" }) do
+  for _, n in ipairs({ "bench", "bin", "flowerbox", "gritbox", "flowerbox_front", "gritbox_front", "planter_sq", "ferry" }) do
     A[n] = newImg("art/scene/" .. n .. ".png")
   end
   -- night branch (tools/make_night_art.py): the bridge abutment and the pontoon (things Pepper uses: crisp, with
@@ -446,12 +447,15 @@ end
 
 -- layers 1 to 5 (everything behind the quay)
 function Sc.drawFar(L, camx, t)
-  for y = 0, 239 do                                                -- 1 sky
+  if Look.on then Look.sky() else                                  -- 1 sky (look.lua: the banded, dithered sky)
+  for y = 0, 239 do
     local k = math.min(1, y / 170)
     lg.setColor(C.sky1[1] + (C.sky2[1] - C.sky1[1]) * k, C.sky1[2] + (C.sky2[2] - C.sky1[2]) * k, C.sky1[3] + (C.sky2[3] - C.sky1[3]) * k)
     lg.rectangle("fill", 0, y, 320, 1)
   end
+  end
   local o = camx * 0.05 - t * 3                                    -- 2 clouds drift
+  Look.use("clouds")
   lg.setColor(1, 1, 1, 1)
   for _, c in ipairs(L.clouds) do
     local x = math.floor((c.x - o) % L.cloudSpan - 120)
@@ -460,13 +464,17 @@ function Sc.drawFar(L, camx, t)
   -- 3 far city: the skyline, bottom at y 138 (its misty base is behind the far shore trees). Over the whole
   -- level (3200 px, the camera moves 2880 px) it moves at most 128 px (factor 128 / 2880): the strip is followed
   -- by its own first 128 columns, which never bring a second City Hall tower on screen.
+  Look.use("city")
   lg.setColor(1, 1, 1, 1)
   local sw = A.skyline:getWidth()
   local sx = -math.floor(math.min(128, camx * 128 / 2880))
   lg.draw(A.skyline, sx, 138 - A.skyline:getHeight()); lg.draw(A.skyline, sx + sw, 138 - A.skyline:getHeight())
   lg.setColor(1, 1, 1, 1)
+  Look.use("shore")
   lg.draw(A.shore, -math.floor(camx * 0.3), 113)                   -- 4 far shore and bridge: bottom row = waterline
+  Look.use("water")
   Sc.drawWater(camx, t)                                            -- 5 river
+  Look.off()
 end
 
 -- a prop of the level; usable ones (solid / one-way) are outlined, decorations are flat
@@ -549,18 +557,22 @@ function Sc.paintGround(w, props)
     end
   end
   -- manhole covers and kerb drains on the promenade road, at fixed pseudo-random spots where the road is flat
+  Sc.decals = {}
   local function flatRun(x0, x1) for x = x0, x1 do if not flat[x] then return false end end return true end
   lg.setColor(1, 1, 1, 1)
   local x, k = 150, 0
   while x < w.width - 30 do
     k = k + 1
-    if flatRun(x - 2, x + 22) then lg.draw(art.manhole, x, 199 + ((k % 2 == 0) and 4 or 27)) end
+    if flatRun(x - 2, x + 22) then
+      local y = 199 + ((k % 2 == 0) and 4 or 27)
+      lg.draw(art.manhole, x, y); Sc.decals[#Sc.decals + 1] = { im = art.manhole, x = x, y = y }   -- (look.lua redraws them)
+    end
     x = x + 260 + (k * 97) % 160
   end
   x, k = 60, 0
   while x < w.width - 20 do
     k = k + 1
-    if flatRun(x - 2, x + 14) then lg.draw(art.drain, x, 200) end
+    if flatRun(x - 2, x + 14) then lg.draw(art.drain, x, 200); Sc.decals[#Sc.decals + 1] = { im = art.drain, x = x, y = 200 } end
     x = x + 180 + (k * 53) % 90
   end
   local function covered(x)                                         -- under art that replaces the greybox (the pier)

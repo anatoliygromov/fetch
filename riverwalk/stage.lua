@@ -3,6 +3,7 @@ local Wd = require("world")
 local Pp = require("pepper")
 local Sc = require("scene")
 local Rd = require("road")
+local Look = require("look")
 local S = require("sfx")
 local I = require("input")
 local Ex = require("extras")                  -- visual extras around Pepper (drawing only, E toggles them)
@@ -396,12 +397,15 @@ function St:draw(debug)
   local C = Sc.C
   local style = self.def.art                                      -- "park" / "town": a greybox level with its art
   local grey = self.def.scenery == "greybox" and not style
+  local lk = Look.on and not style and not grey                   -- the Lion King look (look.lua): River Walk only
+  local function use(n) if lk then Look.use(n) end end
   local function prop(pr, c, colour, kicked)
     if style then Sc.drawPropArt(pr, c, self.def, kicked) else Sc.drawProp(pr, c, colour) end
   end
   if style then Sc.drawFarArt(self.layers, cam, self.t, self.world)
   elseif grey then Sc.drawFarGrey(self.layers, cam, self.t) else Sc.drawFar(self.layers, cam, self.t) end
   -- 6 quay back: railing and things behind Pepper
+  use("back")
   for _, pr in ipairs(self.def.props) do if pr.layer == "back" then prop(pr, cam, C.back) end end
   if style then Sc.drawSpout(self.def, cam) end
   Sp.drawBack(self, cam)                                           -- code-drawn decoration (kiosks)
@@ -411,9 +415,11 @@ function St:draw(debug)
     if style then self.ground = Sc.paintGroundArt(w, style)
     else self.ground = grey and Sc.paintGroundGrey(w) or Sc.paintGround(w, self.def.props) end
   end
+  use("ground")
   for _, ps in ipairs(self.def.passages or {}) do Sc.passageBack(ps, cam) end
   lg.setColor(1, 1, 1, 1)
   lg.draw(self.ground, -cam, 0)
+  if lk then Look.road(self, cam, Sc) end                          -- the road rows recede (row scrolling)
   for _, ps in ipairs(self.def.passages or {}) do Sc.passageFront(ps, cam) end
   if style then Sc.drawTerrainArt(self.def, cam, self.t) end         -- the slide, the fountain's jets
   -- the river Pepper can fall into is not drawn: it is a gap in the quay, and the river art shows through
@@ -429,6 +435,7 @@ function St:draw(debug)
     for _, l in ipairs(self.lamps) do if l.x - cam > -20 and l.x - cam < 340 then Sc.lampGrey(l.x - cam, l.y, l.lit, self.t - (l.litAt or -9), self.t) end end
   else
   for _, l in ipairs(self.lamps) do if l.x - cam > -20 and l.x - cam < 340 then Sc.shadow(l.x - cam, l.y - Sc.EDGE - 1, 14) end end
+  use("back")
   lg.setColor(1, 1, 1, 1)
   for _, l in ipairs(self.lamps) do                                -- lamp posts; a passed checkpoint lights up
     local x = l.x - cam
@@ -440,7 +447,8 @@ function St:draw(debug)
     end
   end
   end
-  for _, pr in ipairs(self.def.props) do if pr.layer == "play" and not pr.over then prop(pr, cam, C.prop) end end
+  for _, pr in ipairs(self.def.props) do if pr.layer == "play" and not pr.over then use(pr.kind == "decor" and "back" or "play"); prop(pr, cam, C.prop) end end
+  use("play")
   Sp.drawRopes(self, cam)                                          -- the ropes the ferries run on
   for _, m in ipairs(self.movers) do
     if style then Sc.drawMoverArt(m, cam, style)                       -- the duck boat
@@ -450,6 +458,7 @@ function St:draw(debug)
       lg.setColor(1, 1, 1, 1); lg.draw(art.pontoon, math.floor(m.x0 - cam + 0.5) - 3, m.y0 - 2)
     end
   end
+  if lk then Look.off() end                                        -- the bones, the girl, the ball, Pepper: as drawn
   lg.setColor(1, 1, 1, 1)
   for _, bn in ipairs(self.bones) do                               -- bones (11 x 6), gold = super bone
     if not bn.taken then
@@ -464,7 +473,9 @@ function St:draw(debug)
       else Sc.drawProp(pr, cam, C.leaves) end
     end
   end
+  use("play")
   Sp.drawPlay(self, cam)                                           -- code-drawn obstacles (kennel, hollow log, awnings)
+  use("ground")
   -- shadows of the girl, the ball and Pepper: on the floor right under them (smaller the higher they are)
   local g = self.girl
   if not g.hidden then Sc.shadow(g.x - cam, g.y, 22) end
@@ -478,6 +489,7 @@ function St:draw(debug)
     local fy = w:floor(p.x - 4, p.x + 4, p.x, p.y - 0.5, 240, p.y - 0.5)
     if fy then Sc.shadow(p.x - cam, fy, 32 * (1 - math.min(48, fy - p.y) / 96)) end
   end
+  if lk then Look.off() end
   -- the girl (real art)
   local gr = GIRL_ROW[g.state] or GIRL_ROW.idle                    -- "happy" (after petting) shows the idle clip
   local rw = GF.rows[gr]
@@ -497,6 +509,7 @@ function St:draw(debug)
   if self.cat and self.cat.state ~= "gone" then Sc.catGrey(self.cat, cam, self.t) end
   if self.magpie and self.magpie.state ~= "gone" then Sc.magpie(self.magpie, cam, self.t) end
   local cyc = Rd.art().cyclists[1]
+  use("play")
   for _, c in ipairs(self.bikes) do
     local x = c.x - cam
     if style then Sc.drawHazardArt(c, cam, style)                        -- the leaf cart, the tram
@@ -506,6 +519,7 @@ function St:draw(debug)
       Sc.outlined(C.prop, C.propEdge, math.floor(x - bw / 2 + 0.5), c.y - bh, bw, bh); Sc.label(z.kind and z.kind:upper() or "BIKE", x, c.y - 17)
     else lg.setColor(1, 1, 1, 1); Rd.drawBike(cyc, -c.x, math.floor(x + 25 + 0.5) - cyc:getWidth(), math.floor(c.y - cyc:getHeight() + 0.5), true) end   -- the art faces right; bikes ride left, wheels rolling
   end
+  if lk then Look.off() end
   Sp.drawWarnings(self, cam)                                       -- a sign at the edge a bike or tram comes from
   -- Pepper
   Ex.drawBehind(self.fx, cam)                                      -- dust behind her
@@ -517,12 +531,15 @@ function St:draw(debug)
     lg.setColor(1, 1, 1, 1 - r.t / 0.4); lg.setLineWidth(1)
     lg.circle("line", math.floor(r.x - cam), math.floor(r.y), 6 + r.t * 70)
   end
-  if self.road then self.road:draw(cam, self.t) end                                      -- traffic in the near lane, in front of the promenade
+  use("play")
+  if self.road then self.road:draw(cam, self.t, lk and Look.rowFactor) end            -- traffic in the near lane, in front of the promenade
+  use("front")
   -- 8 foreground frame
   -- (scrolls 1.3x: a prop sits at its own x when it is mid-screen and slides faster than Pepper's layer)
   for _, pr in ipairs(self.def.props) do
     if pr.layer == "front" then prop(pr, math.floor(cam + (cam + 160 - (pr.x0 + pr.x1) / 2) * 0.3), C.front) end
   end
+  if lk then Look.off(); Look.front(self, cam) end                 -- the dark foreground band (1.4x), under Pepper's lines
   lg.setColor(1, 1, 1, 1)
   if debug then self:drawDebug(cam) end
 end
