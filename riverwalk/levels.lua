@@ -6,4 +6,5 @@ return {
   { name = "citypark",  number = 1, title = "CITY PARK",  par = 60 },
   { name = "downtown",  number = 2, title = "DOWNTOWN",   par = 55 },
   { name = "riverwalk", number = 3, title = "RIVER WALK", par = 60 },
+  { name = "night",     number = 5, title = "NIGHT HARBOUR", par = 135 },  -- autopilot 81.3 s
 }
