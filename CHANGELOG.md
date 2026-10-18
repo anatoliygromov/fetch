@@ -2,6 +2,32 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `level5/night`: Level 5, Night Harbour (night of 18-19 Oct)
+Built on `levels/v2` (c218a0e). The finale: sniff in the dark. Greybox, no SpriteCook credits. See
+`docs/night_beatsheet.md`.
+- **The level** (`level/night.lua`, `level/night.map` from `tools/make_night_map.py`): 14 screens (4480 px) along
+  the harbour at night. A fox snatched the ball; Pepper sniffs out its three hideouts (a tarp, fish crates, under
+  the low jetty), barks it on, picks up the ball it drops and brings it home to Mia at the front door ("HOME AT
+  LAST."). Eight water gaps, two rowboats and four small boats (ping-pong movers), eight crumbling planks, a
+  mooring post, a net shed to crawl under, a crate tower. 5 checkpoint lamps, 54 bones (3 gold), 2 secrets,
+  time 420 s. Autopilot clear 81.3 s; par 135 s.
+- **The night rules** (`night.lua`, new): the darkness (a canvas with dithered light pools from the lamps,
+  lanterns, boat lights, windows, the porch and Pepper herself; moonlit edges on every floor and the water, so the
+  path always reads), sniffing (hold L1 / R1 or Q: Pepper stops and sniffs, a trail of dots points at the hidden
+  fox, the dropped ball or Mia, nearby bones glow), the fox (drawn in code; found by sniffing, chased on by a
+  bark), crumbling planks (`crumble = true`: 0.5 s, then they fall, back after 3 s).
+- **Hooks in `stage.lua`** (each marked `[night hook]`): create `s.night` for a dark level, skip Pepper's
+  controller while she sniffs (her movement code is untouched: `check_pepper` UNCHANGED), the bark, the update,
+  the fox's hint conditions, bones hidden in the dark, and three draw calls.
+- **Controls** (`main.lua`): L1 / R1 now sniff (held); the Lion King look toggles with the L key only
+  (`--classic` still starts with it off). `look.lua`'s header says so.
+- **`levels.lua`**: the `night` line (number 5, par 135).
+- **`qa.lua`**: the fuzz no longer throws bikes at a level without bike zones (it crashed on Night Harbour); the
+  random sequence for the other levels is the same.
+- **Tests** (`tests_night.lua`): `--physics` 37 checks, `--auto` the scripted clear (rec/ every 3rd frame),
+  `--test` a 14-screen screenshot tour plus the fox, sniffing, planks and the tally. `--qa` 0 problems,
+  `tools/check_flow.sh` 81 of 81 (unchanged), other levels' physics and autopilot unchanged.
+
 ## Branch `levels/v2`: QA, balance and two new levels (night of 18-19 Oct)
 Built on `assets/complete`.
 - **QA fixes** (an independent QA pass; probes dropped the ball at every x on every surface, 23,216 cases):
