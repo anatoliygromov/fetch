@@ -9,6 +9,7 @@ local I = require("input")
 local Ex = require("extras")                  -- visual extras around Pepper (drawing only, E toggles them)
 local Sp = require("setpieces")               -- hard mode, rope ferries, traffic warnings, secrets, code-drawn pieces
 local Ch = require("chase")                   -- Level 4: the scroll, the rolling ball, barrels, hatches (L.scroll)
+local Nt = require("night")                   -- Level 5's night rules: darkness, sniffing, the fox, crumbling planks
 local St = {}
 St.__index = St
 local lg = love.graphics
@@ -60,6 +61,7 @@ function St.new(def, carry)
   s.fx = Ex.new()
   Sp.init(s, def, carry)                                          -- hard mode (carry.hard), rope ferries, secrets
   if def.scroll then Ch.init(s, def) end                          -- the chase (Level 4)
+  if def.dark or def.fox then s.night = Nt.new(s, def) end         -- [night hook] Level 5 (night.lua)
   return s
 end
 
@@ -201,7 +203,7 @@ function St:update(dt, presses)
     self.deadT = self.deadT - dt
     if self.deadT <= 0 then self.deadT = nil; self:respawn() end
   else
-    p:update(dt, w, presses)
+    if not (self.night and Nt.sniffing(self, dt)) then p:update(dt, w, presses) end   -- [night hook] sniffing
     if p.mode == "drown" and not self.drownT then
       self.drownT = 1.0
       if p.carrying then p.carrying = nil; self.ball.state = "home"; self.ballBackT = 1.2 end
@@ -302,7 +304,9 @@ function St:update(dt, presses)
     if math.abs(p.x - self.girl.x) < 110 and self.girl.state == "idle" then self.girl.state = "wave"; self.girl.t = 0 end
     if self.cat then self:barkAtCat() end
     if self.magpie then self:barkAtMagpie() end
+    if self.night then Nt.bark(self) end                           -- [night hook] the fox
   end
+  if self.night then Nt.update(self, dt) end                       -- [night hook] the fox, crumbling planks
   if self.cat then self:updateCat(dt) end
   for _, pr in ipairs(self.def.props) do                           -- leaf piles flatten when Pepper runs through
     if pr.leaves and not self.kicked[pr] and x1 > pr.x0 and x0 < pr.x1 and y1 > pr.y0 then self.kicked[pr] = true end
@@ -401,7 +405,8 @@ function St:zoneHint()
       elseif h.need == "catnear" then ok = catNear(self)
       elseif h.need == "magpie" then ok = self.ball.state == "magpie"
       elseif h.need == "magpienear" then ok = magpie(self, true)
-      elseif h.need == "magpieahead" then ok = magpie(self, false) end
+      elseif h.need == "magpieahead" then ok = magpie(self, false)
+      elseif h.need and self.night then ok = Nt.need(self, h.need) end                     -- [night hook] the fox
       if h.bike then ok = true end
       if ok then return { who = h.btn and "pepper" or "girl", btn = h.btn, text = h.text, teach = h.btn ~= nil } end
     end
@@ -439,6 +444,7 @@ function St:draw(debug)
   if style then Sc.drawSpout(self.def, cam) end
   Sp.drawBack(self, cam)                                           -- code-drawn decoration (kiosks)
   if self.chase then Ch.drawBack(self, cam) end                    -- the chase: open cellar hatches
+  if self.night then Nt.drawLights(self, cam) end                  -- [night hook] lanterns, windows
   -- 7 play layer: terrain (pavement art, painted once; see Sc.paintGround)
   local w = self.world
   if not self.ground then
@@ -491,7 +497,7 @@ function St:draw(debug)
   if lk then Look.off() end                                        -- the bones, the girl, the ball, Pepper: as drawn
   lg.setColor(1, 1, 1, 1)
   for _, bn in ipairs(self.bones) do                               -- bones (11 x 6), gold = super bone
-    if not bn.taken then
+    if not bn.taken and not (self.night and Nt.hideBone(self, bn)) then   -- [night hook] bones in the dark
       local bob = math.floor(math.sin(self.t * 3 + bn.x) * 1.5 + 0.5)
       lg.draw(bn.super and art.bone_gold or art.bone, math.floor(bn.x - cam + 0.5) - 5, bn.y - 12 + bob)
     end
@@ -542,6 +548,7 @@ function St:draw(debug)
   end
   if self.magpie and self.magpie.state ~= "gone" then Sc.magpie(self.magpie, cam, self.t) end
   if self.chase then Ch.draw(self, cam) end                        -- the chase: barrels
+  if self.night then Nt.drawWorld(self, cam) end                   -- [night hook] the fox
   local cyc = Rd.art().cyclists[1]
   use("play")
   for _, c in ipairs(self.bikes) do
@@ -574,6 +581,7 @@ function St:draw(debug)
     if pr.layer == "front" then prop(pr, math.floor(cam + (cam + 160 - (pr.x0 + pr.x1) / 2) * 0.3), C.front) end
   end
   if lk then Look.off(); Look.front(self, cam) end                 -- the dark foreground band (1.4x), under Pepper's lines
+  if self.night then Nt.draw(self, cam) end                        -- [night hook] the darkness, the trail, the planks
   lg.setColor(1, 1, 1, 1)
   if debug then self:drawDebug(cam) end
 end

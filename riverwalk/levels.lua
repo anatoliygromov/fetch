@@ -8,4 +8,5 @@ return {
   { name = "downtown",  number = 2, title = "DOWNTOWN",   par = 55 },
   { name = "riverwalk", number = 3, title = "RIVER WALK", par = 60 },
   { name = "soder",     number = 4, title = "SODER HILL", par = 118 },
+  { name = "night",     number = 5, title = "NIGHT HARBOUR", par = 135 },  -- autopilot 81.3 s
 }
