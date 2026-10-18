@@ -95,7 +95,7 @@ return function(api)
     return h and h.btn == "a" and h.text == "TAP: HOP" and h2 and h2.btn == "b", ("walking at 120: %s; running at 60: %s"):format(h and h.text or "-", h2 and h2.text or "-")
   end))
   add(check("hints: the magpie line shows (City Park)", function()
-    local s = St.new(require("level.citypark")); s:resetMagpie(6); s.pepper.x = 1300
+    local s = St.new(require("level.citypark")); s:resetMagpie(6); s.pepper.x = 1900
     local h = s:hint(); return h and h.who == "girl" and h.text:find("MAGPIE") ~= nil, h and h.text or "-"
   end))
   add(check("hints: GO BACK: BARK AT THE CAT shows (Downtown)", function()
@@ -167,7 +167,7 @@ return function(api)
         check("nudge: 2 s pushing at the hedge shows Down", function() local n = T.nudge; return n.btn == "down" and n.why == "push", tostring(n.btn) end),
         { act = function() I.force = {} end })
       -- the girl's line: the magpie still has the ball, far off
-      add({ act = function() tp(1300, 184) end }, wait(0.5), check("talk: the girl says the magpie line", function()
+      add({ act = function() tp(1900, 184) end }, wait(0.5), check("talk: the girl says the magpie line", function()
         local l = said(); return l and l.who == "girl" and l.text:find("MAGPIE") ~= nil, l and l.text or "nothing" end), shot("u2_girl"))
       add({ act = function() tp(1600, 216) end }, wait(0.1))
     end

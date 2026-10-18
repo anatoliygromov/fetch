@@ -102,7 +102,7 @@ return function(api)
       for x = z.zoneX0 + 10, z.zoneX1 - 10, 10 do
         for _, fy in ipairs(floorsAt(w, x)) do
           local y = math.abs(fy)
-          for _, pose in ipairs({ "stand", "crouch", "hop" }) do
+          for _, pose in ipairs(fy < 0 and { "crouch" } or { "stand", "crouch", "hop" }) do   -- under a bench: crouch only
             place(stage(), x, y, pose == "crouch")
             local s2 = stage()
             s2.bikes = { { x = x + 90, y = 184, warn = 0, zone = z } }

@@ -70,6 +70,28 @@ Built on `assets/complete`.
   - River Walk: "FIND THE BALL ON THE BOAT!" only until Pepper has picked it up; then "GO BACK FOR THE BALL!".
   - Story cards also go on with Start / Enter (kids press it). The volume toast sits at the bottom over menus and
     cards. The old ground canvas (3 MB) is released when a level restarts. Stale comments fixed.
+- **Critters** (`riverwalk/critters.lua`, `L.critters`; docs/progression.md): creatures with simple, readable rules.
+  Every one warns first, and a bark is always a good answer.
+  - Goose: walks to and fro. When Pepper is in front of it within 70 px it hisses (0.5 s, a "!"), then charges.
+    Its bite costs a heart, then it struts off the other way (never two bites in a row). A bark within 80 px sends
+    it flapping off for good (+200, "SHOO!"). It is 20 px tall: a held jump clears it.
+  - Gull (used in River Walk): circles high, squawks and shows its shadow where Pepper is, then swoops down to her
+    head height. Crawling ducks under it; a bark while it squawks scares it off for 4 s.
+  - `bounce = h` on a prop (used in Downtown): landing on it launches Pepper h px up. Only her upward speed is set,
+    so Pepper's own movement is untouched.
+  - Hooks in `stage.lua`, one line each: `Cr.init`, `Cr.update`, `Cr.bark`, `Cr.bounce`, `Cr.draw`, and the
+    "BARK: SHOO!" hint (`need = "goose"`, only for a goose ahead of Pepper). Two new sounds: hiss, squawk.
+- **Level 1, City Park: sneak and bark, 6 to 9 screens** (2880 px; `tools/shift_level.py` opened the gaps and moved
+  every x, map column and test literal after them):
+  - New screen 4, the goose lawn: a leaf pile with bones, the first goose, and a log (a magpie perch).
+  - New screen 7, the creek: three small stepping stones over deep water, 56 px apart. Running across fails (she
+    drops past her scramble reach); a jump from standing carries her one stone. Hint: "STOP, THEN HOP". A second
+    goose waits on the far bank and hisses as she lands.
+  - New screen 8, the rose walk: a second leaf cart run (carts a little faster, every 5.5 s): wait on the bench,
+    then the picnic table. A magpie perch on the bench's backrest.
+  - 9 magpie perches (was 6), 68 bones, 8 lamps. Autopilot clear 44 s, no hit (was 31 s).
+  - QA: lamps moved off the log and the picnic table (a respawn stood inside them); `qa.lua`'s bike sweep tests
+    crouch-only spots (under a bench) crouched only. Flow checks use x 1900 for the magpie line.
 
 ## Branch `assets/complete`: the missing assets (18 Oct)
 Built on `lk/look` (9c3bcbd). Every placeholder left in the three levels gets real art.
