@@ -75,7 +75,7 @@ L.props = {
   { name = "HOLLOW LOG", kind = "solid", layer = "play", x0 = 1244, x1 = 1286, y0 = 158, y1 = 165, hidden = true },
   { name = "",         kind = "decor",  layer = "back", x0 = 1328, x1 = 1512, y0 = 44,  y1 = 92 },      -- crown
   { name = "OAK",      kind = "decor",  layer = "back", x0 = 1404, x1 = 1428, y0 = 92,  y1 = 184 },     -- trunk
-  { name = "",         kind = "oneway", layer = "play", x0 = 1336, x1 = 1400, y0 = 104, y1 = 110 },     -- the cat's
+  { name = "",         kind = "oneway", layer = "play", x0 = 1336, x1 = 1400, y0 = 104, y1 = 110 },     -- the left bough
   { name = "BRANCH",   kind = "oneway", layer = "play", x0 = 1432, x1 = 1488, y0 = 156, y1 = 162, label = "below" },
   { name = "",         kind = "oneway", layer = "play", x0 = 1448, x1 = 1512, y0 = 128, y1 = 134 },
   { name = "",         kind = "oneway", layer = "play", x0 = 1424, x1 = 1472, y0 = 100, y1 = 106 },

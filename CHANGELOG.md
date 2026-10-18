@@ -2,6 +2,24 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `levels/v2`: QA, balance and two new levels (night of 18-19 Oct)
+Built on `assets/complete`.
+- **QA fixes** (an independent QA pass; probes dropped the ball at every x on every surface, 23,216 cases):
+  - The ball could be lost forever (it flew out of the level at the edges, or slipped under stairs and the slide)
+    or end up inside solid props (flower boxes, grit boxes, the bin, the pier, the stall, the pedestal) where Pepper
+    could not pick it up. Now it drops at Pepper's own x when her mouth is inside a wall, never leaves the level
+    (kept 14 px from the edges), stops at walls in flight, and any ball that rests out of reach (inside a solid, out
+    of the level, or falling for over 2.5 s) goes back to its home spot. Every case now ends with a reachable ball.
+  - Mia accepted a ball Pepper never brought (barking the magpie off its last perch while standing by her gave
+    FETCH): she now takes a ball only where it lands next to her.
+  - A ball resting on the duck boat or the pontoon rides with it (it hovered over the water when the boat left).
+  - TIME UP while drowning cost a life and then a heart: the timer waits while Pepper is respawning.
+  - The status signs step aside while Pepper is up under them (from the statue's hat, the shop sign, the oak top
+    she was hidden behind the HUD).
+  - River Walk: "FIND THE BALL ON THE BOAT!" only until Pepper has picked it up; then "GO BACK FOR THE BALL!".
+  - Story cards also go on with Start / Enter (kids press it). The volume toast sits at the bottom over menus and
+    cards. The old ground canvas (3 MB) is released when a level restarts. Stale comments fixed.
+
 ## Branch `assets/complete`: the missing assets (18 Oct)
 Built on `lk/look` (9c3bcbd). Every placeholder left in the three levels gets real art.
 - **The Downtown cat** (`art/cat.png`, `tools/build_cat.py`, `Sc.cat`): modelled on the user's Abyssinian (ruddy

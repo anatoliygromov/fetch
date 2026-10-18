@@ -182,7 +182,8 @@ L.hints = {
   { x0 = 1550, x1 = 1800, text = "CLIMB UP TO THE WHEELHOUSE!", need = "noball" },
   { x0 = 2400, x1 = 2830, text = "BIKES! GET UP HIGH!", bike = true },
   { x0 = 2980, x1 = 3200, text = "BRING ME THE BALL!", need = "ball" },
-  { x0 = 2980, x1 = 3200, text = "FIND THE BALL ON THE BOAT!", need = "noball" },
+  { x0 = 2980, x1 = 3200, text = "FIND THE BALL ON THE BOAT!", need = "untouched" },
+  { x0 = 2980, x1 = 3200, text = "GO BACK FOR THE BALL!", need = "noball" },
 }
 
 L.intro = { "LEVEL 3", "RIVER WALK", "THE BALL LANDED ON A BOAT.", "FETCH IT FOR MIA!" }

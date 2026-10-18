@@ -1,5 +1,5 @@
 -- FETCH! Pepper's levels in order (levels.lua): 1 City Park, 2 Downtown, 3 River Walk. Pepper, the girl and the
--- ball are real art; River Walk has scenery art, the others are greybox. 320 x 240, drawn 2x on the RG35XX's
+-- ball are real art; every level has scenery art (City Park and Downtown over their greybox boxes). 320 x 240, drawn 2x on the RG35XX's
 -- 640 x 480 screen. Game logic steps at a fixed 1/60 s, so jumps are the same on every machine.
 --
 --   d-pad / arrows   run (Pepper runs by default);  Down: crouch and crawl
@@ -53,11 +53,12 @@ local clearAt, hit, hl                                          -- the level's c
 local function setLevel(name) levelName = name; def = require("level." .. name) end
 -- the current level from the start, alone (the test modes, api.newRun)
 local function fresh() Talk.reset(); clearAt, hit, hl = nil, false, nil; over.sel, pz.sel, pz.confirm = 1, 1, nil end
-local function newRun() stage = St.new(def); state, t, tally = "intro", 0, nil; fresh() end
+local function freeStage() if stage and stage.ground then stage.ground:release(); stage.ground = nil end end   -- its 3 MB ground canvas
+local function newRun() freeStage(); stage = St.new(def); state, t, tally = "intro", 0, nil; fresh() end
 -- the run's current level: its intro card; it starts with the run's score and lives
 local function startLevel()
   setLevel(run.names[run.k])
-  stage = St.new(def, { score = run.score, lives = run.lives, hard = Flow.hard or nil }); state, t, tally = "intro", 0, nil
+  freeStage(); stage = St.new(def, { score = run.score, lives = run.lives, hard = Flow.hard or nil }); state, t, tally = "intro", 0, nil
   fresh(); S.music(musicOn)
 end
 local function startRun(i) run = Flow.newRun(i); if #run.names > 0 then startLevel() end end
@@ -215,7 +216,7 @@ function love.keypressed(k, sc)
     return
   end
   if state == "over" then overAction(Flow.action(k)); return end
-  if state == "story" then if k == "space" then storyA() end; return end
+  if state == "story" then if k == "space" or k == "return" then storyA() end; return end
   if (k == "return" or k == "p" or k == "escape") and state == "play" then state = "pause"; S.play("tick"); S.music(false); return end
   if state == "intro" and t > 0.5 then state = "play"; return end
   press(I.keyName(k)); anyKey()
@@ -233,7 +234,7 @@ function love.gamepadpressed(j, b)
   end
   if state == "pause" then pauseAction(Flow.action(nil, b ~= "start" and b or nil)); return end
   if state == "over" then overAction(Flow.action(nil, b ~= "start" and b or nil)); return end
-  if state == "story" then if b == "a" then storyA() end; return end
+  if state == "story" then if b == "a" or b == "start" then storyA() end; return end
   if state == "intro" and t > 0.5 then state = "play"; return end
   press(I.padName(b)); anyKey()
 end
@@ -341,7 +342,8 @@ function love.draw()
   end
   stage:draw(debugView)
   local st = stage:stats()
-  U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard })
+  local pp = stage.pepper                                         -- the status signs step aside while Pepper is up under them
+  if pp.y - 44 > 18 or state ~= "play" then U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard }) end
   if state == "intro" then
     U.dim()
     love.graphics.push(); love.graphics.translate(0, Flow.placeY(60, 200, 70, 76, { Talk.pepperRect(stage) }) - 70)

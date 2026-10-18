@@ -47,12 +47,12 @@ function St.new(def, carry)
   s.lamps = {}
   for i, l in ipairs(def.lamps) do s.lamps[i] = { x = l.x, y = l.y, checkpoint = l.checkpoint, lit = false } end
   s.ball = { x = def.ball.x, y = def.ball.y, home = { x = def.ball.x, y = def.ball.y }, state = "rest", vy = 0 }
-  -- the girl: not in every level (Downtown has none); a level without her keeps one far off the map, hidden
+  -- the girl: a level without her (L.girl) keeps one far off the map, hidden
   if def.girl then s.girl = { x = def.girl.x, y = def.girl.y, state = "idle", t = 0, callT = 0 }
   else s.girl = { x = -9999, y = -9999, state = "idle", t = 0, callT = 0, hidden = true } end
   -- the magpie (City Park): it has the ball in its beak (see St:updateMagpie)
   if def.magpie then s:resetMagpie(1) end
-  -- the cat (City Park): it sits on the ball until a bark scares it off; then the ball drops
+  -- the cat (Downtown): it sits on the ball until a bark scares it off; then the ball drops
   if def.cat then s.cat = { x = def.cat.x, y = def.cat.y, state = "sit", t = 0, vx = 0, vy = 0, dir = 1 }; s.ball.state = "cat" end
   s.kicked = {}                                                   -- leaf piles Pepper has run through
   s.cam = 0
@@ -108,7 +108,7 @@ function St:barkAtMagpie()
   local m, d, p, b = self.magpie, self.def.magpie, self.pepper, self.ball
   if m.state ~= "perch" or b.state ~= "magpie" then return end
   if math.abs(p.x - m.x) <= d.bark and math.abs(p.y - m.y) < 110 then
-    b.state, b.vx, b.vy = "air", 0, -20                            -- it lets go: the ball falls
+    b.state, b.vx, b.vy, b.airT = "air", 0, -20, 0                 -- it lets go: the ball falls
     b.home = { x = self.check.x + 24, y = self.check.y }           -- if it falls in the pond: back by the last lamp
     m.fly = { x0 = m.x, y0 = m.y, x1 = m.x - 260, y1 = m.y - 140, dur = 1.2, peak = 10, after = "gone" }
     m.state, m.t = "fly", 0; m.dir = -1
@@ -149,9 +149,20 @@ local function nearBall(s) local p, b = s.pepper, s.ball
 end
 local function nearGirl(s) return math.abs(s.pepper.x - s.girl.x) < 44 and math.abs(s.pepper.y - s.girl.y) < 20 end
 
+-- the ball leaves Pepper's mouth. It never starts inside a wall or outside the level: if her mouth is in a solid
+-- box (she is pressed against it), it drops at her own x instead, and it never flies faster than a gentle toss.
 function St:dropBall()
-  local b, p = self.ball, self.pepper
-  b.x, b.y = p:mouthPos(); b.state = "air"; b.vy = -40; b.vx = p.vx * 0.5; p.carrying = nil
+  local b, p, w = self.ball, self.pepper, self.world
+  b.x, b.y = p:mouthPos(); b.state = "air"; b.vy = -40; b.vx = math.max(-40, math.min(40, p.vx * 0.5)); p.carrying = nil
+  if w:solidIn(b.x - 3, b.x + 3, b.y - 6, b.y) then b.x, b.vx = p.x, 0 end
+  b.x = math.max(14, math.min(w.width - 14, b.x)); b.airT = 0; b.on = nil
+end
+-- a ball that came to rest where Pepper cannot get it (inside a solid box or terrain, or it fell out of the
+-- level) goes back to its home spot (the level's ball home, or where the magpie / cat let it go), with a line
+function St:ballLost()
+  local b = self.ball
+  return b.y > 236 or b.x < 4 or b.x > self.world.width - 4 or (b.state == "air" and (b.airT or 0) > 2.5)
+    or (not self.world:slopeAt(b.x) and self.world:solidIn(b.x - 2, b.x + 2, b.y - 5, b.y - 1) ~= nil)
 end
 
 function St:giveBall()
@@ -168,7 +179,7 @@ function St:update(dt, presses)
   if self.msg then self.msg.t = self.msg.t - dt; if self.msg.t <= 0 then self.msg = nil end end
   if self.clearT then self.clearT = self.clearT - dt; if self.clearT <= 0 then self.events.clear = true; self.clearT = nil end end
   if not self.clearT and not self.events.clear then self.time = self.time - dt end
-  if self.time <= 0 then
+  if self.time <= 0 and not self.drownT and not self.deadT then
     self.time = self.def.time; self.lives = self.lives - 1; self.hearts = self.maxHearts
     if self.lives <= 0 then self.events.over = true else self:say("TIME UP!", 2); self:respawn() end
   end
@@ -206,7 +217,7 @@ function St:update(dt, presses)
     if p.carrying then
       if nearGirl(self) then self:giveBall() else self:dropBall() end
     elseif nearBall(self) then
-      self.ball.state = "carried"; p.carrying = self.ball; p:grab(); S.play("key")
+      self.ball.state = "carried"; self.ball.picked = true; p.carrying = self.ball; p:grab(); S.play("key")
       self:say(self.def.pickupSay or "BRING ME THE BALL!", 2.4)
     end
   end
@@ -215,12 +226,20 @@ function St:update(dt, presses)
   self:checkExit()
   if b.state == "carried" then b.x, b.y = p:mouthPos()
   elseif b.state == "air" then
-    b.vy = math.min(b.vy + 520 * dt, 400)
-    local ny = b.y + b.vy * dt; b.x = b.x + (b.vx or 0) * dt
-    local f = w:floor(b.x - 3, b.x + 3, b.x, b.y - 0.5, ny, b.y, b.drop)    -- drop: knocked off a branch, falls through
-    if f then b.y = f; b.state = "rest"; b.drop = nil; if nearGirl(self) or math.abs(b.x - self.girl.x) < 30 then self:giveBall() end
+    b.vy = math.min(b.vy + 520 * dt, 400); b.airT = (b.airT or 0) + dt
+    local ny = b.y + b.vy * dt
+    local nx = math.max(14, math.min(w.width - 14, b.x + (b.vx or 0) * dt))
+    if w:solidIn(nx - 3, nx + 3, b.y - 6, b.y - 1) then b.vx = 0 else b.x = nx end   -- it bounces off walls, never into them
+    local f, hit = w:floor(b.x - 3, b.x + 3, b.x, b.y - 0.5, ny, b.y, b.drop)    -- drop: knocked off a branch, falls through
+    if f then b.y = f; b.state = "rest"; b.drop = nil; b.on = hit; b.airT = 0
+      if math.abs(b.x - self.girl.x) < 30 and math.abs(b.y - self.girl.y) < 20 then self:giveBall() end
     else b.y = ny end
-    if w:inWater(b.x, b.y) then b.state = "home"; self.ballBackT = 1.2; S.play("splash") end
+    if w:inWater(b.x, b.y) then b.state = "home"; self.ballBackT = 1.2; S.play("splash")
+    elseif self:ballLost() then b.state = "home"; self.ballBackT = 0.6 end
+  elseif b.state == "rest" then
+    if b.on and b.on.dx then b.x = b.x + b.on.dx end            -- it rides a ferry or the duck boat with it
+    if b.on and b.on.dx and (b.x < b.on.x0 - 2 or b.x > b.on.x1 + 2) then b.state, b.vy, b.vx, b.airT, b.on = "air", 0, 0, 0, nil end
+    if b.state == "rest" and self:ballLost() then b.state = "home"; self.ballBackT = 0.6 end
   end
   if b.state == "home" then
     self.ballBackT = (self.ballBackT or 0) - dt
@@ -319,7 +338,7 @@ function St:barkAtCat()
   end
   c.state, c.t = "scared", 0
   c.dir = (c.x >= p.x) and 1 or -1
-  b.state, b.vx, b.vy, b.drop = "air", -c.dir * 20, -60, true
+  b.state, b.vx, b.vy, b.drop, b.airT = "air", -c.dir * 20, -60, true, 0
   b.home = { x = b.x - c.dir * 12, y = self.world:groundAt(b.x - c.dir * 12) or b.y }
   S.play("spring")
 end
@@ -371,6 +390,7 @@ function St:zoneHint()
     if p.x >= h.x0 and p.x < h.x1 and (not h.maxY or p.y <= h.maxY) then
       local ok = true
       if h.need == "ball" then ok = p.carrying ~= nil
+      elseif h.need == "untouched" then ok = not self.ball.picked and p.carrying == nil
       elseif h.need == "noball" then ok = p.carrying == nil and self.ball.state ~= "given"
       elseif h.need == "nearball" then ok = nearBall(self)
       elseif h.need == "cat" then ok = self.cat ~= nil and self.cat.state == "sit"
