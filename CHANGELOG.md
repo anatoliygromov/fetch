@@ -92,6 +92,18 @@ Built on `assets/complete`.
   - 9 magpie perches (was 6), 68 bones, 8 lamps. Autopilot clear 44 s, no hit (was 31 s).
   - QA: lamps moved off the log and the picnic table (a respawn stood inside them); `qa.lua`'s bike sweep tests
     crouch-only spots (under a bench) crouched only. Flow checks use x 1900 for the magpie line.
+- **Level 2, Downtown: bounce and carry, 6 to 10 screens** (3200 px):
+  - New screen 4, the bakery row: a springy awning launches Pepper over a crate wall 64 px high (more than a jump
+    and a scramble); a springier one reaches the bakery sign (gold bone, secret BAKERY SIGN). Holding Down she can
+    stand on a springy top. Springy tops have red coil springs on their posts and dip as they launch her.
+  - New screen 8, the flower market: two geese on the cobbles. A bite knocks the ball out of Pepper's mouth. Bark
+    them off, or go high: the tub, the cafe table, the springy parasol, the balcony.
+  - New screen 9, the canal: the awning at the water's edge launches Pepper over it onto a crate wall on the far
+    quay. Walking in costs a heart.
+  - New screen 10, tram street again: a faster tram (130 px/s, every 5 s; the first one 110 px/s, every 6 s).
+  - `L.ballHomeAtLamps`: a lamp Pepper reaches while carrying the ball becomes its home, so a ball lost in the
+    canal comes back by that lamp ("THE BALL IS BACK BY THE LAMP"), not five screens back at the statue.
+  - 6 lamps for 10 screens (was 5 for 6), 68 bones, 4 secrets. Autopilot clear 44.8 s, no hit (was 29.8 s).
 
 ## Branch `assets/complete`: the missing assets (18 Oct)
 Built on `lk/look` (9c3bcbd). Every placeholder left in the three levels gets real art.

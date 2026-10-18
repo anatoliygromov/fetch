@@ -99,7 +99,7 @@ return function(api)
     local h = s:hint(); return h and h.who == "girl" and h.text:find("MAGPIE") ~= nil, h and h.text or "-"
   end))
   add(check("hints: GO BACK: BARK AT THE CAT shows (Downtown)", function()
-    local s = St.new(require("level.downtown")); s.pepper.x = 1300
+    local s = St.new(require("level.downtown")); s.pepper.x = 1900
     local h = s:hint(); return h and h.who == "girl" and h.text:find("BARK AT THE CAT") ~= nil, h and h.text or "-"
   end))
   add(check("hints: a teaching hint wins over a message", function()

@@ -1117,6 +1117,15 @@ local function houseIndex(def, p)
   return 1
 end
 
+-- a coil spring (crisp, outlined: it is part of an obstacle), centred on x, from y down h px
+function Sc.spring(x, y, h)
+  lg.setColor(INK); lg.rectangle("fill", x - 4, y, 9, h)
+  for yy = y + 1, y + h - 2, 3 do
+    lg.setColor(0.86, 0.22, 0.18); lg.rectangle("fill", x - 3, yy, 7, 2)            -- red coils
+    lg.setColor(1, 0.62, 0.52); lg.rectangle("fill", x - 3, yy, 7, 1)
+  end
+end
+
 -- one prop of an art level. kicked: a leaf pile Pepper has run through.
 function Sc.drawPropArt(p, camx, def, kicked)
   local style = def.art
@@ -1186,7 +1195,9 @@ function Sc.drawPropArt(p, camx, def, kicked)
       local px = math.floor(x + w / 2) - 1
       lg.setColor(INK); lg.rectangle("fill", px - 1, p.y1, 4, (tb and tb.y0 or 184) - p.y1)
       lg.setColor(0.55, 0.57, 0.6); lg.rectangle("fill", px, p.y1, 2, (tb and tb.y0 or 184) - p.y1)
-      at(T.parasol, x, p.y0 - 1)
+      local sq = (p.squashT or 0) > 0 and 2 or 0                  -- a springy one dips as it launches her
+      at(T.parasol, x, p.y0 - 1 + sq)
+      if p.bounce then Sc.spring(px + 1, p.y1 + sq, 10 - sq) end
     elseif n == "SIGN" then at(T.shopsign, x - 1, p.y0 - 6)
     elseif n == "STALL" then shadowUnder(p, camx); at(T.stall, x - 1, p.y0 - 15)
     elseif n == "AWNING" then
@@ -1199,7 +1210,15 @@ function Sc.drawPropArt(p, camx, def, kicked)
         end
       end
       local im = w >= 72 and T.awning80 or T.awning64
-      at(im, x + w / 2 - im:getWidth() / 2, p.y0 - 1)
+      local sq = (p.squashT or 0) > 0 and 2 or 0                  -- a springy one dips as it launches her
+      at(im, x + w / 2 - im:getWidth() / 2, p.y0 - 1 + sq)
+      if p.bounce then                                            -- springs on top of its posts: it is springy
+        for _, q in ipairs(def.props) do
+          if q.kind == "decor" and q.x1 - q.x0 <= 6 and q.y0 == p.y0 and q.x0 >= p.x0 - 2 and q.x1 <= p.x1 + 2 then
+            Sc.spring(math.floor((q.x0 + q.x1) / 2 - camx), p.y1 + sq, 9 - sq)
+          end
+        end
+      end
     elseif n == "STATUE" then at(T.statue, x - 1, p.y0 - 4)
     elseif n == "PEDESTAL" then shadowUnder(p, camx); at(T.pedestal, x, p.y0)
     elseif n == "ARM" then return

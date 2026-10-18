@@ -2,7 +2,8 @@
 --   --physics   checks every set piece: hop, held jump, crates, cafe tables and parasols, the shop sign, market
 --               stall and awnings, the statue, the cat and the ball, the fountain, the tram, the girl
 --   --auto      plays the whole level on autopilot and saves every 3rd frame to rec/ (for the GIF)
---   --test      a screenshot tour of the 6 screens, the cat beat, the tram, the debug view and the tally
+--   --test      a screenshot tour of the 10 screens, the cat beat, the tram, a bounce, the geese, the canal, the
+--               debug view and the tally
 local I = require("input")
 local Pp = require("pepper")
 local Sp = require("setpieces")
@@ -109,27 +110,27 @@ return function(mode, api)
       { act = function(p) report("awning 2: a held jump from the crates onto it", near(p.y, 112), ("x %.0f y %.0f"):format(p.x, p.y)) end },
       -- 5 the statue: the pedestal, the arm, the hat
       -- the flower tub before the pedestal (28 px): a tapped hop and a scramble, then a hop onto the pedestal
-      { act = function() tp(1050, 184); hold("right") end }, { during = 0.2 },
+      { act = function() tp(1370, 184); hold("right") end }, { during = 0.2 },
       { act = function() jump("right", "jump") end }, { wait = 1 / 60 }, { act = function() hold("right") end },
       { cond = function(p) return p.onGround and p.mode == "normal" and p.y < 183 end, act = function() release() end, limit = 2 },
-      { act = function(p) report("tub: a tapped hop and a scramble onto it", near(p.y, 156) and p.x < 1122, ("x %.0f y %.0f"):format(p.x, p.y)) end },
-      { act = function() tp(1100, 156); hold("right") end }, { during = 0.05 },
+      { act = function(p) report("tub: a tapped hop and a scramble onto it", near(p.y, 156) and p.x < 1442, ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      { act = function() tp(1420, 156); hold("right") end }, { during = 0.05 },
       { act = function() jump("right", "jump") end }, { wait = 1 / 60 }, { act = function() hold("right") end },
       { during = 0.1 }, landed(),
       { act = function(p) release(); report("pedestal: a tapped hop from the tub onto it", near(p.y, 144), ("x %.0f y %.0f"):format(p.x, p.y)) end },
-      { act = function() tp(1060, 184); jump("right", "jump") end }, { during = 0.2 }, landed(),
+      { act = function() tp(1380, 184); jump("right", "jump") end }, { during = 0.2 }, landed(),
       { act = function(p) release(); report("pedestal: a held jump from the street gets up", p.y <= 156.5, ("x %.0f y %.0f"):format(p.x, p.y)) end },
-      { act = function() tp(1158, 144); jump("right", "jump") end }, { during = 0.15 },
+      { act = function() tp(1478, 144); jump("right", "jump") end }, { during = 0.15 },
       { cond = function(p) return p.vy > 0 end, act = function() release() end, limit = 2 }, landed(),
       { act = function(p) report("arm: a held jump from the pedestal onto it", near(p.y, 108), ("x %.0f y %.0f"):format(p.x, p.y)) end },
-      { act = function() tp(1162, 108); jump("jump") end }, { during = 0.2 }, landed(),
+      { act = function() tp(1482, 108); jump("jump") end }, { during = 0.2 }, landed(),
       { act = function(p) release(); report("hat: a held jump from the arm onto it", near(p.y, 76), ("x %.0f y %.0f"):format(p.x, p.y)) end },
       -- 6 the cat: a far bark only makes it look up; the ball cannot be picked up under it; a bark from the street
       --   under the arm scares it, the ball drops to the street, the cat runs off; Pepper picks the ball up
-      { act = function() tp(1060, 184) end }, { wait = 0.1 },
+      { act = function() tp(1380, 184) end }, { wait = 0.1 },
       { act = function(p) p.face = 1; love.keypressed("z") end }, { wait = 0.6 },
       { act = function() local s = api.stage(); report("cat: a bark from far away does not scare it", s.cat.state == "sit" and s.ball.state == "cat", s.cat.state) end },
-      { act = function() local s = api.stage(); tp(1170, 184) end }, { wait = 0.1 },
+      { act = function() local s = api.stage(); tp(1490, 184) end }, { wait = 0.1 },
       { act = function() love.keypressed("x") end }, { wait = 0.2 },
       { act = function(p) local s = api.stage(); report("cat: the ball cannot be picked up under it", s.ball.state == "cat" and not p.carrying, s.ball.state) end },
       { wait = 0.4 }, { act = function(p) p.face = 1; love.keypressed("z") end }, { wait = 0.1 },
@@ -145,79 +146,110 @@ return function(mode, api)
       -- 7 carrying the ball: every move still works (crawl under a table, a held jump onto the kiosk)
       { act = function() tp(340, 184); carry(); hold("right", "down") end }, { during = 3.0 },
       { act = function(p) release(); report("ball: crawl under a table carrying it", p.x > 420 and near(p.y, 184) and p.carrying ~= nil, ("x %.0f"):format(p.x)) end },
-      { act = function() tp(1620, 184); carry(); jump("right", "jump") end }, { during = 0.2 }, landed(),
+      { act = function() tp(1940, 184); carry(); jump("right", "jump") end }, { during = 0.2 }, landed(),
       { act = function(p) release(); report("ball: a held jump onto the kiosk carrying it", near(p.y, 148) and p.carrying ~= nil, ("x %.0f y %.0f"):format(p.x, p.y)) end },
       -- 8 the fountain: a hop onto the rim, onto the bowl, onto the far rim; falling in costs a heart, and the
       --   ball goes back by the statue
-      { act = function() tp(1370, 184); hold("right") end }, { during = 0.05 },
+      { act = function() tp(1690, 184); hold("right") end }, { during = 0.05 },
       { act = function() jump("right", "jump") end }, { wait = 1 / 60 }, { act = function() hold("right") end },
       { cond = function(p) return p.onGround end, act = function() release() end, limit = 3 },
-      { act = function(p) report("fountain: a tapped hop onto the rim", near(p.y, 168) and p.x < 1430, ("x %.0f y %.0f"):format(p.x, p.y)) end },
-      { act = function() tp(1408, 168); hold("right") end }, { during = 0.1 },
+      { act = function(p) report("fountain: a tapped hop onto the rim", near(p.y, 168) and p.x < 1750, ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      { act = function() tp(1728, 168); hold("right") end }, { during = 0.1 },
       { act = function() jump("right", "jump") end }, { during = 0.25 },
       { cond = function(p) return p.vy > 0 end, act = function() release() end, limit = 2 }, landed(),
       { act = function(p) report("fountain: a jump from the rim onto the bowl", near(p.y, 160), ("x %.0f y %.0f"):format(p.x, p.y)) end },
-      { act = function() tp(1472, 160); hold("right") end }, { during = 0.1 },
+      { act = function() tp(1792, 160); hold("right") end }, { during = 0.1 },
       { act = function() jump("right", "jump") end }, { during = 0.25 },
       { cond = function(p) return p.vy > 0 end, act = function() release() end, limit = 2 }, landed(),
-      { act = function(p) report("fountain: a jump from the bowl onto the far rim", near(p.y, 168) and p.x > 1515, ("x %.0f y %.0f"):format(p.x, p.y)) end },
-      { act = function() tp(1404, 168); hold("right") end }, { during = 0.15 },
+      { act = function(p) report("fountain: a jump from the bowl onto the far rim", near(p.y, 168) and p.x > 1835, ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      { act = function() tp(1724, 168); hold("right") end }, { during = 0.15 },
       { act = function() jump("right", "jump") end }, { wait = 1 / 60 }, { act = function() hold("right") end },
       { during = 0.1 }, landed(),
       { act = function(p) release(); report("fountain: a running tapped hop from rim to bowl", near(p.y, 160), ("x %.0f y %.0f"):format(p.x, p.y)) end },
-      { act = function() tp(1436, 168); carry(); hearts = api.stage().hearts end }, { during = 2.5 },
+      { act = function() tp(1756, 168); carry(); hearts = api.stage().hearts end }, { during = 2.5 },
       { act = function(p) local s = api.stage(); local b = s.ball
           report("fountain: falling in costs a heart", s.hearts == hearts - 1, ("hearts %d"):format(s.hearts))
-          report("fountain: the ball goes back by the statue", b.state == "rest" and near(b.x, b.home.x) and b.x < 1300 and not p.carrying,
+          report("fountain: the ball goes back home (statue or lamp)", b.state == "rest" and near(b.x, b.home.x) and b.x < 1950 and not p.carrying,
             ("ball %s x %.0f y %.0f"):format(b.state, b.x, b.y)) end },
       -- 9 the tram: it hurts on the street; on the kiosk and on the shelter roof it passes under Pepper
-      { act = function() tp(1620, 184); hearts = api.stage().hearts; tram(1720) end },
+      { act = function() tp(1940, 184); hearts = api.stage().hearts; tram(2040) end },
       { during = 2.0 },
       { act = function() local s = api.stage(); report("tram: hurts Pepper on the street", s.hearts == hearts - 1, ("hearts %d"):format(s.hearts)) end },
-      { act = function() tp(1620, 184); jump("right", "jump") end }, { during = 0.2 }, landed(),
+      { act = function() tp(1940, 184); jump("right", "jump") end }, { during = 0.2 }, landed(),
       { act = function(p) release(); local s = api.stage(); hearts = s.hearts
           report("kiosk: a held jump lands on top", near(p.y, 148), ("x %.0f y %.0f"):format(p.x, p.y)); tram(p.x + 120) end },
       { during = 2.5 },
       { act = function(p) local s = api.stage(); report("kiosk: safe from the tram", near(p.y, 148) and s.hearts == hearts, ("y %.0f hearts %d"):format(p.y, s.hearts)) end },
-      { act = function() tp(1672, 148); hold("right") end }, { during = 0.1 },
+      { act = function() tp(1992, 148); hold("right") end }, { during = 0.1 },
       { act = function() jump("right", "jump") end }, { during = 0.2 },
       { cond = function(p) return p.vy > 0 end, act = function() release() end, limit = 2 }, landed(),
       { act = function(p) local s = api.stage(); hearts = s.hearts
           report("shelter: a jump from the kiosk onto the roof", near(p.y, 136), ("x %.0f y %.0f"):format(p.x, p.y)); tram(p.x + 120) end },
       { during = 2.5 },
       { act = function(p) local s = api.stage(); report("shelter: safe from the tram", near(p.y, 136) and s.hearts == hearts, ("y %.0f hearts %d"):format(p.y, s.hearts)) end },
-      { act = function() tp(1660, 184); tram(1900) end }, { during = 0.5 },
+      { act = function() tp(1980, 184); tram(2220) end }, { during = 0.5 },
       { act = function() local c = api.stage().bikes[1]; report("tram: stays on its rail over the stairs", c and near(c.y, 184), c and ("x %.0f y %.0f"):format(c.x, c.y) or "none") end },
       -- 10 the rooftops (the high route): from the statue's arm along the balconies and the fountain's top tier,
       --    carrying the ball, down to the street by the lamp before tram street
-      { act = function() tp(1180, 108); carry(); hold("right") end },
-      { cond = function(p) return p.x >= 1194 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
-      { act = function(p) report("rooftops: from the arm onto the first balcony", near(p.y, 104) and p.x > 1225, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
-      { cond = function(p) return p.x >= 1284 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
-      { act = function(p) report("rooftops: onto the second balcony", near(p.y, 96) and p.x > 1330, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
-      { cond = function(p) return p.x >= 1388 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
-      { act = function(p) report("rooftops: onto the fountain's top tier (gold)", near(p.y, 104) and p.x > 1440, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
-      { cond = function(p) return p.x >= 1492 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
-      { act = function(p) report("rooftops: onto the last balcony", near(p.y, 104) and p.x > 1515, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
-      { cond = function(p) return p.x >= 1585 end, act = function() release() end, limit = 2 }, landed(),
+      { act = function() tp(1500, 108); carry(); hold("right") end },
+      { cond = function(p) return p.x >= 1514 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
+      { act = function(p) report("rooftops: from the arm onto the first balcony", near(p.y, 104) and p.x > 1545, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
+      { cond = function(p) return p.x >= 1604 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
+      { act = function(p) report("rooftops: onto the second balcony", near(p.y, 96) and p.x > 1650, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
+      { cond = function(p) return p.x >= 1708 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
+      { act = function(p) report("rooftops: onto the fountain's top tier (gold)", near(p.y, 104) and p.x > 1760, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
+      { cond = function(p) return p.x >= 1812 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
+      { act = function(p) report("rooftops: onto the last balcony", near(p.y, 104) and p.x > 1835, ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
+      { cond = function(p) return p.x >= 1905 end, act = function() release() end, limit = 2 }, landed(),
       { act = function(p) local s = api.stage()
-          report("rooftops: down to the street, ball still carried", near(p.y, 184) and p.x > 1576 and p.carrying ~= nil, ("x %.0f y %.0f"):format(p.x, p.y))
+          report("rooftops: down to the street, ball still carried", near(p.y, 184) and p.x > 1896 and p.carrying ~= nil, ("x %.0f y %.0f"):format(p.x, p.y))
           report("secret: ROOFTOPS counted", s.secrets[3].found, ("%d of %d"):format(s:stats().secrets, s:stats().secretsTotal)) end },
       -- the other two secrets: the shop sign and the statue's hat (reached by the climbs checked above)
       { act = function() local s = api.stage()
-          report("secrets: SHOP SIGN and STATUE HAT counted", s.secrets[1].found and s.secrets[2].found and s:stats().secrets == 3 and s:stats().secretsTotal == 3,
+          report("secrets: SHOP SIGN and STATUE HAT counted (of 4)", s.secrets[1].found and s.secrets[2].found and s:stats().secrets == 3 and s:stats().secretsTotal == 4,
             ("%d of %d"):format(s:stats().secrets, s:stats().secretsTotal)) end },
       -- the tram sets off when Pepper walks into its zone, its front 1 s from the screen edge
-      { act = function() tp(1590, 184); hold("right") end },
+      { act = function() tp(1910, 184); hold("right") end },
       { cond = function(p, s) return #s.bikes > 0 end, act = function(p, s) release(); local c = s.bikes[1]
           local lead = (c.x - 40 - (s.cam + 320)) / c.speed
-          report("tram: sets off as Pepper enters its zone", p.x > 1610 and p.x < 1625, ("x %.0f"):format(p.x))
+          report("tram: sets off as Pepper enters its zone", p.x > 1930 and p.x < 1945, ("x %.0f"):format(p.x))
           report("tram: 1 s from the screen edge (bell)", math.abs(lead - 1) < 0.05, ("%.2f s"):format(lead)) end, limit = 2 },
       { act = function() local St = require("stage"); local h = St.new(api.stage().def, { hard = true })
           report("hard mode: 1 heart, the tram 25% faster", h.hearts == 1 and Sp.speed(h, h.def.bikes[1]) == h.def.bikes[1].speed * 1.25,
             ("hearts %d, speed %.1f"):format(h.hearts, Sp.speed(h, h.def.bikes[1]))) end },
+      -- 12 the springy awnings and parasol (bounce), the geese, the canal, the second tram
+      { act = function() tp(1076, 184); hold("right") end }, { during = 0.1 }, { act = function() jump("right", "jump") end }, { during = 1.6 },
+      { act = function(p) release(); report("bakery: the crates (64 px) stop a jump and scramble", p.x < 1104 and near(p.y, 184), ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      { act = function() tp(984, 184); hold("right") end }, { cond = function(p) return p.x >= 992 end, act = function() jump("right", "jump") end, limit = 2 },
+      { cond = function(p) return p.vy < -260 end, act = function(p) minY = p.y end, limit = 2 },
+      { during = 1.2, each = function(p) minY = math.min(minY, p.y) end }, landed(),
+      { act = function(p) release(); report("bakery: the awning launches her 76 px, over the crates", p.x > 1104 and 152 - minY >= 74 and 152 - minY <= 78, ("up %.0f px, x %.0f y %.0f"):format(152 - minY, p.x, p.y)) end },
+      { act = function() tp(1040, 140); local p = api.stage().pepper; p.onGround = false; hold("down") end }, { during = 0.6 },
+      { act = function(p) release(); report("bakery: holding Down she stands on the awning", p.onGround and near(p.y, 152), ("y %.0f"):format(p.y)) end },
+      { act = function() tp(1200, 184); hold("right") end }, { cond = function(p) return p.x >= 1210 end, act = function() jump("right", "jump") end, limit = 2 },
+      { cond = function(p) return p.vy < 0 and p.y < 140 and p.x >= 1266 end, act = function() hold("jump") end, limit = 3 }, landed(),
+      { act = function(p) release(); local s = api.stage(); report("bakery: the second awning reaches the sign (gold)", near(p.y, 64) and s.secrets[4].found, ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      { act = function() local s = api.stage(); local k = s.critters[1]; k.state, k.x, k.y, k.dir, k.t = "walk", 2230, 184, -1, 0
+          s.hearts = 3; hearts = 3; tp(2160, 184); carry(); s.pepper.face = 1; hold("right") end }, { during = 2.0 },
+      { act = function(p) release(); local s = api.stage(); report("geese: a bite costs a heart and knocks the ball out", s.hearts == hearts - 1 and not p.carrying, ("hearts %d, carrying %s"):format(s.hearts, tostring(p.carrying ~= nil))) end },
+      { act = function() local s = api.stage(); for _, k in ipairs(s.critters) do k.state, k.y = "gone", -999 end; tp(2300, 156); carry() end }, { wait = 0.2 },
+      { act = function() hold("right") end }, { cond = function(p) return p.x >= 2306 end, act = function() jump("right", "jump") end, limit = 2 },
+      { during = 0.3 }, { cond = function(p) return p.onGround and p.mode == "normal" and p.y < 100 end, act = function() end, limit = 3 },
+      { act = function(p) release(); report("market: tub, parasol bounce, up onto the balcony", near(p.y, 88) and p.x > 2407 and p.carrying ~= nil, ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      { act = function() local s = api.stage(); s.hearts = 3; hearts = 3; tp(2476, 88); hold("right") end }, { during = 0.4 },
+      { cond = function(p) return p.onGround and p.mode == "normal" and p.y <= 121 end, act = function() end, limit = 3 },
+      { act = function(p) release(); report("canal: off the balcony, the awning launches her onto the crates", near(p.y, 120) and p.x > 2611 and p.carrying ~= nil, ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      { act = function() local s = api.stage(); s.lamps[5].lit = false; tp(2520, 184); carry() end }, { wait = 0.1 },
+      { act = function() hold("right") end }, { during = 1.5 },
+      { cond = function(p, s) return s.ball.state == "rest" and not s.drownT and not s.deadT end, act = function() end, limit = 4 },
+      { act = function(p) release(); local s = api.stage(); local b = s.ball
+          report("canal: walking in drowns; the ball is back by the lamp", s.hearts == hearts - 1 and near(b.x, 2552) and b.state == "rest", ("hearts %d, ball %s x %.0f"):format(s.hearts, b.state, b.x)) end },
+      { act = function() local z1, z2 = api.stage().def.bikes[1], api.stage().def.bikes[2]
+          local tops = { prop("KIOSK", 2).y0, prop("SHELTER", 2).y0 }
+          report("tram 2: faster and more often; its perches are above it", z2.speed > z1.speed and z2.every < z1.every and tops[1] < 184 - z2.h and tops[2] < 184 - z2.h,
+            ("speed %d, every %.1f s"):format(z2.speed, z2.every)) end },
       -- 11 the girl at the stairs: reaching her without the ball does nothing, giving her the ball clears
-      { act = function() local s = api.stage(); s.ball.state = "rest"; s.pepper.carrying = nil; tp(1800, 184); hold("right") end },
+      { act = function() local s = api.stage(); s.ball.state = "rest"; s.pepper.carrying = nil; tp(2120, 184); hold("right") end },
       { wait = 3.0 },
       { act = function() release(); report("girl: without the ball the level goes on", api.getState() == "play" and not api.stage().clearT, api.getState()) end },
       { act = function() local s = api.stage(); carry(); tp(s.girl.x - 30, 184); s.pepper.face = 1 end }, { wait = 0.1 },
@@ -273,16 +305,24 @@ return function(mode, api)
       at(function(p) return p.vy > 0 end, function() release() end),
       at(function(p) return p.onGround and p.y <= 113 end, function() hold("right") end),
       at(function(p) return p.onGround and p.y >= 183 end, function() hold("right") end),
-      -- 4 the plaza: onto the pedestal, bark the cat off, up the arm to the hat (gold bone), down, pick up the ball
-      at(function(p) return p.x >= 1060 end, function() jump("right", "jump") end),             -- over the tub
+      -- 4 the bakery row: onto the springy awning, launched over the crates; the second awning up to the sign
+      at(function(p) return p.onGround and p.y >= 183 and p.x >= 960 end, function() jump("right", "jump") end),
+      at(function(p) return p.onGround and p.x > 1100 end, function() hold("right") end),
+      at(function(p) return p.onGround and p.y >= 183 end, function() hold("right") end),
+      at(function(p) return p.x >= 1204 end, function() jump("right", "jump") end),
+      at(function(p) return p.vy < 0 and p.y < 140 and p.x >= 1266 end, function() hold("jump") end),   -- brake in the air
+      at(function(p) return p.onGround and p.y <= 65 end, function() hold("right") end),
+      at(function(p) return p.onGround and p.y >= 183 end, function() hold("right") end),
+      -- 5 the plaza: onto the pedestal, bark the cat off, up the arm to the hat (gold bone), down, pick up the ball
+      at(function(p) return p.x >= 1380 end, function() jump("right", "jump") end),             -- over the tub
       at(function(p) return p.onGround and p.y <= 145 end, function() release() end),
       at(function(p) return math.abs(p.vx) < 1 end, function() love.keypressed("z") end),
       { wait = 0.6 },
       at(function(p, s) return s.ball.state == "rest" end, function() hold("right") end),
-      at(function(p) return p.x >= 1150 end, function() jump("right", "jump") end),
-      at(function(p) return p.x >= 1168 end, function() hold("jump") end),                    -- brake in the air
+      at(function(p) return p.x >= 1470 end, function() jump("right", "jump") end),
+      at(function(p) return p.x >= 1488 end, function() hold("jump") end),                    -- brake in the air
       at(function(p) return p.onGround and p.y <= 109 end, function() hold("left") end),
-      at(function(p) return p.x <= 1166 end, function() release() end),
+      at(function(p) return p.x <= 1486 end, function() release() end),
       { wait = 0.25 }, { act = function() jump("jump") end },
       at(function(p) return p.onGround and p.y <= 77 end, function() release() end),
       { wait = 0.2 }, { act = function() hold("right") end },
@@ -299,22 +339,39 @@ return function(mode, api)
       { wait = 0.2 }, { act = function() love.keypressed("x") end }, { wait = 0.6 },
       -- 5 the fountain with the ball: onto the rim, the bowl, the far rim
       at(function(p) return p.carrying ~= nil end, function() hold("right") end, 2),
-      at(function(p) return p.x >= 1374 end, function() jump("right", "jump") end, 9),
+      at(function(p) return p.x >= 1694 end, function() jump("right", "jump") end, 9),
       { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p) return p.onGround and p.y <= 169 end, function() hold("right") end),
-      at(function(p) return p.x >= 1410 end, function() jump("right", "jump") end),                -- tapped hops
+      at(function(p) return p.x >= 1730 end, function() jump("right", "jump") end),                -- tapped hops
       { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p) return p.onGround and p.y <= 161 end, function() hold("right") end),
-      at(function(p) return p.x >= 1478 end, function() jump("right", "jump") end),
+      at(function(p) return p.x >= 1798 end, function() jump("right", "jump") end),
       { wait = 1 / 60 }, { act = function() hold("right") end },
-      at(function(p) return p.onGround and p.y <= 169 and p.x > 1515 end, function() hold("right") end),
+      at(function(p) return p.onGround and p.y <= 169 and p.x > 1835 end, function() hold("right") end),
       -- 6 tram street: onto the kiosk, onto the shelter roof, wait there for the tram to pass, down the stairs
-      at(function(p) return p.x >= 1622 and p.onGround and p.y > 183 end, function() jump("right", "jump") end, 9),
+      at(function(p) return p.x >= 1942 and p.onGround and p.y > 183 end, function() jump("right", "jump") end, 9),
       at(function(p) return p.onGround and p.y <= 149 end, function() hold("right") end),
-      at(function(p) return p.x >= 1672 end, function() jump("right", "jump") end),
+      at(function(p) return p.x >= 1992 end, function() jump("right", "jump") end),
       at(function(p) return p.vy > 0 end, function() release() end),
       at(function(p) return p.onGround and p.y <= 137 end, function() release() end),
       at(function(p, s) return s.bikes[1] and s.bikes[1].x < p.x - 60 end, function() hold("right") end, 12),
+      -- 8 the flower market, carrying the ball: bark the first goose off, then the high route: the tub, the table,
+      --   the springy parasol, the balcony; off the balcony onto the canal's awning, which launches her over
+      at(function(p, s) local k = s.critters[1]; return p.onGround and p.y >= 183 and (k.state == "gone" or k.x - p.x < 76) end, function() release(); love.keypressed("z") end, 9),
+      { wait = 0.5 }, { act = function() hold("right") end },
+      at(function(p) return p.x >= 2256 end, function() jump("right", "jump") end),
+      at(function(p) return p.onGround and p.y <= 157 end, function() hold("right") end),
+      at(function(p) return p.x >= 2306 end, function() jump("right", "jump") end),           -- onto the parasol: up
+      at(function(p) return p.onGround and p.y <= 89 end, function() hold("right") end),     -- the balcony
+      -- 9 the canal: off the balcony onto the awning, launched over the water onto the crates, down
+      at(function(p) return p.onGround and p.y <= 121 end, function() hold("right") end),
+      at(function(p) return p.onGround and p.y >= 183 end, function() hold("right") end),
+      -- 10 tram street again: onto the kiosk, wait for the fast tram, on over the shelter roof to Mia
+      at(function(p) return p.x >= 2814 end, function() jump("right", "jump") end),
+      at(function(p) return p.onGround and p.y <= 149 end, function() release() end),
+      at(function(p, s) return s.bikes[1] and s.bikes[1].x < p.x - 60 end, function() hold("right") end, 12),
+      at(function(p) return p.x >= 2874 end, function() jump("right", "jump") end),
+      at(function(p) return p.onGround and p.y <= 137 end, function() hold("right") end),
       at(function(p, s) return p.onGround and p.y >= 183 and p.x >= s.girl.x - 40 end, function() release() end, 9),
       { wait = 0.3 }, { act = function() love.keypressed("x") end },
       at(function() return api.getState() == "clear" end, function() end, 9),
@@ -329,16 +386,17 @@ return function(mode, api)
     steps = { { act = function() api.setState("intro") end }, { wait = 0.6 }, shot("dt_00_intro"),
       { act = function() love.keypressed("space") end }, { wait = 0.3 } }
     -- one shot per screen (camera on the screen's left edge), Pepper standing in it
-    local spots = { { 60, 184 }, { 340, 184 }, { 650, 184 }, { 1060, 184 }, { 1340, 184 }, { 1668, 148 } }
+    local spots = { { 60, 184 }, { 340, 184 }, { 650, 184 }, { 990, 184 }, { 1380, 184 }, { 1690, 184 }, { 1988, 148 },
+      { 2170, 184 }, { 2470, 184 }, { 2860, 148 } }
     for i, sp in ipairs(spots) do
       steps[#steps + 1] = { act = function() tp(sp[1], sp[2]) end }
-      if i == 6 then steps[#steps + 1] = { act = function() tram(1860) end } end
-      steps[#steps + 1] = { wait = i == 6 and 0.6 or 0.6 }
+      if i == 7 then steps[#steps + 1] = { act = function() tram(2180) end } end
+      steps[#steps + 1] = { wait = 0.6 }
       steps[#steps + 1] = shot(("dt_%02d_screen%d"):format(i, i), (i - 1) * 320)
     end
     -- the cat beat: bark from the pedestal, the cat startles, leaps off, runs; the ball on the street; pick it up
-    local beatCam = 1010
-    steps[#steps + 1] = { act = function() tp(1146, 144); api.stage().pepper.face = 1 end }
+    local beatCam = 1330
+    steps[#steps + 1] = { act = function() tp(1466, 144); api.stage().pepper.face = 1 end }
     steps[#steps + 1] = { wait = 0.5 }; steps[#steps + 1] = shot("dt_07_cat", beatCam)
     steps[#steps + 1] = { act = function() love.keypressed("z") end }
     steps[#steps + 1] = { wait = 0.15 }; steps[#steps + 1] = shot("dt_08_bark", beatCam)
@@ -349,18 +407,25 @@ return function(mode, api)
     steps[#steps + 1] = { wait = 0.2 }; steps[#steps + 1] = { act = function() love.keypressed("x") end }
     steps[#steps + 1] = { wait = 0.3 }; steps[#steps + 1] = shot("dt_12_pickup", beatCam)
     steps[#steps + 1] = { act = function() love.keypressed("g") end }; steps[#steps + 1] = { wait = 0.1 }
-    steps[#steps + 1] = shot("dt_13_debug_screen4", 960)
-    steps[#steps + 1] = { act = function() tp(1472, 160) end }; steps[#steps + 1] = { wait = 0.3 }
-    steps[#steps + 1] = shot("dt_14_debug_screen5", 1280)
-    steps[#steps + 1] = { act = function() tp(1668, 148) end }; steps[#steps + 1] = { wait = 0.3 }
-    steps[#steps + 1] = shot("dt_15_debug_screen6", 1600)
+    steps[#steps + 1] = shot("dt_13_debug_screen5", 1280)
+    steps[#steps + 1] = { act = function() tp(1792, 160) end }; steps[#steps + 1] = { wait = 0.3 }
+    steps[#steps + 1] = shot("dt_14_debug_screen6", 1600)
+    steps[#steps + 1] = { act = function() tp(1988, 148) end }; steps[#steps + 1] = { wait = 0.3 }
+    steps[#steps + 1] = shot("dt_15_debug_screen7", 1920)
     steps[#steps + 1] = { act = function() love.keypressed("g") end }
     -- the new spots: the tub before the pedestal, the rooftop route, the tram's warning sign
     local function add(t) for _, st in ipairs(t) do steps[#steps + 1] = st end end
-    add({ { act = function() tp(1104, 156) end }, { wait = 0.4 }, shot("dt_18_tub", 990),
-          { act = function() tp(1472, 104); carry() end }, { wait = 0.4 }, shot("dt_19_rooftops", 1260),
-          { act = function() local s = api.stage(); s.pepper.carrying = nil; s.ball.state = "rest"; tp(1668, 148); s.bikes = { Sp.spawn(s, s.def.bikes[1]) } end },
-          { wait = 0.1 }, shot("dt_20_tram_warning", 1600) })
+    add({ { act = function() tp(1424, 156) end }, { wait = 0.4 }, shot("dt_18_tub", 1310),
+          { act = function() tp(1792, 104); carry() end }, { wait = 0.4 }, shot("dt_19_rooftops", 1580),
+          { act = function() local s = api.stage(); s.pepper.carrying = nil; s.ball.state = "rest"; tp(1988, 148); s.bikes = { Sp.spawn(s, s.def.bikes[1]) } end },
+          { wait = 0.1 }, shot("dt_20_tram_warning", 1920) })
+    -- the new screens: a bounce off the bakery awning, the geese, the flight over the canal
+    add({ { act = function() local s = api.stage(); s.bikes = {}; tp(992, 184); hold("right") end }, { wait = 0.05 }, { act = function() jump("right", "jump") end },
+          { cond = function(p) return p.vy < -200 and p.y < 140 end, act = function() end, limit = 3 }, { wait = 0.15 }, shot("dt_21_bounce", 960),
+          { act = function() release(); tp(2150, 184) end }, { wait = 0.8 }, shot("dt_22_geese", 2136),
+          { act = function() local s = api.stage(); for _, k in ipairs(s.critters) do k.state, k.y = "gone", -999 end; tp(2476, 88); carry(); hold("right") end },
+          { cond = function(p) return p.vy < -100 and p.x > 2520 end, act = function() end, limit = 3 }, { wait = 0.25 }, shot("dt_23_canal", 2460),
+          { act = function() release(); local s = api.stage(); s.pepper.carrying = nil; s.ball.state = "rest" end } })
     -- give the girl the ball: the tally
     steps[#steps + 1] = { act = function() local s = api.stage(); carry(); tp(s.girl.x - 30, 184); s.pepper.face = 1 end }
     steps[#steps + 1] = { wait = 0.2 }; steps[#steps + 1] = { act = function() love.keypressed("x") end }
@@ -369,7 +434,7 @@ return function(mode, api)
     steps[#steps + 1] = { wait = 0.3 }; steps[#steps + 1] = { act = function() love.event.quit() end }
   end
 
-  local i, since, T, lastHearts = 1, 0, 0, nil
+  local i, since, T, lastHearts, lastBikes = 1, 0, 0, nil, nil
   local old = love.update
   love.update = function(dt)
     dt = 1 / 60; T = T + dt; since = since + dt
@@ -377,8 +442,11 @@ return function(mode, api)
     local s = api.stage(); local p = s and s.pepper
     if mode == "--auto" then
       frame = frame + 1
-      if s and s.hearts ~= (lastHearts or s.maxHearts) then print(("  lost a heart at x %.0f y %.0f (step %d)"):format(p.x, p.y, i)) end
+      if s and s.hearts ~= (lastHearts or s.maxHearts) then print(("  lost a heart at x %.0f y %.0f (step %d)%s"):format(p.x, p.y, i, s.bikes[1] and (" tram at %.0f"):format(s.bikes[1].x) or "")) end
       lastHearts = s and s.hearts
+      if os.getenv("AUTO_DEBUG") and s and #s.bikes ~= (lastBikes or 0) then print(("  bikes %d: pepper x %.0f cam %.0f bike x %s"):format(#s.bikes, p.x, s.cam, s.bikes[1] and ("%.0f"):format(s.bikes[1].x) or "-")) end
+      lastBikes = s and #s.bikes
+      if os.getenv("AUTO_TRACE") and p and p.x > tonumber(os.getenv("AUTO_TRACE")) and frame % 6 == 0 then print(("    f%d x %.0f y %.0f vx %.0f %s %s"):format(frame, p.x, p.y, p.vx, p.mode, p.anim or "")) end
       if frame % 3 == 0 then n = n + 1; love.graphics.captureScreenshot(("rec/%04d.png"):format(n)) end
     end
     local st = steps[i]

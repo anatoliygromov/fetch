@@ -1,20 +1,28 @@
 -- Level 2: Downtown (greybox). Terrain is in downtown.map; this file places everything else.
 -- Same format as citypark.lua. x, y in level pixels; y grows downwards; "feet" = the y Pepper stands on.
--- The street (feet) is y 184. The fountain's water starts at y 192. The level is 1920 px (6 screens). See
--- docs/downtown_beatsheet.md.
+-- The street (feet) is y 184. The fountain's water starts at y 192. The level is 3200 px (10 screens). See
+-- docs/downtown_beatsheet.md (the first 6 screens) and docs/progression.md.
 --
--- Screens (320 px each):
+-- Screens (320 px each). Manner: bounce and carry. New here: springy awnings and parasols (bounce = h), and a
+-- long carry: after the cat, Pepper carries the ball through five screens of water, geese and trams.
 --   1  Old town lane  tap A to hop up the crate steps
 --   2  Cafe terrace   two cafe tables: crawl under them or jump on; their parasols are one-way tops, and from the
 --                     second parasol a jump reaches the shop sign (gold bone)
 --   3  Market         a stall: jump onto the counter, up onto its awning; a crate stack up to a second awning
---   4  The plaza      the cat sits on the ball on the statue's arm: bark it off, pick up the ball. A flower tub is a
+--   4  Bakery row     a springy awning launches Pepper over a crate wall too high to jump; a springier one up to
+--                     the bakery sign (gold bone). Holding Down she can stand on one.
+--   5  The plaza      the cat sits on the ball on the statue's arm: bark it off, pick up the ball. A flower tub is a
 --                     step up to the pedestal; the pedestal, the arm and the hat are a climb (gold bone on the hat)
---   5  The fountain   carry the ball over the basin: hop from rim to fountain bowl to rim. Falling in costs a heart, and the
---                     ball goes back to the plaza. Or the high route: from the statue's arm along the balconies and
---                     over the fountain's top tier (gold bone), down by the lamp before tram street
---   6  Tram street    the tram zone: up on the kiosk and the shelter roof while the tram passes, then the girl
---                     waiting at the stairs down to the river: give her the ball (X), GOOD GIRL!
+--   6  The fountain   carry the ball over the basin: hop from rim to fountain bowl to rim. Or the high route: from
+--                     the statue's arm along the balconies and over the fountain's top tier (gold bone)
+--   7  Tram street    the tram zone: up on the kiosk and the shelter roof while the tram passes
+--   8  Flower market  two geese: a bite knocks the ball out. Bark them off, or go high: the tub, the cafe table, the
+--                     springy parasol, the balcony
+--   9  The canal      the awning at the edge launches Pepper over the water onto the crates on the far quay
+--  10  Tram street    a faster tram, every 5 s: the kiosk, the shelter, then Mia at the stairs down to the river:
+--                     give her the ball (X), GOOD GIRL!
+-- Falling in the water with the ball (fountain, canal) costs a heart; the ball goes back by the last lamp Pepper
+-- carried it past (L.ballHomeAtLamps), or to the statue.
 --
 -- Story (level 2 of 3): in town the ball rolled away across the plaza and a cat sat on it. Pepper barks the cat
 -- away and carries the ball to the girl, who waits at the stairs down to the river. Level 3 (River Walk): by the
@@ -68,64 +76,105 @@ L.props = {
   { name = "CRATES",   kind = "solid",  layer = "play", x0 = 832,  x1 = 864,  y0 = 152, y1 = 184, label = "top" },
   { name = "",         kind = "decor",  layer = "back", x0 = 932,  x1 = 936,  y0 = 112, y1 = 184 },     -- awning post
   { name = "AWNING",   kind = "oneway", layer = "play", x0 = 872,  x1 = 936,  y0 = 112, y1 = 116, label = "below" },
-  -- screen 4: the plaza. A flower tub (28 px up: a tap hop and a scramble, or a held jump) stands before the
+  -- screen 4: the bakery row (968-1288). Springy awnings (bounce = h: landing on one launches Pepper h px up;
+  -- holding Down she stands on it). The crate stack (64 px, more than a jump and a scramble) is only crossed by
+  -- bouncing off the first awning; the second, springier one reaches the bakery sign (gold bone).
+  { name = "",         kind = "decor",  layer = "back", x0 = 1010, x1 = 1014, y0 = 152, y1 = 184 },     -- awning posts
+  { name = "",         kind = "decor",  layer = "back", x0 = 1066, x1 = 1070, y0 = 152, y1 = 184 },
+  { name = "AWNING",   kind = "oneway", layer = "play", x0 = 1008, x1 = 1072, y0 = 152, y1 = 156, label = "below", bounce = 76 },
+  { name = "CRATES",   kind = "solid",  layer = "play", x0 = 1104, x1 = 1136, y0 = 120, y1 = 184, label = "top" },
+  { name = "CRATES",   kind = "solid",  layer = "play", x0 = 1136, x1 = 1168, y0 = 152, y1 = 184, label = "top" },
+  { name = "",         kind = "decor",  layer = "back", x0 = 1234, x1 = 1238, y0 = 152, y1 = 184 },
+  { name = "",         kind = "decor",  layer = "back", x0 = 1290, x1 = 1294, y0 = 152, y1 = 184 },
+  { name = "AWNING",   kind = "oneway", layer = "play", x0 = 1232, x1 = 1296, y0 = 152, y1 = 156, label = "below", bounce = 100 },
+  { name = "",         kind = "decor",  layer = "back", x0 = 1308, x1 = 1312, y0 = 60,  y1 = 152 },     -- sign post
+  { name = "SIGN",     kind = "oneway", layer = "play", x0 = 1270, x1 = 1310, y0 = 64,  y1 = 68,  label = "below" },
+  -- screen 5: the plaza. A flower tub (28 px up: a tap hop and a scramble, or a held jump) stands before the
   -- pedestal, which is 12 px above it (40 px above the street: a held jump); the statue's arm is 36 px above the
   -- pedestal, its hat 32 px above the arm. The cat sits on the ball on the arm.
-  { name = "TUB",      kind = "solid",  layer = "play", x0 = 1088, x1 = 1120, y0 = 156, y1 = 184, label = "top" },
-  { name = "STATUE",   kind = "decor",  layer = "back", x0 = 1130, x1 = 1158, y0 = 80,  y1 = 144 },
-  { name = "PEDESTAL", kind = "solid",  layer = "play", x0 = 1120, x1 = 1168, y0 = 144, y1 = 184 },
-  { name = "ARM",      kind = "oneway", layer = "play", x0 = 1158, x1 = 1198, y0 = 108, y1 = 112, label = "below" },
-  { name = "",         kind = "oneway", layer = "play", x0 = 1132, x1 = 1156, y0 = 76,  y1 = 80 },      -- the hat
+  { name = "TUB",      kind = "solid",  layer = "play", x0 = 1408, x1 = 1440, y0 = 156, y1 = 184, label = "top" },
+  { name = "STATUE",   kind = "decor",  layer = "back", x0 = 1450, x1 = 1478, y0 = 80,  y1 = 144 },
+  { name = "PEDESTAL", kind = "solid",  layer = "play", x0 = 1440, x1 = 1488, y0 = 144, y1 = 184 },
+  { name = "ARM",      kind = "oneway", layer = "play", x0 = 1478, x1 = 1518, y0 = 108, y1 = 112, label = "below" },
+  { name = "",         kind = "oneway", layer = "play", x0 = 1452, x1 = 1476, y0 = 76,  y1 = 80 },      -- the hat
   -- the high route (the rooftops): three houses at the back of the plaza (decoration, base y 174) with balconies
   -- (one-way, y 104, 96, 104) and the fountain's top tier (one-way, y 104) between them. From the statue's arm
   -- a running held jump reaches the first balcony; from the last, Pepper drops to the street by the lamp.
-  { name = "HOUSE",    kind = "decor",  layer = "back", x0 = 1216, x1 = 1304, y0 = 56,  y1 = 174, label = "top" },
-  { name = "HOUSE",    kind = "decor",  layer = "back", x0 = 1324, x1 = 1404, y0 = 48,  y1 = 174, label = "top" },
-  { name = "HOUSE",    kind = "decor",  layer = "back", x0 = 1512, x1 = 1580, y0 = 56,  y1 = 174, label = "top" },
-  { name = "BALCONY",  kind = "oneway", layer = "play", x0 = 1232, x1 = 1288, y0 = 104, y1 = 108, label = "below" },
-  { name = "BALCONY",  kind = "oneway", layer = "play", x0 = 1336, x1 = 1392, y0 = 96,  y1 = 100, label = "below" },
-  { name = "",         kind = "decor",  layer = "back", x0 = 1468, x1 = 1476, y0 = 108, y1 = 128 },     -- the tier's column
-  { name = "TIER",     kind = "oneway", layer = "play", x0 = 1448, x1 = 1496, y0 = 104, y1 = 108, label = "below" },
-  { name = "BALCONY",  kind = "oneway", layer = "play", x0 = 1520, x1 = 1576, y0 = 104, y1 = 108, label = "below" },
-  -- screen 5: the fountain. The basin's water is x 1416-1528 (from y 192); the rims are 16 px up (a hop), the
+  { name = "HOUSE",    kind = "decor",  layer = "back", x0 = 1536, x1 = 1624, y0 = 56,  y1 = 174, label = "top" },
+  { name = "HOUSE",    kind = "decor",  layer = "back", x0 = 1644, x1 = 1724, y0 = 48,  y1 = 174, label = "top" },
+  { name = "HOUSE",    kind = "decor",  layer = "back", x0 = 1832, x1 = 1900, y0 = 56,  y1 = 174, label = "top" },
+  { name = "BALCONY",  kind = "oneway", layer = "play", x0 = 1552, x1 = 1608, y0 = 104, y1 = 108, label = "below" },
+  { name = "BALCONY",  kind = "oneway", layer = "play", x0 = 1656, x1 = 1712, y0 = 96,  y1 = 100, label = "below" },
+  { name = "",         kind = "decor",  layer = "back", x0 = 1788, x1 = 1796, y0 = 108, y1 = 128 },     -- the tier's column
+  { name = "TIER",     kind = "oneway", layer = "play", x0 = 1768, x1 = 1816, y0 = 104, y1 = 108, label = "below" },
+  { name = "BALCONY",  kind = "oneway", layer = "play", x0 = 1840, x1 = 1896, y0 = 104, y1 = 108, label = "below" },
+  -- screen 6: the fountain. The basin's water is x 1736-1848 (from y 192); the rims are 16 px up (a hop), the
   -- fountain bowl in the middle 24 px up, 40 px from each rim: a tapped hop from rim to bowl to rim.
-  { name = "",         kind = "decor",  layer = "back", x0 = 1416, x1 = 1528, y0 = 184, y1 = 240 },     -- the basin's inside
-  { name = "RIM",      kind = "solid",  layer = "play", x0 = 1400, x1 = 1416, y0 = 168, y1 = 184, label = "top" },
-  { name = "",         kind = "decor",  layer = "back", x0 = 1466, x1 = 1478, y0 = 128, y1 = 160 },     -- spout
-  { name = "FOUNTAIN", kind = "solid",  layer = "play", x0 = 1456, x1 = 1488, y0 = 160, y1 = 240, label = "top" },
-  { name = "RIM",      kind = "solid",  layer = "play", x0 = 1528, x1 = 1544, y0 = 168, y1 = 184, label = "top" },
-  -- screen 6: tram street. The kiosk (36 px up) and the shelter roof (one-way, 12 px above the kiosk) are above
-  -- the tram (26 px). Then the stairs down to the river (terrain slopes, x 1888-1920).
-  { name = "KIOSK",    kind = "solid",  layer = "play", x0 = 1648, x1 = 1688, y0 = 148, y1 = 184 },
-  { name = "",         kind = "decor",  layer = "back", x0 = 1732, x1 = 1736, y0 = 140, y1 = 184 },     -- shelter posts
-  { name = "",         kind = "decor",  layer = "back", x0 = 1792, x1 = 1796, y0 = 140, y1 = 184 },
-  { name = "SHELTER",  kind = "oneway", layer = "play", x0 = 1728, x1 = 1800, y0 = 136, y1 = 140, label = "below" },
-  { name = "RIVER",    kind = "decor",  layer = "back", x0 = 1856, x1 = 1884, y0 = 120, y1 = 140 },     -- sign
-  { name = "",         kind = "decor",  layer = "back", x0 = 1868, x1 = 1872, y0 = 140, y1 = 184 },
+  { name = "",         kind = "decor",  layer = "back", x0 = 1736, x1 = 1848, y0 = 184, y1 = 240 },     -- the basin's inside
+  { name = "RIM",      kind = "solid",  layer = "play", x0 = 1720, x1 = 1736, y0 = 168, y1 = 184, label = "top" },
+  { name = "",         kind = "decor",  layer = "back", x0 = 1786, x1 = 1798, y0 = 128, y1 = 160 },     -- spout
+  { name = "FOUNTAIN", kind = "solid",  layer = "play", x0 = 1776, x1 = 1808, y0 = 160, y1 = 240, label = "top" },
+  { name = "RIM",      kind = "solid",  layer = "play", x0 = 1848, x1 = 1864, y0 = 168, y1 = 184, label = "top" },
+  -- screen 7: tram street. The kiosk (36 px up) and the shelter roof (one-way, 12 px above the kiosk) are above
+  -- the tram (26 px). The stairs down to the river are at the end of the level (terrain slopes, x 3168-3200).
+  { name = "KIOSK",    kind = "solid",  layer = "play", x0 = 1968, x1 = 2008, y0 = 148, y1 = 184 },
+  { name = "",         kind = "decor",  layer = "back", x0 = 2052, x1 = 2056, y0 = 140, y1 = 184 },     -- shelter posts
+  { name = "",         kind = "decor",  layer = "back", x0 = 2112, x1 = 2116, y0 = 140, y1 = 184 },
+  { name = "SHELTER",  kind = "oneway", layer = "play", x0 = 2048, x1 = 2120, y0 = 136, y1 = 140, label = "below" },
+  -- screen 8: the flower market (2136-2456), carrying the ball. Two geese on the cobbles: a bite knocks the ball
+  -- out of Pepper's mouth. Bark them off, or go high: the tub, the cafe table, the springy parasol, the balcony.
+  { name = "TUB",      kind = "solid",  layer = "play", x0 = 2280, x1 = 2312, y0 = 156, y1 = 184, label = "top" },
+  { name = "",         kind = "decor",  layer = "back", x0 = 2366, x1 = 2370, y0 = 118, y1 = 158 },     -- parasol pole
+  { name = "",         kind = "decor",  layer = "back", x0 = 2348, x1 = 2352, y0 = 165, y1 = 184 },     -- legs
+  { name = "",         kind = "decor",  layer = "back", x0 = 2384, x1 = 2388, y0 = 165, y1 = 184 },
+  { name = "TABLE",    kind = "solid",  layer = "play", x0 = 2344, x1 = 2392, y0 = 158, y1 = 165, label = "below" },
+  { name = "PARASOL",  kind = "oneway", layer = "play", x0 = 2336, x1 = 2400, y0 = 114, y1 = 118, label = "below", bounce = 64 },
+  { name = "HOUSE",    kind = "decor",  layer = "back", x0 = 2404, x1 = 2492, y0 = 56,  y1 = 174, label = "top" },
+  { name = "BALCONY",  kind = "oneway", layer = "play", x0 = 2420, x1 = 2476, y0 = 88,  y1 = 92,  label = "below" },
+  -- screen 9: the canal (2456-2776). Its water (x 2560-2624, from y 192) runs under a wall of crates 64 px
+  -- high on the far quay: too high to jump. The springy awning at the edge launches Pepper over the water onto them.
+  { name = "",         kind = "decor",  layer = "back", x0 = 2498, x1 = 2502, y0 = 152, y1 = 184 },
+  { name = "",         kind = "decor",  layer = "back", x0 = 2554, x1 = 2558, y0 = 152, y1 = 184 },
+  { name = "AWNING",   kind = "oneway", layer = "play", x0 = 2496, x1 = 2560, y0 = 152, y1 = 156, label = "below", bounce = 80 },
+  { name = "CRATES",   kind = "solid",  layer = "play", x0 = 2624, x1 = 2656, y0 = 120, y1 = 240, label = "top" },
+  { name = "CRATES",   kind = "solid",  layer = "play", x0 = 2656, x1 = 2688, y0 = 120, y1 = 184, label = "top" },
+  { name = "CRATES",   kind = "solid",  layer = "play", x0 = 2688, x1 = 2720, y0 = 152, y1 = 184, label = "top" },
+  -- screen 10: tram street again (2776-3096): a faster tram, every 5 s. The kiosk, then a shelter roof a running
+  -- jump away. Then Mia at the stairs down to the river.
+  { name = "KIOSK",    kind = "solid",  layer = "play", x0 = 2840, x1 = 2880, y0 = 148, y1 = 184 },
+  { name = "",         kind = "decor",  layer = "back", x0 = 2952, x1 = 2956, y0 = 140, y1 = 184 },     -- shelter posts
+  { name = "",         kind = "decor",  layer = "back", x0 = 3012, x1 = 3016, y0 = 140, y1 = 184 },
+  { name = "SHELTER",  kind = "oneway", layer = "play", x0 = 2948, x1 = 3020, y0 = 136, y1 = 140, label = "below" },
+  { name = "RIVER",    kind = "decor",  layer = "back", x0 = 3136, x1 = 3164, y0 = 120, y1 = 140 },     -- sign
+  { name = "",         kind = "decor",  layer = "back", x0 = 3148, x1 = 3152, y0 = 140, y1 = 184 },
   -- foreground frame: arcade pillars
   { name = "",         kind = "decor",  layer = "front", x0 = 620,  x1 = 632,  y0 = 221, y1 = 240 },
-  { name = "",         kind = "decor",  layer = "front", x0 = 1580, x1 = 1592, y0 = 221, y1 = 240 },
+  { name = "",         kind = "decor",  layer = "front", x0 = 1900, x1 = 1912, y0 = 221, y1 = 240 },
 }
 
 -- lamp posts: every one is a checkpoint
-L.lamps = {
-  { x = 296,  y = 184, checkpoint = true },
+L.lamps = {                    -- one every 1.5 screens or so (City Park: every screen)
   { x = 636,  y = 184, checkpoint = true },
   { x = 960,  y = 184, checkpoint = true },
-  { x = 1300, y = 184, checkpoint = true },
-  { x = 1600, y = 184, checkpoint = true },
+  { x = 1620, y = 184, checkpoint = true },
+  { x = 1920, y = 184, checkpoint = true },
+  { x = 2528, y = 184, checkpoint = true },
+  { x = 2776, y = 184, checkpoint = true },
 }
+-- a lamp Pepper reaches while carrying the ball becomes the ball's home: if it is lost (the fountain, the canal),
+-- it comes back there, not all the way back at the statue
+L.ballHomeAtLamps = true
 
 L.movers = {}
 
 -- the cat sits on the ball on the statue's arm; a bark within 90 px scares it off and the ball drops to the
--- street. If Pepper falls in the fountain with the ball, it goes back there.
-L.ball = { x = 1188, y = 108 }
-L.cat = { x = 1188, y = 102, range = 90 }
+-- street. If Pepper falls in the water with the ball, it goes back there (or by the last lamp she carried it to).
+L.ball = { x = 1508, y = 108 }
+L.cat = { x = 1508, y = 102, range = 90 }
 L.ballBack = "THE BALL IS BACK BY THE STATUE"
 L.pickupSay = "BRING ME THE BALL!"
 -- the girl waits at the top of the stairs down to the river
-L.girl = { x = 1860, y = 184 }
+L.girl = { x = 3140, y = 184 }
 L.outro = { "BY THE RIVER MIA THREW IT", "AGAIN. IT LANDED ON A FERRY..." }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
@@ -140,15 +189,26 @@ L.bones = {
   { x = 708, y = 156 }, { x = 720, y = 116 }, { x = 816, y = 168 }, { x = 848, y = 152 }, { x = 888, y = 112 },
   { x = 912, y = 112 }, { x = 920, y = 184 },
   -- 4 the plaza: the pedestal, the hat
-  { x = 1000, y = 184 }, { x = 1030, y = 184 }, { x = 1104, y = 156 }, { x = 1132, y = 144 }, { x = 1156, y = 144 },
-  { x = 1144, y = 76, super = true }, { x = 1230, y = 184 }, { x = 1250, y = 184 },
+  { x = 1320, y = 184 }, { x = 1350, y = 184 }, { x = 1424, y = 156 }, { x = 1452, y = 144 }, { x = 1476, y = 144 },
+  { x = 1464, y = 76, super = true }, { x = 1550, y = 184 }, { x = 1570, y = 184 },
   -- 5 the fountain: over the water, on the bowl
-  { x = 1340, y = 184 }, { x = 1408, y = 168 }, { x = 1438, y = 160 }, { x = 1472, y = 160 }, { x = 1506, y = 160 },
-  { x = 1536, y = 168 }, { x = 1570, y = 184 },
+  { x = 1660, y = 184 }, { x = 1728, y = 168 }, { x = 1758, y = 160 }, { x = 1792, y = 160 }, { x = 1826, y = 160 },
+  { x = 1856, y = 168 }, { x = 1890, y = 184 },
   -- 5 the rooftops (the high route): the balconies, gold on the fountain's top tier
-  { x = 1260, y = 104 }, { x = 1364, y = 96 }, { x = 1472, y = 104, super = true }, { x = 1548, y = 104 },
-  -- 6 tram street: the kiosk, the shelter roof
-  { x = 1660, y = 148 }, { x = 1676, y = 148 }, { x = 1748, y = 136 }, { x = 1772, y = 136 }, { x = 1832, y = 184 },
+  { x = 1580, y = 104 }, { x = 1684, y = 96 }, { x = 1792, y = 104, super = true }, { x = 1868, y = 104 },
+  -- 4 the bakery row: on the first awning, up over the crates, gold on the bakery sign
+  { x = 1040, y = 152 }, { x = 1072, y = 104 }, { x = 1096, y = 88 }, { x = 1120, y = 120 }, { x = 1152, y = 152 },
+  { x = 1264, y = 120 }, { x = 1290, y = 64, super = true },
+  -- 7 tram street: the kiosk, the shelter roof
+  { x = 1980, y = 148 }, { x = 1996, y = 148 }, { x = 2068, y = 136 }, { x = 2092, y = 136 },
+  -- 8 the flower market: the tub, the table, high over the parasol, the balcony
+  { x = 2200, y = 184 }, { x = 2296, y = 156 }, { x = 2368, y = 158 }, { x = 2368, y = 80 }, { x = 2400, y = 64 },
+  { x = 2436, y = 88 }, { x = 2460, y = 88 },
+  -- 9 the canal: over the water, along the crates
+  { x = 2528, y = 152 }, { x = 2568, y = 96 }, { x = 2600, y = 88 }, { x = 2640, y = 120 }, { x = 2672, y = 120 },
+  { x = 2704, y = 152 },
+  -- 10 tram street again: the kiosk, the shelter, by Mia
+  { x = 2860, y = 148 }, { x = 2972, y = 136 }, { x = 2996, y = 136 }, { x = 3112, y = 184 },
 }
 
 -- the tram zone (the bike-zone code): a tram drives right to left while Pepper is in the zone, and on until it
@@ -156,32 +216,44 @@ L.bones = {
 -- instead of following the ground, so it does not drive down the river stairs. start = "enter": the tram sets
 -- off when Pepper walks into the zone (its bell rings 1 s before it is on screen), then one every 6 s.
 L.bikes = {
-  { zoneX0 = 1610, zoneX1 = 1800, minY = 150, every = 6.0, speed = 110, endX = 1580, kind = "tram", w = 80, h = 26, rail = true, start = "enter" },
+  { zoneX0 = 1930, zoneX1 = 2120, minY = 150, every = 6.0, speed = 110, endX = 1900, kind = "tram", w = 80, h = 26, rail = true, start = "enter" },
+  { zoneX0 = 2800, zoneX1 = 3080, minY = 150, every = 5.0, speed = 130, endX = 2770, kind = "tram", w = 80, h = 26, rail = true, start = "enter" },
+}
+-- the geese on the flower market (critters.lua): one on the cobbles before the tub, one under the balcony
+L.critters = {
+  { kind = "goose", x = 2230, y = 184, x0 = 2190, x1 = 2262 },
+  { kind = "goose", x = 2446, y = 184, x0 = 2424, x1 = 2470 },
 }
 
 -- secrets: reaching one (Pepper's feet in its box) counts it; the tally shows how many were found
 L.secrets = {
   { name = "SHOP SIGN",   x0 = 548,  x1 = 612,  y0 = 70, y1 = 80 },
-  { name = "STATUE HAT",  x0 = 1120, x1 = 1168, y0 = 66, y1 = 76 },
-  { name = "ROOFTOPS",    x0 = 1436, x1 = 1508, y0 = 94, y1 = 104 },   -- the fountain's top tier
+  { name = "STATUE HAT",  x0 = 1440, x1 = 1488, y0 = 66, y1 = 76 },
+  { name = "ROOFTOPS",    x0 = 1756, x1 = 1828, y0 = 94, y1 = 104 },   -- the fountain's top tier
+  { name = "BAKERY SIGN", x0 = 1258, x1 = 1322, y0 = 54, y1 = 64 },
 }
 
 -- hints (St:hint, drawn by talk.lua): first match wins. With btn ("a", "b", "x", "y", "down") it is Pepper's
 -- control hint: a button picture and 1 to 3 words. Without, it is the girl's line. need: see St:zoneHint.
 L.hints = {
-  { x0 = 0,    x1 = 1920, btn = "y",    text = "BARK!",              need = "catnear" },
-  { x0 = 0,    x1 = 1920, btn = "x",    text = "PICK UP",            need = "nearball" },
-  { x0 = 1800, x1 = 1920, btn = "x",    text = "GIVE",               need = "ball" },
+  { x0 = 0,    x1 = 3200, btn = "y",    text = "BARK!",              need = "catnear" },
+  { x0 = 0,    x1 = 3200, btn = "x",    text = "PICK UP",            need = "nearball" },
+  { x0 = 3080, x1 = 3200, btn = "x",    text = "GIVE",               need = "ball" },
+  { x0 = 0,    x1 = 3200, btn = "y",    text = "BARK: SHOO!",        need = "goose" },
   { x0 = 0,    x1 = 152,  btn = "a",    text = "TAP: HOP" },            -- up the crates
   { x0 = 300,  x1 = 368,  btn = "down", text = "CRAWL" },
   { x0 = 640,  x1 = 688,  btn = "a",    text = "HOLD: BIG JUMP" },      -- onto the stall
-  { x0 = 1064, x1 = 1120, btn = "a",    text = "HOLD: BIG JUMP" },      -- onto the pedestal
-  { x0 = 1340, x1 = 1400, btn = "a",    text = "TAP: HOP" },            -- over the fountain
-  { x0 = 960,  x1 = 1240, text = "THE CAT IS ON MY BALL!",    need = "cat" },
-  { x0 = 1240, x1 = 1920, text = "GO BACK: BARK AT THE CAT!", need = "cat" },
-  { x0 = 1280, x1 = 1920, text = "GO BACK FOR THE BALL!",     need = "noball" },
-  { x0 = 1610, x1 = 1800, text = "TRAM! GET UP HIGH!", bike = true },
-  { x0 = 1400, x1 = 1920, text = "BRING ME THE BALL!", need = "ball" },
+  { x0 = 1384, x1 = 1440, btn = "a",    text = "HOLD: BIG JUMP" },      -- onto the pedestal
+  { x0 = 1660, x1 = 1720, btn = "a",    text = "TAP: HOP" },            -- over the fountain
+  { x0 = 968,  x1 = 1010, btn = "a",    text = "BOUNCE ON IT" },        -- the first springy awning
+  { x0 = 1288, x1 = 1560, text = "THE CAT IS ON MY BALL!",    need = "cat" },
+  { x0 = 1560, x1 = 3200, text = "GO BACK: BARK AT THE CAT!", need = "cat" },
+  { x0 = 1600, x1 = 3200, text = "GO BACK FOR THE BALL!",     need = "noball" },
+  { x0 = 1930, x1 = 2120, text = "TRAM! GET UP HIGH!", bike = true },
+  { x0 = 2800, x1 = 3080, text = "A FAST TRAM! GET UP!", bike = true },
+  { x0 = 2136, x1 = 2190, text = "GEESE! DON'T LOSE MY BALL!", need = "ball" },
+  { x0 = 2464, x1 = 2500, text = "BOUNCE OVER THE CANAL!" },
+  { x0 = 1720, x1 = 3200, text = "BRING ME THE BALL!", need = "ball" },
 }
 
 L.intro = { "LEVEL 2", "DOWNTOWN", "A CAT IS SITTING ON THE BALL!", "BARK IT AWAY. BRING THE BALL!" }

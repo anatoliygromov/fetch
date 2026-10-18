@@ -252,7 +252,7 @@ function St:update(dt, presses)
   end
   if b.state == "home" then
     self.ballBackT = (self.ballBackT or 0) - dt
-    if self.ballBackT <= 0 then b.x, b.y, b.state = b.home.x, b.home.y, "rest"; self:say(self.def.ballBack or "THE BALL IS BACK ON THE BOAT", 2.2) end
+    if self.ballBackT <= 0 then b.x, b.y, b.state = b.home.x, b.home.y, "rest"; self:say(b.homeSay or self.def.ballBack or "THE BALL IS BACK ON THE BOAT", 2.2) end
   end
 
   -- bones
@@ -269,6 +269,9 @@ function St:update(dt, presses)
   for _, l in ipairs(self.lamps) do
     if l.checkpoint and not l.lit and p.x >= l.x - 6 and p.x <= l.x + 40 and p.y <= l.y + 2 and p.y >= l.y - 90 and p.mode == "normal" then
       l.lit = true; l.litAt = self.t; self.check = { x = l.x, y = l.y }; S.play("checkpoint")
+      if p.carrying and self.def.ballHomeAtLamps then                -- L.ballHomeAtLamps: a lost ball comes back here
+        self.ball.home = { x = l.x + 24, y = l.y }; self.ball.homeSay = "THE BALL IS BACK BY THE LAMP"
+      end
     end
   end
 
@@ -353,7 +356,7 @@ function St:barkAtCat()
   c.state, c.t = "scared", 0
   c.dir = (c.x >= p.x) and 1 or -1
   b.state, b.vx, b.vy, b.drop, b.airT = "air", -c.dir * 20, -60, true, 0
-  b.home = { x = b.x - c.dir * 12, y = self.world:groundAt(b.x - c.dir * 12) or b.y }
+  b.home = { x = b.x - c.dir * 12, y = self.world:groundAt(b.x - c.dir * 12) or b.y }; b.homeSay = nil
   S.play("spring")
 end
 

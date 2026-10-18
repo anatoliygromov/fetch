@@ -7,7 +7,7 @@
 --          stops and hisses (0.5 s, a "!"), then charges (90 px/s for 0.9 s), then stands blowing (0.8 s) and walks
 --          on. Its bite costs a heart (it is 22 x 20, so a held jump clears it). A bark within 80 px shoos it away for
 --          good: it flaps off, honking (+200). After a bite it struts off the other way for 2 s (never two bites
---          in a row).
+--          in a row). A bite knocks the ball out of Pepper's mouth if she carries it.
 --   gull   { kind = "gull", x0, x1 (where it hunts Pepper), every (s between swoops) }
 --          Circles high over Pepper while she is between x0 and x1. Every few seconds it squawks and its shadow
 --          shows on the ground where she is (0.9 s), then it swoops down to her head height and back up. Crawling
@@ -62,6 +62,7 @@ function Cr.update(s, dt)
         end
         if k.state ~= "proud" and hits(p, k.x - GOOSE_W / 2, k.y - GOOSE_H, k.x + GOOSE_W / 2, k.y) and p:hurt(k.x, w) then
           s:loseHeart(); k.state, k.t, k.dir = "proud", 0, -k.dir           -- one bite, then it struts off the other way
+          if p.carrying then s:dropBall() end                                -- the fright knocks the ball out of her mouth
         end
         if k.state == "proud" then
           k.x = math.max(c.x0, math.min(c.x1, k.x + k.dir * (c.speed or 22) * dt))
@@ -87,7 +88,9 @@ function Cr.update(s, dt)
         k.x = k.sx + (k.tx + (k.tx - k.sx) - k.sx) * u
         k.y = k.sy + (low - k.sy) * (1 - (2 * u - 1) ^ 2)
         if u >= 1 then k.state, k.t, k.timer = "circle", 0, c.every or 4 end
-        if hits(p, k.x - 8, k.y - 4, k.x + 8, k.y + 4) and p:hurt(k.x, w) then s:loseHeart() end
+        if hits(p, k.x - 8, k.y - 4, k.x + 8, k.y + 4) and p:hurt(k.x, w) then
+          s:loseHeart(); if p.carrying then s:dropBall() end
+        end
       end
     end
   end
@@ -208,7 +211,7 @@ end
 function Cr.bounce(s, wasAir)
   local p = s.pepper
   local g = p.ground
-  if wasAir and p.onGround and g and g.bounce and p.mode == "normal" and not p.crouch then
+  if wasAir and p.onGround and g and g.bounce and p.mode == "normal" and not p.crouch and not require("input").down("down") then
     local Pp = require("pepper")
     p.vy = -math.sqrt(2 * 560 * g.bounce); p.onGround = false; p.ground = nil
     p.jumpBase = p.y - g.bounce + Pp.P.minJump
