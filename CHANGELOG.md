@@ -21,6 +21,17 @@ Built on `lk/look` (9c3bcbd). Every placeholder left in the three levels gets re
   0a12ae1a, 36 credits for 3 options; crank loop 26 credits), drawn mirrored so the winch faces the pond, in place of
   the small `park_winch` drawing. She cranks (10 fps) only while the boat is moving (`Sc.winchFrame`, set in
   St:draw from the rope ferries' `dx`), else she holds the handle.
+- **Front-on picnic table** (`art/scene/park_table_front.png`, `tools/make_table_front.py`): the three-quarter
+  table becomes the long side seen at Pepper's height: the tabletop's front edge with a thin cap (the top she stands
+  on, y 156), the leg posts and the near bench, in the table's own colours, outlined. Same 72 x 28 box.
+- **River Walk's code-drawn pieces get art** (`tools/make_riverwalk_pieces.py`, drawn by setpieces.lua at the old
+  sizes, the code boxes stay as a fallback): Pepper's kennel in falu red with white corner trim, a flat roof of dark
+  boards and a bone sign over the doorway she crawls into (`kennel.png`, 34 x 36); the two kiosks, KAFFE with cups
+  and GLASS with ice cream cones, panelled green fronts and a lit window (decoration, faded at load); their awnings
+  with a lit top, shaded underside and scalloped hem (`awning_88.png`, `awning_80.png`, outlined obstacles).
+- Checks on the branch: flow 73/73, physics 33/64/57, QA 0 problems on all three levels, the autopilot clears all
+  three, PEPPER UNCHANGED (trace 2717 steps, lab 1401 steps, files).
+- SpriteCook credits for this branch: 238 (1,974 before, 1,736 left).
 - **A proper magpie** (`Sc.magpie`): the 14 x 10 placeholder becomes a 24 px magpie pixeled at game size (black
   head and breast, white belly and shoulder patch, long blue-green tail): perched, a tail flick, and two flight
   poses (wings up with white primaries, wings down). The ball hangs at its new beak (`St:beak`). Its perches,

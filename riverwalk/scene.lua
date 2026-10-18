@@ -788,6 +788,7 @@ function Sc.townArt(style)
     for _, n in ipairs({ "ground", "treeline", "bush", "log", "leaves", "leaves_flat", "table", "hedge", "stone", "boat", "cart", "slide", "frame", "hollowlog" }) do T[n] = img("park_" .. n) end
     for _, n in ipairs({ "tree1", "tree2", "gate", "swings", "oak", "willow", "willow_tall", "winch" }) do T[n] = fadeImg("park_" .. n) end
     T.boat = img("park_boat_front")                               -- front-on (tools/make_front_view.py)
+    T.table = img("park_table_front")                             -- front-on (tools/make_table_front.py)
   else
     for _, n in ipairs({ "ground", "crate", "parasol", "table", "stall", "awning80", "awning64", "statue", "pedestal", "tram", "shelter", "kiosk", "shopsign", "rim", "bowl", "bollard", "tub", "house1", "house2", "house3", "tier" }) do T[n] = img("town_" .. n) end
     for _, n in ipairs({ "door", "sign", "spout" }) do T[n] = fadeImg("town_" .. n) end

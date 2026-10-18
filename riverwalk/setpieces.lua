@@ -140,11 +140,29 @@ local WOOD, WOOD_D, WOOD_L = hexc("b86a34"), hexc("8a4a22"), hexc("d98c4e")
 local GREEN, GREEN_D = hexc("3f6b48"), hexc("2c4e35")
 local RED, WHITE, CREAM = hexc("c8473f"), hexc("efece4"), hexc("e8dcc0")
 
+-- art for the pieces (tools/make_riverwalk_pieces.py), same sizes as the boxes below; kiosks faded like decoration
+local pieceArt
+local function art()
+  if pieceArt then return pieceArt end
+  pieceArt = {}
+  local function load(n, fade)
+    local d = love.image.newImageData("art/scene/" .. n .. ".png")
+    if fade then d:mapPixel(function(_, _, r, g, b, a) return r + (HAZE[1] - r) * FADE, g + (HAZE[2] - g) * FADE, b + (HAZE[3] - b) * FADE, a end) end
+    local im = lg.newImage(d); im:setFilter("nearest", "nearest"); return im
+  end
+  pieceArt.kennel = load("kennel")
+  pieceArt.kiosk = { [64] = load("kiosk_kaffe", true), [56] = load("kiosk_glass", true) }
+  pieceArt.awning = { [88] = load("awning_88"), [80] = load("awning_80") }
+  return pieceArt
+end
+
 -- Pepper's kennel by her house (River Walk, the left edge): flat roof (top y0), plank walls, a dark doorway
 -- 19 px high on its right end that she crawls into. Collision: one solid box x0-x1, y0-door top.
 local function kennel(pc, cam)
   local x, y0, x1, dt = pc.x0 - cam, pc.y0, pc.x1 - cam, pc.door
   local w = x1 - x
+  local A = art()
+  if w == A.kennel:getWidth() and dt - y0 == 17 then lg.setColor(1, 1, 1, 1); lg.draw(A.kennel, math.floor(x), y0); return end
   rect(INK, x, y0, w, 184 - y0)                                    -- outline and body
   rect(WOOD, x + 1, y0 + 4, w - 2, 184 - y0 - 5)
   for yy = y0 + 8, 182, 5 do rect(WOOD_D, x + 1, yy, w - 2, 1) end -- planks
@@ -160,6 +178,8 @@ end
 local function kioskBack(pc, cam)
   local bx0, bx1 = pc.bx0 - cam, pc.bx1 - cam
   local top = pc.y0 + 6
+  local im = art().kiosk[bx1 - bx0]
+  if im and im:getHeight() == 174 - top then lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(bx0), top); return end
   local wood, dark, glass = faded(GREEN), faded(GREEN_D), faded(hexc("9fb8c8"))
   rect(dark, bx0, top, bx1 - bx0, 174 - top)
   rect(wood, bx0 + 2, top, bx1 - bx0 - 4, 174 - top)
@@ -170,6 +190,8 @@ local function kioskBack(pc, cam)
 end
 local function kioskAwning(pc, cam)
   local x, y, w = pc.x0 - cam, pc.y0, pc.x1 - pc.x0
+  local im = art().awning[w]
+  if im then lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(x), y); return end
   rect(INK, x, y, w, 8)
   for i = 0, w - 3, 8 do rect((i / 8) % 2 == 0 and RED or WHITE, x + 1 + i, y + 1, math.min(8, w - 2 - i), 6) end
   for i = 0, w - 1, 8 do rect(INK, x + i + 2, y + 8, 4, 2); rect((i / 8) % 2 == 0 and RED or WHITE, x + i + 3, y + 8, 2, 1) end   -- scallops
