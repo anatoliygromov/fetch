@@ -2,6 +2,32 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `level4/soder`: Level 4, Söder Hill, the chase (night of 18-19 Oct)
+Built on `levels/v2` (c218a0e). Greybox, no SpriteCook credits. See `docs/soder_beatsheet.md`.
+- **A new manner of play, Lion King's Stampede our way** (`riverwalk/chase.lua`, `L.scroll`): the screen moves on by
+  itself (50 to 78 px/s by section) and the ball rolls ahead of Pepper down the hill, always on screen. The left
+  edge pushes her along; pinned against something she didn't jump or crawl under costs a heart and sends her back
+  to the last lamp. On the ground she can't run further than 240 px into the screen while the ball rolls, so the
+  chase sets the pace (a jump still flies at full speed). Open cellar hatches are gaps in the street (a heart).
+  The ball knocks a barrel off a stack twice: it rolls down the stairs slower than the chase; jump it (a heart on
+  touch). At the bottom the ball stops against the quay railing, the scroll stops, and it is a normal fetch: pick
+  it up, give it to Mia.
+- **The level** (`level/soder.lua`, `level/soder.map` from `tools/make_soder.py`): 16 screens (5120 px), six stair
+  flights from y 112 down to the quay at y 208, 7 hatches, 2 barrel stacks, crates, hanging signs and an awning
+  and an arch to crawl under, bikes, cafe tables with parasols, a fruit cart, two balconies (gold bones, secrets
+  CAFE BALCONY and HIGH STREET), 3 lamps, 45 bones. Time 200 s, par 118 s. Autopilot: 73.3 s, no hit (the other
+  levels: 31.4, 29.8, 35.1 s).
+- **Flow:** added to `levels.lua` as level 4. River Walk now has an outro leading into it ("UP ON SODER MIA DROPPED
+  / THE BALL. IT ROLLED AWAY..."); Söder Hill's outro leads into Level 5 ("IT GOT DARK ON THE WAY / HOME. A FOX TOOK
+  THE BALL!").
+- **Hooks in `stage.lua`** (one line each, commented): `Ch.init` in `St.new`, `Ch.pre` at the start of `St:update`,
+  `Ch.update` after the camera, `Ch.drawBack` and `Ch.draw`, and the rolling ball drawn like a resting one.
+- **QA:** `qa.lua`'s fuzz no longer drops a bike into a level without bike zones (it crashed on Söder Hill); the
+  random sequence for the other levels is unchanged.
+- **Checks:** `riverwalk/tests_soder.lua`: `--physics` (23 checks), `--auto`, `--test` (a 16-screen screenshot
+  tour). `--qa` 0 problems. `check_flow` 83/83, `check_pepper` (all three) UNCHANGED, the other levels' physics and
+  autopilot unchanged.
+
 ## Branch `levels/v2`: QA, balance and two new levels (night of 18-19 Oct)
 Built on `assets/complete`.
 - **QA fixes** (an independent QA pass; probes dropped the ball at every x on every surface, 23,216 cases):
