@@ -1,4 +1,4 @@
--- The Lion King look (branch lk/look; L / a shoulder button switches it off and on to compare).
+-- The Lion King look (branch lk/look; the L key switches it off and on to compare).
 -- What the 1994 game does, done here in code. Pepper, Mia, the ball, the bones and the HUD are never touched.
 --   1 a colour script per level, as Lion King gives every level its own light: River Walk a summer morning,
 --     City Park a golden autumn afternoon, Downtown a bright midday. Each has one key light and one haze colour

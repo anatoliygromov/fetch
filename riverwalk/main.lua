@@ -6,7 +6,8 @@
 --   A / Space        jump (hold for higher);  Down + A: drop through a railing or deck
 --   B / Shift        walk          X / X key   pick up, drop, give the ball        Y / Z key   bark
 --   Start / Enter    pause         Select / G  debug view        Tab  tuning panel (keyboard)
---   F fullscreen, M music, E visual extras off / on (dust, splash; extras.lua)
+--   L1 / R1 / Q      sniff (hold; Level 5, night.lua)
+--   F fullscreen, M music, E visual extras off / on (dust, splash; extras.lua), L the Lion King look off / on
 --   Volume buttons (keys volumeup / volumedown / mute): the game's sound level, saved (settings.lua). The pause
 --   has a SOUND row too (left / right). Select (pad) toggles the debug view only with --dev or a test flag.
 --   Menus: up / down move, A / Space / Enter choose, B / Esc back. In the pause: Start / Enter go on; QUIT asks
@@ -224,7 +225,7 @@ end
 function love.gamepadpressed(j, b)
   logInput("pad", b)
   I.pad = j
-  if b == "leftshoulder" or b == "rightshoulder" then Look.toggle(); return end   -- the look off / on (L1 / R1)
+  if b == "leftshoulder" or b == "rightshoulder" then return end    -- L1 / R1: sniff (held; night.lua reads them)
   if leaveTitle() then return end
   if b == "back" then if devMode then debugView = not debugView end; return end
   if state == "menu" or state == "select" then menuAction(Flow.action(nil, b)); return end
