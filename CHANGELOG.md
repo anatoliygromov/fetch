@@ -104,6 +104,19 @@ Built on `assets/complete`.
   - `L.ballHomeAtLamps`: a lamp Pepper reaches while carrying the ball becomes its home, so a ball lost in the
     canal comes back by that lamp ("THE BALL IS BACK BY THE LAMP"), not five screens back at the statue.
   - 6 lamps for 10 screens (was 5 for 6), 68 bones, 4 secrets. Autopilot clear 44.8 s, no hit (was 29.8 s).
+- **Level 3, River Walk: water and traffic, 10 to 12 screens** (3840 px):
+  - New screens 8 and 9, the harbour, on the quay's level after the bridge: open water with two rowing boats
+    (movers with `pause`: a rower in each rows to and fro and rests 1.5 s at each end; drawn in code in
+    `setpieces.lua`) and a wooden jetty on piles between them. Hop on, ride, jump onto the jetty, wait for the
+    next boat. A gull circles over the water: it squawks and shows its shadow, then swoops at a standing Pepper.
+    Crawl to duck ("DUCK!"), or bark while it squawks. Gold high over the jetty (secret JETTY JUMP).
+  - Bike zone 2 also has a gull. Bikes a little faster: zone 1 125 px/s every 5.5 s (was 115, 6.5), zone 2
+    135 px/s every 5 s (was 115, 6).
+  - 5 lamps for 12 screens (was 8 for 10). `L.ballHomeAtLamps` here too.
+  - Autopilot clear 65.3 s, no hit (was 35.1 s); hard mode clears too.
+  - `tools/check_pepper.sh`: the golden trace re-recorded (the first difference is step 1658, the autopilot
+    stopping at the quay to wait for a boat). Pepper herself is unchanged: the lab check (1401 steps) and the
+    file check against aa38be5 still pass.
 
 ## Branch `assets/complete`: the missing assets (18 Oct)
 Built on `lk/look` (9c3bcbd). Every placeholder left in the three levels gets real art.

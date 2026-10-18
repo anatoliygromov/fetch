@@ -6,7 +6,7 @@
 --                  warning sign shows at the edge it comes from until it is on screen. A zone with start = "enter"
 --                  sends its first one as soon as Pepper walks in (no global timer)
 --   secrets        L.secrets: hidden spots; reaching one counts it (stats: secrets, secretsTotal)
---   code pieces    L.pieces: things drawn in code (a kennel, a hollow log, kiosks): their collision is ordinary
+--   code pieces    L.pieces: things drawn in code (a kennel, a hollow log, kiosks, a jetty): their collision is ordinary
 --                  hidden props in L.props with exactly the same boxes
 local S = require("sfx")
 local Sc = require("scene")
@@ -53,6 +53,31 @@ function Sp.updateFerry(s, m, dt)
     nx = m.x0 + d * math.min(speed * dt, math.abs(target - m.x0)); m.dir = d
   end
   m.dx = nx - m.x0; m.x1 = m.x1 + m.dx; m.x0 = nx
+end
+
+-- a rowing boat (a mover rowed to and fro, River Walk's harbour): a wooden hull (crisp, outlined: Pepper stands on
+-- it), its deck the mover's top (y0), and a rower on the thwart at the stern, pulling the oars as it moves. The
+-- rower sits at the end away from where it is going (rowers face backwards), low, so Pepper is never behind him.
+function Sp.drawRowboat(m, cam, t)
+  local x0, x1, y = math.floor(m.x0 - cam + 0.5), math.floor(m.x1 - cam + 0.5), m.y0
+  local INK = { 0.11, 0.10, 0.09 }
+  lg.setColor(INK)                                                 -- the hull: deck line to the waterline, tapered
+  lg.polygon("fill", x0 - 3, y - 1, x1 + 3, y - 1, x1 - 3, y + 11, x0 + 3, y + 11)
+  lg.setColor(0.55, 0.33, 0.18); lg.polygon("fill", x0 - 1, y, x1 + 1, y, x1 - 4, y + 10, x0 + 4, y + 10)
+  lg.setColor(0.72, 0.47, 0.27); lg.rectangle("fill", x0, y, x1 - x0, 2)              -- the gunwale, lit
+  lg.setColor(0.93, 0.93, 0.88); lg.rectangle("fill", x0 + 3, y + 4, x1 - x0 - 6, 1)  -- a painted stripe
+  local back = (m.dir or 1) > 0 and x0 + 6 or x1 - 12                                  -- the stern, where he sits
+  local pull = math.sin(t * 5) * (math.abs(m.dx or 0) > 0 and 1 or 0.2)
+  lg.setColor(INK); lg.rectangle("fill", back - 1, y - 9, 8, 9)                       -- the rower: coat
+  lg.setColor(0.24, 0.42, 0.62); lg.rectangle("fill", back, y - 8, 6, 8)
+  lg.setColor(INK); lg.rectangle("fill", back, y - 14, 6, 6)                          -- head and cap
+  lg.setColor(0.93, 0.74, 0.60); lg.rectangle("fill", back + 1, y - 13, 4, 4)
+  lg.setColor(0.80, 0.25, 0.20); lg.rectangle("fill", back, y - 14, 6, 2)
+  lg.setColor(0.42, 0.29, 0.18)                                                       -- the oars, dipping in turn
+  local ox = back + 3
+  lg.line(ox, y - 5, ox - 12 + pull * 6, y + 13 + pull * 2)
+  lg.line(ox + 1, y - 5, ox + 13 + pull * 6, y + 13 - pull * 2)
+  lg.setColor(1, 1, 1, 1)
 end
 
 -- the rope a ferry runs on: a thin line just under its deck, from bank to bank (drawn behind the ferry)
@@ -212,8 +237,26 @@ local function hollowLog(pc, cam)
   lg.setColor(1, 1, 1, 1)
 end
 
+-- a wooden jetty on piles (River Walk's harbour): a plank deck (its top is the box's top), crisp and outlined,
+-- standing on three dark piles down into the water
+local function jetty(pc, cam)
+  local x0, x1, y = math.floor(pc.x0 - cam), math.floor(pc.x1 - cam), pc.y0
+  local INK = { 0.11, 0.10, 0.09 }
+  for _, px in ipairs({ x0 + 3, math.floor((x0 + x1) / 2) - 3, x1 - 9 }) do     -- the piles
+    lg.setColor(INK); lg.rectangle("fill", px - 1, y + 5, 8, 240 - y)
+    lg.setColor(0.30, 0.24, 0.20); lg.rectangle("fill", px, y + 6, 6, 240 - y)
+    lg.setColor(0.42, 0.34, 0.27); lg.rectangle("fill", px, y + 6, 1, 240 - y)
+  end
+  lg.setColor(INK); lg.rectangle("fill", x0 - 1, y - 1, x1 - x0 + 2, 8)           -- the deck
+  lg.setColor(0.66, 0.47, 0.29); lg.rectangle("fill", x0, y, x1 - x0, 6)
+  lg.setColor(0.80, 0.61, 0.40); lg.rectangle("fill", x0, y, x1 - x0, 1)
+  lg.setColor(0.48, 0.33, 0.20)
+  for x = x0 + 7, x1 - 2, 8 do lg.rectangle("fill", x, y + 1, 1, 5) end           -- plank joints
+  lg.setColor(1, 1, 1, 1)
+end
+
 local BACK = { kiosk = kioskBack }
-local PLAY = { kennel = kennel, kiosk = kioskAwning, hollowlog = hollowLog }
+local PLAY = { kennel = kennel, kiosk = kioskAwning, hollowlog = hollowLog, jetty = jetty }
 local function each(s, cam, list)
   for _, pc in ipairs(s.def.pieces or {}) do
     local f = list[pc.kind]

@@ -119,6 +119,12 @@ function Cr.near(s, r)
   return false
 end
 
+-- a gull is about to swoop (its squawk and shadow): for the "DUCK!" hint
+function Cr.gullWarn(s)
+  for _, k in ipairs(s.critters or {}) do if k.kind == "gull" and k.state == "warn" then return true end end
+  return false
+end
+
 -- drawing: pixel critters in code (like the magpie), feet at (x, y)
 local GOOSE = {
   walk = {

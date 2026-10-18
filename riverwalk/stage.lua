@@ -36,7 +36,7 @@ function St.new(def, carry)
   if def.scenery ~= "greybox" then s.road = Rd.new(s.world) end    -- the greybox park has no road and no traffic
   s.movers = {}
   for _, m in ipairs(def.movers) do
-    local mv = { name = m.name, x0 = m.from, x1 = m.from + (m.x1 - m.x0), y0 = m.y0, y1 = m.y1, from = m.from, to = m.to, speed = m.speed, dir = 1, dx = 0, kind = "oneway" }
+    local mv = { name = m.name, x0 = m.from, x1 = m.from + (m.x1 - m.x0), y0 = m.y0, y1 = m.y1, from = m.from, to = m.to, speed = m.speed, dir = 1, dx = 0, kind = "oneway", pause = m.pause }
     s.world:addMover(mv); s.movers[#s.movers + 1] = mv
   end
   s.layers = def.scenery == "greybox" and Sc.buildGrey(s.world.width, def.greyStyle) or Sc.build(s.world.width)
@@ -195,7 +195,9 @@ function St:update(dt, presses)
   for _, m in ipairs(self.movers) do
     if m.call then Sp.updateFerry(self, m, dt) else                -- a rope ferry: it comes when Pepper is near
     local nx = m.x0 + m.dir * m.speed * dt
-    if nx > m.to then nx = m.to; m.dir = -1 elseif nx < m.from then nx = m.from; m.dir = 1 end
+    if (m.waitT or 0) > 0 then m.waitT = m.waitT - dt; nx = m.x0                -- pause = s: it rests at each end
+    elseif nx > m.to then nx = m.to; m.dir = -1; m.waitT = m.pause
+    elseif nx < m.from then nx = m.from; m.dir = 1; m.waitT = m.pause end
     m.dx = nx - m.x0; m.x1 = m.x1 + m.dx; m.x0 = nx
     end
   end
@@ -408,6 +410,7 @@ function St:zoneHint()
       local ok = true
       if h.need == "ball" then ok = p.carrying ~= nil
       elseif h.need == "goose" then ok = Cr.near(self, 110)
+      elseif h.need == "gull" then ok = Cr.gullWarn(self)
       elseif h.need == "untouched" then ok = not self.ball.picked and p.carrying == nil
       elseif h.need == "noball" then ok = p.carrying == nil and self.ball.state ~= "given"
       elseif h.need == "nearball" then ok = nearBall(self)
@@ -501,7 +504,8 @@ function St:draw(debug)
     elseif grey then                                                   -- greybox level: labelled boxes (the duck boat)
       Sc.outlined(C.prop, C.propEdge, m.x0 - cam, m.y0, m.x1 - m.x0, m.y1 - m.y0); Sc.label(m.name or "PONTOON", (m.x0 + m.x1) / 2 - cam, m.y0 + 8)
     else                                                           -- the pontoon (art 54 x 12; its deck row 2 is the top)
-      lg.setColor(1, 1, 1, 1); lg.draw(art.pontoon, math.floor(m.x0 - cam + 0.5) - 3, m.y0 - 2)
+      if m.name == "ROWBOAT" then Sp.drawRowboat(m, cam, self.t)        -- a rowing boat, its rower at the oars
+      else lg.setColor(1, 1, 1, 1); lg.draw(art.pontoon, math.floor(m.x0 - cam + 0.5) - 3, m.y0 - 2) end
     end
   end
   if lk then Look.off() end                                        -- the bones, the girl, the ball, Pepper: as drawn
