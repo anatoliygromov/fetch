@@ -8,6 +8,7 @@ local S = require("sfx")
 local I = require("input")
 local Ex = require("extras")                  -- visual extras around Pepper (drawing only, E toggles them)
 local Sp = require("setpieces")               -- hard mode, rope ferries, traffic warnings, secrets, code-drawn pieces
+local Cr = require("critters")                -- geese, gulls (L.critters) and springy tops (bounce = h on a prop)
 local Ch = require("chase")                   -- Level 4: the scroll, the rolling ball, barrels, hatches (L.scroll)
 local Nt = require("night")                   -- Level 5's night rules: darkness, sniffing, the fox, crumbling planks
 local St = {}
@@ -60,6 +61,7 @@ function St.new(def, carry)
   s.cam = 0
   s.fx = Ex.new()
   Sp.init(s, def, carry)                                          -- hard mode (carry.hard), rope ferries, secrets
+  Cr.init(s, def)                                                 -- geese and gulls
   if def.scroll then Ch.init(s, def) end                          -- the chase (Level 4)
   if def.dark or def.fox then s.night = Nt.new(s, def) end         -- [night hook] Level 5 (night.lua)
   return s
@@ -203,7 +205,9 @@ function St:update(dt, presses)
     self.deadT = self.deadT - dt
     if self.deadT <= 0 then self.deadT = nil; self:respawn() end
   else
+    local wasAir = not p.onGround
     if not (self.night and Nt.sniffing(self, dt)) then p:update(dt, w, presses) end   -- [night hook] sniffing
+    Cr.bounce(self, wasAir)                                        -- a springy top launches her
     if p.mode == "drown" and not self.drownT then
       self.drownT = 1.0
       if p.carrying then p.carrying = nil; self.ball.state = "home"; self.ballBackT = 1.2 end
@@ -304,10 +308,12 @@ function St:update(dt, presses)
     if math.abs(p.x - self.girl.x) < 110 and self.girl.state == "idle" then self.girl.state = "wave"; self.girl.t = 0 end
     if self.cat then self:barkAtCat() end
     if self.magpie then self:barkAtMagpie() end
+    Cr.bark(self)
     if self.night then Nt.bark(self) end                           -- [night hook] the fox
   end
   if self.night then Nt.update(self, dt) end                       -- [night hook] the fox, crumbling planks
   if self.cat then self:updateCat(dt) end
+  if not self.deadT and not self.drownT then Cr.update(self, dt) end
   for _, pr in ipairs(self.def.props) do                           -- leaf piles flatten when Pepper runs through
     if pr.leaves and not self.kicked[pr] and x1 > pr.x0 and x0 < pr.x1 and y1 > pr.y0 then self.kicked[pr] = true end
   end
@@ -398,6 +404,7 @@ function St:zoneHint()
     if p.x >= h.x0 and p.x < h.x1 and (not h.maxY or p.y <= h.maxY) then
       local ok = true
       if h.need == "ball" then ok = p.carrying ~= nil
+      elseif h.need == "goose" then ok = Cr.near(self, 110)
       elseif h.need == "untouched" then ok = not self.ball.picked and p.carrying == nil
       elseif h.need == "noball" then ok = p.carrying == nil and self.ball.state ~= "given"
       elseif h.need == "nearball" then ok = nearBall(self)
@@ -547,6 +554,7 @@ function St:draw(debug)
     if self.def.art then Sc.cat(self.cat, cam, self.t, self.pepper.x) else Sc.catGrey(self.cat, cam, self.t) end
   end
   if self.magpie and self.magpie.state ~= "gone" then Sc.magpie(self.magpie, cam, self.t) end
+  Cr.draw(self, cam, self.t)                                       -- geese and gulls
   if self.chase then Ch.draw(self, cam) end                        -- the chase: barrels
   if self.night then Nt.drawWorld(self, cam) end                   -- [night hook] the fox
   local cyc = Rd.art().cyclists[1]

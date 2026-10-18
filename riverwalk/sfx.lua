@@ -134,6 +134,14 @@ function S.load()
       return ((seed / 2147483648) * 2 - 1) * 0.18 * (1 - t / 0.12) * (math.sin(t * 160) > 0 and 1 or 0.2)
     end))
     sounds.spring = src(sweep(200, 1200, 0.25, 0.22, "sq", 0.5))
+    sounds.hiss = src(render(0.4, function(t)                       -- a goose's hiss: noise, swelling then gone
+      seed = (seed * 1103515245 + 12345) % 2147483648
+      return ((seed / 2147483648) * 2 - 1) * 0.2 * math.sin(math.pi * t / 0.4)
+    end))
+    sounds.squawk = src(render(0.3, function(t)                     -- a gull: a falling squawk, twice
+      local k = t < 0.14 and t or t - 0.14
+      return square(t * (1500 - 2600 * k), 0.3) * 0.12 * math.max(0, 1 - k / 0.14)
+    end))
     sounds.checkpoint = src(arp({ { 659, 0.06 }, { 784, 0.06 }, { 1047, 0.12 } }, 0.18))
     sounds.gate = src(sweep(110, 220, 0.6, 0.2, "tri"))
     sounds.tick = src(arp({ { 1760, 0.02 } }, 0.12))
