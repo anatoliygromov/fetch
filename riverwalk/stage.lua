@@ -508,7 +508,9 @@ function St:draw(debug)
   end
   -- bikes: a cyclist (art/scene/cyclist1.png, 49 x 50) over the 48 x 26 hit box, wheels on the pavement; greybox:
   -- a box the size of the zone's hit box (w, h), labelled with its kind (CART, TRAM) or BIKE
-  if self.cat and self.cat.state ~= "gone" then Sc.catGrey(self.cat, cam, self.t) end
+  if self.cat and self.cat.state ~= "gone" then
+    if self.def.art then Sc.cat(self.cat, cam, self.t, self.pepper.x) else Sc.catGrey(self.cat, cam, self.t) end
+  end
   if self.magpie and self.magpie.state ~= "gone" then Sc.magpie(self.magpie, cam, self.t) end
   local cyc = Rd.art().cyclists[1]
   use("play")

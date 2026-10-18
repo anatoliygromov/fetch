@@ -2,6 +2,15 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `assets/complete`: the missing assets (18 Oct)
+Built on `lk/look` (9c3bcbd). Every placeholder left in the three levels gets real art.
+- **The Downtown cat** (`art/cat.png`, `tools/build_cat.py`, `Sc.cat`): modelled on the user's Abyssinian (ruddy
+  ticked coat, very large ears, green eyes, pale chin). A hand-pixeled 30 px sitting cat (`source_sheets/
+  cat_sit_source.png`, SpriteCook asset 3a0c5b07) animated in SpriteCook (pixel-engine-v1.5, 3 clips, 78 credits):
+  idle (tail curl, ear twitch, blink), startle and leap, gallop. Cleaned like Pepper's clips (the animator's grey
+  matte removed, 10-colour palette, specks, 1 px outline). It sits on the ball facing Pepper, crouches and arches
+  its back when scared, leaps and gallops off. The greybox cat (`Sc.catGrey`) stays for greybox levels.
+
 ## Branch `lk/look`, part 2: City Park and Downtown (12 Oct)
 - **A colour script per level** (`Look.scripts` in look.lua), as Lion King gives every level its own light:
   River Walk a summer morning (as before), **City Park a golden autumn afternoon** (blue-violet sky to an amber
