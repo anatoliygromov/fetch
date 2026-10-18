@@ -10,6 +10,16 @@ Built on `lk/look` (9c3bcbd). Every placeholder left in the three levels gets re
   idle (tail curl, ear twitch, blink), startle and leap, gallop. Cleaned like Pepper's clips (the animator's grey
   matte removed, 10-colour palette, specks, 1 px outline). It sits on the ball facing Pepper, crouches and arches
   its back when scared, leaps and gallops off. The greybox cat (`Sc.catGrey`) stays for greybox levels.
+- **The park keeper pushes the leaf cart** (`art/scene/park_keeper_cart.png`, `tools/build_keeper.py`): City
+  Park's cart hazard no longer drives by itself. An older keeper (flat cap, grey beard, green work jacket), styled on
+  the River Walk cyclist with the old cart as reference (SpriteCook 14e58436, 36 credits for 3 options) and given an
+  8-frame walk cycle (26 credits). Drawn mirrored (the barrow leads, right to left), the barrow's middle on the
+  48 x 26 hit box, wheel and boots on the line; the stride follows the distance covered so the boots don't slide.
+  Hit box, speed and timing unchanged.
+- **A proper magpie** (`Sc.magpie`): the 14 x 10 placeholder becomes a 24 px magpie pixeled at game size (black
+  head and breast, white belly and shoulder patch, long blue-green tail): perched, a tail flick, and two flight
+  poses (wings up with white primaries, wings down). The ball hangs at its new beak (`St:beak`). Its perches,
+  ranges and behaviour are unchanged (City Park physics 64/64, QA 0 problems).
 
 ## Branch `lk/look`, part 2: City Park and Downtown (12 Oct)
 - **A colour script per level** (`Look.scripts` in look.lua), as Lion King gives every level its own light:

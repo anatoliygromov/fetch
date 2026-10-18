@@ -79,7 +79,7 @@ function St:resetMagpie(i)
   b.state, b.drop = "magpie", nil
   b.x, b.y = self:beak()
 end
-function St:beak() local m = self.magpie; return m.x + m.dir * 7, m.y - 6 end
+function St:beak() local m = self.magpie; return m.x + m.dir * 11, m.y - (m.state == "fly" and 5 or 8) end   -- the ball's bottom, at the beak
 function St:updateMagpie(dt)
   local m, d, p, b = self.magpie, self.def.magpie, self.pepper, self.ball
   m.t = m.t + dt
