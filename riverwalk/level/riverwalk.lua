@@ -131,6 +131,7 @@ L.movers = {
 
 L.ball = { x = FX + 108, y = 154 }
 L.girl = { x = 3140, y = 184 }
+L.outro = { "UP ON SODER MIA DROPPED", "THE BALL. IT ROLLED AWAY..." }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
