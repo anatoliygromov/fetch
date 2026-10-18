@@ -1163,7 +1163,14 @@ function Sc.drawPropArt(p, camx, def, kicked)
         lg.setColor(1, 1, 1, 1)
         if i % 2 == 0 then lg.draw(im, cx + 33, 175 - im:getHeight(), 0, -1, 1) else lg.draw(im, cx - 32, 175 - im:getHeight()) end
       end
-    elseif n == "WINCH" then at(T.winch, x, 175 - T.winch:getHeight())
+    elseif n == "WINCH" then                                       -- the second keeper at the duck boat's winch
+      if not T.keeperWinch then                                   -- (art/scene/park_keeper_winch.png, 8 x 80 px,
+        T.keeperWinch = newImg("art/scene/park_keeper_winch.png") -- made facing right, drawn mirrored so the winch
+        T.keeperWinchQ = {}                                       -- faces the pond; drum middle x 60, feet y 79)
+        for i = 1, 8 do T.keeperWinchQ[i] = lg.newQuad((i - 1) * 80, 0, 80, 80, T.keeperWinch:getDimensions()) end
+      end
+      lg.setColor(1, 1, 1, 1)
+      lg.draw(T.keeperWinch, T.keeperWinchQ[Sc.winchFrame or 1], math.floor(x + w / 2), 174, 0, -1, 1, 60, 79)
     else Sc.drawProp(p, camx, C.prop) end
   else
     if n == "DOOR" then at(T.door, x, 175 - T.door:getHeight())

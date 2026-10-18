@@ -16,6 +16,11 @@ Built on `lk/look` (9c3bcbd). Every placeholder left in the three levels gets re
   8-frame walk cycle (26 credits). Drawn mirrored (the barrow leads, right to left), the barrow's middle on the
   48 x 26 hit box, wheel and boots on the line; the stride follows the distance covered so the boots don't slide.
   Hit box, speed and timing unchanged.
+- **A second keeper turns the duck boat's winch** (`art/scene/park_keeper_winch.png`): the rope ferry no longer
+  moves by itself. A keeper in the same uniform (grey beanie, ponytail) at a post winch with a rope drum (SpriteCook
+  0a12ae1a, 36 credits for 3 options; crank loop 26 credits), drawn mirrored so the winch faces the pond, in place of
+  the small `park_winch` drawing. She cranks (10 fps) only while the boat is moving (`Sc.winchFrame`, set in
+  St:draw from the rope ferries' `dx`), else she holds the handle.
 - **A proper magpie** (`Sc.magpie`): the 14 x 10 placeholder becomes a 24 px magpie pixeled at game size (black
   head and breast, white belly and shoulder patch, long blue-green tail): perched, a tail flick, and two flight
   poses (wings up with white primaries, wings down). The ball hangs at its new beak (`St:beak`). Its perches,

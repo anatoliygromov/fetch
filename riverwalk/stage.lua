@@ -399,6 +399,10 @@ function St:draw(debug)
   local grey = self.def.scenery == "greybox" and not style
   local lk = Look.on and (style or not grey)                       -- the Lion King look (look.lua): the art levels
   Look.level(self.def)                                             -- (this level's colour script)
+  Sc.winchFrame = 1                                                -- the winch keeper cranks while a rope ferry moves
+  for _, m in ipairs(self.movers or {}) do
+    if m.call and math.abs(m.dx or 0) > 0 then Sc.winchFrame = 1 + math.floor(self.t * 10) % 8 end
+  end
   local function use(n) if lk then Look.use(n) end end
   local function prop(pr, c, colour, kicked)
     if style then Sc.drawPropArt(pr, c, self.def, kicked) else Sc.drawProp(pr, c, colour) end
