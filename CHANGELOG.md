@@ -124,6 +124,9 @@ Built on `assets/complete`.
   - `tools/check_pepper.sh`: the golden trace re-recorded (the first difference is step 1658, the autopilot
     stopping at the quay to wait for a boat). Pepper herself is unchanged: the lab check (1401 steps) and the
     file check against aa38be5 still pass.
+- **Pars** (`levels.lua`, the autopilot's time times about 1.6): City Park 71 s (was 60), Downtown 83 s (was 55),
+  River Walk 105 s (was 60). `docs/progression.md` has the measured table: the levels now get longer and harder
+  from 1 to 5 (autopilot 44, 52, 65, 73, 81 s).
 
 ## Branch `assets/complete`: the missing assets (18 Oct)
 Built on `lk/look` (9c3bcbd). Every placeholder left in the three levels gets real art.
