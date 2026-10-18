@@ -133,7 +133,8 @@ return function(api)
             if held.left and held.right then held.left = nil end
             if held.jump then pr.jump = true end
             until_ = f + rnd:random(6, 40)
-            stage().bikes = (rnd:random() < 0.3) and { { x = stage().pepper.x + rnd:random(40, 160), y = 184, warn = 0 } } or stage().bikes
+            local bz = stage().def.bikes                                   -- (a level without bike zones gets no bikes)
+            stage().bikes = (rnd:random() < 0.3 and (bz.zoneX0 or #bz > 0)) and { { x = stage().pepper.x + rnd:random(40, 160), y = 184, warn = 0 } } or stage().bikes
           end
           return held, pr
         end, ("fuzz run %d from x %d y %d"):format(k, x, math.abs(fy)))

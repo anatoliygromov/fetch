@@ -8,6 +8,7 @@ local S = require("sfx")
 local I = require("input")
 local Ex = require("extras")                  -- visual extras around Pepper (drawing only, E toggles them)
 local Sp = require("setpieces")               -- hard mode, rope ferries, traffic warnings, secrets, code-drawn pieces
+local Ch = require("chase")                   -- Level 4: the scroll, the rolling ball, barrels, hatches (L.scroll)
 local St = {}
 St.__index = St
 local lg = love.graphics
@@ -58,6 +59,7 @@ function St.new(def, carry)
   s.cam = 0
   s.fx = Ex.new()
   Sp.init(s, def, carry)                                          -- hard mode (carry.hard), rope ferries, secrets
+  if def.scroll then Ch.init(s, def) end                          -- the chase (Level 4)
   return s
 end
 
@@ -175,6 +177,7 @@ end
 
 function St:update(dt, presses)
   self.t = self.t + dt
+  if self.chase then Ch.pre(self) end                             -- the chase: the camera was moved from outside
   local p, w = self.pepper, self.world
   if self.msg then self.msg.t = self.msg.t - dt; if self.msg.t <= 0 then self.msg = nil end end
   if self.clearT then self.clearT = self.clearT - dt; if self.clearT <= 0 then self.events.clear = true; self.clearT = nil end end
@@ -323,6 +326,7 @@ function St:update(dt, presses)
   local centre = self.cam + 160
   if focus > centre + 48 then self.cam = focus - 160 - 48 elseif focus < centre - 48 then self.cam = focus - 160 + 48 end
   self.cam = math.max(0, math.min(w.width - 320, self.cam))
+  if self.chase then Ch.update(self, dt) end                      -- the chase: the scroll pushes the camera and Pepper
 end
 
 -- the cat: a bark close enough (def.cat.range between Pepper's middle and the cat's) scares it. It jumps up,
@@ -434,6 +438,7 @@ function St:draw(debug)
   for _, pr in ipairs(self.def.props) do if pr.layer == "back" then prop(pr, cam, C.back) end end
   if style then Sc.drawSpout(self.def, cam) end
   Sp.drawBack(self, cam)                                           -- code-drawn decoration (kiosks)
+  if self.chase then Ch.drawBack(self, cam) end                    -- the chase: open cellar hatches
   -- 7 play layer: terrain (pavement art, painted once; see Sc.paintGround)
   local w = self.world
   if not self.ground then
@@ -525,7 +530,7 @@ function St:draw(debug)
   lg.setColor(1, 1, 1, 1)
   if not g.hidden then lg.draw(girlImg, girlQ[gr][fr], math.floor(g.x - cam + 0.5), g.y, 0, face, 1, rw.x, rw.y) end
   -- the ball (real art), unless Pepper carries it (drawn after her)
-  if b.state == "rest" or b.state == "air" or b.state == "cat" or b.state == "magpie" or (b.state == "given" and g.state ~= "pet" and g.state ~= "happy") then
+  if b.state == "rest" or b.state == "air" or b.state == "cat" or b.state == "magpie" or b.state == "roll" or (b.state == "given" and g.state ~= "pet" and g.state ~= "happy") then
     local bx, by = b.x, b.y
     if b.state == "given" then bx, by = g.x + face * 8, g.y - 30 - math.abs(math.sin(g.t * 6)) * 14 end
     lg.draw(ballImg, math.floor(bx - cam - 3 + 0.5), math.floor(by - 6 + 0.5))
@@ -536,6 +541,7 @@ function St:draw(debug)
     if self.def.art then Sc.cat(self.cat, cam, self.t, self.pepper.x) else Sc.catGrey(self.cat, cam, self.t) end
   end
   if self.magpie and self.magpie.state ~= "gone" then Sc.magpie(self.magpie, cam, self.t) end
+  if self.chase then Ch.draw(self, cam) end                        -- the chase: barrels
   local cyc = Rd.art().cyclists[1]
   use("play")
   for _, c in ipairs(self.bikes) do
