@@ -126,10 +126,12 @@ function U.volumeBar(x, y, level, max, h)
   end
   lg.setColor(1, 1, 1, 1)
 end
--- shown for a moment when the volume buttons are pressed: a small box under the status signs
-function U.volumeToast(level, max)
-  U.box(110, 20, 100, 17)
-  txt("SOUND", 116, 25)
-  U.volumeBar(150, 25, level, max)
+-- shown for a moment when the volume buttons are pressed: a small box under the status signs while playing;
+-- y = 218 (the bottom edge) over menus and cards, so it never covers their headings
+function U.volumeToast(level, max, y)
+  y = y or 20
+  U.box(110, y, 100, 17)
+  txt("SOUND", 116, y + 5)
+  U.volumeBar(150, y + 5, level, max)
 end
 return U

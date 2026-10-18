@@ -331,7 +331,7 @@ function love.draw()
     or (state == "ending" and function() Flow.drawEnding(ending, t) end)
   if screen then                                                  -- the screens drawn without a level behind them
     screen()
-    if Se.showing() then U.volumeToast(Se.volume, Se.MAX) end
+    if Se.showing() then U.volumeToast(Se.volume, Se.MAX, 218) end
     love.graphics.setCanvas()
     local ww, wh = love.graphics.getDimensions()
     local s = math.max(1, math.floor(math.min(ww / W, wh / H)))
@@ -365,7 +365,7 @@ function love.draw()
   if state ~= "play" then                                         -- the cards dim the level, never Pepper
     love.graphics.setColor(1, 1, 1, 1); stage.pepper:draw(math.floor(stage.cam + 0.5))
   end
-  if Se.showing() then U.volumeToast(Se.volume, Se.MAX) end
+  if Se.showing() then U.volumeToast(Se.volume, Se.MAX, state == "play" and 20 or 218) end
   if debugView then
     U.text(("%d FPS  %.1f MS"):format(fps, frameMs), 4, 228, { 1, 1, 0.4 })
     local p = stage.pepper
