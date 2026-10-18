@@ -2,7 +2,7 @@
 --   --physics   checks every set piece: hop, held jump, crates, cafe tables and parasols, the shop sign, market
 --               stall and awnings, the statue, the cat and the ball, the fountain, the tram, the girl
 --   --auto      plays the whole level on autopilot and saves every 3rd frame to rec/ (for the GIF)
---   --test      a screenshot tour of the 10 screens, the cat beat, the tram, a bounce, the geese, the canal, the
+--   --test      a screenshot tour of the 11 screens, the cat beat, the tram, a bounce, the geese, the canal, the
 --               debug view and the tally
 local I = require("input")
 local Pp = require("pepper")
@@ -244,6 +244,16 @@ return function(mode, api)
       { cond = function(p, s) return s.ball.state == "rest" and not s.drownT and not s.deadT end, act = function() end, limit = 4 },
       { act = function(p) release(); local s = api.stage(); local b = s.ball
           report("canal: walking in drowns; the ball is back by the lamp", s.hearts == hearts - 1 and near(b.x, 2552) and b.state == "rest", ("hearts %d, ball %s x %.0f"):format(s.hearts, b.state, b.x)) end },
+      { act = function() local s = api.stage(); s.hearts = 3; hearts = 3; tp(2802, 168) end }, { wait = 0.2 },
+      { act = function() jump("right", "jump") end },
+      { cond = function(p) return p.onGround and p.mode == "normal" and p.x > 3072 end, act = function() release() end, limit = 6 },
+      { act = function(p) release(); local s = api.stage()
+          report("flooded square: holding Right she bounces across, onto the kiosk", near(p.y, 148) and s.hearts == hearts, ("x %.0f y %.0f hearts %d"):format(p.x, p.y, s.hearts)) end },
+      { act = function() local s = api.stage(); s.hearts = 3; hearts = 3; tp(2770, 184); hold("right") end }, { during = 0.1 },
+      { act = function() jump("right", "jump") end }, { during = 2.5 },
+      { act = function(p) release(); local s = api.stage()
+          report("flooded square: from the street a jump can't reach a parasol", s.hearts == hearts - 1 or (p.y >= 167 and p.x < 2832), ("x %.0f y %.0f hearts %d"):format(p.x, p.y, s.hearts)) end },
+      { cond = function(p, s) return not s.drownT and not s.deadT end, act = function() end, limit = 3 },
       { act = function() local z1, z2 = api.stage().def.bikes[1], api.stage().def.bikes[2]
           local tops = { prop("KIOSK", 2).y0, prop("SHELTER", 2).y0 }
           report("tram 2: faster and more often; its perches are above it", z2.speed > z1.speed and z2.every < z1.every and tops[1] < 184 - z2.h and tops[2] < 184 - z2.h,
@@ -366,12 +376,19 @@ return function(mode, api)
       -- 9 the canal: off the balcony onto the awning, launched over the water onto the crates, down
       at(function(p) return p.onGround and p.y <= 121 end, function() hold("right") end),
       at(function(p) return p.onGround and p.y >= 183 end, function() hold("right") end),
-      -- 10 tram street again: onto the kiosk, wait for the fast tram, on over the shelter roof to Mia
-      at(function(p) return p.x >= 2814 end, function() jump("right", "jump") end),
-      at(function(p) return p.onGround and p.y <= 149 end, function() release() end),
+      -- 10 the flooded square: onto the crate, a held jump onto the first parasol, then hold Right: bounce, bounce,
+      --    bounce, out onto the far side
+      at(function(p) return p.x >= 2770 end, function() jump("right") end),
+      { wait = 1 / 60 }, { act = function() hold("right") end },
+      at(function(p) return p.onGround and p.y <= 169 end, function() release() end),
+      at(function(p) return math.abs(p.vx) < 1 end, function() jump("right", "jump") end),
+      -- 11 tram street again: the last bounce lands on the kiosk; wait for the fast tram, on over the shelter roof
+      at(function(p) return p.onGround and p.y <= 149 and p.x > 3100 end, function() release() end, 9),
       at(function(p, s) return s.bikes[1] and s.bikes[1].x < p.x - 60 end, function() hold("right") end, 12),
-      at(function(p) return p.x >= 2874 end, function() jump("right", "jump") end),
-      at(function(p) return p.onGround and p.y <= 137 end, function() hold("right") end),
+      at(function(p) return p.x >= 3162 end, function() jump("right", "jump") end),
+      at(function(p) return p.onGround and p.y <= 137 end, function() release() end),            -- the shelter roof
+      at(function(p, s) return #s.bikes == 0 end, function() end, 12),                           -- the next tram
+      at(function(p, s) return s.bikes[1] and s.bikes[1].x < p.x - 60 end, function() hold("right") end, 12),
       at(function(p, s) return p.onGround and p.y >= 183 and p.x >= s.girl.x - 40 end, function() release() end, 9),
       { wait = 0.3 }, { act = function() love.keypressed("x") end },
       at(function() return api.getState() == "clear" end, function() end, 9),
@@ -387,7 +404,7 @@ return function(mode, api)
       { act = function() love.keypressed("space") end }, { wait = 0.3 } }
     -- one shot per screen (camera on the screen's left edge), Pepper standing in it
     local spots = { { 60, 184 }, { 340, 184 }, { 650, 184 }, { 990, 184 }, { 1380, 184 }, { 1690, 184 }, { 1988, 148 },
-      { 2170, 184 }, { 2470, 184 }, { 2860, 148 } }
+      { 2170, 184 }, { 2470, 184 }, { 2802, 168 }, { 3148, 148 } }
     for i, sp in ipairs(spots) do
       steps[#steps + 1] = { act = function() tp(sp[1], sp[2]) end }
       if i == 7 then steps[#steps + 1] = { act = function() tram(2180) end } end

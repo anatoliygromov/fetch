@@ -1193,8 +1193,9 @@ function Sc.drawPropArt(p, camx, def, kicked)
       local tb                                                     -- its pole, down to the table under it
       for _, q in ipairs(def.props) do if q.name == "TABLE" and q.x0 >= p.x0 and q.x1 <= p.x1 then tb = q end end
       local px = math.floor(x + w / 2) - 1
-      lg.setColor(INK); lg.rectangle("fill", px - 1, p.y1, 4, (tb and tb.y0 or 184) - p.y1)
-      lg.setColor(0.55, 0.57, 0.6); lg.rectangle("fill", px, p.y1, 2, (tb and tb.y0 or 184) - p.y1)
+      local foot = tb and tb.y0 or 240                            -- (no table: a pole standing in the water)
+      lg.setColor(INK); lg.rectangle("fill", px - 1, p.y1, 4, foot - p.y1)
+      lg.setColor(0.55, 0.57, 0.6); lg.rectangle("fill", px, p.y1, 2, foot - p.y1)
       local sq = (p.squashT or 0) > 0 and 2 or 0                  -- a springy one dips as it launches her
       at(T.parasol, x, p.y0 - 1 + sq)
       if p.bounce then Sc.spring(px + 1, p.y1 + sq, 10 - sq) end

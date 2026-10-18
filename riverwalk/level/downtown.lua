@@ -1,6 +1,6 @@
 -- Level 2: Downtown (greybox). Terrain is in downtown.map; this file places everything else.
 -- Same format as citypark.lua. x, y in level pixels; y grows downwards; "feet" = the y Pepper stands on.
--- The street (feet) is y 184. The fountain's water starts at y 192. The level is 3200 px (10 screens). See
+-- The street (feet) is y 184. The fountain's water starts at y 192. The level is 3520 px (11 screens). See
 -- docs/downtown_beatsheet.md (the first 6 screens) and docs/progression.md.
 --
 -- Screens (320 px each). Manner: bounce and carry. New here: springy awnings and parasols (bounce = h), and a
@@ -19,7 +19,8 @@
 --   8  Flower market  two geese: a bite knocks the ball out. Bark them off, or go high: the tub, the cafe table, the
 --                     springy parasol, the balcony
 --   9  The canal      the awning at the edge launches Pepper over the water onto the crates on the far quay
---  10  Tram street    a faster tram, every 5 s: the kiosk, the shelter, then Mia at the stairs down to the river:
+--  10  Flooded square three springy parasols in the water: bounce from one to the next, holding Right
+--  11  Tram street    a faster tram, every 4 s: the kiosk, the shelter, then Mia at the stairs down to the river:
 --                     give her the ball (X), GOOD GIRL!
 -- Falling in the water with the ball (fountain, canal) costs a heart; the ball goes back by the last lamp Pepper
 -- carried it past (L.ballHomeAtLamps), or to the statue.
@@ -116,7 +117,7 @@ L.props = {
   { name = "FOUNTAIN", kind = "solid",  layer = "play", x0 = 1776, x1 = 1808, y0 = 160, y1 = 240, label = "top" },
   { name = "RIM",      kind = "solid",  layer = "play", x0 = 1848, x1 = 1864, y0 = 168, y1 = 184, label = "top" },
   -- screen 7: tram street. The kiosk (36 px up) and the shelter roof (one-way, 12 px above the kiosk) are above
-  -- the tram (26 px). The stairs down to the river are at the end of the level (terrain slopes, x 3168-3200).
+  -- the tram (26 px). The stairs down to the river are at the end of the level (terrain slopes, x 3488-3520).
   { name = "KIOSK",    kind = "solid",  layer = "play", x0 = 1968, x1 = 2008, y0 = 148, y1 = 184 },
   { name = "",         kind = "decor",  layer = "back", x0 = 2052, x1 = 2056, y0 = 140, y1 = 184 },     -- shelter posts
   { name = "",         kind = "decor",  layer = "back", x0 = 2112, x1 = 2116, y0 = 140, y1 = 184 },
@@ -139,14 +140,26 @@ L.props = {
   { name = "CRATES",   kind = "solid",  layer = "play", x0 = 2624, x1 = 2656, y0 = 120, y1 = 240, label = "top" },
   { name = "CRATES",   kind = "solid",  layer = "play", x0 = 2656, x1 = 2688, y0 = 120, y1 = 184, label = "top" },
   { name = "CRATES",   kind = "solid",  layer = "play", x0 = 2688, x1 = 2720, y0 = 152, y1 = 184, label = "top" },
-  -- screen 10: tram street again (2776-3096): a faster tram, every 5 s. The kiosk, then a shelter roof a running
+  -- screen 10: the flooded square (2784-3104). The water (x 2816-3072, from y 192) is too wide to jump; three
+  -- springy parasols stand in it on their poles (tops y 136, 88 px apart). A crate at the edge is the step up to
+  -- the first (from the street it is 48 px: more than a jump). Each one launches her 56 px: hold Right and she
+  -- bounces from one to the next and out onto the far side (Lion King's hippos and rhinos, our way).
+  { name = "CRATES",   kind = "solid",  layer = "play", x0 = 2788, x1 = 2816, y0 = 168, y1 = 184, label = "top" },
+  { name = "",         kind = "decor",  layer = "back", x0 = 2854, x1 = 2858, y0 = 140, y1 = 240 },     -- parasol poles
+  { name = "",         kind = "decor",  layer = "back", x0 = 2942, x1 = 2946, y0 = 140, y1 = 240 },
+  { name = "",         kind = "decor",  layer = "back", x0 = 3030, x1 = 3034, y0 = 140, y1 = 240 },
+  { name = "PARASOL",  kind = "oneway", layer = "play", x0 = 2832, x1 = 2880, y0 = 136, y1 = 140, label = "below", bounce = 56 },
+  { name = "PARASOL",  kind = "oneway", layer = "play", x0 = 2920, x1 = 2968, y0 = 136, y1 = 140, label = "below", bounce = 56 },
+  { name = "PARASOL",  kind = "oneway", layer = "play", x0 = 3008, x1 = 3056, y0 = 136, y1 = 140, label = "below", bounce = 56 },
+  -- screen 11: tram street again (3104-3424): a faster tram, every 4 s (wait for two). The kiosk (the bounce
+  -- off the last parasol lands on it), then a shelter roof a running
   -- jump away. Then Mia at the stairs down to the river.
-  { name = "KIOSK",    kind = "solid",  layer = "play", x0 = 2840, x1 = 2880, y0 = 148, y1 = 184 },
-  { name = "",         kind = "decor",  layer = "back", x0 = 2952, x1 = 2956, y0 = 140, y1 = 184 },     -- shelter posts
-  { name = "",         kind = "decor",  layer = "back", x0 = 3012, x1 = 3016, y0 = 140, y1 = 184 },
-  { name = "SHELTER",  kind = "oneway", layer = "play", x0 = 2948, x1 = 3020, y0 = 136, y1 = 140, label = "below" },
-  { name = "RIVER",    kind = "decor",  layer = "back", x0 = 3136, x1 = 3164, y0 = 120, y1 = 140 },     -- sign
-  { name = "",         kind = "decor",  layer = "back", x0 = 3148, x1 = 3152, y0 = 140, y1 = 184 },
+  { name = "KIOSK",    kind = "solid",  layer = "play", x0 = 3128, x1 = 3168, y0 = 148, y1 = 184 },   -- (the last bounce lands on it)
+  { name = "",         kind = "decor",  layer = "back", x0 = 3240, x1 = 3244, y0 = 140, y1 = 184 },     -- shelter posts
+  { name = "",         kind = "decor",  layer = "back", x0 = 3300, x1 = 3304, y0 = 140, y1 = 184 },
+  { name = "SHELTER",  kind = "oneway", layer = "play", x0 = 3236, x1 = 3308, y0 = 136, y1 = 140, label = "below" },
+  { name = "RIVER",    kind = "decor",  layer = "back", x0 = 3456, x1 = 3484, y0 = 120, y1 = 140 },     -- sign
+  { name = "",         kind = "decor",  layer = "back", x0 = 3468, x1 = 3472, y0 = 140, y1 = 184 },
   -- foreground frame: arcade pillars
   { name = "",         kind = "decor",  layer = "front", x0 = 620,  x1 = 632,  y0 = 221, y1 = 240 },
   { name = "",         kind = "decor",  layer = "front", x0 = 1900, x1 = 1912, y0 = 221, y1 = 240 },
@@ -159,7 +172,7 @@ L.lamps = {                    -- one every 1.5 screens or so (City Park: every 
   { x = 1620, y = 184, checkpoint = true },
   { x = 1920, y = 184, checkpoint = true },
   { x = 2528, y = 184, checkpoint = true },
-  { x = 2776, y = 184, checkpoint = true },
+  { x = 2764, y = 184, checkpoint = true },
 }
 -- a lamp Pepper reaches while carrying the ball becomes the ball's home: if it is lost (the fountain, the canal),
 -- it comes back there, not all the way back at the statue
@@ -174,7 +187,7 @@ L.cat = { x = 1508, y = 102, range = 90 }
 L.ballBack = "THE BALL IS BACK BY THE STATUE"
 L.pickupSay = "BRING ME THE BALL!"
 -- the girl waits at the top of the stairs down to the river
-L.girl = { x = 3140, y = 184 }
+L.girl = { x = 3460, y = 184 }
 L.outro = { "BY THE RIVER MIA THREW IT", "AGAIN. IT LANDED ON A FERRY..." }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
@@ -207,8 +220,11 @@ L.bones = {
   -- 9 the canal: over the water, along the crates
   { x = 2528, y = 152 }, { x = 2568, y = 96 }, { x = 2600, y = 88 }, { x = 2640, y = 120 }, { x = 2672, y = 120 },
   { x = 2704, y = 152 },
-  -- 10 tram street again: the kiosk, the shelter, by Mia
-  { x = 2860, y = 148 }, { x = 2972, y = 136 }, { x = 2996, y = 136 }, { x = 3112, y = 184 },
+  -- 10 the flooded square: on the crate, high over each parasol
+  { x = 2802, y = 168 }, { x = 2856, y = 136 }, { x = 2900, y = 84 }, { x = 2944, y = 136 }, { x = 2988, y = 84 },
+  { x = 3032, y = 136 }, { x = 3076, y = 84 },
+  -- 11 tram street again: the kiosk, the shelter, by Mia
+  { x = 3148, y = 148 }, { x = 3260, y = 136 }, { x = 3284, y = 136 }, { x = 3432, y = 184 },
 }
 
 -- the tram zone (the bike-zone code): a tram drives right to left while Pepper is in the zone, and on until it
@@ -217,7 +233,7 @@ L.bones = {
 -- off when Pepper walks into the zone (its bell rings 1 s before it is on screen), then one every 6 s.
 L.bikes = {
   { zoneX0 = 1930, zoneX1 = 2120, minY = 150, every = 6.0, speed = 110, endX = 1900, kind = "tram", w = 80, h = 26, rail = true, start = "enter" },
-  { zoneX0 = 2800, zoneX1 = 3080, minY = 150, every = 5.0, speed = 130, endX = 2770, kind = "tram", w = 80, h = 26, rail = true, start = "enter" },
+  { zoneX0 = 3120, zoneX1 = 3300, minY = 150, every = 4.0, speed = 130, endX = 2770, kind = "tram", w = 80, h = 26, rail = true, start = "enter" },
 }
 -- the geese on the flower market (critters.lua): one on the cobbles before the tub, one under the balcony
 L.critters = {
@@ -236,10 +252,10 @@ L.secrets = {
 -- hints (St:hint, drawn by talk.lua): first match wins. With btn ("a", "b", "x", "y", "down") it is Pepper's
 -- control hint: a button picture and 1 to 3 words. Without, it is the girl's line. need: see St:zoneHint.
 L.hints = {
-  { x0 = 0,    x1 = 3200, btn = "y",    text = "BARK!",              need = "catnear" },
-  { x0 = 0,    x1 = 3200, btn = "x",    text = "PICK UP",            need = "nearball" },
-  { x0 = 3080, x1 = 3200, btn = "x",    text = "GIVE",               need = "ball" },
-  { x0 = 0,    x1 = 3200, btn = "y",    text = "BARK: SHOO!",        need = "goose" },
+  { x0 = 0,    x1 = 3520, btn = "y",    text = "BARK!",              need = "catnear" },
+  { x0 = 0,    x1 = 3520, btn = "x",    text = "PICK UP",            need = "nearball" },
+  { x0 = 3400, x1 = 3520, btn = "x",    text = "GIVE",               need = "ball" },
+  { x0 = 0,    x1 = 3520, btn = "y",    text = "BARK: SHOO!",        need = "goose" },
   { x0 = 0,    x1 = 152,  btn = "a",    text = "TAP: HOP" },            -- up the crates
   { x0 = 300,  x1 = 368,  btn = "down", text = "CRAWL" },
   { x0 = 640,  x1 = 688,  btn = "a",    text = "HOLD: BIG JUMP" },      -- onto the stall
@@ -247,13 +263,14 @@ L.hints = {
   { x0 = 1660, x1 = 1720, btn = "a",    text = "TAP: HOP" },            -- over the fountain
   { x0 = 968,  x1 = 1010, btn = "a",    text = "BOUNCE ON IT" },        -- the first springy awning
   { x0 = 1288, x1 = 1560, text = "THE CAT IS ON MY BALL!",    need = "cat" },
-  { x0 = 1560, x1 = 3200, text = "GO BACK: BARK AT THE CAT!", need = "cat" },
-  { x0 = 1600, x1 = 3200, text = "GO BACK FOR THE BALL!",     need = "noball" },
+  { x0 = 1560, x1 = 3520, text = "GO BACK: BARK AT THE CAT!", need = "cat" },
+  { x0 = 1600, x1 = 3520, text = "GO BACK FOR THE BALL!",     need = "noball" },
   { x0 = 1930, x1 = 2120, text = "TRAM! GET UP HIGH!", bike = true },
-  { x0 = 2800, x1 = 3080, text = "A FAST TRAM! GET UP!", bike = true },
+  { x0 = 3120, x1 = 3300, text = "A FAST TRAM! GET UP!", bike = true },
   { x0 = 2136, x1 = 2190, text = "GEESE! DON'T LOSE MY BALL!", need = "ball" },
   { x0 = 2464, x1 = 2500, text = "BOUNCE OVER THE CANAL!" },
-  { x0 = 1720, x1 = 3200, text = "BRING ME THE BALL!", need = "ball" },
+  { x0 = 2784, x1 = 2832, btn = "a",    text = "BOUNCE ACROSS" },
+  { x0 = 1720, x1 = 3520, text = "BRING ME THE BALL!", need = "ball" },
 }
 
 L.intro = { "LEVEL 2", "DOWNTOWN", "A CAT IS SITTING ON THE BALL!", "BARK IT AWAY. BRING THE BALL!" }

@@ -92,7 +92,7 @@ Built on `assets/complete`.
   - 9 magpie perches (was 6), 68 bones, 8 lamps. Autopilot clear 44 s, no hit (was 31 s).
   - QA: lamps moved off the log and the picnic table (a respawn stood inside them); `qa.lua`'s bike sweep tests
     crouch-only spots (under a bench) crouched only. Flow checks use x 1900 for the magpie line.
-- **Level 2, Downtown: bounce and carry, 6 to 10 screens** (3200 px):
+- **Level 2, Downtown: bounce and carry, 6 to 11 screens** (3520 px):
   - New screen 4, the bakery row: a springy awning launches Pepper over a crate wall 64 px high (more than a jump
     and a scramble); a springier one reaches the bakery sign (gold bone, secret BAKERY SIGN). Holding Down she can
     stand on a springy top. Springy tops have red coil springs on their posts and dip as they launch her.
@@ -100,10 +100,17 @@ Built on `assets/complete`.
     them off, or go high: the tub, the cafe table, the springy parasol, the balcony.
   - New screen 9, the canal: the awning at the water's edge launches Pepper over it onto a crate wall on the far
     quay. Walking in costs a heart.
-  - New screen 10, tram street again: a faster tram (130 px/s, every 5 s; the first one 110 px/s, every 6 s).
+  - New screen 10, the flooded square: three springy parasols standing in the water, 88 px apart. From a crate
+    at the edge, a held jump onto the first; holding Right she bounces from one to the next and lands on the
+    kiosk across the water (our version of Lion King's hippo and rhino bounces). From the street a jump can't
+    reach a parasol.
+  - New screen 11, tram street again: a faster tram (130 px/s, every 4 s; the first one 110 px/s, every 6 s), so
+    Pepper waits for two: on the kiosk, then on the shelter roof. Its zone ends at the shelter, so Mia's spot is
+    safe once she is down.
   - `L.ballHomeAtLamps`: a lamp Pepper reaches while carrying the ball becomes its home, so a ball lost in the
     canal comes back by that lamp ("THE BALL IS BACK BY THE LAMP"), not five screens back at the statue.
-  - 6 lamps for 10 screens (was 5 for 6), 68 bones, 4 secrets. Autopilot clear 44.8 s, no hit (was 29.8 s).
+  - 6 lamps for 11 screens (was 5 for 6), 75 bones, 4 secrets. Autopilot clear 51.5 s, no hit (was 29.8 s);
+    hard mode clears too.
 - **Level 3, River Walk: water and traffic, 10 to 12 screens** (3840 px):
   - New screens 8 and 9, the harbour, on the quay's level after the bridge: open water with two rowing boats
     (movers with `pause`: a rower in each rows to and fro and rests 1.5 s at each end; drawn in code in
