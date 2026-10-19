@@ -1126,6 +1126,28 @@ function Sc.spring(x, y, h)
   end
 end
 
+-- the tram shed at the end of a tram line (Downtown): a brick front with a cornice (its roof is a perch) and a
+-- dark arched doorway open on the right, where the tram drives in (stage.lua draws a tram only right of the door)
+function Sc.tramShed(p, camx)
+  local im = Sc.townArt("town").tramshed
+  local x, w, h = math.floor(p.x0 - camx), p.x1 - p.x0, p.y1 - p.y0
+  if im then lg.setColor(1, 1, 1, 1); lg.draw(im, x + w - im:getWidth(), p.y1 - im:getHeight()); return end
+  lg.setColor(INK); lg.rectangle("fill", x - 1, p.y0 - 1, w + 2, h + 1)
+  lg.setColor(0.62, 0.36, 0.27); lg.rectangle("fill", x, p.y0 + 4, w, h - 4)               -- brick
+  lg.setColor(0.52, 0.29, 0.22)
+  for yy = p.y0 + 7, p.y1 - 2, 4 do
+    lg.rectangle("fill", x, yy, w, 1)
+    for xx = x + ((yy / 4) % 2 == 0 and 2 or 6), x + w - 1, 8 do lg.rectangle("fill", xx, yy - 3, 1, 3) end
+  end
+  lg.setColor(0.29, 0.35, 0.33); lg.rectangle("fill", x - 2, p.y0, w + 4, 4)               -- the cornice: the roof
+  lg.setColor(0.46, 0.54, 0.50); lg.rectangle("fill", x - 2, p.y0, w + 4, 1)
+  lg.setColor(INK); lg.rectangle("fill", x + 6, p.y0 + 10, w - 6, h - 10)                  -- the doorway
+  lg.rectangle("fill", x + 9, p.y0 + 8, w - 9, 2)
+  lg.setColor(0.10, 0.10, 0.13); lg.rectangle("fill", x + 7, p.y0 + 11, w - 7, h - 11)
+  lg.setColor(0.86, 0.70, 0.22); lg.rectangle("fill", x + 2, p.y0 + 6, 4, 3)              -- a lamp by the door
+  lg.setColor(1, 1, 1, 1)
+end
+
 -- one prop of an art level. kicked: a leaf pile Pepper has run through.
 function Sc.drawPropArt(p, camx, def, kicked)
   local style = def.art
@@ -1220,6 +1242,7 @@ function Sc.drawPropArt(p, camx, def, kicked)
           end
         end
       end
+    elseif n == "TRAM SHED" then Sc.tramShed(p, camx)
     elseif n == "STATUE" then at(T.statue, x - 1, p.y0 - 4)
     elseif n == "PEDESTAL" then shadowUnder(p, camx); at(T.pedestal, x, p.y0)
     elseif n == "ARM" then return

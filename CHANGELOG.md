@@ -2,6 +2,17 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `assets/v2`: the tram fix and art for the new pieces (19 Oct)
+Built on `levels/v2`.
+- **The trams end in tram sheds** (Downtown). Before, the first tram vanished in plain view before the fountain,
+  and the second drove on across the flooded square on its rails. Now each line ends in a tram shed (`TRAM SHED`,
+  a solid prop) with its door on the right: a zone's `depot` is the door's x; the tram is drawn and hurts only
+  right of it (a scissor), so it drives in and is gone. The shed roofs are perches: the first shed stands after
+  the fountain (a hop from the rim), the second at the far side of the flooded square, where the last bounce
+  lands. The second kiosk is gone; the first kiosk moved 12 px right, so the lamp between shed and kiosk has
+  room for Pepper. New checks: tram 2 goes into its shed and never over the water; no bone in any level is
+  inside a solid. The test tour shows a tram driving into each shed.
+
 ## Branch `level4/soder`: Level 4, Söder Hill, the chase (night of 18-19 Oct)
 Built on `levels/v2` (c218a0e). Greybox, no SpriteCook credits. See `docs/soder_beatsheet.md`.
 - **A new manner of play, Lion King's Stampede our way** (`riverwalk/chase.lua`, `L.scroll`): the screen moves on by

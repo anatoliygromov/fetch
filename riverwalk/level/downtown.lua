@@ -118,7 +118,10 @@ L.props = {
   { name = "RIM",      kind = "solid",  layer = "play", x0 = 1848, x1 = 1864, y0 = 168, y1 = 184, label = "top" },
   -- screen 7: tram street. The kiosk (36 px up) and the shelter roof (one-way, 12 px above the kiosk) are above
   -- the tram (26 px). The stairs down to the river are at the end of the level (terrain slopes, x 3488-3520).
-  { name = "KIOSK",    kind = "solid",  layer = "play", x0 = 1968, x1 = 2008, y0 = 148, y1 = 184 },
+  -- the tram shed (DEPOT) after the fountain: the end of the first tram line. Its roof (36 px up, a hop from the
+  -- fountain's rim) is a perch; the tram drives in through its door on the right (depot = 1938) and is gone.
+  { name = "TRAM SHED", kind = "solid", layer = "play", x0 = 1868, x1 = 1938, y0 = 148, y1 = 184, label = "top" },
+  { name = "KIOSK",    kind = "solid",  layer = "play", x0 = 1980, x1 = 2020, y0 = 148, y1 = 184 },
   { name = "",         kind = "decor",  layer = "back", x0 = 2052, x1 = 2056, y0 = 140, y1 = 184 },     -- shelter posts
   { name = "",         kind = "decor",  layer = "back", x0 = 2112, x1 = 2116, y0 = 140, y1 = 184 },
   { name = "SHELTER",  kind = "oneway", layer = "play", x0 = 2048, x1 = 2120, y0 = 136, y1 = 140, label = "below" },
@@ -140,10 +143,10 @@ L.props = {
   { name = "CRATES",   kind = "solid",  layer = "play", x0 = 2624, x1 = 2656, y0 = 120, y1 = 240, label = "top" },
   { name = "CRATES",   kind = "solid",  layer = "play", x0 = 2656, x1 = 2688, y0 = 120, y1 = 184, label = "top" },
   { name = "CRATES",   kind = "solid",  layer = "play", x0 = 2688, x1 = 2720, y0 = 152, y1 = 184, label = "top" },
-  -- screen 10: the flooded square (2784-3104). (The tram's rails run on through the shallow water: it drives across.) The water (x 2816-3072, from y 192) is too wide to jump; three
+  -- screen 10: the flooded square (2784-3104). The water (x 2816-3072, from y 192) is too wide to jump; three
   -- springy parasols stand in it on their poles (tops y 136, 88 px apart). A crate at the edge is the step up to
   -- the first (from the street it is 48 px: more than a jump). Each one launches her 56 px: hold Right and she
-  -- bounces from one to the next and over to the kiosk on the far side (Lion King's hippos and rhinos, our way).
+  -- bounces from one to the next and over to the tram shed's roof on the far side (Lion King's hippos and rhinos, our way).
   { name = "CRATES",   kind = "solid",  layer = "play", x0 = 2788, x1 = 2816, y0 = 168, y1 = 184, label = "top" },
   { name = "",         kind = "decor",  layer = "back", x0 = 2854, x1 = 2858, y0 = 140, y1 = 240 },     -- parasol poles
   { name = "",         kind = "decor",  layer = "back", x0 = 2942, x1 = 2946, y0 = 140, y1 = 240 },
@@ -154,7 +157,9 @@ L.props = {
   -- screen 11: tram street again (3104-3424): a faster tram, every 4 s (wait for two). The kiosk (the bounce
   -- off the last parasol lands on it), then a shelter roof a running
   -- jump away. Then Mia at the stairs down to the river.
-  { name = "KIOSK",    kind = "solid",  layer = "play", x0 = 3128, x1 = 3168, y0 = 148, y1 = 184 },   -- (the last bounce lands on it)
+  -- the second tram line ends in a tram shed at the far side of the flooded square (no rails through the water):
+  -- the last bounce lands on its roof, and the tram drives in through its door (depot = 3168)
+  { name = "TRAM SHED", kind = "solid", layer = "play", x0 = 3072, x1 = 3168, y0 = 148, y1 = 184, label = "top" },
   { name = "",         kind = "decor",  layer = "back", x0 = 3240, x1 = 3244, y0 = 140, y1 = 184 },     -- shelter posts
   { name = "",         kind = "decor",  layer = "back", x0 = 3300, x1 = 3304, y0 = 140, y1 = 184 },
   { name = "SHELTER",  kind = "oneway", layer = "play", x0 = 3236, x1 = 3308, y0 = 136, y1 = 140, label = "below" },
@@ -170,7 +175,7 @@ L.lamps = {                    -- one every 1.5 screens or so (City Park: every 
   { x = 636,  y = 184, checkpoint = true },
   { x = 960,  y = 184, checkpoint = true },
   { x = 1620, y = 184, checkpoint = true },
-  { x = 1920, y = 184, checkpoint = true },
+  { x = 1959, y = 184, checkpoint = true },    -- (between the tram shed and the kiosk: 42 px, room for her)
   { x = 2528, y = 184, checkpoint = true },
   { x = 2764, y = 184, checkpoint = true },
 }
@@ -206,14 +211,14 @@ L.bones = {
   { x = 1464, y = 76, super = true }, { x = 1550, y = 184 }, { x = 1570, y = 184 },
   -- 5 the fountain: over the water, on the bowl
   { x = 1660, y = 184 }, { x = 1728, y = 168 }, { x = 1758, y = 160 }, { x = 1792, y = 160 }, { x = 1826, y = 160 },
-  { x = 1856, y = 168 }, { x = 1890, y = 184 },
+  { x = 1856, y = 168 }, { x = 1884, y = 148 },
   -- 5 the rooftops (the high route): the balconies, gold on the fountain's top tier
   { x = 1580, y = 104 }, { x = 1684, y = 96 }, { x = 1792, y = 104, super = true }, { x = 1868, y = 104 },
   -- 4 the bakery row: on the first awning, up over the crates, gold on the bakery sign
   { x = 1040, y = 152 }, { x = 1072, y = 104 }, { x = 1096, y = 88 }, { x = 1120, y = 120 }, { x = 1152, y = 152 },
   { x = 1264, y = 120 }, { x = 1290, y = 64, super = true },
   -- 7 tram street: the kiosk, the shelter roof
-  { x = 1980, y = 148 }, { x = 1996, y = 148 }, { x = 2068, y = 136 }, { x = 2092, y = 136 },
+  { x = 1920, y = 148 }, { x = 1996, y = 148 }, { x = 2068, y = 136 }, { x = 2092, y = 136 },
   -- 8 the flower market: the tub, the table, high over the parasol, the balcony
   { x = 2200, y = 184 }, { x = 2296, y = 156 }, { x = 2368, y = 158 }, { x = 2368, y = 80 }, { x = 2400, y = 64 },
   { x = 2436, y = 88 }, { x = 2460, y = 88 },
@@ -227,13 +232,13 @@ L.bones = {
   { x = 3148, y = 148 }, { x = 3260, y = 136 }, { x = 3284, y = 136 }, { x = 3432, y = 184 },
 }
 
--- the tram zone (the bike-zone code): a tram drives right to left while Pepper is in the zone, and on until it
--- passes endX (before the fountain). w, h: its hit box (80 x 26); rail: it stays on the street's line (y 184)
+-- the tram zones (the bike-zone code): a tram drives right to left while Pepper is in the zone, into its tram
+-- shed: depot = the shed's door (the tram is drawn and hurts only right of it), endX = where it is all inside. w, h: its hit box (80 x 26); rail: it stays on the street's line (y 184)
 -- instead of following the ground, so it does not drive down the river stairs. start = "enter": the tram sets
 -- off when Pepper walks into the zone (its bell rings 1 s before it is on screen), then one every 6 s.
 L.bikes = {
-  { zoneX0 = 1930, zoneX1 = 2120, minY = 150, every = 6.0, speed = 110, endX = 1900, kind = "tram", w = 80, h = 26, rail = true, start = "enter" },
-  { zoneX0 = 3120, zoneX1 = 3300, minY = 150, every = 4.0, speed = 130, endX = 2770, kind = "tram", w = 80, h = 26, rail = true, start = "enter" },
+  { zoneX0 = 1930, zoneX1 = 2120, minY = 150, every = 6.0, speed = 110, endX = 1882, depot = 1938, kind = "tram", w = 80, h = 26, rail = true, start = "enter" },
+  { zoneX0 = 3120, zoneX1 = 3300, minY = 150, every = 4.0, speed = 130, endX = 3112, depot = 3168, kind = "tram", w = 80, h = 26, rail = true, start = "enter" },
 }
 -- the geese on the flower market (critters.lua): one on the cobbles before the tub, one under the balcony
 L.critters = {

@@ -314,7 +314,7 @@ function St:update(dt, presses)
     local hw, h = (bk.w or 48) / 2, bk.h or 26                     -- (rail: a tram stays on its line)
     if c.x < bk.endX or c.x < self.cam - 80 then table.remove(self.bikes, i)
     else
-      local bx0, bx1, by0 = c.x - hw, c.x + hw, c.y - h
+      local bx0, bx1, by0 = math.max(c.x - hw, bk.depot or -1e9), c.x + hw, c.y - h   -- (inside its shed it is gone)
       if x1 > bx0 and x0 < bx1 and y1 > by0 and y0 < c.y and p:hurt(c.x, w) then self:loseHeart() end
     end
   end
@@ -582,12 +582,15 @@ function St:draw(debug)
   use("play")
   for _, c in ipairs(self.bikes) do
     local x = c.x - cam
+    local depot = c.zone and c.zone.depot                                -- a tram entering its shed: drawn right of the door
+    if depot then lg.setScissor(math.max(0, math.floor(depot - cam)), 0, 400, 240) end
     if style then Sc.drawHazardArt(c, cam, style)                        -- the leaf cart, the tram
     elseif grey then
       local z = c.zone or {}
       local bw, bh = z.w or 48, z.h or 26
       Sc.outlined(C.prop, C.propEdge, math.floor(x - bw / 2 + 0.5), c.y - bh, bw, bh); Sc.label(z.kind and z.kind:upper() or "BIKE", x, c.y - 17)
     else lg.setColor(1, 1, 1, 1); Rd.drawBike(cyc, -c.x, math.floor(x + 25 + 0.5) - cyc:getWidth(), math.floor(c.y - cyc:getHeight() + 0.5), true) end   -- the art faces right; bikes ride left, wheels rolling
+    if depot then lg.setScissor() end
   end
   if lk then Look.off() end
   Sp.drawWarnings(self, cam)                                       -- a sign at the edge a bike or tram comes from

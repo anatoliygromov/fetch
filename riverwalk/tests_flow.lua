@@ -94,6 +94,16 @@ return function(api)
     local h2 = (function() p.x = 60; return s:hint() end)()
     return h and h.btn == "a" and h.text == "TAP: HOP" and h2 and h2.btn == "b", ("walking at 120: %s; running at 60: %s"):format(h and h.text or "-", h2 and h2.text or "-")
   end))
+  add(check("bones: none is inside a solid (all five levels)", function()
+    local bad = {}
+    for _, L in ipairs(require("levels")) do
+      local s = St.new(require("level." .. L.name)); local w = s.world
+      for _, bn in ipairs(s.bones) do
+        if w:solidIn(bn.x - 3, bn.x + 3, bn.y - 12, bn.y - 6) then bad[#bad + 1] = L.name .. " " .. bn.x end
+      end
+    end
+    return #bad == 0, #bad == 0 and "all clear" or table.concat(bad, ", ")
+  end))
   add(check("hints: the magpie line shows (City Park)", function()
     local s = St.new(require("level.citypark")); s:resetMagpie(6); s.pepper.x = 1900
     local h = s:hint(); return h and h.who == "girl" and h.text:find("MAGPIE") ~= nil, h and h.text or "-"
