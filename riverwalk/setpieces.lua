@@ -68,15 +68,23 @@ function Sp.drawRowboat(m, cam, t)
   lg.setColor(0.93, 0.93, 0.88); lg.rectangle("fill", x0 + 3, y + 4, x1 - x0 - 6, 1)  -- a painted stripe
   local back = (m.dir or 1) > 0 and x0 + 6 or x1 - 12                                  -- the stern, where he sits
   local pull = math.sin(t * 5) * (math.abs(m.dx or 0) > 0 and 1 or 0.2)
-  lg.setColor(INK); lg.rectangle("fill", back - 1, y - 9, 8, 9)                       -- the rower: coat
-  lg.setColor(0.24, 0.42, 0.62); lg.rectangle("fill", back, y - 8, 6, 8)
-  lg.setColor(INK); lg.rectangle("fill", back, y - 14, 6, 6)                          -- head and cap
-  lg.setColor(0.93, 0.74, 0.60); lg.rectangle("fill", back + 1, y - 13, 4, 4)
-  lg.setColor(0.80, 0.25, 0.20); lg.rectangle("fill", back, y - 14, 6, 2)
-  lg.setColor(0.42, 0.29, 0.18)                                                       -- the oars, dipping in turn
-  local ox = back + 3
-  lg.line(ox, y - 5, ox - 12 + pull * 6, y + 13 + pull * 2)
-  lg.line(ox + 1, y - 5, ox + 13 + pull * 6, y + 13 - pull * 2)
+  local lean = math.floor(pull + 0.5)                                                 -- he leans into each stroke
+  lg.setColor(INK); lg.rectangle("fill", back - 2 + lean, y - 13, 11, 13)             -- the rower: coat
+  lg.setColor(0.24, 0.42, 0.62); lg.rectangle("fill", back - 1 + lean, y - 12, 9, 12)
+  lg.setColor(0.33, 0.55, 0.78); lg.rectangle("fill", back - 1 + lean, y - 12, 9, 2)
+  lg.setColor(INK); lg.rectangle("fill", back - 1 + lean, y - 21, 9, 9)               -- head and cap
+  lg.setColor(0.93, 0.74, 0.60); lg.rectangle("fill", back + lean, y - 19, 7, 6)
+  lg.setColor(0.11, 0.10, 0.09); lg.rectangle("fill", back + 2 + lean, y - 17, 1, 1); lg.rectangle("fill", back + 5 + lean, y - 17, 1, 1)
+  lg.setColor(0.86, 0.25, 0.20); lg.rectangle("fill", back - 1 + lean, y - 21, 9, 3)  -- a red cap
+  lg.setColor(INK)                                                                    -- the oars, dipping in turn
+  local ox = back + 3 + lean
+  lg.setLineWidth(2)
+  lg.line(ox, y - 6, ox - 14 + pull * 6, y + 13 + pull * 2)
+  lg.line(ox + 1, y - 6, ox + 15 + pull * 6, y + 13 - pull * 2)
+  lg.setLineWidth(1)
+  lg.setColor(0.42, 0.29, 0.18)
+  lg.line(ox, y - 6, ox - 14 + pull * 6, y + 13 + pull * 2)
+  lg.line(ox + 1, y - 6, ox + 15 + pull * 6, y + 13 - pull * 2)
   lg.setColor(1, 1, 1, 1)
 end
 

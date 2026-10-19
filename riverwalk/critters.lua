@@ -24,7 +24,7 @@ function Cr.init(s, def)
     if c.kind == "goose" then
       k.x, k.y, k.dir, k.state = c.x, c.y, -1, "walk"
     else
-      k.x, k.y, k.state, k.timer = (c.x0 + c.x1) / 2, 76, "circle", c.every or 4
+      k.x, k.y, k.state, k.timer = (c.x0 + c.x1) / 2, 86, "circle", c.every or 4
     end
     s.critters[i] = k
   end
@@ -73,7 +73,7 @@ function Cr.update(s, dt)
       local inZone = p.x >= c.x0 and p.x <= c.x1
       if k.state == "circle" or k.state == "away" then
         local tx = math.max(c.x0, math.min(c.x1, p.x)) + math.sin(k.t * 1.3) * 60
-        k.x = k.x + (tx - k.x) * math.min(1, dt * 1.5); k.y = (k.state == "away" and 40 or 76) + math.sin(k.t * 2.1) * 6
+        k.x = k.x + (tx - k.x) * math.min(1, dt * 1.5); k.y = (k.state == "away" and 48 or 86) + math.sin(k.t * 2.1) * 6
         -- (it circles below the top hint panel and the HUD, so it is always in view)
         if k.state == "away" and k.t >= 4 then k.state, k.t = "circle", 0 end
         if k.state == "circle" and inZone and p.mode == "normal" then
@@ -132,50 +132,49 @@ function Cr.gullWarn(s)
 end
 
 -- drawing: pixel critters in code (like the magpie), feet at (x, y)
-local GOOSE = {
-  walk = {
-    "................kkk.......",
-    "...............kwwwk......",
-    "...............kwkwkoo....",
-    "...............kwwwkoooo..",
-    "...............kwwwk......",
-    "................kwwk......",
-    "................kwwk......",
-    "................kwwk......",
-    "...............kwwwk......",
-    "..kkk.........kwwwwk......",
-    ".kwwwkkkkkkkkkwwwwwk......",
-    "kwwwwwwwwwwwwwwwwwwk......",
-    "kwwwssswwwwwwwwwwwk.......",
-    "kwwsssssswwwwwwwwk........",
-    ".kwwssssswwwwwwwk.........",
-    "..kwwwwwwwwwwwwk..........",
-    "...kkkkkkkkkkkk...........",
-    "........oo..oo............",
-    "........o....o............",
-    ".......oo...oo............",
+local GOOSE = {                                                    -- 26 px wide, drawn feet at the bottom
+  walk = {                                                         -- (taller than its 20 px hit box: the neck)
+    "..................kkk.....",
+    ".................kwwwk....",
+    ".................kwkwkooo.",
+    ".................kwwwkoooo",
+    ".................kwwwk....",
+    "..................kwwk....",
+    "..................kwwk....",
+    "..................kwwk....",
+    "..................kwwk....",
+    "..................kwwk....",
+    ".................kwwwk....",
+    "................kwwwwk....",
+    "..kkk..........kwwwwwk....",
+    ".kwwwkkkkkkkkkkwwwwwwk....",
+    "kwwwwwwwwwwwwwwwwwwwk.....",
+    "kwwwssswwwwwwwwwwwwk......",
+    "kwwsssssswwwwwwwwwk.......",
+    ".kwwssssswwwwwwwwk........",
+    "..kwwwwwwwwwwwwwk.........",
+    "...kkkkkkkkkkkkk..........",
+    "........oo...oo...........",
+    "........o.....o...........",
+    ".......oo....oo...........",
   },
-  hiss = {
-    "..........................",
-    "..........................",
-    "..........................",
-    "..........................",
-    "..........................",
-    "....................kkk...",
-    "...................kwkwkoo",
-    "..............kkkkkwwwwkoo",
-    ".............kwwwwwwwwk...",
-    "..kkk.......kwwwkkkkk.oo..",
-    ".kwwwkkkkkkkwwwwk.........",
-    "kwwwwwwwwwwwwwwwk.........",
-    "kwwwssswwwwwwwwwk.........",
-    "kwwsssssswwwwwwk..........",
-    ".kwwssssswwwwwk...........",
-    "..kwwwwwwwwwwwk...........",
-    "...kkkkkkkkkkk............",
-    "........oo..oo............",
-    "........o....o............",
-    ".......oo...oo............",
+  hiss = {                                                         -- neck stretched out low, beak open, wing up
+    "..kk......................",
+    ".kwwk.....................",
+    ".kwwwk..............kkk...",
+    ".kwwwwk............kwwwkoo",
+    "..kwwwwk.......kkkkwkwkk..",
+    "...kwwwwkkkkkkkwwwwwwwwkoo",
+    "..kwwwwwwwwwwwwwwkkkkkk...",
+    ".kwwwwwwwwwwwwwwwk........",
+    "kwwwsssswwwwwwwwk.........",
+    "kwwssssssswwwwwk..........",
+    "kwwsssssswwwwwk...........",
+    ".kwwwwwwwwwwwk............",
+    "..kkkkkkkkkkk.............",
+    "......oo...oo.............",
+    "......o.....o.............",
+    ".....oo....oo.............",
   },
 }
 local GCOL = { k = { 0.14, 0.14, 0.18 }, w = { 0.96, 0.96, 0.93 }, s = { 0.72, 0.74, 0.76 }, o = { 0.93, 0.55, 0.16 } }

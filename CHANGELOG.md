@@ -144,6 +144,10 @@ Built on `assets/complete`.
   - Downtown: "HOLD: STAY ON" (Down) shows above the first springy awning. A springy top's dip counts down by
     time, not frames. The test tour's shots of screens 8-11 now have Pepper on screen.
   - The River Walk golden trace re-recorded again (the harbour timing changed); lab and file checks unchanged.
+- **Readability:** the goose is redrawn taller (a long neck when walking; neck stretched out low, beak open and a
+  wing up when it hisses), so it reads as a goose, not a duck; its hit box is unchanged. The rower is bigger (red
+  cap, face, coat) and leans into each stroke; the oars have a dark outline. Gulls circle a little lower (y 86),
+  clear of the hint panel.
 
 ## Branch `assets/complete`: the missing assets (18 Oct)
 Built on `lk/look` (9c3bcbd). Every placeholder left in the three levels gets real art.
