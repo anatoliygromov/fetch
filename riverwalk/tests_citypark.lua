@@ -412,6 +412,7 @@ return function(mode, api)
       if s and s.hearts ~= (lastHearts or s.maxHearts) then print(("  lost a heart at x %.0f y %.0f (step %d)"):format(p.x, p.y, i)) end
       lastHearts = s and s.hearts
       if frame % 3 == 0 then n = n + 1; love.graphics.captureScreenshot(("rec/%04d.png"):format(n)) end
+      if os.getenv("AUTO_TRACE") and p and p.x > tonumber(os.getenv("AUTO_TRACE")) and frame % 6 == 0 then print(("    f%d x %.0f y %.0f"):format(frame, p.x, p.y)) end   -- (for cutting GIFs: rec/ n = frame / 3)
     end
     local st = steps[i]
     if not st then return end
