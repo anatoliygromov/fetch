@@ -56,10 +56,26 @@ function Sp.updateFerry(s, m, dt)
 end
 
 -- a rowing boat (a mover rowed to and fro, River Walk's harbour): a wooden hull (crisp, outlined: Pepper stands on
--- it), its deck the mover's top (y0), and a rower on the thwart at the stern, pulling the oars as it moves. The
--- rower sits at the end away from where it is going (rowers face backwards), low, so Pepper is never behind him.
+-- it), its deck the mover's top (y0), and a rower pulling the oars as it moves. Art: art/scene/rowboat.png; without
+-- it, the boat is drawn in code below.
+local boatImg, boatQ
 function Sp.drawRowboat(m, cam, t)
   local x0, x1, y = math.floor(m.x0 - cam + 0.5), math.floor(m.x1 - cam + 0.5), m.y0
+  if boatImg == nil then                                           -- the art (SpriteCook, tools/build_critters_art.py):
+    boatImg = false                                                -- 8 rowing frames of 70 x 70, hull x 4-64, deck row 55
+    if love.filesystem.getInfo("art/scene/rowboat.png") then
+      boatImg = lg.newImage("art/scene/rowboat.png"); boatImg:setFilter("nearest", "nearest"); boatQ = {}
+      for i = 1, 8 do boatQ[i] = lg.newQuad((i - 1) * 70, 0, 70, 70, boatImg:getDimensions()) end
+    end
+  end
+  if boatImg then                                                  -- he rows while it moves, rests at the ends. He
+    local i = math.abs(m.dx or 0) > 0 and 1 + math.floor(t * 8) % 8 or 1   -- sits at the front end (the way it goes),
+    local mid = math.floor((x0 + x1) / 2)                          -- so Pepper, boarding at the back, never hides him
+    lg.setColor(1, 1, 1, 1)
+    if (m.dir or 1) < 0 then lg.draw(boatImg, boatQ[i], mid - 34, y - 55)
+    else lg.draw(boatImg, boatQ[i], mid + 34, y - 55, 0, -1, 1) end
+    return
+  end
   local INK = { 0.11, 0.10, 0.09 }
   lg.setColor(INK)                                                 -- the hull: deck line to the waterline, tapered
   lg.polygon("fill", x0 - 3, y - 1, x1 + 3, y - 1, x1 - 3, y + 11, x0 + 3, y + 11)
@@ -247,8 +263,14 @@ end
 
 -- a wooden jetty on piles (River Walk's harbour): a plank deck (its top is the box's top), crisp and outlined,
 -- standing on three dark piles down into the water
+local jettyImg
 local function jetty(pc, cam)
   local x0, x1, y = math.floor(pc.x0 - cam), math.floor(pc.x1 - cam), pc.y0
+  if jettyImg == nil then                                          -- the art (SpriteCook, tools/import_assets_v2.py)
+    jettyImg = love.filesystem.getInfo("art/scene/rw_jetty.png") and lg.newImage("art/scene/rw_jetty.png") or false
+    if jettyImg then jettyImg:setFilter("nearest", "nearest") end
+  end
+  if jettyImg then lg.setColor(1, 1, 1, 1); lg.draw(jettyImg, x0, y - 1); return end
   local INK = { 0.11, 0.10, 0.09 }
   for _, px in ipairs({ x0 + 3, math.floor((x0 + x1) / 2) - 3, x1 - 9 }) do     -- the piles
     lg.setColor(INK); lg.rectangle("fill", px - 1, y + 5, 8, 240 - y)

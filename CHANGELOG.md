@@ -12,6 +12,20 @@ Built on `levels/v2`.
   lands. The second kiosk is gone; the first kiosk moved 12 px right, so the lamp between shed and kiosk has
   room for Pepper. New checks: tram 2 goes into its shed and never over the water; no bone in any level is
   inside a solid. The test tour shows a tram driving into each shed.
+- **Art for the new pieces** (SpriteCook, 380 credits; `tools/build_critters_art.py`, sources in `source_sheets/` and
+  `source_scenery/`): the goose (walk, rearing hiss with wings up, take-off and flight: 22 frames), the gull (6 flap
+  frames), the rowing boat with its rower (8 rowing frames), the harbour jetty, and the tram shed (70 and 96 px
+  wide). Still images were made at about 2-5x game size, reduced with a box filter, snapped to their own colours
+  and outlined; the animations were made from those 1x images, so they keep the game's pixel scale. Each was
+  pulled out of the browser as a false-colour picture and checked against a hash of its pixels (all exact).
+  Code drawings stay as the fallback when a file is missing.
+  - The goose's frame follows what it does: walking (by distance, so its feet don't slide), rearing up to hiss,
+    flapping as it charges, standing, taking off and flying away when barked at. The "!" sits above its head.
+  - The rowing boats' decks are 7 px lower (y 219: the hull sits in the water). The rower rows while the boat
+    moves and sits at the end it rows towards, so Pepper, boarding at the other end, never hides him.
+  - The gull swoops 2 px higher, so a crawling Pepper on the quay (3 px above a boat's deck) still ducks it.
+  - `tools/check_pepper.sh`: the River Walk trace re-recorded (first difference step 2295, the lower decks);
+    the lab and file checks are unchanged.
 
 ## Branch `level4/soder`: Level 4, Söder Hill, the chase (night of 18-19 Oct)
 Built on `levels/v2` (c218a0e). Greybox, no SpriteCook credits. See `docs/soder_beatsheet.md`.

@@ -793,6 +793,7 @@ function Sc.townArt(style)
     for _, n in ipairs({ "ground", "crate", "parasol", "table", "stall", "awning80", "awning64", "statue", "pedestal", "tram", "shelter", "kiosk", "shopsign", "rim", "bowl", "bollard", "tub", "house1", "house2", "house3", "tier" }) do T[n] = img("town_" .. n) end
     for _, n in ipairs({ "door", "sign", "spout" }) do T[n] = fadeImg("town_" .. n) end
     T.crate, T.table = img("town_crate_front"), img("town_table_front")   -- front-on (tools/make_front_view.py)
+    T.tramshed = { [70] = img("town_tramshed70"), [96] = img("town_tramshed96") }   -- SpriteCook (tools/import_assets_v2.py)
     -- the two far layers sit further back than the back-edge decoration: faded more (as River Walk's far shore),
     -- so the street's obstacles and the climbable houses stand out against them
     T.facades = fadeImg("town_facades", 0.40)
@@ -1129,9 +1130,9 @@ end
 -- the tram shed at the end of a tram line (Downtown): a brick front with a cornice (its roof is a perch) and a
 -- dark arched doorway open on the right, where the tram drives in (stage.lua draws a tram only right of the door)
 function Sc.tramShed(p, camx)
-  local im = Sc.townArt("town").tramshed
   local x, w, h = math.floor(p.x0 - camx), p.x1 - p.x0, p.y1 - p.y0
-  if im then lg.setColor(1, 1, 1, 1); lg.draw(im, x + w - im:getWidth(), p.y1 - im:getHeight()); return end
+  local im = Sc.townArt("town").tramshed[w]                       -- the art: its cornice on the box's top, the rails
+  if im then lg.setColor(1, 1, 1, 1); lg.draw(im, x, p.y0); return end   -- running in below the line
   lg.setColor(INK); lg.rectangle("fill", x - 1, p.y0 - 1, w + 2, h + 1)
   lg.setColor(0.62, 0.36, 0.27); lg.rectangle("fill", x, p.y0 + 4, w, h - 4)               -- brick
   lg.setColor(0.52, 0.29, 0.22)

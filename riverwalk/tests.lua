@@ -146,11 +146,11 @@ return function(mode, api)
           report("hard mode: 1 heart, bikes 25% faster", h.hearts == 1 and Sp.speed(h, h.def.bikes[1]) == h.def.bikes[1].speed * 1.25,
             ("hearts %d, speed %.2f"):format(h.hearts, Sp.speed(h, h.def.bikes[1]))) end },
       -- 16 the harbour: the rowing boats carry Pepper and rest at each end; the gulls
-      { act = function() local s = api.stage(); local b = s.movers[2]; b.x0, b.x1, b.dir, b.waitT = 2200, 2256, 1, 0; tp(2228, 212)
+      { act = function() local s = api.stage(); local b = s.movers[2]; b.x0, b.x1, b.dir, b.waitT = 2200, 2256, 1, 0; tp(2228, 219)
           for _, k in ipairs(s.critters) do k.state, k.timer = "circle", 99 end end },                  -- (the gulls wait)
       { wait = 2.0 },
       { act = function(p) local s = api.stage(); local b = s.movers[2]
-          report("harbour: a rowing boat carries Pepper", p.ground == b and p.x > 2270 and near(p.y, 212), ("x %.0f, boat x %.0f"):format(p.x, b.x0)) end },
+          report("harbour: a rowing boat carries Pepper", p.ground == b and p.x > 2270 and near(p.y, 219), ("x %.0f, boat x %.0f"):format(p.x, b.x0)) end },
       { cond = function(p, s) return s.movers[2].waitT and s.movers[2].waitT > 0 end, act = function(p, s) minY = s.movers[2].x0 end, limit = 6 },
       { wait = 1.2 },
       { act = function(p, s) local b = api.stage().movers[2]
@@ -248,7 +248,7 @@ return function(mode, api)
       ride(function(p, s) local b = s.movers[3]; return p.onGround and p.y <= 197 and b.x0 <= 2458 and b.dir > 0 end, 14),
       at(function() return true end, function() hold("right") end),
       at(function(p, s) return p.ground == s.movers[3] and p.x >= s.movers[3].x0 + 20 end, function() release() end, 3),
-      ride(function(p, s) return p.ground == s.movers[3] and s.movers[3].x0 >= 2578 end, 14),
+      ride(function(p, s) return (p.ground == s.movers[3] and s.movers[3].x0 >= 2578) or (p.onGround and p.x > 2610 and p.y <= 217) end, 14),
       at(function() return true end, function() hold("right") end),
       at(function(p) return p.x >= 2840 and p.y <= 185 end, function() hold("right") end, 9),           -- up the steps
       onto(2930, 154),                                                                               -- the planter

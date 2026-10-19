@@ -3,7 +3,8 @@
 # tools/pepper_golden_trace.txt. The trace was first recorded from the build the user approved (aa38be5); it was
 # recorded again on ml/levels because River Walk itself changed (the first difference, step 460, is the autopilot
 # jumping for the new kiosk awning; see docs/riverwalk_notes.md), and again on levels/v2 for the harbour (the first
-# difference, step 1658, is the autopilot stopping at the quay to wait for a rowing boat). Level changes
+# difference, step 1658, is the autopilot stopping at the quay to wait for a rowing boat; on assets/v2 the boats'
+# decks went down 7 px, first difference step 2295). Level changes
 # legitimately change this trace:
 # Pepper herself is proven unchanged by tools/check_pepper_lab.sh (a test room, no level) and
 # tools/check_pepper_files.sh (her files against aa38be5). Run from the repo root; needs LÖVE (headless: xvfb-run).

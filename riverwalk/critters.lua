@@ -90,7 +90,7 @@ function Cr.update(s, dt)
         if k.t >= 0.9 then k.state, k.t, k.sx, k.sy = "swoop", 0, k.x, k.y; k.ty = k.ty end
       elseif k.state == "swoop" then
         local u = math.min(1, k.t / 1.0)                           -- down to her head height and up again
-        local low = k.ty - 22
+        local low = k.ty - 24                                       -- (a crouched Pepper 3 px higher, on the quay, still clears it)
         k.x = k.sx + (k.tx + (k.tx - k.sx) - k.sx) * u
         k.y = k.sy + (low - k.sy) * (1 - (2 * u - 1) ^ 2)
         if u >= 1 then k.state, k.t, k.timer = "circle", 0, c.every or 4 end
@@ -195,22 +195,70 @@ local function sprite(rows, cols, x, y, flip)
     end
   end
 end
+-- the art (tools/build_critters_art.py; SpriteCook): art/goose.png rows walk 8 / hiss 6 / fly 8 in 34 x 34 cells,
+-- the feet on the cell's last row, the body's middle at x 16, facing right; art/gull.png 6 flap frames, 26 x 26,
+-- facing right. Without the files the pixel rows above are drawn.
+local art
+local function loadArt()
+  if art ~= nil then return art end
+  art = false
+  if love.filesystem.getInfo("art/goose.png") and love.filesystem.getInfo("art/gull.png") then
+    art = { goose = lg.newImage("art/goose.png"), gull = lg.newImage("art/gull.png"), gq = {}, uq = {} }
+    art.goose:setFilter("nearest", "nearest"); art.gull:setFilter("nearest", "nearest")
+    local gw, gh = art.goose:getDimensions()
+    for r, row in ipairs({ "walk", "hiss", "fly" }) do
+      art.gq[row] = {}
+      for i = 1, (row == "hiss" and 6 or 8) do art.gq[row][i] = lg.newQuad((i - 1) * 34, (r - 1) * 34, 34, 34, gw, gh) end
+    end
+    local uw, uh = art.gull:getDimensions()
+    for i = 1, 6 do art.uq[i] = lg.newQuad((i - 1) * 26, 0, 26, 26, uw, uh) end
+  end
+  return art
+end
+-- which goose frame: walking (by distance, so the feet don't slide), rearing up to hiss, flapping while it
+-- charges, standing, taking off and flying away
+local function gooseFrame(k)
+  if k.state == "hiss" then return "hiss", math.min(4, 2 + math.floor(k.t / 0.5 * 3)) end
+  if k.state == "charge" then return "hiss", 3 + math.floor(k.t * 10) % 3 end
+  if k.state == "rest" then return "hiss", 1 end
+  if k.state == "gone" then
+    if k.t < 0.36 then return "fly", 2 + math.floor(k.t / 0.12) end
+    return "fly", 5 + math.floor(k.t * 10) % 4
+  end
+  return "walk", 1 + math.floor(math.abs(k.x) / 3) % 8                   -- walk, proud
+end
 function Cr.draw(s, cam, t)
+  local A = loadArt()
   for _, k in ipairs(s.critters or {}) do
     local x = k.x - cam
     if x > -40 and x < 360 then
       if k.kind == "goose" then
-        local rows = (k.state == "hiss" or k.state == "charge") and GOOSE.hiss or GOOSE.walk
-        local bob = (k.state == "walk" and math.floor(k.t * 6) % 2 == 0) and 1 or 0
         if k.state ~= "gone" then require("scene").shadow(x, k.y - 1, 18) end
-        sprite(rows, GCOL, x - 13, k.y - bob, k.dir < 0)            -- drawn facing right, mirrored when it walks left
-        if k.state == "hiss" then lg.setColor(1, 0.85, 0.2); require("bigfont").print("!", math.floor(x) - 2, k.y - 34, 1) end
+        if A then
+          local row, i = gooseFrame(k)
+          lg.setColor(1, 1, 1, 1)
+          if k.dir < 0 then lg.draw(A.goose, A.gq[row][i], math.floor(x) + 17, math.floor(k.y) - 33, 0, -1, 1)   -- mirrored: walks left
+          else lg.draw(A.goose, A.gq[row][i], math.floor(x) - 16, math.floor(k.y) - 33) end
+        else
+          local rows = (k.state == "hiss" or k.state == "charge") and GOOSE.hiss or GOOSE.walk
+          local bob = (k.state == "walk" and math.floor(k.t * 6) % 2 == 0) and 1 or 0
+          sprite(rows, GCOL, x - 13, k.y - bob, k.dir < 0)            -- drawn facing right, mirrored when it walks left
+        end
+        if k.state == "hiss" then lg.setColor(1, 0.85, 0.2); require("bigfont").print("!", math.floor(x) - 2, k.y - 40, 1) end
       else
         if k.state == "warn" then                                  -- its shadow where it will come down
           lg.setColor(0.09, 0.11, 0.17, 0.45 + 0.3 * math.sin(k.t * 20)); lg.ellipse("fill", math.floor(k.tx - cam), k.ty - 1, 17, 3)   -- wider than her
         end
-        local frame = GULL[(math.floor(t * (k.state == "swoop" and 4 or 8)) % 2) + 1]
-        sprite(frame, GCOL, x - 7, k.y + 3, (k.state == "swoop" and k.tx < k.sx) or (k.state ~= "swoop" and s.pepper.x < k.x))
+        local flip = (k.state == "swoop" and k.tx < k.sx) or (k.state ~= "swoop" and s.pepper.x < k.x)
+        if A then
+          local i = k.state == "swoop" and 2 or 1 + math.floor(t * 10) % 6    -- wings folded in the dive
+          lg.setColor(1, 1, 1, 1)
+          if flip then lg.draw(A.gull, A.uq[i], math.floor(x) + 13, math.floor(k.y) - 16, 0, -1, 1)
+          else lg.draw(A.gull, A.uq[i], math.floor(x) - 13, math.floor(k.y) - 16) end
+        else
+          local frame = GULL[(math.floor(t * (k.state == "swoop" and 4 or 8)) % 2) + 1]
+          sprite(frame, GCOL, x - 7, k.y + 3, flip)
+        end
       end
     end
   end

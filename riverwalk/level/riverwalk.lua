@@ -77,7 +77,7 @@ L.props = {
   { name = "WHEELHOUSE", kind = "solid", layer = "play", x0 = FX + 97, x1 = FX + 145, y0 = 154, y1 = 184, hidden = true },
   -- the harbour (screens 8-9, 2112-2752), on the quay's level: open water x 2192-2640 (surface y 224). Two rowing
   -- boats (movers; a rower in each) row to and fro; between them a jetty on piles (top y 196, 16 px above a boat's
-  -- deck: a hop). Gulls circle over the water and swoop at a standing Pepper (crawl to duck, or bark).
+  -- deck: a hop, 23 px). Gulls circle over the water and swoop at a standing Pepper (crawl to duck, or bark).
   { name = "JETTY",    kind = "solid",  layer = "play", x0 = 2400, x1 = 2448, y0 = 196, y1 = 240, hidden = true },   -- drawn in code
   -- promenade B
   { name = "",         kind = "decor",  layer = "back", x0 = 2880, x1 = 3626, y0 = 144, y1 = 174, railing = true },   -- decorative railing by the water
@@ -137,11 +137,11 @@ L.pieces = {
 L.movers = {
   { name = "PONTOON", x0 = 1400, x1 = 1448, y0 = 214, y1 = 220, from = 1400, to = 1504, speed = 30,
     call = { 1150, 1398 }, callSpeed = 60, rope = { 1392, 1562 } },
-  -- the rowing boats in the harbour: rowed to and fro between from and to (deck y 212, 56 wide), resting 1.5 s at
+  -- the rowing boats in the harbour: rowed to and fro between from and to (deck y 219, low in the water, 56 wide), resting 1.5 s at
   -- each end. The first one turns at the quay (2192) and by the jetty (2400); the second by the jetty and at the
   -- far quay (2640).
-  { name = "ROWBOAT", x0 = 2196, x1 = 2252, y0 = 212, y1 = 218, from = 2196, to = 2340, speed = 30, pause = 1.5 },
-  { name = "ROWBOAT", x0 = 2456, x1 = 2512, y0 = 212, y1 = 218, from = 2456, to = 2580, speed = 34, pause = 1.5 },
+  { name = "ROWBOAT", x0 = 2196, x1 = 2252, y0 = 219, y1 = 225, from = 2196, to = 2340, speed = 30, pause = 1.5 },
+  { name = "ROWBOAT", x0 = 2456, x1 = 2512, y0 = 219, y1 = 225, from = 2456, to = 2580, speed = 34, pause = 1.5 },
 }
 -- gulls (critters.lua): one over the harbour, one over promenade B up to bike zone 2
 L.critters = {
