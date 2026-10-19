@@ -140,10 +140,10 @@ L.props = {
   { name = "CRATES",   kind = "solid",  layer = "play", x0 = 2624, x1 = 2656, y0 = 120, y1 = 240, label = "top" },
   { name = "CRATES",   kind = "solid",  layer = "play", x0 = 2656, x1 = 2688, y0 = 120, y1 = 184, label = "top" },
   { name = "CRATES",   kind = "solid",  layer = "play", x0 = 2688, x1 = 2720, y0 = 152, y1 = 184, label = "top" },
-  -- screen 10: the flooded square (2784-3104). The water (x 2816-3072, from y 192) is too wide to jump; three
+  -- screen 10: the flooded square (2784-3104). (The tram's rails run on through the shallow water: it drives across.) The water (x 2816-3072, from y 192) is too wide to jump; three
   -- springy parasols stand in it on their poles (tops y 136, 88 px apart). A crate at the edge is the step up to
   -- the first (from the street it is 48 px: more than a jump). Each one launches her 56 px: hold Right and she
-  -- bounces from one to the next and out onto the far side (Lion King's hippos and rhinos, our way).
+  -- bounces from one to the next and over to the kiosk on the far side (Lion King's hippos and rhinos, our way).
   { name = "CRATES",   kind = "solid",  layer = "play", x0 = 2788, x1 = 2816, y0 = 168, y1 = 184, label = "top" },
   { name = "",         kind = "decor",  layer = "back", x0 = 2854, x1 = 2858, y0 = 140, y1 = 240 },     -- parasol poles
   { name = "",         kind = "decor",  layer = "back", x0 = 2942, x1 = 2946, y0 = 140, y1 = 240 },
@@ -262,6 +262,7 @@ L.hints = {
   { x0 = 1384, x1 = 1440, btn = "a",    text = "HOLD: BIG JUMP" },      -- onto the pedestal
   { x0 = 1660, x1 = 1720, btn = "a",    text = "TAP: HOP" },            -- over the fountain
   { x0 = 968,  x1 = 1010, btn = "a",    text = "BOUNCE ON IT" },        -- the first springy awning
+  { x0 = 1008, x1 = 1072, btn = "down", text = "HOLD: STAY ON",      maxY = 150 },   -- (above it, bouncing)
   { x0 = 1288, x1 = 1560, text = "THE CAT IS ON MY BALL!",    need = "cat" },
   { x0 = 1560, x1 = 3520, text = "GO BACK: BARK AT THE CAT!", need = "cat" },
   { x0 = 1600, x1 = 3520, text = "GO BACK FOR THE BALL!",     need = "noball" },

@@ -241,6 +241,11 @@ return function(mode, api)
       { act = function() tp(2068, 188) end }, { wait = 0.3 },
       { act = function() jump("right", "jump") end }, { during = 0.2 }, landed(),
       { act = function(p) release(); report("creek: a standing jump lands on the next stone", near(p.y, 188) and p.x > 2136 - 13 and p.x < 2160 + 13, ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      -- every lamp's ball home is a spot the ball can rest on (by the bin lamp it was inside the bin once)
+      { act = function() local s = api.stage(); local bad = {}
+          for _, l in ipairs(s.lamps) do local h = s:homeNear(l.x, l.y); local w = s.world
+            if w:solidIn(h.x - 3, h.x + 3, h.y - 6, h.y - 1) or w:inWater(h.x, h.y - 2) then bad[#bad + 1] = l.x end end
+          report("lamps: the ball's home by each lamp is clear", #bad == 0, #bad == 0 and "all clear" or table.concat(bad, ", ")) end },
       -- last: give the ball to the girl by the swings
       { act = function() local s = api.stage(); s.ball.state = "carried"; s.pepper.carrying = s.ball; tp(s.girl.x - 30, 184); s.pepper.face = 1 end },
       { wait = 0.1 }, { act = function() love.keypressed("x") end }, { wait = 3.0 },

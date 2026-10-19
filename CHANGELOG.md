@@ -120,13 +120,30 @@ Built on `assets/complete`.
   - Bike zone 2 also has a gull. Bikes a little faster: zone 1 125 px/s every 5.5 s (was 115, 6.5), zone 2
     135 px/s every 5 s (was 115, 6).
   - 5 lamps for 12 screens (was 8 for 10). `L.ballHomeAtLamps` here too.
-  - Autopilot clear 65.3 s, no hit (was 35.1 s); hard mode clears too.
+  - Autopilot clear 66.3 s, no hit (was 35.1 s); hard mode clears too.
   - `tools/check_pepper.sh`: the golden trace re-recorded (the first difference is step 1658, the autopilot
     stopping at the quay to wait for a boat). Pepper herself is unchanged: the lab check (1401 steps) and the
     file check against aa38be5 still pass.
 - **Pars** (`levels.lua`, the autopilot's time times about 1.6): City Park 71 s (was 60), Downtown 83 s (was 55),
-  River Walk 105 s (was 60). `docs/progression.md` has the measured table: the levels now get longer and harder
-  from 1 to 5 (autopilot 44, 52, 65, 73, 81 s).
+  River Walk 107 s (was 60). `docs/progression.md` has the measured table: the levels now get longer and harder
+  from 1 to 5 (autopilot 44, 52, 66, 73, 81 s).
+- **Fixes from an independent review** (a fresh agent played and probed the new sections):
+  - Softlock: a lost ball's home by a lamp could be inside a solid (City Park's bin lamp, Downtown's lamp by the
+    flooded square's crate), and the ball looped "THE BALL IS BACK" forever. Homes now come from `St:homeNear`
+    (24 px past the lamp, 24 px before, or the respawn spot itself, the first that is clear), and a home that
+    is still no good falls back to the checkpoint. New checks: every City Park lamp's home is clear; a ball lost
+    in the flooded square rests by the lamp, pickable.
+  - City Park: the lamp after the creek is now on the far bank (2300), and that goose patrols 2350-2372: a
+    respawn no longer lands between a goose and the cart run.
+  - "BARK: SHOO!" shows only when a bark would work (80 px, the same as the bark).
+  - Gulls: the warning shadow sits on the floor under Pepper even when she is mid-jump (or on the boat under
+    her), and is wider than her so it shows; the gull circles below the hint panel and the HUD; a bark resets
+    its timer (it came straight back before). River Walk's harbour gull swoops every 4.5 s (was 3.2) and the
+    second boat rows faster, so the wait on the jetty is shorter; the second gull is over promenade B before
+    the bike zone, not over the bikes.
+  - Downtown: "HOLD: STAY ON" (Down) shows above the first springy awning. A springy top's dip counts down by
+    time, not frames. The test tour's shots of screens 8-11 now have Pepper on screen.
+  - The River Walk golden trace re-recorded again (the harbour timing changed); lab and file checks unchanged.
 
 ## Branch `assets/complete`: the missing assets (18 Oct)
 Built on `lk/look` (9c3bcbd). Every placeholder left in the three levels gets real art.

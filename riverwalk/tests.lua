@@ -146,7 +146,8 @@ return function(mode, api)
           report("hard mode: 1 heart, bikes 25% faster", h.hearts == 1 and Sp.speed(h, h.def.bikes[1]) == h.def.bikes[1].speed * 1.25,
             ("hearts %d, speed %.2f"):format(h.hearts, Sp.speed(h, h.def.bikes[1]))) end },
       -- 16 the harbour: the rowing boats carry Pepper and rest at each end; the gulls
-      { act = function() local s = api.stage(); local b = s.movers[2]; b.x0, b.x1, b.dir, b.waitT = 2200, 2256, 1, 0; tp(2228, 212) end },
+      { act = function() local s = api.stage(); local b = s.movers[2]; b.x0, b.x1, b.dir, b.waitT = 2200, 2256, 1, 0; tp(2228, 212)
+          for _, k in ipairs(s.critters) do k.state, k.timer = "circle", 99 end end },                  -- (the gulls wait)
       { wait = 2.0 },
       { act = function(p) local s = api.stage(); local b = s.movers[2]
           report("harbour: a rowing boat carries Pepper", p.ground == b and p.x > 2270 and near(p.y, 212), ("x %.0f, boat x %.0f"):format(p.x, b.x0)) end },

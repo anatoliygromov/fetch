@@ -16,7 +16,7 @@
 --   8  Harbour       open water: hop onto the rowing boat, ride it to the jetty; a gull swoops (crawl to duck, or
 --                    bark while it squawks). Gold high over the jetty (secret JETTY JUMP)
 --   9  Harbour       wait on the jetty for the second boat, ride it to the far quay, steps back up
---  10  Promenade B   a planter on its own, then bike zone 2 (faster bikes, and a gull): the flower box
+--  10  Promenade B   a planter on its own and a gull, then bike zone 2 (faster bikes): the flower box
 --  11  Bike zone 2   grit box, a planter as a step (a tap hop and a scramble), bin
 --  12  The girl      a bench, then the cafe: give her the ball, GOOD GIRL!
 -- Lamps about every 2 screens. Falling in with the ball: it comes back by the last lamp she carried it past.
@@ -141,12 +141,12 @@ L.movers = {
   -- each end. The first one turns at the quay (2192) and by the jetty (2400); the second by the jetty and at the
   -- far quay (2640).
   { name = "ROWBOAT", x0 = 2196, x1 = 2252, y0 = 212, y1 = 218, from = 2196, to = 2340, speed = 30, pause = 1.5 },
-  { name = "ROWBOAT", x0 = 2456, x1 = 2512, y0 = 212, y1 = 218, from = 2456, to = 2580, speed = 26, pause = 1.5 },
+  { name = "ROWBOAT", x0 = 2456, x1 = 2512, y0 = 212, y1 = 218, from = 2456, to = 2580, speed = 34, pause = 1.5 },
 }
--- gulls (critters.lua): one over the harbour, one over bike zone 2
+-- gulls (critters.lua): one over the harbour, one over promenade B up to bike zone 2
 L.critters = {
-  { kind = "gull", x0 = 2192, x1 = 2640, every = 3.2 },
-  { kind = "gull", x0 = 3040, x1 = 3470, every = 4.5 },
+  { kind = "gull", x0 = 2192, x1 = 2640, every = 4.5 },
+  { kind = "gull", x0 = 2880, x1 = 3060, every = 4.5 },     -- (over promenade B before the bikes, not over them)
 }
 
 L.ball = { x = FX + 108, y = 154 }

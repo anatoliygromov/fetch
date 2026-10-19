@@ -29,10 +29,10 @@ Problems:
 | --- | --- | --- | --- | --- | --- |
 | Manner | sneak and bark | bounce and carry | water and traffic | the chase | sniff in the dark |
 | Length | 9 screens (was 6) | 11 screens (was 6) | 12 screens (was 10) | 16 screens | 14 screens |
-| Autopilot clear | 44.2 s (was 31.4) | 51.5 s (was 29.8) | 65.3 s (was 35.1) | 73.3 s | 81.3 s |
+| Autopilot clear | 44.2 s (was 31.4) | 51.5 s (was 29.8) | 66.3 s (was 35.1) | 73.3 s | 81.3 s |
 | Lamps | 8 (every screen) | 6 (every 1.5-2) | 5 (every 2-3) | 3 | 5 (up to 3 screens apart) |
 | New | 2 geese, the creek (stop, then hop), a second cart run | springy awnings and parasols, a bounce chain over the flooded square, 2 geese (a bite knocks the ball out), the canal, a second faster tram (wait for two) | the harbour: rowing boats and a jetty, gulls (duck or bark), faster bikes, a gull over bike zone 2 | the screen scrolls, the ball rolls ahead | darkness, sniffing, the fox |
-| Par time | 71 s | 83 s | 105 s | 118 s | 135 s |
+| Par time | 71 s | 83 s | 107 s | 118 s | 135 s |
 
 The autopilot plays perfectly and never waits longer than it must; a child will take two to four times as long.
 Lion King's perfect run is about 84 s a level, so levels 3 to 5 now sit in that range and levels 1 and 2 stay

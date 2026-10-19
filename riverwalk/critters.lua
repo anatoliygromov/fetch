@@ -9,7 +9,7 @@
 --          good: it flaps off, honking (+200). After a bite it struts off the other way for 2 s (never two bites
 --          in a row). A bite knocks the ball out of Pepper's mouth if she carries it.
 --   gull   { kind = "gull", x0, x1 (where it hunts Pepper), every (s between swoops) }
---          Circles high over Pepper while she is between x0 and x1. Every few seconds it squawks and its shadow
+--          Circles over Pepper (below the hint panel) while she is between x0 and x1. Every few seconds it squawks and its shadow
 --          shows on the ground where she is (0.9 s), then it swoops down to her head height and back up. Crawling
 --          (Down) ducks under it; it hurts only a standing Pepper. A bark while it squawks scares it off for 4 s.
 local S = require("sfx")
@@ -24,7 +24,7 @@ function Cr.init(s, def)
     if c.kind == "goose" then
       k.x, k.y, k.dir, k.state = c.x, c.y, -1, "walk"
     else
-      k.x, k.y, k.state, k.timer = (c.x0 + c.x1) / 2, 40, "circle", c.every or 4
+      k.x, k.y, k.state, k.timer = (c.x0 + c.x1) / 2, 76, "circle", c.every or 4
     end
     s.critters[i] = k
   end
@@ -73,11 +73,17 @@ function Cr.update(s, dt)
       local inZone = p.x >= c.x0 and p.x <= c.x1
       if k.state == "circle" or k.state == "away" then
         local tx = math.max(c.x0, math.min(c.x1, p.x)) + math.sin(k.t * 1.3) * 60
-        k.x = k.x + (tx - k.x) * math.min(1, dt * 1.5); k.y = (k.state == "away" and 12 or 36) + math.sin(k.t * 2.1) * 6
+        k.x = k.x + (tx - k.x) * math.min(1, dt * 1.5); k.y = (k.state == "away" and 40 or 76) + math.sin(k.t * 2.1) * 6
+        -- (it circles below the top hint panel and the HUD, so it is always in view)
         if k.state == "away" and k.t >= 4 then k.state, k.t = "circle", 0 end
         if k.state == "circle" and inZone and p.mode == "normal" then
           k.timer = k.timer - dt
-          if k.timer <= 0 then k.state, k.t, k.tx, k.ty = "warn", 0, p.x, p.y; S.play("squawk") end
+          if k.timer <= 0 then                                      -- its shadow goes on the floor under her, even mid-jump
+            k.state, k.t, k.tx = "warn", 0, p.x
+            k.ty = p.onGround and p.y or (w:groundAt(p.x) or p.y)
+            if not p.onGround then for _, m in ipairs(s.movers or {}) do if p.x > m.x0 and p.x < m.x1 and m.y0 >= p.y then k.ty = m.y0 end end end
+            S.play("squawk")
+          end
         end
       elseif k.state == "warn" then
         k.tx = k.tx + (p.x - k.tx) * math.min(1, dt * 3)            -- its shadow follows her a little
@@ -103,18 +109,18 @@ function Cr.bark(s)
       k.state, k.t, k.dir = "gone", 0, (k.x >= p.x) and 1 or -1
       s.score = s.score + 200; S.play("honk"); s:say("SHOO! +200", 1.4)
     elseif k.kind == "gull" and k.state == "warn" and math.abs(p.x - k.x) < 140 then
-      k.state, k.t = "away", 0; S.play("flap")
+      k.state, k.t, k.timer = "away", 0, k.def.every or 4; S.play("flap")
     end
   end
 end
 
--- a goose that is still there, ahead of Pepper (the way she faces) within r px and on her level (for the
--- "BARK: SHOO!" hint; one behind her is no news)
-function Cr.near(s, r)
+-- a goose a bark would shoo now (the same 80 px and level as Cr.bark), ahead of Pepper (the way she faces; one
+-- behind her is no news): for the "BARK: SHOO!" hint
+function Cr.near(s)
   local p = s.pepper
   for _, k in ipairs(s.critters or {}) do
     local dx = (k.x - p.x) * p.face
-    if k.kind == "goose" and k.state ~= "gone" and dx > -12 and dx < r and math.abs(p.y - k.y) < 30 then return true end
+    if k.kind == "goose" and k.state ~= "gone" and dx > -12 and dx < 80 and math.abs(p.y - k.y) < 40 then return true end
   end
   return false
 end
@@ -202,7 +208,7 @@ function Cr.draw(s, cam, t)
         if k.state == "hiss" then lg.setColor(1, 0.85, 0.2); require("bigfont").print("!", math.floor(x) - 2, k.y - 34, 1) end
       else
         if k.state == "warn" then                                  -- its shadow where it will come down
-          lg.setColor(0.09, 0.11, 0.17, 0.45 + 0.3 * math.sin(k.t * 20)); lg.ellipse("fill", math.floor(k.tx - cam), k.ty - 1, 9, 2)
+          lg.setColor(0.09, 0.11, 0.17, 0.45 + 0.3 * math.sin(k.t * 20)); lg.ellipse("fill", math.floor(k.tx - cam), k.ty - 1, 17, 3)   -- wider than her
         end
         local frame = GULL[(math.floor(t * (k.state == "swoop" and 4 or 8)) % 2) + 1]
         sprite(frame, GCOL, x - 7, k.y + 3, (k.state == "swoop" and k.tx < k.sx) or (k.state ~= "swoop" and s.pepper.x < k.x))
@@ -214,7 +220,7 @@ end
 
 -- the bounce: a prop with bounce = h launches Pepper h px up when she lands on it (not when she holds Down).
 -- Only her upward speed is set; her jump base is moved so letting go of A does not cut the launch short.
-function Cr.bounce(s, wasAir)
+function Cr.bounce(s, wasAir, dt)
   local p = s.pepper
   local g = p.ground
   if wasAir and p.onGround and g and g.bounce and p.mode == "normal" and not p.crouch and not require("input").down("down") then
@@ -223,6 +229,6 @@ function Cr.bounce(s, wasAir)
     p.jumpBase = p.y - g.bounce + Pp.P.minJump
     g.squashT = 0.2; S.play("spring")
   end
-  for _, pr in ipairs(s.def.props) do if pr.squashT then pr.squashT = math.max(0, pr.squashT - 1 / 60) end end
+  for _, pr in ipairs(s.def.props) do if pr.squashT then pr.squashT = math.max(0, pr.squashT - (dt or 1 / 60)) end end
 end
 return Cr

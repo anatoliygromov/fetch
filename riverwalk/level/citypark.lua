@@ -122,7 +122,7 @@ L.lamps = {
   { x = 1306, y = 184, checkpoint = true },
   { x = 1624, y = 184, checkpoint = true },
   { x = 1936, y = 184, checkpoint = true },
-  { x = 2358, y = 184, checkpoint = true },
+  { x = 2300, y = 184, checkpoint = true },    -- on the far bank, before the goose and the cart run
   { x = 2592, y = 184, checkpoint = true },
 }
 
@@ -207,7 +207,7 @@ L.bikes = {
 -- geese (critters.lua): each walks its stretch of path; bark to shoo it away (+200), or jump over it
 L.critters = {
   { kind = "goose", x = 1160, y = 184, x0 = 1096, x1 = 1224 },
-  { kind = "goose", x = 2340, y = 184, x0 = 2330, x1 = 2352 },
+  { kind = "goose", x = 2360, y = 184, x0 = 2350, x1 = 2372 },
 }
 
 -- secrets: reaching one (Pepper's feet in its box) counts it; the tally shows how many were found

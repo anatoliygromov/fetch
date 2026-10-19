@@ -115,7 +115,7 @@ function St:barkAtMagpie()
   if m.state ~= "perch" or b.state ~= "magpie" then return end
   if math.abs(p.x - m.x) <= d.bark and math.abs(p.y - m.y) < 110 then
     b.state, b.vx, b.vy, b.airT = "air", 0, -20, 0                 -- it lets go: the ball falls
-    b.home = { x = self.check.x + 24, y = self.check.y }           -- if it falls in the pond: back by the last lamp
+    b.home = self:homeNear(self.check.x, self.check.y)             -- if it falls in the pond: back by the last lamp
     m.fly = { x0 = m.x, y0 = m.y, x1 = m.x - 260, y1 = m.y - 140, dur = 1.2, peak = 10, after = "gone" }
     m.state, m.t = "fly", 0; m.dir = -1
     S.play("flap"); self:say(d.dropSay or "IT DROPPED THE BALL!", 2.2)
@@ -163,6 +163,17 @@ function St:dropBall()
   if w:solidIn(b.x - 3, b.x + 3, b.y - 6, b.y) then b.x, b.vx = p.x, 0 end
   b.x = math.max(14, math.min(w.width - 14, b.x)); b.airT = 0; b.on = nil
 end
+-- a spot by a lamp (or Pepper's checkpoint) where a ball can rest and be picked up: 24 px past it, 24 px before
+-- it, or on it (the respawn spot itself, always clear), whichever is first free of solids and water
+function St:homeNear(x, y)
+  local w = self.world
+  for _, dx in ipairs({ 24, -24, 0 }) do
+    local bx = x + dx
+    if bx >= 14 and bx <= w.width - 14 and not w:solidIn(bx - 3, bx + 3, y - 6, y - 1) and not w:inWater(bx, y - 2)
+      and w:floor(bx - 2, bx + 2, bx, y - 2, y + 2, y - 4) then return { x = bx, y = y } end
+  end
+  return { x = x, y = y }
+end
 -- a ball that came to rest where Pepper cannot get it (inside a solid box or terrain, or it fell out of the
 -- level) goes back to its home spot (the level's ball home, or where the magpie / cat let it go), with a line
 function St:ballLost()
@@ -209,7 +220,7 @@ function St:update(dt, presses)
   else
     local wasAir = not p.onGround
     if not (self.night and Nt.sniffing(self, dt)) then p:update(dt, w, presses) end   -- [night hook] sniffing
-    Cr.bounce(self, wasAir)                                        -- a springy top launches her
+    Cr.bounce(self, wasAir, dt)                                    -- a springy top launches her
     if p.mode == "drown" and not self.drownT then
       self.drownT = 1.0
       if p.carrying then p.carrying = nil; self.ball.state = "home"; self.ballBackT = 1.2 end
@@ -254,7 +265,10 @@ function St:update(dt, presses)
   end
   if b.state == "home" then
     self.ballBackT = (self.ballBackT or 0) - dt
-    if self.ballBackT <= 0 then b.x, b.y, b.state = b.home.x, b.home.y, "rest"; self:say(b.homeSay or self.def.ballBack or "THE BALL IS BACK ON THE BOAT", 2.2) end
+    if self.ballBackT <= 0 then
+      b.x, b.y, b.state = b.home.x, b.home.y, "rest"; self:say(b.homeSay or self.def.ballBack or "THE BALL IS BACK ON THE BOAT", 2.2)
+      if self:ballLost() then b.home = self:homeNear(self.check.x, self.check.y); b.x, b.y = b.home.x, b.home.y end   -- never a home it can't rest at
+    end
   end
 
   -- bones
@@ -272,7 +286,7 @@ function St:update(dt, presses)
     if l.checkpoint and not l.lit and p.x >= l.x - 6 and p.x <= l.x + 40 and p.y <= l.y + 2 and p.y >= l.y - 90 and p.mode == "normal" then
       l.lit = true; l.litAt = self.t; self.check = { x = l.x, y = l.y }; S.play("checkpoint")
       if p.carrying and self.def.ballHomeAtLamps then                -- L.ballHomeAtLamps: a lost ball comes back here
-        self.ball.home = { x = l.x + 24, y = l.y }; self.ball.homeSay = "THE BALL IS BACK BY THE LAMP"
+        self.ball.home = self:homeNear(l.x, l.y); self.ball.homeSay = "THE BALL IS BACK BY THE LAMP"
       end
     end
   end
@@ -409,7 +423,7 @@ function St:zoneHint()
     if p.x >= h.x0 and p.x < h.x1 and (not h.maxY or p.y <= h.maxY) then
       local ok = true
       if h.need == "ball" then ok = p.carrying ~= nil
-      elseif h.need == "goose" then ok = Cr.near(self, 110)
+      elseif h.need == "goose" then ok = Cr.near(self)
       elseif h.need == "gull" then ok = Cr.gullWarn(self)
       elseif h.need == "untouched" then ok = not self.ball.picked and p.carrying == nil
       elseif h.need == "noball" then ok = p.carrying == nil and self.ball.state ~= "given"

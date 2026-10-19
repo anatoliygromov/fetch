@@ -254,6 +254,11 @@ return function(mode, api)
       { act = function(p) release(); local s = api.stage()
           report("flooded square: from the street a jump can't reach a parasol", s.hearts == hearts - 1 or (p.y >= 167 and p.x < 2832), ("x %.0f y %.0f hearts %d"):format(p.x, p.y, s.hearts)) end },
       { cond = function(p, s) return not s.drownT and not s.deadT end, act = function() end, limit = 3 },
+      { act = function() local s = api.stage(); s.lamps[6].lit = false; s.hearts = 3; hearts = 3; tp(2770, 184); carry() end }, { wait = 0.1 },
+      { act = function() local p = api.stage().pepper; p.x, p.y, p.onGround = 2900, 170, false end }, { during = 2.5 },
+      { cond = function(p, s) return s.ball.state == "rest" and not s.drownT and not s.deadT end, act = function() end, limit = 4 }, { wait = 1.0 },
+      { act = function() local s = api.stage(); local b = s.ball
+          report("flooded square: a ball lost there rests by the lamp (pickable)", b.state == "rest" and not s:ballLost() and math.abs(b.x - 2764) <= 24, ("ball %s x %.0f"):format(b.state, b.x)) end },
       { act = function() local z1, z2 = api.stage().def.bikes[1], api.stage().def.bikes[2]
           local tops = { prop("KIOSK", 2).y0, prop("SHELTER", 2).y0 }
           report("tram 2: faster and more often; its perches are above it", z2.speed > z1.speed and z2.every < z1.every and tops[1] < 184 - z2.h and tops[2] < 184 - z2.h,
@@ -404,7 +409,7 @@ return function(mode, api)
       { act = function() love.keypressed("space") end }, { wait = 0.3 } }
     -- one shot per screen (camera on the screen's left edge), Pepper standing in it
     local spots = { { 60, 184 }, { 340, 184 }, { 650, 184 }, { 990, 184 }, { 1380, 184 }, { 1690, 184 }, { 1988, 148 },
-      { 2170, 184 }, { 2470, 184 }, { 2802, 168 }, { 3148, 148 } }
+      { 2296, 156 }, { 2802, 168 }, { 3148, 148 }, { 3260, 136 } }
     for i, sp in ipairs(spots) do
       steps[#steps + 1] = { act = function() tp(sp[1], sp[2]) end }
       if i == 7 then steps[#steps + 1] = { act = function() tram(2180) end } end
