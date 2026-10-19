@@ -1,4 +1,4 @@
-"""Builds the art for the critters and set pieces added on levels/v2 (19 Oct, SpriteCook, 380 credits):
+"""Builds the art for the critters and set pieces added on levels/v2 (19 Oct, SpriteCook, 250 credits):
 
   riverwalk/art/goose.png           rows walk (8), hiss (6), fly (8); 34 x 34 cells, feet on row 33, faces right
   riverwalk/art/gull.png            6 flap frames, 26 x 26 cells, faces right

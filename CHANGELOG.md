@@ -12,7 +12,7 @@ Built on `levels/v2`.
   lands. The second kiosk is gone; the first kiosk moved 12 px right, so the lamp between shed and kiosk has
   room for Pepper. New checks: tram 2 goes into its shed and never over the water; no bone in any level is
   inside a solid. The test tour shows a tram driving into each shed.
-- **Art for the new pieces** (SpriteCook, 380 credits; `tools/build_critters_art.py`, sources in `source_sheets/` and
+- **Art for the new pieces** (SpriteCook, 250 credits; `tools/build_critters_art.py`, sources in `source_sheets/` and
   `source_scenery/`): the goose (walk, rearing hiss with wings up, take-off and flight: 22 frames), the gull (6 flap
   frames), the rowing boat with its rower (8 rowing frames), the harbour jetty, and the tram shed (70 and 96 px
   wide). Still images were made at about 2-5x game size, reduced with a box filter, snapped to their own colours
