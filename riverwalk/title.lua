@@ -1,4 +1,4 @@
--- The title screen, animated. The painting is cut into layers by tools/make_title.py; everything moves by time t:
+-- The title screen, animated. The picture is hand-pixeled by tools/title_redraw.py, which also cuts it into layers;
 -- the river sparkles twinkle, the lamps glow, Pepper blinks, the bird flaps, a shine sweeps across the logo,
 -- and PRESS ANY KEY blinks (fast once a key is pressed; then the menu opens over the same picture, see flow.lua).
 local D = require("title_data")
@@ -11,7 +11,7 @@ function T.load()
   if I then return end
   I = { base = img("base"), press_off = img("press_off"), eye = img("eye_closed"), bird = img("bird"), logo = img("logo_hi") }
   -- the logo as it is in the painting (letters, outline and paw), to draw it bright over the dimmed menus:
-  -- the brightened letters' pixels plus the dark outline pixels within 3 px of them
+  -- the brightened letters' pixels plus the dark outline and shadow pixels within 5 px of them
   local base, hi = love.image.newImageData("art/title/base.png"), love.image.newImageData("art/title/logo_hi.png")
   local L, w, h = D.logo, hi:getWidth(), hi:getHeight()
   local d = love.image.newImageData(w, h)
@@ -20,7 +20,7 @@ function T.load()
     local r, g, b = base:getPixel(L.x + x, L.y + y)
     local keep = inLogo(x, y)
     if not keep and 0.3 * r + 0.59 * g + 0.11 * b < 90 / 255 then
-      for dy = -3, 3 do for dx = -3, 3 do if not keep and inLogo(x + dx, y + dy) then keep = true end end end
+      for dy = -5, 5 do for dx = -5, 5 do if not keep and inLogo(x + dx, y + dy) then keep = true end end end
     end
     if keep then d:setPixel(x, y, r, g, b, 1) end
   end end
