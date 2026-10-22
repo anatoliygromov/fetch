@@ -20,7 +20,7 @@ the same rows and the same table L. The rules (docs/tiled.md has them for design
     order of the objects in the map.
   * A rectangle gives x0, x1, y0, y1 (x0 = left, y1 = bottom). Its property "box" can name other fields for its
     sides, in the order left,right,top,bottom ("-" or nothing: not used): bike zones "zoneX0,zoneX1", hints
-    "x0,x1", hatches "1,2,3" (a list { x0, x1, y }).
+    "x0,x1", hatches "1,2,3" (a list { x0, x1, y }). Zones with no top and bottom are drawn as bands above the map.
   * A point gives x and y.
   * The object's name is the field "name" (a property "name" wins, so name = "" survives the trip).
   * Every other custom property is copied as it is. A text property that starts with "{" is a Lua table, written
@@ -99,6 +99,9 @@ def run_lua(script, args):
     if cmd:
         return subprocess.run(cmd + [script] + args, check=True, capture_output=True, text=True).stdout
     love = shutil.which("love")
+    mac = "/Applications/love.app/Contents/MacOS/love"
+    if not love and os.path.exists(mac):
+        love = mac
     if not love:
         sys.exit("level_to_tiled: needs lua5.1, luajit, lua or love on the PATH")
     runner = os.path.join(ROOT, "tools", "tiled", "love_runner")
@@ -180,7 +183,7 @@ def is_geo(d):
                                     or ("zoneX0" in d and "zoneX1" in d))
 
 
-def to_object(item, cls, band, map_h, positional=None):
+def to_object(item, cls, map_h, positional=None):
     """One level item -> a Tiled object dict: name, cls, shape, x, y, w, h, props (list of (name, type, value))."""
     o = {"name": "", "cls": cls, "props": []}
     if positional:
@@ -207,10 +210,9 @@ def to_object(item, cls, band, map_h, positional=None):
                     side[3] = "y1"
                 else:
                     y1 = y0 + 8
-            else:                                   # a zone with no height: drawn as a band near the top
-                y0 = 2 + 10 * band[0]
-                y1 = y0 + 8
-                band[0] = (band[0] + 1) % max(1, (map_h - 16) // 10)
+            else:                                   # a zone with no height: a band above the map (level_to_layers)
+                y0, y1 = 0, 8
+                o["band"] = True
             o.update(shape="rectangle", x=x0, y=y0, w=x1 - x0, h=y1 - y0)
             while side and side[-1] == "-":
                 side.pop()
@@ -233,7 +235,6 @@ def level_to_layers(L, map_h):
     layers = {n: [] for n, _ in LAYERS}
     extra = []                                   # layers for fields this script does not know
     mprops = []
-    bands = {}
 
     def add(field, items, cls, positional=None):
         lname = FIELD_LAYER.get(field)
@@ -242,9 +243,8 @@ def level_to_layers(L, map_h):
             if lname not in layers:
                 layers[lname] = []
                 extra.append(lname)
-        band = bands.setdefault(lname, [0])
         for it in items:
-            layers[lname].append(to_object(it, cls, band, map_h, positional))
+            layers[lname].append(to_object(it, cls, map_h, positional))
 
     known = [f for f in FIELD_LAYER if "." not in f and f != "hints"] + ["magpie", "hints"]
     for key in sorted(L, key=lambda k: (known.index(k) if k in known else len(known), k)):
@@ -278,6 +278,9 @@ def level_to_layers(L, map_h):
     if singles:
         mprops.append(("singles", "string", ",".join(singles)))
     order = [n for n, _ in LAYERS] + extra
+    banded = [o for n in order for o in layers[n] if o.get("band")]
+    for i, o in enumerate(banded):                  # stacked above the map, the first one on top
+        o["y"] = -10 * (len(banded) - i)
     colors = dict(LAYERS)
     return [(n, colors.get(n, "#a0a0a0"), layers[n]) for n in order], mprops
 

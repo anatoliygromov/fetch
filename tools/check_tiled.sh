@@ -13,7 +13,8 @@ REPO="$(pwd)"
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 FAIL=0
 if command -v lua5.1 >/dev/null; then LUA="lua5.1"; elif command -v luajit >/dev/null; then LUA="luajit"
-elif command -v lua >/dev/null; then LUA="lua"; else LUA="love tools/tiled/love_runner"; fi
+elif command -v lua >/dev/null; then LUA="lua"; elif command -v love >/dev/null; then LUA="love tools/tiled/love_runner"
+else LUA="/Applications/love.app/Contents/MacOS/love tools/tiled/love_runner"; fi        # a Mac with only LOVE
 CHECK="$LUA tools/tiled/check_tiled.lua $REPO"
 
 echo "== 1. round trip: level files -> Tiled map -> export -> tiled.lua ($LUA)"

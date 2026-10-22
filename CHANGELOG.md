@@ -28,6 +28,11 @@ Built on `main` (v0.5). No SpriteCook credits. See `docs/tiled.md`.
   from `level/tiled/citypark.lua`; the rest of the file (and `citypark.map`) stays as the fallback: set it to
   false to play the original. Its physics checks, autopilot (44.2 s, as before), QA and the flow test pass
   unchanged. The other four levels still load from their own files; switching one is the same two lines.
+- **Zones with no height** (hints, bike and tram zones, gull stretches) are bands stacked above the map in Tiled,
+  the first one on top, so they no longer cover the level. **A preview without Tiled:**
+  `tools/tiled/render_map.py maps/<name>.tmx out.png --rows 3` draws a map layer by layer (terrain, props by kind,
+  zones, movers with their paths, geese with their stretches, lamps, bones, the magpie's perches numbered, hints).
+  The tools find LOVE and Tiled in `/Applications` on a Mac with no Lua installed.
 ## Branch `assets/v2`: the tram fix and art for the new pieces (19 Oct)
 Built on `levels/v2`.
 - **The trams end in tram sheds** (Downtown). Before, the first tram vanished in plain view before the fountain,

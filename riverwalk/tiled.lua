@@ -177,7 +177,7 @@ end
 -- path: a Tiled Lua export inside the game folder. Returns L, ready for St.new (L.map is the terrain file).
 function T.load(path)
   local L, rows
-  if love and love.filesystem then
+  if love and love.filesystem and not T.base then
     local chunk, err = love.filesystem.load(path)
     if not chunk then error("tiled: cannot read " .. path .. ": " .. tostring(err), 0) end
     L, rows = T.parse(chunk())
@@ -189,7 +189,7 @@ function T.load(path)
     end
     L.map = file
   else
-    L, rows = T.parse(dofile((T.base or "") .. path))  -- outside LOVE (tools/tiled/check_tiled.lua): T.base = game folder
+    L, rows = T.parse(dofile((T.base or "") .. path))  -- tools (check_tiled.lua): T.base = the game folder
     L.rows = rows
   end
   return L

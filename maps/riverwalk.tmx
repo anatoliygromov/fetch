@@ -377,7 +377,7 @@
   <object id="39" type="passages" x="1936" y="192" width="136" height="24"/>
  </objectgroup>
  <objectgroup id="3" name="zones" color="#ff4060" draworder="index">
-  <object id="40" type="bikes" x="790" y="2" width="438" height="8">
+  <object id="40" type="bikes" x="790" y="-190" width="438" height="8">
    <properties>
     <property name="box" value="zoneX0,zoneX1"/>
     <property name="endX" type="int" value="600"/>
@@ -386,7 +386,7 @@
     <property name="speed" type="int" value="125"/>
    </properties>
   </object>
-  <object id="41" type="bikes" x="3040" y="12" width="430" height="8">
+  <object id="41" type="bikes" x="3040" y="-180" width="430" height="8">
    <properties>
     <property name="box" value="zoneX0,zoneX1"/>
     <property name="endX" type="int" value="2890"/>
@@ -428,14 +428,14 @@
   </object>
  </objectgroup>
  <objectgroup id="5" name="critters" color="#c060ff" draworder="index">
-  <object id="48" type="critters" x="2192" y="2" width="448" height="8">
+  <object id="48" type="critters" x="2192" y="-170" width="448" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="kind" value="gull"/>
     <property name="every" type="float" value="4.5"/>
    </properties>
   </object>
-  <object id="49" type="critters" x="2880" y="12" width="180" height="8">
+  <object id="49" type="critters" x="2880" y="-160" width="180" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="kind" value="gull"/>
@@ -685,7 +685,7 @@
   <object id="119" type="girl" x="3780" y="184">
    <point/>
   </object>
-  <object id="120" type="hints" x="1550" y="2" width="250" height="8">
+  <object id="120" type="hints" x="1550" y="-150" width="250" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="PICK UP"/>
@@ -693,7 +693,7 @@
     <property name="need" value="nearball"/>
    </properties>
   </object>
-  <object id="121" type="hints" x="3690" y="12" width="150" height="8">
+  <object id="121" type="hints" x="3690" y="-140" width="150" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="GIVE"/>
@@ -701,28 +701,28 @@
     <property name="need" value="ball"/>
    </properties>
   </object>
-  <object id="122" type="hints" x="0" y="22" width="92" height="8">
+  <object id="122" type="hints" x="0" y="-130" width="92" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="HOLD: BIG JUMP"/>
     <property name="btn" value="a"/>
    </properties>
   </object>
-  <object id="123" type="hints" x="560" y="32" width="81" height="8">
+  <object id="123" type="hints" x="560" y="-120" width="81" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="HOLD + PUSH: CLIMB"/>
     <property name="btn" value="a"/>
    </properties>
   </object>
-  <object id="124" type="hints" x="1868" y="42" width="68" height="8">
+  <object id="124" type="hints" x="1868" y="-110" width="68" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="CRAWL"/>
     <property name="btn" value="down"/>
    </properties>
   </object>
-  <object id="125" type="hints" x="0" y="52" width="3840" height="8">
+  <object id="125" type="hints" x="0" y="-100" width="3840" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="DUCK!"/>
@@ -730,61 +730,61 @@
     <property name="need" value="gull"/>
    </properties>
   </object>
-  <object id="126" type="hints" x="790" y="62" width="438" height="8">
+  <object id="126" type="hints" x="790" y="-90" width="438" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="BIKES! GET UP HIGH!"/>
     <property name="bike" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="127" type="hints" x="1290" y="72" width="110" height="8">
+  <object id="127" type="hints" x="1290" y="-80" width="110" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="RIDE THE PONTOON!"/>
    </properties>
   </object>
-  <object id="128" type="hints" x="1550" y="82" width="250" height="8">
+  <object id="128" type="hints" x="1550" y="-70" width="250" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="CLIMB UP TO THE WHEELHOUSE!"/>
     <property name="need" value="noball"/>
    </properties>
   </object>
-  <object id="129" type="hints" x="2100" y="92" width="96" height="8">
+  <object id="129" type="hints" x="2100" y="-60" width="96" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="HOP ON THE ROWING BOAT!"/>
    </properties>
   </object>
-  <object id="130" type="hints" x="2400" y="102" width="48" height="8">
+  <object id="130" type="hints" x="2400" y="-50" width="48" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="WAIT FOR THE NEXT BOAT!"/>
     <property name="maxY" type="int" value="197"/>
    </properties>
   </object>
-  <object id="131" type="hints" x="3040" y="112" width="430" height="8">
+  <object id="131" type="hints" x="3040" y="-40" width="430" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="BIKES! GET UP HIGH!"/>
     <property name="bike" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="132" type="hints" x="3620" y="122" width="220" height="8">
+  <object id="132" type="hints" x="3620" y="-30" width="220" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="BRING ME THE BALL!"/>
     <property name="need" value="ball"/>
    </properties>
   </object>
-  <object id="133" type="hints" x="3620" y="132" width="220" height="8">
+  <object id="133" type="hints" x="3620" y="-20" width="220" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="FIND THE BALL ON THE BOAT!"/>
     <property name="need" value="untouched"/>
    </properties>
   </object>
-  <object id="134" type="hints" x="3620" y="142" width="220" height="8">
+  <object id="134" type="hints" x="3620" y="-10" width="220" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="GO BACK FOR THE BALL!"/>
