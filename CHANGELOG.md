@@ -2,6 +2,25 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
+Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of
+every level, the menus and the cards. The bug list with evidence: `docs/bugs_22oct.md`. Pepper's files are untouched.
+- **River Walk's bikes are an adult's bike** (stage.lua, level/riverwalk.lua, maps/riverwalk.tmx and its export): the
+  promenade cyclists now use the road cyclists' art (`road_cyclist1-2.png`, 73 x 75, true 1x pixels; the two riders
+  take turns) instead of `cyclist1.png` (49 x 50, a child's bike: the wheels were 19 px, smaller than Pepper's
+  27 px back). The wheels are now as tall as her back, the rider 1.27x Mia. The hit box follows the drawn bike from
+  wheel to wheel: 70 x 28 (was 48 x 26); 28 px keeps the perches (tops y 152-154) safe. The bikes ride behind the
+  obstacles on her line (a flower box hides their wheels), so the taller rider no longer rides through Pepper on a
+  box. `tests.lua`'s bell timing reads the zone's hit box.
+- **Road traffic is never sliced** (road.lua): cars and cyclists only come in and leave at a screen edge. Before, a
+  car drove into the end of its stretch of road (where the promenade turns into the quay steps) and was cut in half
+  there by the road's scissor, could pop out of the start of a stretch on screen, and was removed on screen when it
+  passed the end. Now one is sent only when its stretch reaches far enough past the screen for it to cross at the
+  camera's present speed; if Pepper then runs after it so that the end would come into view, it speeds up or drops
+  behind; it is removed only once wholly off screen; a cut (respawn) clears the road. Cars drive both ways now (300-
+  380 px/s, about 25-30 km/h; were 110-170) so traffic still passes while Pepper runs right; cyclists 190-240 px/s.
+  `LOOK_CHECK=1` prints `ROAD CUT` if a vehicle ever meets a road end on screen: none in the autopilot.
+
 ## Branch `r4/playtest`: the playtest lab, ported to today's levels, and the level order checked (22 Oct)
 Built on `round1`. The lab from `ml/playtest` (6 Oct, never merged) rebuilt around the levels' own autopilots.
 The game is untouched: `main.lua` gains one line (`--playtest`, only with `--auto`); no level, map, stage, world,

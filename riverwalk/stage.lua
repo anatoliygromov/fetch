@@ -329,6 +329,7 @@ function St:update(dt, presses)
       if self.bikeT <= 0 and #self.bikes == 0 then
         self.bikeT = bk.every
         self.bikes[1] = Sp.spawn(self, bk)                          -- 1 s off screen, with a bell (and a sign)
+        self.bikeN = (self.bikeN or 0) + 1; self.bikes[1].rider = 1 + self.bikeN % 2   -- (the two riders take turns)
       end
     end
   end
@@ -545,6 +546,15 @@ function St:draw(debug)
     end
   end
   end
+  -- River Walk's bikes ride behind the obstacles on Pepper's line (r5/bugs): the adult's bike is taller than a flower
+  -- box, so drawn in front of the box it rode through Pepper standing on it; behind it, the box hides its wheels
+  if not style and not grey then
+    use("play"); lg.setColor(1, 1, 1, 1)
+    for _, c in ipairs(self.bikes) do
+      local cyc = Rd.art().riders[c.rider or 1]
+      Rd.drawBike(cyc, -c.x, math.floor(c.x - cam + 0.5) - math.floor(cyc:getWidth() / 2), math.floor(c.y - cyc:getHeight() + 0.5), true)
+    end                                                            -- the art faces right; bikes ride left, wheels rolling
+  end
   for _, pr in ipairs(self.def.props) do if pr.layer == "play" and not pr.over then use(pr.kind == "decor" and "back" or "play"); prop(pr, cam, C.prop) end end
   use("play")
   Sp.drawRopes(self, cam)                                          -- the ropes the ferries run on
@@ -606,8 +616,10 @@ function St:draw(debug)
     if b.state == "given" then bx, by = g.x + face * 8, g.y - 30 - math.abs(math.sin(g.t * 6)) * 14 end
     lg.draw(ballImg, math.floor(bx - cam - 3 + 0.5), math.floor(by - 6 + 0.5))
   end
-  -- bikes: a cyclist (art/scene/cyclist1.png, 49 x 50) over the 48 x 26 hit box, wheels on the pavement; greybox:
-  -- a box the size of the zone's hit box (w, h), labelled with its kind (CART, TRAM) or BIKE
+  -- bikes: an adult cyclist (art/scene/road_cyclist1-2.png, 73 x 75: the wheels as tall as Pepper's back; drawn
+  -- behind the obstacles, before the play props) centred on the zone's hit box (River Walk: 70 x 28, the bike from wheel to wheel), wheels on the pavement; greybox:
+  -- a box the size of the zone's hit box (w, h), labelled with its kind (CART, TRAM) or BIKE. (Until r5/bugs the
+  -- small cyclist1.png, 49 x 50, a child's bike next to Pepper.)
   if self.cat and self.cat.state ~= "gone" then
     if self.def.art then Sc.cat(self.cat, cam, self.t, self.pepper.x) else Sc.catGrey(self.cat, cam, self.t) end
   end
@@ -617,7 +629,6 @@ function St:draw(debug)
   Cr.draw(self, cam, self.t)                                       -- geese and gulls
   if self.chase then Ch.draw(self, cam) end                        -- the chase: barrels
   if self.night then Nt.drawWorld(self, cam) end                   -- [night hook] the fox
-  local cyc = Rd.art().cyclists[1]
   use("play")
   for _, c in ipairs(self.bikes) do
     local x = c.x - cam
@@ -628,7 +639,7 @@ function St:draw(debug)
       local z = c.zone or {}
       local bw, bh = z.w or 48, z.h or 26
       Sc.outlined(C.prop, C.propEdge, math.floor(x - bw / 2 + 0.5), c.y - bh, bw, bh); Sc.label(z.kind and z.kind:upper() or "BIKE", x, c.y - 17)
-    else lg.setColor(1, 1, 1, 1); Rd.drawBike(cyc, -c.x, math.floor(x + 25 + 0.5) - cyc:getWidth(), math.floor(c.y - cyc:getHeight() + 0.5), true) end   -- the art faces right; bikes ride left, wheels rolling
+    end                                                                  -- (River Walk's bikes: drawn behind the obstacles, above)
     if depot then lg.setScissor() end
   end
   if lk then Look.off() end

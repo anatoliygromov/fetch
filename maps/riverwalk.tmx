@@ -382,8 +382,10 @@
     <property name="box" value="zoneX0,zoneX1"/>
     <property name="relx.endX" type="int" value="-190"/>
     <property name="every" type="float" value="5.5"/>
+    <property name="h" type="int" value="28"/>
     <property name="minY" type="int" value="150"/>
     <property name="speed" type="int" value="125"/>
+    <property name="w" type="int" value="70"/>
    </properties>
   </object>
   <object id="41" type="bikes" x="3040" y="-180" width="430" height="8">
@@ -391,8 +393,10 @@
     <property name="box" value="zoneX0,zoneX1"/>
     <property name="relx.endX" type="int" value="-150"/>
     <property name="every" type="int" value="5"/>
+    <property name="h" type="int" value="28"/>
     <property name="minY" type="int" value="150"/>
     <property name="speed" type="int" value="135"/>
+    <property name="w" type="int" value="70"/>
    </properties>
   </object>
   <object id="42" name="KENNEL" type="secrets" x="0" y="176" width="30" height="8"/>

@@ -182,10 +182,11 @@ L.bones = {
 }
 
 -- bike zones: a cyclist rides right to left along the promenade while Pepper is in a zone; it rides on until
--- it passes endX
+-- it passes endX. w, h: the hit box, the drawn bike from wheel to wheel (r5/bugs: an adult's bike, 73 x 75 art,
+-- wheels 29 px; was 48 x 26 for the small cyclist art); 28 px tall keeps the perches (tops y 152-154) safe
 L.bikes = {
-  { zoneX0 = 790,  zoneX1 = 1228, minY = 150, every = 5.5, speed = 125, endX = 600 },     -- (was 6.5 s, 115 px/s)
-  { zoneX0 = 3040, zoneX1 = 3470, minY = 150, every = 5.0, speed = 135, endX = 2890 },    -- (was 6.0 s, 115 px/s)
+  { zoneX0 = 790,  zoneX1 = 1228, minY = 150, every = 5.5, speed = 125, endX = 600, w = 70, h = 28 },     -- (was 6.5 s, 115 px/s)
+  { zoneX0 = 3040, zoneX1 = 3470, minY = 150, every = 5.0, speed = 135, endX = 2890, w = 70, h = 28 },    -- (was 6.0 s, 115 px/s)
 }
 
 -- secrets: reaching one (Pepper's feet in its box) counts it; the tally shows how many were found

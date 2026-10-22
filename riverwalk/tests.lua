@@ -140,7 +140,7 @@ return function(mode, api)
       { act = function() hold("right", "down") end }, { during = 1.2 },
       { act = function(p) release(); report("kennel: crawl back out", p.x > 50 and near(p.y, 184), ("x %.0f"):format(p.x)) end },
       -- 15 traffic: a bike is sent 1 s before it reaches the screen edge (its bell rings then); hard mode
-      { act = function() local s = api.stage(); local c = Sp.spawn(s, s.def.bikes[1]); local lead = (c.x - 24 - (s.cam + 320)) / c.speed
+      { act = function() local s = api.stage(); local c = Sp.spawn(s, s.def.bikes[1]); local lead = (c.x - (s.def.bikes[1].w or 48) / 2 - (s.cam + 320)) / c.speed   -- (the front: half the hit box)
           report("bike: sent 1 s before the screen edge (bell)", math.abs(lead - 1) < 0.01, ("%.2f s"):format(lead))
           local St = require("stage"); local h = St.new(s.def, { hard = true })
           report("hard mode: 1 heart, bikes 25% faster", h.hearts == 1 and Sp.speed(h, h.def.bikes[1]) == h.def.bikes[1].speed * 1.25,
