@@ -60,12 +60,12 @@ local function newRun() freeStage(); stage = St.new(def); state, t, tally = "int
 local function startLevel()
   setLevel(run.names[run.k])
   freeStage(); stage = St.new(def, { score = run.score, lives = run.lives, hard = Flow.hard or nil }); state, t, tally = "intro", 0, nil
-  fresh(); S.music(musicOn)
+  fresh(); S.music(musicOn, levelName)                           -- the level's tune (sfx.lua)
 end
 local function startRun(i) run = Flow.newRun(i); if #run.names > 0 then startLevel() end end
 local Title = require("title")                                  -- the title screen: PRESS ANY KEY, then the menu
 local titleLeaving                                              -- seconds since a key was pressed on the title
-local function toTitle() state, t, titleLeaving, run = "title", 0, nil, nil; S.music(musicOn) end
+local function toTitle() state, t, titleLeaving, run = "title", 0, nil, nil; S.music(musicOn, "title") end
 local function leaveTitle()
   if state ~= "title" then return false end
   if t > 0.5 and not titleLeaving then S.play("select"); titleLeaving = 0 end
@@ -135,11 +135,11 @@ local function nextLevel()
     local score = run and run.score or tally.score
     local newBest = Flow.runOver(score)
     ending = { score = score, best = Flow.bestRun, newBest = newBest, lines = def.outro }
-    state, t = "ending", 0
+    state, t = "ending", 0; S.music(musicOn, "title")                 -- the ending: the title theme again
   end
 end
 -- GAME OVER: TRY AGAIN plays the same level again with 3 lives and the score it started with; MENU
-local function toMenu() state, t, run = "menu", 0, nil; Flow.menu.sel = 1; S.music(musicOn) end
+local function toMenu() state, t, run = "menu", 0, nil; Flow.menu.sel = 1; S.music(musicOn, "title") end
 local function tryAgain() if run then run.lives = 3; startLevel() else newRun() end end
 local function overAction(a)
   if t < Flow.OVER_WAIT then return end
@@ -271,7 +271,7 @@ function love.update(dt)
       stage:update(DT, presses); Talk.watch(stage, presses, DT); presses = {}; acc = acc - DT; steps = steps + 1
       local now = stage.lives * 10 + stage.hearts                 -- a heart (or a life) lost: no NO HIT medal
       if hl and now < hl then hit = true end; hl = now
-      if stage.clearT and not clearAt then clearAt = stage.t end                -- the ball given: the clear time
+      if stage.clearT and not clearAt then clearAt = stage.t; S.play("fetch") end   -- the ball given: the clear time, the GOOD GIRL! sting
       if stage.events.over then state, t = "over", 0; over.sel = 1; S.music(false); S.play("over"); if run then Flow.runOver(stage.score) end; break end
       if stage.events.clear then
         state, t = "clear", 0; S.music(false); S.play("clear")
