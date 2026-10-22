@@ -26,6 +26,10 @@ Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untou
   `tests_citypark_tall.lua --physics` 82 of 82: 5 new cart checks (a cart sets off with its warning as she walks
   in on the path, drives at y 328, hurts her there, passes under her on the picnic table, never comes while she is
   on a treetop over the run). The autopilot (the high road) is unchanged: GOOD GIRL! in 38.5 s.
+- **QA in tall levels** (review 5). `qa.lua` flagged "below the level" at 4 px under the world, while the fall rule
+  (stage.lua) lets her drop 24 px out of the bottom before it takes her out of play: now 24 + 8 px. A QA run also
+  clears a pending fall and puts the vertical camera on her when it places her. `--qa` on lab_tall: 4283 runs,
+  0 problems (was 18 false ones); on citypark_tall: 11734 runs, 0 problems.
 
 ## The old title is back (22 Oct, evening)
 - The hand-pixeled title (branch `title/redraw`) was rejected by the owner: the 19 Oct title has far more charm.
