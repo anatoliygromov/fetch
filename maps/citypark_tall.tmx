@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="360" height="48" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#20242c" nextlayerid="9" nextobjectid="243">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="360" height="48" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#20242c" nextlayerid="9" nextobjectid="244">
  <editorsettings>
   <export target="../riverwalk/level/tiled/citypark_tall.lua" format="lua"/>
  </editorsettings>
@@ -8,14 +8,16 @@
   <property name="magpie.dropSay" value="IT DROPPED THE BALL!"/>
   <property name="magpie.flee" type="int" value="110"/>
   <property name="magpie.fleeWalk" type="int" value="40"/>
+  <property name="art" value="park"/>
   <property name="ballBack" value="THE BALL IS BACK BY THE LAMP"/>
+  <property name="foot" type="int" value="328"/>
   <property name="intro" value="{ &quot;LEVEL 1&quot;, &quot;CITY PARK&quot;, &quot;A MAGPIE STOLE MIA'S BALL!&quot;, &quot;UP IN THE TREES OR DOWN ON THE PATH&quot; }"/>
   <property name="name" value="CITY PARK"/>
   <property name="number" type="int" value="1"/>
   <property name="outro" value="{ &quot;OFF TO TOWN! BUT THE BALL&quot;, &quot;ROLLED AWAY ACROSS THE PLAZA...&quot; }"/>
   <property name="scenery" value="greybox"/>
   <property name="time" type="int" value="300"/>
-  <property name="title" value="Pepper: City Park, tall (greybox)"/>
+  <property name="title" value="Pepper: City Park, tall"/>
  </properties>
  <tileset firstgid="1" name="terrain" tilewidth="8" tileheight="8" tilecount="4" columns="4">
   <image source="terrain.png" width="32" height="8"/>
@@ -250,6 +252,9 @@
    <properties>
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
+    <property name="hidden" type="bool" value="true"/>
+    <property name="leaves" type="bool" value="true"/>
+    <property name="over" type="bool" value="true"/>
    </properties>
   </object>
   <object id="24" type="props" x="1648" y="188" width="184" height="48">
@@ -701,6 +706,12 @@
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
     <property name="layer" value="front"/>
+   </properties>
+  </object>
+  <object id="243" type="pieces" x="1564" y="302" width="42" height="7">
+   <properties>
+    <property name="kind" value="hollowlog"/>
+    <property name="rely.foot" type="int" value="26"/>
    </properties>
   </object>
  </objectgroup>

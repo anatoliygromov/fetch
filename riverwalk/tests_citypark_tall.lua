@@ -413,7 +413,21 @@ return function(mode, api)
       { act = function() local s = api.stage(); s.hearts = 3; s.bikes, s.zoneIn, s.bikeT = {}, {}, 2.5; tp(1350, PATH); hold("right") end },
       { wait = 0.45 }, shot("ct_21_cart_warning"), { wait = 0.75 }, shot("ct_22_cart_coming"),
       { act = function() release(); tp(1452, 300) end }, { wait = 0.9 }, shot("ct_23_cart_under_the_table"),
-      { act = function() love.event.quit() end } }) do steps[#steps + 1] = st end
+      { act = function() release() end } }) do steps[#steps + 1] = st end
+    -- every screen (r3/citypark-art): the low road (ct_3x), then the treetops over it (ct_4x, on a ledge of each
+    -- screen; the gate screen has none, so the hedge top), for the art's contact sheet
+    for i = 0, 8 do
+      steps[#steps + 1] = { act = function() local s = api.stage(); s.hearts = 3; s.bikes, s.zoneIn, s.bikeT = {}, {}, 99; tp(160 + 320 * i, PATH) end }
+      steps[#steps + 1] = { wait = 0.8 }
+      steps[#steps + 1] = shot(("ct_3%d_low_screen%d"):format(i + 1, i + 1))
+    end
+    local high = { { 560, 256 }, { 650, 216 }, { 824, 216 }, { 1116, 184 }, { 1424, 216 }, { 1772, 192 }, { 2140, 200 }, { 2470, 200 }, { 2720, 120 } }
+    for i, sp in ipairs(high) do
+      steps[#steps + 1] = { act = function() tp(sp[1], sp[2]) end }
+      steps[#steps + 1] = { wait = 0.8 }
+      steps[#steps + 1] = shot(("ct_4%d_high_screen%d"):format(i, i))
+    end
+    steps[#steps + 1] = { act = function() love.event.quit() end }
   end
 
   local i, since, T, lastHearts = 1, 0, 0, nil

@@ -13,8 +13,9 @@ unless given --force.
 What changes from City Park (besides the shift), and why:
   * the three willow branches over the pond go (a fall from them landed in the water); the high road crosses the
     pond on the treetop walk instead, a solid boardwalk with no gaps over water
-  * the hollow log is drawn as a plain box (setpieces.lua draws the hollow log down to y 184)
-  * no park art (L.art): the art and the cart code assume the path at y 184 (docs/citypark_tall_beatsheet.md,
+  * the park art (L.art = "park") with the path line L.foot = 328 (r3/citypark-art: the art is placed from it);
+    the hollow log keeps its piece, standing on the path (foot = 328). (The first draft had no art and drew the
+    hollow log as a plain box: the art assumed the path at y 184; docs/citypark_tall_beatsheet.md,
     "What the engine must add")
   * the two leaf-cart zones have roadY = 328 (engine/round2: a zone's road at any height; the cart drives on the
     path and the zone counts Pepper in only on the low road, up to 90 px above it), with their two hints
@@ -156,14 +157,14 @@ def build():
     cols = len(rows[0])
     rows = ["." * cols] * (DY // 8) + rows
     L = shift(L)
-    L.pop("art", None)
-    L.pop("pieces", None)
-    L["title"] = "Pepper: City Park, tall (greybox)"
+    L["foot"] = PATH                     # the path line the park art is placed from (scene.lua, r3/citypark-art)
+    for pc in L.get("pieces", []):
+        if pc.get("kind") == "hollowlog":
+            pc["foot"] = PATH
+    L["title"] = "Pepper: City Park, tall"
     # the willow branches over the pond (one-way, x 672 / 776 / 880) go: the treetop walk replaces them
     props = [p for p in L["props"] if not (p["kind"] == "oneway" and p["x0"] in (672, 776, 880))]
     for p in props:
-        if p["name"] == "HOLLOW LOG":
-            p.pop("hidden", None)
         if p["name"] == "WILLOWS":
             p["label"] = "below"
     front = [p for p in props if p["layer"] == "front"]

@@ -6,7 +6,8 @@
 --   2 split toning per layer (a shader): light colours lean warm, dark ones lean blue-violet, colours a bit
 --     richer; the further back a layer is, the more it turns into its haze colour. Each colour in maps to one
 --     colour out, so an asset keeps its number of colours. The art files are untouched.
---   3 a painted sky in bands, joined by 2 x 2 ordered dither rows (the 16-bit way to do a gradient)
+--   3 a painted sky in bands, joined by 2 x 2 ordered dither rows (the 16-bit way to do a gradient); in a tall
+--     art level it goes on above the old top (deeper blues) and rises with the far city (Look.skyTall)
 --   4 River Walk's road recedes: each road row scrolls a little faster the nearer it is (row scrolling, like the
 --     river), and the near-lane traffic slides with its row
 --   5 a dark foreground band at the bottom that scrolls 1.4x, only in front of the flat ground Pepper walks at
@@ -45,6 +46,8 @@ Look.scripts = {
                front = L(0.0, 1.8, 1.10, "1e1626", 0.40) },
     bands = { { 0, "6a83b8" }, { 18, "7b91bf" }, { 36, "8f9fc3" }, { 54, "a6adc3" }, { 72, "bebac0" },
               { 89, "d4c3b7" }, { 104, "e5c9a9" }, { 118, "efcb9b" }, { 131, "f4cc8e" }, { 143, "f7cd86" } },
+    -- a tall level's sky goes on above y 0 (up in the treetops): deeper blues, each band 24 rows
+    above = { { -120, "39579a" }, { -96, "4060a1" }, { -72, "4a68a7" }, { -48, "5571ad" }, { -24, "5f7ab3" } },
     fg = { dark = hex("1d1525"), mid = hex("2b1f33"), rim = hex("594257"), warm = hex("b5793f"), warmK = 0.22 },
     kinds = {},                                                    -- (the earth band is already the dark frame)
   },
@@ -113,6 +116,49 @@ local function sky()
   return im
 end
 function Look.sky() lg.setColor(1, 1, 1, 1); lg.draw(sky(), 0, 0) end
+
+-- a tall level's sky (art levels): the same bands with Look.SKY_ABOVE more rows above y 0, from the script's
+-- `above` bands (or, without them, the top two bands' step carried on upwards, darker). Drawn from y -SKY_ABOVE.
+Look.SKY_ABOVE = 120
+local tallSkies = {}
+function Look.skyTall()
+  local key = Look.key
+  if not tallSkies[key] then
+    local S_ = S()
+    local A, top = Look.SKY_ABOVE, S_.bands
+    local above = S_.above
+    if not above then                                               -- carry the top step on upwards
+      above = {}
+      local c0, c1 = hex(top[1][2]), hex(top[2][2])
+      for i = 5, 1, -1 do
+        local c = {}
+        for j = 1, 3 do c[j] = math.max(0, math.min(1, c0[j] - (c1[j] - c0[j]) * i)) end
+        above[#above + 1] = { -24 * i, string.format("%02x%02x%02x", math.floor(c[1] * 255 + 0.5), math.floor(c[2] * 255 + 0.5), math.floor(c[3] * 255 + 0.5)) }
+      end
+    end
+    local BANDS = {}
+    for _, b in ipairs(above) do if b[1] >= -A then BANDS[#BANDS + 1] = { b[1] + A, b[2] } end end
+    for _, b in ipairs(top) do BANDS[#BANDS + 1] = { b[1] + A, b[2] } end
+    local H = 240 + A
+    local d = love.image.newImageData(320, H)
+    local cols = {}
+    for i, b in ipairs(BANDS) do cols[i] = hex(b[2]) end
+    for y = 0, H - 1 do
+      local i = 1
+      while BANDS[i + 1] and y >= BANDS[i + 1][1] do i = i + 1 end
+      local nxt = BANDS[i + 1] and (BANDS[i + 1][1] - y) or 99
+      local lvl = (nxt <= 3) and (4 - nxt) or 0
+      for x = 0, 319 do
+        local c = cols[i]
+        if lvl > 0 and BAYER[y % 2][x % 2] < lvl then c = cols[i + 1] end
+        d:setPixel(x, y, c[1], c[2], c[3], 1)
+      end
+    end
+    local im = lg.newImage(d); im:setFilter("nearest", "nearest")
+    tallSkies[key] = im
+  end
+  lg.setColor(1, 1, 1, 1); lg.draw(tallSkies[key], 0, -Look.SKY_ABOVE)
+end
 
 -- 4 the road (rows 199-239 of the screen): row y scrolls ROAD_K * (y - 199) / 40 faster than the camera, so the
 -- near edge of the road moves 1.3x and the far edge (the kerb) 1x, as a floor seen from a low camera does.
@@ -226,12 +272,13 @@ local function clump(r, kind, w, h)
   return im
 end
 
--- the stretches of flat ground at Pepper's line (terrain top y 184), found as the road's traffic finds them
-local function flatSpans(world)
+-- the stretches of flat ground at Pepper's line (terrain top y 184, or a tall level's path line foot), found as
+-- the road's traffic finds them
+local function flatSpans(world, foot)
   local spans, s = {}, nil
   for x = 0, world.width - 1, 4 do
     local flat = false
-    for _, b in ipairs(world.rects) do if b.terrain and b.y0 == 184 and x >= b.x0 and x < b.x1 then flat = true; break end end
+    for _, b in ipairs(world.rects) do if b.terrain and b.y0 == foot and x >= b.x0 and x < b.x1 then flat = true; break end end
     if flat and not s then s = x elseif not flat and s then spans[#spans + 1] = { s, x }; s = nil end
   end
   if s then spans[#spans + 1] = { s, world.width } end
@@ -248,7 +295,7 @@ local function buildFront(stage)
   local r, list = rng(1994), {}
   local kinds = S().kinds
   if next(kinds) == nil then return list end                       -- this level has no foreground band
-  for _, sp in ipairs(flatSpans(stage.world)) do
+  for _, sp in ipairs(flatSpans(stage.world, stage.def.foot or 184)) do
     local x = sp[1] + math.floor(r(20, 120))
     while true do
       local kind = pick(r, kinds)
@@ -266,19 +313,20 @@ local function buildFront(stage)
   end
   return list
 end
-function Look.front(stage, cam)
+function Look.front(stage, cam, camY)
   stage.lkFront = stage.lkFront or buildFront(stage)
+  local bottom = (stage.def.foot or 184) + 56 - (camY or 0)        -- the screen y of the world's bottom row + 1 (a flat level: 240)
   lg.setColor(1, 1, 1, 1)
   local k = Look.FRONT_SPEED - 1
   for _, c in ipairs(stage.lkFront) do
     local mid = c.x + c.w / 2
     local sx = math.floor(c.x - cam - (cam + 160 - mid) * k + 0.5)
     if sx < 330 and sx + c.w > -10 then
-      lg.draw(c.img, sx, 240 - c.h)
+      lg.draw(c.img, sx, bottom - c.h)
       if Look.CHECK then                                          -- LOOK_CHECK=1: report a clump over Pepper's box
         local x0, y0, x1, y1 = stage.pepper:box()
-        if x1 - cam > sx and x0 - cam < sx + c.w and y1 + 2 > 240 - c.h then
-          print(("LOOK OVERLAP clump at %d (top %d) over Pepper x %.0f y %.0f"):format(c.x, 240 - c.h, stage.pepper.x, stage.pepper.y)); io.stdout:flush()
+        if x1 - cam > sx and x0 - cam < sx + c.w and y1 + 2 - (camY or 0) > bottom - c.h then
+          print(("LOOK OVERLAP clump at %d (top %d) over Pepper x %.0f y %.0f"):format(c.x, bottom - c.h, stage.pepper.x, stage.pepper.y)); io.stdout:flush()
         end
       end
     end

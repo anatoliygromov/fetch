@@ -141,7 +141,7 @@ elseif mode == "moved" then
   local dirA, dirB, dx, dy = arg[3], arg[4], tonumber(arg[5]), tonumber(arg[6])
   local X = { x = 1, x0 = 1, x1 = 1, zoneX0 = 1, zoneX1 = 1, from = 1, to = 1, call = 1, rope = 1, endX = 1,
     depot = 1, trigger = 1, ax = 1, bx0 = 1, bx1 = 1 }
-  local Y = { y = 1, y0 = 1, y1 = 1, fromY = 1, toY = 1, minY = 1, maxY = 1, ay = 1, door = 1 }
+  local Y = { y = 1, y0 = 1, y1 = 1, fromY = 1, toY = 1, minY = 1, maxY = 1, ay = 1, door = 1, foot = 1 }   -- (foot: a piece's path)
   local XY = { winch = 1, rest = 1 }
   local function add(v, a, b)                     -- v + (a, b): numbers, lists, { x =, y = }, lists of points
     if type(v) == "number" then return v + a end
