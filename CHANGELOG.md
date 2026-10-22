@@ -2,6 +2,29 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `title/redraw`: the title screen, pixeled by hand (22 Oct)
+Built on `main` (v0.5). No SpriteCook, no image generation.
+- **A new title picture, authored pixel by pixel** (`tools/title_redraw.py`, now the source of truth for
+  `riverwalk/art/title/` and `title_data.lua`; `tools/make_title.py`, which cut the AI painting down, is kept as the
+  old pipeline and must not be run). Same composition as before: Pepper large in the lower left (winking, tongue
+  out, pink bandana), the tree and the lamp on the left, FETCH! with a paw print, the banner, Stockholm's
+  waterfront (City Hall's tower with the three crowns, the Riddarholmen spire, Gamla stan facades, a stone bridge,
+  sailboats and motorboats), the quay with its railing, a bench, flagstones, sky and clouds, a gull.
+  - Everything is shapes, pixel grids and shading rules written in the script; the old picture served only as a
+    sketch for positions. 32 colours on the VGA 6-bit grid, in ramps (swatch: `source_title/palette_redraw.png`).
+  - Light from the upper left everywhere. Ordered 4x4 dither only in the sky and the water.
+  - Pepper is built from forms (chest, shoulder, bandana, ears, skull, cheek, muzzle, jaw), each painted flat and
+    then given a shadow rim and an inset sheen band, so her black fur reads glossy with clean shapes. Her open eye,
+    wink, nose and grin are hand-made grids; proportions follow her in-game portrait.
+  - The logo is hand-lettered: stroke boxes with rounded corners, a round C, a tapered "!", climbing 1 px every
+    13 columns, yellow over orange joined by one checker row, lit and shaded inner edges, a navy outline and a
+    drop shadow. The banner and PRESS ANY KEY use the game's own 5x7 font and the HUD's box colours.
+- **Animation layers redone for the new picture**: the blink is drawn like her wink, the gull is a 3-frame sprite in
+  open sky, the logo shine is the logo one ramp step brighter, sparkles are placed by hand on the water.
+  `title.lua` keeps the logo's outline and shadow within 5 px (was 3) when it draws the logo over the menus.
+- The window title is now "FETCH!".
+- Checks: `check_flow` 94/94, `check_pepper` UNCHANGED.
+
 ## Branch `assets/v2`: the tram fix and art for the new pieces (19 Oct)
 Built on `levels/v2`.
 - **The trams end in tram sheds** (Downtown). Before, the first tram vanished in plain view before the fountain,
