@@ -2,6 +2,29 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r4/playtest`: the playtest lab, ported to today's levels, and the level order checked (22 Oct)
+Built on `round1`. The lab from `ml/playtest` (6 Oct, never merged) rebuilt around the levels' own autopilots.
+The game is untouched: `main.lua` gains one line (`--playtest`, only with `--auto`); no level, map, stage, world,
+camera, lift, roof, critter, set piece, Pepper or art file changes.
+- **The persona layer wraps the current autopilot** (`riverwalk/pt_bot.lua`, `playtest.lua`): `tests_<level>.lua
+  --auto` still decides what to press from the real game state; the lab sits between its buttons (`I.force`,
+  `love.keypressed`) and the game and adds reaction delays, early and late presses, hold errors, controls found by
+  trying, failures, recovery (back up on foot or back to the lamp, then on along the route), patience and quits.
+  Routes stay current by themselves; Rooftops' high road comes from the autopilot's own `AUTO_ROUTE=high`.
+  `pt_json.lua` comes over unchanged; the old copied routes (`pt_routes.lua`) are gone.
+- **Runs:** `tools/run_playtest.py` (all personas x levels x seeds, one LOVE process per run, each with its own
+  `XDG_DATA_HOME`, `SDL_AUDIODRIVER=dummy`, `xvfb-run -a`). A run takes about a second (no drawing).
+- **Analysis and method:** `tools/analyse_playtest.py` (per persona and level: clears, quits and where, hearts,
+  lives, game overs, clear times, waits, bones, secrets, controls found, failures per beat-sheet screen; the
+  difficulty index per group along each candidate order; charts and stall maps); `docs/playtest/method.md`
+  rewritten for the new design (what is exact, what is modelled, the recovery model, lost runs).
+- **The order report** (`docs/playtest/report_22oct.md`, `docs/playtest/summary_22oct.json`; 1,280 runs, 20 per
+  persona per level): the proposed order is not progressive. River Walk is the easiest level for every group; City
+  Park (either version) and Downtown are spikes. City Park and Downtown beat their tall versions as levels 1 and 3;
+  the current order (Downtown 2nd) is smoother by the index. Top fixes: City Park's climbing frame, Downtown's cafe
+  terrace, the tall City Park's first held jump, the magpie at the gate. Checks: `check_pepper` UNCHANGED, flow 103
+  of 103, City Park `--auto` 44.2 s as before.
+
 ## Pepper's file check narrowed to what she uses (22 Oct, evening)
 - `tools/check_pepper_files.sh` flagged world.lua: engine/round2 gave `Wd:groundAt` an optional `fromY` for carts,
   bikes and the gull on tall levels. Pepper never calls it. The check now proves the rest of world.lua (all her
