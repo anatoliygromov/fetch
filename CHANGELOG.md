@@ -2,6 +2,23 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r7/curve`: the tall order's difficulty curve passes the acceptance test (22 Oct)
+Built on `round1`. The planned order with the tall levels (River Walk, City Park tall, Downtown tall, Rooftops,
+Soder Hill, Night Harbour), measured with `tools/check_curve.py --name tall --seeds 10`; every iteration's numbers are
+in `docs/playtest/curve_r7.md`. Pepper's files, music, sfx and the title are untouched.
+- **Downtown (tall), softer** (maps/downtown_tall.tmx and its export, tests_downtown_tall.lua): it was the spike
+  (kids 24, parents 26; Anna and Elsa quit at the cafe terrace and the statue). The cafe terrace: both parasols at
+  y 362 (were 354), 16 px apart (were 48): a 36 px held jump up from the table, a walk across, and the shop sign
+  8 px lower (34 px up). Way up A: a crate step (x 1172-1208, 24 px) after the bakery crates, so a tap hop reaches
+  the springier awning. The plaza: with the ball, a springy cafe parasol right of the statue (x 1512-1552, 20 px over
+  the street, bounce 136) bounces Pepper up to the loggia (HOLD: BOUNCE UP!); the four held jumps up the statue
+  (pedestal, arm, hat, loggia) stay as the way to the STATUE HAT secret. The flooded square: the first parasol 12 px
+  lower (a tap hop from the crate reaches it). Autopilot: two tap hops onto the market stall (the r6 crate step);
+  it lets go of Right only once Pepper is off the shop sign and the market awning (a player who stops short on the
+  edge was a stuck in the lab). New checks: the parasols, the plaza parasol held and tapped, the way up A crate
+  step, the flooded square tapped (98 of 98). `--auto` 56.2 s (was 56.6), no heart lost.
+  Before/after: `/home/claude/out/r7-curve/downtown_tall_before_after.png`.
+
 ## Branch `r6/engine`: safety nets, the same in every level (22 Oct)
 Built on `round1`. Benchmark principles 5, 6 and 7 (`docs/benchmark_22oct.md` section 4) in the engine, so every
 level gets them without level changes. Hard mode (`stage.hard`: `carry.hard` from the menu's `hard.txt`, or `--hard`)
