@@ -1,0 +1,11 @@
+-- Level 1, tall: City Park with a treetop tier (greybox; not in levels.lua): love riverwalk --level citypark_tall.
+-- The level is the Tiled map maps/citypark_tall.tmx, exported to level/tiled/citypark_tall.lua (docs/tiled.md).
+-- Its first version was drawn by tools/make_citypark_tall.py from City Park; edit the map in Tiled from now on.
+-- Design: docs/citypark_tall_beatsheet.md. Checks and autopilot: tests_citypark_tall.lua.
+--
+-- 9 screens x 48 rows (2880 x 384 px). City Park moved down 18 rows: the path (the low road) is at y 328, and
+-- on the path the camera rests at the bottom of the world, so the low road looks exactly as City Park does.
+-- Above it the high road: the plane tree and the treetop walk over the pond, the lime trees, the old oak's crown
+-- (its top twig holds the golden bone), the alder walk over the creek, the rose arbour, the play tower and the
+-- big oak, where the magpie has its nest (its last perch). Every drop off the high road lands on the low road.
+return require("tiled").load("level/tiled/citypark_tall.lua")

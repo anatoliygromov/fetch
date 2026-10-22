@@ -2,6 +2,29 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `design/round2`: the tall City Park and the Rooftops plan (22 Oct)
+Built on `round1` (the height engine, Tiled, music). Level design only: no engine files changed, no SpriteCook.
+- **City Park, tall** (`citypark_tall`, greybox, not in `levels.lua`: `love riverwalk --level citypark_tall`).
+  A Tiled map, `maps/citypark_tall.tmx` (360 x 48 cells, 2880 x 384 px), exported to
+  `level/tiled/citypark_tall.lua`; `level/citypark_tall.lua` loads it. Its first version is drawn by
+  `tools/make_citypark_tall.py` from City Park (moved down 18 rows: the path is at y 328, and on the path the
+  camera rests at the bottom of the world, so the low road looks as before) plus the new treetop tier: the plane
+  tree and the treetop walk over the pond, seven lime trees, the old oak's crown and its top twig (the golden
+  bone), the ash and the alder walk over the creek (a low bough to crawl under), the rose arbour, the play tower and
+  the big oak, the magpie's nest at its top (its 12th and last perch; 3 new high perches on the way). 3 lamps up
+  high, 31 more bones, 4 secrets (TREETOP WALK and GOLDEN BONE are new; WILLOWS went with the willow branches).
+  Greybox only: no `L.art`, the hollow log a plain box, and the leaf carts wait on a note layer `#carts` (a cart
+  zone starts only while Pepper's feet are above y 184 and the cart drives at y 184: the engine must read a
+  zone's y first; see the beat sheet).
+- **Checks** (`riverwalk/tests_citypark_tall.lua`): `--physics` 77 of 77: the world and camera, her 46 / 24 px
+  measured, 40 jumps simulated with her own controller (the low road's climbs, the 3 ways up, every high-road
+  jump standing and some running, the finale), 3 jumps that must fail, the crawl, 124 ways off the high road
+  (walk off and run-jump off each end, Down + A through each one-way ledge) all land with no heart lost and never in
+  the water, the two walks over water are solid, the magpie's 12 perches (where the ball lands after a bark),
+  3 perches that ignore a bark from below, the nest perch stays put, bones (none in a solid, all within a jump),
+  the fetch ends the level. `--auto` plays the high road and the finale: GOOD GIRL! in 38.5 s, no heart lost,
+  2 of 4 secrets. `--test` a screenshot tour. `tools/check_tiled.sh` also checks its export is up to date.
+
 ## Branch `engine/height`: levels that climb and drop (22 Oct)
 Built on `main` (v0.5). The engine for the tall levels (rooftops, the building site, the metro); the five levels
 play and draw exactly as before. Greybox, no SpriteCook credits.
