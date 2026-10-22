@@ -1,6 +1,0 @@
-# made by tools/make_music.py: name, samples, rate, loop or once (tools/check_music.sh)
-title 801818 22050 loop
-citypark 1764000 22050 loop
-jingle_clear 79380 22050 once
-jingle_over 63945 22050 once
-jingle_fetch 34398 22050 once

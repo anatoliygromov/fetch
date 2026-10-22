@@ -2,6 +2,11 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Music out of the builds (22 Oct, evening)
+- The owner takes music on separately, so builds have no music for now: the merge of `audio/music` (title and
+  City Park tunes, jingles) is reverted on `round1`, and the old synthesised loop is switched off
+  (`S.MUSIC = false` in sfx.lua). Sound effects are unchanged. The tunes stay on branch `audio/music`.
+
 ## Branch `design/round2`: the tall City Park and the Rooftops plan (22 Oct)
 Built on `round1` (the height engine, Tiled, music). Level design only: no engine files changed, no SpriteCook.
 - **City Park, tall** (`citypark_tall`, greybox, not in `levels.lua`: `love riverwalk --level citypark_tall`).
@@ -120,35 +125,6 @@ Built on `main` (v0.5). No SpriteCook credits. See `docs/tiled.md`.
 - **`docs/tiled.md`**, a guide for drawing levels: the files, opening a map, the units and Pepper's limits (34 x 26
   px, 16 crouched; hop 24, held jump 46, scramble 58 px), what each layer and object means, adding a prop, a bone
   or a lamp, notes, exporting (Ctrl+E), running the game on a Mac, switching a level to Tiled and back, taller maps.
-
-## Branch `audio/music`: music, the first real tunes (22 Oct)
-Built on main (v0.5). Composed and synthesised by our own code (`tools/make_music.py`), no services.
-- **Tunes** in `riverwalk/music/` (OGG Vorbis, 22050 Hz mono, like the sound effects): the title theme (D major,
-  132 bpm, 20 bars, 36.4 s loop), City Park (G major with an E minor sneaking section, 126 bpm with a light
-  shuffle, 42 bars, 80 s loop), and three jingles: level clear (3.6 s), game over (2.9 s) and the GOOD GIRL! sting
-  when Pepper gives Mia the ball (1.6 s). The sound is a 90s sound chip: two pulse channels (duty 12.5, 25 and
-  50 %), a 16-step triangle bass and LFSR noise drums, with vibrato, chord arpeggios and an echo on pulse 2.
-- **The composer** (`tools/make_music.py`): the songs are data (a note string per channel, bar by bar; chords per
-  bar drive the generated bass and arpeggio parts), rendered at 44100 Hz and filtered down. A loop is rendered
-  twice over and its tail folded onto the start, so it loops without a click. Every tune is set to the same
-  loudness, -20.5 dB A-weighted RMS (about -17 dB plain), with its peak under -1 dBFS. It also writes `title.mod`, the title theme as a 4-channel ProTracker module
-  (29 KB) that LOVE plays through libmodplug and that loops by itself; the game plays the OGG.
-- **The game** (`sfx.lua`): `S.music(on, name)` plays the track `music/<name>.ogg` (or .xm / .mod): `title` for
-  the title and the menus, each level by its name. Levels without a tune yet get the old synthesised loop, now
-  built the first time it is needed instead of at start-up. Music off pauses (the pause goes on where it
-  stopped); a new track starts from the top; one streamed track at a time. `S.play("clear" / "over" / "fetch")`
-  plays the jingle when the music is on, else the short sound effect as before. Music plays at 0.67: 6 dB
-  under the sound effects (about -18 dB A-weighted); the synthesised loop plays at 0.62 (was 0.55), as loud as
-  the tunes; the player's volume scales everything.
-- **Hooks in `main.lua`** (one line each): `startLevel` passes the level's name to `S.music`, `toTitle` and
-  `toMenu` pass `"title"`, the ending plays the title theme again (`nextLevel`), and the line that notes the
-  clear time (the ball given) plays `S.play("fetch")`.
-- The harmony was checked by a script (non-chord tones held on strong beats, minor seconds and tritones between
-  the channels) and three spots fixed. The OGG files are made bit-exact (a fixed stream serial), so building
-  again changes nothing unless a tune changed.
-- **Checks:** `tools/check_music.sh` (every file decodes in LOVE with its expected length, peak under -1 dBFS,
-  loops join without a jump, jingles end in silence, the module loops by itself, `sfx.lua` picks the right
-  track). `check_pepper` UNCHANGED, `check_flow` 94/94, City Park autopilot clears.
 
 ## Branch `title/redraw`: the title screen, pixeled by hand (22 Oct)
 Built on `main` (v0.5). No SpriteCook, no image generation.
