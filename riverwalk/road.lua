@@ -102,7 +102,10 @@ end
 
 function Rd:update(dt, cam)
   local c = self.lastCam and (cam - self.lastCam) / math.max(dt, 1e-3) or 0  -- the camera's speed
-  if math.abs(c) * dt > 40 then self.list = {}; c = 0 end                    -- a cut (a respawn): a new view
+  if math.abs(c) * dt > 40 then                                              -- a cut (a respawn): a new view
+    for i = #self.list, 1, -1 do if not self.list[i].still then table.remove(self.list, i) end end
+    c = 0
+  end
   self.lastCam = cam
   for i = #self.list, 1, -1 do
     local v = self.list[i]
@@ -110,7 +113,7 @@ function Rd:update(dt, cam)
     local x = screenX(v, cam)
     if x > 330 or x + v.w < -10 then table.remove(self.list, i)                -- wholly off screen
     else
-      keepWhole(v, x, cam, c)
+      if not v.still then keepWhole(v, x, cam, c) end                          -- (still: put there by a test shot)
       if Look.CHECK and x < 320 and x + v.w > 0 then                           -- LOOK_CHECK=1: it never meets a road end
         local a, b = v.sp[1] - cam, v.sp[2] - cam
         if (a > 0 and x < a) or (b < 320 and x + v.w > b) then print(("ROAD CUT vehicle at screen x %.0f, road %d-%d"):format(x, v.sp[1], v.sp[2])); io.stdout:flush() end
