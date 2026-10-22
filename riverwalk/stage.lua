@@ -21,6 +21,9 @@ local function img(p) local i = lg.newImage(p); i:setFilter("nearest", "nearest"
 local girlImg, ballImg, girlQ
 local GF = require("girl_frames")             -- the girl's SpriteCook animations: idle, wave, cheer, call
 local GIRL_ROW, GIRL_FPS = {}, { idle = 6, wave = 9, cheer = 9, call = 8, pet = 7 }
+local POP_T = 1.2                                                -- a lamp's heart rises and fades this long
+local HEART = { ".kk.kk.", "krrkrrk", "krwrrrk", "krrrrrk", ".krrrk.", "..krk..", "...k..." }   -- 7 x 7, drawn 2x
+local HCOL = { k = { 0.13, 0.08, 0.10 }, r = { 0.90, 0.20, 0.25 }, w = { 1, 0.85, 0.85 } }
 for i, r in ipairs(GF.rows) do GIRL_ROW[r.name] = i end
 
 -- def: the level (level/*.lua). carry (optional): { score, lives } carried over from the level before.
@@ -61,6 +64,7 @@ function St.new(def, carry)
   -- the cat (Downtown): it sits on the ball until a bark scares it off; then the ball drops
   if def.cat then s.cat = { x = def.cat.x, y = def.cat.y, state = "sit", t = 0, vx = 0, vy = 0, dir = 1 }; s.ball.state = "cat" end
   s.kicked = {}                                                   -- leaf piles Pepper has run through
+  s.pops = {}                                                     -- hearts popping out of a lamp (St:update, the lamps)
   s.cam = 0
   Vc.init(s)                                                      -- s.camY, the vertical camera (vcam.lua)
   s.fx = Ex.new()
@@ -367,7 +371,12 @@ function St:update(dt, presses)
   -- lamp posts: passing a checkpoint lamp saves Pepper's place
   for _, l in ipairs(self.lamps) do
     if l.checkpoint and not l.lit and p.x >= l.x - 6 and p.x <= l.x + 40 and p.y <= l.y + 2 and p.y >= l.y - 90 and p.mode == "normal" then
-      l.lit = true; l.litAt = self.t; self.check = { x = l.x, y = l.y }; S.play("checkpoint")
+      l.lit = true; l.litAt = self.t; self.check = { x = l.x, y = l.y }
+      -- a lamp is a gift (benchmark principle 5): it gives back one heart, up to the most she can have, and a heart
+      -- pops out of it (not in hard mode). The heart's chime instead of the lamp's, so the gift is heard.
+      if not self.hard and self.hearts < self.maxHearts then
+        self.hearts = self.hearts + 1; self.pops[#self.pops + 1] = { x = l.x, y = l.y, t = 0 }; S.play("heart")
+      else S.play("checkpoint") end
       if p.carrying and self.def.ballHomeAtLamps then                -- L.ballHomeAtLamps: a lost ball comes back here
         self.ball.home = self:homeNear(l.x, l.y); self.ball.homeSay = "THE BALL IS BACK BY THE LAMP"
       end
@@ -426,6 +435,7 @@ function St:update(dt, presses)
     if pr.leaves and not self.kicked[pr] and x1 > pr.x0 and x0 < pr.x1 and y1 > pr.y0 then self.kicked[pr] = true end
   end
   for i = #self.rings, 1, -1 do local r = self.rings[i]; r.t = r.t + dt; if r.t > 0.4 then table.remove(self.rings, i) end end
+  for i = #self.pops, 1, -1 do local h = self.pops[i]; h.t = h.t + dt; if h.t > POP_T then table.remove(self.pops, i) end end
 
   -- the girl
   local g = self.girl
@@ -715,6 +725,21 @@ function St:draw(debug)
     lg.setColor(1, 1, 1, 1 - r.t / 0.4); lg.setLineWidth(1)
     lg.circle("line", math.floor(r.x - cam), math.floor(r.y), 6 + r.t * 70)
   end
+  for _, h in ipairs(self.pops) do                                 -- a heart pops out of a lamp: up 26 px, fading
+    local k = h.t / POP_T
+    local x = math.floor(h.x - cam + 0.5) - 7
+    local y = math.floor(h.y - (grey and 76 or 94) - 26 * (1 - (1 - k) ^ 2) + 0.5) - 7
+    local a = k < 0.7 and 1 or (1 - k) / 0.3
+    if k < 0.12 then x, y = x + 3, y + 3 end                       -- (a small pop first, then full size)
+    local sc = k < 0.12 and 1 or 2
+    for r, line in ipairs(HEART) do
+      for c = 1, #line do
+        local col = HCOL[line:sub(c, c)]
+        if col then lg.setColor(col[1], col[2], col[3], a); lg.rectangle("fill", x + (c - 1) * sc, y + (r - 1) * sc, sc, sc) end
+      end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
   use("play")
   if self.road then self.road:draw(cam, self.t, lk and Look.rowFactor) end            -- traffic in the near lane, in front of the promenade
   use("front")

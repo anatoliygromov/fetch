@@ -22,6 +22,10 @@ keeps the old rules everywhere. Pepper's files are untouched; music is untouched
   main.lua (one line): a knocked-out ball also loses the NO HIT medal (a hit is a hit).
   qa.lua: a 4th sweep, the ball sweep: at every 24 px on every surface, hit from either side while carrying, the
   ball must come to rest where she can pick it up (or ride a boat, or reach Mia) within 3.3 s.
+- **Lamps heal** (stage.lua): lighting a checkpoint lamp gives back one heart, up to the most she can have, and a
+  red heart pops out of the lamp's light and floats up 26 px, fading, over 1.2 s; it rings the existing "heart"
+  chime instead of the lamp's "checkpoint" chime so the gift is heard (at full hearts the lamp chimes as before).
+  Not in hard mode (1 heart).
 
 ## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
 Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of
