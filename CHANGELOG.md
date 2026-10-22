@@ -28,6 +28,11 @@ untouched (`check_pepper` UNCHANGED).
   tiles and all six bridges; every jump on both roads with Pepper's controller; the walls too tall to jump without a
   puff; 27 falls off the high road all land safely below; no bone in a solid; the nest; the fetch). `--auto`: the
   low road GOOD GIRL! in 54.1 s, no heart lost; `AUTO_ROUTE=high`: the high road in 51.8 s, both secrets.
+  `--qa`: 12446 runs, 0 problems. The low road is about 6 s under the Morning chapter's 60 to 90 s; the beat sheet
+  says how to close it (one more screen on T2).
+- **Docs and tools:** `docs/rooftops_beatsheet.md` rewritten to match the build (tiers, beats, both roads, every
+  jump, every puff, lamps, timing, open questions). `tools/draw_routes.py` has a `rooftops` entry (the routes on the
+  new map). No engine file changed (stage, world, vcam, lift, critters, main untouched).
 
 ## Branch `engine/round2`: the review's engine fixes and the rooftops mechanics (22 Oct)
 Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untouched (`check_pepper` UNCHANGED).
