@@ -132,7 +132,7 @@ function Ch.update(s, dt)
   if c.pitT then
     c.pitT = c.pitT - dt
     if c.pitT <= 0 then c.pitT = nil; p.mode = "normal"; kill(s, "OOPS! AN OPEN HATCH") end
-  elseif p.mode ~= "gone" and p.mode ~= "drown" and p.y > 236 and not s.deadT then
+  elseif p.mode ~= "gone" and p.mode ~= "drown" and p.y > w.height - 4 and not s.deadT then
     p.mode, p.vy, p.vx = "gone", 0, 0; c.pitT = 0.6; S.play("splash")
   end
 

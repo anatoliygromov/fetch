@@ -121,7 +121,8 @@ end
 function T.pepperRect(stage)
   local p = stage.pepper
   local x = math.floor(p.x + 0.5) - math.floor(stage.cam + 0.5)
-  return x - 33, p.y - 46, x + 33, p.y + 4
+  local y = p.y - math.floor((stage.camY or 0) + 0.5)               -- (a tall level: her feet on screen)
+  return x - 33, y - 46, x + 33, y + 4
 end
 local function overlaps(a, x0, y0, x1, y1) return a.x0 < x1 and a.x1 > x0 and a.y0 < y1 and a.y1 > y0 end
 

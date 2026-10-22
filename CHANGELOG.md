@@ -2,6 +2,30 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `engine/height`: levels that climb and drop (22 Oct)
+Built on `main` (v0.5). The engine for the tall levels (rooftops, the building site, the metro); the five levels
+play and draw exactly as before. Greybox, no SpriteCook credits.
+- **Tall worlds.** A level map may have more than 30 rows: the world is rows x 8 px high (`world.height`). The
+  ground canvases are as tall as the world. Everything that assumed 240 (a lost ball, the shadows' floor search,
+  Soder Hill's hatch rule) uses the world's height, which is 240 in the five levels.
+- **The vertical camera** (`riverwalk/vcam.lua`). `s.cam` is still the camera's x; `s.camY` is new (the world y at
+  the top of the screen; always 0 in a world 240 px high). Standing, the camera settles so the floor she stands on
+  is at screen y 168 (a "platform snap": eased, at most 300 px/s). In the air there is a dead zone (her feet between
+  screen y 64 and 204): hops and jumps do not bob the screen. Falling more than 24 px below the floor she left, it
+  leads down (her feet go to screen y 120). Up held while she stands still looks up 64 px, Down held while she is
+  crouched and still looks down 64 px, after 0.5 s. What Up and Down do to Pepper is unchanged. `Vc.snap(s)` puts
+  the camera on her at once (the start, a respawn; tests use it after moving her).
+- **Drawing.** `St:draw` draws the world translated by `-camY` (the HUD, the talk panels, the foreground band and
+  the night's darkness stay screen space). The far layers move down slower than the world as the camera rises
+  (sky 0.1, far city 0.3, mid trees / houses 0.6, from the bottom of the world), so climbing rises over the city;
+  the sky's top colour fills in above. `Talk.pepperRect` and the cards' Pepper (main.lua) use her screen y.
+- **Movers on both axes** (`riverwalk/lift.lua`): an `L.movers` entry with `fromY` (and `toY`) goes to and fro along
+  the line from (`from`, `fromY`) to (`to`, `toY`) at `speed` px/s, resting `pause` s at each end. It is one-way (jump
+  up through it, Down + A drops off), carries Pepper and a resting ball both ways, and never crushes her: if carrying
+  her would push her into a solid, or the platform would come down (or slide) into her, it waits. `winch = { x, y }`
+  draws its motor house with the operator who runs it. Movers without `fromY` are moved exactly as before.
+- **Falls.** Falling out of the bottom of the world costs a heart and goes back to the last lamp, as the water does
+  (`fallT`; not on Soder Hill, whose hatches have their own rule). Landing on a lower floor costs nothing.
 ## Branch `assets/v2`: the tram fix and art for the new pieces (19 Oct)
 Built on `levels/v2`.
 - **The trams end in tram sheds** (Downtown). Before, the first tram vanished in plain view before the fountain,
