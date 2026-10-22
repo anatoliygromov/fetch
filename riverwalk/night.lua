@@ -365,6 +365,7 @@ end
 -- the darkness and everything drawn over it (the stage's draw, at the very end)
 function Nt.draw(s, cam)
   local n = s.night
+  local cy = math.floor((s.camY or 0) + 0.5)                            -- (a tall level: the camera's y; 0 here)
   if n.dark then
     if not darkCv then darkCv = lg.newCanvas(320, 240); darkCv:setFilter("nearest", "nearest") end
     lg.push("all")
@@ -378,16 +379,16 @@ function Nt.draw(s, cam)
     local function stamp(x, y, r) local im = lightSprite(r); lg.draw(im, math.floor(x - r), math.floor(y - r)) end
     for _, l in ipairs(n.lights) do
       local x = l.x - cam
-      if x > -l.r and x < 320 + l.r then stamp(x, l.y, l.r) end
+      if x > -l.r and x < 320 + l.r then stamp(x, l.y - cy, l.r) end
     end
-    stamp(p.x - cam, p.y - 20, 60)                                       -- her own glow: she is never in the dark
+    stamp(p.x - cam, p.y - 20 - cy, 60)                                       -- her own glow: she is never in the dark
     lg.pop()
     lg.push("all")
     lg.setBlendMode("alpha", "premultiplied"); lg.setColor(1, 1, 1, 1); lg.draw(darkCv, 0, 0)
     lg.setBlendMode("add")                                               -- a warm glow round each light
     for _, l in ipairs(n.lights) do
       local x = l.x - cam
-      if x > -l.r and x < 320 + l.r then local g = glowSprite(math.floor(l.r * 0.6)); lg.draw(g, math.floor(x - l.r * 0.6), math.floor(l.y - l.r * 0.6)) end
+      if x > -l.r and x < 320 + l.r then local g = glowSprite(math.floor(l.r * 0.6)); lg.draw(g, math.floor(x - l.r * 0.6), math.floor(l.y - cy - l.r * 0.6)) end
     end
     lg.pop()
     -- the sky: stars and the moon
@@ -398,6 +399,7 @@ function Nt.draw(s, cam)
     end
     lg.setColor(0.93, 0.93, 0.82); lg.circle("fill", 262, 30, 9); lg.setColor(0.03, 0.04, 0.12); lg.circle("fill", 266, 27, 8)
     -- the moonlit edges of every floor Pepper may need (terrain, props she can stand on, the boats, the water)
+    lg.push(); lg.translate(0, -cy)                                      -- (in the world)
     lg.setColor(0.55, 0.64, 0.82, 0.55)
     for _, r in ipairs(n.tops) do
       local x0, x1 = r.x0 - cam, r.x1 - cam
@@ -419,8 +421,10 @@ function Nt.draw(s, cam)
         if math.sin(x * 0.3 + s.t * 3) > -0.2 then lg.rectangle("fill", math.floor(x - cam), r.y + (x % 12 == 0 and 1 or 0), 4, 1) end
       end
     end
+    lg.pop()
     lg.setColor(1, 1, 1, 1)
   end
+  lg.push(); lg.translate(0, -cy)                                        -- (the rest is in the world)
   drawPlanks(s, cam)
   if n.dark then foxAndBall(s, cam, 0.8) end
   local f = n.fox
@@ -470,6 +474,7 @@ function Nt.draw(s, cam)
       end
     end
   end
+  lg.pop()
   lg.setColor(1, 1, 1, 1)
 end
 

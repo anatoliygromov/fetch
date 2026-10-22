@@ -11,6 +11,8 @@ local Sp = require("setpieces")               -- hard mode, rope ferries, traffi
 local Cr = require("critters")                -- geese, gulls (L.critters) and springy tops (bounce = h on a prop)
 local Ch = require("chase")                   -- Level 4: the scroll, the rolling ball, barrels, hatches (L.scroll)
 local Nt = require("night")                   -- Level 5's night rules: darkness, sniffing, the fox, crumbling planks
+local Vc = require("vcam")                    -- the vertical camera (tall levels; s.camY is 0 in a 240 px world)
+local Lf = require("lift")                    -- movers on both axes (a goods lift): L.movers entries with fromY
 local St = {}
 St.__index = St
 local lg = love.graphics
@@ -36,7 +38,7 @@ function St.new(def, carry)
   if def.scenery ~= "greybox" then s.road = Rd.new(s.world) end    -- the greybox park has no road and no traffic
   s.movers = {}
   for _, m in ipairs(def.movers) do
-    local mv = { name = m.name, x0 = m.from, x1 = m.from + (m.x1 - m.x0), y0 = m.y0, y1 = m.y1, from = m.from, to = m.to, speed = m.speed, dir = 1, dx = 0, kind = "oneway", pause = m.pause }
+    local mv = m.fromY and Lf.new(m) or { name = m.name, x0 = m.from, x1 = m.from + (m.x1 - m.x0), y0 = m.y0, y1 = m.y1, from = m.from, to = m.to, speed = m.speed, dir = 1, dx = 0, kind = "oneway", pause = m.pause }
     s.world:addMover(mv); s.movers[#s.movers + 1] = mv
   end
   s.layers = def.scenery == "greybox" and Sc.buildGrey(s.world.width, def.greyStyle) or Sc.build(s.world.width)
@@ -59,6 +61,7 @@ function St.new(def, carry)
   if def.cat then s.cat = { x = def.cat.x, y = def.cat.y, state = "sit", t = 0, vx = 0, vy = 0, dir = 1 }; s.ball.state = "cat" end
   s.kicked = {}                                                   -- leaf piles Pepper has run through
   s.cam = 0
+  Vc.init(s)                                                      -- s.camY, the vertical camera (vcam.lua)
   s.fx = Ex.new()
   Sp.init(s, def, carry)                                          -- hard mode (carry.hard), rope ferries, secrets
   Cr.init(s, def)                                                 -- geese and gulls
@@ -138,6 +141,7 @@ function St:respawn()
   p.x, p.y, p.vx, p.vy = self.check.x, self.check.y, 0, 0
   p.mode, p.onGround, p.ground, p.crouch, p.invuln = "normal", true, nil, false, 1.0
   self.cam = math.max(0, math.min(self.world.width - 320, p.x - 140))
+  Vc.snap(self)
 end
 
 function St:loseHeart()
@@ -178,7 +182,7 @@ end
 -- level) goes back to its home spot (the level's ball home, or where the magpie / cat let it go), with a line
 function St:ballLost()
   local b = self.ball
-  return b.y > 236 or b.x < 4 or b.x > self.world.width - 4 or (b.state == "air" and (b.airT or 0) > 2.5)
+  return b.y > self.world.height - 4 or b.x < 4 or b.x > self.world.width - 4 or (b.state == "air" and (b.airT or 0) > 2.5)
     or (not self.world:slopeAt(b.x) and self.world:solidIn(b.x - 2, b.x + 2, b.y - 5, b.y - 1) ~= nil)
 end
 
@@ -204,7 +208,8 @@ function St:update(dt, presses)
 
   -- moving platforms
   for _, m in ipairs(self.movers) do
-    if m.call then Sp.updateFerry(self, m, dt) else                -- a rope ferry: it comes when Pepper is near
+    if m.call then Sp.updateFerry(self, m, dt)                     -- a rope ferry: it comes when Pepper is near
+    elseif m.lift then Lf.update(self, m, dt) else                 -- a lift (both axes; lift.lua)
     local nx = m.x0 + m.dir * m.speed * dt
     if (m.waitT or 0) > 0 then m.waitT = m.waitT - dt; nx = m.x0                -- pause = s: it rests at each end
     elseif nx > m.to then nx = m.to; m.dir = -1; m.waitT = m.pause
@@ -224,6 +229,20 @@ function St:update(dt, presses)
     if p.mode == "drown" and not self.drownT then
       self.drownT = 1.0
       if p.carrying then p.carrying = nil; self.ball.state = "home"; self.ballBackT = 1.2 end
+    end
+  end
+  -- a fall out of the bottom of the world (a pit in a tall level): as in the water, a heart and back to the lamp.
+  -- (Soder Hill's hatches have their own rule in chase.lua.) Landing on a lower floor costs nothing.
+  if not self.chase and not self.fallT and not self.deadT and not self.drownT and p.mode ~= "gone" and p.mode ~= "drown"
+    and p.y > w.height + 24 then
+    self.fallT = 0.5; p.mode, p.vx, p.vy = "gone", 0, 0; S.play("hurt")
+    if p.carrying then p.carrying = nil; self.ball.state = "home"; self.ballBackT = 1.2 end
+  end
+  if self.fallT then
+    self.fallT = self.fallT - dt
+    if self.fallT <= 0 then
+      self.fallT = nil; self:loseHeart()
+      if not self.events.over then self:respawn(); if not self.deadT then self:say("OOPS! LOST A HEART", 1.6) end end
     end
   end
   if self.drownT then
@@ -355,6 +374,7 @@ function St:update(dt, presses)
   local centre = self.cam + 160
   if focus > centre + 48 then self.cam = focus - 160 - 48 elseif focus < centre - 48 then self.cam = focus - 160 + 48 end
   self.cam = math.max(0, math.min(w.width - 320, self.cam))
+  Vc.update(self, dt)                                             -- and up and down in a tall level (vcam.lua)
   if self.chase then Ch.update(self, dt) end                      -- the chase: the scroll pushes the camera and Pepper
 end
 
@@ -396,7 +416,7 @@ function St:updateCat(dt)
 end
 
 -- what is being said now (talk.lua draws it): nil or a line { who = "pepper" | "girl", btn, text, teach, msg }.
--- The level's L.hints, first match wins: { x0, x1, text, btn, need, maxY, bike }. A hint with a button (btn: "a",
+-- The level's L.hints, first match wins: { x0, x1, text, btn, need, maxY, minY, bike }. A hint with a button (btn: "a",
 -- "b", "x", "y", "down") is Pepper's: it teaches a control, in 1 to 3 words. One without is the girl's (a goal or
 -- a story line). need: "ball" (Pepper carries it), "noball", "nearball" (she can pick it up), "cat" (it sits on
 -- the ball), "catnear" (a bark would scare it), "magpie" (it has the ball), "magpienear" (a bark would make it
@@ -420,7 +440,7 @@ end
 function St:zoneHint()
   local p = self.pepper
   for _, h in ipairs(self.def.hints) do
-    if p.x >= h.x0 and p.x < h.x1 and (not h.maxY or p.y <= h.maxY) then
+    if p.x >= h.x0 and p.x < h.x1 and (not h.maxY or p.y <= h.maxY) and (not h.minY or p.y >= h.minY) then   -- (minY: tall levels)
       local ok = true
       if h.need == "ball" then ok = p.carrying ~= nil
       elseif h.need == "goose" then ok = Cr.near(self)
@@ -450,6 +470,7 @@ end
 
 function St:draw(debug)
   local cam = math.floor(self.cam + 0.5)
+  local camY = math.floor((self.camY or 0) + 0.5)                -- the vertical camera (vcam.lua): 0 in a flat level
   local C = Sc.C
   local style = self.def.art                                      -- "park" / "town": a greybox level with its art
   local grey = self.def.scenery == "greybox" and not style
@@ -463,8 +484,11 @@ function St:draw(debug)
   local function prop(pr, c, colour, kicked)
     if style then Sc.drawPropArt(pr, c, self.def, kicked) else Sc.drawProp(pr, c, colour) end
   end
+  Sc.vshift = Vc.parallax(self, camY)                              -- (tall levels: the layers rise slower than the world)
   if style then Sc.drawFarArt(self.layers, cam, self.t, self.world)
   elseif grey then Sc.drawFarGrey(self.layers, cam, self.t) else Sc.drawFar(self.layers, cam, self.t) end
+  Sc.vshift = nil
+  lg.push(); lg.translate(0, -camY)                                -- the world, up to the foreground band
   -- 6 quay back: railing and things behind Pepper
   use("back")
   for _, pr in ipairs(self.def.props) do if pr.layer == "back" then prop(pr, cam, C.back) end end
@@ -515,6 +539,7 @@ function St:draw(debug)
   Sp.drawRopes(self, cam)                                          -- the ropes the ferries run on
   for _, m in ipairs(self.movers) do
     if style then Sc.drawMoverArt(m, cam, style)                       -- the duck boat
+    elseif m.lift then Lf.draw(m, cam, Sc, self.t)                     -- a lift (lift.lua)
     elseif grey then                                                   -- greybox level: labelled boxes (the duck boat)
       Sc.outlined(C.prop, C.propEdge, m.x0 - cam, m.y0, m.x1 - m.x0, m.y1 - m.y0); Sc.label(m.name or "PONTOON", (m.x0 + m.x1) / 2 - cam, m.y0 + 8)
     else                                                           -- the pontoon (art 54 x 12; its deck row 2 is the top)
@@ -546,12 +571,12 @@ function St:draw(debug)
   if not g.hidden then Sc.shadow(g.x - cam, g.y, 22) end
   local b = self.ball
   if b.state == "rest" or b.state == "air" then
-    local fy = w:floor(b.x - 2, b.x + 2, b.x, b.y - 0.5, 240, b.y - 0.5, b.drop)
+    local fy = w:floor(b.x - 2, b.x + 2, b.x, b.y - 0.5, w.height, b.y - 0.5, b.drop)
     if fy then Sc.shadow(b.x - cam, fy, 8 - math.min(4, (fy - b.y) / 8)) end
   end
   local p = self.pepper
   if p.mode ~= "gone" and p.mode ~= "drown" then
-    local fy = w:floor(p.x - 4, p.x + 4, p.x, p.y - 0.5, 240, p.y - 0.5)
+    local fy = w:floor(p.x - 4, p.x + 4, p.x, p.y - 0.5, w.height, p.y - 0.5)
     if fy then Sc.shadow(p.x - cam, fy, 32 * (1 - math.min(48, fy - p.y) / 96)) end
   end
   if lk then Look.off() end
@@ -583,7 +608,7 @@ function St:draw(debug)
   for _, c in ipairs(self.bikes) do
     local x = c.x - cam
     local depot = c.zone and c.zone.depot                                -- a tram entering its shed: drawn right of the door
-    if depot then lg.setScissor(math.max(0, math.floor(depot - cam)), 0, 400, 240) end
+    if depot then lg.setScissor(math.max(0, math.floor(depot - cam)), 0, 400, 240) end   -- (screen space: the whole height)
     if style then Sc.drawHazardArt(c, cam, style)                        -- the leaf cart, the tram
     elseif grey then
       local z = c.zone or {}
@@ -612,10 +637,11 @@ function St:draw(debug)
   for _, pr in ipairs(self.def.props) do
     if pr.layer == "front" then prop(pr, math.floor(cam + (cam + 160 - (pr.x0 + pr.x1) / 2) * 0.3), C.front) end
   end
+  lg.pop()                                                         -- (screen space again)
   if lk then Look.off(); Look.front(self, cam) end                 -- the dark foreground band (1.4x), under Pepper's lines
   if self.night then Nt.draw(self, cam) end                        -- [night hook] the darkness, the trail, the planks
   lg.setColor(1, 1, 1, 1)
-  if debug then self:drawDebug(cam) end
+  if debug then lg.push(); lg.translate(0, -camY); self:drawDebug(cam); lg.pop() end
 end
 
 function St:drawDebug(cam)
@@ -635,7 +661,8 @@ function St:drawDebug(cam)
   for _, m in ipairs(self.movers) do lg.rectangle("line", m.x0 - cam + 0.5, m.y0 + 0.5, m.x1 - m.x0 - 1, m.y1 - m.y0 - 1) end
   local x0, y0, x1, y1 = self.pepper:box()
   lg.setColor(0.3, 1, 0.3, 1); lg.rectangle("line", x0 - cam + 0.5, y0 + 0.5, x1 - x0 - 1, y1 - y0 - 1)
-  lg.setColor(1, 1, 1, 0.5); lg.line(112, 20, 112, 240); lg.line(208, 20, 208, 240)
+  local cy = math.floor((self.camY or 0) + 0.5)                     -- (the camera's dead zone, on screen)
+  lg.setColor(1, 1, 1, 0.5); lg.line(112, 20 + cy, 112, 240 + cy); lg.line(208, 20 + cy, 208, 240 + cy)
   lg.setColor(1, 1, 1, 1)
 end
 

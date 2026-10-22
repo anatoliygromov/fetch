@@ -195,6 +195,20 @@ local function outlined(c, e, x, y, w, h)
 end
 Sc.box, Sc.outlined = box, outlined
 
+-- tall levels (vcam.lua): while stage.lua draws the far layers, Sc.vshift = { sky, far, mid, world } holds how far
+-- down each layer is moved on screen (the sky, far city, mid trees / houses scroll up and down slower than the
+-- world; world = -camY for world things drawn here, the art levels' ponds). nil in a flat level: nothing moves.
+local function vpush(k)
+  local v = Sc.vshift
+  if not v or v[k] == 0 then return false end
+  lg.push(); lg.translate(0, v[k]); return true
+end
+local function vpop(on) if on then lg.pop() end end
+local function skyGap()                                            -- the sky moved down: its top colour above it
+  local v = Sc.vshift
+  if v and v.sky > 0 then box(C.sky1, 0, 0, 320, v.sky) end
+end
+
 -- greybox park: the same sky and clouds, then plain boxes per layer, lighter the further back:
 --   3 far city   (0.08) low blocks beyond the park
 --   4 far trees  (0.25) round-ish crowns on trunks
@@ -266,6 +280,9 @@ local function drawTown(L, camx, base)
     end
   end
   box(C.trees, 0, base - 6, 320, 240 - base + 6)
+  local v = Sc.vshift                                              -- (tall levels: the houses are the mid layer)
+  local on = v and v.mid ~= v.far
+  if on then lg.push(); lg.translate(0, v.mid - v.far) end
   ox = math.floor(camx * 0.5)                                      -- 5 near houses
   for _, h in ipairs(L.houses) do
     local x = h.x - ox
@@ -282,9 +299,11 @@ local function drawTown(L, camx, base)
     end
   end
   box(C.bushes, 0, base + 2, 320, 240 - base - 2)                  -- the pavement's back edge, up to the street
+  if on then lg.pop() end
 end
 
 function Sc.drawFarGrey(L, camx, t)
+  skyGap(); local on = vpush("sky")
   for y = 0, 239 do                                                -- 1 sky
     local k = math.min(1, y / 170)
     lg.setColor(C.sky1[1] + (C.sky2[1] - C.sky1[1]) * k, C.sky1[2] + (C.sky2[2] - C.sky1[2]) * k, C.sky1[3] + (C.sky2[3] - C.sky1[3]) * k)
@@ -296,13 +315,14 @@ function Sc.drawFarGrey(L, camx, t)
     local x = math.floor((c.x - o) % L.cloudSpan - 120)
     if x < 330 and x + c.w > -10 then lg.draw(c.img, x, c.y) end
   end
+  vpop(on); on = vpush("far")
   local base = 172                                                 -- the far edge of the park lawn
   local ox = math.floor(camx * 0.08)                               -- 3 far city
   for _, b in ipairs(L.city) do
     local x = b.x - ox
     if x < 330 and x + b.w > -10 then box(C.city, x, base - 20 - b.h, b.w, b.h + 20) end
   end
-  if L.town then return drawTown(L, camx, base) end
+  if L.town then drawTown(L, camx, base); vpop(on); return end
   ox = math.floor(camx * 0.25)                                     -- 4 far trees
   for _, tr in ipairs(L.trees) do
     local x = tr.x - ox
@@ -313,6 +333,7 @@ function Sc.drawFarGrey(L, camx, t)
     end
   end
   box(C.trees, 0, base - 6, 320, 240 - base + 6)                   -- the far lawn
+  vpop(on); on = vpush("mid")
   ox = math.floor(camx * 0.5)                                      -- 5 near trees and bushes
   for _, tr in ipairs(L.bushes) do
     local x = tr.x - ox
@@ -323,12 +344,13 @@ function Sc.drawFarGrey(L, camx, t)
     end
   end
   box(C.bushes, 0, base + 2, 320, 240 - base - 2)                  -- the near lawn, up to the path
+  vpop(on)
 end
 
 -- the greybox ground: every terrain column flat grey with a 1 px edge on top; the pond's water as a flat box
 -- with a light surface line. Painted once into a canvas as wide as the level.
 function Sc.paintGroundGrey(w)
-  local cv = lg.newCanvas(w.width, 240)
+  local cv = lg.newCanvas(w.width, w.height)                       -- (as tall as the world: 240 in a flat level)
   cv:setFilter("nearest", "nearest")
   lg.push("all"); lg.setCanvas(cv); lg.clear(0, 0, 0, 0); lg.origin()
   for _, r in ipairs(w.water) do
@@ -520,6 +542,7 @@ end
 
 -- layers 1 to 5 (everything behind the quay)
 function Sc.drawFar(L, camx, t)
+  skyGap(); local on = vpush("sky")
   if Look.on then Look.sky() else                                  -- 1 sky (look.lua: the banded, dithered sky)
   for y = 0, 239 do
     local k = math.min(1, y / 170)
@@ -534,6 +557,7 @@ function Sc.drawFar(L, camx, t)
     local x = math.floor((c.x - o) % L.cloudSpan - 120)
     if x < 330 and x + c.w > -10 then lg.draw(c.img, x, c.y) end
   end
+  vpop(on); on = vpush("far")
   -- 3 far city: the skyline, bottom at y 138 (its misty base is behind the far shore trees). Over the whole
   -- level (3200 px, the camera moves 2880 px) it moves at most 128 px (factor 128 / 2880): the strip is followed
   -- by its own first 128 columns, which never bring a second City Hall tower on screen.
@@ -545,9 +569,11 @@ function Sc.drawFar(L, camx, t)
   lg.setColor(1, 1, 1, 1)
   Look.use("shore")
   lg.draw(A.shore, -math.floor(camx * 0.3), 113)                   -- 4 far shore and bridge: bottom row = waterline
+  vpop(on); on = vpush("mid")
   Look.use("water")
   Sc.drawWater(camx, t)                                            -- 5 river
   Look.off()
+  vpop(on)
 end
 
 -- a prop of the level; usable ones (solid / one-way) are outlined, decorations are flat
@@ -598,7 +624,7 @@ function Sc.paintGround(w, props)
   local rw, rh = road:getDimensions()
   local rq = {}
   for i = 0, rw - 1 do rq[i] = lg.newQuad(i, 0, 1, rh, rw, rh) end
-  local cv = lg.newCanvas(w.width, 240)
+  local cv = lg.newCanvas(w.width, w.height)                       -- (as tall as the world: 240 in a flat level)
   cv:setFilter("nearest", "nearest")
   lg.push("all"); lg.setCanvas(cv); lg.clear(0, 0, 0, 0); lg.origin()
   local high, flat = {}, {}
@@ -809,6 +835,7 @@ end
 
 -- the sky and the drifting clouds (as River Walk and the greybox)
 local function skyAndClouds(L, camx, t)
+  skyGap(); local on = vpush("sky")
   if Look.on then Look.sky() else                                  -- (look.lua: the level's banded, dithered sky)
   for y = 0, 239 do
     local k = math.min(1, y / 170)
@@ -823,6 +850,7 @@ local function skyAndClouds(L, camx, t)
     local x = math.floor((c.x - o) % L.cloudSpan - 120)
     if x < 330 and x + c.w > -10 then lg.draw(c.img, x, c.y) end
   end
+  vpop(on)
 end
 
 -- a strip that repeats sideways, scrolled at factor f, bottom at y
@@ -868,6 +896,7 @@ end
 function Sc.drawFarArt(L, camx, t, w)
   local T, A = Sc.townArt(L.style), Sc.art()
   skyAndClouds(L, camx, t)
+  local on = vpush("far")
   Look.use("city")
   lg.setColor(1, 1, 1, 1)                                         -- 3 far city: River Walk's skyline, moved at
   local sx = -math.floor(math.min(128, camx * 128 / math.max(1, w.width - 320)))   -- most 128 px (one City Hall)
@@ -875,6 +904,7 @@ function Sc.drawFarArt(L, camx, t, w)
   if L.style == "park" then
     Look.use("shore")
     strip(T.treeline, camx, 0.25, 177)                            -- 4 the far tree line
+    vpop(on); on = vpush("mid")
     Look.use("mid")
     local ox = math.floor(camx * 0.5)                             -- 5 near trees (faded)
     for _, tr in ipairs(L.trees) do
@@ -885,9 +915,11 @@ function Sc.drawFarArt(L, camx, t, w)
   else
     Look.use("shore")
     strip(T.roofs, camx, 0.25, 160)                               -- 4 far roofs and spires
+    vpop(on); on = vpush("mid")
     Look.use("mid")
     strip(T.facades, camx, 0.5, 178)                              -- 5 old town facades (faded)
   end
+  vpop(on); on = vpush("world")                                   -- (the ponds are in the world)
   -- the pond / basin: its far bank, then the water (rows of the river art, each moving on its own)
   Look.use("ground")
   local gw = T.ground:getWidth()
@@ -922,6 +954,7 @@ function Sc.drawFarArt(L, camx, t, w)
       Look.use("ground")
     end
   end
+  vpop(on)
   Look.off()
   lg.setColor(1, 1, 1, 1)
 end
@@ -931,7 +964,7 @@ end
 function Sc.paintGroundArt(w, style)
   local T = Sc.townArt(style)
   local gw, gh = T.ground:getDimensions()
-  local cv = lg.newCanvas(w.width, 240)
+  local cv = lg.newCanvas(w.width, w.height)                       -- (as tall as the world: 240 in a flat level)
   cv:setFilter("nearest", "nearest")
   lg.push("all"); lg.setCanvas(cv); lg.clear(0, 0, 0, 0); lg.origin()
   local cover = {}
@@ -955,7 +988,7 @@ function Sc.paintGroundArt(w, style)
       lg.setColor(1, 1, 1, 1)
       lg.setScissor(x, 0, 1, m[2])
       lg.draw(T.ground, T.groundQ[x % gw], x, top - 12)
-      if top - 12 + gh < 240 then lg.draw(T.ground, T.groundQ[x % gw], x, top - 12 + gh) end
+      if top - 12 + gh < w.height then lg.draw(T.ground, T.groundQ[x % gw], x, top - 12 + gh) end
       lg.setScissor()
       if stair then                                               -- each step: a light granite nosing
         lg.setColor(0.78, 0.75, 0.70); lg.rectangle("fill", x, top, 1, 1)

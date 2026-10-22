@@ -344,7 +344,7 @@ function love.draw()
   stage:draw(debugView)
   local st = stage:stats()
   local pp = stage.pepper                                         -- the status signs step aside while Pepper is up under them
-  if pp.y - 44 > 18 or state ~= "play" then U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard }) end
+  if pp.y - math.floor((stage.camY or 0) + 0.5) - 44 > 18 or state ~= "play" then U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard }) end
   if state == "intro" then
     U.dim()
     love.graphics.push(); love.graphics.translate(0, Flow.placeY(60, 200, 70, 76, { Talk.pepperRect(stage) }) - 70)
@@ -366,7 +366,9 @@ function love.draw()
     Flow.drawStory(story, t, { Talk.pepperRect(stage) })
   end
   if state ~= "play" then                                         -- the cards dim the level, never Pepper
+    love.graphics.push(); love.graphics.translate(0, -math.floor((stage.camY or 0) + 0.5))   -- (tall levels: camera y)
     love.graphics.setColor(1, 1, 1, 1); stage.pepper:draw(math.floor(stage.cam + 0.5))
+    love.graphics.pop()
   end
   if Se.showing() then U.volumeToast(Se.volume, Se.MAX, state == "play" and 20 or 218) end
   if debugView then
