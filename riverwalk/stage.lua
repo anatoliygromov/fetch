@@ -311,11 +311,15 @@ function St:update(dt, presses)
   end
 
   -- bikes: one rides through every few seconds while Pepper is in a bike zone of the promenade.
-  -- def.bikes is one zone or a list of zones; each bike remembers its zone (speed, endX)
+  -- def.bikes is one zone or a list of zones; each bike remembers its zone (speed, endX).
+  -- roadY (tall levels): the feet line the zone's road is at (default 184, the flat levels' line). A zone with
+  -- roadY counts Pepper in only while her feet are on that road or up to `band` px (default 90) above it, so a
+  -- cart run on the low road says nothing to her on the treetops; without roadY: anywhere above 184, as before.
   local zones = self.def.bikes
   if zones.zoneX0 then zones = { zones } end
   for _, bk in ipairs(zones) do
-    local inside = p.x > bk.zoneX0 and p.x < bk.zoneX1 and p.y <= 184
+    local inside = p.x > bk.zoneX0 and p.x < bk.zoneX1 and p.y <= (bk.roadY or 184)
+      and (not bk.roadY or p.y > bk.roadY - (bk.band or 90))
     Sp.enterZone(self, bk, inside)                                 -- start = "enter": the first one comes now
     if inside then
       self.bikeT = self.bikeT - dt
@@ -329,7 +333,7 @@ function St:update(dt, presses)
     local c = self.bikes[i]
     local bk = c.zone or zones[1]
     c.x = c.x - (c.speed or bk.speed) * dt; c.warn = c.warn - dt
-    if not bk.rail then c.y = w:groundAt(c.x) or c.y end            -- it rides on the pavement, up and down the stairs
+    if not bk.rail then c.y = w:groundAt(c.x, bk.roadY and bk.roadY - 34) or c.y end   -- on the pavement, up and down the stairs
     local hw, h = (bk.w or 48) / 2, bk.h or 26                     -- (rail: a tram stays on its line)
     if c.x < bk.endX or c.x < self.cam - 80 then table.remove(self.bikes, i)
     else
@@ -392,7 +396,7 @@ function St:barkAtCat()
   c.state, c.t = "scared", 0
   c.dir = (c.x >= p.x) and 1 or -1
   b.state, b.vx, b.vy, b.drop, b.airT = "air", -c.dir * 20, -60, true, 0
-  b.home = { x = b.x - c.dir * 12, y = self.world:groundAt(b.x - c.dir * 12) or b.y }; b.homeSay = nil
+  b.home = { x = b.x - c.dir * 12, y = self.world:groundAt(b.x - c.dir * 12, self.world.height > 240 and b.y - 2 or nil) or b.y }; b.homeSay = nil
   S.play("spring")
 end
 
@@ -405,12 +409,12 @@ function St:updateCat(dt)
   elseif c.state == "leap" then
     c.vy = c.vy + 560 * dt; c.x = c.x + c.vx * dt
     local ny = c.y + c.vy * dt
-    local g = w:groundAt(c.x)
+    local g = w:groundAt(c.x, w.height > 240 and c.y - 34 or nil)   -- (a tall world: the ground below it)
     if c.vy > 0 and g and ny >= g then c.y = g; c.state = "run"; self:say("THE CAT RAN OFF! GET THE BALL", 2.4)
     else c.y = ny end
   elseif c.state == "run" then
     c.x = c.x + c.dir * 170 * dt
-    c.y = w:groundAt(c.x) or c.y
+    c.y = w:groundAt(c.x, w.height > 240 and c.y - 34 or nil) or c.y
     if c.x < self.cam - 60 or c.x > self.cam + 380 then c.state = "gone" end
   end
 end

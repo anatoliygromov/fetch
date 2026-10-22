@@ -92,7 +92,45 @@ return function(mode, api)
           report("a tall map: 2880 x 384 px (360 x 48 cells)", s.world.width == 2880 and s.world.height == 384, ("%d x %d"):format(s.world.width, s.world.height))
           report("on the path (y 328) the camera rests at the bottom of the world", near(p.y, PATH) and s.camY == s.camYMax and s.camYMax == 144,
             ("feet %.0f, camY %.0f of %d: the path is at screen y %.0f, as in City Park"):format(p.y, s.camY, s.camYMax, p.y - s.camY))
-          report("the leaf carts wait on the #carts note layer (engine: zone y)", #s.def.bikes == 0, ("%d cart zones active"):format(#s.def.bikes))
+          local okZ = #s.def.bikes == 2
+          for _, z in ipairs(s.def.bikes) do okZ = okZ and z.roadY == PATH and z.kind == "cart" end
+          report("the leaf carts are back: 2 cart zones on the low road (roadY 328)", okZ, ("%d cart zones"):format(#s.def.bikes))
+        end },
+      -- 0b the carts on the low road: one sets off as she walks in, drives on the path (y 328) and hurts her there;
+      -- the picnic table is above it; on the treetops over the cart run no cart comes at all
+      { act = function()
+          local st = simStage(); local z = st.def.bikes[1]
+          local function fresh(x, y) place(st, x, y); st.bikes, st.bikeT, st.zoneIn = {}, 2.5, {} end
+          fresh(z.zoneX0 - 30, PATH)
+          local sent, ys, hurt, warned = nil, {}, false, false
+          for f = 1, 60 * 6 do
+            I.force = (st.pepper.x < z.zoneX0 + 30) and { right = true, walk = true } or {}
+            local h = st.hearts
+            st:update(1 / 60, {})
+            local c = st.bikes[1]
+            if c and not sent then sent = st.pepper.x; warned = c.warn > 0.9 end
+            if c then ys[#ys + 1] = c.y end
+            if st.hearts < h then hurt = true; break end
+          end
+          I.force = {}
+          local okY = #ys > 0; for _, y in ipairs(ys) do if not near(y, PATH, 0.01) then okY = false end end
+          report("a cart sets off as she walks into its zone on the path, with its warning", sent ~= nil and sent > z.zoneX0 and sent < z.zoneX0 + 20 and warned,
+            ("at x %s"):format(tostring(sent and math.floor(sent))))
+          report("it drives on the path (y 328), not on the treetops", okY, ("%d frames, y %s"):format(#ys, tostring(ys[1])))
+          report("standing on the path, the cart hurts her", hurt)
+          local tab
+          for _, pr in ipairs(st.def.props) do if pr.name == "PICNIC TABLE" and pr.x0 > z.zoneX0 and pr.x1 < z.zoneX1 then tab = pr end end
+          fresh((tab.x0 + tab.x1) / 2, tab.y0); st.zoneIn[z] = true; st.bikeT = 0
+          local passed = false
+          for f = 1, 60 * 6 do st:update(1 / 60, {}); if st.bikes[1] and st.bikes[1].x < tab.x0 - 30 then passed = true end end
+          report("on the picnic table (y 300) the cart passes under her", passed and st.hearts == 3 and near(st.pepper.y, tab.y0), ("hearts %d"):format(st.hearts))
+          local hi                                                    -- a treetop over the cart run, more than 90 px up
+          for _, pr in ipairs(st.def.props) do
+            if pr.kind ~= "decor" and pr.y0 < PATH - 90 and pr.x0 >= z.zoneX0 and pr.x1 <= z.zoneX1 and pr.x1 - pr.x0 >= 30 then hi = hi or pr end
+          end
+          fresh((hi.x0 + hi.x1) / 2, hi.y0); local any = false
+          for f = 1, 60 * 8 do st:update(1 / 60, {}); if #st.bikes > 0 then any = true end end
+          report("on a treetop over the cart run no cart comes", not any and near(st.pepper.y, hi.y0), ("y %.0f"):format(st.pepper.y))
         end },
       { act = function() tp(864, 216) end }, { wait = 1.2 },
       { act = function(p, s) report("on the treetop walk (y 216) the camera follows her up", near(s.camY, 216 - Vc.FLOOR, 1),

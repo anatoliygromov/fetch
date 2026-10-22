@@ -10,6 +10,22 @@ Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untou
   she crouches or not, and a lift that is already lower than that over her (she crawled in under it) is wound back
   up by its operator until she has room. lab_tall `--physics`: 4 new checks (the review's case, crouched then
   standing; a lift too low over her backs up), 34 of 34.
+- **Traffic and ground at any height** (the flat levels' y 184 made a level's field). A bike, cart or tram zone in
+  `L.bikes` may give `roadY`, the feet line its road is at (default 184: every existing level is unchanged). The
+  vehicle drives at `roadY` (and follows the terrain from 34 px above it, as the bikes did from y 150), the
+  warning sign sits at its height, and a zone with `roadY` counts Pepper in only while her feet are on that road
+  or up to `band` px (default 90) above it, so a cart on the low road says nothing to her up in the trees.
+  `world:groundAt(x, fromY)` finds the highest terrain floor (slopes too) at or below any `fromY`; without
+  `fromY` it is the old search (below y 150). In a tall world (more than 240 px) the cat's run, the gull's target
+  floor (the floor right under her, ledges too) use it; the gull circles at its height on screen (camera y + 86),
+  so it swoops to the floor it targets at any height. The kennel and the hollow log stand on `pc.foot` (default
+  184). `qa.lua`'s bikes drive at their zone's `roadY`.
+- **The leaf carts are back in the tall City Park.** `tools/make_citypark_tall.py` keeps City Park's two cart zones
+  as zones (`roadY = 328`, the low road) with their hints ("CART! GET UP HIGH!", on the low road only), not on a
+  `#carts` note layer; `maps/citypark_tall.tmx` and its export regenerated (`check_tiled` passes).
+  `tests_citypark_tall.lua --physics` 82 of 82: 5 new cart checks (a cart sets off with its warning as she walks
+  in on the path, drives at y 328, hurts her there, passes under her on the picnic table, never comes while she is
+  on a treetop over the run). The autopilot (the high road) is unchanged: GOOD GIRL! in 38.5 s.
 
 ## The old title is back (22 Oct, evening)
 - The hand-pixeled title (branch `title/redraw`) was rejected by the owner: the 19 Oct title has far more charm.
