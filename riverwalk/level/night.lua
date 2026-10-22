@@ -55,19 +55,21 @@ L.props = {
   { name = "ROOF",     kind = "oneway", layer = "play", x0 = 1960, x1 = 2040, y0 = 112, y1 = 116, label = "below" },
   { name = "STACK",    kind = "solid",  layer = "play", x0 = 1912, x1 = 1944, y0 = 152, y1 = 184, label = "top" },
   { name = "CRATES",   kind = "decor",  layer = "back", x0 = 2064, x1 = 2128, y0 = 144, y1 = 184, label = "top" },
-  -- 8 rotten planks: four in a row over the gap (water x 2280-2520), 24 px apart
-  { name = "",         kind = "oneway", layer = "play", x0 = 2304, x1 = 2336, y0 = 184, y1 = 190, crumble = true, hidden = true },
-  { name = "",         kind = "oneway", layer = "play", x0 = 2360, x1 = 2392, y0 = 184, y1 = 190, crumble = true, hidden = true },
-  { name = "",         kind = "oneway", layer = "play", x0 = 2416, x1 = 2448, y0 = 184, y1 = 190, crumble = true, hidden = true },
-  { name = "",         kind = "oneway", layer = "play", x0 = 2472, x1 = 2504, y0 = 184, y1 = 190, crumble = true, hidden = true },
+  -- 8 rotten planks: four in a row over the gap (water x 2280-2520), 32 px apart (r7/curve: 24 px wide, were 32:
+  --   each hop has to land on a narrower plank)
+  { name = "",         kind = "oneway", layer = "play", x0 = 2308, x1 = 2332, y0 = 184, y1 = 190, crumble = true, hidden = true },
+  { name = "",         kind = "oneway", layer = "play", x0 = 2364, x1 = 2388, y0 = 184, y1 = 190, crumble = true, hidden = true },
+  { name = "",         kind = "oneway", layer = "play", x0 = 2420, x1 = 2444, y0 = 184, y1 = 190, crumble = true, hidden = true },
+  { name = "",         kind = "oneway", layer = "play", x0 = 2476, x1 = 2500, y0 = 184, y1 = 190, crumble = true, hidden = true },
   -- 9 the mooring post between the two boats (top y 176, standing in the water)
   { name = "POST",     kind = "solid",  layer = "play", x0 = 2712, x1 = 2728, y0 = 176, y1 = 240, label = "top" },
   -- 10 hideout 3: the low jetty. Its deck is solid (y 158-165): 19 px to crawl under, where the fox hides
   { name = "",         kind = "decor",  layer = "back", x0 = 2964, x1 = 2968, y0 = 165, y1 = 184 },     -- jetty legs
   { name = "",         kind = "decor",  layer = "back", x0 = 3072, x1 = 3076, y0 = 165, y1 = 184 },
   { name = "LOW JETTY", kind = "solid", layer = "play", x0 = 2960, x1 = 3080, y0 = 158, y1 = 165, label = "below" },
-  -- 11 one more crumbling plank (water x 3424-3520)
-  { name = "",         kind = "oneway", layer = "play", x0 = 3456, x1 = 3488, y0 = 184, y1 = 190, crumble = true, hidden = true },
+  -- 11 two crumbling planks (water x 3424-3520; r7/curve: two narrow ones instead of one: hop, hop, carrying the ball)
+  { name = "",         kind = "oneway", layer = "play", x0 = 3440, x1 = 3464, y0 = 184, y1 = 190, crumble = true, hidden = true },
+  { name = "",         kind = "oneway", layer = "play", x0 = 3480, x1 = 3504, y0 = 184, y1 = 190, crumble = true, hidden = true },
   -- 12 the crate tower: 16, 32, then 64 px up (a held jump from the second step); gold bone on top
   { name = "",         kind = "solid",  layer = "play", x0 = 3600, x1 = 3632, y0 = 168, y1 = 184 },
   { name = "",         kind = "solid",  layer = "play", x0 = 3632, x1 = 3664, y0 = 152, y1 = 184 },
@@ -108,7 +110,7 @@ L.movers = {
   { name = "BOAT",    x0 = 2736, x1 = 2784, y0 = 196, y1 = 202, from = 2736, to = 2788, speed = 26 },
   { name = "ROWBOAT", x0 = 3244, x1 = 3300, y0 = 196, y1 = 202, from = 3244, to = 3340, speed = 24 },
   { name = "BOAT",    x0 = 3804, x1 = 3852, y0 = 196, y1 = 202, from = 3804, to = 3884, speed = 26 },
-  { name = "BOAT",    x0 = 4000, x1 = 4048, y0 = 196, y1 = 202, from = 4000, to = 4028, speed = 22 },
+  { name = "BOAT",    x0 = 4000, x1 = 4048, y0 = 196, y1 = 202, from = 4000, to = 4040, speed = 30 },   -- (r7: 22 -> 30, to 4028 -> 4040)
 }
 
 -- the fox (night.lua) has the ball. It sits on the quay at the start and runs into the dark when Pepper comes

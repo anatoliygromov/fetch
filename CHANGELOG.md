@@ -36,6 +36,15 @@ in `docs/playtest/curve_r7.md`. Pepper's files, music, sfx and the title are unt
   barrels' tells (the "!" as it comes off the stack, the rumble and "!" when she closes in, its shadow); the screen
   still pushes. `--physics` 29 of 29, `--auto` 73.3 s (unchanged), no heart lost.
   Before/after: `/home/claude/out/r7-curve/soder_before_after.png`.
+- **Night Harbour, the hardest for parents** (level/night.lua, tests_night.lua; maps/night.tmx and its export
+  written again from it): tighter timing windows, nothing hidden, no new kind of threat. The rotten planks (screen 8)
+  are 24 px wide (were 32), the same middles, so each tap hop must land on a narrower plank (their shake, scramble
+  sound and the planks drawn over the dark are unchanged). Back over (screen 11), carrying the ball: two narrow
+  crumbling planks (x 3440 and 3480) instead of one. The slipway's second boat rows faster and further (30 px/s, to
+  x 4040; was 22, to 4028). Tried and taken back: a faster first slipway boat and a narrower slipway plank (the
+  slipway took 40 to 58% of the level's failures, a T2 fail). Autopilot: the first plank hop 6 px earlier.
+  `--physics` 40 of 40, `--auto` 82.6 s (was 81.3), no heart lost.
+  Before/after: `/home/claude/out/r7-curve/night_before_after.png`.
 
 ## Branch `r6/engine`: safety nets, the same in every level (22 Oct)
 Built on `round1`. Benchmark principles 5, 6 and 7 (`docs/benchmark_22oct.md` section 4) in the engine, so every
