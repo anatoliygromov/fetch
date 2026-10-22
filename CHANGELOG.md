@@ -20,6 +20,10 @@ every level, the menus and the cards. The bug list with evidence: `docs/bugs_22o
   behind; it is removed only once wholly off screen; a cut (respawn) clears the road. Cars drive both ways now (300-
   380 px/s, about 25-30 km/h; were 110-170) so traffic still passes while Pepper runs right; cyclists 190-240 px/s.
   `LOOK_CHECK=1` prints `ROAD CUT` if a vehicle ever meets a road end on screen: none in the autopilot.
+- **River Walk's far shore ran out** (scene.lua): the shore layer was built for the 3200 px level (1196 px wide); at
+  3840 px the camera needs 1376 px, so over the last two screens the trees ended in a hard edge with bare sand-coloured
+  sky beside them. The trees now go back and forth to 1600 px. The far skyline's range was fixed at 2880 px too, so
+  it stood still over the last 640 px; it now uses the level's own width.
 
 ## Branch `r4/playtest`: the playtest lab, ported to today's levels, and the level order checked (22 Oct)
 Built on `round1`. The lab from `ml/playtest` (6 Oct, never merged) rebuilt around the levels' own autopilots.
