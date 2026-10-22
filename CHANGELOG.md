@@ -121,6 +121,38 @@ Built on `round1`. Level design only: no engine files changed, no SpriteCook, mu
   `--physics` 81 of 81, citypark_tall `--physics` 82 of 82. Renders, the screenshot sheet and the autopilot GIF are
   in `/home/claude/out/r3-design/`.
 
+## Branch `r3/rooftops`: Rooftops at full length, readable steam (22 Oct)
+Built on `round1`. Level design, the rooftops' own code and checks; greybox, no SpriteCook. Pepper's files are
+untouched (`check_pepper` UNCHANGED).
+- **Rooftops, full length** (`tools/make_rooftops.py`, now standalone: it no longer starts from the paper map).
+  12 x 5 screens, 3840 x 1200 px (was 6 x 4). The skyline climbs to the right in tiers: the street (1144), the
+  bakery (T1 952), T1b (856), the market hall and the laundry (T2 760), the roof bar (T3 568), Mia's roof cafe (T4
+  376), the copper roof (280), the nest chimney (184). The four beats of the steam puffs and loose tiles: the
+  kitchen fan up a wall too tall to jump, with a flat roof under it, and the light well's three loose tiles with a
+  fan in the well to climb out (introduce, safe); the market hall (a puff over the sweep's chimneys, the skylight's
+  tiles), the laundry vent and the balcony's tiles between two puffs (practise); the roof garden's goose and the roof
+  bar's gull and springy awning with puffs (combine); the sauna that only steams on a bark, at the nest (twist). The
+  high road floats over it on ledges, 8 loose tiles and 4 puffs, with the golden bone on the bakery's chimney pot
+  and the secret ROOF WALKWAY; it meets the low road on the copper roof. 14 vents, 17 loose tiles, 7 lamps, 76
+  bones. Story: Mia takes the building's stairs up to the roof cafe; Pepper goes over the roofs.
+- **Steam you can read on a light sky** (`roofs.lua`). The column is now cloud blobs with a crisp blue-grey outline,
+  a shaded underside and a lit top (`Rf.blob`), still drawn behind Pepper. Every vent has a visible cap on a stem
+  over its mouth: at rest grey, while it warns it turns orange, hops 1 to 3 px and rattles sideways, with small
+  outlined wisps and dark specks leaking out and the "!" over it; during the puff it stands open. The landmark from
+  below (`Rf.drawLandmark`): while the nest chimney is above the screen, a faded far copy of it (the nest, the gull
+  circling, the sauna's thread of steam) stands at the top of the sky, sliding slower than the world, behind the
+  roofs.
+- **Checks** (`tests_rooftops.lua`): `--physics` 88 of 88 (every vent's apex, its landing with no input and when
+  steering, the warning, the cycle, one lift per puff, crouching, a bark, the sauna; every vent runs; the loose
+  tiles and all six bridges; every jump on both roads with Pepper's controller; the walls too tall to jump without a
+  puff; 27 falls off the high road all land safely below; no bone in a solid; the nest; the fetch). `--auto`: the
+  low road GOOD GIRL! in 54.1 s, no heart lost; `AUTO_ROUTE=high`: the high road in 51.8 s, both secrets.
+  `--qa`: 12446 runs, 0 problems. The low road is about 6 s under the Morning chapter's 60 to 90 s; the beat sheet
+  says how to close it (one more screen on T2).
+- **Docs and tools:** `docs/rooftops_beatsheet.md` rewritten to match the build (tiers, beats, both roads, every
+  jump, every puff, lamps, timing, open questions). `tools/draw_routes.py` has a `rooftops` entry (the routes on the
+  new map). No engine file changed (stage, world, vcam, lift, critters, main untouched).
+
 ## Branch `engine/round2`: the review's engine fixes and the rooftops mechanics (22 Oct)
 Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untouched (`check_pepper` UNCHANGED).
 - **The lift never waits at her crouched height** (review, SHOULD FIX 2). A lift coming down over a crouched Pepper

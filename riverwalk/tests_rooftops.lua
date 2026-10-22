@@ -1,18 +1,20 @@
--- The checks for Rooftops (greybox; love riverwalk --level rooftops <flag>):
---   --physics   the world; every steam puff (its apex is y0 - lift within 1 px, it lands her on the floor it serves
---               when she steers, back on its hood or the floor with no input; the warning comes 0.8 s before the
+-- The checks for Rooftops (greybox; love riverwalk --level rooftops <flag>). Design: docs/rooftops_beatsheet.md.
+--   --physics   the world; every steam puff (its apex is y0 - lift within 1 px; with no input she lands back on
+--               its hood or the floor over it; steering, on the floor it serves); the warning 0.8 s before the
 --               lift; one lift per puff; a bark starts a resting vent at once; the sauna puffs only after a bark;
---               crouching stays put); the loose tiles (a floor for 0.6 s, then not; a bridge of three crossed with
---               hops; back after 3 s, not while she is in its place); every jump on the main route (the cafe table,
---               the walk up the stairwells to the terrace, the finale) and the high road's plain jumps; the gull's
---               nest (a bark drops the ball on the chimney); the fetch ends the level
---   --auto      the main route and the finale on autopilot (frames in rec_rooftops/ every 3rd frame)
+--               crouching stays put; the loose tiles (a floor for 0.6 s, then not; back after 3 s, not while she
+--               is in its place; every bridge crossed); every jump on both routes with Pepper's own controller;
+--               every fall off the high road lands on a floor below with no heart lost; no bone inside a solid;
+--               the gull's nest; the fetch ends the level
+--   --auto      the main route (the low road) and the finale on autopilot (frames in rec_rooftops/ every 3rd
+--               frame); AUTO_ROUTE=high plays the high road instead
 --   --test      a screenshot tour, and frames of a puff and a loose tile (rec_rooftops_puff/, rec_rooftops_tile/)
 local I = require("input")
 local Pp = require("pepper")
 local St = require("stage")
 local Vc = require("vcam")
 local Rf = require("roofs")
+local Cr = require("critters")
 return function(mode, api)
   I.testing = true
   local function hold(...) I.force = {}; for _, k in ipairs({ ... }) do I.force[k] = true end end
@@ -21,7 +23,7 @@ return function(mode, api)
   local function report(name, ok, detail)
     ok = ok and true or false
     results[#results + 1] = ok
-    print(("%-66s %s  %s"):format(name, ok and "PASS" or "FAIL", detail or "")); io.stdout:flush()
+    print(("%-72s %s  %s"):format(name, ok and "PASS" or "FAIL", detail or "")); io.stdout:flush()
   end
   local function near(a, b, e) return a and b and math.abs(a - b) <= (e or 0.01) end
   local function tp(x, y) local s = api.stage(); local p = s.pepper
@@ -29,7 +31,7 @@ return function(mode, api)
     s.cam = math.max(0, math.min(s.world.width - 320, x - 140)); Vc.snap(s)
   end
 
-  -- the simulation stage (no gull over T2: it is checked in play) ---------------------------------------------
+  -- the simulation stage (no goose or gull: they are checked in play and by the autopilot) -------------------
   local function fresh()
     local st = St.new(api.stage().def); st.critters = {}
     return st
@@ -54,35 +56,81 @@ return function(mode, api)
       if not p.onGround then air = true end
       minY = math.min(minY, p.y)
       if st.fallT or p.mode == "gone" then I.force = {}; return { x = p.x, y = p.y, fell = true, minY = minY, hearts = st.hearts } end
+      if keepGoing and keepGoing(p) then I.force = {}; return { x = p.x, y = p.y, landed = p.onGround, minY = minY, hearts = st.hearts } end
       if air and p.onGround and p.mode == "normal" and not keepGoing then I.force = {}; return { x = p.x, y = p.y, landed = true, minY = minY, hearts = st.hearts } end
     end
     I.force = {}
-    return { x = p.x, y = p.y, landed = p.onGround, minY = minY, hearts = st.hearts }
+    return { x = p.x, y = p.y, landed = p.onGround, minY = minY, hearts = st.hearts, timeout = true }
   end
   local function vent(st, name) for _, v in ipairs(st.vents) do if v.d.name == name then return v end end end
   local function puffNow(v) v.st, v.t = "warn", (v.d.warn or 0.8) - 1 / 60 end   -- its puff starts next frame
+
+  -- every vent: name, where she lands with no input, the way to steer, the floor it serves, that floor's x range
+  local VENTS = {
+    { "KITCHEN FAN", 948, "right", 856, 1280, 1568 },
+    { "COURTYARD FAN", 856, "right", 856, 1664, 2048 },        -- (no input: back onto the loose tile over it)
+    { "LAUNDRY VENT", 852, "right", 760, 2048, 3328 },
+    { "SWEEP VENT", 756, "right", 664, 2400, 2464 },
+    { "SKYLIGHT FAN", 760, "right", 760, 2624, 3328 },         -- (no input: back onto the loose tile over it)
+    { "GARDEN VENT", 756, "right", 664, 3072, 3144 },
+    { "BALCONY VENT", 660, "right", 568, 3328, 3552 },
+    { "TANK VENT", 444, "right", 376, 3552, 3728 },
+    { "TERRACE FAN", 280, nil, 280 },                           -- (up through the copper roof, onto it)
+    { "SAUNA", 276, "right", 184, 3728, 3760 },
+    { "ATTIC FAN", 852, "right", 760, 1424, 1520 },
+    { "LOFT VENT", 692, "right", 600, 1960, 2720 },
+    { "BAKERY CHIMNEY", 596, "right", 456, 2984, 3200 },
+    { "BAR FAN", 420, "right", 280, 3456, 3712 },
+  }
+  -- a jump: name, from x, y, the plan ("held", "tap", "walk", "run", "downA", or a function), its way, the floor
+  -- she must land on, and (optional) its x range
+  local JUMPS = {
+    { "the sweep's chimney block (664) -> walk off its right side onto the market roof (760)", 2440, 664, "walk", "right", 760 },
+    { "high: the pigeon loft (600) -> ledge 568: held jump right", 2068, 600, "held", "right", 568 },
+    { "high: ledge 568 -> ledge 536: held jump right", 2196, 568, "held", "right", 536 },
+    { "high: ledge 536 -> down to ledge 600: held jump right", 2548, 536, "held", "right", 600, { 2592, 2720 } },
+    -- the low road
+    { "street: a running jump onto the cafe table (1120)", 70, 1144, "runjump", "right", 1120 },
+    { "the awning (552) from the roof bar: a tap hop", 3388, 568, "tap", "right", 432, nil, "bounce" },
+    { "the awning's bounce onto the water tank (448), holding right", 3388, 568, "taphold", "right", 448, { 3480, 3552 } },
+    { "copper roof -> Down + A -> the roof terrace (376)", 3670, 280, "downA", nil, 376 },
+    { "nest chimney -> step off left onto the sauna's hood (276)", 3732, 184, "walk", "left", 276 },
+    -- the high road
+    { "ledge 760 -> ledge 728: held jump right", 1750, 760, "held", "right", 728 },
+    { "ledge 728 -> ledge 696: held jump right", 1846, 728, "held", "right", 696 },
+    { "ledge 600 -> the chimney pot (552, golden bone): held jump and scramble", 2868, 600, "held", "right", 552 },
+    { "the chimney pot -> off its right side onto the ledge (the vent hood, 596)", 2916, 552, "walk", "right", 596 },
+  }
+  -- bridges of loose tiles: name, start x, y, hop from x (nil: run straight across), end x, the floor at the end
+  local BRIDGES = {
+    { "the market hall's skylight: running straight across its three loose tiles", 2476, 760, nil, 2660, 760 },
+    { "high: ledge 536, two loose tiles (tap hops), ledge 536", 2250, 536, 2310, 2490, 536 },
+    { "the light well: running straight across its three loose tiles", 1480, 856, nil, 1700, 856 },
+    { "the balcony: running across its three loose tiles", 3088, 664, nil, 3260, 664 },
+    { "high: ledge 760, two loose tiles (tap hops), ledge 760", 1440, 760, 1500, 1680, 760 },
+    { "high: ledge 600, two loose tiles (tap hops), the chimney pot's ledge 600", 2630, 600, 2700, 2856, 600 },
+    { "high: the walkway (456), two loose tiles (held jumps), ledge 424", 3110, 456, 3180, 3360, 424, "held" },
+  }
 
   local steps
   if mode == "--physics" then
     steps = {
       { wait = 0.6 }, { act = function() love.keypressed("space") end }, { wait = 0.3 },
       { act = function(p, s)
-          report("a tall map: 1920 x 960 px (240 x 120 cells)", s.world.width == 1920 and s.world.height == 960, ("%d x %d"):format(s.world.width, s.world.height))
-          report("6 steam vents, 5 loose tiles, the gull's nest, Mia on the terrace", #s.vents == 6 and #s.tiles == 5 and s.def.magpie.look == "gull"
-            and s.ball.state == "magpie" and near(s.girl.y, 328), ("%d vents, %d tiles"):format(#s.vents, #s.tiles))
+          report("a tall map: 3840 x 1200 px (480 x 150 cells, 12 x 5 screens)", s.world.width == 3840 and s.world.height == 1200, ("%d x %d"):format(s.world.width, s.world.height))
+          report("14 steam vents, 17 loose tiles, the gull's nest, Mia at the roof cafe", #s.vents == 14 and #s.tiles == 17 and s.def.magpie.look == "gull"
+            and s.ball.state == "magpie" and near(s.girl.y, 376), ("%d vents, %d tiles"):format(#s.vents, #s.tiles))
+          local bad = {}
+          for _, b in ipairs(s.def.bones) do
+            if s.world:solidIn(b.x - 5, b.x + 5, b.y - 12, b.y - 7) then bad[#bad + 1] = ("%d,%d"):format(b.x, b.y) end
+          end
+          report(("no bone inside a solid (%d bones)"):format(#s.def.bones), #bad == 0, table.concat(bad, " "))
+          local lamps = 0; for _, l in ipairs(s.def.lamps) do if l.checkpoint then lamps = lamps + 1 end end
+          report("7 lamps (5 on the low road, 2 on the high road), 2 secrets, a golden bone", lamps == 7 and #s.def.secrets == 2, ("%d lamps"):format(lamps))
         end },
       -- 1 every vent: apex exact; no input; steering to the floor it serves
       { act = function()
-          -- name, no-input landing (y), steer, landing when steering (y), its x range (feet span overlaps)
-          local V = {
-            { "KITCHEN FAN", 616, nil, 616 },
-            { "DORMER VENT", 612, "right", 520, 688, 768 },
-            { "LAUNDRY VENT", 452, "right", 360, 1240, 1320 },
-            { "CHIMNEY", 356, "right", 232, 1568, 1792 },
-            { "TERRACE FAN", 232, nil, 232 },
-            { "SAUNA", 228, "right", 136, 1808, 1840 },
-          }
-          for _, c in ipairs(V) do
+          for _, c in ipairs(VENTS) do
             local st = fresh(); local v = vent(st, c[1]); local d = v.d
             local mid = (d.x0 + d.x1) / 2
             place(st, mid, d.y0)
@@ -103,43 +151,44 @@ return function(mode, api)
       { act = function()
           local st = fresh(); local v = vent(st, "KITCHEN FAN"); local d = v.d
           place(st, (d.x0 + d.x1) / 2, d.y0); v.st, v.t = "rest", 0
-          local warnAt, liftAt, f = nil, nil, 0
+          local warnAt, liftAt = nil, nil
           for i = 1, 60 * 4 do
-            st:update(1 / 60, {}); f = i
+            st:update(1 / 60, {})
             if v.st == "warn" and not warnAt then warnAt = i end
             if not st.pepper.onGround and not liftAt then liftAt = i end
             if liftAt then break end
           end
-          report("a vent warns (rattle, wisps) 0.8 s before it lifts her", warnAt and liftAt and near((liftAt - warnAt) / 60, 0.8, 2 / 60),
+          report("a vent warns (the cap rattles, wisps) 0.8 s before it lifts her", warnAt and liftAt and near((liftAt - warnAt) / 60, 0.8, 2 / 60),
             ("warn at %.2f s, lift at %.2f s"):format((warnAt or 0) / 60, (liftAt or 0) / 60))
           report("the cycle: rest every - warn - puff (3 - 0.8 - 0.9 = 1.3 s)", warnAt and near(warnAt / 60, 1.3, 2 / 60), ("%.2f s"):format((warnAt or 0) / 60))
-          -- one lift per puff: put her back on the hood while it still puffs
           st = fresh(); v = vent(st, "KITCHEN FAN"); place(st, (d.x0 + d.x1) / 2, d.y0); puffNow(v)
           st:update(1 / 60, {}); st:update(1 / 60, {})
           local lifted1 = not st.pepper.onGround
           local p = st.pepper; p.y, p.vy, p.onGround, p.ground = d.y0, 0, true, nil
           local again = false
-          for i = 1, 20 do st:update(1 / 60, {}); if v.st == "puff" and p.vy < -50 then again = true end end
+          for _ = 1, 20 do st:update(1 / 60, {}); if v.st == "puff" and p.vy < -50 then again = true end end
           report("one lift per puff: back in the column, she is not lifted again", lifted1 and not again and st.puffed == 1, ("%d lifts"):format(st.puffed or 0))
-          -- crouching through a puff
           st = fresh(); v = vent(st, "KITCHEN FAN"); place(st, (d.x0 + d.x1) / 2, d.y0); I.force = { down = true }
-          for i = 1, 10 do st:update(1 / 60, {}) end
+          for _ = 1, 10 do st:update(1 / 60, {}) end
           puffNow(v)
-          for i = 1, 70 do st:update(1 / 60, {}) end
+          for _ = 1, 70 do st:update(1 / 60, {}) end
           I.force = {}
           report("crouched (Down) on the hood she stays put through a puff", st.pepper.onGround and near(st.pepper.y, d.y0) and not st.puffed, ("y %.1f"):format(st.pepper.y))
-          -- a bark starts a resting vent within one frame (her feet within 60 px of its mouth, 80 px across)
-          st = fresh(); v = vent(st, "LAUNDRY VENT"); place(st, 1180, 456); v.st, v.t = "rest", 0
+          st = fresh(); v = vent(st, "LAUNDRY VENT"); place(st, 1990, 856); v.st, v.t = "rest", 0
           st:update(1 / 60, { bark = true })
           report("a bark near a resting vent starts its warning at once", v.st == "warn", v.st)
-          -- the sauna: never by itself; a bark: it puffs and lifts her to the nest chimney
           st = fresh(); v = vent(st, "SAUNA"); d = v.d; place(st, (d.x0 + d.x1) / 2, d.y0)
           local any = false
-          for i = 1, 60 * 8 do st:update(1 / 60, {}); if v.st ~= "rest" then any = true end end
+          for _ = 1, 60 * 8 do st:update(1 / 60, {}); if v.st ~= "rest" then any = true end end
           report("the sauna never puffs by itself (8 s)", not any, v.st)
           st:update(1 / 60, { bark = true })
           local r = run(st, function(q, f, air) if air then return { right = true } end; return {} end, 4)
-          report("a bark: the sauna puffs and carries her onto the nest chimney (136)", r.landed and near(r.y, 136), ("y %.1f"):format(r.y))
+          report("a bark: the sauna puffs and carries her onto the nest chimney (184)", r.landed and near(r.y, 184), ("y %.1f"):format(r.y))
+          -- every timed vent puffs by itself within its cycle, and neighbours start at different phases
+          st = fresh(); local seen = {}
+          for _ = 1, 60 * 4 do st:update(1 / 60, {}); for _, q in ipairs(st.vents) do if q.st == "puff" then seen[q] = true end end end
+          local n = 0; for _ in pairs(seen) do n = n + 1 end
+          report("all 13 timed vents puff within 4 s (someone runs each one)", n == 13, ("%d"):format(n))
         end },
       -- 3 loose tiles
       { act = function()
@@ -150,72 +199,100 @@ return function(mode, api)
           for i = 1, 60 do st:update(1 / 60, {}); if not fellAt and (not st.pepper.onGround or st.pepper.ground ~= t) then fellAt = i end end
           report("a loose tile: a floor for 0.6 s, then she falls through", on and fellAt and near((fellAt + 4) / 60, 0.6, 3 / 60), ("%.2f s"):format(((fellAt or 0) + 4) / 60))
           local r = run(st, function() return {} end, 3)
-          report("she lands on the roof below, no harm", r.landed and r.hearts == 3 and r.y > t.y0, ("y %.0f"):format(r.y))
-          -- not back while she is in its place; back after 3 s once she is out of it
+          report("she lands in the light well (952) below, no harm", r.landed and r.hearts == 3 and near(r.y, 952), ("y %.0f"):format(r.y))
           local p = st.pepper
-          for i = 1, 60 * 3.5 do p.x, p.y, p.vy, p.onGround = (t.x0 + t.x1) / 2, t.y0 + 10, 0, true; st:update(1 / 60, {}) end
+          for _ = 1, 60 * 3.5 do p.x, p.y, p.vy, p.onGround = (t.x0 + t.x1) / 2, t.y0 + 10, 0, true; st:update(1 / 60, {}) end
           local stillGone = k.st == "gone"
-          place(st, t.x0 - 120, 712)
+          place(st, 1320, 856)
           st:update(1 / 60, {})
           local back = false; for _, r2 in ipairs(st.world.rects) do if r2 == t then back = true end end
           report("it does not come back while she is in its place", stillGone, k.st)
           report("it is back after 3 s once she is out of the way", k.st == "idle" and back, k.st)
-          -- the bridge of three (x 800, 856, 912 at y 520): walking, a tap hop on each, from the ledge to the gable
-          st = fresh(); place(st, 700, 520)
-          local low = 0
-          r = run(st, function(q, f, air)                            -- running, a tap hop each time she lands
-              if q.y > low then low = q.y end
-              if q.x >= 968 then return {} end
-              return { right = true }, q.onGround and q.x >= 752
-            end, 5, true)
-          report("running, a tap hop on each tile crosses the bridge of three to the gable", st.pepper.x >= 960 and near(st.pepper.y, 520) and low <= 521 and st.hearts == 3,
-            ("x %.0f y %.0f, lowest %.0f"):format(st.pepper.x, st.pepper.y, low))
-        end },
-      -- 4 the main route: the cafe table, the stairwells, the terrace; the high road's plain jumps
-      { act = function()
-          local st = fresh(); place(st, 70, 904)
-          local r = run(st, function(q, f) return { right = true }, f == 1 end, 3)
-          report("street: a running jump onto the cafe table (y 880)", r.landed and near(r.y, 880), ("y %.1f x %.0f"):format(r.y, r.x))
-          st = fresh(); place(st, 70, 904)
-          r = run(st, function(q) return { right = true, down = true } end, 3, true)
-          report("street: or crawl under it", st.pepper.x > 150 and near(st.pepper.y, 904), ("x %.0f"):format(st.pepper.x))
-          -- the walk up: street to the roof terrace, holding right, no jump
-          st = fresh(); place(st, 150, 904)
-          local maxDrop, last = 0, st.pepper.y
-          r = run(st, function(q) maxDrop = math.max(maxDrop, q.y - last); last = q.y; return { right = true } end, 30, true)
-          local p = st.pepper
-          for _ = 1, 600 do if p.x >= 1700 then break end; I.force = { right = true }; st:update(1 / 60, {}) end
-          I.force = {}
-          report("the low road: street to the roof terrace, walking and stairs only", p.x >= 1700 and near(p.y, 328) and st.hearts == 3,
-            ("x %.0f y %.0f"):format(p.x, p.y))
-          -- the high road's plain jumps
-          local J = {
-            { "gable (520) -> ledge 488: held jump right", 1030, 520, "right", 488 },
-            { "ledge 488 -> ledge 456: held jump right", 1126, 488, "right", 456 },
-            { "ledge 360 -> chimney pot (312): held jump and scramble", 1460, 360, "right", 312 },
-            { "nest chimney -> step off left onto the sauna's hood (228)", 1812, 136, "left", 228, true },
-          }
-          for _, j in ipairs(J) do
-            st = fresh(); place(st, j[2], j[3])
-            r = run(st, function(q, f) if j[6] then return { [j[4]] = true, walk = true } end; return { [j[4]] = true, jump = f < 40 }, f == 1 end, 3)
-            report(j[1], r.landed and near(r.y, j[5]) and r.hearts == 3, ("y %.1f x %.0f"):format(r.y, r.x))
+          for _, b in ipairs(BRIDGES) do
+            st = fresh(); place(st, b[2], b[3])
+            local low = 0
+            r = run(st, function(q, f)
+                if q.y > low then low = q.y end
+                if q.x >= b[5] then return {} end
+                if not b[4] then return { right = true } end
+                return { right = true, jump = b[7] == "held" }, q.onGround and q.x >= b[4]
+              end, 6, function(q) return q.x >= b[5] and q.onGround end)
+            report(b[1], near(st.pepper.y, b[6]) and st.pepper.x >= b[5] - 2 and st.hearts == 3 and not r.fell,
+              ("x %.0f y %.0f, lowest %.0f"):format(st.pepper.x, st.pepper.y, low))
           end
-          st = fresh(); place(st, 1750, 232)
-          r = run(st, function(q, f) if f < 4 then return { down = true }, f == 2 end; return {} end, 3)
-          report("copper roof -> Down + A -> the roof terrace (328)", r.landed and near(r.y, 328), ("y %.1f"):format(r.y))
         end },
-      -- 5 the gull's nest and the fetch
-      { act = function(p, s) tp(1778, 228); p.face = 1 end }, { wait = 0.3 },
+      -- 4 the low road on foot: the street to the bakery's roof, walking and the stairwell only
+      { act = function()
+          local st = fresh(); place(st, 70, 1144)
+          local r = run(st, function(q) return { right = true, down = true } end, 4, function(q) return q.x > 150 end)
+          report("street: or crawl under the cafe table", st.pepper.x > 150 and near(st.pepper.y, 1144), ("x %.0f"):format(st.pepper.x))
+          st = fresh(); place(st, 150, 1144)
+          r = run(st, function() return { right = true } end, 12, function(q) return q.x >= 1250 end)
+          report("the low road: street, stairwell A, over R1 to the kitchen fan (walking only)", st.pepper.x >= 1250 and near(st.pepper.y, 952, 4) and st.hearts == 3,
+            ("x %.0f y %.0f"):format(st.pepper.x, st.pepper.y))
+          st = fresh(); place(st, 1300, 856)
+          r = run(st, function() return { right = true } end, 12, function(q) return q.x >= 2028 end)
+          report("T1b: over the light well's tiles and R2 to the laundry vent, running", st.pepper.x >= 2028 and near(st.pepper.y, 856, 4) and st.hearts == 3,
+            ("x %.0f y %.0f"):format(st.pepper.x, st.pepper.y))
+          report("the walls between the tiers are too tall to jump (96 px)", true, "")
+          for _, w in ipairs({ { "T1 -> T1b (no fan)", 1230, 952 }, { "T1b -> T2 (no vent)", 1990, 856 } }) do
+            st = fresh(); place(st, w[2], w[3])
+            r = run(st, function(q, f) return { right = true, jump = f < 40 }, f == 1 end, 3)
+            report("  " .. w[1] .. ": a held jump and scramble does not reach", r.landed and r.y >= w[3] - 4, ("y %.1f"):format(r.y))
+          end
+          for _, j in ipairs(JUMPS) do
+            st = fresh(); place(st, j[2], j[3])
+            local how, dir = j[4], j[5]
+            local plan
+            if how == "held" then plan = function(q, f) return { [dir] = true, jump = f < 40 }, f == 1 end
+            elseif how == "runjump" then plan = function(q, f) return { [dir] = true, jump = f < 40 }, f == 1 end
+            elseif how == "tap" or how == "taphold" then plan = function(q, f) return { [dir] = true }, f == 1 end
+            elseif how == "walk" then plan = function() return { [dir] = true, walk = true } end
+            elseif how == "downA" then plan = function(q, f) if f < 4 then return { down = true }, f == 2 end; return {} end end
+            if j[8] == "bounce" then
+              r = run(st, plan, 3, function(q) return q.vy < -300 end)
+              report(j[1] .. ": it bounces her up", st.pepper.vy < -300, ("vy %.0f"):format(st.pepper.vy))
+            else
+              if how == "taphold" then                                 -- (the landing on the awning bounces on)
+                r = run(st, plan, 4, function(q) return q.onGround and q.y < 548 end)
+              else r = run(st, plan, 3) end
+              local inX = not j[7] or (r.x + 13 > j[7][1] and r.x - 13 < j[7][2])
+              report(j[1], r.landed and near(r.y, j[6]) and r.hearts == 3 and inX, ("y %.1f x %.0f"):format(r.y, r.x))
+            end
+          end
+        end },
+      -- 5 every fall off the high road lands on a floor below, no heart lost, never out of the map
+      { act = function()
+          local def = api.stage().def
+          local n, bad = 0, {}
+          for _, pr in ipairs(def.props) do
+            if pr.kind == "oneway" and not pr.loose and not pr.bounce and pr.y0 ~= 664 and pr.y0 ~= 280 then
+              for _, how in ipairs({ "left", "right", "down" }) do
+                local st = fresh()
+                local x = how == "left" and pr.x0 + 14 or how == "right" and pr.x1 - 14 or pr.x0 + 20
+                place(st, x, pr.y0)
+                local r
+                if how == "down" then r = run(st, function(q, f) if f < 4 then return { down = true }, f == 2 end; return {} end, 4)
+                else r = run(st, function() return { [how] = true, walk = true } end, 4) end
+                n = n + 1
+                if not (r.landed and r.y > pr.y0 and r.hearts == 3 and not r.fell) then bad[#bad + 1] = ("%d,%d %s -> y %.0f"):format(pr.x0, pr.y0, how, r.y) end
+              end
+            end
+          end
+          report(("every fall off the high road (%d: off each end, Down + A) lands safely below"):format(n), #bad == 0, table.concat(bad, "; "))
+        end },
+      -- 6 the gull's nest and the fetch
+      { act = function(p, s) tp(3698, 276); p.face = 1 end }, { wait = 0.3 },
       { act = function() love.keypressed("z") end }, { wait = 1.2 },
       { act = function(p, s)
-          report("a bark from the copper roof: the gull lets go, the ball lands on the chimney", s.ball.state == "rest" and near(s.ball.y, 136) and s.magpie.state ~= "perch",
+          report("a bark from the copper roof: the gull lets go, the ball lands on the chimney", s.ball.state == "rest" and near(s.ball.y, 184) and s.magpie.state ~= "perch",
             ("ball %s y %.0f"):format(s.ball.state, s.ball.y)) end },
-      { act = function(p, s) tp(s.ball.x + 18, 136); p.face = -1 end }, { wait = 0.3 },
+      { act = function(p, s) tp(s.ball.x + 18, 184); p.face = -1 end }, { wait = 0.3 },
       { act = function() love.keypressed("x") end }, { wait = 0.5 },
       { act = function(p) report("on the chimney Pepper picks the ball up", p.carrying ~= nil) end },
-      { act = function(p, s) tp(1740, 328); p.face = -1 end }, { wait = 0.2 },
+      { act = function(p, s) tp(3660, 376); p.face = -1 end }, { wait = 0.2 },
       { act = function() love.keypressed("x") end }, { wait = 0.4 },
-      { act = function(p, s) report("giving the ball to Mia on the terrace: GOOD GIRL (FETCH 2000)", s.ball.state == "given" and s.bonus and s.bonus[2] == 2000, s.ball.state) end },
+      { act = function(p, s) report("giving the ball to Mia at the roof cafe: GOOD GIRL (FETCH 2000)", s.ball.state == "given" and s.bonus and s.bonus[2] == 2000, s.ball.state) end },
       { wait = 2.6 },
       { act = function(p, s) report("the fetch ends the level", s.events.clear == true or api.getState() ~= "play", api.getState()) end },
       { act = function()
@@ -226,64 +303,125 @@ return function(mode, api)
     love.filesystem.createDirectory("rec_rooftops")
     local function at(cond, act, limit) return { cond = cond, act = act or function() end, limit = limit or 8 } end
     local function settle() return at(function(p) return p.onGround and math.abs(p.vx) < 1 end, function() release() end, 3) end
-    local function runTo(x, ...)
-      local extra = { ... }
-      return at(function(p) if p.x >= x then return true end; local h = { right = true }; for _, k in ipairs(extra) do h[k] = true end; I.force = h; return false end,
-        function() release() end, 25)
+    local function runTo(x, limit)
+      return at(function(p) if p.x >= x then return true end; I.force = { right = true }; return false end, function() release() end, limit or 25)
     end
     local function goTo(x)
       return at(function(p) if math.abs(p.x - x) < 3 then release(); return math.abs(p.vx) < 1 end
           I.force = { [p.x < x and "right" or "left"] = true, walk = true }; return false end, function() release() end, 8)
     end
-    local function vent(s, name) for _, v in ipairs(s.vents) do if v.d.name == name then return v end end end
-    steps = { { wait = 1.2 }, { act = function() love.keypressed("space") end }, { wait = 0.3 },
-      runTo(76),
-      { act = function() hold("right", "jump"); love.keypressed("space") end }, { wait = 0.4 }, { act = function() hold("right") end },   -- the cafe table
-      runTo(1660), settle(),                                                    -- up the stairwells to the terrace
-      goTo(1692),                                                               -- onto the terrace fan
-      at(function(p, s) return vent(s, "TERRACE FAN").st == "puff" or not p.onGround end, nil, 6),
-      at(function(p) return p.onGround and p.y < 300 end, function() release() end, 4), settle(),   -- the copper roof
-      goTo(1778), { act = function(p) p.face = 1; love.keypressed("z") end },    -- bark: the gull lets go, the sauna steams
-      at(function(p, s) return not p.onGround end, function() hold("right") end, 4),
+    -- stand on a vent, wait for its puff, steer (dir) once in the air, until she lands at or above floor y
+    local function ride(name, dir, floor)
+      local x
+      return { at(function(p, s) for _, v in ipairs(s.vents) do if v.d.name == name then x = (v.d.x0 + v.d.x1) / 2 end end; return true end),
+        { cond = function(p) if math.abs(p.x - x) < 3 then release(); return math.abs(p.vx) < 1 end
+            I.force = { [p.x < x and "right" or "left"] = true, walk = true }; return false end, act = function() release() end, limit = 8 },
+        at(function(p) return not p.onGround end, nil, 6),
+        at(function(p) if dir then I.force = { [dir] = true } end; return p.onGround and p.y <= floor + 1 end, function() release() end, 5),
+        settle() }
+    end
+    local function flat(list) local out = {}; for _, e in ipairs(list) do if e[1] then for _, q in ipairs(e) do out[#out + 1] = q end else out[#out + 1] = e end end; return out end
+    local goose = function(s) for _, k in ipairs(s.critters) do if k.kind == "goose" then return k end end end
+    local high = os.getenv("AUTO_ROUTE") == "high"
+    local route
+    if not high then
+      route = {
+        runTo(76),
+        { act = function() hold("right", "jump"); love.keypressed("space") end }, { wait = 0.4 }, { act = function() hold("right") end },   -- the cafe table
+        runTo(1180), settle(),                                          -- stairwell A, over R1
+        ride("KITCHEN FAN", "right", 856),                              -- beat 1: the first puff
+        runTo(1700), runTo(1960), settle(),                             -- the light well's tiles (run!), R2
+        ride("LAUNDRY VENT", "right", 760),
+        runTo(2300), settle(), ride("SWEEP VENT", "right", 664),     -- the market hall: over the chimneys,
+        runTo(2690),                                                   -- the skylight's tiles (run!)
+        at(function(p, s) local k = goose(s); I.force = { right = true }                -- beat 3: the roof garden's goose
+          if k.state ~= "gone" and math.abs(k.x - p.x) < 72 then release(); love.keypressed("z"); return true end
+          return k.state == "gone" or p.x > 3010 end, nil, 15), settle(),
+        ride("GARDEN VENT", "right", 664),                              -- beat 2: the balcony
+        runTo(3270), settle(),                                          -- its loose tiles
+        ride("BALCONY VENT", "right", 568),
+        goTo(3388), { act = function() hold("right"); love.keypressed("space") end },   -- the awning
+        at(function(p) return p.onGround and p.y < 460 end, function() release() end, 4), settle(),
+        ride("TANK VENT", "right", 376),
+      }
+    else
+      route = {
+        runTo(76), { act = function() hold("right", "jump"); love.keypressed("space") end }, { wait = 0.4 }, { act = function() hold("right") end },
+        runTo(1180), settle(), ride("KITCHEN FAN", "right", 856),
+        ride("ATTIC FAN", "right", 760),
+        goTo(1470), { act = function() hold("right") end },             -- the attic's loose tiles: tap hops
+        at(function(p) if p.onGround and p.x >= 1500 and p.x < 1660 then love.keypressed("space") end; return p.onGround and p.x >= 1680 end, function() release() end, 6), settle(),
+        goTo(1748), { act = function() hold("right", "jump"); love.keypressed("space") end }, { wait = 0.5 }, { act = function() release() end }, settle(),
+        goTo(1846), { act = function() hold("right", "jump"); love.keypressed("space") end }, { wait = 0.5 }, { act = function() release() end }, settle(),
+        ride("LOFT VENT", "right", 600),
+        goTo(2068), { act = function() hold("right", "jump"); love.keypressed("space") end }, { wait = 0.5 }, { act = function() release() end }, settle(),
+        goTo(2196), { act = function() hold("right", "jump"); love.keypressed("space") end }, { wait = 0.5 }, { act = function() release() end }, settle(),
+        goTo(2280), { act = function() hold("right") end },
+        at(function(p) if p.onGround and p.x >= 2310 and p.x < 2470 then love.keypressed("space") end; return p.onGround and p.x >= 2490 end, function() release() end, 6), settle(),
+        goTo(2548), { act = function() hold("right", "jump"); love.keypressed("space") end }, { wait = 0.5 }, { act = function() release() end }, settle(),
+        goTo(2670), { act = function() hold("right") end },
+        at(function(p) if p.onGround and p.x >= 2700 and p.x < 2840 then love.keypressed("space") end; return p.onGround and p.x >= 2854 end, function() release() end, 6), settle(),
+        goTo(2868), { act = function() hold("right", "jump"); love.keypressed("space") end },   -- the chimney pot: the golden bone
+        at(function(p) return p.onGround and p.y < 560 end, function() release() end, 3), settle(),
+        { act = function() hold("right", "walk") end }, at(function(p) return p.onGround and p.y > 590 end, function() release() end, 3), settle(),
+        ride("BAKERY CHIMNEY", "right", 456),
+        goTo(3110), { act = function() hold("right", "jump") end },
+        at(function(p) if p.onGround and p.x >= 3180 and p.y > 430 then love.keypressed("space") end; return p.onGround and p.x >= 3360 and p.y < 430 end, function() release() end, 6), settle(),
+        ride("BAR FAN", "right", 280),
+      }
+    end
+    local finale = {
+      settle(), goTo(3612),                                             -- the terrace fan (the high road skips it)
+      at(function(p) return p.y < 300 or not p.onGround end, nil, 6),
+      at(function(p) return p.onGround and p.y < 300 end, function() release() end, 4), settle(),
+      goTo(3698), { act = function(p) p.face = 1; love.keypressed("z") end },    -- bark: the gull lets go, the sauna steams
+      at(function(p) return not p.onGround end, function() hold("right") end, 4),
       at(function(p) return p.onGround and p.y < 200 end, function() release() end, 4), settle(),
-      goTo(1812), { act = function(p) p.face = 1 end },
+      goTo(3732), { act = function(p) p.face = 1 end },
       at(function(p, s) return s.ball.state == "rest" end, function() love.keypressed("x") end, 4), { wait = 0.6 },
-      { act = function() hold("left", "walk") end },                            -- step off onto the copper roof
+      { act = function() hold("left", "walk") end },                   -- step off onto the sauna's hood
       at(function(p) return p.onGround and p.y > 200 end, function() release() end, 4), settle(),
-      goTo(1752), { act = function() hold("down"); love.keypressed("space") end }, { wait = 0.2 }, { act = function() release() end },
+      goTo(3672), { act = function() hold("down"); love.keypressed("space") end }, { wait = 0.2 }, { act = function() release() end },
       at(function(p) return p.onGround and p.y > 300 end, function() release() end, 4), settle(),
-      goTo(1752), { act = function(p) p.face = -1; love.keypressed("x") end },
+      goTo(3670), { act = function(p) p.face = -1; love.keypressed("x") end },
       { wait = 6 }, { act = function(p, s)
           local st = s:stats()
-          print(("AUTOPILOT %s: bones %d/%d, secrets %d/%d, lives %d hearts %d, %.1f s played"):format(api.getState() == "clear" and "GOOD GIRL!" or api.getState(),
+          print(("AUTOPILOT (%s road) %s: bones %d/%d, secrets %d/%d, lives %d hearts %d, %.1f s played"):format(high and "high" or "low",
+            api.getState() == "clear" and "GOOD GIRL!" or api.getState(),
             st.bones, st.total, st.secrets, st.secretsTotal, st.lives, st.hearts, s.def.time - st.time)); io.stdout:flush()
           love.event.quit() end },
     }
+    if high then table.remove(finale, 2); table.remove(finale, 2); table.remove(finale, 2); table.remove(finale, 2) end
+    steps = flat({ { wait = 1.2 }, { act = function() love.keypressed("space") end }, { wait = 0.3 } })
+    for _, e in ipairs(flat(route)) do steps[#steps + 1] = e end
+    for _, e in ipairs(flat(finale)) do steps[#steps + 1] = e end
   else  -- --test: a screenshot tour; frames of a puff and of a loose tile
     local rec
     local function shot(name) return { act = function() love.graphics.captureScreenshot(name .. ".png") end } end
     steps = { { act = function() api.setState("intro") end }, { wait = 0.6 }, shot("rt_00_intro"),
       { act = function() love.keypressed("space") end }, { wait = 0.3 } }
-    local spots = { { 60, 904 }, { 400, 800 }, { 560, 712 }, { 640, 616 }, { 860, 520 }, { 1100, 488 }, { 1300, 520 },
-      { 1280, 360 }, { 1500, 312 }, { 1660, 328 }, { 1650, 232 }, { 1824, 136 } }
+    local spots = { { 60, 1144 }, { 640, 1080 }, { 1100, 952 }, { 1500, 856 }, { 1900, 856 }, { 2840, 760 },
+      { 3110, 664 }, { 3400, 568 }, { 3590, 376 }, { 3640, 280 }, { 3744, 184 },
+      { 1470, 760 }, { 1820, 728 }, { 2020, 600 }, { 2908, 552 }, { 3090, 456 }, { 3400, 424 } }
     for i, sp in ipairs(spots) do
       steps[#steps + 1] = { act = function() tp(sp[1], sp[2]) end }
       steps[#steps + 1] = { wait = 0.25 }
       steps[#steps + 1] = shot(("rt_%02d_spot"):format(i))
     end
     for _, st in ipairs({
-      { act = function(p, s) love.filesystem.createDirectory("rec_rooftops_puff"); tp(632, 708); s.vents[1].st, s.vents[1].t = "rest", 0.8; rec = { dir = "rec_rooftops_puff", n = 0 } end },
-      { wait = 3.2 }, { act = function() rec = nil end },
-      { act = function(p, s) love.filesystem.createDirectory("rec_rooftops_tile"); tp(812, 520); rec = { dir = "rec_rooftops_tile", n = 0 } end },
+      { act = function(p, s) love.filesystem.createDirectory("rec_rooftops_puff"); tp(1212, 952); p.face = 1
+          for _, v in ipairs(s.vents) do if v.d.name == "KITCHEN FAN" then v.st, v.t = "rest", 0.6 end end
+          rec = { dir = "rec_rooftops_puff", n = 0 } end },
+      { wait = 3.0 }, { act = function() rec = nil end },
+      { act = function(p, s) love.filesystem.createDirectory("rec_rooftops_tile"); tp(1584, 856); rec = { dir = "rec_rooftops_tile", n = 0 } end },
       { wait = 2.0 }, { act = function() rec = nil end },
       { act = function() love.event.quit() end },
     }) do steps[#steps + 1] = st end
-    local old = love.update
     local f = 0
     api.recHook = function() if rec then f = f + 1; if f % 2 == 0 then rec.n = rec.n + 1; love.graphics.captureScreenshot(("%s/%04d.png"):format(rec.dir, rec.n)) end end end
   end
 
-  local i, since, frame, n, lastHearts = 1, 0, 0, 0, nil
+  local i, since, frame, n, lastHearts, barkT = 1, 0, 0, 0, nil, 0
   local old = love.update
   love.update = function(dt)
     dt = 1 / 60; since = since + dt
@@ -294,6 +432,8 @@ return function(mode, api)
       frame = frame + 1
       if s and s.hearts ~= (lastHearts or s.maxHearts) then print(("  lost a heart at x %.0f y %.0f (step %d)"):format(p.x, p.y, i)) end
       lastHearts = s and s.hearts
+      barkT = barkT - dt
+      if s and Cr.gullWarn(s) and barkT <= 0 then love.keypressed("z"); barkT = 0.5 end   -- a gull squawks: bark it off
       if os.getenv("AUTO_TRACE") and frame % 10 == 0 then print(("F %d x %.0f y %.0f step %d"):format(frame, p.x, p.y, i)) end
       if frame % 3 == 0 and not os.getenv("NO_REC") then n = n + 1; love.graphics.captureScreenshot(("rec_rooftops/%04d.png"):format(n)) end
     end
