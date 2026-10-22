@@ -36,8 +36,8 @@ Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untou
   with a scramble at the far edge, walking off or running off the edge falls in (a heart, back to the lamp). The
   hint is "RUN, HOLD: BIG JUMP", the bone over it moved onto the jump's arc. For designers (docs/tiled.md is on
   another branch): a gap Pepper must not walk or scramble across is at least 64 px; a running held jump clears
-  about 110 px (from her numbers, not measured). lab_tall `--physics` 40 of 40 (6 new pit checks, all played, no teleport), `--auto` GOOD GIRL! in
-  25.9 s, 13/13 bones, `--qa` 0 problems.
+  about 110 px (from her numbers, not measured). lab_tall `--physics` 40 of 40 (6 new pit checks, all played, no
+  teleport), `--auto` GOOD GIRL! in 25.9 s, 13/13 bones, `--qa` 0 problems.
 - **The ground in chunks** (review 8). The painted ground (terrain, pavement, path) was one canvas as big as the
   world (a 16 x 3 screen level: 15 to 20 MB of video memory, and wider or taller than the handheld's largest
   texture). It is now cut into canvases of 512 x 512 px (`Sc.CHUNK`, the last ones smaller), each drawn only when
@@ -85,6 +85,9 @@ Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untou
   chimney, Down + A off the copper roof; the nest; the fetch ends the level). `--auto`: the low road and the
   finale, GOOD GIRL! in 21.8 s, 21/34 bones, no heart lost. `--qa`: 5509 runs, 0 problems. `--test`: a tour and
   frames of a puff and a loose tile.
+- **For `docs/tiled.md`** (on another branch, not touched here): new fields to document are a zone's `roadY` and
+  `band`, the `steam` objects and their properties, props with `loose = true`, `magpie.look = "gull"`, a piece's
+  `foot`, and the minimum gap width (64 px). The loader (`tiled.lua`) needed no change: all of it passes through.
 
 ## The old title is back (22 Oct, evening)
 - The hand-pixeled title (branch `title/redraw`) was rejected by the owner: the 19 Oct title has far more charm.
