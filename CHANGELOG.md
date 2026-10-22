@@ -28,6 +28,12 @@ it still hooks in only through main.lua's `--playtest` flag. Method: `docs/playt
 - **The fox's sig** (pt_bot.lua): whether the fox was sniffed out at its hideout is part of the world sig, so a
   persona who missed the shed roof on Night Harbour goes back to sniff before she barks (it was picked up after the
   sniff, and the bark found no fox).
+- **Baseline v2** (docs/playtest/baseline_v2_22oct.md, charts in /home/claude/out/r6-lab/): round1 as it is, three
+  orders (current; new: River Walk first, Rooftops 4th; tall: the tall City Park and Downtown) in whole-game mode,
+  8 personas x 10 seeds. No order passes; the tall order comes closest (only Downtown (tall) spikes; Elsa clears every
+  level in 80% or more). City Park and Downtown are the spikes of the other two, and the last three levels are flat
+  and easier than the middle in every order. Lost runs: 41% on 22 Oct, 2.3% now (Downtown 8.8%, City Park (tall)
+  7.5%, City Park 5.6% still over 5%). check_pepper: PEPPER UNCHANGED; check_flow: 103 of 103; City Park --auto 44.2 s.
 
 ## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
 Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of
