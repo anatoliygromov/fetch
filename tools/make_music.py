@@ -694,18 +694,18 @@ def chord_chart(song, marks, spans, length, rows, file_seconds):
     return "\n".join(lines)
 
 
-def piano_roll(song, x, ch, spans, marks, rows, path):
+def piano_roll(song, x, ch, spans, marks, rows, length, path):
     from PIL import Image, ImageDraw
-    px = 3 if rows <= 400 else 2
-    W = max(400, rows * px + 60)
+    px = max(2, min(16, 1000 // rows))
+    cols = int(len(x) / SR / length * rows * px)          # the wave on the same time scale (a jingle rings on)
+    W = max(rows * px, cols) + 70
     lanes = [("lead", 52, 92, (250, 210, 70)), ("p2", 52, 92, (110, 200, 250)), ("bass", 28, 64, (240, 120, 90))]
     H = 70 + sum((hi - lo) * 2 + 14 for _, lo, hi, _ in lanes) + 60 + 30
     img = Image.new("RGB", (W, H), (18, 20, 30))
     d = ImageDraw.Draw(img)
-    d.text((6, 4), f"{song['name']}  {song['key']}  {song['bpm']} bpm  {rows // 16} bars", fill=(230, 230, 230))
+    d.text((6, 4), f"{song['name']}  {song['key']}  {song['bpm']} bpm  {rows // 16} bar{'s' if rows > 16 else ''}", fill=(230, 230, 230))
     # waveform
     wy, wh = 20, 44
-    cols = W - 60
     for c in range(cols):
         a = int(c * len(x) / cols)
         b = max(a + 1, int((c + 1) * len(x) / cols))
@@ -782,7 +782,7 @@ def main():
         charts.append(chord_chart(song, marks, spans, length, rows, len(x) / SR))
         if out:
             shutil.copy(ogg, out)
-            piano_roll(song, x, ch, spans, marks, rows, os.path.join(out, song["name"] + ".png"))
+            piano_roll(song, x, ch, spans, marks, rows, length, os.path.join(out, song["name"] + ".png"))
         if song["name"] == "title":
             size = write_mod(song, os.path.join(MUSIC, "title.mod"), "FETCH! title")
             print(f"{'title.mod':<14} {size // 1024} KB (tracker module, 4 channels)")
