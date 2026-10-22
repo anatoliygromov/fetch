@@ -408,7 +408,12 @@ return function(mode, api)
       steps[#steps + 1] = shot(("ct_%02d_spot"):format(i))
     end
     for _, st in ipairs({ { act = function() tp(1000, PATH) end }, { wait = 0.5 }, { act = function() hold("up") end }, { wait = 1.6 },
-      shot("ct_20_lookup_from_the_lawn"), { act = function() release(); love.event.quit() end } }) do steps[#steps + 1] = st end
+      shot("ct_20_lookup_from_the_lawn"), { act = function() release() end },
+      -- the leaf carts on the low road (engine/round2): walk into the first cart run and up onto the picnic table
+      { act = function() local s = api.stage(); s.hearts = 3; s.bikes, s.zoneIn, s.bikeT = {}, {}, 2.5; tp(1350, PATH); hold("right") end },
+      { wait = 0.45 }, shot("ct_21_cart_warning"), { wait = 0.75 }, shot("ct_22_cart_coming"),
+      { act = function() release(); tp(1452, 300) end }, { wait = 0.9 }, shot("ct_23_cart_under_the_table"),
+      { act = function() love.event.quit() end } }) do steps[#steps + 1] = st end
   end
 
   local i, since, T, lastHearts = 1, 0, 0, nil
