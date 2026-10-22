@@ -33,6 +33,9 @@ Built on `main` (v0.5). No SpriteCook credits. See `docs/tiled.md`.
   `tools/tiled/render_map.py maps/<name>.tmx out.png --rows 3` draws a map layer by layer (terrain, props by kind,
   zones, movers with their paths, geese with their stretches, lamps, bones, the magpie's perches numbered, hints).
   The tools find LOVE and Tiled in `/Applications` on a Mac with no Lua installed.
+- **`docs/tiled.md`**, a guide for drawing levels: the files, opening a map, the units and Pepper's limits (34 x 26
+  px, 16 crouched; hop 24, held jump 46, scramble 58 px), what each layer and object means, adding a prop, a bone
+  or a lamp, notes, exporting (Ctrl+E), running the game on a Mac, switching a level to Tiled and back, taller maps.
 ## Branch `assets/v2`: the tram fix and art for the new pieces (19 Oct)
 Built on `levels/v2`.
 - **The trams end in tram sheds** (Downtown). Before, the first tram vanished in plain view before the fountain,
