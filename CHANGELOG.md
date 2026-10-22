@@ -26,6 +26,18 @@ keeps the old rules everywhere. Pepper's files are untouched; music is untouched
   red heart pops out of the lamp's light and floats up 26 px, fading, over 1.2 s; it rings the existing "heart"
   chime instead of the lamp's "checkpoint" chime so the gift is heard (at full hearts the lamp chimes as before).
   Not in hard mode (1 heart).
+- **Tells** (principle 7). Audit of every hazard's warning, at least 0.5 s and on screen before it can hit:
+  bikes, carts, trams (bell, honk or ding 1 s before the front reaches the screen edge, and the blinking sign at
+  that edge: OK); goose (0.5 s hiss, rearing pose and a "!" before the charge: OK at the minimum; a goose walked
+  into from behind or landed on from a jump has no hiss, it is in plain view); gull (squawk and its shadow on her
+  floor 0.9 s before the swoop: OK); steam (never hurts); loose roof tiles (0.6 s shake, clink and grit; they only
+  drop her, never fall on her); Night Harbour's crumbling planks (0.5 s shake and a scramble sound); the fox (never
+  hurts); hatches and water (static, in view). Added in code: **the chase's barrels** (chase.lua) now show a
+  blinking "!" as they come off the stack (with the existing "spring"), a "!" again with a rumble ("push") while
+  Pepper closes in within 110 px behind one (about a second at a run), and a shadow on the street; the playtest
+  found Soder Hill's barrels the costliest hazard for Mikael and Elsa (fix 9). Art-dependent tells left for the
+  art plan: a goose pose for "annoyed, about to turn" (so a goose walked into from behind warns too), a barrel
+  wobble frame on the stack, a cart keeper or tram driver waving as the bell rings.
 
 ## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
 Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of

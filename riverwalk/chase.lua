@@ -16,7 +16,8 @@
 --   Barrels      the ball knocks a barrel off a stack (L.barrels: when the ball passes trigger); it rolls down the
 --                street slower than the chase, so Pepper catches up with it: hop over it. Touching it costs a heart
 --                (a knock-back; carrying the ball, the ball is knocked out instead: St:hazardHit). A barrel that
---                drops into a hatch is gone.
+--                drops into a hatch is gone. Its tell: a "!" as it comes off the stack (with the "spring"), and a
+--                "!" with a rumble while Pepper closes in on it (CLOSE px), and its shadow on the street.
 -- A respawn (or a test moving the camera) restarts the scroll from the new camera, puts the ball back on screen
 -- and stacks the barrels again that are still ahead.
 local Pp = require("pepper")
@@ -31,6 +32,7 @@ local AHEAD = 240        -- while the ball rolls, Pepper can't run (on the groun
                          -- the chase sets the pace, as in Stampede. A jump still flies at her full speed (up to EDGE_R),
                          -- and when she lands past AHEAD she drifts back to it.
 local EDGE_R = 320 - HW - 2
+local CLOSE = 110        -- a rolling barrel shows its "!" while Pepper is this close behind it
 local BARREL_HIT = 5     -- a barrel hurts only on a real touch: its middle 10 px against Pepper's body without her paws
 
 -- the speed of the scroll at camera x
@@ -166,9 +168,15 @@ function Ch.update(s, dt)
   -- barrels: knocked off their stack by the ball, they roll down the street
   for _, br in ipairs(c.barrels) do
     if br.state == "stack" and b.state == "roll" and b.x >= br.def.trigger then
-      br.state, br.vx, br.vy = "roll", br.def.speed or 45, -60; S.play("spring")
+      br.state, br.vx, br.vy, br.t = "roll", br.def.speed or 45, -60, 0; S.play("spring")
     elseif br.state == "roll" then
       roll(w, br, br.x + br.vx * dt, dt, false)
+      br.t = (br.t or 0) + dt
+      -- the tell (principle 7): a "!" over it as it comes off the stack, and again with a rumble once Pepper is
+      -- closing in (within CLOSE px behind it, about a second before she would touch it at a run)
+      local d = br.x - p.x
+      br.close = d > -8 and d < CLOSE and math.abs(br.y - p.y) < 40
+      if br.close and not br.rumbled then br.rumbled = true; S.play("push") end
       if br.y > 250 or br.x < s.cam - 60 or br.x > w.width then br.state = "gone" end
       local x0, y0, x1, y1 = p:box()
       if br.state == "roll" and x1 - 6 > br.x - BARREL_HIT and x0 + 6 < br.x + BARREL_HIT and y1 > br.y - 12 and y0 < br.y and p:hurt(br.x, w) then s:hazardHit() end
@@ -209,7 +217,11 @@ function Ch.draw(s, cam)
       barrel(br.def.x - cam, br.def.y, false, 0)
       for _, o in ipairs(br.def.rest or {}) do barrel(o[1] - cam, o[2], false, 0) end   -- the rest of the stack stays
     elseif br.state == "roll" then
+      Sc.shadow(br.x - cam, br.y - 1, 14)
       barrel(br.x - cam, br.y, true, s.t)
+      if (br.t or 0) < 0.8 or br.close then                         -- the tell: a blinking "!" over it
+        if math.floor(s.t * 8) % 2 == 0 then lg.setColor(1, 0.85, 0.2); require("bigfont").print("!", math.floor(br.x - cam) - 2, math.floor(br.y) - 28, 1); lg.setColor(1, 1, 1, 1) end
+      end
       for _, o in ipairs(br.def.rest or {}) do barrel(o[1] - cam, o[2], false, 0) end
     else for _, o in ipairs(br.def.rest or {}) do barrel(o[1] - cam, o[2], false, 0) end end
   end
