@@ -2,6 +2,30 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r3/design`: the tall Downtown and the Metro plan (22 Oct)
+Built on `round1`. Level design only: no engine files changed, no SpriteCook, music untouched.
+- **Downtown, tall** (`downtown_tall`, greybox, not in `levels.lua`: `love riverwalk --level downtown_tall`). A
+  Tiled map, `maps/downtown_tall.tmx` (440 x 60 cells, 3520 x 480 px, 11 x 2 screens), exported to
+  `level/tiled/downtown_tall.lua`; `level/downtown_tall.lua` loads it. Its first version is drawn by
+  `tools/make_downtown_tall.py` from Downtown (moved down 30 rows: the street is at y 424, and on the street the
+  camera rests at the bottom of the world, so the low road looks as before), plus the high road over the roofs:
+  a balcony from the bakery sign, the loggia over the statue (the cat can be barked off from there), the guild
+  house's pitched roof (one-way steps 4 px high) with its chimney (the golden bone), the gallery over the fountain
+  in two solid halves (the gap between them drops onto the fountain's top tier), six roof ledges over tram street
+  and the flower market with a springy window awning, and the footbridge over the canal. Both roads meet before the
+  flooded square. The trams have `roadY = 424`. 2 lamps up high, 27 more bones, the GOLDEN BONE secret (5 in all),
+  the landmark (Riddarholmen church's spire over the river stairs). Greybox only: no `L.art` (the town art is
+  drawn at y 184). Downtown's old balcony route stays as a middle tier under the roofs.
+- **Checks** (`riverwalk/tests_downtown_tall.lua`): `--physics` 81 of 81: the world and camera, the trams on the
+  street only (both zones: set off with the warning, hurt on the street, pass under the shelter, never come on the
+  roofs), her 46 / 24 px measured, 47 jumps simulated with her own controller (the low road, the two ways up, the
+  high road standing and running, the old balcony route under the new roofs), 4 jumps that must fail, the roof's
+  steps and the chimney, 63 ways off the high road all land with no heart lost and never in the water, the solid
+  walks over water, the cat from the loggia, bones, lamps, secrets, the fetch ends the level. `--auto` plays the
+  high road with the ball: GOOD GIRL! in 56.9 s, no heart lost, 4 of 5 secrets. `--qa` 0 problems.
+  `tools/check_tiled.sh` covers `downtown_tall` (LEVELS, MAPPED, its export up to date).
+- **Paper map with routes:** `python3 tools/draw_routes.py downtown_tall <out.png>`.
+
 ## Branch `engine/round2`: the review's engine fixes and the rooftops mechanics (22 Oct)
 Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untouched (`check_pepper` UNCHANGED).
 - **The lift never waits at her crouched height** (review, SHOULD FIX 2). A lift coming down over a crouched Pepper
