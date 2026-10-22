@@ -8,7 +8,9 @@
 --   Saved:        progress.txt (the open levels, one name per line), best_run.txt (the best run score), the
 --                 best points per level (best.txt for River Walk, best_<name>.txt for the others), the best clear
 --                 time per level (time_<name>.txt, seconds) and the medals won on it (medals_<name>.txt: nohit,
---                 bones, par), and hard.txt (1: HARD MODE is on).
+--                 bones, par), hard.txt (1: HARD MODE is on) and bonus_best.txt (the best FETCH FRENZY points).
+--   Bonus:        a level cleared with at least one of its golden bones found: tally -> FETCH FRENZY (bonus.lua,
+--                 30 s, its points go into the run's score, 11 catches (bonus.lua B.LIFE_AT) give an extra life) -> story card.
 --   Medals:       NO HIT (no heart lost), ALL BONES, PAR TIME (cleared within the level's par, levels.lua).
 --   Cards:        the story card waits 2 s, then only A goes on. GAME OVER: TRY AGAIN (the same level, 3 lives,
 --                 the score it started with) or MENU. The pause: GO ON or QUIT, and QUIT asks first (B is sneak,
@@ -43,7 +45,7 @@ function F.load()
   F.hard = (read("hard.txt") or ""):match("1") ~= nil
 end
 -- every save file (the flow test starts from none)
-F.FILES = { "progress.txt", "best_run.txt", "hard.txt" }
+F.FILES = { "progress.txt", "best_run.txt", "hard.txt", "bonus_best.txt" }
 function F.wipe()
   local list = {}
   for _, n in ipairs(F.FILES) do list[#list + 1] = n end
@@ -92,6 +94,19 @@ function F.addMedals(name, won)
 end
 -- 35.3 -> "0:35.3"
 function F.clock(t) t = math.max(0, t or 0); return ("%d:%04.1f"):format(math.floor(t / 60), t % 60) end
+
+-- FETCH FRENZY (bonus.lua): the bonus round opens after a level's tally when Pepper found at least one of the
+-- level's golden bones (super = true in its bones list). A level with none never opens it.
+function F.bonusOpen(stage)
+  for _, bn in ipairs(stage and stage.bones or {}) do if bn.super and bn.taken then return true end end
+  return false
+end
+-- the best bonus round points (bonus_best.txt): true if these beat it
+function F.bonusBestPoints() return tonumber(read("bonus_best.txt") or "") or 0 end
+function F.bonusBest(points)
+  if points <= F.bonusBestPoints() then return false end
+  write("bonus_best.txt", tostring(points)); return true
+end
 
 -- the run is over (the ending or GAME OVER): true if its score is the best run
 function F.runOver(score)

@@ -2,6 +2,34 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r3/bonus`: FETCH FRENZY, the golden bone bonus round (22 Oct)
+Built on `round1`. Gameplay only, no new art, no SpriteCook. Pepper's files are untouched (`check_pepper` UNCHANGED).
+- **The rule.** A level cleared with at least one of its golden bones found (`super` bones, `bone_gold` art; every
+  level has two to four) opens FETCH FRENZY after the tally, before the story card (`Flow.bonusOpen`). No golden
+  bone: tally, then the story card as before. Its points go into the tally's and the run's score.
+- **The round** (`riverwalk/bonus.lua`). One screen of City Park lawn (City Park's own sky, skyline, tree line,
+  near trees and path, drawn by `scene.lua`), 30 seconds. Mia stands on the left and throws every item with a
+  throwing animation (her wave clip winds up for 0.36 s with the item in her hand, the cheer clip's open arms let
+  go); nothing moves by itself. Balls bounce and roll, sticks spin and drop flat, frisbees glide down slowly.
+  Pepper is the levels' Pepper (`pepper.lua`'s controller and numbers): she runs, hops, jumps, crawls; her body box
+  catches. In the air: +100, on the lawn: +50, both count as catches; off the screen or 3 s lying still: lost.
+  The stick and the frisbee are a few hand-placed pixels in code (12 x 3, 12 x 5); the ball is `art/ball.png`.
+- **Three rounds**, so two levels in a row never play the same one: BALL RALLY (levels 1 and 4), STICK TIME (2 and
+  5), FRISBEE FLOAT (3). Each starts with a short and a long ball to learn the arc; 14 or 15 throws.
+- **Extra life at 11 catches** (`B.LIFE_AT`). Tuned with a model child set before tuning (reacts 0.45-0.9 s late,
+  runs to a spot up to 50 px off, jumps up to 0.25 s off time, skips 40% of the jumps): 50% of 120 model rounds
+  reach 11 (10 would be 84%). At most 9 lives. Best points saved in `bonus_best.txt`.
+- **Screens.** Intro card (FETCH FRENZY!, the goal, PRESS ANY BUTTON), READY... GO!, three signs (catches against
+  the goal, the time, points), the last 5 seconds big with a tick, TIME UP!, the result card (catches, in the air,
+  points, EXTRA LIFE! or GOOD TRY), then the flow goes on. Cards never cover Pepper (she is drawn over them).
+- **Hooks**: `main.lua` (state `bonus`, `--bonus`, `--level X --bonus`, `--bonus --physics`, `--bonus --auto`),
+  `flow.lua` (`bonusOpen`, `bonusBest`), `hud.lua` (`U.bonusStatus`).
+- **Checks**: `love riverwalk --bonus --physics` (`tests_bonus.lua`) 23 of 23: every throw lands on the lawn under
+  the signs and before the time is up; every throw can be caught in the air by the real controller starting
+  where the throw before landed (simulated, 44 of 44); Mia winds up before every throw; the timer ends the round;
+  the extra life at 11, not 10; the points; the autopilot catches 13-14 of each round; the model child; the flow
+  (golden bone: tally, bonus, story; none: tally, story). `--bonus --auto` records the autopilot (rec/).
+
 ## Branch `engine/round2`: the review's engine fixes and the rooftops mechanics (22 Oct)
 Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untouched (`check_pepper` UNCHANGED).
 - **The lift never waits at her crouched height** (review, SHOULD FIX 2). A lift coming down over a crouched Pepper

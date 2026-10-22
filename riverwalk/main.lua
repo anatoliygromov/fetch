@@ -16,6 +16,9 @@
 -- The flow (flow.lua): title -> menu (START GAME or LEVEL SELECT) -> each level: intro card, play, tally ->
 -- story card -> the next level ... -> the ending -> title. GAME OVER -> TRY AGAIN (the same level) or the menu.
 -- Hints and story lines are said in the talk panel (talk.lua); the tally shows times and medals (flow.lua).
+-- A level cleared with a golden bone found opens FETCH FRENZY (bonus.lua) between the tally and the story card.
+-- love riverwalk --bonus starts that bonus round directly (--level <name> --bonus: that level's round); with
+-- --physics or --auto it runs tests_bonus.lua (the checks, or the autopilot that records rec/ for a GIF).
 -- love riverwalk --level <name> starts a run at that level (no menus). The test flags (--physics, --auto,
 -- --test, --qa) play one level alone, River Walk unless --level names another; --flowtest checks the flow.
 function love.errorhandler(msg) io.stderr:write("ERROR: " .. tostring(msg) .. "\n" .. debug.traceback() .. "\n"); io.stderr:flush(); os.exit(1) end
@@ -32,6 +35,8 @@ local Flow = require("flow")
 local Talk = require("talk")
 local Se = require("settings")
 local Look = require("look")
+local Bonus = require("bonus")                                  -- FETCH FRENZY, the golden bone bonus round
+local bonus, bonusArg                                           -- the round being played; --bonus was given
 local devMode = false                                           -- --dev or a test flag: Select shows the debug view
 local levelName, def                                            -- the level being played
 local function argLevel(args)
@@ -63,6 +68,13 @@ local function startLevel()
   fresh(); S.music(musicOn)
 end
 local function startRun(i) run = Flow.newRun(i); if #run.names > 0 then startLevel() end end
+-- FETCH FRENZY: the round of the level just cleared (its number picks the round's throws)
+-- (direct: started by --bonus, so it goes back to the title afterwards)
+local function startBonus(direct)
+  local lv = Flow.levels[Flow.index(levelName) or 0] or {}
+  bonus = Bonus.new({ level = lv.number or def.number or 1 }); state, t = "bonus", 0; presses = {}
+  bonus.direct = direct
+end
 local Title = require("title")                                  -- the title screen: PRESS ANY KEY, then the menu
 local titleLeaving                                              -- seconds since a key was pressed on the title
 local function toTitle() state, t, titleLeaving, run = "title", 0, nil, nil; S.music(musicOn) end
@@ -73,6 +85,7 @@ local function leaveTitle()
 end
 function love.load(args)
   local lv, test = argLevel(args), nil
+  for _, a in ipairs(args or {}) do if a == "--bonus" then bonusArg = true end end
   for _, a in ipairs(args or {}) do
     if a == "--test" or a == "--auto" or a == "--physics" or a == "--qa" or a == "--flowtest" or a == "--lookshots" then test = a end
   end
@@ -91,13 +104,16 @@ function love.load(args)
     love.window.setTitle("FETCH!")
     if test then Flow.prefix = "flowtest_"; Flow.wipe() end
     Flow.load()
-    if lv and Flow.index(lv) and not test then startRun(Flow.index(lv)) else state, t = "title", 0 end
+    if bonusArg and not test then setLevel(lv or "citypark"); startBonus(true)                 -- --bonus: the round alone
+    elseif lv and Flow.index(lv) and not test then startRun(Flow.index(lv)) else state, t = "title", 0 end
   end
   local api = { stage = function() return stage end, setState = function(s) state = s end, getState = function() return state end, newRun = newRun,
     run = function() return run end, tally = function() return tally end, flow = Flow, talk = Talk,
+    bonus = function() return bonus end, startBonus = function() startBonus(true) end, startRun = startRun, levelName = function() return levelName end,
     over = function() return over end, pause = function() return pz end }
   for _, a in ipairs(args or {}) do
-    if a == "--test" or a == "--auto" or a == "--physics" then require(levelName == "riverwalk" and "tests" or ("tests_" .. levelName))(a, api) end
+    if (a == "--auto" or a == "--physics") and bonusArg then require("tests_bonus")(a, api)          -- the bonus round's checks
+    elseif a == "--test" or a == "--auto" or a == "--physics" then require(levelName == "riverwalk" and "tests" or ("tests_" .. levelName))(a, api) end
     if a == "--noextras" then Ex.enabled = false end
     if a == "--classic" then Look.on = false end                                        -- start with the look as before
     if a == "--lookshots" then require("tests_look")(api) end                                    -- start with the extras off
@@ -138,6 +154,21 @@ local function nextLevel()
     state, t = "ending", 0
   end
 end
+-- the round is over: its points go into the tally's (and the run's) score, B.LIFE_AT catches give an extra life (at most
+-- 9 lives); then the flow goes on as after the tally (the story card, the next level or the ending)
+local function finishBonus()
+  local r = bonus:result(); r.direct = bonus.direct
+  bonus.newBest = Flow.bonusBest(r.points)
+  if tally then tally.score = tally.score + r.points; tally.bonusDone = true; tally.bonus = r end
+  if run then run.score = run.score + r.points; if r.life then run.lives = math.min(9, run.lives + 1) end end
+  bonus = nil
+  if r.direct or not tally then toTitle() else nextLevel() end
+end
+-- a button in the bonus round: the cards take any button, in play the presses go to Pepper
+local function bonusKey(name)
+  if bonus:press(name) then return end
+  if name and bonus.phase ~= "intro" and bonus.phase ~= "result" then presses[name] = true end
+end
 -- GAME OVER: TRY AGAIN plays the same level again with 3 lives and the score it started with; MENU
 local function toMenu() state, t, run = "menu", 0, nil; Flow.menu.sel = 1; S.music(musicOn) end
 local function tryAgain() if run then run.lives = 3; startLevel() else newRun() end end
@@ -169,7 +200,9 @@ end
 -- the story card: only A goes on, after Flow.CARD_WAIT seconds (time to read it aloud)
 local function storyA() if state == "story" and t >= Flow.CARD_WAIT then S.play("select"); startLevel() end end
 local function anyKey()
-  if state == "clear" and tally and tally.done then S.play("select"); nextLevel()
+  if state == "clear" and tally and tally.done then
+    S.play("select")
+    if not tally.bonusDone and Flow.bonusOpen(stage) then startBonus() else nextLevel() end    -- a golden bone: the bonus
   elseif state == "ending" and t > Flow.ENDING_WAIT then S.play("select"); toTitle() end
 end
 -- the main menu and the level select
@@ -206,6 +239,7 @@ function love.keypressed(k, sc)
   if state == "title" and k == "escape" then love.event.quit(); return end
   if leaveTitle() then return end
   if state == "menu" or state == "select" then menuAction(Flow.action(k)); return end
+  if state == "bonus" then bonusKey(I.keyName(k)); return end
   if tuning and state == "play" then
     local n = tonumber(k) or tonumber((k:gsub("kp", "")))
     if n and TUNE[n] then tuneRow = n; return end
@@ -229,6 +263,7 @@ function love.gamepadpressed(j, b)
   if leaveTitle() then return end
   if b == "back" then if devMode then debugView = not debugView end; return end
   if state == "menu" or state == "select" then menuAction(Flow.action(nil, b)); return end
+  if state == "bonus" then bonusKey(I.padName(b)); return end
   if b == "start" and (state == "play" or state == "pause") then
     if state == "play" then state = "pause"; S.music(false) else resume() end
     return
@@ -300,6 +335,14 @@ function love.update(dt)
       end
     end
     if steps == 4 then acc = 0 end
+  elseif state == "bonus" then                                     -- FETCH FRENZY: fixed steps, as the levels
+    acc = acc + dt
+    local steps = 0
+    while acc >= DT - 1e-9 and steps < 4 do
+      bonus:update(DT, presses); presses = {}; acc = acc - DT; steps = steps + 1
+      if bonus.phase == "done" then finishBonus(); break end
+    end
+    if steps == 4 then acc = 0 end
   elseif state == "clear" then
     tally.t = tally.t + dt
     if tally.t > 1.4 and tally.shown < tally.points then              -- the points count up into the score
@@ -331,6 +374,7 @@ function love.draw()
   local screen = (state == "title" and function() Title.draw(t, titleLeaving) end)
     or (state == "menu" and function() Flow.drawMenu(t) end) or (state == "select" and function() Flow.drawSelect(t) end)
     or (state == "ending" and function() Flow.drawEnding(ending, t) end)
+    or (state == "bonus" and function() bonus:draw() end)
   if screen then                                                  -- the screens drawn without a level behind them
     screen()
     if Se.showing() then U.volumeToast(Se.volume, Se.MAX, 218) end
