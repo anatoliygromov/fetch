@@ -26,7 +26,7 @@ in `docs/playtest/curve_r7.md`. Pepper's files, music, sfx and the title are unt
   a tile drops 0.6 s after she lands), under the roof bar's gull; a miss drops her into the dip (a held jump and a
   scramble get her out, left). Off the stack's right side she drops onto the springy awning, which bounces her onto
   the water tank. The high road crosses above at 456 (a ledge, two loose tiles) and its ledge 424 now starts over
-  the stack. Hint HOLD: BIG JUMPS! at the dip. 12 new bones (88). Checks 103 of 103 (new: the staircase held and
+  the stack. Hint HOLD: BIG JUMP at the dip. 12 new bones (88). Checks 103 of 103 (new: the staircase held and
   tapped, out of the dip, off the stack onto the tank; counts 14 vents, 21 tiles). `--auto` low road 58.1 s (was
   54.1), high road 54.4 s (was 51.8). The goose spot (screen 9) was 43% of the failures; now 30%.
   Before/after: `/home/claude/out/r7-curve/rooftops_before_after.png`.

@@ -2832,7 +2832,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1,minY,maxY",
-            ["text"] = "HOLD: BIG JUMPS!",
+            ["text"] = "HOLD: BIG JUMP",
             ["btn"] = "a",
           },
         },

@@ -1031,7 +1031,7 @@
   <object id="168" type="hints" x="3380" y="540" width="52" height="32">
    <properties>
     <property name="box" value="x0,x1,minY,maxY"/>
-    <property name="text" value="HOLD: BIG JUMPS!"/>
+    <property name="text" value="HOLD: BIG JUMP"/>
     <property name="btn" value="a"/>
    </properties>
   </object>

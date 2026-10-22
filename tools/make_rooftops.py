@@ -269,7 +269,7 @@ props += [
 for pr in props:                                         # the high road's ledge 424 reaches back over the stack
     if pr["x0"] == 3344 + D and pr["y0"] == 424:
         pr["x0"] = 3600
-hints.insert(-1, {"x0": 3380, "x1": 3432, "btn": "a", "text": "HOLD: BIG JUMPS!", "minY": 540, "maxY": 572})
+hints.insert(-1, {"x0": 3380, "x1": 3432, "btn": "a", "text": "HOLD: BIG JUMP", "minY": 540, "maxY": 572})
 bones += [B(3384, T3), B(3476, 536), B(3532, 504), B(3500, WELL3_FLOOR), B(3600, 472), B(3640, 472), B(3664, 472),
           B(3700, T3), B(3392, 456), B(3484, 456), B(3540, 456), B(3628, 424)]
 
