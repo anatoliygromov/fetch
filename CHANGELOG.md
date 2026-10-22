@@ -2,6 +2,19 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r6/lab`: the playtest lab, recovery v2, whole-game mode, DI v2 and the curve check (22 Oct)
+Built on `round1`. The lab only (`riverwalk/playtest.lua`, `riverwalk/pt_bot.lua`, `tools/`); no game file changes,
+it still hooks in only through main.lua's `--playtest` flag. Method: `docs/playtest/method.md`.
+- **Recovery v2** (pt_bot.lua, playtest.lua, tools/pt_common.py, tools/run_playtest.py): the clean run now records a
+  route map (where each autopilot step began: place, floor, mover, buttons, speed, and the world's sig: the ball, the
+  magpie's perch, the fox's hideout, the cat; and the x range and lowest floor each step ran over). The persona runs
+  get it (`--route`). A persona who leaves the route (more than 72 px beside it or 20 px below it for 0.3 s) fails
+  there at once (`offroute`) instead of running on into the water; after any failure the bot settles, fetches a
+  loose ball, chases the magpie if it sits where the clean run never saw it, else walks to the nearest step on her
+  floor with the same sig and the autopilot goes on from there with the clean run's buttons; nothing on her floor:
+  the lab moves her there and charges the walk (`lab_walks`). A step picked up out of sequence that errors counts as
+  a stuck. Lost runs on the 22 Oct bot (5 seeds, every level): 127 of 320 (40%); with v2, see the baseline.
+
 ## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
 Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of
 every level, the menus and the cards. The bug list with evidence: `docs/bugs_22oct.md`. Pepper's files are untouched.

@@ -1,5 +1,6 @@
 -- Playtest lab (docs/playtest/method.md). Loaded only by its own flag; normal play and the checks never load it.
 --   love riverwalk --level <name> --auto --playtest <personaId> --seed <n> [--out <file.json>]
+--       [--route <perfect.json>] [--carry <carry.json>]
 --     the level's own autopilot (tests_<level>.lua, --auto) plays, and a persona (docs/playtest/personas.json) stands
 --     between its buttons and the game (pt_bot.lua). Headless and fast: no drawing, no screenshots, 600 game steps
 --     of 1/60 s per frame. Writes one JSON result. AUTO_ROUTE=high picks the Rooftops high road, as for --auto.
@@ -26,7 +27,20 @@ return function(api, args)
   love.graphics.captureScreenshot = function() end                -- the autopilot's GIF frames: not needed here
   print = function() end                                          -- (the input log and the autopilot's lines)
   local Bot = require("pt_bot")
-  local bot = Bot.new(api, persona, { level = level, seed = tonumber(argVal(args, "--seed") or "1"), route = os.getenv("AUTO_ROUTE") or "main" })
+  local function readJson(path)
+    if not path then return nil end
+    local f = io.open(path, "r"); if not f then return nil end
+    local ok, d = pcall(J.decode, f:read("*a")); f:close()
+    return ok and d or nil
+  end
+  -- --route <perfect run's json>: the clean route map for recovery v2; --carry <json>: lives, score and the
+  -- controls known from the levels before (whole-game mode, tools/run_campaign.py)
+  local routeMap
+  local rj = readJson(argVal(args, "--route"))
+  if rj and rj.route then routeMap = {}; for _, en in ipairs(rj.route) do routeMap[en.i] = en end end
+  local carry = readJson(argVal(args, "--carry"))
+  local bot = Bot.new(api, persona, { level = level, seed = tonumber(argVal(args, "--seed") or "1"), route = os.getenv("AUTO_ROUTE") or "main",
+    routeMap = (not persona.perfect) and routeMap or nil, carry = carry })
   pcall(love.window.setVSync, 0)
   local function save()
     local s = J.encode(bot.summary)
