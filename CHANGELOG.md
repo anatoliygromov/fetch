@@ -2,6 +2,59 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r7/curve`: the tall order's difficulty curve passes the acceptance test (22 Oct)
+Built on `round1`. The planned order with the tall levels (River Walk, City Park tall, Downtown tall, Rooftops,
+Soder Hill, Night Harbour), measured with `tools/check_curve.py --name tall --seeds 10`; every iteration's numbers are
+in `docs/playtest/curve_r7.md`. Pepper's files, music, sfx and the title are untouched.
+- **Downtown (tall), softer** (maps/downtown_tall.tmx and its export, tests_downtown_tall.lua): it was the spike
+  (kids 24, parents 26; Anna and Elsa quit at the cafe terrace and the statue). The cafe terrace: both parasols at
+  y 362 (were 354), 16 px apart (were 48): a 36 px held jump up from the table, a walk across, and the shop sign
+  8 px lower (34 px up). Way up A: a crate step (x 1172-1208, 24 px) after the bakery crates, so a tap hop reaches
+  the springier awning. The plaza: with the ball, a springy cafe parasol right of the statue (x 1512-1552, 20 px over
+  the street, bounce 136) bounces Pepper up to the loggia (HOLD: BOUNCE UP!); the four held jumps up the statue
+  (pedestal, arm, hat, loggia) stay as the way to the STATUE HAT secret. The flooded square: the first parasol 12 px
+  lower (a tap hop from the crate reaches it). Autopilot: two tap hops onto the market stall (the r6 crate step);
+  it lets go of Right only once Pepper is off the shop sign and the market awning (a player who stops short on the
+  edge was a stuck in the lab). New checks: the parasols, the plaza parasol held and tapped, the way up A crate
+  step, the flooded square tapped (98 of 98). `--auto` 56.2 s (was 56.6), no heart lost.
+  Before/after: `/home/claude/out/r7-curve/downtown_tall_before_after.png`.
+- **Rooftops, a peak: a 13th screen, the drying yard** (tools/make_rooftops.py, maps/rooftops.tmx and its export,
+  tests_rooftops.lua): x 3344-3664 on T3 (568), between the balcony vent and the roof bar; everything from x 3344 on
+  moved 320 px right (the generator now inserts the screen; it also matches the map's Tiled edits again: LEVEL 4,
+  the outro, BARK on Y, HOP ON FAN, BOUNCE ON IT). The combined beat before the finale: a dip 144 px wide and 40 deep
+  with a staircase of two loose tiles over it up to a chimney stack (three held jumps, 32 px up each, no stopping:
+  a tile drops 0.6 s after she lands), under the roof bar's gull; a miss drops her into the dip (a held jump and a
+  scramble get her out, left). Off the stack's right side she drops onto the springy awning, which bounces her onto
+  the water tank. The high road crosses above at 456 (a ledge, two loose tiles) and its ledge 424 now starts over
+  the stack. Hint HOLD: BIG JUMP at the dip. 12 new bones (88). Checks 103 of 103 (new: the staircase held and
+  tapped, out of the dip, off the stack onto the tank; counts 14 vents, 21 tiles). `--auto` low road 58.1 s (was
+  54.1), high road 54.4 s (was 51.8). The goose spot (screen 9) was 43% of the failures; now 30%.
+  Before/after: `/home/claude/out/r7-curve/rooftops_before_after.png`.
+- **Soder Hill, a step up** (level/soder.lua; maps/soder.tmx and its export written again from it with
+  `tools/level_to_tiled.py`): a third terrace with a barrel stack after the balcony's hatches (x 3776-3832, 24 px
+  over the street; the barrel at x 3820, set off when the ball passes x 3786, 34 px/s). A threat from ahead with the
+  barrels' tells (the "!" as it comes off the stack, the rumble and "!" when she closes in, its shadow); the screen
+  still pushes. `--physics` 29 of 29, `--auto` 73.3 s (unchanged), no heart lost.
+  Before/after: `/home/claude/out/r7-curve/soder_before_after.png`.
+- **Night Harbour, the hardest for parents** (level/night.lua, tests_night.lua; maps/night.tmx and its export
+  written again from it): tighter timing windows, nothing hidden, no new kind of threat. The rotten planks (screen 8)
+  are 24 px wide (were 32), the same middles, so each tap hop must land on a narrower plank (their shake, scramble
+  sound and the planks drawn over the dark are unchanged). Back over (screen 11), carrying the ball: two narrow
+  crumbling planks (x 3440 and 3480) instead of one. The slipway's second boat rows faster and further (30 px/s, to
+  x 4040; was 22, to 4028). Tried and taken back: a faster first slipway boat and a narrower slipway plank (the
+  slipway took 40 to 58% of the level's failures, a T2 fail). Autopilot: the first plank hop 6 px earlier.
+  `--physics` 40 of 40, `--auto` 82.6 s (was 81.3), no heart lost.
+  Before/after: `/home/claude/out/r7-curve/night_before_after.png`.
+- **The curve** (`docs/playtest/curve_r7.md`: six iterations, what moved and why, what is left): the tall order
+  passes T1 to T4 (exit 0). DI v2 kids / parents: River Walk 18.0 / 14.0, City Park (tall) 12.6 / 17.6, Downtown
+  (tall) 11.6 / 18.5 (was 24.1 / 26.0), Rooftops 20.0 / 16.5 (was 16.0 / 13.3), Soder Hill 15.7 / 14.7 (was
+  9.6 / 7.3), Night Harbour 19.2 / 24.7 (was 15.1 / 23.4); worst spots 21 to 33%; Elsa clears 80 to 100%; lost runs
+  0 to 3.8%. Chart `/home/claude/out/r7-curve/curve_tall.png`. Checks: `check_pepper` UNCHANGED (4591 steps),
+  `check_flow` 113 of 113, `check_tiled` PASSED, `--physics` riverwalk 54, citypark 85, downtown 81, citypark_tall
+  94, downtown_tall 98, rooftops 103, soder 29, night 40 (all pass), `--auto` 66.3, 44.6, 51.4, 39.1, 56.2, 58.1
+  (high road 54.4), 73.3, 82.6 s, `--qa` 0 problems on River Walk, City Park, Downtown, Downtown (tall), Rooftops
+  and Soder Hill, 1 on Night Harbour (the ball sweep at the slipway's edge, see the curve doc).
+
 ## Branch `r6/engine`: safety nets, the same in every level (22 Oct)
 Built on `round1`. Benchmark principles 5, 6 and 7 (`docs/benchmark_22oct.md` section 4) in the engine, so every
 level gets them without level changes. Hard mode (`stage.hard`: `carry.hard` from the menu's `hard.txt`, or `--hard`)

@@ -73,14 +73,14 @@ return function(mode, api)
     { "SWEEP VENT", 756, "right", 664, 2400, 2464 },
     { "SKYLIGHT FAN", 760, "right", 760, 2624, 3328 },         -- (no input: back onto the loose tile over it)
     { "GARDEN VENT", 756, "right", 664, 3072, 3144 },
-    { "BALCONY VENT", 660, "right", 568, 3328, 3552 },
-    { "TANK VENT", 444, "right", 376, 3552, 3728 },
+    { "BALCONY VENT", 660, "right", 568, 3328, 3872 },
+    { "TANK VENT", 444, "right", 376, 3872, 4048 },
     { "TERRACE FAN", 280, nil, 280 },                           -- (up through the copper roof, onto it)
-    { "SAUNA", 276, "right", 184, 3728, 3760 },
+    { "SAUNA", 276, "right", 184, 4048, 4080 },
     { "ATTIC FAN", 852, "right", 760, 1424, 1520 },
     { "LOFT VENT", 692, "right", 600, 1960, 2720 },
     { "BAKERY CHIMNEY", 596, "right", 456, 2984, 3200 },
-    { "BAR FAN", 420, "right", 280, 3456, 3712 },
+    { "BAR FAN", 420, "right", 280, 3776, 4032 },
   }
   -- a jump: name, from x, y, the plan ("held", "tap", "walk", "run", "downA", or a function), its way, the floor
   -- she must land on, and (optional) its x range
@@ -91,10 +91,16 @@ return function(mode, api)
     { "high: ledge 536 -> down to ledge 600: held jump right", 2548, 536, "held", "right", 600, { 2592, 2720 } },
     -- the low road
     { "street: a running jump onto the cafe table (1120)", 70, 1144, "runjump", "right", 1120 },
-    { "the awning (552) from the roof bar: a tap hop", 3388, 568, "tap", "right", 432, nil, "bounce" },
-    { "the awning's bounce onto the water tank (448), holding right", 3388, 568, "taphold", "right", 448, { 3480, 3552 } },
-    { "copper roof -> Down + A -> the roof terrace (376)", 3670, 280, "downA", nil, 376 },
-    { "nest chimney -> step off left onto the sauna's hood (276)", 3732, 184, "walk", "left", 276 },
+    { "the awning (552) from the roof bar: a tap hop", 3708, 568, "tap", "right", 432, nil, "bounce" },
+    { "the awning's bounce onto the water tank (448), holding right", 3708, 568, "taphold", "right", 448, { 3800, 3872 } },
+    { "copper roof -> Down + A -> the roof terrace (376)", 3990, 280, "downA", nil, 376 },
+    { "nest chimney -> step off left onto the sauna's hood (276)", 4052, 184, "walk", "left", 276 },
+    { "(r7) the drying yard: T3 (568) -> the first loose tile (536): held jump right", 3414, 568, "held", "right", 536, { 3464, 3488 } },
+    { "(r7) the drying yard: a tapped hop does not reach it (into the dip, 40 px)", 3414, 568, "tap", "right", 608 },
+    { "(r7) out of the dip: a held jump and scramble back onto the yard (568)", 3452, 608, "held", "left", 568, { 3344, 3432 } },
+    { "(r7) loose tile 536 -> loose tile 504: held jump right", 3476, 536, "held", "right", 504, { 3520, 3544 } },
+    { "(r7) loose tile 504 -> the chimney stack (472): held jump right", 3532, 504, "held", "right", 472, { 3576, 3680 } },
+    { "(r7) the chimney stack (472) -> run off its right side: the springy awning bounces her onto the water tank (448)", 3670, 472, "run", "right", 448, { 3800, 3872 } },
     -- the high road
     { "ledge 760 -> ledge 728: held jump right", 1750, 760, "held", "right", 728 },
     { "ledge 728 -> ledge 696: held jump right", 1846, 728, "held", "right", 696 },
@@ -109,7 +115,7 @@ return function(mode, api)
     { "the balcony: running across its three loose tiles", 3088, 664, nil, 3260, 664 },
     { "high: ledge 760, two loose tiles (tap hops), ledge 760", 1440, 760, 1500, 1680, 760 },
     { "high: ledge 600, two loose tiles (tap hops), the chimney pot's ledge 600", 2630, 600, 2700, 2856, 600 },
-    { "high: the walkway (456), two loose tiles (held jumps), ledge 424", 3110, 456, 3180, 3360, 424, "held" },
+    { "high: the walkway (456), two loose tiles (held jumps), ledge 424", 3110, 456, 3180, 3680, 424, "held" },
   }
 
   local steps
@@ -117,8 +123,8 @@ return function(mode, api)
     steps = {
       { wait = 0.6 }, { act = function() love.keypressed("space") end }, { wait = 0.3 },
       { act = function(p, s)
-          report("a tall map: 3840 x 1200 px (480 x 150 cells, 12 x 5 screens)", s.world.width == 3840 and s.world.height == 1200, ("%d x %d"):format(s.world.width, s.world.height))
-          report("14 steam vents, 17 loose tiles, the gull's nest, Mia at the roof cafe", #s.vents == 14 and #s.tiles == 17 and s.def.magpie.look == "gull"
+          report("a tall map: 4160 x 1200 px (520 x 150 cells, 13 x 5 screens)", s.world.width == 4160 and s.world.height == 1200, ("%d x %d"):format(s.world.width, s.world.height))
+          report("14 steam vents, 21 loose tiles, the gull's nest, Mia at the roof cafe (r7: the drying yard)", #s.vents == 14 and #s.tiles == 21 and s.def.magpie.look == "gull"
             and s.ball.state == "magpie" and near(s.girl.y, 376), ("%d vents, %d tiles"):format(#s.vents, #s.tiles))
           local bad = {}
           for _, b in ipairs(s.def.bones) do
@@ -248,12 +254,15 @@ return function(mode, api)
             elseif how == "runjump" then plan = function(q, f) return { [dir] = true, jump = f < 40 }, f == 1 end
             elseif how == "tap" or how == "taphold" then plan = function(q, f) return { [dir] = true }, f == 1 end
             elseif how == "walk" then plan = function() return { [dir] = true, walk = true } end
+            elseif how == "run" then plan = function() return { [dir] = true } end           -- (r7)
             elseif how == "downA" then plan = function(q, f) if f < 4 then return { down = true }, f == 2 end; return {} end end
             if j[8] == "bounce" then
               r = run(st, plan, 3, function(q) return q.vy < -300 end)
               report(j[1] .. ": it bounces her up", st.pepper.vy < -300, ("vy %.0f"):format(st.pepper.vy))
             else
-              if how == "taphold" then                                 -- (the landing on the awning bounces on)
+              if how == "run" then                                     -- (r7: off the stack, the awning bounces on)
+                r = run(st, plan, 4, function(q) return q.onGround and q.x > 3760 end)
+              elseif how == "taphold" then                             -- (the landing on the awning bounces on)
                 r = run(st, plan, 4, function(q) return q.onGround and q.y < 548 end)
               else r = run(st, plan, 3) end
               local inX = not j[7] or (r.x + 13 > j[7][1] and r.x - 13 < j[7][2])
@@ -282,7 +291,7 @@ return function(mode, api)
           report(("every fall off the high road (%d: off each end, Down + A) lands safely below"):format(n), #bad == 0, table.concat(bad, "; "))
         end },
       -- 6 the gull's nest and the fetch
-      { act = function(p, s) tp(3698, 276); p.face = 1 end }, { wait = 0.3 },
+      { act = function(p, s) tp(4018, 276); p.face = 1 end }, { wait = 0.3 },
       { act = function() love.keypressed("z") end }, { wait = 1.2 },
       { act = function(p, s)
           report("a bark from the copper roof: the gull lets go, the ball lands on the chimney", s.ball.state == "rest" and near(s.ball.y, 184) and s.magpie.state ~= "perch",
@@ -290,7 +299,7 @@ return function(mode, api)
       { act = function(p, s) tp(s.ball.x + 18, 184); p.face = -1 end }, { wait = 0.3 },
       { act = function() love.keypressed("x") end }, { wait = 0.5 },
       { act = function(p) report("on the chimney Pepper picks the ball up", p.carrying ~= nil) end },
-      { act = function(p, s) tp(3660, 376); p.face = -1 end }, { wait = 0.2 },
+      { act = function(p, s) tp(3980, 376); p.face = -1 end }, { wait = 0.2 },
       { act = function() love.keypressed("x") end }, { wait = 0.4 },
       { act = function(p, s) report("giving the ball to Mia at the roof cafe: GOOD GIRL (FETCH 2000)", s.ball.state == "given" and s.bonus and s.bonus[2] == 2000, s.ball.state) end },
       { wait = 2.6 },
@@ -341,8 +350,15 @@ return function(mode, api)
         ride("GARDEN VENT", "right", 664),                              -- beat 2: the balcony
         runTo(3270), settle(),                                          -- its loose tiles
         ride("BALCONY VENT", "right", 568),
-        goTo(3388), { act = function() hold("right"); love.keypressed("space") end },   -- the awning
-        at(function(p) return p.onGround and p.y < 460 end, function() release() end, 4), settle(),
+        goTo(3414),                                                     -- (r7) the drying yard: up the loose tiles,
+        { act = function() hold("right", "jump"); love.keypressed("space") end },
+        at(function(p) return p.onGround and p.y < 540 end, function() release() end, 3),
+        { act = function() hold("right", "jump"); love.keypressed("space") end },
+        at(function(p) return p.onGround and p.y < 508 end, function() release() end, 3),
+        { act = function() hold("right", "jump"); love.keypressed("space") end },
+        at(function(p) return p.onGround and p.y < 476 end, function() release() end, 3),
+        { act = function() hold("right") end },                         -- off the stack onto the springy awning: up onto the tank
+        at(function(p) return p.onGround and p.y < 460 and p.x > 3780 end, function() release() end, 4), settle(),
         ride("TANK VENT", "right", 376),
       }
     else
@@ -367,24 +383,24 @@ return function(mode, api)
         { act = function() hold("right", "walk") end }, at(function(p) return p.onGround and p.y > 590 end, function() release() end, 3), settle(),
         ride("BAKERY CHIMNEY", "right", 456),
         goTo(3110), { act = function() hold("right", "jump") end },
-        at(function(p) if p.onGround and p.x >= 3180 and p.y > 430 then love.keypressed("space") end; return p.onGround and p.x >= 3360 and p.y < 430 end, function() release() end, 6), settle(),
+        at(function(p) if p.onGround and p.x >= 3180 and p.y > 430 then love.keypressed("space") end; return p.onGround and p.x >= 3680 and p.y < 430 end, function() release() end, 6), settle(),
         ride("BAR FAN", "right", 280),
       }
     end
     local finale = {
-      settle(), goTo(3612),                                             -- the terrace fan (the high road skips it)
+      settle(), goTo(3932),                                             -- the terrace fan (the high road skips it)
       at(function(p) return p.y < 300 or not p.onGround end, nil, 6),
       at(function(p) return p.onGround and p.y < 300 end, function() release() end, 4), settle(),
-      goTo(3698), { act = function(p) p.face = 1; love.keypressed("z") end },    -- bark: the gull lets go, the sauna steams
+      goTo(4018), { act = function(p) p.face = 1; love.keypressed("z") end },    -- bark: the gull lets go, the sauna steams
       at(function(p) return not p.onGround end, function() hold("right") end, 4),
       at(function(p) return p.onGround and p.y < 200 end, function() release() end, 4), settle(),
-      goTo(3732), { act = function(p) p.face = 1 end },
+      goTo(4052), { act = function(p) p.face = 1 end },
       at(function(p, s) return s.ball.state == "rest" end, function() love.keypressed("x") end, 4), { wait = 0.6 },
       { act = function() hold("left", "walk") end },                   -- step off onto the sauna's hood
       at(function(p) return p.onGround and p.y > 200 end, function() release() end, 4), settle(),
-      goTo(3672), { act = function() hold("down"); love.keypressed("space") end }, { wait = 0.2 }, { act = function() release() end },
+      goTo(3992), { act = function() hold("down"); love.keypressed("space") end }, { wait = 0.2 }, { act = function() release() end },
       at(function(p) return p.onGround and p.y > 300 end, function() release() end, 4), settle(),
-      goTo(3670), { act = function(p) p.face = -1; love.keypressed("x") end },
+      goTo(3990), { act = function(p) p.face = -1; love.keypressed("x") end },
       { wait = 6 }, { act = function(p, s)
           local st = s:stats()
           print(("AUTOPILOT (%s road) %s: bones %d/%d, secrets %d/%d, lives %d hearts %d, %.1f s played"):format(high and "high" or "low",
@@ -402,8 +418,8 @@ return function(mode, api)
     steps = { { act = function() api.setState("intro") end }, { wait = 0.6 }, shot("rt_00_intro"),
       { act = function() love.keypressed("space") end }, { wait = 0.3 } }
     local spots = { { 60, 1144 }, { 640, 1080 }, { 1100, 952 }, { 1500, 856 }, { 1900, 856 }, { 2840, 760 },
-      { 3110, 664 }, { 3400, 568 }, { 3590, 376 }, { 3640, 280 }, { 3744, 184 },
-      { 1470, 760 }, { 1820, 728 }, { 2020, 600 }, { 2908, 552 }, { 3090, 456 }, { 3400, 424 } }
+      { 3110, 664 }, { 3720, 568 }, { 3910, 376 }, { 3960, 280 }, { 4064, 184 },
+      { 1470, 760 }, { 1820, 728 }, { 2020, 600 }, { 2908, 552 }, { 3090, 456 }, { 3720, 424 } }
     for i, sp in ipairs(spots) do
       steps[#steps + 1] = { act = function() tp(sp[1], sp[2]) end }
       steps[#steps + 1] = { wait = 0.25 }

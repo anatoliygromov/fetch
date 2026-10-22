@@ -161,14 +161,13 @@ return function(mode, api)
             { "low: stall's crate -> the stall (12 px, tapped)", x = 672, y = 408, dir = "right", tap = true, brake = 720, to = 396 },
             { "low: hop onto the plaza crate (16 px, tapped)", x = 1340, y = STREET, dir = "right", tap = true, brake = 1384, to = 408 },
             { "low: plaza crate -> the tub and on up to the pedestal (tapped)", x = 1384, y = 408, dir = "right", tap = true, brake = 1424, to = 384 },
-            { "low: table -> its parasol (44 px, straight up)", x = 392, y = 398, to = 354 },
-            { "low: parasol -> parasol (running)", x = 372, y = 354, dir = "right", run = 412, to = 354 },
-            { "low: parasol -> the shop sign (running, gold)", x = 480, y = 354, dir = "right", run = 518, to = 320 },
+            { "low: table -> its parasol (36 px, straight up; r7: 8 px lower)", x = 392, y = 398, to = 362 },
+            { "low: parasol -> the shop sign (running, gold; r7: both 8 px lower)", x = 480, y = 362, dir = "right", run = 518, to = 328 },
             { "low: onto the stall's counter (28 px)", x = 660, y = STREET, dir = "right", brake = 714, to = 396 },
             { "low: counter -> the stall's awning (40 px)", x = 714, y = 396, to = 356 },
             { "low: crates -> the second awning (40 px)", x = 846, y = 392, dir = "right", brake = 900, to = 352 },
             { "low: the springy awning launches her over the crate wall", x = 980, y = STREET, dir = "right", through = true, to = 360 },
-            { "way up A: the springier awning reaches the bakery sign", x = 1180, y = STREET, dir = "right", run = 1204, brake = 1266, through = true, to = 304 },
+            { "way up A: the springier awning reaches the bakery sign (r7: a tap from the crate step)", x = 1186, y = 400, dir = "right", run = 1196, tap = true, brake = 1266, through = true, to = 304 },
             { "low: onto the flower tub (28 px)", x = 1350, y = STREET, dir = "right", brake = 1410, to = 396 },
             { "low: tub -> pedestal (12 px, tapped)", x = 1424, y = 396, dir = "right", tap = true, brake = 1460, to = 384 },
             { "low: street -> pedestal from the right (40 px, with the ball after the cat)", x = 1522, y = STREET, dir = "left", brake = 1470, to = 384 },
@@ -182,7 +181,10 @@ return function(mode, api)
             { "low: tub -> table -> springy parasol -> the flower balcony", x = 2296, y = 396, dir = "right", run = 2306, through = true, to = 328 },
             { "low: the canal awning launches her over the water", x = 2470, y = 328, dir = "right", run = 2476, through = true, to = 360 },
             { "low: the flooded square: crate -> three parasols -> tram shed", x = 2802, y = 408, dir = "right", through = true, to = 388 },
-            -- way up B (with the ball): the hat to the loggia
+            { "low (r7): the same with a tapped hop onto the first parasol (20 px)", x = 2802, y = 408, dir = "right", tap = true, through = true, to = 388 },
+            -- way up B (with the ball): the hat to the loggia; (r7) or the plaza's springy parasol straight to the loggia
+            { "way up B (r7): street -> the springy parasol -> the loggia (held jump left)", x = 1574, y = STREET, dir = "left", brake = 1546, through = true, to = 280 },
+            { "way up B (r7): a tapped hop onto the parasol (20 px) bounces her up to the loggia too", x = 1574, y = STREET, dir = "left", tap = true, brake = 1546, through = true, to = 280 },
             { "way up B: the statue's hat -> the loggia (36 px)", x = 1464, y = 316, to = 280 },
             -- the high road, west to east
             { "high: bakery sign -> the balcony (gap 18, 32 up)", x = 1293, y = 304, dir = "right", to = 272 },
@@ -215,7 +217,7 @@ return function(mode, api)
           -- the tiers stay apart: the same jumps from below fall short
           for _, j in ipairs({ { "the loggia is out of reach from the street", x = 1420, y = STREET, dir = "right", run = 1430, bad = 280 },
                                { "the loggia is out of reach from the statue's arm (68 px)", x = 1500, y = 348, bad = 280 },
-                               { "the balcony is out of reach from the springy bakery awning", x = 1180, y = STREET, dir = "right", run = 1204, through = true, bad = 272 },
+                               { "the balcony is out of reach from the springy bakery awning", x = 1186, y = 400, dir = "right", run = 1196, through = true, bad = 272 },
                                { "the flower roof is out of reach from the springy parasol", x = 2296, y = 396, dir = "right", run = 2306, brake = 2330, through = true, bad = 232 } }) do
             local r = leap(j)
             report(j[1], not near(r.y, j.bad, 1) and r.y > j.bad, ("ends at y %.0f"):format(r.y))
@@ -382,21 +384,21 @@ return function(mode, api)
       { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p) return p.onGround and p.y <= Y(159) end, function() release() end),
       at(function(p) return math.abs(p.vx) < 1 end, function() jump("jump") end),
-      at(function(p) return p.onGround and p.y <= Y(115) end, function() hold("left") end),
-      at(function(p) return p.x <= 372 end, function() hold("right") end),
-      at(function(p) return p.x >= 412 end, function() jump("right", "jump") end),
-      at(function(p) return p.onGround and p.y <= Y(115) and p.x > 472 end, function() hold("right") end),
+      at(function(p) return p.onGround and p.y <= Y(122) end, function() hold("right") end),         -- (r7: both parasols at 362, walk across)
       at(function(p) return p.x >= 518 end, function() jump("right", "jump") end),
       at(function(p) return p.vy > 0 and p.x >= 560 end, function() release() end),
-      at(function(p) return p.onGround and p.y <= Y(81) end, function() hold("right") end),
-      at(function(p) return p.x >= 604 end, function() release() end),
+      at(function(p) return p.onGround and p.y <= Y(88) end, function() hold("right") end),
+      at(function(p) return not p.onGround and p.x > 580 end, function() release() end),   -- (r7: let go once she is off the sign, never on it)
       at(function(p) return p.onGround and p.y >= Y(183) end, function() hold("right") end),
       -- 3 market: the stall, its awning, down, the crates, the second awning
-      at(function(p) return p.x >= 628 end, function() jump("right", "jump") end),         -- (r6/levels: over the crate step)
+      at(function(p) return p.x >= 628 end, function() jump("right", "jump") end),         -- (r7) the crate step: a tap,
+      { wait = 1 / 60 }, { act = function() hold("right") end },
+      at(function(p) return p.onGround and p.y <= Y(168) end, function() jump("right", "jump") end),   -- and a tap onto the stall
+      { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p) return p.onGround and p.y <= Y(157) end, function() release() end),
       at(function(p) return p.x >= 714 or math.abs(p.vx) < 1 end, function() jump("jump") end),
       at(function(p) return p.onGround and p.y <= Y(117) end, function() hold("right") end),
-      at(function(p) return p.x >= 766 end, function() release() end),
+      at(function(p) return not p.onGround and p.x > 740 end, function() release() end),      -- (r7: once off the awning)
       at(function(p) return p.onGround and p.y >= Y(183) end, function() hold("right") end),
       at(function(p) return p.x >= 774 end, function() jump("right", "jump") end),
       { wait = 1 / 60 }, { act = function() hold("right") end },
@@ -412,8 +414,9 @@ return function(mode, api)
       -- 4 the bakery row: the springy awning over the crates; the springier one up to the bakery sign (way up A)
       at(function(p) return p.onGround and p.y >= Y(183) and p.x >= 960 end, function() jump("right", "jump") end),
       at(function(p) return p.onGround and p.x > 1100 end, function() hold("right") end),
-      at(function(p) return p.onGround and p.y >= Y(183) end, function() hold("right") end),
-      at(function(p) return p.x >= 1204 end, function() jump("right", "jump") end),
+      at(function(p) return p.onGround and p.y >= Y(160) and p.x >= 1180 end, function() hold("right") end),   -- (r7) down onto the crate step (400)
+      at(function(p) return p.x >= 1196 end, function() jump("right", "jump") end),                -- a tap onto the springier awning
+      { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p) return p.vy < 0 and p.y < Y(140) and p.x >= 1266 end, function() hold("jump") end),
       at(function(p) return p.onGround and p.y <= Y(65) end, function() release() end),
     })
@@ -435,9 +438,8 @@ return function(mode, api)
         return false end, nil, 6),
       { wait = 0.2 }, { act = function() love.keypressed("x") end }, { wait = 0.5 },
     })
-    -- way up B with the ball: the pedestal (from its right side), the arm, the hat, the loggia
-    hop(1522, "left", 384, 1470); hop(1470, "right", 348, 1488); hop(1486, nil, 316)
-    add({ goTo(1464) }); add({ leapTo(nil, 280) })
+    -- way up B with the ball (r7): the plaza's springy parasol, a held jump onto it from its right, up to the loggia
+    hop(1574, "left", 280, 1546)
     -- the guild roof, the chimney (the golden bone), the gallery, the roof ledges, the window awning, the footbridge
     hop(1519, "right", 256, 1572)
     add({ at(function() return true end, function() hold("right", "walk") end), at(function(p) return p.x >= 1606 end, function() release() end), settle() })

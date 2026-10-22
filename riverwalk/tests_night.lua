@@ -120,7 +120,7 @@ return function(mode, api)
       -- a running hop chain over the four rotten planks (tap hops), from the quay
       { act = function(p, s) for _, k in ipairs(s.night.planks) do if k.st == "gone" then s.world.rects[#s.world.rects + 1] = k.p end; k.st, k.t = "idle", 0 end
           hearts = s.hearts; tp(2240, 184); hold("right") end },
-      at(function(p) return p.x >= 2272 end, function() jump("right", "jump") end),
+      at(function(p) return p.x >= 2266 end, function() jump("right", "jump") end),          -- (r7: narrower planks)
       { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p) return p.onGround and p.x > 2300 end, function() jump("right", "jump") end, 2),
       { wait = 1 / 60 }, { act = function() hold("right") end },
@@ -221,7 +221,7 @@ return function(mode, api)
       { wait = 0.1 }, { act = function() love.keypressed("z") end }, { wait = 0.6 },
       at(function(p, s) return s.night.fox.i == 3 end, function() hold("right") end),
       -- 8 rotten planks: four tap hops (each lands on the next plank)
-      at(function(p) return p.x >= 2272 end, function() jump("right", "jump") end),
+      at(function(p) return p.x >= 2266 end, function() jump("right", "jump") end),          -- (r7: narrower planks)
       { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p) return p.onGround and p.x > 2300 end, function() jump("right", "jump") end, 2),
       { wait = 1 / 60 }, { act = function() hold("right") end },
@@ -258,7 +258,9 @@ return function(mode, api)
       at(function(p) return p.onGround and p.x > 3400 end, function() hold("right") end, 3),
       at(function(p) return p.x >= 3412 end, function() jump("right", "jump") end),
       { wait = 1 / 60 }, { act = function() hold("right") end },
-      at(function(p) return p.onGround and p.x > 3440 end, function() jump("right", "jump") end, 2),
+      at(function(p) return p.onGround and p.x > 3430 end, function() jump("right", "jump") end, 2),     -- (r7) two narrow planks
+      { wait = 1 / 60 }, { act = function() hold("right") end },
+      at(function(p) return p.onGround and p.x > 3470 end, function() jump("right", "jump") end, 2),
       { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p) return p.onGround and p.x > 3510 end, function() hold("right") end, 3),
       -- 12 the crate tower (gold bone, secret)

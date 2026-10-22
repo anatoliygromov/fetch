@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="440" height="60" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#20242c" nextlayerid="9" nextobjectid="270">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="440" height="60" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#20242c" nextlayerid="9" nextobjectid="275">
  <editorsettings>
   <export target="../riverwalk/level/tiled/downtown_tall.lua" format="lua"/>
  </editorsettings>
@@ -129,7 +129,7 @@
     <property name="label" value="top"/>
    </properties>
   </object>
-  <object id="4" type="props" x="390" y="358" width="4" height="40">
+  <object id="4" type="props" x="390" y="366" width="4" height="32">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
@@ -164,14 +164,14 @@
     <property name="label" value="below"/>
    </properties>
   </object>
-  <object id="8" name="PARASOL" type="props" x="360" y="354" width="64" height="4">
+  <object id="8" name="PARASOL" type="props" x="360" y="362" width="64" height="4">
    <properties>
     <property name="kind" value="oneway"/>
     <property name="layer" value="play"/>
     <property name="label" value="below"/>
    </properties>
   </object>
-  <object id="9" type="props" x="502" y="358" width="4" height="40">
+  <object id="9" type="props" x="502" y="366" width="4" height="32">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
@@ -199,21 +199,21 @@
     <property name="label" value="below"/>
    </properties>
   </object>
-  <object id="13" name="PARASOL" type="props" x="472" y="354" width="64" height="4">
+  <object id="13" name="PARASOL" type="props" x="440" y="362" width="96" height="4">
    <properties>
     <property name="kind" value="oneway"/>
     <property name="layer" value="play"/>
     <property name="label" value="below"/>
    </properties>
   </object>
-  <object id="14" type="props" x="598" y="316" width="4" height="108">
+  <object id="14" type="props" x="598" y="324" width="4" height="100">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
     <property name="layer" value="back"/>
    </properties>
   </object>
-  <object id="15" name="SIGN" type="props" x="560" y="320" width="40" height="4">
+  <object id="15" name="SIGN" type="props" x="560" y="328" width="40" height="4">
    <properties>
     <property name="kind" value="oneway"/>
     <property name="layer" value="play"/>
@@ -325,6 +325,13 @@
     <property name="layer" value="back"/>
    </properties>
   </object>
+  <object id="274" name="CRATES" type="props" x="1172" y="400" width="36" height="24">
+   <properties>
+    <property name="kind" value="solid"/>
+    <property name="layer" value="play"/>
+    <property name="label" value="top"/>
+   </properties>
+  </object>
   <object id="30" type="props" x="1290" y="392" width="4" height="32">
    <properties>
     <property name="name" value=""/>
@@ -338,6 +345,21 @@
     <property name="layer" value="play"/>
     <property name="label" value="below"/>
     <property name="bounce" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="270" name="PARASOL" type="props" x="1512" y="404" width="40" height="4">
+   <properties>
+    <property name="kind" value="oneway"/>
+    <property name="layer" value="play"/>
+    <property name="label" value="below"/>
+    <property name="bounce" type="int" value="136"/>
+   </properties>
+  </object>
+  <object id="271" type="props" x="1530" y="408" width="4" height="16">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
    </properties>
   </object>
   <object id="32" type="props" x="1308" y="300" width="4" height="92">
@@ -626,7 +648,7 @@
     <property name="label" value="top"/>
    </properties>
   </object>
-  <object id="72" type="props" x="2854" y="380" width="4" height="100">
+  <object id="72" type="props" x="2854" y="392" width="4" height="88">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
@@ -647,7 +669,7 @@
     <property name="layer" value="back"/>
    </properties>
   </object>
-  <object id="75" name="PARASOL" type="props" x="2832" y="376" width="48" height="4">
+  <object id="75" name="PARASOL" type="props" x="2832" y="388" width="48" height="4">
    <properties>
     <property name="kind" value="oneway"/>
     <property name="layer" value="play"/>
@@ -968,7 +990,7 @@
     <property name="w" type="int" value="80"/>
    </properties>
   </object>
-  <object id="118" name="SHOP SIGN" type="secrets" x="548" y="310" width="64" height="10"/>
+  <object id="118" name="SHOP SIGN" type="secrets" x="548" y="318" width="64" height="10"/>
   <object id="119" name="STATUE HAT" type="secrets" x="1440" y="306" width="48" height="10"/>
   <object id="120" name="ROOFTOPS" type="secrets" x="1756" y="334" width="72" height="10"/>
   <object id="121" name="BAKERY SIGN" type="secrets" x="1258" y="294" width="64" height="10"/>
@@ -1072,16 +1094,16 @@
   <object id="141" type="bones" x="392" y="424">
    <point/>
   </object>
-  <object id="142" type="bones" x="392" y="354">
+  <object id="142" type="bones" x="392" y="362">
    <point/>
   </object>
   <object id="143" type="bones" x="504" y="398">
    <point/>
   </object>
-  <object id="144" type="bones" x="504" y="354">
+  <object id="144" type="bones" x="504" y="362">
    <point/>
   </object>
-  <object id="145" type="bones" x="580" y="320">
+  <object id="145" type="bones" x="580" y="328">
    <properties>
     <property name="super" type="bool" value="true"/>
    </properties>
@@ -1252,7 +1274,7 @@
   <object id="197" type="bones" x="2802" y="408">
    <point/>
   </object>
-  <object id="198" type="bones" x="2856" y="376">
+  <object id="198" type="bones" x="2856" y="388">
    <point/>
   </object>
   <object id="199" type="bones" x="2900" y="324">
@@ -1499,6 +1521,14 @@
     <property name="box" value="x0,x1,minY"/>
     <property name="text" value="TAP: HOP"/>
     <property name="btn" value="a"/>
+   </properties>
+  </object>
+  <object id="272" type="hints" x="1556" y="380" width="48" height="100">
+   <properties>
+    <property name="box" value="x0,x1,minY"/>
+    <property name="text" value="HOLD: BOUNCE UP!"/>
+    <property name="btn" value="a"/>
+    <property name="need" value="ball"/>
    </properties>
   </object>
   <object id="253" type="hints" x="1660" y="380" width="60" height="100">
