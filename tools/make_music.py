@@ -495,20 +495,16 @@ def write_mod(song, path, title):
             rr = p * 64 + r
             for c in range(4):
                 cell = grid[rr][c] if rr < nrows else None
-                if rr == 0 and c == 3 and cell is None:
-                    cell = (0, 0, (0, 0))
                 per, ins, (fx, arg) = cell if cell else (0, 0, (0, 0))
-                if rr == 0 and c == 0:
-                    pass
                 pats += struct.pack(">BBBB", (ins & 0xF0) | (per >> 8), per & 0xFF, ((ins & 0x0F) << 4) | fx, arg)
-    # tempo: set speed 6, BPM = bpm (one row = a sixteenth at 6 ticks); put it on row 0 channel 3 or 2's effect
+    # tempo: speed 6 and BPM = the song's bpm (ProTracker's BPM counts 4 rows a beat at speed 6, so a row is a
+    # sixteenth), set on row 0 in two cells that have no effect of their own
     pats = bytearray(pats)
 
     def set_eff(row, chan, fx, arg):
         o = (row * 4 + chan) * 4
         pats[o + 2] = (pats[o + 2] & 0xF0) | fx
         pats[o + 3] = arg
-    # find two cells with no effect on row 0 for F06 and Fxx
     used = []
     for c in range(4):
         o = c * 4
@@ -555,13 +551,13 @@ TITLE = {
          "p2": "F#4:3 F#4:3 F#4:2 A4:4 D5:4 | C#5:3 C#5:3 C#5:2 A4:4 E4:4", "p2_vol": 0.75,
          "bass": "D3:3 D3:3 D3:2 A2:4 D3:4 | A2:3 A2:3 A2:2 E2:4 A2:4",
          "drums": "k..k..k.s...s.s. | k..k..k.s.s.ssss", "hats": "c............... | ................"},
-        {"name": "A", "chords": "D | G | D | A | D | G | Em A | D",
+        {"name": "A", "chords": "D | G A | D | A | D | G | Em A | D",
          "lead": "F#4:4 A4:4 D5:6 C#5:2 | B4:4 A4:2 G4:2 A4:8v | F#4:4 A4:4 D5:4 E5:2 F#5:2 | E5:8v C#5:4 A4:4 |"
                  "F#4:4 A4:4 D5:6 C#5:2 | B4:4 D5:2 E5:2 D5:4 B4:4 | G4:2 B4:2 E5:4 C#5:2 E5:2 A5:4 | F#5:2 E5:2 D5:12v",
          "p2": ("echo", 3, 0.4),
          "drums": "k...s...k.k.s...", "hats": "h.h.h.h.h.h.h.h."},
         {"name": "B", "chords": "Bm | G | Em | A",
-         "lead": "B4:2 C#5:2 D5:2 F#5:4 r:6 | B4:2 C#5:2 D5:2 G5:4 r:6 | E5:2 F#5:2 G5:2 A5:2 B5:4 A5:2 G5:2 |"
+         "lead": "B4:2 C#5:2 D5:2 F#5:4 r:6 | G4:2 B4:2 D5:2 G5:4 r:6 | E5:2 F#5:2 G5:2 A5:2 B5:4 A5:2 G5:2 |"
                  "E5:4 C#5:2 E5:2 A5:8v",
          "p2": "r:10 F#5:2 E5:2 D5:2 | r:10 G5:2 F#5:2 D5:2 | C#5:2 D5:2 E5:2 F#5:2 G5:4 F#5:2 E5:2 |"
                "C#5:4 A4:2 C#5:2 E5:8", "p2_vol": 0.7,
@@ -570,7 +566,7 @@ TITLE = {
          "lead": "F#4:4 A4:4 D5:6 C#5:2 | E5:4 D5:2 C5:2 G4:8v | B4:4 D5:4 G5:4 F#5:2 G5:2 | A5:12v r:4",
          "p2": "D4:4 F#4:4 A4:6 A4:2 | C5:4 B4:2 A4:2 E4:8 | G4:4 B4:4 D5:4 D5:2 D5:2 | C#5:12 r:4", "p2_vol": 0.7,
          "drums": "k...s...k.k.s...", "hats": "c.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h."},
-        {"name": "Turnaround", "chords": "G | A",
+        {"name": "Turnaround", "chords": "G | A7",
          "lead": "r:4 D5:2s D5:2s E5:2s E5:2s F#5:2s G5:2s | A5:4 G5:2s F#5:2s E5:2s C#5:2s A4:4",
          "p2": ("echo", 3, 0.4),
          "bass": "G2:4 A2:4 B2:4 C#3:4 | A2:2 A2:2 A2:2 A2:2 B2:2 B2:2 C#3:2 C#3:2",
@@ -603,7 +599,7 @@ CITYPARK = {
                  "F#5:4 D#5:2s F#5:2s A5:4 F#5:4 | G5:4 E5:2s B4:2s E5:8v |"
                  "A5:2s G5:2s E5:2s C5:2s D5:2s F#5:2s C6:2s A5:2s | G5:4 D5:2s B4:2s G4:4 r:4",
          "p2": "B4:2s r:2 G4:2s B4:2s D5:4 D5:2s D5:2s | B4:2s E5:2s G5:4 F#5:2s E5:2s B4:4 |"
-               "A4:2s r:2 C5:2s E5:2s F#5:4 E5:2s C5:2s | F#5:4 D5:2s A4:2s r:4 A4:1 C5:1 D5:2s |"
+               "E4:2s r:2 G4:2s C5:2s C5:4 C5:2s G4:2s | F#5:4 D5:2s A4:2s r:4 A4:1 C5:1 D5:2s |"
                "D#5:4 B4:2s D#5:2s F#5:4 D#5:4 | E5:4 B4:2s G4:2s B4:8 |"
                "E5:2s E5:2s C5:2s A4:2s A4:2s D5:2s A5:2s F#5:2s | D5:4 B4:2s G4:2s D4:4 r:4", "p2_vol": 0.5,
          "drums": "k...s...k.k.s... | k...s...k.k.s... | k...s...k.k.s... | k...s...k.k.s... |"
@@ -657,8 +653,8 @@ CLEAR = {
 OVER = {
     "name": "jingle_over", "bpm": 100, "key": "D minor", "mood": "sad, gentle (kids play this)", "ring": 0.5,
     "sections": [{"name": "Fall", "chords": "Dm Bb A Dm",
-                  "lead": "A4:3 F4:3 E4:2 D4:8vd",
-                  "p2": "F4:3 D4:3 C#4:2 A3:8d", "p2_vol": 0.7,
+                  "lead": "A4:4 F4:4 E4:2 D4:6vd",
+                  "p2": "F4:4 D4:4 C#4:2 A3:6d", "p2_vol": 0.7,
                   "bass": "D2:4 A#1:4 A1:4 D2:4", "drums": "k.......k.......", "drum_vol": 0.6}]}
 
 # Fetch sting ("GOOD GIRL!"): D major, 160 bpm, 1.5 s: a quick arpeggio up, then two notes like the words.
@@ -675,9 +671,11 @@ LOOPS = {"title", "citypark"}
 
 
 # ---------------------------------------------------------------------------------------------------------------
-def chord_chart(song, marks, spans, length, rows):
+def chord_chart(song, marks, spans, length, rows, file_seconds):
+    nb = rows // 16
     lines = [f"{song['name']}: {song['key']}, {song['bpm']} bpm" + (f", shuffle {song['swing']}" if song.get('swing') else "")
-             + f", {rows // 16} bars, {length:.2f} s" + (" (loops)" if song["name"] in LOOPS else ""),
+             + f", {nb} bar{'s' if nb > 1 else ''}, {length:.2f} s"
+             + (" (loops)" if song["name"] in LOOPS else f" (file {file_seconds:.2f} s with the ring)"),
              f"  mood: {song['mood']}"]
     for sec in song["sections"]:
         bars = [" ".join(b.split()) for b in bars_of(sec["chords"])]
@@ -758,19 +756,20 @@ def main():
         pcm = np.round(np.clip(x, -1, 1) * 32767).astype(np.int16)
         wavfile.write(tmp, SR, pcm)
         ogg = os.path.join(MUSIC, song["name"] + ".ogg")
-        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", tmp, "-c:a", "libvorbis", "-q:a", "3", ogg], check=True)
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", tmp, "-c:a", "libvorbis", "-q:a", "3",
+                        "-fflags", "+bitexact", "-flags:a", "+bitexact", "-serial_offset", "1", ogg], check=True)
         peak = 20 * np.log10(np.max(np.abs(x)))
         snd = np.abs(x) > 1e-3
         rms = 20 * np.log10(np.sqrt(np.mean(x[snd] ** 2)))
         join = abs(float(x[-1]) - float(x[0]))
         step = float(np.percentile(np.abs(np.diff(x)), 99))
         print(f"{song['name']:<14} {len(x) / SR:6.2f} s  {len(x):7d} samples  peak {peak:5.1f} dBFS  rms {rms:5.1f} dB"
-              f"  loop join {join:.4f} (99% step {step:.4f})  {os.path.getsize(ogg) // 1024} KB")
+              + (f"  loop join {join:.3f} (99 % of steps under {step:.3f})" if loop else "")
+              + f"  {os.path.getsize(ogg) // 1024} KB")
         manifest.append(f"{song['name']} {len(x)} {SR} {'loop' if loop else 'once'}")
-        charts.append(chord_chart(song, marks, spans, length, rows))
+        charts.append(chord_chart(song, marks, spans, length, rows, len(x) / SR))
         if out:
             shutil.copy(ogg, out)
-            shutil.copy(tmp, os.path.join(out, song["name"] + ".wav"))
             piano_roll(song, x, ch, spans, marks, rows, os.path.join(out, song["name"] + ".png"))
         if song["name"] == "title":
             size = write_mod(song, os.path.join(MUSIC, "title.mod"), "FETCH! title")

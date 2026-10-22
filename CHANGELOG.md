@@ -21,7 +21,11 @@ Built on main (v0.5). Composed and synthesised by our own code (`tools/make_musi
   plays the jingle when the music is on, else the short sound effect as before. Music plays at 0.6 (about 6 dB
   under the sound effects); the player's volume scales everything.
 - **Hooks in `main.lua`** (one line each): `startLevel` passes the level's name to `S.music`, `toTitle` and
-  `toMenu` pass `"title"`, and the line that notes the clear time (the ball given) plays `S.play("fetch")`.
+  `toMenu` pass `"title"`, the ending plays the title theme again (`nextLevel`), and the line that notes the
+  clear time (the ball given) plays `S.play("fetch")`.
+- The harmony was checked by a script (non-chord tones held on strong beats, minor seconds and tritones between
+  the channels) and three spots fixed. The OGG files are made bit-exact (a fixed stream serial), so building
+  again changes nothing unless a tune changed.
 - **Checks:** `tools/check_music.sh` (every file decodes in LOVE with its expected length, peak under -1 dBFS,
   loops join without a jump, jingles end in silence, the module loops by itself, `sfx.lua` picks the right
   track). `check_pepper` UNCHANGED, `check_flow` 94/94, City Park autopilot clears.

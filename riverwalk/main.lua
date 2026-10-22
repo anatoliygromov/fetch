@@ -135,7 +135,7 @@ local function nextLevel()
     local score = run and run.score or tally.score
     local newBest = Flow.runOver(score)
     ending = { score = score, best = Flow.bestRun, newBest = newBest, lines = def.outro }
-    state, t = "ending", 0
+    state, t = "ending", 0; S.music(musicOn, "title")                 -- the ending: the title theme again
   end
 end
 -- GAME OVER: TRY AGAIN plays the same level again with 3 lives and the score it started with; MENU
