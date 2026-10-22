@@ -28,6 +28,12 @@
 -- the bones (the leaf piles); leaves = true: it flattens when Pepper runs through it.
 -- Secrets (L.secrets, counted on the tally): the willows (the high route over the pond), inside the hollow log,
 -- the oak's top branch.
+
+-- TILED: this level loads from its Tiled map, maps/citypark.tmx, exported to level/tiled/citypark.lua (docs/tiled.md).
+-- The table below is the fallback and the original: set USE_TILED to false to play it instead.
+local USE_TILED = true
+if USE_TILED then return require("tiled").load("level/tiled/citypark.lua") end
+
 local L = {}
 L.name = "CITY PARK"
 L.number = 1

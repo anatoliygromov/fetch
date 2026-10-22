@@ -42,6 +42,41 @@ play and draw exactly as before. Greybox, no SpriteCook credits.
   and on this branch are pixel identical (120 of 127 shots; the other 7 differ only in the debug view's FPS counter).
   (Run the checks with their own `XDG_DATA_HOME` when other copies of the game run at the same time: they share the
   save folder, and `check_flow` fails when two runs write its files at once.)
+
+## Branch `tools/tiled`: levels in Tiled, the map editor (22 Oct)
+Built on `main` (v0.5). No SpriteCook credits. See `docs/tiled.md`.
+- **Levels as Tiled maps** (`tools/level_to_tiled.py`): a level (`level/<name>.map` and `level/<name>.lua`) becomes
+  `maps/<name>.tmx`, a map Tiled 1.8 and later opens: the terrain as a tile layer of 8 x 8 px cells (tileset
+  `maps/terrain.png`: solid, water, two slopes, each tile carrying its map character), the rest as objects in the
+  layers props, zones, movers, critters, lamps, bones and story, and the level's other fields (time, art, intro...)
+  as map properties. Each map remembers its export target, so Tiled's File > Export (Ctrl+E) writes
+  `riverwalk/level/tiled/<name>.lua`, the file the game reads; `--export` does the same without Tiled. The level
+  table is read by running the level file in Lua (lua5.1, luajit or lua, else LOVE: `tools/tiled/love_runner`).
+  All five levels converted.
+- **The loader** (`riverwalk/tiled.lua`): `require("tiled").load("level/tiled/<name>.lua")` gives back the terrain
+  rows and the table L the game uses today. It is generic: an object goes into the list named by its class (empty:
+  the layer's name; "magpie.perches" is a nested list; start, ball, girl, cat, fox and exit are single objects), a
+  rectangle gives x0, x1, y0, y1 (or the fields its "box" property names), a point x and y, a polyline its points,
+  and every custom property passes through, so new kinds of objects (lifts, vertical movers) need no change. Any
+  number of rows: a tall map just works. Text objects and layers named "#..." are notes. The terrain rows go to
+  the save folder as `tiled_<name>.map` (as `pepperlab.lua` does) and L.map names that file: no change to
+  `world.lua` or `stage.lua`.
+- **The check** (`tools/check_tiled.sh`, `tools/tiled/check_tiled.lua`): all five levels go level files -> Tiled
+  map -> export -> loader and come back identical (deep compare, lists in order, and every terrain row); the same
+  through Tiled's own Lua export (`tiled --export-map`, Tiled 1.8.2 here); the game's exports are up to date with
+  `maps/*.tmx`; a tall map (50 rows) with new kinds of objects loads; and which maps were changed in Tiled.
+- **City Park loads from Tiled.** `level/citypark.lua` starts with `local USE_TILED = true` and returns the level
+  from `level/tiled/citypark.lua`; the rest of the file (and `citypark.map`) stays as the fallback: set it to
+  false to play the original. Its physics checks, autopilot (44.2 s, as before), QA and the flow test pass
+  unchanged. The other four levels still load from their own files; switching one is the same two lines.
+- **Zones with no height** (hints, bike and tram zones, gull stretches) are bands stacked above the map in Tiled,
+  the first one on top, so they no longer cover the level. **A preview without Tiled:**
+  `tools/tiled/render_map.py maps/<name>.tmx out.png --rows 3` draws a map layer by layer (terrain, props by kind,
+  zones, movers with their paths, geese with their stretches, lamps, bones, the magpie's perches numbered, hints).
+  The tools find LOVE and Tiled in `/Applications` on a Mac with no Lua installed.
+- **`docs/tiled.md`**, a guide for drawing levels: the files, opening a map, the units and Pepper's limits (34 x 26
+  px, 16 crouched; hop 24, held jump 46, scramble 58 px), what each layer and object means, adding a prop, a bone
+  or a lamp, notes, exporting (Ctrl+E), running the game on a Mac, switching a level to Tiled and back, taller maps.
 ## Branch `assets/v2`: the tram fix and art for the new pieces (19 Oct)
 Built on `levels/v2`.
 - **The trams end in tram sheds** (Downtown). Before, the first tram vanished in plain view before the fountain,
