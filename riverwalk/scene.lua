@@ -1708,6 +1708,15 @@ function Sc.drawPropArt(p, camx, def, kicked)
       local im = kicked and T.leaves_flat or T.leaves
       at(im, x + w / 2 - im:getWidth() / 2, p.y1 - im:getHeight())
     elseif n == "LOG" then shadowUnder(p, camx); at(T.log, x, p.y0 - 4)
+    elseif n == "STUMP" then                                      -- a tree stump (r6/levels: the tall City Park's
+      shadowUnder(p, camx)                                        -- practice ledge), drawn in code: bark, a cut top
+      local sx, sy, sw, sh = math.floor(x), p.y0, w, p.y1 - p.y0
+      lg.setColor(INK); lg.rectangle("fill", sx - 1, sy - 1, sw + 2, sh + 1)
+      lg.setColor(0.42, 0.26, 0.14); lg.rectangle("fill", sx, sy + 3, sw, sh - 3)
+      lg.setColor(0.33, 0.20, 0.11); for i = 3, sw - 3, 5 do lg.rectangle("fill", sx + i, sy + 5, 1, sh - 7) end
+      lg.setColor(0.86, 0.66, 0.40); lg.rectangle("fill", sx, sy, sw, 3)
+      lg.setColor(0.70, 0.50, 0.28); lg.rectangle("fill", sx + 4, sy + 1, sw - 8, 1)
+      lg.setColor(1, 1, 1, 1)
     elseif n == "BENCH" then Sc.shadow(x + w / 2, 183 + d, w + 10, 5); at(A.bench, x - 3, 184 + d - A.bench:getHeight())
     elseif n == "HEDGE" then Sc.shadow(x + w / 2, 183 + d, w + 4, 5); at(T.hedge, x, p.y0)
     elseif n == "STONE" then

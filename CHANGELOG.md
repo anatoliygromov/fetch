@@ -46,6 +46,24 @@ Built on `round1`. The owner's new strategy (ten levels; five built, plus Roofto
   it. A control hint now stays on one row (smaller words rather than two rows). The d-pad glyph is a hint button
   too (`btn = "right"`: RUN). "HOLD + PUSH: CLIMB" is now "HOLD: CLIMB" (River Walk, both City Parks) so it keeps
   the big letters beside the picture. `tests_flow.lua` checks every Pepper hint of every level has a picture.
+- **City Park's climbing frame** (level/citypark.lua, maps/citypark.tmx and the tall map, their exports, the frame's
+  art in tools/make_town_art.py, tests_citypark.lua and tests_citypark_tall.lua): 60% of City Park's failures were
+  here (x about 2720): a tap hop that had to stop in the air on a 48 px one-way bar. The frame is wider (posts 2712
+  and 2796, was 2772) with a step inside it (x 2716-2732, 12 px up: any hop; drawn in the art, its box hidden), the
+  low bar 72 px (2712-2784, y 160), the top bar 76 px (2724-2800, y 136; the magpie's last perch, the ball 48 px up
+  as before). A running held jump from the path lands on the low bar, a held jump from the step or the low bar
+  lands on the top bar, a tap hop goes up one at a time. Hints at the frame: TAP: HOP onto the step, HOLD: BIG JUMP
+  from it. New checks: the step, a held jump from the step to the top bar, a running held jump onto the low bar
+  (76 of 76; tall: 85 of 85). Before/after: `/home/claude/out/r6-levels/citypark_frame_before_after.png`. City
+  Park's own held jump is taught on flat ground at the bench (screen 2) and in River Walk before it.
+- **Tall City Park: the held jump is shown before it is needed** (maps/citypark_tall.tmx, scene.lua): the first held
+  jump (the bench seat, then the hedge) came where the magpie's BARK! hint wins the panel, so the level asked for
+  it before HOLD: BIG JUMP was shown (Anna found it by trying in 19 of 20 runs). A **stump** (x 250-274, 28 px,
+  drawn in code, a bone on it) is a safe practice ledge on the path before the bench, with HOLD: BIG JUMP before it
+  (x 196-250); a second HOLD: BIG JUMP shows on the bench seat for the jump up to the hedge (way up 1). There is
+  ground between the stump and the bench (48 px), so the crawl under the bench stays; the stump keeps clear of the
+  lamp at 296 (a respawn there landed inside it in a first try: `--qa` found it). Two bones moved off the stump's
+  box. The autopilot: the stump, down, the bench seat, the hedge (39.1 s).
 
 ## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
 Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of

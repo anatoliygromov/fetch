@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="360" height="30" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#20242c" nextlayerid="9" nextobjectid="165">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="360" height="30" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#20242c" nextlayerid="9" nextobjectid="169">
  <editorsettings>
   <export target="../riverwalk/level/tiled/citypark.lua" format="lua"/>
  </editorsettings>
@@ -13,7 +13,7 @@
   <property name="intro" value="{ &quot;LEVEL 2&quot;, &quot;CITY PARK&quot;, &quot;A MAGPIE STOLE MIA'S BALL!&quot;, &quot;SNEAK UP AND BARK, PEPPER!&quot; }"/>
   <property name="name" value="CITY PARK"/>
   <property name="number" type="int" value="2"/>
-  <property name="outro" value="{ &quot;NOON IN TOWN. THE BALL&quot;, &quot;ROLLED AWAY ACROSS THE PLAZA...&quot; }"/>
+  <property name="outro" value='{ "NOON IN TOWN. THE BALL", "ROLLED AWAY ACROSS THE PLAZA..." }'/>
   <property name="scenery" value="greybox"/>
   <property name="time" type="int" value="300"/>
   <property name="title" value="Pepper: City Park"/>
@@ -374,94 +374,101 @@
     <property name="layer" value="back"/>
    </properties>
   </object>
-  <object id="44" type="props" x="2772" y="120" width="4" height="64">
+  <object id="44" type="props" x="2796" y="120" width="4" height="64">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
     <property name="layer" value="back"/>
    </properties>
   </object>
-  <object id="45" name="FRAME" type="props" x="2712" y="160" width="48" height="4">
+  <object id="45" name="STEP" type="props" x="2716" y="172" width="16" height="12">
+   <properties>
+    <property name="kind" value="solid"/>
+    <property name="layer" value="play"/>
+    <property name="hidden" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="46" name="FRAME" type="props" x="2712" y="160" width="72" height="4">
    <properties>
     <property name="kind" value="oneway"/>
     <property name="layer" value="play"/>
     <property name="label" value="below"/>
    </properties>
   </object>
-  <object id="46" type="props" x="2728" y="136" width="48" height="4">
+  <object id="47" type="props" x="2724" y="136" width="76" height="4">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="oneway"/>
     <property name="layer" value="play"/>
    </properties>
   </object>
-  <object id="47" name="SWINGS" type="props" x="2804" y="104" width="72" height="80">
+  <object id="48" name="SWINGS" type="props" x="2804" y="104" width="72" height="80">
    <properties>
     <property name="kind" value="decor"/>
     <property name="layer" value="back"/>
    </properties>
   </object>
-  <object id="48" type="props" x="620" y="221" width="12" height="19">
+  <object id="49" type="props" x="620" y="221" width="12" height="19">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
     <property name="layer" value="front"/>
    </properties>
   </object>
-  <object id="49" type="props" x="1900" y="221" width="12" height="19">
+  <object id="50" type="props" x="1900" y="221" width="12" height="19">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
     <property name="layer" value="front"/>
    </properties>
   </object>
-  <object id="50" type="pieces" x="1564" y="158" width="42" height="7">
+  <object id="51" type="pieces" x="1564" y="158" width="42" height="7">
    <properties>
     <property name="kind" value="hollowlog"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup id="3" name="zones" color="#ff4060" draworder="index">
-  <object id="51" type="bikes" x="1376" y="-200" width="184" height="8">
+  <object id="52" type="bikes" x="1376" y="-190" width="184" height="8">
    <properties>
     <property name="box" value="zoneX0,zoneX1"/>
     <property name="kind" value="cart"/>
-    <property name="relx.endX" type="int" value="-76"/>
     <property name="every" type="int" value="6"/>
     <property name="minY" type="int" value="150"/>
+    <property name="relx.endX" type="int" value="-76"/>
     <property name="speed" type="int" value="100"/>
     <property name="start" value="enter"/>
    </properties>
   </object>
-  <object id="52" type="bikes" x="2350" y="-190" width="226" height="8">
+  <object id="53" type="bikes" x="2350" y="-180" width="226" height="8">
    <properties>
     <property name="box" value="zoneX0,zoneX1"/>
     <property name="kind" value="cart"/>
-    <property name="relx.endX" type="int" value="-10"/>
     <property name="every" type="float" value="5.5"/>
     <property name="minY" type="int" value="150"/>
+    <property name="relx.endX" type="int" value="-10"/>
     <property name="speed" type="int" value="105"/>
     <property name="start" value="enter"/>
    </properties>
   </object>
-  <object id="53" name="WILLOWS" type="secrets" x="764" y="100" width="80" height="12"/>
-  <object id="54" name="HOLLOW LOG" type="secrets" x="1570" y="176" width="30" height="8"/>
-  <object id="55" name="OAK TOP" type="secrets" x="1732" y="90" width="72" height="10"/>
+  <object id="54" name="WILLOWS" type="secrets" x="764" y="100" width="80" height="12"/>
+  <object id="55" name="HOLLOW LOG" type="secrets" x="1570" y="176" width="30" height="8"/>
+  <object id="56" name="OAK TOP" type="secrets" x="1732" y="90" width="72" height="10"/>
  </objectgroup>
  <objectgroup id="4" name="movers" color="#40c0ff" draworder="index">
-  <object id="56" name="DUCK BOAT" type="movers" x="824" y="202" width="48" height="6">
+  <object id="57" name="DUCK BOAT" type="movers" x="824" y="202" width="48" height="6">
    <properties>
-    <property name="relx.call" value="{ -224, 6 }"/>
     <property name="callSpeed" type="int" value="48"/>
+    <property name="relx.call" value="{ -224, 6 }"/>
     <property name="relx.from" type="int" value="0"/>
     <property name="relx.rope" value="{ -8, 120 }"/>
-    <property name="speed" type="int" value="24"/>
     <property name="relx.to" type="int" value="64"/>
+    <property name="speed" type="int" value="24"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup id="5" name="critters" color="#c060ff" draworder="index">
-  <object id="57" type="critters" x="1160" y="184">
+  <object id="58" type="critters" x="1160" y="184">
    <properties>
     <property name="kind" value="goose"/>
     <property name="relx.x0" type="int" value="-64"/>
@@ -469,7 +476,7 @@
    </properties>
    <point/>
   </object>
-  <object id="58" type="critters" x="2360" y="184">
+  <object id="59" type="critters" x="2360" y="184">
    <properties>
     <property name="kind" value="goose"/>
     <property name="relx.x0" type="int" value="-10"/>
@@ -479,49 +486,49 @@
   </object>
  </objectgroup>
  <objectgroup id="6" name="lamps" color="#ffe040" draworder="index">
-  <object id="59" type="lamps" x="296" y="184">
+  <object id="60" type="lamps" x="296" y="184">
    <properties>
     <property name="checkpoint" type="bool" value="true"/>
    </properties>
    <point/>
   </object>
-  <object id="60" type="lamps" x="656" y="184">
+  <object id="61" type="lamps" x="656" y="184">
    <properties>
     <property name="checkpoint" type="bool" value="true"/>
    </properties>
    <point/>
   </object>
-  <object id="61" type="lamps" x="976" y="184">
+  <object id="62" type="lamps" x="976" y="184">
    <properties>
     <property name="checkpoint" type="bool" value="true"/>
    </properties>
    <point/>
   </object>
-  <object id="62" type="lamps" x="1306" y="184">
+  <object id="63" type="lamps" x="1306" y="184">
    <properties>
     <property name="checkpoint" type="bool" value="true"/>
    </properties>
    <point/>
   </object>
-  <object id="63" type="lamps" x="1624" y="184">
+  <object id="64" type="lamps" x="1624" y="184">
    <properties>
     <property name="checkpoint" type="bool" value="true"/>
    </properties>
    <point/>
   </object>
-  <object id="64" type="lamps" x="1936" y="184">
+  <object id="65" type="lamps" x="1936" y="184">
    <properties>
     <property name="checkpoint" type="bool" value="true"/>
    </properties>
    <point/>
   </object>
-  <object id="65" type="lamps" x="2300" y="184">
+  <object id="66" type="lamps" x="2300" y="184">
    <properties>
     <property name="checkpoint" type="bool" value="true"/>
    </properties>
    <point/>
   </object>
-  <object id="66" type="lamps" x="2592" y="184">
+  <object id="67" type="lamps" x="2592" y="184">
    <properties>
     <property name="checkpoint" type="bool" value="true"/>
    </properties>
@@ -529,264 +536,267 @@
   </object>
  </objectgroup>
  <objectgroup id="7" name="bones" color="#ffffff" draworder="index">
-  <object id="67" type="bones" x="102" y="184">
+  <object id="68" type="bones" x="102" y="184">
    <point/>
   </object>
-  <object id="68" type="bones" x="116" y="184">
+  <object id="69" type="bones" x="116" y="184">
    <point/>
   </object>
-  <object id="69" type="bones" x="130" y="184">
+  <object id="70" type="bones" x="130" y="184">
    <point/>
   </object>
-  <object id="70" type="bones" x="188" y="168">
+  <object id="71" type="bones" x="188" y="168">
    <point/>
   </object>
-  <object id="71" type="bones" x="204" y="168">
+  <object id="72" type="bones" x="204" y="168">
    <point/>
   </object>
-  <object id="72" type="bones" x="248" y="184">
+  <object id="73" type="bones" x="248" y="184">
    <point/>
   </object>
-  <object id="73" type="bones" x="270" y="184">
+  <object id="74" type="bones" x="270" y="184">
    <point/>
   </object>
-  <object id="74" type="bones" x="376" y="156">
+  <object id="75" type="bones" x="376" y="156">
    <point/>
   </object>
-  <object id="75" type="bones" x="400" y="156">
+  <object id="76" type="bones" x="400" y="156">
    <point/>
   </object>
-  <object id="76" type="bones" x="424" y="156">
+  <object id="77" type="bones" x="424" y="156">
    <point/>
   </object>
-  <object id="77" type="bones" x="488" y="184">
+  <object id="78" type="bones" x="488" y="184">
    <point/>
   </object>
-  <object id="78" type="bones" x="540" y="184">
+  <object id="79" type="bones" x="540" y="184">
    <point/>
   </object>
-  <object id="79" type="bones" x="560" y="184">
+  <object id="80" type="bones" x="560" y="184">
    <point/>
   </object>
-  <object id="80" type="bones" x="580" y="184">
+  <object id="81" type="bones" x="580" y="184">
    <point/>
   </object>
-  <object id="81" type="bones" x="560" y="112">
+  <object id="82" type="bones" x="560" y="112">
    <properties>
     <property name="super" type="bool" value="true"/>
    </properties>
    <point/>
   </object>
-  <object id="82" type="bones" x="684" y="184">
+  <object id="83" type="bones" x="684" y="184">
    <point/>
   </object>
-  <object id="83" type="bones" x="748" y="188">
+  <object id="84" type="bones" x="748" y="188">
    <point/>
   </object>
-  <object id="84" type="bones" x="776" y="180">
+  <object id="85" type="bones" x="776" y="180">
    <point/>
   </object>
-  <object id="85" type="bones" x="804" y="188">
+  <object id="86" type="bones" x="804" y="188">
    <point/>
   </object>
-  <object id="86" type="bones" x="866" y="202">
+  <object id="87" type="bones" x="866" y="202">
    <point/>
   </object>
-  <object id="87" type="bones" x="906" y="202">
+  <object id="88" type="bones" x="906" y="202">
    <point/>
   </object>
-  <object id="88" type="bones" x="952" y="184">
+  <object id="89" type="bones" x="952" y="184">
    <point/>
   </object>
-  <object id="89" type="bones" x="700" y="120">
+  <object id="90" type="bones" x="700" y="120">
    <point/>
   </object>
-  <object id="90" type="bones" x="804" y="112">
+  <object id="91" type="bones" x="804" y="112">
    <properties>
     <property name="super" type="bool" value="true"/>
    </properties>
    <point/>
   </object>
-  <object id="91" type="bones" x="908" y="120">
+  <object id="92" type="bones" x="908" y="120">
    <point/>
   </object>
-  <object id="92" type="bones" x="1020" y="184">
+  <object id="93" type="bones" x="1020" y="184">
    <point/>
   </object>
-  <object id="93" type="bones" x="1032" y="184">
+  <object id="94" type="bones" x="1032" y="184">
    <point/>
   </object>
-  <object id="94" type="bones" x="1044" y="184">
+  <object id="95" type="bones" x="1044" y="184">
    <point/>
   </object>
-  <object id="95" type="bones" x="1090" y="184">
+  <object id="96" type="bones" x="1090" y="184">
    <point/>
   </object>
-  <object id="96" type="bones" x="1160" y="160">
+  <object id="97" type="bones" x="1160" y="160">
    <point/>
   </object>
-  <object id="97" type="bones" x="1262" y="168">
+  <object id="98" type="bones" x="1262" y="168">
    <point/>
   </object>
-  <object id="98" type="bones" x="1276" y="168">
+  <object id="99" type="bones" x="1276" y="168">
    <point/>
   </object>
-  <object id="99" type="bones" x="1310" y="184">
+  <object id="100" type="bones" x="1310" y="184">
    <point/>
   </object>
-  <object id="100" type="bones" x="1345" y="128">
+  <object id="101" type="bones" x="1345" y="128">
    <point/>
   </object>
-  <object id="101" type="bones" x="1434" y="156">
+  <object id="102" type="bones" x="1434" y="156">
    <point/>
   </object>
-  <object id="102" type="bones" x="1452" y="156">
+  <object id="103" type="bones" x="1452" y="156">
    <point/>
   </object>
-  <object id="103" type="bones" x="1470" y="156">
+  <object id="104" type="bones" x="1470" y="156">
    <point/>
   </object>
-  <object id="104" type="bones" x="1530" y="184">
+  <object id="105" type="bones" x="1530" y="184">
    <point/>
   </object>
-  <object id="105" type="bones" x="1546" y="184">
+  <object id="106" type="bones" x="1546" y="184">
    <point/>
   </object>
-  <object id="106" type="bones" x="1585" y="184">
+  <object id="107" type="bones" x="1585" y="184">
    <properties>
     <property name="super" type="bool" value="true"/>
    </properties>
    <point/>
   </object>
-  <object id="107" type="bones" x="1648" y="184">
+  <object id="108" type="bones" x="1648" y="184">
    <point/>
   </object>
-  <object id="108" type="bones" x="1780" y="156">
+  <object id="109" type="bones" x="1780" y="156">
    <point/>
   </object>
-  <object id="109" type="bones" x="1810" y="128">
+  <object id="110" type="bones" x="1810" y="128">
    <point/>
   </object>
-  <object id="110" type="bones" x="1768" y="100">
+  <object id="111" type="bones" x="1768" y="100">
    <properties>
     <property name="super" type="bool" value="true"/>
    </properties>
    <point/>
   </object>
-  <object id="111" type="bones" x="1864" y="184">
+  <object id="112" type="bones" x="1864" y="184">
    <point/>
   </object>
-  <object id="112" type="bones" x="1888" y="184">
+  <object id="113" type="bones" x="1888" y="184">
    <point/>
   </object>
-  <object id="113" type="bones" x="1968" y="184">
+  <object id="114" type="bones" x="1968" y="184">
    <point/>
   </object>
-  <object id="114" type="bones" x="2028" y="160">
+  <object id="115" type="bones" x="2028" y="160">
    <point/>
   </object>
-  <object id="115" type="bones" x="2068" y="188">
+  <object id="116" type="bones" x="2068" y="188">
    <point/>
   </object>
-  <object id="116" type="bones" x="2108" y="160">
+  <object id="117" type="bones" x="2108" y="160">
    <point/>
   </object>
-  <object id="117" type="bones" x="2148" y="188">
+  <object id="118" type="bones" x="2148" y="188">
    <point/>
   </object>
-  <object id="118" type="bones" x="2188" y="160">
+  <object id="119" type="bones" x="2188" y="160">
    <point/>
   </object>
-  <object id="119" type="bones" x="2228" y="188">
+  <object id="120" type="bones" x="2228" y="188">
    <point/>
   </object>
-  <object id="120" type="bones" x="2268" y="160">
+  <object id="121" type="bones" x="2268" y="160">
    <point/>
   </object>
-  <object id="121" type="bones" x="2330" y="184">
+  <object id="122" type="bones" x="2330" y="184">
    <point/>
   </object>
-  <object id="122" type="bones" x="2404" y="156">
+  <object id="123" type="bones" x="2404" y="156">
    <point/>
   </object>
-  <object id="123" type="bones" x="2428" y="156">
+  <object id="124" type="bones" x="2428" y="156">
    <point/>
   </object>
-  <object id="124" type="bones" x="2452" y="156">
+  <object id="125" type="bones" x="2452" y="156">
    <point/>
   </object>
-  <object id="125" type="bones" x="2490" y="184">
+  <object id="126" type="bones" x="2490" y="184">
    <point/>
   </object>
-  <object id="126" type="bones" x="2520" y="156">
+  <object id="127" type="bones" x="2520" y="156">
    <point/>
   </object>
-  <object id="127" type="bones" x="2536" y="156">
+  <object id="128" type="bones" x="2536" y="156">
    <point/>
   </object>
-  <object id="128" type="bones" x="2552" y="156">
+  <object id="129" type="bones" x="2552" y="156">
    <point/>
   </object>
-  <object id="129" type="bones" x="2596" y="184">
+  <object id="130" type="bones" x="2596" y="184">
    <point/>
   </object>
-  <object id="130" type="bones" x="2640" y="152">
+  <object id="131" type="bones" x="2640" y="152">
    <point/>
   </object>
-  <object id="131" type="bones" x="2672" y="168">
+  <object id="132" type="bones" x="2672" y="168">
    <point/>
   </object>
-  <object id="132" type="bones" x="2736" y="160">
+  <object id="133" type="bones" x="2724" y="172">
    <point/>
   </object>
-  <object id="133" type="bones" x="2752" y="136">
+  <object id="134" type="bones" x="2760" y="160">
    <point/>
   </object>
-  <object id="134" type="bones" x="2792" y="184">
+  <object id="135" type="bones" x="2752" y="136">
+   <point/>
+  </object>
+  <object id="136" type="bones" x="2792" y="184">
    <point/>
   </object>
  </objectgroup>
  <objectgroup id="8" name="story" color="#40ff80" draworder="index">
-  <object id="135" type="start" x="60" y="184">
+  <object id="137" type="start" x="60" y="184">
    <point/>
   </object>
-  <object id="136" type="ball" x="240" y="184">
+  <object id="138" type="ball" x="240" y="184">
    <point/>
   </object>
-  <object id="137" type="girl" x="2840" y="184">
+  <object id="139" type="girl" x="2840" y="184">
    <point/>
   </object>
-  <object id="138" type="magpie.perches" x="240" y="184">
+  <object id="140" type="magpie.perches" x="240" y="184">
    <properties>
     <property name="flee" type="int" value="80"/>
    </properties>
    <point/>
   </object>
-  <object id="139" type="magpie.perches" x="400" y="138">
+  <object id="141" type="magpie.perches" x="400" y="138">
    <point/>
   </object>
-  <object id="140" type="magpie.perches" x="656" y="120">
+  <object id="142" type="magpie.perches" x="656" y="120">
    <point/>
   </object>
-  <object id="141" type="magpie.perches" x="1268" y="168">
+  <object id="143" type="magpie.perches" x="1268" y="168">
    <point/>
   </object>
-  <object id="142" type="magpie.perches" x="1345" y="128">
+  <object id="144" type="magpie.perches" x="1345" y="128">
    <point/>
   </object>
-  <object id="143" type="magpie.perches" x="1624" y="100">
+  <object id="145" type="magpie.perches" x="1624" y="100">
    <point/>
   </object>
-  <object id="144" type="magpie.perches" x="2428" y="138">
+  <object id="146" type="magpie.perches" x="2428" y="138">
    <point/>
   </object>
-  <object id="145" type="magpie.perches" x="2640" y="124">
+  <object id="147" type="magpie.perches" x="2640" y="124">
    <point/>
   </object>
-  <object id="146" type="magpie.perches" x="2752" y="136">
+  <object id="148" type="magpie.perches" x="2752" y="136">
    <point/>
   </object>
-  <object id="147" type="hints" x="0" y="-180" width="2880" height="8">
+  <object id="149" type="hints" x="0" y="-170" width="2880" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="BARK!"/>
@@ -794,7 +804,7 @@
     <property name="need" value="magpienear"/>
    </properties>
   </object>
-  <object id="148" type="hints" x="0" y="-170" width="2880" height="8">
+  <object id="150" type="hints" x="0" y="-160" width="2880" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="PICK UP"/>
@@ -802,7 +812,7 @@
     <property name="need" value="nearball"/>
    </properties>
   </object>
-  <object id="149" type="hints" x="2760" y="-160" width="120" height="8">
+  <object id="151" type="hints" x="2760" y="-150" width="120" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="GIVE"/>
@@ -810,28 +820,28 @@
     <property name="need" value="ball"/>
    </properties>
   </object>
-  <object id="150" type="hints" x="288" y="-150" width="64" height="8">
+  <object id="152" type="hints" x="288" y="-140" width="64" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="HOLD: BIG JUMP"/>
     <property name="btn" value="a"/>
    </properties>
   </object>
-  <object id="151" type="hints" x="456" y="-140" width="72" height="8">
+  <object id="153" type="hints" x="456" y="-130" width="72" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="CRAWL"/>
     <property name="btn" value="down"/>
    </properties>
   </object>
-  <object id="152" type="hints" x="660" y="-130" width="76" height="8">
+  <object id="154" type="hints" x="660" y="-120" width="76" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="TAP: HOP"/>
     <property name="btn" value="a"/>
    </properties>
   </object>
-  <object id="153" type="hints" x="0" y="-120" width="2880" height="8">
+  <object id="155" type="hints" x="0" y="-110" width="2880" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="BARK: SHOO!"/>
@@ -839,21 +849,35 @@
     <property name="need" value="goose"/>
    </properties>
   </object>
-  <object id="154" type="hints" x="1960" y="-110" width="270" height="8">
+  <object id="156" type="hints" x="1960" y="-100" width="270" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="STOP, THEN HOP"/>
     <property name="btn" value="a"/>
    </properties>
   </object>
-  <object id="155" type="hints" x="1300" y="-100" width="28" height="8">
+  <object id="157" type="hints" x="1300" y="-90" width="28" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="HOLD: CLIMB"/>
     <property name="btn" value="a"/>
    </properties>
   </object>
-  <object id="156" type="hints" x="0" y="-90" width="2880" height="8">
+  <object id="158" type="hints" x="2690" y="183" width="40" height="57">
+   <properties>
+    <property name="box" value="x0,x1,minY"/>
+    <property name="text" value="TAP: HOP"/>
+    <property name="btn" value="a"/>
+   </properties>
+  </object>
+  <object id="159" type="hints" x="2700" y="0" width="40" height="173">
+   <properties>
+    <property name="box" value="x0,x1,-,maxY"/>
+    <property name="text" value="HOLD: BIG JUMP"/>
+    <property name="btn" value="a"/>
+   </properties>
+  </object>
+  <object id="160" type="hints" x="0" y="-80" width="2880" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="HOLD: SNEAK"/>
@@ -861,54 +885,54 @@
     <property name="need" value="magpieahead"/>
    </properties>
   </object>
-  <object id="157" type="hints" x="100" y="-80" width="76" height="8">
+  <object id="161" type="hints" x="100" y="-70" width="76" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="TAP: HOP"/>
     <property name="btn" value="a"/>
    </properties>
   </object>
-  <object id="158" type="hints" x="800" y="0" width="60" height="196">
+  <object id="162" type="hints" x="800" y="0" width="60" height="196">
    <properties>
     <property name="box" value="x0,x1,-,maxY"/>
     <property name="text" value="RIDE THE DUCK BOAT!"/>
    </properties>
   </object>
-  <object id="159" type="hints" x="1376" y="-60" width="184" height="8">
+  <object id="163" type="hints" x="1376" y="-60" width="184" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="CART! GET UP HIGH!"/>
     <property name="bike" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="160" type="hints" x="2350" y="-50" width="226" height="8">
+  <object id="164" type="hints" x="2350" y="-50" width="226" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="ANOTHER CART! UP HIGH!"/>
     <property name="bike" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="161" type="hints" x="1040" y="-40" width="60" height="8">
+  <object id="165" type="hints" x="1040" y="-40" width="60" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="A GOOSE! BARK AT IT!"/>
    </properties>
   </object>
-  <object id="162" type="hints" x="300" y="-30" width="2580" height="8">
+  <object id="166" type="hints" x="300" y="-30" width="2580" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="THE MAGPIE STILL HAS MY BALL!"/>
     <property name="need" value="magpie"/>
    </properties>
   </object>
-  <object id="163" type="hints" x="1880" y="-20" width="1000" height="8">
+  <object id="167" type="hints" x="1880" y="-20" width="1000" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="BRING ME THE BALL!"/>
     <property name="need" value="ball"/>
    </properties>
   </object>
-  <object id="164" type="hints" x="1880" y="-10" width="1000" height="8">
+  <object id="168" type="hints" x="1880" y="-10" width="1000" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
     <property name="text" value="GO BACK FOR THE BALL!"/>

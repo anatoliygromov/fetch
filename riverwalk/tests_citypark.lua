@@ -181,10 +181,20 @@ return function(mode, api)
           if r then inside = ("x %.1f y %.1f"):format(p.x, p.y) end
         end },
       { act = function(p) report("slide: knocked back off its top, not into the tower", not inside, inside or ("ends x %.0f y %.0f"):format(p.x, p.y)) end },
-      { act = function() tp(2736, 184); jump("jump") end }, { wait = 1 / 60 }, { act = function() release() end }, { during = 0.1 }, landed(),
+      { act = function() tp(2760, 184); jump("jump") end }, { wait = 1 / 60 }, { act = function() release() end }, { during = 0.1 }, landed(),
       { act = function(p) report("climbing frame: a hop onto the low bar", near(p.y, 160), ("y %.0f"):format(p.y)) end },
       { act = function() tp(2744, 160); jump("jump") end }, { wait = 1 / 60 }, { act = function() release() end }, { during = 0.1 }, landed(),
       { act = function(p) report("climbing frame: a hop onto the top bar", near(p.y, 136), ("y %.0f"):format(p.y)) end },
+      -- (r6/levels) the step and the wide bars: any hop gets onto the step; from it a held jump lands on the top
+      -- bar; a running held jump from the path lands on the low bar, not over it
+      { act = function() tp(2694, 184); jump("right", "jump") end }, { wait = 1 / 60 }, { act = function() hold("right") end }, { during = 0.1 },
+      { cond = function(p) return p.onGround end, act = function() release() end, limit = 2 },
+      { act = function(p) report("climbing frame: a tap hop onto the step (or the low bar)", near(p.y, 172) or near(p.y, 160), ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      { act = function() tp(2724, 172); jump("right", "jump") end }, { during = 0.2 }, landed(),
+      { act = function(p) release(); report("climbing frame: a held jump from the step lands on the top bar", near(p.y, 136), ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      { act = function() tp(2694, 184); hold("right") end }, { cond = function(p) return p.x >= 2697 end, act = function() jump("right", "jump") end, limit = 2 },
+      { during = 0.2 }, landed(),
+      { act = function(p) release(); report("climbing frame: a running held jump lands on the low bar", near(p.y, 160) or near(p.y, 136), ("x %.0f y %.0f"):format(p.x, p.y)) end },
       -- the high route over the pond: hedge top, the three willows' branches, down on the far bank
       { act = function() tp(560, 112); hold("right") end },
       { cond = function(p) return p.x >= 590 end, act = function() jump("right", "jump") end, limit = 2 }, { during = 0.2 }, landed(),
@@ -343,9 +353,10 @@ return function(mode, api)
       at(function(p) return p.x >= 2588 end, function() jump("right", "jump") end, 9),
       at(function(p) return p.onGround and p.y <= 153 end, function() hold("right") end),
       at(function(p) return p.onGround and p.y >= 183 and p.x > 2688 end, function() hold("right") end),
-      at(function(p) return p.x >= 2722 end, function() jump("right", "jump") end),
+      at(function(p) return p.x >= 2690 end, function() jump("right", "jump") end),          -- (r6/levels: over the step)
       at(function() return true end, function() hold("right") end),
-      at(function(p) return p.onGround and p.y <= 161 end, function() release() end),
+      at(function(p) return p.onGround and p.y <= 161 end, function() hold("right") end),
+      at(function(p) return p.x >= 2748 end, function() release() end),
       { wait = 0.3 }, { act = function() jump("jump") end }, { wait = 1 / 60 }, { act = function() release() end },
       at(function(p) return p.onGround and p.y <= 137 end, function() release() end),
       { wait = 0.2 }, { act = function() hold("right") end },

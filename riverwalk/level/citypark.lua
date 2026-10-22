@@ -111,9 +111,14 @@ L.props = {
   { name = "SLIDE",    kind = "decor",  layer = "back", x0 = 2624, x1 = 2656, y0 = 124, y1 = 152, label = "top" },  -- handrail
   { name = "",         kind = "solid",  layer = "play", x0 = 2624, x1 = 2640, y0 = 152, y1 = 184, hidden = true },
   { name = "",         kind = "decor",  layer = "back", x0 = 2712, x1 = 2716, y0 = 120, y1 = 184 },     -- frame posts
-  { name = "",         kind = "decor",  layer = "back", x0 = 2772, x1 = 2776, y0 = 120, y1 = 184 },
-  { name = "FRAME",    kind = "oneway", layer = "play", x0 = 2712, x1 = 2760, y0 = 160, y1 = 164, label = "below" },
-  { name = "",         kind = "oneway", layer = "play", x0 = 2728, x1 = 2776, y0 = 136, y1 = 140 },
+  { name = "",         kind = "decor",  layer = "back", x0 = 2796, x1 = 2800, y0 = 120, y1 = 184 },
+  -- (r6/levels: 60% of the level's failures were here, a tap hop that had to stop on a 48 px bar.) The frame is
+  -- wider (posts 2712 and 2796) with a step inside it (12 px: any hop; drawn in the frame's art,
+  -- tools/make_town_art.py): bars of 72 and 76 px, so a running held jump from the path lands on the low bar,
+  -- a held jump from the step or the low bar lands on the top bar, and a tap hop goes up one at a time.
+  { name = "STEP",     kind = "solid",  layer = "play", x0 = 2716, x1 = 2732, y0 = 172, y1 = 184, hidden = true },
+  { name = "FRAME",    kind = "oneway", layer = "play", x0 = 2712, x1 = 2784, y0 = 160, y1 = 164, label = "below" },
+  { name = "",         kind = "oneway", layer = "play", x0 = 2724, x1 = 2800, y0 = 136, y1 = 140 },
   { name = "SWINGS",   kind = "decor",  layer = "back", x0 = 2804, x1 = 2876, y0 = 104, y1 = 184 },
   -- foreground frame
   { name = "",         kind = "decor",  layer = "front", x0 = 620,  x1 = 632,  y0 = 221, y1 = 240 },
@@ -199,7 +204,7 @@ L.bones = {
   { x = 2404, y = 156 }, { x = 2428, y = 156 }, { x = 2452, y = 156 }, { x = 2490, y = 184 }, { x = 2520, y = 156 },
   { x = 2536, y = 156 }, { x = 2552, y = 156 }, { x = 2596, y = 184 },
   -- 9 playground
-  { x = 2640, y = 152 }, { x = 2672, y = 168 }, { x = 2736, y = 160 }, { x = 2752, y = 136 }, { x = 2792, y = 184 },
+  { x = 2640, y = 152 }, { x = 2672, y = 168 }, { x = 2724, y = 172 }, { x = 2760, y = 160 }, { x = 2752, y = 136 }, { x = 2792, y = 184 },
 }
 
 -- the leaf cart zone (the bike-zone code): the park keeper's cart drives right to left while Pepper is in the
@@ -235,6 +240,8 @@ L.hints = {
   { x0 = 0,    x1 = 2880, btn = "y",    text = "BARK: SHOO!",        need = "goose" },
   { x0 = 1960, x1 = 2230, btn = "a",    text = "STOP, THEN HOP" },            -- onto the creek's stones
   { x0 = 1300, x1 = 1328, btn = "a",    text = "HOLD: CLIMB" },
+  { x0 = 2690, x1 = 2730, btn = "a",    text = "TAP: HOP",           minY = 183 },   -- onto the frame's step (r6/levels)
+  { x0 = 2700, x1 = 2740, btn = "a",    text = "HOLD: BIG JUMP",     maxY = 173 },   -- from the step to the top bar
   { x0 = 0,    x1 = 2880, btn = "b",    text = "HOLD: SNEAK",        need = "magpieahead" },
   { x0 = 100,  x1 = 176,  btn = "a",    text = "TAP: HOP" },            -- onto the log (once she sneaks)
   { x0 = 800,  x1 = 860,  text = "RIDE THE DUCK BOAT!", maxY = 196 },
