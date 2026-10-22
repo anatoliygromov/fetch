@@ -13,9 +13,10 @@
   <property name="magpie.look" value="gull"/>
   <property name="ballBack" value="THE BALL IS BACK BY THE LAMP"/>
   <property name="ballHomeAtLamps" type="bool" value="true"/>
-  <property name="intro" value="{ &quot;LEVEL 3&quot;, &quot;ROOFTOPS&quot;, &quot;A GULL TOOK THE BALL TO ITS NEST!&quot;, &quot;MIA: MEET ME AT THE ROOF CAFE!&quot; }"/>
+  <property name="intro" value="{ &quot;LEVEL 4&quot;, &quot;ROOFTOPS&quot;, &quot;A GULL TOOK THE BALL TO ITS NEST!&quot;, &quot;MIA: MEET ME AT THE ROOF CAFE!&quot; }"/>
   <property name="name" value="ROOFTOPS"/>
-  <property name="number" type="int" value="3"/>
+  <property name="number" type="int" value="4"/>
+  <property name="outro" value="{ &quot;AFTERNOON ON SODER THE BALL&quot;, &quot;SLIPPED AND ROLLED DOWN THE HILL...&quot; }"/>
   <property name="scenery" value="greybox"/>
   <property name="time" type="int" value="300"/>
   <property name="title" value="Pepper: Rooftops (greybox)"/>
@@ -893,14 +894,14 @@
    <properties>
     <property name="box" value="x0,x1,minY,maxY"/>
     <property name="text" value="BARK!"/>
-    <property name="btn" value="b"/>
+    <property name="btn" value="y"/>
     <property name="need" value="magpienear"/>
    </properties>
   </object>
   <object id="143" type="hints" x="3570" y="340" width="80" height="40">
    <properties>
     <property name="box" value="x0,x1,minY,maxY"/>
-    <property name="text" value="STAND ON THE FAN"/>
+    <property name="text" value="HOP ON FAN"/>
     <property name="btn" value="a"/>
     <property name="need" value="magpie"/>
    </properties>
@@ -934,7 +935,7 @@
   <object id="148" type="hints" x="3370" y="540" width="40" height="32">
    <properties>
     <property name="box" value="x0,x1,minY,maxY"/>
-    <property name="text" value="HOP ON THE AWNING"/>
+    <property name="text" value="BOUNCE ON IT"/>
     <property name="btn" value="a"/>
    </properties>
   </object>

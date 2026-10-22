@@ -1,5 +1,5 @@
--- FETCH! Pepper's levels in order (levels.lua): 1 City Park, 2 Downtown, 3 River Walk. Pepper, the girl and the
--- ball are real art; every level has scenery art (City Park and Downtown over their greybox boxes). 320 x 240, drawn 2x on the RG35XX's
+-- FETCH! Pepper's levels in order (levels.lua): 1 River Walk, 2 City Park, 3 Downtown, 4 Rooftops, 5 Soder Hill,
+-- 6 Night Harbour. Pepper, the girl and the ball are real art; every level has scenery art (City Park and Downtown over their greybox boxes). 320 x 240, drawn 2x on the RG35XX's
 -- 640 x 480 screen. Game logic steps at a fixed 1/60 s, so jumps are the same on every machine.
 --
 --   d-pad / arrows   run (Pepper runs by default);  Down: crouch and crawl

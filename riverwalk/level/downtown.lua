@@ -1,4 +1,4 @@
--- Level 2: Downtown (greybox). Terrain is in downtown.map; this file places everything else.
+-- Level 3: Downtown (greybox). Terrain is in downtown.map; this file places everything else.
 -- Same format as citypark.lua. x, y in level pixels; y grows downwards; "feet" = the y Pepper stands on.
 -- The street (feet) is y 184. The fountain's water starts at y 192. The level is 3520 px (11 screens). See
 -- docs/downtown_beatsheet.md (the first 6 screens) and docs/progression.md.
@@ -37,7 +37,7 @@
 -- rooftop route).
 local L = {}
 L.name = "DOWNTOWN"
-L.number = 2
+L.number = 3
 L.title = "Pepper: Downtown"
 L.scenery = "greybox"
 L.greyStyle = "town"
@@ -54,6 +54,10 @@ L.props = {
   -- screen 2: cafe terrace. A table's box is only its top (y 158-165): 19 px to crawl under it, a held jump onto
   -- it. Its parasol (one-way, top y 114) is 44 px above the table top: a held jump. The shop sign (one-way, y 80)
   -- is 34 px above the second parasol: the gold bone.
+  -- (r6/levels: 46% of the level's failures and 20 quits were here: Elsa could not crawl yet, Anna missed the
+  -- held jump onto the table.) An apple crate splits the jump: a tap hop onto it (16 px), a tap hop from it onto the
+  -- table (10 px up). The 36 px of street between them keep the crawl under the tables as the other way.
+  { name = "CRATES",   kind = "solid",  layer = "play", x0 = 300,  x1 = 332,  y0 = 168, y1 = 184, label = "top" },
   { name = "",         kind = "decor",  layer = "back", x0 = 390,  x1 = 394,  y0 = 118, y1 = 158 },     -- parasol pole
   { name = "",         kind = "decor",  layer = "back", x0 = 372,  x1 = 376,  y0 = 165, y1 = 184 },     -- legs
   { name = "",         kind = "decor",  layer = "back", x0 = 408,  x1 = 412,  y0 = 165, y1 = 184 },
@@ -193,7 +197,7 @@ L.ballBack = "THE BALL IS BACK BY THE STATUE"
 L.pickupSay = "BRING ME THE BALL!"
 -- the girl waits at the top of the stairs down to the river
 L.girl = { x = 3460, y = 184 }
-L.outro = { "BY THE RIVER MIA THREW IT", "AGAIN. IT LANDED ON A FERRY..." }
+L.outro = { "AT THE STREET CAFE A GULL TOOK", "THE BALL UP TO ITS NEST!" }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
@@ -262,7 +266,9 @@ L.hints = {
   { x0 = 3400, x1 = 3520, btn = "x",    text = "GIVE",               need = "ball" },
   { x0 = 0,    x1 = 3520, btn = "y",    text = "BARK: SHOO!",        need = "goose" },
   { x0 = 0,    x1 = 152,  btn = "a",    text = "TAP: HOP" },            -- up the crates
-  { x0 = 300,  x1 = 368,  btn = "down", text = "CRAWL" },
+  { x0 = 336,  x1 = 368,  btn = "down", text = "CRAWL",              minY = 183 },   -- (r6/levels: the crate)
+  { x0 = 240,  x1 = 300,  btn = "a",    text = "TAP: HOP",           minY = 183 },   -- onto the crate
+  { x0 = 300,  x1 = 368,  btn = "a",    text = "TAP: HOP",           maxY = 169 },   -- from it onto the table
   { x0 = 640,  x1 = 688,  btn = "a",    text = "HOLD: BIG JUMP" },      -- onto the stall
   { x0 = 1384, x1 = 1440, btn = "a",    text = "HOLD: BIG JUMP" },      -- onto the pedestal
   { x0 = 1660, x1 = 1720, btn = "a",    text = "TAP: HOP" },            -- over the fountain
@@ -279,5 +285,5 @@ L.hints = {
   { x0 = 1720, x1 = 3520, text = "BRING ME THE BALL!", need = "ball" },
 }
 
-L.intro = { "LEVEL 2", "DOWNTOWN", "A CAT IS SITTING ON THE BALL!", "BARK IT AWAY. BRING THE BALL!" }
+L.intro = { "LEVEL 3", "DOWNTOWN", "A CAT IS SITTING ON THE BALL!", "BARK IT AWAY. BRING THE BALL!" }
 return L

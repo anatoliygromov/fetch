@@ -1,7 +1,7 @@
-# Level 3: Rooftops (beat sheet, as built)
+# Level 4: Rooftops (beat sheet, as built)
 
-Noon over the roofs, sun on copper and tin. The first level that only goes up. Greybox, playable:
-`love riverwalk --level rooftops` (not in `levels.lua` yet).
+Early afternoon over the roofs, sun on copper and tin. The first level that only goes up. Greybox, level 4 (r6/levels):
+`love riverwalk --level rooftops`, fourth in `levels.lua`.
 
 - **Files:** the map `maps/rooftops.tmx` (edit it in Tiled; its export `riverwalk/level/tiled/rooftops.lua`), the
   loader `riverwalk/level/rooftops.lua`, the generator of this version `tools/make_rooftops.py` (it will not

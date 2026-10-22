@@ -137,10 +137,10 @@ return function(mode, api)
           ("camY %.1f, her feet at screen y %.0f"):format(s.camY, p.y - s.camY)) end },
       -- 1 Pepper's numbers, measured in the simulation
       { act = function()
-          local st = simStage(); place(st, 260, PATH); local minY = PATH
+          local st = simStage(); place(st, 300, PATH); local minY = PATH
           run(st, function(p, t) minY = math.min(minY, p.y); return { jump = true }, t == 0 end, 2)
           report("her held jump: 46 px", near(PATH - minY, 46, 1), ("%.1f px"):format(PATH - minY))
-          place(st, 260, PATH); minY = PATH
+          place(st, 300, PATH); minY = PATH
           run(st, function(p, t) minY = math.min(minY, p.y); return t == 0 and { jump = true } or {}, t == 0 end, 2)
           report("her tapped hop: 24 px", near(PATH - minY, 24, 2), ("%.1f px"):format(PATH - minY))
         end },
@@ -149,7 +149,10 @@ return function(mode, api)
           local J = {
             -- the low road (the same as City Park, 144 px lower), and its new climb: the play tower and the big oak
             { "low: hop onto the log (running, tapped)", x = 120, y = PATH, dir = "right", run = 150, tap = true, brake = 196, to = 312 },
-            { "low: held jump onto the bench seat (running)", x = 290, y = PATH, dir = "right", run = 320, to = 300 },
+            { "low: held jump onto the stump, the practice ledge (running)", x = 180, y = PATH, dir = "right", run = 214, to = 300 },
+            { "low: held jump onto the bench seat (between the stump and the bench)", x = 330, y = PATH, dir = "right", to = 300 },
+            { "low: a held jump from the frame's step onto the top bar", x = 2724, y = 316, dir = "right", to = 280 },
+            { "low: a running held jump onto the frame's low bar", x = 2694, y = PATH, dir = "right", run = 2697, to = 304 },
             { "low: stone to stone over the pond (running hop)", x = 744, y = 332, dir = "right", run = 758, tap = true, brake = 786, to = 332 },
             { "low: jump and scramble onto the bin (56 px)", x = 1300, y = PATH, dir = "right", to = 272 },
             { "low: creek, stone to stone (stop, then a held jump)", x = 2068, y = 332, dir = "right", brake = 2138, to = 332 },
@@ -357,9 +360,11 @@ return function(mode, api)
       at(function() return true end, function() hold("right") end),
       at(function(p) return p.x >= 150 end, function() jump("right", "jump") end),
       at(function(p) return p.onGround and p.y > 320 end, function() hold("right") end),
-      -- 2 the bench seat, a running jump to the hedge top
-      at(function(p) return p.x >= 320 end, function() jump("right", "jump") end),
+      -- 2 the stump (r6/levels: the practice ledge), across to the bench seat, a running jump to the hedge top
+      at(function(p) return p.x >= 214 end, function() jump("right", "jump") end),
       at(function(p) return p.onGround and near(p.y, 300, 0.5) end, function() hold("right") end),
+      at(function(p) return p.x >= 296 and p.onGround and p.y > 327 end, function() jump("right", "jump") end, 4),   -- off it, onto the seat
+      at(function(p) return p.onGround and near(p.y, 300, 0.5) and p.x > 352 end, function() hold("right") end),
       at(function(p) return p.x >= 439 end, function() jump("right", "jump") end),
       at(function(p) return p.onGround and near(p.y, 256, 0.5) end, function() release() end),
     })

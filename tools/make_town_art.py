@@ -300,19 +300,22 @@ def park_slide():
     return outline(trim(o))
 
 def park_frame():
-    # the climbing frame: two posts (x 1752 and 1812, y 120-184) and two bars (y 160: 1752-1800, y 136: 1768-1816),
-    # metal pipes in blue. Image origin = level (1751, 119).
-    W, H = 67, 66
+    # the climbing frame (r6/levels: wider, with a step): two posts (level x 2712 and 2796, y 120-184), two bars
+    # (y 160: 2712-2784, y 136: 2724-2800) and a low step inside it (2716-2732, top y 172), metal pipes in blue.
+    # Image origin = level (2711, 119), the FRAME prop's x0 - 1. (Before: posts 2712 and 2772, bars 2712-2760 and
+    # 2728-2776, no step; 60% of City Park's failures were on its 48 px bars.)
+    W, H = 91, 66
     o = canvas(W, H)
     blu, blud, blul = hexc('3f7fb6'), hexc('2c5a85'), hexc('7fb4dd')
     def post(x):
         rect(o, x, 1, x + 3, H - 1, blu); rect(o, x, 1, x, H - 1, blul); rect(o, x + 3, 1, x + 3, H - 1, blud)
     def bar(x0, x1, y):
         rect(o, x0, y, x1, y + 3, blu); rect(o, x0, y, x1, y, blul); rect(o, x0, y + 3, x1, y + 3, blud)
-    post(1); post(61)
-    bar(1, 49, 41); bar(17, 64, 17)
-    rect(o, 1, 1, 64, 2, blud)                                     # the top rail between the posts
-    for x in range(21, 49, 9): rect(o, x, 21, x + 1, 40, blud)     # rungs between the bars
+    post(1); post(85)
+    bar(1, 73, 41); bar(13, 88, 17)
+    rect(o, 1, 1, 88, 2, blud)                                     # the top rail between the posts
+    for x in range(21, 73, 9): rect(o, x, 21, x + 1, 40, blud)     # rungs between the bars
+    rect(o, 5, 53, 20, H - 1, blud); rect(o, 6, 53, 19, 53, blul); rect(o, 6, 54, 19, H - 2, blu)   # the step
     return outline(trim(o))
 
 # ---------------------------------------------------------------- Downtown

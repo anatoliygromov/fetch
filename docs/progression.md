@@ -61,7 +61,13 @@ Rules kept in every level:
 - For kids 6-10, damage is always readable. Every hazard warns first (a honk, a bell, a squawk, a shadow), and a
   bark is always a useful answer.
 
-## The story across five levels
+## The story across the levels (r6/levels, 22 Oct: the new order)
+One day, in play order: 1 River Walk (morning: Mia throws the ball by the river, it lands on a ferry), 2 City Park
+(late morning: a magpie steals it), 3 Downtown (noon: a cat sits on it), 4 Rooftops (early afternoon: a gull takes it
+to its nest), 5 Soder Hill (afternoon: it rolls down the hill), 6 Night Harbour (a fox). Metro, the building site, the
+funfair and home in the storm come later; the cards number the levels as they are played.
+
+## The story across five levels (19 Oct, the old order)
 1. City Park: a magpie steals Mia's ball.
 2. Downtown: a cat sits on it on the plaza.
 3. River Walk: Mia throws it by the river, and it lands on a ferry.

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="360" height="48" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#20242c" nextlayerid="9" nextobjectid="244">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="360" height="48" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#20242c" nextlayerid="9" nextobjectid="251">
  <editorsettings>
   <export target="../riverwalk/level/tiled/citypark_tall.lua" format="lua"/>
  </editorsettings>
@@ -11,10 +11,10 @@
   <property name="art" value="park"/>
   <property name="ballBack" value="THE BALL IS BACK BY THE LAMP"/>
   <property name="foot" type="int" value="328"/>
-  <property name="intro" value="{ &quot;LEVEL 1&quot;, &quot;CITY PARK&quot;, &quot;A MAGPIE STOLE MIA'S BALL!&quot;, &quot;UP IN THE TREES OR DOWN ON THE PATH&quot; }"/>
+  <property name="intro" value="{ &quot;LEVEL 2&quot;, &quot;CITY PARK&quot;, &quot;A MAGPIE STOLE MIA'S BALL!&quot;, &quot;UP IN THE TREES OR DOWN ON THE PATH&quot; }"/>
   <property name="name" value="CITY PARK"/>
-  <property name="number" type="int" value="1"/>
-  <property name="outro" value="{ &quot;OFF TO TOWN! BUT THE BALL&quot;, &quot;ROLLED AWAY ACROSS THE PLAZA...&quot; }"/>
+  <property name="number" type="int" value="2"/>
+  <property name="outro" value="{ &quot;NOON IN TOWN. THE BALL&quot;, &quot;ROLLED AWAY ACROSS THE PLAZA...&quot; }"/>
   <property name="scenery" value="greybox"/>
   <property name="time" type="int" value="300"/>
   <property name="title" value="Pepper: City Park, tall"/>
@@ -117,6 +117,13 @@
    <properties>
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
+   </properties>
+  </object>
+  <object id="246" name="STUMP" type="props" x="250" y="300" width="24" height="28">
+   <properties>
+    <property name="kind" value="solid"/>
+    <property name="layer" value="play"/>
+    <property name="label" value="below"/>
    </properties>
   </object>
   <object id="4" type="props" x="352" y="282" width="96" height="14">
@@ -374,21 +381,28 @@
     <property name="layer" value="back"/>
    </properties>
   </object>
-  <object id="41" type="props" x="2772" y="264" width="4" height="64">
+  <object id="41" type="props" x="2796" y="264" width="4" height="64">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
     <property name="layer" value="back"/>
    </properties>
   </object>
-  <object id="42" name="FRAME" type="props" x="2712" y="304" width="48" height="4">
+  <object id="244" name="STEP" type="props" x="2716" y="316" width="16" height="12">
+   <properties>
+    <property name="kind" value="solid"/>
+    <property name="layer" value="play"/>
+    <property name="hidden" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="42" name="FRAME" type="props" x="2712" y="304" width="72" height="4">
    <properties>
     <property name="kind" value="oneway"/>
     <property name="layer" value="play"/>
     <property name="label" value="below"/>
    </properties>
   </object>
-  <object id="43" type="props" x="2728" y="280" width="48" height="4">
+  <object id="43" type="props" x="2724" y="280" width="76" height="4">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="oneway"/>
@@ -857,10 +871,10 @@
   <object id="113" type="bones" x="204" y="312">
    <point/>
   </object>
-  <object id="114" type="bones" x="248" y="328">
+  <object id="114" type="bones" x="232" y="328">
    <point/>
   </object>
-  <object id="115" type="bones" x="270" y="328">
+  <object id="115" type="bones" x="262" y="300">
    <point/>
   </object>
   <object id="116" type="bones" x="376" y="300">
@@ -1037,7 +1051,13 @@
   <object id="170" type="bones" x="2672" y="312">
    <point/>
   </object>
-  <object id="171" type="bones" x="2736" y="304">
+  <object id="171" type="bones" x="2760" y="304">
+   <point/>
+  </object>
+  <object id="247" type="bones" x="318" y="328">
+   <point/>
+  </object>
+  <object id="245" type="bones" x="2724" y="316">
    <point/>
   </object>
   <object id="172" type="bones" x="2752" y="280">
@@ -1260,9 +1280,16 @@
     <property name="btn" value="down"/>
    </properties>
   </object>
-  <object id="228" type="hints" x="288" y="290" width="64" height="94">
+  <object id="228" type="hints" x="196" y="290" width="54" height="94">
    <properties>
     <property name="box" value="x0,x1,minY"/>
+    <property name="text" value="HOLD: BIG JUMP"/>
+    <property name="btn" value="a"/>
+   </properties>
+  </object>
+  <object id="248" type="hints" x="360" y="292" width="168" height="10">
+   <properties>
+    <property name="box" value="x0,x1,minY,maxY"/>
     <property name="text" value="HOLD: BIG JUMP"/>
     <property name="btn" value="a"/>
    </properties>
@@ -1277,6 +1304,20 @@
   <object id="230" type="hints" x="660" y="290" width="76" height="94">
    <properties>
     <property name="box" value="x0,x1,minY"/>
+    <property name="text" value="TAP: HOP"/>
+    <property name="btn" value="a"/>
+   </properties>
+  </object>
+  <object id="250" type="hints" x="2700" y="310" width="40" height="8">
+   <properties>
+    <property name="box" value="x0,x1,minY,maxY"/>
+    <property name="text" value="HOLD: BIG JUMP"/>
+    <property name="btn" value="a"/>
+   </properties>
+  </object>
+  <object id="249" type="hints" x="2690" y="320" width="40" height="10">
+   <properties>
+    <property name="box" value="x0,x1,minY,maxY"/>
     <property name="text" value="TAP: HOP"/>
     <property name="btn" value="a"/>
    </properties>
@@ -1299,7 +1340,7 @@
   <object id="233" type="hints" x="1300" y="290" width="28" height="94">
    <properties>
     <property name="box" value="x0,x1,minY"/>
-    <property name="text" value="HOLD + PUSH: CLIMB"/>
+    <property name="text" value="HOLD: CLIMB"/>
     <property name="btn" value="a"/>
    </properties>
   </object>

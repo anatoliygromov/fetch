@@ -2,9 +2,10 @@
 --   The panel: what St:hint() says now, as a short dialogue line. Pepper says the control hints: a button
 --   picture and 1 to 3 words ([B] HOLD: SNEAK). The girl says the goal and story lines (BRING ME THE BALL!).
 --   Pepper's portrait sits bottom left, the girl's bottom right; the portrait plays its talking loop
---   (art/portraits, 8 frames, 9 fps) while the line is being said, then rests on frame 1. The panel sits low on
---   the pavement; if Pepper's sprite would touch it, it moves to the top of the screen, and if she would touch
---   that too it is not drawn. A girl's line goes away after a few seconds; a control hint stays while it applies.
+--   (art/portraits, 8 frames, 9 fps) while the line is being said, then rests on frame 1. A control hint also shows
+--   a picture sign (T.picFor, hud.lua's U.pict) between the button and the words, for children who cannot read.
+--   The panel sits low on the pavement; if Pepper's sprite would touch it, it moves to the top of the screen, and
+--   if she would touch that too it is not drawn. A girl's line goes away after a few seconds; a control hint stays while it applies.
 --   The nudge: when Pepper has pushed against something for 2 s without getting anywhere, or has stood still for
 --   3 s where a control hint applies, the button she needs bounces above her head until a button is pressed.
 --   It reads Pepper from outside (position, speed, the buttons held) and is never drawn over her.
@@ -97,6 +98,20 @@ local function wrap(text, w, s)
   end
 end
 
+-- the picture sign of a control hint (hud.lua's U.pict, r6/levels): what the hint asks, drawn, so a child who
+-- cannot read knows it from the button and the picture. A hint can name one (pic = "climb"); otherwise its words
+-- choose it, first match wins.
+T.PICS = {
+  { "CLIMB", "climb" }, { "HOLD: UP", "climb" }, { "BIG JUMP", "jump" }, { "BOUNCE", "bounce" }, { "HOP", "hop" },
+  { "SNEAK", "sneak" }, { "CRAWL", "crawl" }, { "DUCK", "duck" }, { "STAY ON", "stay" }, { "DROP", "drop" },
+  { "PICK UP", "pickup" }, { "GIVE", "give" }, { "BARK", "bark" }, { "RUN", "run" },
+}
+function T.picFor(line)
+  if not line.btn then return nil end
+  if line.pic then return line.pic end
+  for _, m in ipairs(T.PICS) do if line.text:find(m[1], 1, true) then return m[2] end end
+end
+
 -- the panel's layout for a line: its rect (x0, y0, x1, y1, the portrait included) at the bottom or the top
 local BOX_H = 40
 local GAP = 4                                                    -- between the button picture and the words
@@ -104,8 +119,10 @@ local TEXT_W = 238                                               -- room for the
 function T.layout(line, where)
   loadPorts()
   local p = PORT[line.who] or PORT.girl
-  local gw = line.btn and 2 * T.SIZE.big + GAP or 0              -- the button picture and a gap
+  local pic = T.picFor(line)
+  local gw = (line.btn and 2 * T.SIZE.big + GAP or 0) + (pic and U.PICT_W + GAP or 0)   -- the button, the picture
   local scale, rows = 2, wrap(line.text, TEXT_W - gw, 2)
+  if line.btn and rows and #rows > 1 then rows = nil end         -- a control hint stays on one row (smaller words)
   if not rows then scale, rows = 1, wrap(line.text, TEXT_W - gw, 1) or { line.text } end
   local tw = 0
   for _, r in ipairs(rows) do tw = math.max(tw, F.width(r, scale)) end
@@ -113,7 +130,7 @@ function T.layout(line, where)
   local by = where == "top" and 30 or 198                        -- the box; the portrait stands up out of it
   local x0 = line.who == "pepper" and 2 or 318 - w
   return { x0 = x0, y0 = by + BOX_H - 1 - p.h, x1 = x0 + w, y1 = by + BOX_H, by = by, w = w, rows = rows, scale = scale,
-    gw = gw, tw = tw, port = p }
+    gw = gw, tw = tw, port = p, pic = pic }
 end
 
 -- Pepper's sprite on screen (her art reaches 30 px either side of her x and 41 px above her feet; a carried ball
@@ -174,7 +191,11 @@ function T.drawPanel(stage)
   lg.setColor(1, 1, 1, 1); lg.draw(p.img, p.q[f], px, L.y1 - 1 - p.h)
   local x = c.line.who == "pepper" and px + p.w + 5 or L.x0 + 6
   local cy = L.by + BOX_H / 2
-  if c.line.btn then T.glyph(c.line.btn, x + T.SIZE.big, cy, "big"); x = x + L.gw end
+  if c.line.btn then
+    T.glyph(c.line.btn, x + T.SIZE.big, cy, "big")
+    if L.pic then U.pict(L.pic, x + 2 * T.SIZE.big + GAP, math.floor(cy - U.PICT_H / 2)) end
+    x = x + L.gw
+  end
   local lh = L.scale * 7
   local total = #L.rows * lh + (#L.rows - 1) * 3
   for i, r in ipairs(L.rows) do

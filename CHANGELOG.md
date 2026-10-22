@@ -85,6 +85,91 @@ it still hooks in only through main.lua's `--playtest` flag. Method: `docs/playt
   and easier than the middle in every order. Lost runs: 41% on 22 Oct, 2.3% now (Downtown 8.8%, City Park (tall)
   7.5%, City Park 5.6% still over 5%). check_pepper: PEPPER UNCHANGED; check_flow: 103 of 103; City Park --auto 44.2 s.
 
+## Branch `r6/levels`: the new level order, River Walk as the tutorial, the spikes smoothed (22 Oct)
+Built on `round1`. The owner's new strategy (ten levels; five built, plus Rooftops) and the synthetic playtest of
+22 Oct (`docs/playtest/report_22oct.md`). Pepper's files are untouched.
+- **The new order** (levels.lua, every level's intro and story card, main.lua's header, docs/progression.md, the
+  Rooftops beat sheet; its own commit so it can be reverted alone): 1 River Walk, 2 City Park, 3 Downtown,
+  4 Rooftops, 5 Soder Hill, 6 Night Harbour. The story is one day: in the morning Mia throws the ball by the river
+  and it lands on a ferry; late morning a magpie steals it in the park; at noon a cat sits on it on the plaza; early
+  in the afternoon a gull at the street cafe takes it up to its nest; in the afternoon it rolls down Soder Hill; on
+  the way home in the dark a fox takes it. New story cards: River Walk's ("LATE MORNING IN THE PARK. A MAGPIE
+  SNATCHED THE BALL!"), City Park's ("NOON IN TOWN..."), Downtown's (the gull), Rooftops' first one (Soder Hill).
+  **Rooftops is in** as level 4: its flow works (intro card, tally, its new story card, par time 87 s from its
+  54.1 s autopilot clear; `--flowtest` plays it in the run). Decision: the cards count the levels as they are played
+  (1 to 6), not the plan's slots (Soder Hill 6, Night Harbour 9), so a child never sees LEVEL 4 followed by LEVEL 6;
+  when Metro and the others are built, the numbers move up. The tall City Park and Downtown carry their twins'
+  numbers and story. Par times stay with their levels. Rooftops' button hints follow the panel's rule (one to three
+  words): "HOP ON FAN", "BOUNCE ON IT"; its BARK! hint showed the B button (sneak), now Y. LEVEL SELECT fits six
+  rows (26 px from y 40; flow.lua). `tests_flow.lua` runs City Park's talk checks where City Park now is (run 2).
+- **River Walk is the tutorial** (level/riverwalk.lua, maps/riverwalk.tmx and its export, tests.lua): one control at
+  a time on flat pavement, in the order she needs them, nothing harmful in the first two screens. RUN at the start;
+  the bench: CRAWL under it (the hint now teaches the low way; the seat is still a held jump up); a new fallen
+  branch under the big tree (`LOG`, x 270-310, 21 px: the park's log art, loaded in scene.lua) for the first
+  TAP: HOP; the flower box: HOLD: BIG JUMP; the bin: HOLD: CLIMB; the ferry: PICK UP; the bridge: CRAWL with the
+  ball; GIVE to Mia at the end (the level's real fetch; there is no earlier Mia to give to). **Threats shown safely
+  first:** a bike zone of its own covers only the bin's top (Pepper's middle is between 624 and 693 only up there),
+  so as she climbs the bin one bike rides right under her ("A BIKE! STAY UP HERE!"): survivable by doing nothing.
+  Bike zone 1 then rides at the tutorial's pace again (every 6.5 s, 115 px/s; levels/v2 had 5.5 s, 125 px/s; the
+  playtest's fix 7: screens 2-3 had 62% of the failures). A third gull circles over the ferry and the far quay
+  while she fetches the ball and never swoops (its x1 is left of its x0, so critters.lua gives it no stretch to
+  hunt in); the harbour's gull is the first that swoops. Layout otherwise unchanged (one prop, one bone on it).
+  New checks: the branch stops a walk and a tapped hop lands on it; the first bike is sent as she lands on the bin
+  and passes under her with no heart lost; the first gull never swoops (45 of 45). The autopilot hops the branch and
+  waits on the last flower box of bike zone 1 for a bike to pass (slower bikes changed the timing): 66.3 s, no heart
+  lost. **The golden trace was re-recorded**: the first difference is step 218, the autopilot jumping onto the new
+  branch (x 241); Pepper herself is proven unchanged by `check_pepper_lab` (1401 lab steps identical) and
+  `check_pepper_files` (5 files identical to aa38be5).
+- **Picture signs for children who cannot read** (hud.lua `U.pict`, talk.lua `T.picFor`): every control hint now
+  shows a little scene between the button and the words, 14 x 12 cells of 3 px: Pepper (the HUD's dog, standing or
+  crouched, white) and what she uses (gold: the ground, a box, a bar, arrows; the ball pink; Mia). Pictures: run,
+  hop (a low box), big jump (a tall box), climb (an arrow up a wall), crawl (under a bench), duck (a gull above),
+  stay on, drop through, bounce, pick up (an arrow to the ball), give (the ball to Mia), bark (sound arcs), sneak
+  (soft steps and a "z"). The words stay for readers; a hint can name its picture (`pic`), else its words choose
+  it. A control hint now stays on one row (smaller words rather than two rows). The d-pad glyph is a hint button
+  too (`btn = "right"`: RUN). "HOLD + PUSH: CLIMB" is now "HOLD: CLIMB" (River Walk, both City Parks) so it keeps
+  the big letters beside the picture. `tests_flow.lua` checks every Pepper hint of every level has a picture.
+- **City Park's climbing frame** (level/citypark.lua, maps/citypark.tmx and the tall map, their exports, the frame's
+  art in tools/make_town_art.py, tests_citypark.lua and tests_citypark_tall.lua): 60% of City Park's failures were
+  here (x about 2720): a tap hop that had to stop in the air on a 48 px one-way bar. The frame is wider (posts 2712
+  and 2796, was 2772) with a step inside it (x 2716-2732, 12 px up: any hop; drawn in the art, its box hidden), the
+  low bar 72 px (2712-2784, y 160), the top bar 76 px (2724-2800, y 136; the magpie's last perch, the ball 48 px up
+  as before). A running held jump from the path lands on the low bar, a held jump from the step or the low bar
+  lands on the top bar, a tap hop goes up one at a time. Hints at the frame: TAP: HOP onto the step, HOLD: BIG JUMP
+  from it. New checks: the step, a held jump from the step to the top bar, a running held jump onto the low bar
+  (76 of 76; tall: 85 of 85). Before/after: `/home/claude/out/r6-levels/citypark_frame_before_after.png`. City
+  Park's own held jump is taught on flat ground at the bench (screen 2) and in River Walk before it.
+- **Tall City Park: the held jump is shown before it is needed** (maps/citypark_tall.tmx, scene.lua): the first held
+  jump (the bench seat, then the hedge) came where the magpie's BARK! hint wins the panel, so the level asked for
+  it before HOLD: BIG JUMP was shown (Anna found it by trying in 19 of 20 runs). A **stump** (x 250-274, 28 px,
+  drawn in code, a bone on it) is a safe practice ledge on the path before the bench, with HOLD: BIG JUMP before it
+  (x 196-250); a second HOLD: BIG JUMP shows on the bench seat for the jump up to the hedge (way up 1). There is
+  ground between the stump and the bench (48 px), so the crawl under the bench stays; the stump keeps clear of the
+  lamp at 296 (a respawn there landed inside it in a first try: `--qa` found it). Two bones moved off the stump's
+  box. The autopilot: the stump, down, the bench seat, the hedge (39.1 s).
+- **Downtown's cafe terrace** (level/downtown.lua, maps/downtown.tmx and its export, tests_downtown.lua): 46% of the
+  level's failures and 20 quits (Elsa had not found crawl yet, Anna missed the held jump onto the table). An apple
+  crate (x 300-332, 16 px) splits the jump: a tap hop onto it, a tap hop from it onto the table (10 px up). The
+  36 px of street between crate and table keep the crawl under both tables as the other way. Hints: TAP: HOP before
+  the crate and on it, CRAWL only on the street by the table. No parasol on the terrace bounces; the first springy
+  awning (BOUNCE ON IT, x 968) stays after it. New checks: a tapped hop onto the crate, a tapped hop from it onto
+  the table (72 of 72). Before/after: `/home/claude/out/r6-levels/downtown_terrace_before_after.png`.
+- **Tall Downtown, softer for kids** (maps/downtown_tall.tmx, tests_downtown_tall.lua): the same terrace crate, and
+  crate steps at its other two held jumps of the main road (the stall heatmap's next hot spots): before the market
+  stall (x 656-688: two tap hops onto the counter) and before the flower tub at the plaza (x 1368-1400: tap hops up
+  to the tub and the pedestal). Their hints say TAP: HOP now. Six new jump checks (87 of 87); autopilot 56.6 s.
+- **Par times** (levels.lua): City Park's par is 72 s (its autopilot clear is 44.6 s with the wider frame); the others
+  are unchanged (River Walk 66.3 s, Downtown 51.4 s, Rooftops 54.1 s, Soder Hill 73.3 s, Night Harbour 81.3 s).
+- **Not done (time box): Rooftops and Soder Hill are still short for their slots.** Rooftops needs a 13th screen and
+  one combined beat (target 90 to 110 s; now 54.1 s on the low road), Soder Hill one combined beat (keep 70 to 90 s;
+  now 73.3 s). Rooftops is in the order anyway as level 4; it is the easiest-reading of the climbs for now.
+- Checks on this branch: `check_pepper` PEPPER UNCHANGED (4591 steps, the re-recorded trace), `check_pepper_lab`
+  1401 lab steps identical, `check_pepper_files` 5 files identical, `check_flow` 113 of 113, `check_tiled` all PASS,
+  `--physics` riverwalk 45, citypark 76, downtown 72, rooftops 88, soder 23, night 37, citypark_tall 85,
+  downtown_tall 87, lab_tall 40 (all pass), `--auto` 66.3, 44.6, 51.4, 54.1 (low road), 73.3, 81.3 s and
+  citypark_tall 39.1, downtown_tall 56.6, lab_tall 25.9 s (no heart lost), `--qa` 0 problems on River Walk, City
+  Park, Downtown and the tall City Park.
+
 ## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
 Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of
 every level, the menus and the cards. The bug list with evidence: `docs/bugs_22oct.md`. Pepper's files are untouched.

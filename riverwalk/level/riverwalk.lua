@@ -1,17 +1,21 @@
--- Level 3: River Walk (greybox). Terrain is in riverwalk.map; this file places everything else.
+-- Level 1: River Walk (greybox). Terrain is in riverwalk.map; this file places everything else.
 -- x, y in level pixels; y grows downwards; "feet" = the y Pepper stands on.
 -- Upper promenade feet y = 184, lower quay y = 216, river surface y = 224. The level is 3840 px (12 screens).
 -- Manner: water and traffic (docs/progression.md). New here: the harbour's rowing boats and the gulls.
 --
 -- Screens (320 px each):
---   1  Home          crawl under the bench or jump onto its seat (tutorial: hold A to jump higher). Secret: go
---                    left and crawl into Pepper's kennel by the house (a gold bone)
---   2  Promenade A   open pavement, a flower box
---   3  Promenade A   a bin on its own (tutorial: hold A and push to climb), then bike zone 1 starts: the grit box
+-- Level 1 since r6/levels: the tutorial. One control at a time on flat pavement, each with a picture sign
+-- (talk.lua), nothing harmful in the first two screens, every threat shown safely before it can hurt.
+--   1  Home          RUN; the bench: CRAWL under it (or a held jump onto its seat); the fallen branch: TAP: HOP.
+--                    Secret: go left and crawl into Pepper's kennel by the house (a gold bone)
+--   2  Promenade A   open pavement, the flower box: HOLD: BIG JUMP
+--   3  Promenade A   a bin on its own (HOLD: CLIMB); up there the first bike rides under her (a zone of its
+--                    own: seen safely, doing nothing), then bike zone 1 starts (6.5 s, 115 px/s): the grit box
 --   4  Bike zone 1   hop from perch to perch while the bikes pass: planter, flower box. The high route: from the bin
 --                    a held jump onto the first kiosk's awning, then the second (gold bone), down onto the planter
 --   5  Steps         down to the quay, ride the pontoon over the river
---   6  Boat          the commuter ferry: deck, saloon roof, wheelhouse roof; pick up the ball up there
+--   6  Boat          the commuter ferry: deck, saloon roof, wheelhouse roof; PICK UP the ball up there. A gull
+--                    circles over the ferry and the far quay and never swoops (the first gull: seen safely)
 --   7  Bridge        the far quay, crawl under the bridge pier with the ball
 --   8  Harbour       open water: hop onto the rowing boat, ride it to the jetty; a gull swoops (crawl to duck, or
 --                    bark while it squawks). Gold high over the jetty (secret JETTY JUMP)
@@ -35,7 +39,7 @@
 -- y 174). Secrets (L.secrets, counted on the tally): the kennel, the kiosk roofs.
 local L = {}
 L.name = "RIVER WALK"
-L.number = 3
+L.number = 1
 L.map = "level/riverwalk.map"
 L.time = 420
 L.start = { x = 52, y = 184 }
@@ -50,6 +54,9 @@ L.props = {
   { name = "HOME",     kind = "decor",  layer = "back", x0 = 0,    x1 = 77,   y0 = 39,  y1 = 174, art = "building" },
   { name = "TREE",     kind = "decor",  layer = "back", x0 = -2,   x1 = 112,  y0 = 47,  y1 = 174, art = "tree" },
   { name = "POT",      kind = "decor",  layer = "play", x0 = 214,  x1 = 231,  y0 = 147, y1 = 174, art = "pot" },
+  -- (r6/levels, the tutorial) a branch fallen from the big tree: 21 px, the first tap hop (TAP: HOP) on flat
+  -- pavement, before the flower box asks for the held jump and the bin for the climb
+  { name = "LOG",      kind = "solid",  layer = "play", x0 = 270,  x1 = 310,  y0 = 163, y1 = 184, art = "park_log" },
   { name = "",         kind = "decor",  layer = "back", x0 = 80,   x1 = 1288, y0 = 144, y1 = 174, railing = true },   -- decorative railing by the water
   { name = "BENCH",    kind = "solid",  layer = "play", x0 = 93,   x1 = 189,  y0 = 156, y1 = 165, art = "bench", ax = 90, ay = 184, depth = 5 },
   -- Pepper's kennel by the house (drawn in code): its roof and walls are solid down to the doorway (y 148-165),
@@ -147,16 +154,20 @@ L.movers = {
 L.critters = {
   { kind = "gull", x0 = 2192, x1 = 2640, every = 4.5 },
   { kind = "gull", x0 = 2880, x1 = 3060, every = 4.5 },     -- (over promenade B before the bikes, not over them)
+  -- (r6/levels, teach before testing) the first gull only circles over the ferry and the far quay, seen while
+  -- Pepper fetches the ball: x1 < x0 leaves it no stretch to hunt in (critters.lua swoops only while Pepper is
+  -- between x0 and x1), so it never swoops. The harbour's gull is the first that does.
+  { kind = "gull", x0 = 1780, x1 = 1700, every = 99 },
 }
 
 L.ball = { x = FX + 108, y = 154 }
 L.girl = { x = 3780, y = 184 }
-L.outro = { "UP ON SODER MIA DROPPED", "THE BALL. IT ROLLED AWAY..." }
+L.outro = { "LATE MORNING IN THE PARK.", "A MAGPIE SNATCHED THE BALL!" }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
   -- promenade A
-  { x = 116, y = 156 }, { x = 141, y = 156 }, { x = 166, y = 156 }, { x = 250, y = 184 }, { x = 340, y = 184 },
+  { x = 116, y = 156 }, { x = 141, y = 156 }, { x = 166, y = 156 }, { x = 250, y = 184 }, { x = 290, y = 163 }, { x = 340, y = 184 },
   { x = 426, y = 152 }, { x = 452, y = 152 }, { x = 478, y = 152 }, { x = 600, y = 184 }, { x = 658, y = 128 },
   { x = 760, y = 184 },
   -- the kennel (gold, inside) and the kiosk roofs (gold on the second)
@@ -185,8 +196,12 @@ L.bones = {
 -- it passes endX. w, h: the hit box, the drawn bike from wheel to wheel (r5/bugs: an adult's bike, 73 x 75 art,
 -- wheels 29 px; was 48 x 26 for the small cyclist art); 28 px tall keeps the perches (tops y 152-154) safe
 L.bikes = {
-  { zoneX0 = 790,  zoneX1 = 1228, minY = 150, every = 5.5, speed = 125, endX = 600, w = 70, h = 28 },     -- (was 6.5 s, 115 px/s)
+  { zoneX0 = 790,  zoneX1 = 1228, minY = 150, every = 6.5, speed = 115, endX = 600, w = 70, h = 28 },     -- (r6/levels: the tutorial's pace again; levels/v2 had 5.5 s, 125 px/s)
   { zoneX0 = 3040, zoneX1 = 3470, minY = 150, every = 5.0, speed = 135, endX = 2890, w = 70, h = 28 },    -- (was 6.0 s, 115 px/s)
+  -- (r6/levels, teach before testing) the first bike: Pepper's middle is between 624 and 693 only while she is
+  -- up on the bin, so this zone sends one bike (start = enter) right under her as she climbs it: she sees it pass
+  -- in safety, doing nothing. Then bike zone 1 asks her to use the perches.
+  { zoneX0 = 624,  zoneX1 = 693,  minY = 150, every = 4.0, speed = 115, endX = 520, w = 70, h = 28, start = "enter" },
 }
 
 -- secrets: reaching one (Pepper's feet in its box) counts it; the tally shows how many were found
@@ -201,8 +216,12 @@ L.secrets = {
 L.hints = {
   { x0 = 1550, x1 = 1800, btn = "x",    text = "PICK UP",            need = "nearball" },
   { x0 = 3690, x1 = 3840, btn = "x",    text = "GIVE",               need = "ball" },
-  { x0 = 0,    x1 = 92,   btn = "a",    text = "HOLD: BIG JUMP" },
-  { x0 = 560,  x1 = 641,  btn = "a",    text = "HOLD + PUSH: CLIMB" },
+  { x0 = 0,    x1 = 66,   btn = "right", text = "RUN" },                     -- (r6/levels: the tutorial, in order)
+  { x0 = 66,   x1 = 200,  btn = "down", text = "CRAWL",              minY = 183 },   -- under the bench (on the pavement)
+  { x0 = 200,  x1 = 271,  btn = "a",    text = "TAP: HOP" },                 -- over the fallen branch
+  { x0 = 330,  x1 = 402,  btn = "a",    text = "HOLD: BIG JUMP" },           -- onto the flower box
+  { x0 = 560,  x1 = 641,  btn = "a",    text = "HOLD: CLIMB" },
+  { x0 = 624,  x1 = 693,  text = "A BIKE! STAY UP HERE!", maxY = 130 },     -- the first bike, from the bin
   { x0 = 1868, x1 = 1936, btn = "down", text = "CRAWL" },
   { x0 = 0,    x1 = 3840, btn = "down", text = "DUCK!",              need = "gull" },
   { x0 = 790,  x1 = 1228, text = "BIKES! GET UP HIGH!", bike = true },
@@ -216,5 +235,5 @@ L.hints = {
   { x0 = 3620, x1 = 3840, text = "GO BACK FOR THE BALL!", need = "noball" },
 }
 
-L.intro = { "LEVEL 3", "RIVER WALK", "THE BALL LANDED ON A BOAT.", "FETCH IT FOR MIA!" }
+L.intro = { "LEVEL 1", "RIVER WALK", "MORNING! MIA THREW THE BALL...", "IT LANDED ON A FERRY. FETCH!" }
 return L

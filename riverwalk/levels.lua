@@ -1,13 +1,18 @@
 -- The game's levels in play order. Each name is a file in level/ (level/<name>.lua and its .map).
--- The story runs across all of them: a magpie steals Mia's ball in the park (1), a cat sits on it on the plaza
--- downtown (2), Mia throws it by the river and it lands on a ferry (3), it rolls all the way down Soder Hill (4),
--- and on the way home in the dark a fox takes it (5).
+-- The story is one day (r6/levels, the owner's ten-level plan; the levels not built yet are left out, so the cards
+-- count the levels as they are played): in the morning Mia throws the ball by the river and it lands on a ferry
+-- (1 River Walk), late morning a magpie steals it in the park (2 City Park), at noon a cat sits on it on the plaza
+-- (3 Downtown), early in the afternoon a gull takes it up to its nest (4 Rooftops), in the afternoon it rolls all
+-- the way down Soder Hill (5), and on the way home in the dark a fox takes it (6 Night Harbour).
+-- Still to come in the plan: Metro (after Rooftops), the building site and the funfair (after Soder Hill), home in
+-- the storm (after Night Harbour). When one is added, the numbers on the cards (L.number, L.intro) move up.
 -- par: the PAR TIME medal's time in seconds (the autopilot's clear time times about 1.6, rounded up). Autopilot
--- clear times (levels/v2): 44.2, 51.5, 66.3, 73.3 (the scroll sets the pace), 81.3 s.
+-- clear times (r6/levels): 66.3, 44.6, 51.4, 54.1, 73.3 (the scroll sets the pace), 81.3 s.
 return {
-  { name = "citypark",  number = 1, title = "CITY PARK",  par = 71 },      -- (was 60: 6 screens)
-  { name = "downtown",  number = 2, title = "DOWNTOWN",   par = 83 },      -- (was 55: 6 screens)
-  { name = "riverwalk", number = 3, title = "RIVER WALK", par = 107 },     -- (was 60: 10 screens)
-  { name = "soder",     number = 4, title = "SODER HILL", par = 118 },
-  { name = "night",     number = 5, title = "NIGHT HARBOUR", par = 135 },
+  { name = "riverwalk", number = 1, title = "RIVER WALK", par = 107 },
+  { name = "citypark",  number = 2, title = "CITY PARK",  par = 72 },
+  { name = "downtown",  number = 3, title = "DOWNTOWN",   par = 83 },
+  { name = "rooftops",  number = 4, title = "ROOFTOPS",   par = 87 },
+  { name = "soder",     number = 5, title = "SODER HILL", par = 118 },
+  { name = "night",     number = 6, title = "NIGHT HARBOUR", par = 135 },
 }

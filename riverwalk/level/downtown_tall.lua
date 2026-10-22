@@ -1,4 +1,4 @@
--- Level 2, tall: Downtown with the roofs of the old town (greybox; not in levels.lua): love riverwalk --level
+-- Level 3, tall: Downtown with the roofs of the old town (greybox; not in levels.lua): love riverwalk --level
 -- downtown_tall. The level is the Tiled map maps/downtown_tall.tmx, exported to level/tiled/downtown_tall.lua
 -- (docs/tiled.md). Its first version was drawn by tools/make_downtown_tall.py from Downtown; edit the map in Tiled
 -- from now on. Design: docs/downtown_tall_beatsheet.md. Checks and autopilot: tests_downtown_tall.lua.

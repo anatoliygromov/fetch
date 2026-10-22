@@ -68,13 +68,20 @@ return function(mode, api)
       { act = function(p) release(); report("crates: a tapped hop onto the high crate", near(p.y, 152), ("x %.0f y %.0f"):format(p.x, p.y)) end },
       -- 3 the cafe tables: stop a walk, crawl under both, a held jump onto a table, up onto its parasol, from
       --   parasol to parasol, from the second parasol to the shop sign
-      { act = function() tp(310, 184); hold("right") end }, { during = 1.0 },
+      { act = function() tp(350, 184); hold("right") end }, { during = 1.0 },
       { act = function(p) report("table: stops a walk", p.x < 352, ("x %.0f"):format(p.x)); hold("right", "down") end },
       { during = 6.0 },
       { act = function(p) release(); report("tables: crawling passes under both", p.x > 545 and near(p.y, 184), ("x %.0f"):format(p.x)) end },
-      { act = function() tp(320, 184); hold("right") end }, { during = 0.3 },
-      { act = function() jump("right", "jump") end }, { during = 0.2 }, landed(),
+      { act = function() tp(350, 184); jump("right", "jump") end }, { during = 0.2 }, landed(),
       { act = function(p) release(); report("table: a held jump lands on the top", near(p.y, 158), ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      -- (r6/levels) the crate splits the jump: a tap hop onto it, a tap hop from it onto the table
+      { act = function() tp(262, 184); hold("right") end }, { during = 0.15 },
+      { act = function() jump("right", "jump") end }, { wait = 1 / 60 }, { act = function() hold("right") end }, { during = 0.1 }, landed(),
+      { act = function(p) release(); report("terrace crate: a tapped hop onto it", near(p.y, 168), ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      { act = function() tp(312, 168); hold("right") end }, { during = 0.12 },
+      { act = function() jump("right", "jump") end }, { wait = 1 / 60 }, { act = function() hold("right") end }, { during = 0.1 },
+      { cond = function(p) return p.onGround end, act = function() release() end, limit = 3 },
+      { act = function(p) report("terrace crate: a tapped hop from it onto the table", near(p.y, 158), ("x %.0f y %.0f"):format(p.x, p.y)) end },
       { act = function() tp(392, 158); jump("jump") end }, { during = 0.2 }, landed(),
       { act = function(p) release(); report("parasol: a held jump from the table onto it", near(p.y, 114), ("y %.0f"):format(p.y)) end },
       { act = function() tp(380, 114); hold("right") end }, { during = 0.3 },
@@ -296,7 +303,11 @@ return function(mode, api)
       { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p) return p.onGround and p.y <= 153 end, function() hold("right") end),
       -- 2 cafe terrace: onto the first table, its parasol, the second parasol, the shop sign (gold bone)
-      at(function(p) return p.x >= 322 and p.onGround and p.y > 183 end, function() jump("right", "jump") end),
+      at(function(p) return p.x >= 270 and p.onGround and p.y > 183 end, function() jump("right", "jump") end),   -- the crate (r6/levels)
+      { wait = 1 / 60 }, { act = function() hold("right") end },
+      at(function(p) return p.onGround and p.y <= 169 end, function() hold("right") end),
+      at(function(p) return p.x >= 318 end, function() jump("right", "jump") end),
+      { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p) return p.onGround and p.y <= 159 end, function() release() end),
       at(function(p) return math.abs(p.vx) < 1 end, function() jump("jump") end),
       at(function(p) return p.onGround and p.y <= 115 end, function() hold("left") end),

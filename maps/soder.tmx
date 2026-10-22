@@ -8,9 +8,9 @@
   <property name="movers" value="{}"/>
   <property name="ballBack" value="THE BALL IS BACK BY THE RAILING"/>
   <property name="greyStyle" value="town"/>
-  <property name="intro" value="{ &quot;LEVEL 4&quot;, &quot;SODER HILL&quot;, &quot;THE BALL ROLLED DOWN THE HILL!&quot;, &quot;CATCH IT, PEPPER! KEEP UP!&quot; }"/>
+  <property name="intro" value="{ &quot;LEVEL 5&quot;, &quot;SODER HILL&quot;, &quot;THE BALL ROLLED DOWN THE HILL!&quot;, &quot;CATCH IT, PEPPER! KEEP UP!&quot; }"/>
   <property name="name" value="SODER HILL"/>
-  <property name="number" type="int" value="4"/>
+  <property name="number" type="int" value="5"/>
   <property name="outro" value="{ &quot;IT GOT DARK ON THE WAY&quot;, &quot;HOME. A FOX TOOK THE BALL!&quot; }"/>
   <property name="pickupSay" value="BRING ME THE BALL!"/>
   <property name="scenery" value="greybox"/>
