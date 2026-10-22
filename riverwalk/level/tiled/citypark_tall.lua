@@ -3489,6 +3489,7 @@ return {
             ["text"] = "GIVE",
             ["btn"] = "x",
             ["need"] = "ball",
+            ["minY"] = 290,
           },
         },
         {
@@ -3617,6 +3618,7 @@ return {
             ["box"] = "x0,x1",
             ["text"] = "HOLD: BIG JUMP",
             ["btn"] = "a",
+            ["minY"] = 290,
           },
         },
         {
@@ -3634,6 +3636,7 @@ return {
             ["box"] = "x0,x1",
             ["text"] = "CRAWL",
             ["btn"] = "down",
+            ["minY"] = 290,
           },
         },
         {
@@ -3651,6 +3654,7 @@ return {
             ["box"] = "x0,x1",
             ["text"] = "TAP: HOP",
             ["btn"] = "a",
+            ["minY"] = 290,
           },
         },
         {
@@ -3686,6 +3690,7 @@ return {
             ["box"] = "x0,x1",
             ["text"] = "STOP, THEN HOP",
             ["btn"] = "a",
+            ["minY"] = 290,
           },
         },
         {
@@ -3703,6 +3708,7 @@ return {
             ["box"] = "x0,x1",
             ["text"] = "HOLD + PUSH: CLIMB",
             ["btn"] = "a",
+            ["minY"] = 290,
           },
         },
         {
@@ -3738,6 +3744,7 @@ return {
             ["box"] = "x0,x1",
             ["text"] = "TAP: HOP",
             ["btn"] = "a",
+            ["minY"] = 290,
           },
         },
         {
@@ -3755,6 +3762,7 @@ return {
             ["box"] = "x0,x1",
             ["text"] = "RIDE THE DUCK BOAT!",
             ["maxY"] = 340,
+            ["minY"] = 290,
           },
         },
         {
@@ -3771,6 +3779,7 @@ return {
           properties = {
             ["box"] = "x0,x1",
             ["text"] = "A GOOSE! BARK AT IT!",
+            ["minY"] = 290,
           },
         },
         {

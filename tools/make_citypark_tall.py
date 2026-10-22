@@ -179,6 +179,9 @@ def build():
     ]
     L["magpie"]["perches"] = PERCHES
     hints = [h for h in L["hints"] if not h.get("bike")]     # "CART! GET UP HIGH!": back with the carts
+    for h in hints:                                           # City Park's hints for one spot: on the low road only
+        if h["x1"] - h["x0"] < 600 and "minY" not in h:
+            h["minY"] = 290
     k = next(i for i, h in enumerate(hints) if not h.get("need") or h["need"] not in ("magpienear", "nearball", "ball"))
     L["hints"] = hints[:k] + HINTS_HIGH + hints[k:]
     # the leaf carts wait on a note layer until the engine reads a zone's y (see the docstring)

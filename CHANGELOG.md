@@ -27,6 +27,23 @@ Built on `round1` (the height engine, Tiled, music). Level design only: no engin
 - **`docs/citypark_tall_beatsheet.md`**: the four beats of the magpie idea, screen by screen on both roads, every
   jump with Pepper's numbers, the 12 perches, secrets and the golden bone, timing (par 75 s), what the engine must
   add (cart zones, the hollow log, the art and the look at any height), open questions.
+- **Rooftops, the paper map** (level 3 in the plan; not wired into the game): `docs/rooftops_beatsheet.md` and
+  `maps/rooftops_sketch.tmx` (240 x 120 cells, 1920 x 960 px, drawn by `tools/make_rooftops_sketch.py`): the street
+  and the cafe, three stairwells, flat roofs T1 and T2, two pitched roofs, the roof terrace (Mia), the copper roof
+  and the nest chimney (the landmark, top y 136). The main route takes the stairwells; the high route rides six
+  steam puffs and five loose tiles, with the golden bone on a chimney pot. Two new kinds of objects in the map:
+  `steam` (vents: lift, every, warn, puff, source, bark) and props with `loose = true`. The beat sheet specifies them
+  for the engine: the steam puff (cycle, warning, the lift as `vy = -sqrt(2 * 560 * h)` with the bounce's jumpBase
+  trick, one lift per puff, a bark starts a puff) and the loose tile (Night's crumble made general: 0.6 s shake,
+  fall, back after 3 s), plus the gull's nest and the checks to write.
+- **Paper maps with routes** (`tools/draw_routes.py <map>`): the map rendered by `render_map.py` with the main route
+  (blue), the high route (orange), lamps, secrets, the golden bone, steam puffs with their lift, loose tiles and the
+  landmark. Renders, the autopilot GIF and a screenshot tour are in `/home/claude/out/design-round2/`.
+- **City Park tall, hints:** City Park's hints for one spot show only on the low road (`minY = 290`), so "STOP, THEN
+  HOP" no longer shows on the alder walk.
+- **Checks on this branch:** `check_pepper` PEPPER UNCHANGED (4591 steps), `check_flow` 94 of 94, `check_tiled`
+  passed (and citypark_tall's export up to date), City Park `--physics` 73 of 73, citypark_tall `--physics` 77 of 77,
+  its autopilot GOOD GIRL! in 38.5 s.
 
 ## Branch `engine/height`: levels that climb and drop (22 Oct)
 Built on `main` (v0.5). The engine for the tall levels (rooftops, the building site, the metro); the five levels
