@@ -24,6 +24,10 @@ Built on `main` (v0.5). No SpriteCook credits. See `docs/tiled.md`.
   map -> export -> loader and come back identical (deep compare, lists in order, and every terrain row); the same
   through Tiled's own Lua export (`tiled --export-map`, Tiled 1.8.2 here); the game's exports are up to date with
   `maps/*.tmx`; a tall map (50 rows) with new kinds of objects loads; and which maps were changed in Tiled.
+- **City Park loads from Tiled.** `level/citypark.lua` starts with `local USE_TILED = true` and returns the level
+  from `level/tiled/citypark.lua`; the rest of the file (and `citypark.map`) stays as the fallback: set it to
+  false to play the original. Its physics checks, autopilot (44.2 s, as before), QA and the flow test pass
+  unchanged. The other four levels still load from their own files; switching one is the same two lines.
 ## Branch `assets/v2`: the tram fix and art for the new pieces (19 Oct)
 Built on `levels/v2`.
 - **The trams end in tram sheds** (Downtown). Before, the first tram vanished in plain view before the fountain,
