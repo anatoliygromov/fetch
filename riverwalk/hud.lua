@@ -55,6 +55,23 @@ function U.status(g)
   txt(("SCORE %06d"):format(g.score), 243, y + 3)
 end
 
+-- FETCH FRENZY (bonus.lua): g = { time (seconds left), catches, need (catches for the extra life), points }.
+-- Three signs: the catches against the goal (gold once reached), the countdown (blinks in the last 5 s), points.
+local ballIcon = bitmap({ ".###.", "#####", "#####", "#####", ".###." })
+function U.bonusStatus(g)
+  local y = 3
+  U.sign(4, y, 84)
+  lg.setColor(1, 1, 1, 1); lg.draw(ballIcon, 9, y + 4)
+  if g.catches >= g.need then                                    -- the goal reached: the count in gold and a dog (+1 life)
+    txt(("CATCH %02d"):format(g.catches), 18, y + 3, U.GOLD); lg.setColor(U.GOLD); lg.draw(dogIcon, 72, y + 3); lg.setColor(1, 1, 1, 1)
+  else txt(("CATCH %02d/%02d"):format(g.catches, g.need), 18, y + 3) end
+  U.sign(124, y, 62)
+  local low = g.time <= 5 and g.time > 0 and math.floor(love.timer.getTime() * 4) % 2 == 0
+  txt(("TIME %02d"):format(math.max(0, math.ceil(g.time))), 132, y + 3, low and U.GOLD or U.WHITE)
+  U.sign(232, y, 80)
+  txt(("POINTS %05d"):format(g.points), 237, y + 3)
+end
+
 -- a box with clipped corners: dark edge, light rim, blue body
 function U.box(x, y, w, h)
   lg.setColor(U.EDGE); lg.rectangle("fill", x + 1, y, w - 2, h); lg.rectangle("fill", x, y + 1, w, h - 2)
