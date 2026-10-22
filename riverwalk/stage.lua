@@ -509,7 +509,7 @@ function St:draw(debug)
   use("ground")
   for _, ps in ipairs(self.def.passages or {}) do Sc.passageBack(ps, cam) end
   lg.setColor(1, 1, 1, 1)
-  lg.draw(self.ground, -cam, 0)
+  self.ground:draw(cam, camY)                                      -- (in chunks, the ones on screen: scene.lua)
   if lk then Look.road(self, cam, Sc) end                          -- the road rows recede (row scrolling)
   for _, ps in ipairs(self.def.passages or {}) do Sc.passageFront(ps, cam) end
   if style then Sc.drawTerrainArt(self.def, cam, self.t) end         -- the slide, the fountain's jets

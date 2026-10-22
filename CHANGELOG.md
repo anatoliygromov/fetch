@@ -38,6 +38,18 @@ Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untou
   another branch): a gap Pepper must not walk or scramble across is at least 64 px; a running held jump clears
   about 110 px (from her numbers, not measured). lab_tall `--physics` 40 of 40 (6 new pit checks, all played, no teleport), `--auto` GOOD GIRL! in
   25.9 s, 13/13 bones, `--qa` 0 problems.
+- **The ground in chunks** (review 8). The painted ground (terrain, pavement, path) was one canvas as big as the
+  world (a 16 x 3 screen level: 15 to 20 MB of video memory, and wider or taller than the handheld's largest
+  texture). It is now cut into canvases of 512 x 512 px (`Sc.CHUNK`, the last ones smaller), each drawn only when
+  it is on screen, and a chunk with no terrain or water in it (the sky of a tall level) is not made at all
+  (lab_tall: 3 chunks, 1.6 MB instead of 2.6 MB). Each chunk is painted by the same code moved to its origin
+  (`clip()` is the scissor in world coordinates), drawing only its own columns; each column's terrain runs are
+  worked out once per world and shared. Load time as before (Soder Hill 38 ms, City Park 47 ms here).
+  `St.ground` is a `Sc.Ground` with `:draw(cam, camY)`, `:release()` and `:bytes()`. Proof: the `--test` tours
+  drawn on `round1` and on this branch are pixel identical: River Walk 24 of 26 shots, City Park 21 of 23, Downtown
+  28 of 31, Soder Hill 22 of 22; the others differ only in the debug view's FPS / MS counter
+  (`/home/claude/out/engine-round2/debug_counter_diff.png`). lab_tall (its pit changed since round1) drawn with one
+  big chunk and with 512 px chunks: 140 of 140 shots identical, across both chunk seams.
 
 ## The old title is back (22 Oct, evening)
 - The hand-pixeled title (branch `title/redraw`) was rejected by the owner: the 19 Oct title has far more charm.
