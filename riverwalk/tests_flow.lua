@@ -53,6 +53,7 @@ return function(api)
   local names = run.names
   local steps = {}
   local function add(...) for _, st in ipairs({ ... }) do steps[#steps + 1] = st end end
+  local bh = { add = add, key = key, wait = wait, state = state, check = check, shot = shot, api = api }   -- [bonus] tests_bonus.flow
 
   -- the level list and the run: a missing file is skipped (also checked on a made-up list)
   add(check("levels.lua: files found as they are on disk", function()
@@ -188,7 +189,9 @@ return function(api)
         return L and L.by < 100 and not (L.x0 < x1 and L.x1 > x0 and L.y0 < y1 and L.y1 > y0), L and ("panel y %d-%d, Pepper y %d-%d"):format(L.y0, L.y1, y0, y1) or "no panel" end),
         shot("u10_top"))
     end
-    add({ act = function() local s = api.stage(); s.lives, s.hearts, s.score = 2, 1, s.score + 1200; finish() end })
+    add({ act = function() local s = api.stage(); s.lives, s.hearts, s.score = 2, 1, s.score + 1200
+      if k == 1 then for _, bn in ipairs(s.bones) do if bn.super then bn.taken = true; s.taken = s.taken + 1; break end end end   -- [bonus] a golden bone
+      finish() end })
     add(state("clear", 6), { cond = function() local tl = api.tally(); return tl and tl.done end, act = function() end, limit = 8, what = "the tally" })
     add(check(("run %d: the tally adds up"):format(k), function()
       local tl, st = api.tally(), stats()
@@ -212,6 +215,8 @@ return function(api)
       return not tl.medals.nohit and tl.medals.par and not tl.medals.bones and m.par and not m.nohit, readSave("medals_" .. name .. ".txt"):gsub("\n", "")
     end))
     add(key("space"))
+    if k == 1 then require("tests_bonus").flow(bh, { name = "bonus, run 1", life = false, after = k < #names and "story" or "ending", tag = "b" }) end   -- [bonus]
+    if k == 2 then add(check("bonus: no golden bone, no FETCH FRENZY", function() return api.getState() ~= "bonus" and api.bonus() == nil, api.getState() end)) end
     if k < #names then
       if require("level." .. name).outro then
         add(state("story", 1), wait(0.6), key("space"), key("x"),
@@ -254,7 +259,9 @@ return function(api)
     local tl = api.tally(); local b = math.min(tl.time, prev.time)
     return tl.best == b and tl.newBestTime == (tl.time < prev.time) and F.levelTimeBest(last) == b,
       ("%.2f then %.2f, best %.2f"):format(prev.time, tl.time, tl.best) end), shot("5_tally"), shot("u4_tally"))
-  add(key("space"), state("ending", 1), wait(2.3), key("space"), state("title", 1))
+  add(key("space"))
+  require("tests_bonus").flow(bh, { name = "bonus, clean clear", life = true, after = "ending", tag = "c" })    -- [bonus] every bone: golden too
+  add(wait(2.3), key("space"), state("title", 1))
   add(wait(0.8), key("space"), state("menu", 2), key("down"), key("space"), state("select", 1), wait(0.3), shot("u6_select"),
     check("level select: medals shown from the saves", function() local m = F.medals(last); return m.nohit and m.bones and m.par, "" end))
   add(key("escape"), state("menu", 1))

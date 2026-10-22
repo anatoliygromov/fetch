@@ -103,7 +103,28 @@ local function playRound(variant, kid, onStep)
   return r
 end
 
-return function(mode, api)
+-- the flow test's bonus cases (tests_flow.lua calls this where a tally with a golden bone ends): h = its step
+-- makers { add, key, wait, state, check, shot, api }; o = { life (the round gives an extra life), name, after
+-- (the state the flow goes on to: "story" or "ending"), tag (screenshot names) }
+local TB = {}
+function TB.flow(h, o)
+  local api, before = h.api, {}
+  h.add(h.state("bonus", 1), h.wait(0.6), h.shot(o.tag .. "1_intro"),
+    h.check(o.name .. ": a golden bone opens FETCH FRENZY after the tally", function()
+      local b = api.bonus(); return api.getState() == "bonus" and b and b.phase == "intro", api.getState() end))
+  h.add({ act = function() local r = api.run(); before.score, before.lives = r.score, r.lives end })
+  h.add(h.key("space"), h.wait(1.4), h.check(o.name .. ": a button starts the round", function() return api.bonus().phase == "play", api.bonus().phase end))
+  h.add(h.wait(2.4), h.shot(o.tag .. "2_play"))
+  h.add({ act = function() local b = api.bonus(); b.catches, b.air, b.points, b.time = o.life and B.LIFE_AT or 4, o.life and B.LIFE_AT or 3, o.life and 1100 or 350, 0.02 end })
+  h.add({ cond = function() return api.bonus() and api.bonus().phase == "result" end, act = function() end, limit = 4, what = "the bonus result" })
+  h.add(h.wait(2.0), h.shot(o.tag .. "3_result"))
+  h.add(h.key("space"), h.state(o.after, 1), h.check(o.name .. ": then " .. (o.after == "story" and "the story card" or "the ending"), function() return api.getState() == o.after, api.getState() end))
+  h.add(h.check(o.name .. (o.life and ": points in the score, an extra life" or ": points in the score, no extra life"), function()
+    local r = api.run(); local pts = o.life and 1100 or 350
+    return r.score == before.score + pts and r.lives == before.lives + (o.life and 1 or 0), ("score %d -> %d, lives %d -> %d"):format(before.score, r.score, before.lives, r.lives) end))
+end
+
+local function run(mode, api)
   I.testing = true
   local results = {}
   local function report(name, ok, detail)
@@ -386,3 +407,4 @@ return function(mode, api)
     else st.act(); i, since = i + 1, 0 end
   end
 end
+return setmetatable(TB, { __call = function(_, mode, api) return run(mode, api) end })

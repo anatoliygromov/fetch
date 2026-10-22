@@ -29,6 +29,11 @@ Built on `round1`. Gameplay only, no new art, no SpriteCook. Pepper's files are 
   where the throw before landed (simulated, 44 of 44); Mia winds up before every throw; the timer ends the round;
   the extra life at 11, not 10; the points; the autopilot catches 13-14 of each round; the model child; the flow
   (golden bone: tally, bonus, story; none: tally, story). `--bonus --auto` records the autopilot (rec/).
+- **The flow test reaches it** (`tools/check_flow.sh`, 103 of 103, was 94). Three small hooks in
+  `tests_flow.lua` (marked `[bonus]`): run level 1 is cleared with a golden bone, so the bonus opens between its
+  tally and its story card (no extra life, the points carry into level 2's score); level 2 checks there is no
+  bonus without one; the clean clear at the end (every bone) plays it with the extra life before the ending.
+  The cases themselves are `tests_bonus.flow`. Screens: `flow_b*.png` (run) and `flow_c*.png` (clean clear).
 
 ## Branch `engine/round2`: the review's engine fixes and the rooftops mechanics (22 Oct)
 Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untouched (`check_pepper` UNCHANGED).
