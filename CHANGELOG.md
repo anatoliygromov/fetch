@@ -14,6 +14,10 @@ camera, lift, roof, critter, set piece, Pepper or art file changes.
   `pt_json.lua` comes over unchanged; the old copied routes (`pt_routes.lua`) are gone.
 - **Runs:** `tools/run_playtest.py` (all personas x levels x seeds, one LOVE process per run, each with its own
   `XDG_DATA_HOME`, `SDL_AUDIODRIVER=dummy`, `xvfb-run -a`). A run takes about a second (no drawing).
+- **Analysis and method:** `tools/analyse_playtest.py` (per persona and level: clears, quits and where, hearts,
+  lives, game overs, clear times, waits, bones, secrets, controls found, failures per beat-sheet screen; the
+  difficulty index per group along each candidate order; charts and stall maps); `docs/playtest/method.md`
+  rewritten for the new design (what is exact, what is modelled, the recovery model, lost runs).
 
 ## Pepper's file check narrowed to what she uses (22 Oct, evening)
 - `tools/check_pepper_files.sh` flagged world.lua: engine/round2 gave `Wd:groundAt` an optional `fromY` for carts,
