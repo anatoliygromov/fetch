@@ -122,7 +122,8 @@ function Sc.art()
   A.outlined = {}
   -- round 2 obstacles and buildings (tools/make_props.py): mid-tone SpriteCook art that already has its own 1 px
   -- dark outline, so none is added here
-  for _, n in ipairs({ "bench", "bin", "flowerbox", "gritbox", "flowerbox_front", "gritbox_front", "planter_sq", "ferry" }) do
+  for _, n in ipairs({ "bench", "bin", "flowerbox", "gritbox", "flowerbox_front", "gritbox_front", "planter_sq", "ferry",
+      "park_log" }) do                                            -- (r6/levels: River Walk's fallen branch, the park's log)
     A[n] = newImg("art/scene/" .. n .. ".png")
   end
   -- night branch (tools/make_night_art.py): the bridge abutment and the pontoon (things Pepper uses: crisp, with

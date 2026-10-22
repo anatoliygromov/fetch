@@ -168,7 +168,24 @@ return function(mode, api)
       { act = function() love.keypressed("z") end }, { wait = 0.2 },
       { act = function() local k = api.stage().critters[1]; report("gull: a bark while it squawks scares it off", k.state == "away", k.state) end },
       { act = function() local s = api.stage(); local z1, z2 = s.def.bikes[1], s.def.bikes[2]
-          report("bikes: a little faster than before (125, 135 px/s)", z1.speed == 125 and z2.speed == 135 and z2.every < z1.every, ("%d, %d"):format(z1.speed, z2.speed)) end },
+          report("bikes: zone 1 the tutorial's pace, zone 2 faster", z1.speed == 115 and z2.speed == 135 and z2.every < z1.every, ("%d, %d"):format(z1.speed, z2.speed)) end },
+      -- 17 (r6/levels) the tutorial: the fallen branch is a tap hop on flat pavement
+      { act = function() tp(232, 184); hold("right") end }, { during = 0.8 },
+      { act = function(p) report("branch: stops a walk", p.x < 254 and near(p.y, 184), ("x %.0f"):format(p.x)); jump("right", "jump") end },
+      { wait = 1 / 60 }, { act = function() hold("right") end },
+      { cond = function(p) return p.onGround and p.mode == "normal" and p.y < 183 end, act = function() release() end, limit = 2 },
+      { act = function(p) report("branch: a tapped hop lands on it", near(p.y, 163), ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      -- 18 the first bike: climbing the bin sends one right under her; standing still up there she is safe
+      { act = function() local s = api.stage(); tp(616, 184); s.bikeT = 2.5; s.zoneIn = {}; s.hearts = 3; hold("right", "jump"); love.keypressed("space") end },
+      { during = 0.3 },
+      { cond = function(p) return p.onGround end, act = function() release() end, limit = 2 },
+      { act = function(p, s) local st = api.stage(); report("first bike: sent as she lands on the bin", #st.bikes == 1 and near(p.y, 128), ("bikes %d, y %.0f"):format(#st.bikes, p.y)) end },
+      { cond = function(p) local st = api.stage(); return #st.bikes == 0 end, act = function() end, limit = 8 },
+      { act = function(p) local st = api.stage(); report("first bike: passes under her, no heart lost", st.hearts == 3 and near(p.y, 128), ("hearts %d"):format(st.hearts)) end },
+      -- 19 the first gull only circles: Pepper standing under it for 8 s keeps her hearts
+      { act = function() local s = api.stage(); s.hearts = 3; tp(1850, 216) end }, { during = 8 },
+      { act = function(p) local st = api.stage(); local k = st.critters[3]
+          report("first gull: circles, never swoops", st.hearts == 3 and k.state == "circle", ("hearts %d, %s"):format(st.hearts, k.state)) end },
       { act = function()
           local ok = 0; for _, r in ipairs(results) do if r then ok = ok + 1 end end
           print(("%d of %d passed"):format(ok, #results)); love.event.quit() end },
@@ -208,7 +225,8 @@ return function(mode, api)
       at(function(p) return true end, function() hold("right") end),
       at(function(p) return p.x >= 70 end, function() hold("right", "jump"); love.keypressed("space") end),
       at(function(p) return p.onGround and p.y <= 157 end, function() hold("right") end),            -- on the bench seat
-      onto(401, 152),                                                                                -- the flower box
+      onto(270, 163),                                                                                -- the fallen branch (r6/levels)
+      onto(401, 152, 310),                                                                           -- the flower box
       onto(641, 128),                                                                                -- the bin: jump and scramble
       -- bike zone 1 by the high route (a secret): from the bin onto the two kiosk awnings, down onto the planter,
       -- then the flower box; up there the bikes pass under her
@@ -219,6 +237,9 @@ return function(mode, api)
       at(function(p) return p.x >= 975 end, function() release() end),
       at(function(p) return p.onGround and p.y > 150 end, function() hold("right") end),
       onto(1113, 152, 1034),
+      -- (r6/levels: slower bikes, so one may still be coming: wait on the flower box until it has passed under her)
+      at(function(p) return p.x >= 1185 end, function() release() end, 4),
+      at(function(p, s) return (#s.bikes == 0 and s.bikeT > 1.2) or (#s.bikes > 0 and s.bikes[1].x < p.x - 60) end, function() hold("right") end, 9),
       -- down the steps to the quay, then the pontoon
       at(function(p) return p.x >= 1378 and p.onGround and p.y >= 215 end, function() release() end, 14),
       at(function(p, s) return s.movers[1].x0 <= 1402 end, function() hold("right") end, 9),

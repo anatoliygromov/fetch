@@ -19,6 +19,33 @@ Built on `round1`. The owner's new strategy (ten levels; five built, plus Roofto
   numbers and story. Par times stay with their levels. Rooftops' button hints follow the panel's rule (one to three
   words): "HOP ON FAN", "BOUNCE ON IT"; its BARK! hint showed the B button (sneak), now Y. LEVEL SELECT fits six
   rows (26 px from y 40; flow.lua). `tests_flow.lua` runs City Park's talk checks where City Park now is (run 2).
+- **River Walk is the tutorial** (level/riverwalk.lua, maps/riverwalk.tmx and its export, tests.lua): one control at
+  a time on flat pavement, in the order she needs them, nothing harmful in the first two screens. RUN at the start;
+  the bench: CRAWL under it (the hint now teaches the low way; the seat is still a held jump up); a new fallen
+  branch under the big tree (`LOG`, x 270-310, 21 px: the park's log art, loaded in scene.lua) for the first
+  TAP: HOP; the flower box: HOLD: BIG JUMP; the bin: HOLD: CLIMB; the ferry: PICK UP; the bridge: CRAWL with the
+  ball; GIVE to Mia at the end (the level's real fetch; there is no earlier Mia to give to). **Threats shown safely
+  first:** a bike zone of its own covers only the bin's top (Pepper's middle is between 624 and 693 only up there),
+  so as she climbs the bin one bike rides right under her ("A BIKE! STAY UP HERE!"): survivable by doing nothing.
+  Bike zone 1 then rides at the tutorial's pace again (every 6.5 s, 115 px/s; levels/v2 had 5.5 s, 125 px/s; the
+  playtest's fix 7: screens 2-3 had 62% of the failures). A third gull circles over the ferry and the far quay
+  while she fetches the ball and never swoops (its x1 is left of its x0, so critters.lua gives it no stretch to
+  hunt in); the harbour's gull is the first that swoops. Layout otherwise unchanged (one prop, one bone on it).
+  New checks: the branch stops a walk and a tapped hop lands on it; the first bike is sent as she lands on the bin
+  and passes under her with no heart lost; the first gull never swoops (45 of 45). The autopilot hops the branch and
+  waits on the last flower box of bike zone 1 for a bike to pass (slower bikes changed the timing): 66.3 s, no heart
+  lost. **The golden trace was re-recorded**: the first difference is step 218, the autopilot jumping onto the new
+  branch (x 241); Pepper herself is proven unchanged by `check_pepper_lab` (1401 lab steps identical) and
+  `check_pepper_files` (5 files identical to aa38be5).
+- **Picture signs for children who cannot read** (hud.lua `U.pict`, talk.lua `T.picFor`): every control hint now
+  shows a little scene between the button and the words, 14 x 12 cells of 3 px: Pepper (the HUD's dog, standing or
+  crouched, white) and what she uses (gold: the ground, a box, a bar, arrows; the ball pink; Mia). Pictures: run,
+  hop (a low box), big jump (a tall box), climb (an arrow up a wall), crawl (under a bench), duck (a gull above),
+  stay on, drop through, bounce, pick up (an arrow to the ball), give (the ball to Mia), bark (sound arcs), sneak
+  (soft steps and a "z"). The words stay for readers; a hint can name its picture (`pic`), else its words choose
+  it. A control hint now stays on one row (smaller words rather than two rows). The d-pad glyph is a hint button
+  too (`btn = "right"`: RUN). "HOLD + PUSH: CLIMB" is now "HOLD: CLIMB" (River Walk, both City Parks) so it keeps
+  the big letters beside the picture. `tests_flow.lua` checks every Pepper hint of every level has a picture.
 
 ## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
 Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of

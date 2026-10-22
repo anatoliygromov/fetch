@@ -151,4 +151,61 @@ function U.volumeToast(level, max, y)
   txt("SOUND", 116, y + 5)
   U.volumeBar(150, y + 5, level, max)
 end
+-- Picture signs (r6/levels): a little scene of what a control hint asks, for children who cannot read yet (the
+-- talk panel draws one between the button and the words). 14 x 12 cells, drawn 3 px a cell (42 x 36 px): Pepper
+-- (white, the HUD's dog in a pose) and what she uses (gold: the ground, a box, a bar, arrows, the ball, Mia).
+U.PICT_CELL = 3
+U.PICT_W, U.PICT_H = 14 * U.PICT_CELL, 12 * U.PICT_CELL
+local lowDog = bitmap({ "..........##", "#########.##", ".##########.", "##.......##." })   -- crouched, crawling
+local girlIcon = bitmap({ ".##.", ".##.", "####", ".##.", "####", "####", "####", ".#.#", ".#.#" })   -- Mia, 4 x 9
+local ballDot = bitmap({ ".##.", "####", "####", ".##." })
+local BALLC = { 236/255, 84/255, 104/255 }
+local PICT = {}
+-- the steps of one picture: { "dog" | "low" | "girl" | "ball", cx, cy } (its top-left cell), or { "box", cx, cy, w, h } (gold),
+-- or { "dots", {cx, cy}, ... } (a dotted path, gold), or { "up" | "down" | "right", cx, cy } (an arrow, gold)
+PICT.run    = { { "box", 0, 11, 14, 1 }, { "dog", 1, 5 }, { "box", 0, 6, 1, 1 }, { "box", 0, 8, 1, 1 }, { "right", 11, 5 } }
+PICT.hop    = { { "box", 0, 11, 14, 1 }, { "box", 6, 9, 3, 2 }, { "dots", { 0, 10 }, { 1, 8 }, { 3, 6 } }, { "dog", 4, 2 } }
+PICT.jump   = { { "box", 0, 11, 14, 1 }, { "box", 8, 6, 4, 5 }, { "dots", { 0, 10 }, { 1, 7 }, { 2, 4 } }, { "dog", 4, 0 } }
+PICT.climb  = { { "box", 0, 11, 14, 1 }, { "box", 10, 5, 4, 6 }, { "dog", 0, 5 }, { "up", 8, 0 } }
+PICT.crawl  = { { "box", 0, 11, 14, 1 }, { "box", 2, 6, 11, 1 }, { "box", 3, 7, 1, 4 }, { "box", 11, 7, 1, 4 }, { "low", 1, 7 } }
+PICT.duck   = { { "box", 0, 11, 14, 1 }, { "low", 1, 7 }, { "box", 9, 1, 1, 1 }, { "box", 10, 2, 1, 1 }, { "box", 11, 1, 1, 1 },
+  { "box", 12, 0, 1, 1 }, { "box", 8, 0, 1, 1 }, { "dots", { 8, 4 }, { 6, 5 } } }
+PICT.stay   = { { "box", 0, 9, 14, 1 }, { "dots", { 1, 10 }, { 4, 11 }, { 7, 10 }, { 10, 11 }, { 12, 10 } }, { "low", 1, 5 }, { "down", 11, 0 } }
+PICT.drop   = { { "box", 0, 6, 14, 1 }, { "box", 0, 11, 14, 1 }, { "dog", 0, 0 }, { "down", 11, 7 } }
+PICT.bounce = { { "box", 2, 10, 10, 1 }, { "dots", { 3, 11 }, { 5, 11 }, { 7, 11 }, { 9, 11 }, { 11, 11 } }, { "up", 0, 3 }, { "dog", 4, 2 } }
+PICT.pickup = { { "box", 0, 11, 14, 1 }, { "dog", 0, 5 }, { "ball", 10, 7 }, { "down", 10, 2 } }
+PICT.give   = { { "box", 0, 11, 14, 1 }, { "dog", 0, 5 }, { "ball", 7, 1 }, { "girl", 10, 2 } }
+PICT.bark   = { { "box", 0, 11, 14, 1 }, { "dog", 0, 5 }, { "box", 10, 4, 1, 1 }, { "box", 11, 5, 1, 2 }, { "box", 10, 7, 1, 1 },
+  { "box", 12, 3, 1, 1 }, { "box", 13, 4, 1, 4 }, { "box", 12, 8, 1, 1 } }
+PICT.sneak  = { { "box", 0, 11, 14, 1 }, { "dog", 4, 5 }, { "dots", { 0, 10 }, { 2, 10 } }, { "box", 0, 2, 3, 1 }, { "box", 2, 3, 1, 1 },
+  { "box", 1, 4, 1, 1 }, { "box", 0, 5, 3, 1 } }     -- (soft steps behind her, a "z": quiet)
+local arrows = {
+  up    = bitmap({ ".#.", "###", ".#.", ".#." }), down = bitmap({ ".#.", ".#.", "###", ".#." }),
+  right = bitmap({ "#..", "##.", "###", "##.", "#.." }),
+}
+-- draws picture `kind` with its top-left at x, y (cells of 2 px); returns false if there is no such picture
+function U.pict(kind, x, y)
+  local steps = PICT[kind]
+  if not steps then return false end
+  local c = U.PICT_CELL
+  local function at(cx, cy) return x + cx * c, y + cy * c end
+  for pass = 1, 2 do                                             -- 1: the shadow, 1 px down and right; 2: the picture
+    local o = pass == 1 and 1 or 0
+    for _, st in ipairs(steps) do
+      local k = st[1]
+      local col = pass == 1 and U.SHADE or (k == "dog" or k == "low") and U.WHITE or k == "ball" and BALLC or U.GOLD
+      lg.setColor(col)
+      if k == "box" then local px, py = at(st[2], st[3]); lg.rectangle("fill", px + o, py + o, st[4] * c, st[5] * c)
+      elseif k == "dots" then for i = 2, #st do local px, py = at(st[i][1], st[i][2]); lg.rectangle("fill", px + o, py + o, c, c) end
+      else
+        local im = (k == "dog" and dogIcon) or (k == "low" and lowDog) or (k == "girl" and girlIcon) or (k == "ball" and ballDot) or arrows[k]
+        local px, py = at(st[2], st[3]); lg.draw(im, px + o, py + o, 0, c)
+      end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+  return true
+end
+U.PICTS = PICT
+
 return U

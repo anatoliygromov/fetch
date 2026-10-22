@@ -72,7 +72,7 @@ return function(api)
   end))
 
   -- the hints: every one fits the panel; Pepper's have a known button and 1 to 3 words
-  add(check("hints: all fit the panel, Pepper's are 1 to 3 words", function()
+  add(check("hints: all fit the panel, Pepper's are 1 to 3 words with a picture sign", function()
     local bad, n = {}, 0
     for _, l in ipairs(F.levels) do
       if l.exists then
@@ -82,7 +82,8 @@ return function(api)
           local L = T.layout({ who = who, btn = h.btn, text = h.text }, "bottom")
           local words = select(2, h.text:gsub("%a+", ""))                  -- "+" is not a word
           if L.x0 < 0 or L.x1 > 320 or #L.rows > 2 or L.scale < 2 or (h.btn and (words > 3 or #L.rows > 1))
-            or (h.btn and not ({ a = 1, b = 1, x = 1, y = 1, down = 1 })[h.btn]) or h.text:find("\226\128\148") then bad[#bad + 1] = l.name .. ": " .. h.text end
+            or (h.btn and not ({ a = 1, b = 1, x = 1, y = 1, down = 1, right = 1 })[h.btn]) or h.text:find("\226\128\148")
+            or (h.btn and not T.picFor({ btn = h.btn, text = h.text })) then bad[#bad + 1] = l.name .. ": " .. h.text end
         end
       end
     end

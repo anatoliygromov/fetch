@@ -234,7 +234,7 @@ L.hints = {
   { x0 = 660,  x1 = 736,  btn = "a",    text = "TAP: HOP" },
   { x0 = 0,    x1 = 2880, btn = "y",    text = "BARK: SHOO!",        need = "goose" },
   { x0 = 1960, x1 = 2230, btn = "a",    text = "STOP, THEN HOP" },            -- onto the creek's stones
-  { x0 = 1300, x1 = 1328, btn = "a",    text = "HOLD + PUSH: CLIMB" },
+  { x0 = 1300, x1 = 1328, btn = "a",    text = "HOLD: CLIMB" },
   { x0 = 0,    x1 = 2880, btn = "b",    text = "HOLD: SNEAK",        need = "magpieahead" },
   { x0 = 100,  x1 = 176,  btn = "a",    text = "TAP: HOP" },            -- onto the log (once she sneaks)
   { x0 = 800,  x1 = 860,  text = "RIDE THE DUCK BOAT!", maxY = 196 },

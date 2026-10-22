@@ -849,7 +849,7 @@
   <object id="155" type="hints" x="1300" y="-100" width="28" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
-    <property name="text" value="HOLD + PUSH: CLIMB"/>
+    <property name="text" value="HOLD: CLIMB"/>
     <property name="btn" value="a"/>
    </properties>
   </object>

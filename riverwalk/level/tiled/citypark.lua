@@ -2517,7 +2517,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1",
-            ["text"] = "HOLD + PUSH: CLIMB",
+            ["text"] = "HOLD: CLIMB",
             ["btn"] = "a",
           },
         },
