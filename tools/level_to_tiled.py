@@ -7,6 +7,9 @@
                                                             a Tiled map -> the Lua export the game loads
                                                             (what Tiled's File > Export does; default target:
                                                             the one stored in the map, riverwalk/level/tiled/)
+  python3 tools/level_to_tiled.py --upgrade maps/*.tmx      older maps -> drag-safe fields (relx. / rely. / relxy.,
+                                                            hints with a height as boxes), in place, and exports
+                                                            them; the levels the game loads stay the same
   python3 tools/level_to_tiled.py --tileset                 (re)draws maps/terrain.png
   options: --out DIR (where the .tmx go, default maps/), --export-dir DIR (default riverwalk/level/tiled/)
 
@@ -25,6 +28,10 @@ the same rows and the same table L. The rules (docs/tiled.md has them for design
   * The object's name is the field "name" (a property "name" wins, so name = "" survives the trip).
   * Every other custom property is copied as it is. A text property that starts with "{" is a Lua table, written
     the way the level files write it, e.g. call = "{ 600, 830 }".
+  * Drag-safe fields (REL below): positions that belong to an object (a boat's from / to, a lift's fromY / toY, a
+    goose's x0 / x1...) are stored as offsets from the object's own x and y: relx.<field>, rely.<field>,
+    relxy.<field>. The loader adds the position back, so dragging the object moves them too. A hint with a height
+    (minY, maxY) is a box in the map: its top edge is minY, its bottom edge maxY ("-" in box: that edge does not count).
   * Map properties are the level's other fields (time, art, scenery, intro...). A dotted name sets a nested field:
     "magpie.flee" -> L.magpie.flee. An empty list is kept as "{}", so it still exists.
 
@@ -82,6 +89,21 @@ POSITIONAL = {"hatches": ["1", "2", "3"]}
 SKIP = {"map"}
 # properties shown first in Tiled
 FIRST = ["kind", "layer", "art", "label", "text", "btn", "need"]
+# Drag-safe fields: positions that belong to an object are stored as offsets from the object's own x and y (a
+# rectangle's top left corner, a point's pin), as the property relx.<field> (x), rely.<field> (y) or relxy.<field>
+# (points: { x =, y = } or { x, y }, or a list of them). riverwalk/tiled.lua adds the object's position back.
+# So dragging an object in Tiled moves everything that belongs to it. Per class: field -> axis.
+REL = {
+    "movers": {"from": "x", "to": "x", "call": "x", "rope": "x", "fromY": "y", "toY": "y", "winch": "xy"},
+    "critters": {"x0": "x", "x1": "x"},             # a goose (a point): the stretch it walks
+    "props": {"ax": "x", "ay": "y"},                # River Walk's pictures: their anchor
+    "pieces": {"bx0": "x", "bx1": "x", "door": "y"},  # a kiosk's booth, the kennel's doorway
+    "barrels": {"trigger": "x", "rest": "xy"},
+    "bikes": {"endX": "x", "depot": "x"},           # (a band: x only; its minY is not used by the game)
+}
+REL_PREFIX = {"x": "relx.", "y": "rely.", "xy": "relxy."}
+# hints with a height (minY, maxY: where her feet must be) are boxes in the map: top = minY, bottom = maxY
+HEIGHT_BOX = {"hints": ("minY", "maxY")}
 
 
 # ---------------------------------------------------------------------------------------------------- reading Lua
@@ -125,6 +147,44 @@ def read_level(name):
 def read_rows(path):
     with open(path) as f:
         return [line.rstrip("\n") for line in f if line.strip("\n")]
+
+
+# -------------------------------------------------------------------------------------------- relative positions
+def shift(v, axis, bx, by):
+    """v plus the object's position (bx, by); with -bx, -by: an absolute value as an offset. See REL."""
+    if isinstance(v, bool) or not isinstance(v, (int, float, list, dict)):
+        return v
+    if isinstance(v, (int, float)):
+        return v + (by if axis == "y" else bx)
+    if isinstance(v, dict):
+        out = dict(v)
+        if axis == "xy":
+            if "x" in v or "y" in v:
+                if isinstance(v.get("x"), (int, float)):
+                    out["x"] = v["x"] + bx
+                if isinstance(v.get("y"), (int, float)):
+                    out["y"] = v["y"] + by
+                return out
+            if isinstance(v.get(1), (int, float)):
+                out[1] = v[1] + bx
+                if isinstance(v.get(2), (int, float)):
+                    out[2] = v[2] + by
+                return out
+        i = 1
+        while i in v:
+            out[i] = shift(v[i], axis, bx, by)
+            i += 1
+        return out
+    if axis == "xy" and v and isinstance(v[0], (int, float)) and not isinstance(v[0], bool):
+        return [v[0] + bx] + ([v[1] + by] if len(v) > 1 else []) + v[2:]
+    return [shift(x, axis, bx, by) for x in v]
+
+
+def make_relative(cls, d, x, y, band):
+    """Moves the fields of REL[cls] in d (an object's custom properties) to relx. / rely. / relxy. offsets."""
+    for field, axis in REL.get(cls, {}).items():
+        if field in d and not (band and axis != "x"):
+            d[REL_PREFIX[axis] + field] = shift(d.pop(field), axis, -x, -y)
 
 
 # --------------------------------------------------------------------------------------------------- Lua literals
@@ -202,7 +262,13 @@ def to_object(item, cls, map_h, positional=None):
             kx1 = "x1" if "x1" in d else "zoneX1"
             x0, x1 = d.pop(kx0), d.pop(kx1)
             side = [kx0, kx1, "-", "-"]
-            if "y0" in d:
+            hb = HEIGHT_BOX.get(cls)
+            if hb and "y0" not in d and (hb[0] in d or hb[1] in d):   # a hint with a height: a box in the map
+                side[2] = hb[0] if hb[0] in d else "-"
+                side[3] = hb[1] if hb[1] in d else "-"
+                y0 = d.pop(hb[0]) if hb[0] in d else 0       # no minY: from the top of the map
+                y1 = d.pop(hb[1]) if hb[1] in d else map_h   # no maxY: to the bottom
+            elif "y0" in d:
                 y0 = d.pop("y0")
                 side[2] = "y0"
                 if "y1" in d:
@@ -225,6 +291,7 @@ def to_object(item, cls, map_h, positional=None):
                 o["name"] = n
             else:
                 o["props"].append(prop("name", n))
+        make_relative(cls, d, o["x"], o["y"], o.get("band"))
     for k in order_keys(d.keys()):
         o["props"].append(prop(str(k), d[k]))
     return o
@@ -533,6 +600,135 @@ def write_tileset(path):
     im.save(path)
 
 
+# --------------------------------------------------------------------------- upgrade: an older map made drag-safe
+TOKEN = re.compile(r'\s*(?:(-?\d+\.?\d*(?:[eE][-+]?\d+)?)|("(?:[^"\\]|\\.)*")|([A-Za-z_][A-Za-z0-9_]*)|(.))')
+
+
+def parse_lua(text):
+    """A Lua table literal as the level files write them ({ 600, 830 }, { x = 1, y = 2 }, nested) -> list / dict."""
+    toks = []
+    pos = 0
+    text = text.strip()
+    while pos < len(text):
+        m = TOKEN.match(text, pos)
+        if not m or m.end() == pos:
+            break
+        pos = m.end()
+        n, st, ident, ch = m.groups()
+        if n is not None:
+            toks.append(("v", int(n) if re.match(r"^-?\d+$", n) else float(n)))
+        elif st is not None:
+            toks.append(("v", json.loads(st)))
+        elif ident is not None:
+            toks.append(("v", {"true": True, "false": False}.get(ident, ident)) if ident in ("true", "false")
+                        else ("id", ident))
+        elif ch.strip():
+            toks.append(("p", ch))
+    i = 0
+
+    def value():
+        nonlocal i
+        kind, v = toks[i]
+        if kind == "p" and v == "{":
+            i += 1
+            d, n = {}, 0
+            while not (toks[i] == ("p", "}")):
+                if toks[i][0] == "id" and i + 1 < len(toks) and toks[i + 1] == ("p", "="):
+                    k = toks[i][1]
+                    i += 2
+                    d[k] = value()
+                elif toks[i] == ("p", "["):
+                    i += 1
+                    k = value()
+                    i += 2                          # ] =
+                    d[k] = value()
+                else:
+                    n += 1
+                    d[n] = value()
+                if toks[i] == ("p", ","):
+                    i += 1
+            i += 1
+            if d and all(isinstance(k, int) for k in d) and sorted(d) == list(range(1, len(d) + 1)):
+                return [d[k] for k in range(1, len(d) + 1)]
+            return d if d else []
+        i += 1
+        return v
+    return value()
+
+
+def box_sides(props):
+    b = props.get("box")
+    return [s.strip() for s in b.get("value", "").split(",")] if b is not None else ["x0", "x1", "y0", "y1"]
+
+
+def remove_child(parent, el):
+    kids = list(parent)
+    i = kids.index(el)
+    if i > 0 and i == len(kids) - 1:
+        kids[i - 1].tail = el.tail                  # keep the indentation of the closing tag
+    parent.remove(el)
+
+
+def upgrade_tmx(src, dst):
+    """Rewrites an older Tiled map with the drag-safe fields (REL, HEIGHT_BOX); everything else stays as it is
+    (notes, layers, object ids). The level the game loads from it is the same. Returns how many fields moved."""
+    tree = ET.parse(src)
+    root = tree.getroot()
+    map_h = int(root.get("height")) * int(root.get("tileheight"))
+    moved = 0
+    for og in root.iter("objectgroup"):
+        lname = og.get("name", "")
+        if lname.startswith("#"):
+            continue
+        for o in og.findall("object"):
+            cls = o.get("type") or o.get("class") or lname
+            if cls.startswith("#") or o.find("text") is not None:
+                continue
+            pel = o.find("properties")
+            if pel is None:
+                continue
+            props = {p.get("name"): p for p in pel.findall("property")}
+            point = o.find("point") is not None
+            sides = box_sides(props) + ["-"] * 4
+            band = not point and all(s in ("-", "") for s in sides[2:4])
+            hb = HEIGHT_BOX.get(cls)
+            if hb and band and (hb[0] in props or hb[1] in props):
+                top = tmx_value(props[hb[0]]) if hb[0] in props else 0
+                bottom = tmx_value(props[hb[1]]) if hb[1] in props else map_h
+                side = sides[:2] + [hb[0] if hb[0] in props else "-", hb[1] if hb[1] in props else "-"]
+                while side[-1] == "-":
+                    side.pop()
+                o.set("y", lua_num(top))
+                o.set("height", lua_num(bottom - top))
+                for f in hb:
+                    if f in props:
+                        remove_child(pel, props.pop(f))
+                        moved += 1
+                if "box" in props:
+                    props["box"].set("value", ",".join(side))
+                band = False
+            x, y = round(float(o.get("x", 0))), round(float(o.get("y", 0)))
+            for field, axis in REL.get(cls, {}).items():
+                if field not in props or (band and axis != "x"):
+                    continue
+                p = props.pop(field)
+                v = tmx_value(p)
+                if isinstance(v, str) and v.lstrip().startswith("{"):
+                    v = parse_lua(v)
+                n, t, text = prop(REL_PREFIX[axis] + field, shift(v, axis, -x, -y))
+                p.set("name", n)
+                p.set("value", text)
+                if t == "string":
+                    p.attrib.pop("type", None)
+                else:
+                    p.set("type", t)
+                moved += 1
+    body = ET.tostring(root, encoding="unicode").replace(" />", "/>")
+    with open(dst, "w") as f:
+        f.write('<?xml version="1.0" encoding="UTF-8"?>\n' + body + "\n")
+    return moved
+
+
 def level_names():
     with open(os.path.join(GAME, "levels.lua")) as f:
         return re.findall(r'name\s*=\s*"([a-z0-9_]+)"', f.read())
@@ -540,7 +736,10 @@ def level_names():
 
 def convert(name, out_dir, export_dir):
     L = read_level(name)
-    rows = read_rows(os.path.join(LEVELS, name + ".map"))
+    rows = L.pop("rows", None)                      # a level drawn in Tiled only: its rows come from its export
+    mapfile = os.path.join(LEVELS, name + ".map")
+    if os.path.exists(mapfile) or not rows:
+        rows = read_rows(mapfile)
     os.makedirs(out_dir, exist_ok=True)
     tileset = os.path.join(out_dir, "terrain.png")
     if not os.path.exists(tileset):
@@ -566,6 +765,26 @@ def main(argv):
         return
     if argv[0] == "--export":
         print("exported", export(argv[1], argv[2] if len(argv) > 2 else None))
+        return
+    if argv[0] == "--upgrade":
+        # in place (and its export, to the target stored in the map), or into --out / --export-dir
+        for src in argv[1:]:
+            name = os.path.splitext(os.path.basename(src))[0]
+            dst = os.path.join(out_dir, os.path.basename(src)) if out_dir != MAPS else src
+            if dst != src:
+                os.makedirs(out_dir, exist_ok=True)
+                ts = os.path.join(os.path.dirname(os.path.abspath(src)), "terrain.png")
+                if os.path.exists(ts) and not os.path.exists(os.path.join(out_dir, "terrain.png")):
+                    shutil.copy(ts, out_dir)
+            n = upgrade_tmx(src, dst)
+            has_target = ET.parse(dst).getroot().find("editorsettings/export") is not None
+            if export_dir != EXPORTS:
+                lua = export(dst, os.path.join(export_dir, name + ".lua"))
+            elif has_target and dst == src:
+                lua = export(dst)
+            else:
+                lua = None
+            print("%s: %d fields made drag-safe%s" % (dst, n, ", exported " + lua if lua else ""))
         return
     if argv[0] == "--tileset":
         write_tileset(os.path.join(out_dir, "terrain.png"))

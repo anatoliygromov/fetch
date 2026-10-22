@@ -49,6 +49,12 @@ return function(path)
   local src = f:read("*a"):gsub("local USE_TILED = true", "local USE_TILED = false")
   f:close()
   local chunk = assert((loadstring or load)(src, path))
+  -- a level drawn in Tiled only (level/citypark_tall.lua: return require("tiled").load(...)) loads its export;
+  -- its terrain comes back as L.rows
+  local game = path:match("^(.*)level/[^/]+%.lua$") or ""
+  package.path = game .. "?.lua;" .. package.path
+  local ok, T = pcall(require, "tiled")
+  if ok then T.base = game end
   local out = {}
   enc(chunk(), out)
   return table.concat(out)

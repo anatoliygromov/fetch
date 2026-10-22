@@ -28,8 +28,13 @@ local function compile(src, name)
   return assert(f, err)
 end
 
--- the original level: its .lua with the Tiled switch off, and its .map
+-- the original level: its .lua with the Tiled switch off, and its .map (a level drawn in Tiled only, with no .map:
+-- the level as the game loads it, from its committed export)
 local function original(name)
+  if not io.open(GAME .. "level/" .. name .. ".map", "rb") then
+    local L = dofile(GAME .. "level/" .. name .. ".lua")
+    return L, L.rows
+  end
   local src = readFile(GAME .. "level/" .. name .. ".lua"):gsub("local USE_TILED = true", "local USE_TILED = false")
   local L = compile(src, name .. ".lua")()
   local rows = {}
@@ -129,6 +134,69 @@ elseif mode == "game" then
       print(("PASS  %-10s the game loads it from level/%s.lua and .map"):format(name, name))
     end
   end
+elseif mode == "moved" then
+  -- every object of the maps in <dirB> was dragged by (dx, dy) and dy / 8 empty rows added at the top
+  -- (tools/tiled/move_map.py, as Map > Resize Map with an offset does): every position that belongs to an object
+  -- moved with it, nothing else changed
+  local dirA, dirB, dx, dy = arg[3], arg[4], tonumber(arg[5]), tonumber(arg[6])
+  local X = { x = 1, x0 = 1, x1 = 1, zoneX0 = 1, zoneX1 = 1, from = 1, to = 1, call = 1, rope = 1, endX = 1,
+    depot = 1, trigger = 1, ax = 1, bx0 = 1, bx1 = 1 }
+  local Y = { y = 1, y0 = 1, y1 = 1, fromY = 1, toY = 1, minY = 1, maxY = 1, ay = 1, door = 1 }
+  local XY = { winch = 1, rest = 1 }
+  local function add(v, a, b)                     -- v + (a, b): numbers, lists, { x =, y = }, lists of points
+    if type(v) == "number" then return v + a end
+    local out = {}
+    for k, w in pairs(v) do out[k] = w end
+    if b == nil then for i, w in ipairs(v) do out[i] = add(w, a) end
+    elseif v.x or v.y then out.x, out.y = v.x + a, v.y + b
+    elseif type(v[1]) == "number" then out[1], out[2] = v[1] + a, v[2] + b
+    else for i, w in ipairs(v) do out[i] = add(w, a, b) end end
+    return out
+  end
+  local function expect(L)                         -- L with every object's positions moved by (dx, dy)
+    local E = {}
+    for k, v in pairs(L) do E[k] = v end
+    local function item(it, class)
+      if type(it) ~= "table" then return it end
+      local e = {}
+      for k, v in pairs(it) do e[k] = v end
+      if class == "hatches" then e[1], e[2], e[3] = it[1] + dx, it[2] + dx, it[3] + dy; return e end
+      for k, v in pairs(it) do
+        if X[k] then e[k] = add(v, dx)
+        elseif Y[k] and not (class == "bikes" and k == "minY") then e[k] = add(v, dy)  -- (a bike zone's minY: not used)
+        elseif XY[k] then e[k] = add(v, dx, dy)
+        elseif type(v) == "table" and type(v[1]) == "table" and (v[1].x or v[1].x0) then  -- magpie.perches, fox.hideouts
+          local l = {}
+          for i, w in ipairs(v) do l[i] = item(w, class .. "." .. k) end
+          e[k] = l
+        end
+      end
+      return e
+    end
+    for k, v in pairs(L) do
+      if type(v) == "table" and (v.x or v.x0) then E[k] = item(v, k)
+      elseif type(v) == "table" and type(v[1]) == "table" and k ~= "scroll" then
+        local l = {}
+        for i, w in ipairs(v) do l[i] = item(w, k) end
+        E[k] = l
+      elseif type(v) == "table" and k == "magpie" then E[k] = item(v, k)
+      end
+    end
+    return E
+  end
+  for _, name in ipairs(names(7)) do
+    local La, Ra = export(dirA, name)
+    local Lb, Rb = export(dirB, name)
+    if not (La and Lb) then print("FAIL  " .. name .. ": an export is missing"); ok = false
+    else
+      local R = {}
+      for i = 1, dy / 8 do R[i] = ("."):rep(#Ra[1]) end
+      for i = 1, #Ra do R[#R + 1] = Ra[i] end
+      local same = report(name, ("dragged by (%d, %d): every position moved with its object"):format(dx, dy),
+        compare(expect(La), R, Lb, Rb), Lb, Rb, "FAIL")
+      ok = ok and same
+    end
+  end
 elseif mode == "unit" then
   -- a tall map (50 rows, 400 px) with kinds of objects no level has yet: the loader needs no change for them
   local data = {}
@@ -142,7 +210,9 @@ elseif mode == "unit" then
       { type = "tilelayer", name = "terrain", width = 4, height = 50, encoding = "lua", data = data },
       { type = "objectgroup", name = "lifts", objects = {
         { id = 1, name = "LIFT", type = "", shape = "rectangle", x = 8, y = 380.4, width = 16, height = 4,
-          properties = { travel = 300, path = "{ 380, 80 }" } },
+          properties = { travel = 300, path = "{ 380, 80 }", ["relx.from"] = 0, to = 999, ["relx.to"] = 8,
+            ["rely.toY"] = -300, ["relxy.winch"] = "{ x = 4, y = -10 }", ["relx.rope"] = "{ 0, 16, dy = 3 }",
+            ["relxy.rest"] = "{ { 1, 2 }, { 3, 4 } }" } },
         { id = 2, name = "", type = "", shape = "polyline", x = 10, y = 20, polyline = { { x = 0, y = 0 }, { x = 0, y = -12.6 } },
           properties = {} },
         { id = 3, name = "a note", type = "", shape = "text", x = 0, y = 0, width = 10, height = 10, properties = {} } } },
@@ -155,13 +225,15 @@ elseif mode == "unit" then
   map.layers[4].objects[3].properties = { box = "1, 2, -, 3" }
   local L, rows = T.parse(map)
   local want = { time = 90, lift = { speed = 40 }, notes = { 1, { a = "b" } },
-    lifts = { { name = "LIFT", x0 = 8, x1 = 24, y0 = 380, y1 = 384, travel = 300, path = { 380, 80 } },
+    lifts = { { name = "LIFT", x0 = 8, x1 = 24, y0 = 380, y1 = 384, travel = 300, path = { 380, 80 },
+                from = 8, to = 16, toY = 80, winch = { x = 12, y = 370 }, rope = { 8, 24, dy = 3 },
+                rest = { { 9, 382 }, { 11, 384 } } },
               { x = 10, y = 20, points = { { 10, 20 }, { 10, 7 } } } },
     exit = { x = 30, y = 392, to = "night" }, bones = { { x = 12, y = 100, super = true } }, hatches = { { 4, 13, 149 } } }
   local out = {}
   diff(want, L, "L", out, true)
   if #rows ~= 50 or rows[50] ~= "####" or rows[21] ~= ".~.." or rows[1] ~= "...." then out[#out + 1] = "terrain rows" end
-  ok = report("tall map", "50 rows, new object kinds (lifts, polyline, exit), notes skipped", out, L, rows, "FAIL")
+  ok = report("tall map", "50 rows, new object kinds (lifts, polyline, exit), relx / rely / relxy fields, notes skipped", out, L, rows, "FAIL")
 else
   error("check_tiled.lua: unknown mode " .. tostring(mode))
 end

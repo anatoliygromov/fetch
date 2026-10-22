@@ -2,6 +2,27 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `polish/round2`: Tiled maps you can drag safely, and the guide brought up to date (22 Oct)
+Built on `round1`. Tools and docs only: no engine, level or map files changed.
+- **Drag-safe fields.** Positions that belong to an object (a boat's or lift's `from`, `to`, `fromY`, `toY`,
+  `winch`, a ferry's `call` and `rope`, a goose's `x0` / `x1`, River Walk's picture anchor `ax` / `ay`, a kiosk's
+  `bx0` / `bx1`, the kennel's `door`, a barrel's `trigger` and `rest`, a bike or tram zone's `endX` and `depot`) are
+  now stored in the Tiled map as offsets from the object itself: `relx.<field>` (from its x), `rely.<field>` (from
+  its y), `relxy.<field>` (points). `riverwalk/tiled.lua` adds the object's position back, so dragging an object
+  in Tiled, or adding rows at the top of a map, moves everything that belongs to it. A hint with a height (`minY`,
+  `maxY`) is now a box in the map instead of a band above it: its top edge is `minY`, its bottom edge `maxY`.
+  Older maps and exports with plain numbers load exactly as before. (A bike zone's `minY` stays a plain number:
+  the game does not use it.)
+- **`tools/level_to_tiled.py --upgrade maps/*.tmx`** rewrites older maps with the drag-safe fields, in place,
+  keeping notes, layers and object ids, and exports them; the levels the game loads stay the same. The maps on this
+  branch are not upgraded yet (the engine branch is editing `citypark_tall.tmx`): run it once after merging.
+  The converter also reads a level drawn only in Tiled (`citypark_tall`: its table and rows from its export).
+- **`tools/check_tiled.sh`** now covers seven levels (the five, `lab_tall`, `citypark_tall`): the round trip (also
+  through Tiled 1.8.2's own export) gives identical tables and rows; the committed maps upgraded in a scratch folder
+  give the same levels; and every map, fresh and upgraded, dragged by (16, 80) with 10 rows added on top
+  (`tools/tiled/move_map.py`) gives the same level with every position moved along. On the old maps that last
+  check fails, as it should (night: 12 boat `from` / `to` left behind).
+
 ## The old title is back (22 Oct, evening)
 - The hand-pixeled title (branch `title/redraw`) was rejected by the owner: the 19 Oct title has far more charm.
   Its merge is reverted on `round1`; the branch is kept for reference. The window is now called "FETCH!".
