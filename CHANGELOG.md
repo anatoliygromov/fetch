@@ -2,6 +2,21 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `title/pixels`: real pixels on the title screen (22 Oct)
+Built on `assets/v2`.
+- **The title picture is redrawn by pixel-art rules** (`tools/title_pixel.py`, called by `tools/make_title.py`).
+  The old cut of the painting kept its AI texture: noisy fur, random speckle where a pixel artist would use an
+  ordered pattern, wobbly double outlines, 64 colours. Now: flat colour clusters (the painting averaged per game
+  pixel, smoothed with edges kept), 30 colours snapped to the VGA 6-bit grid, no cluster smaller than 4 px unless
+  it is a real highlight, one even outline on every strong edge (the darker side takes a darker shade of its own
+  colour), and drawn lines (mouth, wink, ears) thinned to 1 px with short scraps dropped.
+- **The logo is rebuilt**: cleaned letter shapes, four bands of yellow to orange joined by 2x2 checker rows, a light
+  top edge, a dark lower edge, a navy outline and a drop shadow. The subtitle and PRESS ANY KEY boxes use 4
+  colours each, so the letters are crisp.
+- Composition, animation (sparkles, blink, bird, logo shine, lamps) and positions are unchanged; the layers were
+  re-cut from the new picture. The window is called "FETCH!" (was "Pepper: River Walk (greybox)").
+- Checks: flow 94/94, PEPPER UNCHANGED (4591 steps).
+
 ## Branch `assets/v2`: the tram fix and art for the new pieces (19 Oct)
 Built on `levels/v2`.
 - **The trams end in tram sheds** (Downtown). Before, the first tram vanished in plain view before the fountain,

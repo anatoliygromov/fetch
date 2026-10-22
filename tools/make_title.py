@@ -3,6 +3,7 @@
 #      (the painting is pixel art at about 7.5 source px per game px, but not on an exact grid).
 #   2. Clean-up: a 64-colour palette (k-means in Lab), then despeckle: a stray pixel takes the colour around it
 #      when that colour is close (letters, outlines and highlights survive).
+#   2b. Real pixels: tools/title_pixel.py redraws that cut by pixel-art rules (see there).
 #   3. Layers for the animation, written to riverwalk/art/title/ and riverwalk/title_data.lua:
 #      base.png       the screen with the river sparkles and the bird taken out (they are drawn live)
 #      press_off.png  the "PRESS ANY KEY" box without its text (the text blinks)
@@ -44,6 +45,11 @@ for _ in range(2):
                     out[y, x] = m
     idx = out
 img = pal[idx].astype(int)
+# ---- 2b. real pixels (22 Oct): the cut above still had the painting's AI texture. tools/title_pixel.py redraws
+#      it by pixel-art rules (flat clusters, 30 colours on the VGA grid, sel-out outlines, a rebuilt logo, crisp boxes)
+import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from title_pixel import repixel
+img = repixel(src, img.astype(np.uint8))
 base = img.copy()
 L = 0.3 * img[..., 0] + 0.59 * img[..., 1] + 0.11 * img[..., 2]
 
