@@ -2,6 +2,30 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `audio/music`: music, the first real tunes (22 Oct)
+Built on main (v0.5). Composed and synthesised by our own code (`tools/make_music.py`), no services.
+- **Tunes** in `riverwalk/music/` (OGG Vorbis, 22050 Hz mono, like the sound effects): the title theme (D major,
+  132 bpm, 20 bars, 36.4 s loop), City Park (G major with an E minor sneaking section, 126 bpm with a light
+  shuffle, 42 bars, 80 s loop), and three jingles: level clear (3.6 s), game over (2.9 s) and the GOOD GIRL! sting
+  when Pepper gives Mia the ball (1.6 s). The sound is a 90s sound chip: two pulse channels (duty 12.5, 25 and
+  50 %), a 16-step triangle bass and LFSR noise drums, with vibrato, chord arpeggios and an echo on pulse 2.
+- **The composer** (`tools/make_music.py`): the songs are data (a note string per channel, bar by bar; chords per
+  bar drive the generated bass and arpeggio parts), rendered at 44100 Hz and filtered down. A loop is rendered
+  twice over and its tail folded onto the start, so it loops without a click. Every tune is set to -17 dB RMS
+  with its peak under -1 dBFS. It also writes `title.mod`, the title theme as a 4-channel ProTracker module
+  (29 KB) that LOVE plays through libmodplug and that loops by itself; the game plays the OGG.
+- **The game** (`sfx.lua`): `S.music(on, name)` plays the track `music/<name>.ogg` (or .xm / .mod): `title` for
+  the title and the menus, each level by its name. Levels without a tune yet get the old synthesised loop, now
+  built the first time it is needed instead of at start-up. Music off pauses (the pause goes on where it
+  stopped); a new track starts from the top; one streamed track at a time. `S.play("clear" / "over" / "fetch")`
+  plays the jingle when the music is on, else the short sound effect as before. Music plays at 0.6 (about 6 dB
+  under the sound effects); the player's volume scales everything.
+- **Hooks in `main.lua`** (one line each): `startLevel` passes the level's name to `S.music`, `toTitle` and
+  `toMenu` pass `"title"`, and the line that notes the clear time (the ball given) plays `S.play("fetch")`.
+- **Checks:** `tools/check_music.sh` (every file decodes in LOVE with its expected length, peak under -1 dBFS,
+  loops join without a jump, jingles end in silence, the module loops by itself, `sfx.lua` picks the right
+  track). `check_pepper` UNCHANGED, `check_flow` 94/94, City Park autopilot clears.
+
 ## Branch `assets/v2`: the tram fix and art for the new pieces (19 Oct)
 Built on `levels/v2`.
 - **The trams end in tram sheds** (Downtown). Before, the first tram vanished in plain view before the fountain,
