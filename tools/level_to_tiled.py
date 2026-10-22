@@ -97,7 +97,8 @@ REL = {
     "movers": {"from": "x", "to": "x", "call": "x", "rope": "x", "fromY": "y", "toY": "y", "winch": "xy"},
     "critters": {"x0": "x", "x1": "x"},             # a goose (a point): the stretch it walks
     "props": {"ax": "x", "ay": "y"},                # River Walk's pictures: their anchor
-    "pieces": {"bx0": "x", "bx1": "x", "door": "y"},  # a kiosk's booth, the kennel's doorway
+    "pieces": {"bx0": "x", "bx1": "x", "door": "y", "foot": "y"},  # a kiosk's booth, the kennel's doorway, the path
+                                                    # a piece stands on (tall levels)
     "barrels": {"trigger": "x", "rest": "xy"},
     "bikes": {"endX": "x", "depot": "x"},           # (a band: x only; its minY is not used by the game)
 }

@@ -845,10 +845,16 @@ end
 -- levels keep scenery = "greybox" for the game rules (no road, no traffic); only the drawing changes. Every piece is
 -- placed from its prop's collision box, so a box and its art stay together.
 --   obstacles (things Pepper stands on, bumps into, crawls under): crisp, mid-tone, their own 1 px dark outline,
---             standing on her line (y 184)
+--             standing on her line (y 184; in a tall level the path line Sc.FOOT, see dy() below)
 --   decoration: faded DECOR_FADE towards the haze, no outline, its base on the back edge (y 174)
 --   foreground: dark, only below her lowest line (tops at y 221+), never over her
 -- ===================================================================================================================
+-- Any path height (tall levels): the art was drawn for the path at y 184. Sc.FOOT is the level's path line (its
+-- def.foot, default 184; stage.lua sets it before drawing), and every fixed y below is placed relative to it
+-- (dy() = FOOT - 184), so a flat level draws exactly as before and the tall City Park's low road (path y 328)
+-- looks exactly as City Park does.
+Sc.FOOT = 184
+local function dy() return Sc.FOOT - 184 end
 local TA = {}
 local function fadeImg(n, k)
   local d = love.image.newImageData("art/scene/" .. n .. ".png")
@@ -982,24 +988,25 @@ function Sc.drawFarArt(L, camx, t, w)
   for _, p in ipairs(pools(w)) do
     local x0, x1 = math.floor(p.x0 - camx), math.floor(p.x1 - camx)
     if x1 > -2 and x0 < 322 then
-      lg.setScissor(math.max(0, x0), 0, math.max(0, math.min(320, x1) - math.max(0, x0)), 240)
+      lg.setScissor(math.max(0, x0), 0, math.max(0, math.min(320, x1) - math.max(0, x0)), 240)   -- (screen space)
       local ox = math.floor(camx) % gw
       if L.style == "park" then                                   -- the lawn goes on behind, then an earth bank
         for x = -ox - gw, 320, gw do
-          lg.draw(T.ground, T.bankTop, x, 172); lg.draw(T.ground, T.bankEarth, x, 181); lg.draw(T.ground, T.bankEarth, x, 201)
+          lg.draw(T.ground, T.bankTop, x, 172 + dy()); lg.draw(T.ground, T.bankEarth, x, 181 + dy()); lg.draw(T.ground, T.bankEarth, x, 201 + dy())
         end
       else                                                        -- the pavement's back, then the basin's granite
-        for x = -ox - gw, 320, gw do lg.draw(T.ground, T.bankTop, x, 172) end
-        lg.setColor(0.62, 0.59, 0.56); lg.rectangle("fill", x0, 182, x1 - x0, p.y0 - 182)
-        lg.setColor(0.76, 0.73, 0.69); lg.rectangle("fill", x0, 182, x1 - x0, 2)
+        local d = dy()
+        for x = -ox - gw, 320, gw do lg.draw(T.ground, T.bankTop, x, 172 + d) end
+        lg.setColor(0.62, 0.59, 0.56); lg.rectangle("fill", x0, 182 + d, x1 - x0, p.y0 - 182 - d)
+        lg.setColor(0.76, 0.73, 0.69); lg.rectangle("fill", x0, 182 + d, x1 - x0, 2)
         lg.setColor(0.45, 0.42, 0.40)
-        for x = x0 - (x0 % 18), x1, 18 do lg.rectangle("fill", x, 184, 1, p.y0 - 184) end
+        for x = x0 - (x0 % 18), x1, 18 do lg.rectangle("fill", x, 184 + d, 1, p.y0 - 184 - d) end
       end
       lg.setColor(0.18, 0.2, 0.22); lg.rectangle("fill", x0, p.y0 - 1, x1 - x0, 1)   -- the water's edge
       Look.use("water")
       local tint = L.style == "park" and { 0.80, 0.93, 0.86 } or { 0.92, 1, 1 }
       local ww, wh = A.water:getDimensions()
-      for y = p.y0, 239 do
+      for y = p.y0, w.height - 1 do                               -- (down to the bottom of the world)
         local row = math.min(wh - 1, 20 + (y - p.y0))
         local depth = (y - p.y0) / 32
         local o = math.floor(camx + math.sin(t * 1.3 + y * 0.55) * (0.6 + depth) + t * (1 + 2 * depth) + 0.5) % ww
@@ -1017,7 +1024,8 @@ end
 
 -- the ground of an art level, painted once: the path / pavement strip on every walkable top (its back edge 12 px
 -- above Pepper's line), dark edges on the cut faces (the pond's banks); Downtown's river stairs as stone steps.
-function Sc.paintGroundArt(w, style)
+function Sc.paintGroundArt(w, style, foot)
+  foot = foot or 184                                              -- (the path line: a tall level's def.foot)
   local T = Sc.townArt(style)
   local gw, gh = T.ground:getDimensions()
   return chunked(w, function(xa, xb)                              -- (painted once per chunk: Sc.CHUNK)
@@ -1028,9 +1036,9 @@ function Sc.paintGroundArt(w, style)
     cover[x] = merged
     for _, m in ipairs((x >= xa and x < xb) and merged or {}) do      -- (drawn in the chunk's columns only)
       local top = m[1]
-      if top < 184 then top = 184 end                             -- the slide tower: the path goes on behind it
+      if top < foot then top = foot end                           -- the slide tower: the path goes on behind it
       local stair = sl and style == "town"
-      if stair then top = 184 + math.floor((top - 184) / 4) * 4 end   -- the river stairs: 4 px steps
+      if stair then top = foot + math.floor((top - foot) / 4) * 4 end   -- the river stairs: 4 px steps
       lg.setColor(1, 1, 1, 1)
       clip(x, 0, 1, m[2])
       lg.draw(T.ground, T.groundQ[x % gw], x, top - 12)
@@ -1050,7 +1058,7 @@ function Sc.paintGroundArt(w, style)
   for x = xa, xb - 1 do                                           -- (the chunk's columns)
     if not w:slopeAt(x) then
       for _, m in ipairs(cover[x]) do
-        for y = math.max(m[1], 184), m[2] - 1 do
+        for y = math.max(m[1], foot), m[2] - 1 do
           if (x > 0 and not solid(x - 1, y) and not w:slopeAt(x - 1)) or (x < w.width - 1 and not solid(x + 1, y) and not w:slopeAt(x + 1)) then
             lg.rectangle("fill", x, y, 1, 1)
           end
@@ -1235,11 +1243,12 @@ function Sc.drawPropArt(p, camx, def, kicked)
   if x > 360 or x + w < -120 then return end
   if p.layer == "front" then                                      -- the foreground frame: below Pepper's lines only
     local im = style == "park" and T.bush or T.bollard
-    at(im, x + w / 2 - im:getWidth() / 2, math.max(221, p.y0))
+    at(im, x + w / 2 - im:getWidth() / 2, math.max(221 + dy(), p.y0))
     return
   end
   local n = p.name
   if p.hidden then return end
+  local d = dy()                                                  -- (the art's fixed lines follow the path line)
   if not n or n == "" then
     if style == "park" and underCrown(def, p) then drawBough(p, camx); return end
     local o = owner(def, p)
@@ -1249,30 +1258,30 @@ function Sc.drawPropArt(p, camx, def, kicked)
     if n ~= "CRATES" then return end                              -- the hat (statue), the frame's top bar (FRAME)
   end
   if style == "park" then
-    if n == "GATE" then at(T.gate, x, 175 - T.gate:getHeight())
+    if n == "GATE" then at(T.gate, x, 175 + d - T.gate:getHeight())
     elseif n == "LEAVES" then
       local im = kicked and T.leaves_flat or T.leaves
       at(im, x + w / 2 - im:getWidth() / 2, p.y1 - im:getHeight())
     elseif n == "LOG" then shadowUnder(p, camx); at(T.log, x, p.y0 - 4)
-    elseif n == "BENCH" then Sc.shadow(x + w / 2, 183, w + 10, 5); at(A.bench, x - 3, 184 - A.bench:getHeight())
-    elseif n == "HEDGE" then Sc.shadow(x + w / 2, 183, w + 4, 5); at(T.hedge, x, p.y0)
+    elseif n == "BENCH" then Sc.shadow(x + w / 2, 183 + d, w + 10, 5); at(A.bench, x - 3, 184 + d - A.bench:getHeight())
+    elseif n == "HEDGE" then Sc.shadow(x + w / 2, 183 + d, w + 4, 5); at(T.hedge, x, p.y0)
     elseif n == "STONE" then
       at(T.stone, x - 1, p.y0 - 1)
-      local water = 208                                           -- under the surface: the pond's colour over it
-      lg.setColor(0.33, 0.47, 0.52, 0.55); lg.rectangle("fill", math.floor(x) - 1, water, T.stone:getWidth(), 240 - water)
-    elseif n == "BIN" then shadowUnder(p, camx); at(A.bin, x - 1, 184 - A.bin:getHeight())
+      local water = 208 + d                                       -- under the surface: the pond's colour over it
+      lg.setColor(0.33, 0.47, 0.52, 0.55); lg.rectangle("fill", math.floor(x) - 1, water, T.stone:getWidth(), 240 + d - water)
+    elseif n == "BIN" then shadowUnder(p, camx); at(A.bin, x - 1, 184 + d - A.bin:getHeight())
     elseif n == "PICNIC TABLE" then shadowUnder(p, camx); at(T.table, x, p.y0)
-    elseif n == "OAK" then at(T.oak, x + w / 2 - 94, 175 - T.oak:getHeight())
+    elseif n == "OAK" then at(T.oak, x + w / 2 - 94, 175 + d - T.oak:getHeight())
     elseif n == "BRANCH" then drawBranch(p, named(def, "OAK"), camx)
     elseif n == "SLIDE" or n == "FRAME" then
-      if n == "FRAME" then at(T.frame, x - 1, 119) end            -- (the slide: Sc.drawTerrainArt, over the path)
-    elseif n == "SWINGS" then at(T.swings, x + w / 2 - T.swings:getWidth() / 2, 175 - T.swings:getHeight())
+      if n == "FRAME" then at(T.frame, x - 1, 119 + d) end            -- (the slide: Sc.drawTerrainArt, over the path)
+    elseif n == "SWINGS" then at(T.swings, x + w / 2 - T.swings:getWidth() / 2, 175 + d - T.swings:getHeight())
     elseif n == "WILLOWS" then                                    -- all three willows (decoration, base y 174)
       for i, c in ipairs(willowCrowns(def)) do
-        local im = c.y1 < 120 and T.willow_tall or T.willow
+        local im = c.y1 < 120 + d and T.willow_tall or T.willow
         local cx = math.floor((c.x0 + c.x1) / 2 - camx)
         lg.setColor(1, 1, 1, 1)
-        if i % 2 == 0 then lg.draw(im, cx + 33, 175 - im:getHeight(), 0, -1, 1) else lg.draw(im, cx - 32, 175 - im:getHeight()) end
+        if i % 2 == 0 then lg.draw(im, cx + 33, 175 + d - im:getHeight(), 0, -1, 1) else lg.draw(im, cx - 32, 175 + d - im:getHeight()) end
       end
     elseif n == "WINCH" then                                       -- the second keeper at the duck boat's winch
       if not T.keeperWinch then                                   -- (art/scene/park_keeper_winch.png, 8 x 80 px,
@@ -1281,20 +1290,20 @@ function Sc.drawPropArt(p, camx, def, kicked)
         for i = 1, 8 do T.keeperWinchQ[i] = lg.newQuad((i - 1) * 80, 0, 80, 80, T.keeperWinch:getDimensions()) end
       end
       lg.setColor(1, 1, 1, 1)
-      lg.draw(T.keeperWinch, T.keeperWinchQ[Sc.winchFrame or 1], math.floor(x + w / 2), 174, 0, -1, 1, 60, 79)
+      lg.draw(T.keeperWinch, T.keeperWinchQ[Sc.winchFrame or 1], math.floor(x + w / 2), 174 + d, 0, -1, 1, 60, 79)
     else Sc.drawProp(p, camx, C.prop) end
   else
-    if n == "DOOR" then at(T.door, x, 175 - T.door:getHeight())
+    if n == "DOOR" then at(T.door, x, 175 + d - T.door:getHeight())
     elseif n == "CRATES" then                                     -- a stack of apple crates, 16 px each
       local k = math.max(1, math.floor((p.y1 - p.y0) / 16 + 0.5))
       shadowUnder(p, camx)
       for i = 1, k do at(T.crate, x, p.y1 - 16 * i - 12) end
-    elseif n == "TABLE" then Sc.shadow(x + w / 2, 183, w + 4, 5); at(T.table, x - 1, p.y0)
+    elseif n == "TABLE" then Sc.shadow(x + w / 2, 183 + d, w + 4, 5); at(T.table, x - 1, p.y0)
     elseif n == "PARASOL" then
       local tb                                                     -- its pole, down to the table under it
       for _, q in ipairs(def.props) do if q.name == "TABLE" and q.x0 >= p.x0 and q.x1 <= p.x1 then tb = q end end
       local px = math.floor(x + w / 2) - 1
-      local foot = tb and tb.y0 or 240                            -- (no table: a pole standing in the water)
+      local foot = tb and tb.y0 or 240 + d                        -- (no table: a pole standing in the water)
       lg.setColor(INK); lg.rectangle("fill", px - 1, p.y1, 4, foot - p.y1)
       lg.setColor(0.55, 0.57, 0.6); lg.rectangle("fill", px, p.y1, 2, foot - p.y1)
       local sq = (p.squashT or 0) > 0 and 2 or 0                  -- a springy one dips as it launches her
@@ -1328,14 +1337,14 @@ function Sc.drawPropArt(p, camx, def, kicked)
     elseif n == "RIM" then at(T.rim, x - 1, p.y0 - 1)
     elseif n == "FOUNTAIN" then
       at(T.bowl, x - 1, p.y0 - 1)
-      lg.setColor(0.33, 0.47, 0.52, 0.45); lg.rectangle("fill", math.floor(x) + 8, 193, w - 16, 47)
+      lg.setColor(0.33, 0.47, 0.52, 0.45); lg.rectangle("fill", math.floor(x) + 8, 193 + d, w - 16, 47)
     elseif n == "KIOSK" then shadowUnder(p, camx); at(T.kiosk, x - 1, p.y0 - 1)
-    elseif n == "SHELTER" then shadowUnder({ x0 = p.x0, x1 = p.x1, y1 = 184 }, camx); at(T.shelter, x, p.y0)
-    elseif n == "RIVER" then at(T.sign, x + w / 2 - T.sign:getWidth() / 2, 175 - T.sign:getHeight())
+    elseif n == "SHELTER" then shadowUnder({ x0 = p.x0, x1 = p.x1, y1 = 184 + d }, camx); at(T.shelter, x, p.y0)
+    elseif n == "RIVER" then at(T.sign, x + w / 2 - T.sign:getWidth() / 2, 175 + d - T.sign:getHeight())
     elseif n == "TUB" then shadowUnder(p, camx); at(T.tub, x, p.y0 - 18)
     elseif n == "HOUSE" then                                      -- crisp and outlined: their balconies are ledges
       local im = T["house" .. ((houseIndex(def, p) - 1) % 3 + 1)]
-      at(im, x + w / 2 - im:getWidth() / 2, 175 - im:getHeight())
+      at(im, x + w / 2 - im:getWidth() / 2, 175 + d - im:getHeight())
     elseif n == "BALCONY" then drawBalcony(p, camx)
     elseif n == "TIER" then at(T.tier, x - 1, p.y0 - 1)
     else Sc.drawProp(p, camx, C.prop) end
@@ -1361,7 +1370,7 @@ function Sc.drawTerrainArt(def, camx, t)
           local k = (t * 1.1 + i / 8) % 1
           for _, e in ipairs({ { tier.x0 - camx, -1 }, { tier.x1 - camx, 1 } }) do
             lg.setColor(0.86, 0.94, 1, 0.85 - 0.4 * k)
-            lg.rectangle("fill", math.floor(e[1] + e[2] * (1 + k * 4)), math.floor(tier.y0 + 4 + k * (190 - tier.y0 - 4)), 1, 2)
+            lg.rectangle("fill", math.floor(e[1] + e[2] * (1 + k * 4)), math.floor(tier.y0 + 4 + k * (190 + dy() - tier.y0 - 4)), 1, 2)
           end
         end
       else
@@ -1392,7 +1401,7 @@ end
 function Sc.drawPieceArt(pc, camx, def)
   if def.art == "park" and pc.kind == "hollowlog" then
     local T = Sc.townArt("park")
-    Sc.shadow((pc.x0 + pc.x1) / 2 - camx, 183, pc.x1 - pc.x0 + 4, 5)
+    Sc.shadow((pc.x0 + pc.x1) / 2 - camx, (pc.foot or 184) - 1, pc.x1 - pc.x0 + 4, 5)   -- (on the path it lies on)
     at(T.hollowlog, pc.x0 - camx - 1, pc.y0 - 1)
     return true
   end
@@ -1406,8 +1415,9 @@ function Sc.drawMoverArt(m, camx, style)
   local x = math.floor(m.x0 - camx + 0.5) - 3
   lg.setColor(1, 1, 1, 1)
   if m.dir and m.dir > 0 then lg.draw(im, x + im:getWidth(), m.y0 - 18, 0, -1, 1) else lg.draw(im, x, m.y0 - 18) end
-  lg.setColor(0.33, 0.47, 0.52, 0.5); lg.rectangle("fill", x, 209, im:getWidth(), m.y0 - 18 + im:getHeight() - 209)
-  lg.setColor(0.86, 0.94, 0.95, 0.8); lg.rectangle("fill", x + 2, 208, im:getWidth() - 4, 1)   -- the ripple line
+  local d = dy()
+  lg.setColor(0.33, 0.47, 0.52, 0.5); lg.rectangle("fill", x, 209 + d, im:getWidth(), m.y0 - 18 + im:getHeight() - 209 - d)
+  lg.setColor(0.86, 0.94, 0.95, 0.8); lg.rectangle("fill", x + 2, 208 + d, im:getWidth() - 4, 1)   -- the ripple line
   lg.setColor(1, 1, 1, 1)
 end
 

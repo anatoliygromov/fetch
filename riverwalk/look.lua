@@ -226,12 +226,13 @@ local function clump(r, kind, w, h)
   return im
 end
 
--- the stretches of flat ground at Pepper's line (terrain top y 184), found as the road's traffic finds them
-local function flatSpans(world)
+-- the stretches of flat ground at Pepper's line (terrain top y 184, or a tall level's path line foot), found as
+-- the road's traffic finds them
+local function flatSpans(world, foot)
   local spans, s = {}, nil
   for x = 0, world.width - 1, 4 do
     local flat = false
-    for _, b in ipairs(world.rects) do if b.terrain and b.y0 == 184 and x >= b.x0 and x < b.x1 then flat = true; break end end
+    for _, b in ipairs(world.rects) do if b.terrain and b.y0 == foot and x >= b.x0 and x < b.x1 then flat = true; break end end
     if flat and not s then s = x elseif not flat and s then spans[#spans + 1] = { s, x }; s = nil end
   end
   if s then spans[#spans + 1] = { s, world.width } end
@@ -248,7 +249,7 @@ local function buildFront(stage)
   local r, list = rng(1994), {}
   local kinds = S().kinds
   if next(kinds) == nil then return list end                       -- this level has no foreground band
-  for _, sp in ipairs(flatSpans(stage.world)) do
+  for _, sp in ipairs(flatSpans(stage.world, stage.def.foot or 184)) do
     local x = sp[1] + math.floor(r(20, 120))
     while true do
       local kind = pick(r, kinds)
@@ -266,19 +267,20 @@ local function buildFront(stage)
   end
   return list
 end
-function Look.front(stage, cam)
+function Look.front(stage, cam, camY)
   stage.lkFront = stage.lkFront or buildFront(stage)
+  local bottom = (stage.def.foot or 184) + 56 - (camY or 0)        -- the screen y of the world's bottom row + 1 (a flat level: 240)
   lg.setColor(1, 1, 1, 1)
   local k = Look.FRONT_SPEED - 1
   for _, c in ipairs(stage.lkFront) do
     local mid = c.x + c.w / 2
     local sx = math.floor(c.x - cam - (cam + 160 - mid) * k + 0.5)
     if sx < 330 and sx + c.w > -10 then
-      lg.draw(c.img, sx, 240 - c.h)
+      lg.draw(c.img, sx, bottom - c.h)
       if Look.CHECK then                                          -- LOOK_CHECK=1: report a clump over Pepper's box
         local x0, y0, x1, y1 = stage.pepper:box()
-        if x1 - cam > sx and x0 - cam < sx + c.w and y1 + 2 > 240 - c.h then
-          print(("LOOK OVERLAP clump at %d (top %d) over Pepper x %.0f y %.0f"):format(c.x, 240 - c.h, stage.pepper.x, stage.pepper.y)); io.stdout:flush()
+        if x1 - cam > sx and x0 - cam < sx + c.w and y1 + 2 - (camY or 0) > bottom - c.h then
+          print(("LOOK OVERLAP clump at %d (top %d) over Pepper x %.0f y %.0f"):format(c.x, bottom - c.h, stage.pepper.x, stage.pepper.y)); io.stdout:flush()
         end
       end
     end

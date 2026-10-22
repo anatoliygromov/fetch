@@ -484,6 +484,7 @@ function St:draw(debug)
   local grey = self.def.scenery == "greybox" and not style
   local lk = Look.on and (style or not grey)                       -- the Lion King look (look.lua): the art levels
   Look.level(self.def)                                             -- (this level's colour script)
+  Sc.FOOT = self.def.foot or 184                                   -- the path line the art is placed from (scene.lua)
   Sc.winchFrame = 1                                                -- the winch keeper cranks while a rope ferry moves
   for _, m in ipairs(self.movers or {}) do
     if m.call and math.abs(m.dx or 0) > 0 then Sc.winchFrame = 1 + math.floor(self.t * 10) % 8 end
@@ -508,7 +509,7 @@ function St:draw(debug)
   -- 7 play layer: terrain (pavement art, painted once; see Sc.paintGround)
   local w = self.world
   if not self.ground then
-    if style then self.ground = Sc.paintGroundArt(w, style)
+    if style then self.ground = Sc.paintGroundArt(w, style, self.def.foot)
     else self.ground = grey and Sc.paintGroundGrey(w) or Sc.paintGround(w, self.def.props) end
   end
   use("ground")
@@ -650,7 +651,7 @@ function St:draw(debug)
     if pr.layer == "front" then prop(pr, math.floor(cam + (cam + 160 - (pr.x0 + pr.x1) / 2) * 0.3), C.front) end
   end
   lg.pop()                                                         -- (screen space again)
-  if lk then Look.off(); Look.front(self, cam) end                 -- the dark foreground band (1.4x), under Pepper's lines
+  if lk then Look.off(); Look.front(self, cam, camY) end           -- the dark foreground band (1.4x), under Pepper's lines
   if self.night then Nt.draw(self, cam) end                        -- [night hook] the darkness, the trail, the planks
   lg.setColor(1, 1, 1, 1)
   if debug then lg.push(); lg.translate(0, -camY); self:drawDebug(cam); lg.pop() end

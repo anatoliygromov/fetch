@@ -2,6 +2,21 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r3/citypark-art`: the tall City Park gets City Park's art, and a treetop tier dressed to match (22 Oct)
+Built on `round1`. Scene and art only; no new generated art (no SpriteCook): the treetops use the approved park art
+in `art/scene/` and pieces drawn in code. Pepper's files are untouched (`check_pepper` UNCHANGED).
+- **The park art at any path height.** The art levels' fixed lines (the path at y 184, decoration's base at y 175,
+  the pond's bank and water line, the bench, bin, oak, gate, swings, frame, willows, winch, the duck boat's water,
+  Downtown's door, table, fountain, shelter, houses) are now placed from the level's path line: `L.foot` (default
+  184; stage.lua sets `Sc.FOOT` before it draws, and scene.lua adds `dy() = FOOT - 184`). The painted path is
+  clamped to `foot` (was 184), the pond's water runs to the bottom of the world, the hollow log's art shadow sits
+  on its piece's `foot`. `look.lua`'s foreground band finds the flat ground at `foot` and stands on the world's
+  bottom row (a flat level: screen y 240 as before). `tools/level_to_tiled.py` keeps a piece's `foot` drag-safe
+  (`rely.foot`). Proof: the `--test` tours drawn on `round1` and on this branch, 147 of 153 shots pixel
+  identical (River Walk 24 of 26, City Park 21 of 23, Downtown 30 of 31, Night 24 of 25, Soder Hill 22 of 22,
+  lab_tall 13 of 13, Rooftops 13 of 13); the 6 others differ only in the debug view's FPS / MS counter
+  (x 8-30, y 456-470 of the 640 x 480 shot).
+
 ## Branch `engine/round2`: the review's engine fixes and the rooftops mechanics (22 Oct)
 Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untouched (`check_pepper` UNCHANGED).
 - **The lift never waits at her crouched height** (review, SHOULD FIX 2). A lift coming down over a crouched Pepper
