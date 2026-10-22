@@ -2,6 +2,19 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r4/playtest`: the playtest lab, ported to today's levels, and the level order checked (22 Oct)
+Built on `round1`. The lab from `ml/playtest` (6 Oct, never merged) rebuilt around the levels' own autopilots.
+The game is untouched: `main.lua` gains one line (`--playtest`, only with `--auto`); no level, map, stage, world,
+camera, lift, roof, critter, set piece, Pepper or art file changes.
+- **The persona layer wraps the current autopilot** (`riverwalk/pt_bot.lua`, `playtest.lua`): `tests_<level>.lua
+  --auto` still decides what to press from the real game state; the lab sits between its buttons (`I.force`,
+  `love.keypressed`) and the game and adds reaction delays, early and late presses, hold errors, controls found by
+  trying, failures, recovery (back up on foot or back to the lamp, then on along the route), patience and quits.
+  Routes stay current by themselves; Rooftops' high road comes from the autopilot's own `AUTO_ROUTE=high`.
+  `pt_json.lua` comes over unchanged; the old copied routes (`pt_routes.lua`) are gone.
+- **Runs:** `tools/run_playtest.py` (all personas x levels x seeds, one LOVE process per run, each with its own
+  `XDG_DATA_HOME`, `SDL_AUDIODRIVER=dummy`, `xvfb-run -a`). A run takes about a second (no drawing).
+
 ## Pepper's file check narrowed to what she uses (22 Oct, evening)
 - `tools/check_pepper_files.sh` flagged world.lua: engine/round2 gave `Wd:groundAt` an optional `fromY` for carts,
   bikes and the gull on tall levels. Pepper never calls it. The check now proves the rest of world.lua (all her

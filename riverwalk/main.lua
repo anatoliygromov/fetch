@@ -21,6 +21,7 @@
 -- --physics or --auto it runs tests_bonus.lua (the checks, or the autopilot that records rec/ for a GIF).
 -- love riverwalk --level <name> starts a run at that level (no menus). The test flags (--physics, --auto,
 -- --test, --qa) play one level alone, River Walk unless --level names another; --flowtest checks the flow.
+-- --auto --playtest <persona>: the playtest lab (playtest.lua, pt_bot.lua, docs/playtest/method.md).
 function love.errorhandler(msg) io.stderr:write("ERROR: " .. tostring(msg) .. "\n" .. debug.traceback() .. "\n"); io.stderr:flush(); os.exit(1) end
 love.graphics.setDefaultFilter("nearest", "nearest")
 local W, H = 320, 240
@@ -121,6 +122,7 @@ function love.load(args)
     if a == "--flowtest" then require("tests_flow")(api) end
     if a == "--pepperlab" then require("pepperlab")() end                              -- Pepper alone in a test room
   end
+  for _, a in ipairs(args or {}) do if a == "--playtest" then require("playtest")(api, args) end end   -- the playtest lab (with --auto)
 end
 function love.joystickadded(j)
   print(("[input] joystick added: %s, gamepad %s, %d buttons, %d hats"):format(j:getName(), tostring(j:isGamepad()), j:getButtonCount(), j:getHatCount()))
