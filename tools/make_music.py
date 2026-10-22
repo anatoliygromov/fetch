@@ -19,8 +19,8 @@ Generated parts: bass ('bounce' root / octave eighths, 'drive' root eighths, 'pi
 walking quarters, 'hold'), pulse 2 ('echo' the tune delayed and quieter, 'arp' chord arpeggios in a rhythm).
 
 A looping tune is rendered twice over and the tail of the second pass (echo, ringing notes) is folded onto the
-start, so the last sample runs into the first without a click. Each tune is set to the same loudness (RMS), with
-its peak kept under -1 dBFS; the game plays music about 6 dB under the sound effects (sfx.lua).
+start, so the last sample runs into the first without a click. Each tune is set to the same loudness (A-weighted
+RMS, so a deep bass does not count more than it is heard), with its peak kept under -1 dBFS; the game plays music about 6 dB under the sound effects (sfx.lua).
 """
 import os
 import re
@@ -36,7 +36,7 @@ from scipy.signal import resample_poly
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MUSIC = os.path.join(ROOT, "riverwalk", "music")
 HI, SR = 44100, 22050
-RMS_DB = -17.0          # every tune's loudness (RMS of the sounding part)
+LOUD_DB = -20.5         # every tune's loudness: A-weighted RMS of the sounding part (about -17 dB plain RMS)
 PEAK_DB = -1.0          # never above this
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -388,10 +388,21 @@ def render(song, loop):
     return lo, ch, spans, marks, rows, length
 
 
-def normalise(x):
+def a_weight(x):
+    """x through the A-weighting curve (how loud it sounds, not how much energy it has: bass counts less)"""
+    f = np.maximum(np.fft.rfftfreq(len(x), 1 / SR), 1.0)
+    f2 = f * f
+    ra = 12194 ** 2 * f2 ** 2 / ((f2 + 20.6 ** 2) * np.sqrt((f2 + 107.7 ** 2) * (f2 + 737.9 ** 2)) * (f2 + 12194 ** 2))
+    return np.fft.irfft(np.fft.rfft(x) * ra * 10 ** (2.0 / 20), len(x))
+
+
+def loudness(x):
     sounding = np.abs(x) > 1e-3
-    rms = np.sqrt(np.mean(x[sounding] ** 2)) if sounding.any() else 1.0
-    g = 10 ** (RMS_DB / 20) / rms
+    return 20 * np.log10(np.sqrt(np.mean(a_weight(x)[sounding] ** 2))) if sounding.any() else -120.0
+
+
+def normalise(x):
+    g = 10 ** ((LOUD_DB - loudness(x)) / 20)
     peak = np.max(np.abs(x)) * g
     limit = 10 ** (PEAK_DB / 20)
     if peak > limit:
@@ -761,9 +772,10 @@ def main():
         peak = 20 * np.log10(np.max(np.abs(x)))
         snd = np.abs(x) > 1e-3
         rms = 20 * np.log10(np.sqrt(np.mean(x[snd] ** 2)))
+        loud = loudness(x)
         join = abs(float(x[-1]) - float(x[0]))
         step = float(np.percentile(np.abs(np.diff(x)), 99))
-        print(f"{song['name']:<14} {len(x) / SR:6.2f} s  {len(x):7d} samples  peak {peak:5.1f} dBFS  rms {rms:5.1f} dB"
+        print(f"{song['name']:<14} {len(x) / SR:6.2f} s  {len(x):7d} samples  peak {peak:5.1f} dBFS  rms {rms:5.1f} dB  A {loud:5.1f} dB"
               + (f"  loop join {join:.3f} (99 % of steps under {step:.3f})" if loop else "")
               + f"  {os.path.getsize(ogg) // 1024} KB")
         manifest.append(f"{song['name']} {len(x)} {SR} {'loop' if loop else 'once'}")

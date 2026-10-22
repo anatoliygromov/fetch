@@ -15,8 +15,9 @@ local S = {}
 local RATE = 22050
 local sounds = {}
 local ok = love.audio ~= nil
-local MUSIC_VOL = 0.6                       -- the tunes are made at -17 dB RMS; the effects are about -15 dB
-local LOOP_VOL = 0.55                       -- the synthesised loop
+local MUSIC_VOL = 0.67                      -- the tunes are made at -20.5 dB (A-weighted RMS), the effects sound at
+                                            -- about -18 dB: at 0.67 (-3.5 dB) the music sits 6 dB under them
+local LOOP_VOL = 0.62                       -- the synthesised loop (about -20 dB A: as loud as the tunes)
 S.FORMATS = { ".ogg", ".xm", ".mod" }       -- the first one found is played
 S.JINGLES = { clear = true, over = true, fetch = true }
 local track = "title"                       -- the track the game is in

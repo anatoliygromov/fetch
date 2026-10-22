@@ -11,15 +11,16 @@ Built on main (v0.5). Composed and synthesised by our own code (`tools/make_musi
   50 %), a 16-step triangle bass and LFSR noise drums, with vibrato, chord arpeggios and an echo on pulse 2.
 - **The composer** (`tools/make_music.py`): the songs are data (a note string per channel, bar by bar; chords per
   bar drive the generated bass and arpeggio parts), rendered at 44100 Hz and filtered down. A loop is rendered
-  twice over and its tail folded onto the start, so it loops without a click. Every tune is set to -17 dB RMS
-  with its peak under -1 dBFS. It also writes `title.mod`, the title theme as a 4-channel ProTracker module
+  twice over and its tail folded onto the start, so it loops without a click. Every tune is set to the same
+  loudness, -20.5 dB A-weighted RMS (about -17 dB plain), with its peak under -1 dBFS. It also writes `title.mod`, the title theme as a 4-channel ProTracker module
   (29 KB) that LOVE plays through libmodplug and that loops by itself; the game plays the OGG.
 - **The game** (`sfx.lua`): `S.music(on, name)` plays the track `music/<name>.ogg` (or .xm / .mod): `title` for
   the title and the menus, each level by its name. Levels without a tune yet get the old synthesised loop, now
   built the first time it is needed instead of at start-up. Music off pauses (the pause goes on where it
   stopped); a new track starts from the top; one streamed track at a time. `S.play("clear" / "over" / "fetch")`
-  plays the jingle when the music is on, else the short sound effect as before. Music plays at 0.6 (about 6 dB
-  under the sound effects); the player's volume scales everything.
+  plays the jingle when the music is on, else the short sound effect as before. Music plays at 0.67: 6 dB
+  under the sound effects (about -18 dB A-weighted); the synthesised loop plays at 0.62 (was 0.55), as loud as
+  the tunes; the player's volume scales everything.
 - **Hooks in `main.lua`** (one line each): `startLevel` passes the level's name to `S.music`, `toTitle` and
   `toMenu` pass `"title"`, the ending plays the title theme again (`nextLevel`), and the line that notes the
   clear time (the ball given) plays `S.play("fetch")`.
