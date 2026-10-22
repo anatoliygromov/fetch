@@ -15,7 +15,8 @@
 --                it stops against the quay railing (L.scroll.ballStop) and lies there to be picked up.
 --   Barrels      the ball knocks a barrel off a stack (L.barrels: when the ball passes trigger); it rolls down the
 --                street slower than the chase, so Pepper catches up with it: hop over it. Touching it costs a heart
---                (a knock-back). A barrel that drops into a hatch is gone.
+--                (a knock-back; carrying the ball, the ball is knocked out instead: St:hazardHit). A barrel that
+--                drops into a hatch is gone.
 -- A respawn (or a test moving the camera) restarts the scroll from the new camera, puts the ball back on screen
 -- and stacks the barrels again that are still ahead.
 local Pp = require("pepper")
@@ -170,7 +171,7 @@ function Ch.update(s, dt)
       roll(w, br, br.x + br.vx * dt, dt, false)
       if br.y > 250 or br.x < s.cam - 60 or br.x > w.width then br.state = "gone" end
       local x0, y0, x1, y1 = p:box()
-      if br.state == "roll" and x1 - 6 > br.x - BARREL_HIT and x0 + 6 < br.x + BARREL_HIT and y1 > br.y - 12 and y0 < br.y and p:hurt(br.x, w) then s:loseHeart() end
+      if br.state == "roll" and x1 - 6 > br.x - BARREL_HIT and x0 + 6 < br.x + BARREL_HIT and y1 > br.y - 12 and y0 < br.y and p:hurt(br.x, w) then s:hazardHit() end
     end
   end
 end

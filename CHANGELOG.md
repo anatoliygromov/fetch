@@ -2,6 +2,27 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r6/engine`: safety nets, the same in every level (22 Oct)
+Built on `round1`. Benchmark principles 5, 6 and 7 (`docs/benchmark_22oct.md` section 4) in the engine, so every
+level gets them without level changes. Hard mode (`stage.hard`: `carry.hard` from the menu's `hard.txt`, or `--hard`)
+keeps the old rules everywhere. Pepper's files are untouched; music is untouched.
+- **A free first mistake** (stage.lua `St:hazardHit`, `St:knockBall`, `St:spotNear`, `St:ballLands`): when a hazard
+  hits Pepper while she carries the ball (bikes, leaf carts, trams and any other kind in `L.bikes`, geese, gulls, the
+  chase's barrels), the ball pops out with her knock-back and she keeps her hearts; she still gets the hurt sound,
+  the knock-back and 1.5 s of blinking, and Mia says "OOPS! GET THE BALL!". Without the ball a hit costs a heart as
+  before. The ball flies along with her (60% of her knock-back speed, up 150 px/s); if that flight would end in the
+  water or inside a box (`St:ballLands` runs it ahead), it pops straight up instead; if even that fails, it splashes
+  and comes back 0.6 to 1.2 s later on a spot fixed at the hit: the floor under her paws, the nearest clear spot
+  within 48 px (never a boat or a lift, they move on), else by the last lamp. critters.lua (goose, gull), chase.lua
+  (barrel) and the bike loop call `St:hazardHit`; a hazard added later only has to call it after `p:hurt`.
+  Not hits, unchanged: the water and a fall out of the world (a heart and back to the lamp, as before: returning her
+  to the bank where she fell was weighed and left out, because the "last safe ground" can be a crumbling plank, a
+  loose tile, a boat or a bike lane, and the tests and autopilots rely on the lamp), the chase's pin and hatches,
+  time up. In hard mode a hit costs a heart even with the ball, and the goose and the gull still knock it out.
+  main.lua (one line): a knocked-out ball also loses the NO HIT medal (a hit is a hit).
+  qa.lua: a 4th sweep, the ball sweep: at every 24 px on every surface, hit from either side while carrying, the
+  ball must come to rest where she can pick it up (or ride a boat, or reach Mia) within 3.3 s.
+
 ## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
 Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of
 every level, the menus and the cards. The bug list with evidence: `docs/bugs_22oct.md`. Pepper's files are untouched.
