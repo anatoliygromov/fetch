@@ -140,7 +140,7 @@ return function(mode, api)
       { act = function() hold("right", "down") end }, { during = 1.2 },
       { act = function(p) release(); report("kennel: crawl back out", p.x > 50 and near(p.y, 184), ("x %.0f"):format(p.x)) end },
       -- 15 traffic: a bike is sent 1 s before it reaches the screen edge (its bell rings then); hard mode
-      { act = function() local s = api.stage(); local c = Sp.spawn(s, s.def.bikes[1]); local lead = (c.x - 24 - (s.cam + 320)) / c.speed
+      { act = function() local s = api.stage(); local c = Sp.spawn(s, s.def.bikes[1]); local lead = (c.x - (s.def.bikes[1].w or 48) / 2 - (s.cam + 320)) / c.speed   -- (the front: half the hit box)
           report("bike: sent 1 s before the screen edge (bell)", math.abs(lead - 1) < 0.01, ("%.2f s"):format(lead))
           local St = require("stage"); local h = St.new(s.def, { hard = true })
           report("hard mode: 1 heart, bikes 25% faster", h.hearts == 1 and Sp.speed(h, h.def.bikes[1]) == h.def.bikes[1].speed * 1.25,
@@ -303,7 +303,7 @@ return function(mode, api)
         local sp = { 0, s.world.width }
         for _, q in ipairs(s.road.spans) do if v[3] >= q[1] and v[3] < q[2] then sp = q end end
         local e = { im = im, x = v[3], w = im:getWidth(), vx = (v[4] and 1 or -1) * 0.01, sp = sp, bob = 0,
-          flip = car and v[4] or (not car and not v[4]) }
+          flip = car and v[4] or (not car and not v[4]), f = 1, cam0 = 0, base = 0.01, still = true }   -- (at world x, kept for the shot)
         if car then e.top = Rd.CAR_TOP; if not e.top then e.base = 239 end
         else e.top = Rd.RIDER_TOP; if not e.top then e.base = 236 end end
         s.road.list[#s.road.list + 1] = e
@@ -315,7 +315,7 @@ return function(mode, api)
           { act = function() tp(700, 184) end }, { wait = 0.3 },
           { act = function() traffic({ { "car", 2, 690, true }, { "car", 3, 450, true } }) end }, { wait = 0.05 }, shot("20_traffic_bin", 520),
           { act = function() tp(2952, 154) end }, { wait = 0.3 },
-          { act = function() traffic({ { "car", 4, 2790, true }, { "rider", 2, 3020, false } }) end }, { wait = 0.05 }, shot("21_traffic_planter", 2760),
+          { act = function() traffic({ { "car", 4, 2830, true }, { "rider", 2, 3020, false } }) end }, { wait = 0.05 }, shot("21_traffic_planter", 2760),
           { act = function() tp(140, 184); api.stage().pepper.face = 1; hold("down") end }, { wait = 0.4 },
           { act = function() traffic({ { "car", 5, 60, true } }) end }, { wait = 0.05 }, shot("22_traffic_crawl", 0),
           { act = function() release() end } })

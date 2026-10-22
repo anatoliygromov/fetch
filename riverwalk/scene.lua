@@ -147,8 +147,13 @@ function Sc.art()
   for x = 308, 316 do cols[#cols + 1] = x end
   for x = 278, 0, -1 do cols[#cols + 1] = x end
   for x = 0, 271 do cols[#cols + 1] = x end
-  local x = 271
-  while #cols < 1196 do cols[#cols + 1] = x; x = x - 1 end
+  -- (r5/bugs: River Walk is 3840 px now, so the layer must cover 320 + 0.3 * 3520 = 1376 px; it was cut at 1196 and
+  -- the trees ended in a hard edge over the last screens. The trees now go back and forth to 1600 px.)
+  local x, dx = 271, -1
+  while #cols < 1600 do
+    cols[#cols + 1] = x; x = x + dx
+    if x < 0 then x, dx = 0, 1 elseif x > 271 then x, dx = 271, -1 end
+  end
   local d = love.image.newImageData(#cols, h)
   for i, x in ipairs(cols) do for y = 0, h - 1 do d:setPixel(i - 1, y, src:getPixel(x, y)) end end
   A.shore = newImg(d)
@@ -170,7 +175,7 @@ end
 -- deterministic boxes per layer
 local function rng(seed) local s = seed return function(a, b) s = (s * 1103515245 + 12345) % 2147483648; return a + (s % 100000) / 100000 * (b - a) end end
 function Sc.build(levelW)
-  local L = {}
+  local L = { levelW = levelW }
   local function span(speed) return 320 + (levelW - 320) * speed + 64 end
   -- 2 clouds: SpriteCook cloud sprites (art/scene/cloud*.png) spaced along the sky, high ones bigger
   local A = Sc.art()
@@ -629,12 +634,13 @@ function Sc.drawFar(L, camx, t)
   end
   vpop(on); on = vpush("far")
   -- 3 far city: the skyline, bottom at y 138 (its misty base is behind the far shore trees). Over the whole
-  -- level (3200 px, the camera moves 2880 px) it moves at most 128 px (factor 128 / 2880): the strip is followed
-  -- by its own first 128 columns, which never bring a second City Hall tower on screen.
+  -- level it moves at most 128 px (factor 128 / the camera's range): the strip is followed by its own first 128
+  -- columns, which never bring a second City Hall tower on screen. (r5/bugs: the range was fixed at 2880 px, from
+  -- when River Walk was 3200 px; at 3840 px the skyline stood still over the last two screens.)
   Look.use("city")
   lg.setColor(1, 1, 1, 1)
   local sw = A.skyline:getWidth()
-  local sx = -math.floor(math.min(128, camx * 128 / 2880))
+  local sx = -math.floor(math.min(128, camx * 128 / math.max(320, (L.levelW or 3200) - 320)))
   lg.draw(A.skyline, sx, 138 - A.skyline:getHeight()); lg.draw(A.skyline, sx + sw, 138 - A.skyline:getHeight())
   lg.setColor(1, 1, 1, 1)
   Look.use("shore")

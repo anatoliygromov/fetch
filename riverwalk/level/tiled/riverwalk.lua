@@ -846,8 +846,10 @@ return {
             ["box"] = "zoneX0,zoneX1",
             ["relx.endX"] = -190,
             ["every"] = 5.5,
+            ["h"] = 28,
             ["minY"] = 150,
             ["speed"] = 125,
+            ["w"] = 70,
           },
         },
         {
@@ -865,8 +867,10 @@ return {
             ["box"] = "zoneX0,zoneX1",
             ["relx.endX"] = -150,
             ["every"] = 5,
+            ["h"] = 28,
             ["minY"] = 150,
             ["speed"] = 135,
+            ["w"] = 70,
           },
         },
         {

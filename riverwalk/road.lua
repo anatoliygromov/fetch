@@ -5,10 +5,19 @@
 -- (Mia is about 60 px tall, about 44 px a metre): cars about 190-235 x 70-92 px, cyclists about 95 px tall.
 -- Their tops are at y 192 / 190, below Pepper's feet (y 184), so they never cover her; the frame crops their
 -- lower part (the wheels), as the near lane would be.
---   cars drive to the right (Swedish right-hand traffic, near lane), 110-170 px/s (art: road_car1-5, facing left)
---   cyclists use the bike lane next to the kerb in either direction, 45-70 px/s (art: road_cyclist1-2, facing right)
--- The promenade bikes (stage.lua) keep the small cyclist1.png: they ride on Pepper's line.
+--   cars drive to the right (Swedish right-hand traffic, near lane) or to the left (the far lane; r5/bugs, so that
+--   traffic still passes while Pepper runs right), 300-380 px/s (art: road_car1-5, facing left)
+--   cyclists use the bike lane next to the kerb in either direction, 190-240 px/s (art: road_cyclist1-2, facing right)
+-- A vehicle is always seen whole (r5/bugs): it comes in at a screen edge and leaves at a screen edge, never at the
+-- end of its stretch of road. One is only sent when its stretch reaches far enough past the screen for it to cross
+-- at the camera's present speed; if Pepper then runs after it so that the stretch's end would come into view while
+-- it is still on screen, it speeds up (or drops behind); it is removed only once it is wholly off screen. (Before,
+-- the end of the road sliced cars in half where the promenade turns into the quay steps, a car could pop out of the
+-- start of a stretch on screen, and one was removed on screen when it passed the end.)
+-- The promenade bikes (stage.lua) use the same road_cyclist art since r5/bugs (the small cyclist1.png was a
+-- child's bike next to Pepper).
 local Sc = require("scene")
+local Look = require("look")
 local lg = love.graphics
 local Rd = {}
 Rd.__index = Rd
@@ -61,52 +70,97 @@ end
 
 local function spanAt(self, x) for _, sp in ipairs(self.spans) do if x >= sp[1] and x < sp[2] then return sp end end end
 
+-- where a vehicle is on screen: it slides with its road row (look.lua's row scrolling: f > 1 for the near rows),
+-- counting only the camera's movement since it was sent, so it still comes in from the screen's edge
+local function screenX(v, cam) return v.x - cam - (v.f - 1) * (cam - v.cam0) end
+-- how far past the screen edge its stretch of road must reach when it is sent, with the camera moving at c the
+-- way it goes (negative: the other way): it needs (320 + w) / (speed - f * c) seconds to cross while its front gains (speed - (f - 1) * c)
+-- a second on its row
+local function reach(speed, w, f, c)
+  local s = speed - f * c
+  if s <= 0 then return math.huge end
+  return (speed - (f - 1) * c) * (320 + w) / s
+end
+-- the end of its stretch must not come into view while it is on screen: with the camera running towards that end
+-- at c (px/s), the end shows in gap / c s. If it would not be gone by then, it changes speed: it leaves ahead (it
+-- speeds up) or falls behind (it slows down, never below 40 % of its speed), whichever is the smaller change.
+local function keepWhole(v, x, cam, c)
+  local dir = v.vx > 0 and 1 or -1
+  local gap = dir > 0 and (v.sp[2] - cam - 320) or (-(v.sp[1] - cam))          -- the end, beyond the edge it heads for
+  local cc = c * dir                                                          -- the camera's speed towards that end
+  if cc <= 1 or gap > 2000 then return end
+  local T = math.max(0.05, (gap - 8) / cc)                                    -- (8 px to spare)
+  local sAhead = (dir > 0 and (320 - x) or (x + v.w)) / T                     -- screen speed to leave ahead in time
+  local sBack = (dir > 0 and (x + v.w) or (320 - x)) / T                      -- or to fall behind it
+  local sp = math.abs(v.vx)
+  local now = sp - v.f * cc                                                  -- its screen speed the way it goes
+  if now >= sAhead * 1.1 or now <= -sBack * 1.1 then return end               -- it will be gone in time
+  local ahead, back = sAhead * 1.1 + v.f * cc, -sBack * 1.1 + v.f * cc       -- the speeds that do it
+  if back >= v.base * 0.4 and (sp - back) < (ahead - sp) then sp = back else sp = math.min(ahead, 1400) end
+  v.vx = dir * sp
+end
+
 function Rd:update(dt, cam)
+  local c = self.lastCam and (cam - self.lastCam) / math.max(dt, 1e-3) or 0  -- the camera's speed
+  if math.abs(c) * dt > 40 then                                              -- a cut (a respawn): a new view
+    for i = #self.list, 1, -1 do if not self.list[i].still then table.remove(self.list, i) end end
+    c = 0
+  end
+  self.lastCam = cam
   for i = #self.list, 1, -1 do
     local v = self.list[i]
     v.x = v.x + v.vx * dt
-    if (v.vx > 0 and v.x > v.sp[2] + 10) or (v.vx < 0 and v.x + v.w < v.sp[1] - 10) or v.x > cam + 700 or v.x + v.w < cam - 380 then
-      table.remove(self.list, i)
+    local x = screenX(v, cam)
+    if x > 330 or x + v.w < -10 then table.remove(self.list, i)                -- wholly off screen
+    else
+      if not v.still then keepWhole(v, x, cam, c) end                          -- (still: put there by a test shot)
+      if Look.CHECK and x < 320 and x + v.w > 0 then                           -- LOOK_CHECK=1: it never meets a road end
+        local a, b = v.sp[1] - cam, v.sp[2] - cam
+        if (a > 0 and x < a) or (b < 320 and x + v.w > b) then print(("ROAD CUT vehicle at screen x %.0f, road %d-%d"):format(x, v.sp[1], v.sp[2])); io.stdout:flush() end
+      end
     end
   end
   self.t = self.t - dt
   if self.t > 0 or #self.list >= 2 then return end
-  self.t = 3 + self.rng:random() * 6
-  local mid = cam + 160
-  local sp = spanAt(self, mid)
+  self.t = 0.4                                                      -- (no room for one now: try again soon)
+  local sp = spanAt(self, cam + 160)
   if not sp then return end
   local rng = self.rng
-  if rng:random() < 0.7 then                                        -- a car, from the left
+  local function rowF(top, im) return Look.on and Look.rowFactor(top + im:getHeight() * 0.6) or 1 end
+  if rng:random() < 0.7 then                                        -- a car: to the right in the near lane, or to the left
     local im = art.cars[rng:random(1, #art.cars)]
-    local w = im:getWidth()
-    local x = cam - w - 20
-    if x < sp[1] - w then x = sp[1] - w end
-    self.list[#self.list + 1] = { im = im, x = x, w = w, vx = 110 + rng:random() * 60, top = Rd.CAR_TOP, flip = true, sp = sp, bob = 0 }
+    local w, vx = im:getWidth(), 300 + rng:random() * 80
+    local f = rowF(Rd.CAR_TOP, im)
+    local okR = sp[1] <= cam - w - 30 and sp[2] >= cam + 320 + reach(vx, w, f, c)
+    local okL = sp[2] >= cam + 320 + w + 30 and sp[1] <= cam - reach(vx, w, f, -c)
+    if not okR and not okL then return end
+    local right = okR and (not okL or rng:random() < 0.5)
+    self.t = 3 + rng:random() * 6
+    self.list[#self.list + 1] = { im = im, x = right and (cam - w - 4) or (cam + 324), w = w, vx = right and vx or -vx, base = vx,
+      top = Rd.CAR_TOP, flip = right, sp = sp, bob = 0, f = f, cam0 = cam }      -- (car art faces left)
   else                                                              -- a cyclist, either way
     local im = art.riders[rng:random(1, #art.riders)]
-    local w = im:getWidth()
-    local right = rng:random() < 0.5
-    local x = right and (cam - w - 10) or (cam + 330)
-    self.list[#self.list + 1] = { im = im, x = x, w = w, vx = (right and 1 or -1) * (45 + rng:random() * 25), top = Rd.RIDER_TOP, flip = not right, sp = sp, bob = 1 }   -- cyclist art faces right
+    local w, right = im:getWidth(), rng:random() < 0.5
+    local vx = 190 + rng:random() * 50
+    local f = rowF(Rd.RIDER_TOP, im)
+    if right and (sp[1] > cam - w - 30 or sp[2] < cam + 320 + reach(vx, w, f, c)) then return end
+    if not right and (sp[2] < cam + 320 + w + 30 or sp[1] > cam - reach(vx, w, f, -c)) then return end
+    self.t = 3 + rng:random() * 6
+    self.list[#self.list + 1] = { im = im, x = right and (cam - w - 4) or (cam + 324), w = w, vx = right and vx or -vx, base = vx,
+      top = Rd.RIDER_TOP, flip = not right, sp = sp, bob = 1, f = f, cam0 = cam }  -- cyclist art faces right
   end
 end
 
--- rowFactor (look.lua, optional): the road rows scroll faster the nearer they are, so a vehicle slides with the
--- row it drives on. Only the camera movement since it appeared counts, so it still comes in from the screen's edge.
+-- (rowFactor: look.lua's, when the look is on; each vehicle keeps the factor of its row from when it was sent)
 function Rd:draw(cam, t, rowFactor)
   if #self.list == 0 then return end
   lg.setColor(1, 1, 1, 1)
   for _, v in ipairs(self.list) do
     local a, b = math.max(v.sp[1], cam) - cam, math.min(v.sp[2], cam + 320) - cam
     if b > a then
-      lg.setScissor(a, 0, b - a, 240)                                 -- clip to its stretch of road
-      local y = v.top or (v.base - v.im:getHeight())
-      local x = v.x - cam
-      if rowFactor then
-        v.cam0 = v.cam0 or cam
-        x = x - (rowFactor(y + v.im:getHeight() * 0.6) - 1) * (cam - v.cam0)
-      end
-      x = math.floor(x + 0.5)
+      lg.setScissor(a, 0, b - a, 240)                                 -- (a safety net: it never meets a road end on screen)
+      local y = v.top
+      local x = math.floor(screenX(v, cam) + 0.5)
       if v.bob == 1 then Rd.drawBike(v.im, v.vx > 0 and v.x or -v.x, x, y, v.flip)   -- a cyclist: wheels roll
       elseif v.flip then lg.draw(v.im, x + v.w, y, 0, -1, 1) else lg.draw(v.im, x, y) end
       lg.setScissor()

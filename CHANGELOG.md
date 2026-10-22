@@ -2,6 +2,40 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
+Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of
+every level, the menus and the cards. The bug list with evidence: `docs/bugs_22oct.md`. Pepper's files are untouched.
+- **River Walk's bikes are an adult's bike** (stage.lua, level/riverwalk.lua, maps/riverwalk.tmx and its export): the
+  promenade cyclists now use the road cyclists' art (`road_cyclist1-2.png`, 73 x 75, true 1x pixels; the two riders
+  take turns) instead of `cyclist1.png` (49 x 50, a child's bike: the wheels were 19 px, smaller than Pepper's
+  27 px back). The wheels are now as tall as her back, the rider 1.27x Mia. The hit box follows the drawn bike from
+  wheel to wheel: 70 x 28 (was 48 x 26); 28 px keeps the perches (tops y 152-154) safe. The bikes ride behind the
+  obstacles on her line (a flower box hides their wheels), so the taller rider no longer rides through Pepper on a
+  box. `tests.lua`'s bell timing reads the zone's hit box.
+- **Road traffic is never sliced** (road.lua): cars and cyclists only come in and leave at a screen edge. Before, a
+  car drove into the end of its stretch of road (where the promenade turns into the quay steps) and was cut in half
+  there by the road's scissor, could pop out of the start of a stretch on screen, and was removed on screen when it
+  passed the end. Now one is sent only when its stretch reaches far enough past the screen for it to cross at the
+  camera's present speed; if Pepper then runs after it so that the end would come into view, it speeds up or drops
+  behind; it is removed only once wholly off screen; a cut (respawn) clears the road. Cars drive both ways now (300-
+  380 px/s, about 25-30 km/h; were 110-170) so traffic still passes while Pepper runs right; cyclists 190-240 px/s.
+  `LOOK_CHECK=1` prints `ROAD CUT` if a vehicle ever meets a road end on screen: none in the autopilot.
+  The `--test` tour's traffic shots mark their vehicles `still` (kept through the shot's camera cut, at their world
+  x); the planter shot's car starts inside its stretch of road (x 2830; at 2790 it hung over the quay steps).
+- **River Walk's far shore ran out** (scene.lua): the shore layer was built for the 3200 px level (1196 px wide); at
+  3840 px the camera needs 1376 px, so over the last two screens the trees ended in a hard edge with bare sand-coloured
+  sky beside them. The trees now go back and forth to 1600 px. The far skyline's range was fixed at 2880 px too, so
+  it stood still over the last 640 px; it now uses the level's own width.
+- **LEVEL SELECT fits five levels** (flow.lua): the rows were 46 px, made for three levels; with five, SODER HILL ran
+  under the "A PLAY  B BACK" footer, NIGHT HARBOUR hung off the bottom of the panel and the screen, and the SOUND
+  pill sat on its text. Rows are now 30 px (the panel 208 px tall), so all five and the footer fit inside it.
+- **The bug list** (`docs/bugs_22oct.md`): 16 items, 7 fixed here; the rest need new art (the Downtown tram, its shed
+  and stop are toy-sized next to Pepper; the leaf cart keeper and the winch man are Mia's height; doors, the duck
+  boat, a treetop lantern) or an owner decision (near-lane cars framed off at the bottom). The art list with target
+  sizes goes to the asset plan. Checks: `check_pepper` UNCHANGED, `check_pepper_files` identical, flow 103 of 103,
+  `check_tiled` all PASS, `--physics` all levels as before (73, 70, 40, 23, 37, 40, 82, 88, 81), `--auto` 44.2, 51.6,
+  66.3, 73.3, 81.3 s unchanged (the wider bike hit box changes no autopilot time), `--qa` 0 problems.
+
 ## Branch `r4/playtest`: the playtest lab, ported to today's levels, and the level order checked (22 Oct)
 Built on `round1`. The lab from `ml/playtest` (6 Oct, never merged) rebuilt around the levels' own autopilots.
 The game is untouched: `main.lua` gains one line (`--playtest`, only with `--auto`); no level, map, stage, world,
