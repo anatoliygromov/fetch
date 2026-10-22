@@ -38,6 +38,11 @@ Built on `round1`. Level design only: no engine files changed, no SpriteCook, mu
   scrubber), with the checks to write. `tools/draw_routes.py metro_sketch` draws escalators with arrows,
   walkways, gates, doors, the wagon's ride and the signs.
 
+- **Checks on this branch:** `check_pepper` PEPPER UNCHANGED (4591 steps), `check_flow` 94 of 94, `check_tiled`
+  passed (downtown_tall in LEVELS and MAPPED, its export up to date), Downtown `--physics` 70 of 70, downtown_tall
+  `--physics` 81 of 81, citypark_tall `--physics` 82 of 82. Renders, the screenshot sheet and the autopilot GIF are
+  in `/home/claude/out/r3-design/`.
+
 ## Branch `engine/round2`: the review's engine fixes and the rooftops mechanics (22 Oct)
 Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untouched (`check_pepper` UNCHANGED).
 - **The lift never waits at her crouched height** (review, SHOULD FIX 2). A lift coming down over a crouched Pepper
