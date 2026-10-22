@@ -28,6 +28,15 @@ Built on `round1`. Level design only: no engine files changed, no SpriteCook, mu
 - **`docs/downtown_tall_beatsheet.md`**: the four beats of bounce and carry, screen by screen on both roads, every
   jump with Pepper's numbers, the cat from above, timing (par 85 s), what the engine must add (the town art and the
   look at any height), open questions.
+- **Metro, the paper map** (level 5 in the plan; not wired into the game): `docs/metro_beatsheet.md` and
+  `maps/metro_sketch.tmx` (320 x 90 cells, 2560 x 720 px, drawn by `tools/make_metro_sketch.py`): Sergels torg and
+  the ticket hall, the long passage, Stockholm City's platform, the tunnel and Odenplan, three rows in a zig-zag
+  joined by switchback escalators. New kinds of objects in the map: `escalators`, `walkways`, `gates`, `doors`,
+  `wagon`, `signs`, `hazards`. The beat sheet specifies them for the engine (moving steps riding and walking
+  against them, walkways, ticket gates with passengers and the booth, screen doors with chime, light and timer,
+  the work wagon's ride with ducking under warned tunnel signs and its camera, the suitcase and the floor
+  scrubber), with the checks to write. `tools/draw_routes.py metro_sketch` draws escalators with arrows,
+  walkways, gates, doors, the wagon's ride and the signs.
 
 ## Branch `engine/round2`: the review's engine fixes and the rooftops mechanics (22 Oct)
 Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untouched (`check_pepper` UNCHANGED).

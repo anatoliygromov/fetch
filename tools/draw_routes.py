@@ -5,6 +5,7 @@ gold star), steam puffs (white arrows up, with their lift), loose tiles (red X),
 
   python3 tools/draw_routes.py citypark_tall [out.png]     (default: /home/claude/out/design-round2/<name>_routes.png)
   python3 tools/draw_routes.py rooftops_sketch [out.png]
+  python3 tools/draw_routes.py metro_sketch /home/claude/out/r3-design/metro_sketch_routes.png
   python3 tools/draw_routes.py downtown_tall /home/claude/out/r3-design/downtown_tall_routes.png
 
 The routes are Pepper's feet, point by point, in ROUTES below (world px). Lamps, secrets, the golden bone, steam
@@ -55,6 +56,17 @@ ROUTES = {
         # the loop for the ball (Down + A off the loggia, the ball, back up the statue: way up B); the middle tier
         "high2": [[(1500, 280), (1500, 348), (1530, 424), (1500, 384), (1500, 348), (1486, 316), (1464, 280)],
                   [(1500, 348), (1580, 344), (1684, 336), (1792, 344), (1868, 344), (1905, 388)]],
+    },
+    "metro_sketch": {
+        "rows": 1, "scale": 1, "landmark": (2352, 494),
+        "main": [(60, 184), (320, 184), (344, 160), (368, 184), (720, 184), (748, 148), (776, 184), (1000, 184),
+                 (1050, 184), (1600, 184), (1617, 247), (1440, 424), (1360, 424), (1104, 424), (944, 424),
+                 (624, 424), (536, 396), (504, 424), (160, 424), (143, 487), (320, 664), (944, 664), (1008, 664),
+                 (2144, 664), (2320, 664), (2496, 488), (2536, 488)],
+        "high": [(1400, 392), (1340, 352), (1236, 336), (1132, 352), (1040, 296), (988, 336), (884, 320),
+                 (780, 336), (676, 352), (600, 424)],
+        "high2": [[(1064, 148), (1128, 112), (1248, 96), (1360, 80), (1472, 104), (1560, 184)],
+                  [(560, 664), (576, 624), (680, 600), (800, 576), (908, 600), (930, 664)]],
     },
     "rooftops_sketch": {
         "rows": 1, "scale": 1, "landmark": (1824, 136),
@@ -120,6 +132,36 @@ def main(argv):
                 d.polygon([P(cx - 6, y - lift + 8), P(cx + 6, y - lift + 8), P(cx, y - lift)], fill=(235, 235, 240, 255))
                 d.text(P(x1 + 2, y - 12), "%s +%d%s" % (o["name"] or "STEAM", lift, " (bark)" if p.get("bark") else ""),
                        fill=(235, 235, 240, 255), font=font)
+            elif cls == "escalators":                      # the moving stairs: the diagonal, arrows the way it carries her
+                x1, y1 = x + o["w"], y + o["h"]
+                a, b = ((x, y + o["h"]), (x1, y)) if p.get("slope") == "/" else ((x, y), (x1, y1))
+                d.line([P(*a), P(*b)], fill=(120, 255, 200, 255), width=3 * S)
+                lo, hi = (a, b) if a[1] > b[1] else (b, a)
+                src, dst = (hi, lo) if p.get("way") == "down" else (lo, hi)
+                for k in (0.3, 0.6, 0.9):
+                    cx, cy = src[0] + (dst[0] - src[0]) * k, src[1] + (dst[1] - src[1]) * k
+                    ux, uy = (dst[0] - src[0]), (dst[1] - src[1])
+                    n = (ux * ux + uy * uy) ** 0.5
+                    ux, uy = ux / n, uy / n
+                    d.polygon([P(cx + ux * 8, cy + uy * 8), P(cx - uy * 5, cy + ux * 5), P(cx + uy * 5, cy - ux * 5)], fill=(120, 255, 200, 255))
+                d.text(P(x + 4, y + o["h"] / 2 - 18), "%s (%s, %s px/s)" % (o["name"], p.get("way"), p.get("belt")), fill=(120, 255, 200, 255), font=font)
+            elif cls == "walkways":
+                belt = p.get("belt", 0)
+                d.rectangle([P(x, y), P(x + o["w"], y + o["h"])], fill=(120, 255, 200, 255))
+                for k in range(int(x) + 16, int(x + o["w"]) - 8, 48):
+                    tip = k + (8 if belt > 0 else -8)
+                    d.polygon([P(tip, y - 6), P(k, y - 11), P(k, y - 1)], fill=(120, 255, 200, 255))
+                d.text(P(x, y - 24), "%s %+d px/s" % (o["name"], belt), fill=(120, 255, 200, 255), font=font)
+            elif cls == "signs":
+                d.rectangle([P(x, y), P(x + o["w"], y + o["h"])], fill=(255, 60, 60, 200))
+                d.text(P(x - 4, y + o["h"] + 2), "DUCK", fill=(255, 90, 90, 255), font=font)
+            elif cls == "doors" or cls == "gates":
+                d.rectangle([P(x, y), P(x + o["w"], y + o["h"])], outline=(200, 230, 255, 255), width=2 * S)
+                d.text(P(x - 10, y - 12), o["name"], fill=(200, 230, 255, 255), font=font)
+            elif cls == "wagon":
+                d.rectangle([P(x, y - 4), P(x + o["w"], y + 6)], fill=(255, 140, 0, 255))
+                d.line([P(p.get("from", x), y + 14), P(p.get("to", x) + o["w"], y + 14)], fill=(255, 140, 0, 200), width=2 * S)
+                d.text(P(x, y + 18), "WORK WAGON: the ride ->", fill=(255, 160, 40, 255), font=font)
             elif cls == "props" and p.get("loose"):
                 d.line([P(x, y - 4), P(x + o["w"], y + 6)], fill=(255, 60, 60, 255), width=2 * S)
                 d.line([P(x, y + 6), P(x + o["w"], y - 4)], fill=(255, 60, 60, 255), width=2 * S)
