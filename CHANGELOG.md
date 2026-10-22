@@ -25,6 +25,9 @@ Built on `round1`. Level design only: no engine files changed, no SpriteCook, mu
   high road with the ball: GOOD GIRL! in 56.9 s, no heart lost, 4 of 5 secrets. `--qa` 0 problems.
   `tools/check_tiled.sh` covers `downtown_tall` (LEVELS, MAPPED, its export up to date).
 - **Paper map with routes:** `python3 tools/draw_routes.py downtown_tall <out.png>`.
+- **`docs/downtown_tall_beatsheet.md`**: the four beats of bounce and carry, screen by screen on both roads, every
+  jump with Pepper's numbers, the cat from above, timing (par 85 s), what the engine must add (the town art and the
+  look at any height), open questions.
 
 ## Branch `engine/round2`: the review's engine fixes and the rooftops mechanics (22 Oct)
 Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untouched (`check_pepper` UNCHANGED).
