@@ -15,8 +15,8 @@ play and draw exactly as before. Greybox, no SpriteCook credits.
   leads down (her feet go to screen y 120). Up held while she stands still looks up 64 px, Down held while she is
   crouched and still looks down 64 px, after 0.5 s. What Up and Down do to Pepper is unchanged. `Vc.snap(s)` puts
   the camera on her at once (the start, a respawn; tests use it after moving her).
-- **Drawing.** `St:draw` draws the world translated by `-camY` (the HUD, the talk panels, the foreground band and
-  the night's darkness stay screen space). The far layers move down slower than the world as the camera rises
+- **Drawing.** `St:draw` draws the world translated by `-camY` (the HUD, the talk panels and the foreground band
+  stay screen space; the night's darkness stamps its light pools at their screen y, `night.lua`). The far layers move down slower than the world as the camera rises
   (sky 0.1, far city 0.3, mid trees / houses 0.6, from the bottom of the world), so climbing rises over the city;
   the sky's top colour fills in above. `Talk.pepperRect` and the cards' Pepper (main.lua) use her screen y.
 - **Movers on both axes** (`riverwalk/lift.lua`): an `L.movers` entry with `fromY` (and `toY`) goes to and fro along
@@ -34,7 +34,14 @@ play and draw exactly as before. Greybox, no SpriteCook credits.
   bones, Mia on the roof with the ball nearby: pick it up, give it to her.
 - **Checks:** `riverwalk/tests_lab_tall.lua`: `--physics` (30 checks: the camera up the stairs, no bob on a jump,
   look up and down, the tall drop and the lead down, the lift up and down, waiting under a ceiling and over her head,
-  the pit, the fetch, and the five flat levels at camera y 0), `--auto` (clears it), `--test` (a screenshot tour).
+  the pit, the fetch, and the five flat levels at camera y 0), `--auto` (clears it: 25.9 s, 13/13 bones, no heart
+  lost), `--test` (a screenshot tour, frames of looking up and down in `rec_lab_tall_look/`).
+- **The five levels unchanged:** `check_pepper` (all three) UNCHANGED; `--physics` 73, 70, 40, 23, 37 of the same
+  checks pass; the autopilots' runs are identical (44.2, 51.6, 66.3, 73.3, 81.3 s, same bones); `--qa` 0 problems
+  with the same run and frame counts; `check_flow` 94 of 94. The `--test` tours of all five levels drawn on `main`
+  and on this branch are pixel identical (120 of 127 shots; the other 7 differ only in the debug view's FPS counter).
+  (Run the checks with their own `XDG_DATA_HOME` when other copies of the game run at the same time: they share the
+  save folder, and `check_flow` fails when two runs write its files at once.)
 ## Branch `assets/v2`: the tram fix and art for the new pieces (19 Oct)
 Built on `levels/v2`.
 - **The trams end in tram sheds** (Downtown). Before, the first tram vanished in plain view before the fountain,
