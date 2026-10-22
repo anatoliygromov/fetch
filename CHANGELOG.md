@@ -2,6 +2,16 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `tools/tiled`: levels in Tiled, the map editor (22 Oct)
+Built on `main` (v0.5). No SpriteCook credits. See `docs/tiled.md`.
+- **Levels as Tiled maps** (`tools/level_to_tiled.py`): a level (`level/<name>.map` and `level/<name>.lua`) becomes
+  `maps/<name>.tmx`, a map Tiled 1.8 and later opens: the terrain as a tile layer of 8 x 8 px cells (tileset
+  `maps/terrain.png`: solid, water, two slopes, each tile carrying its map character), the rest as objects in the
+  layers props, zones, movers, critters, lamps, bones and story, and the level's other fields (time, art, intro...)
+  as map properties. Each map remembers its export target, so Tiled's File > Export (Ctrl+E) writes
+  `riverwalk/level/tiled/<name>.lua`, the file the game reads; `--export` does the same without Tiled. The level
+  table is read by running the level file in Lua (lua5.1, luajit or lua, else LOVE: `tools/tiled/love_runner`).
+  All five levels converted.
 ## Branch `assets/v2`: the tram fix and art for the new pieces (19 Oct)
 Built on `levels/v2`.
 - **The trams end in tram sheds** (Downtown). Before, the first tram vanished in plain view before the fountain,
