@@ -897,6 +897,22 @@ end
 
 -- the sky and the drifting clouds (as River Walk and the greybox)
 local function skyAndClouds(L, camx, t)
+  local v = Sc.vshift
+  if v and Look.on then                                            -- a tall art level: the sky rises with the far
+    lg.push(); lg.translate(0, v.far)                              -- city (so the warm glow stays behind it) and
+    Look.skyTall()                                                 -- goes on above, deeper blue, with high clouds
+    local o = camx * 0.05 - t * 3
+    Look.use("clouds")
+    lg.setColor(1, 1, 1, 1)
+    for _, list in ipairs({ L.clouds, L.cloudsHigh }) do
+      for _, c in ipairs(list) do
+        local x = math.floor((c.x - o) % L.cloudSpan - 120)
+        if x < 330 and x + c.w > -10 and c.y + v.far < 240 and c.y + v.far + 60 > 0 then lg.draw(c.img, x, c.y) end
+      end
+    end
+    lg.pop()
+    return
+  end
   skyGap(); local on = vpush("sky")
   if Look.on then Look.sky() else                                  -- (look.lua: the level's banded, dithered sky)
   for y = 0, 239 do
@@ -943,6 +959,13 @@ end
 function Sc.buildArt(levelW, style)
   local L = Sc.build(levelW)
   L.style = style
+  local A, r, x = Sc.art(), rng(13), 30                            -- high clouds, for a tall level's sky (y < 0)
+  L.cloudsHigh = {}
+  while x < L.cloudSpan - 60 do
+    local im = A.clouds[1 + (#L.cloudsHigh * 3) % #A.clouds]
+    L.cloudsHigh[#L.cloudsHigh + 1] = { x = x, y = math.floor(r(-104, -40)), img = im, w = im:getWidth() }
+    x = x + im:getWidth() + math.floor(r(120, 260))
+  end
   if style == "park" then                                         -- near trees (parallax 0.5), deterministic
     local r = rng(47); L.trees = {}
     local x = -30
@@ -1235,6 +1258,420 @@ function Sc.tramShed(p, camx)
   lg.setColor(1, 1, 1, 1)
 end
 
+-- ===================================================================================================================
+-- The treetop tier of a tall park (the tall City Park's high road; only a level with L.foot, its path line, and
+-- props high over it). Built from the level's boxes, as everything else here, in the park's two manners:
+--   obstacles (the branches, the walks, the arbour's slats, the play tower's decks, the low bough): crisp, their
+--             own 1 px dark outline, front-on (no tops seen from above), the box's top row is the ledge
+--   decoration (trunks, the arbour's posts, the canopies): faded towards the haze, no outline, behind Pepper
+-- The tier: a ledge (one-way or solid) whose bottom is 90 px or more above the path, and decoration whose top is
+-- 100 px or more above it. Its parts, by name (an unnamed ledge belongs to the named ledge over or under it, else
+-- to the named ledge before it in the map):
+--   TREETOP WALK, ALDER WALK  a plank walk on timber legs down to the ground or the bed of the water under it
+--   ARBOUR                    the rose arbour's slats, each on two posts with a climbing rose
+--   PLAY TOWER                the play tower's decks (grey posts as the slide tower's)
+--   LOW BOUGH                 a thick bough to crawl under, bending up into the canopy
+--   NEST, BIG OAK             the magpie's nest (the landmark) and the big oak's trunk
+--   any other ledge           a branch of the nearest tree: across its trunk, or reaching out from it
+-- Narrow decoration boxes standing on the path are trunks (or posts under a deck or a slat); wide ones are the
+-- canopies, drawn from the crowns of the park's tree art (park_tree1, park_tree2, park_oak), faded. A canopy
+-- with no trunk near one end gets one there, on dry ground: nothing floats.
+local TIER_NAMES = { ["TREETOP WALK"] = "walk", ["ALDER WALK"] = "walk", ARBOUR = "slat", ["PLAY TOWER"] = "deck",
+  ["LOW BOUGH"] = "lowbough" }
+local function fadeC(c, k) k = k or Sc.DECOR_FADE; return { c[1] + (HAZE[1] - c[1]) * k, c[2] + (HAZE[2] - c[2]) * k, c[3] + (HAZE[3] - c[3]) * k } end
+local FBARK = { fadeC(BARK[1]), fadeC(BARK[2]), fadeC(BARK[3]) }
+local WOOD = { hex("a8784a"), hex("c99a63"), hex("6e4a2c") }           -- the walks' planks: light, top, dark
+local POST = { hex("8f969c"), hex("b9bfc4"), hex("5d646b") }           -- the play tower's grey posts (the slide's)
+local DECK = { hex("e2b23a"), hex("f3d36a"), hex("a77a1e") }           -- its yellow decks
+local ROSE = { fadeC(hex("4f7a3a")), fadeC(hex("d9586e")), fadeC(hex("f2a0b0")) }   -- vine, rose, rose light
+
+local function tier(def)
+  if def._tier ~= nil then return def._tier end
+  local foot = def.foot
+  if not foot or foot <= 184 then def._tier = false; return false end
+  local TI = { role = {}, trunks = {}, canopies = {}, ledges = {}, foot = foot }
+  local lastNamed
+  local named_ = {}
+  for _, p in ipairs(def.props) do
+    if p.layer ~= "front" and p.kind ~= "decor" and p.y1 <= foot - 90 and p.name and p.name ~= "" then named_[#named_ + 1] = p end
+  end
+  for _, p in ipairs(def.props) do
+    if p.layer == "front" then
+    elseif p.kind ~= "decor" and p.y1 <= foot - 90 then              -- a ledge of the tier
+      local who
+      if p.name and p.name ~= "" then who = p
+      else
+        for _, q in ipairs(named_) do if q.x0 < p.x1 and q.x1 > p.x0 then who = q; break end end
+        who = who or lastNamed
+      end
+      if p.name and p.name ~= "" then lastNamed = p end
+      TI.role[p] = (who and TIER_NAMES[who.name]) or "branch"
+      TI.ledges[#TI.ledges + 1] = p
+    elseif p.kind == "decor" and p.y0 <= foot - 100 then             -- decoration of the tier
+      if p.name == "NEST" then TI.role[p] = "nest"
+      elseif p.name == "BIG OAK" then TI.role[p] = "trunk"; TI.trunks[#TI.trunks + 1] = p
+      elseif p.x1 - p.x0 <= 12 and p.y1 >= foot - 40 then TI.role[p] = "trunk"
+      elseif p.x1 - p.x0 >= 48 and p.y1 <= foot - 100 then TI.role[p] = "canopy"; TI.canopies[#TI.canopies + 1] = p
+      else TI.role[p] = "skip" end
+    end
+  end
+  for p, r in pairs(TI.role) do                                     -- a trunk under a deck or a slat is its post
+    if r == "trunk" and p.name ~= "BIG OAK" then
+      local post
+      for _, q in ipairs(TI.ledges) do
+        if (TI.role[q] == "deck" or TI.role[q] == "slat") and q.x0 < p.x1 and q.x1 > p.x0 and q.y1 <= p.y0 + 2 then post = TI.role[q] end
+      end
+      if post then TI.role[p] = post == "deck" and "towerpost" or "skip" else TI.trunks[#TI.trunks + 1] = p end
+    end
+  end
+  local oak = named(def, "OAK")                                      -- City Park's old oak (its art has its trunk)
+  if oak then TI.trunks[#TI.trunks + 1] = { x0 = oak.x0, x1 = oak.x1, y0 = oak.y0, y1 = oak.y1, art = true } end
+  table.sort(TI.trunks, function(a, b) return a.x0 < b.x0 end)
+  def._tier = TI
+  return TI
+end
+Sc.tier = tier
+
+-- the trunk a branch grows from: one across it, else the nearest one under the canopy
+local function trunkOf(TI, p)
+  local best, bd
+  for _, t in ipairs(TI.trunks) do
+    local d = math.max(0, t.x0 - p.x1, p.x0 - t.x1)
+    if not best or d < bd then best, bd = t, d end
+  end
+  return best, bd
+end
+
+-- a faded trunk from y top down to the path: bark lines, a lit left edge, a shaded right edge, roots that flare
+local function drawTrunk(t, top, foot, ox, big)
+  local x0, w = t.x0 - ox, t.x1 - t.x0
+  local h = foot - top
+  for y = top, foot - 1 do
+    local fl = 0
+    local e = foot - y
+    if e <= 3 then fl = big and 6 or 3 elseif e <= 7 then fl = big and 3 or 1 elseif big and e <= 12 then fl = 1 end
+    lg.setColor(FBARK[1]); lg.rectangle("fill", x0 - fl, y, w + 2 * fl, 1)
+    lg.setColor(FBARK[2]); lg.rectangle("fill", x0 - fl, y, 1, 1)
+    lg.setColor(FBARK[3]); lg.rectangle("fill", x0 + w + fl - (w > 10 and 3 or 2), y, w > 10 and 3 or 2, 1)
+  end
+  lg.setColor(FBARK[3])                                             -- bark furrows, broken now and then
+  for bx = x0 + 3, x0 + w - 4, 4 do
+    local s = (bx * 7) % 11
+    for y = top + s, foot - 6, 13 do lg.rectangle("fill", bx, y, 1, 8) end
+  end
+  if big then                                                       -- knots on the big oak
+    for _, k in ipairs({ 0.3, 0.55, 0.8 }) do
+      local ky = math.floor(top + h * k)
+      lg.setColor(FBARK[3]); lg.rectangle("fill", x0 + math.floor(w * k), ky, 4, 3)
+      lg.setColor(FBARK[2]); lg.rectangle("fill", x0 + math.floor(w * k), ky - 1, 4, 1)
+    end
+  end
+end
+
+-- a canopy: the crowns of the park's trees (faded), overlapping, covering its box and a little round it
+local crownQ
+-- a tree's crown alone: the art down to its trunk's foot, minus the trunk (from row `from` down, only the leaves:
+-- the orange pixels, red well over blue), faded as decoration
+local function crownImg(n, rows, from)
+  local src = love.image.newImageData("art/scene/" .. n .. ".png")
+  local w = src:getWidth()
+  local d = love.image.newImageData(w, rows)
+  local k = Sc.DECOR_FADE
+  for y = 0, rows - 1 do
+    for x = 0, w - 1 do
+      local r, g, b, a = src:getPixel(x, y)
+      if a > 0 and (y < from or r - b > 0.28) then
+        d:setPixel(x, y, r + (HAZE[1] - r) * k, g + (HAZE[2] - g) * k, b + (HAZE[3] - b) * k, a)
+      end
+    end
+  end
+  return newImg(d)
+end
+local function crowns()
+  if crownQ then return crownQ end
+  local function c(n, rows, from) local im = crownImg(n, rows, from); return { im = im, q = lg.newQuad(0, 0, im:getWidth(), rows, im:getDimensions()), w = im:getWidth(), h = rows } end
+  crownQ = { c("park_tree1", 78, 52), c("park_tree2", 78, 52), oak = c("park_oak", 76, 58) }
+  return crownQ
+end
+local function drawCanopy(c, ox, T)
+  local Q = crowns()
+  local w, h = c.x1 - c.x0, c.y1 - c.y0
+  local r = rng(c.x0 * 3 + c.y0)
+  lg.setColor(1, 1, 1, 1)
+  local function put(cr, x, y, flip)
+    x, y = math.floor(x - ox), math.floor(y)
+    if x > 330 or x + cr.w < -10 then return end
+    if flip then lg.draw(cr.im, cr.q, x + cr.w, y, 0, -1, 1) else lg.draw(cr.im, cr.q, x, y) end
+  end
+  if h >= 90 then                                                   -- a big crown: oak crowns over a row of trees
+    local n = math.max(1, math.ceil((w - 187) / 120) + 1)
+    for i = 0, n - 1 do
+      local x = n == 1 and (c.x0 + w / 2 - 94) or (c.x0 - 14 + i * (w + 28 - 187) / (n - 1))
+      put(Q.oak, x, c.y0 - 6 + (i % 2) * 8, i % 2 == 1)
+    end
+    for x = c.x0 - 16, c.x1 - 70, 58 do
+      local k = 1 + math.floor(r(0, 1.99))
+      put(Q[k], x + r(-6, 6), c.y1 - 52 + r(-4, 4), r(0, 1) < 0.5)
+    end
+    for x = c.x0 + 20, c.x1 - 100, 74 do                             -- and between them, to close the gaps
+      local k = 1 + math.floor(r(0, 1.99))
+      put(Q[k], x + r(-6, 6), c.y0 + 30 + r(-4, 4), r(0, 1) < 0.5)
+    end
+  elseif h >= 60 and w >= 180 then                                  -- an oak's top
+    put(Q.oak, c.x0 + w / 2 - 94, c.y0, false)
+  else                                                              -- a row of tree crowns
+    local cy = (c.y0 + c.y1) / 2
+    local n = math.max(1, math.ceil((w - 70) / 54) + 1)
+    for i = 0, n - 1 do
+      local k = 1 + (i + math.floor(c.x0 / 8)) % 2
+      local x = n == 1 and (c.x0 + w / 2 - 43) or (c.x0 - 12 + i * (w + 24 - 87) / (n - 1))
+      put(Q[k], x + r(-4, 4), cy - 36 + ((i % 2 == 0) and r(-5, 0) or r(2, 7)), i % 2 == 1)
+    end
+  end
+end
+
+-- leafy twigs at a branch's tip (as the old oak's branches have), rising out and away
+local function tipTwig(tx, y, side)
+  local pts = { { 0, 1 }, { 1, 0 }, { 2, -1 }, { 3, -2 }, { 4, -2 } }
+  local lv = { { 2, -4 }, { 5, -4 }, { 4, -6 }, { 1, -1 } }
+  lg.setColor(INK)
+  for _, q in ipairs(pts) do lg.rectangle("fill", tx + side * q[1] - 1, y + q[2] - 1, 3, 3) end
+  for _, q in ipairs(lv) do lg.rectangle("fill", tx + side * q[1] - 1, y + q[2] - 1, 3, 3) end
+  lg.setColor(BARK[1])
+  for _, q in ipairs(pts) do lg.rectangle("fill", tx + side * q[1], y + q[2], 1, 1) end
+  for i, q in ipairs(lv) do
+    lg.setColor(LEAF[1 + i % 3]); lg.rectangle("fill", tx + side * q[1] - (side < 0 and 1 or 0), y + q[2], 2, 1)
+    lg.rectangle("fill", tx + side * q[1], y + q[2] - 1, 1, 1)
+  end
+end
+-- a bough lying across its trunk: 6 px thick over the trunk, 4 at the tips, twigs at both tips; the trunk's top
+-- shows under it (it grows out of the trunk)
+local function drawFork(p, t, ox)
+  local x0, x1, y = p.x0 - ox, p.x1 - ox, p.y0
+  local tc = (t.x0 + t.x1) / 2 - ox
+  local half = math.max(tc - x0, x1 - tc)
+  local function th(x) return 6 - math.floor(2 * math.abs(x + 0.5 - tc) / half + 0.5) end
+  lg.setColor(INK)
+  for x = x0, x1 - 1 do lg.rectangle("fill", x - 1, y - 1, 3, th(x) + 2) end
+  for x = x0, x1 - 1 do
+    local k = th(x)
+    lg.setColor(BARK[1]); lg.rectangle("fill", x, y, 1, k)
+    lg.setColor(BARK[2]); lg.rectangle("fill", x, y, 1, 1)
+    lg.setColor(BARK[3]); lg.rectangle("fill", x, y + k - 1, 1, 1)
+  end
+  lg.setColor(BARK[3])
+  for k = 1, 3 do lg.rectangle("fill", math.floor(x0 + (x1 - x0) * k / 4), y + 2, 2, 1) end
+  tipTwig(x1, y, 1); tipTwig(x0 - 1, y, -1)
+end
+
+-- a plank walk: the deck (crisp), a rope hand-rail on posts behind Pepper
+local function drawWalk(p, ox)
+  local x0, x1, y = p.x0 - ox, p.x1 - ox, p.y0
+  local hgt = p.y1 - p.y0
+  local w = x1 - x0
+  for px = x0 + 4, x1 - 4, 40 do                                     -- rail posts and the rope between them
+    lg.setColor(INK); lg.rectangle("fill", px - 1, y - 15, 4, 15)
+    lg.setColor(WOOD[3]); lg.rectangle("fill", px, y - 14, 2, 14); lg.setColor(WOOD[2]); lg.rectangle("fill", px, y - 14, 1, 1)
+    if px + 40 <= x1 - 4 then
+      for dx = 2, 39 do
+        local u = dx / 40
+        local ry = math.floor(y - 12 + 4 * 4 * u * (1 - u) * 0.5 + 0.5)
+        lg.setColor(INK); lg.rectangle("fill", px + dx, ry - 1, 1, 3)
+        lg.setColor(hex("c9b48a")); lg.rectangle("fill", px + dx, ry, 1, 1)
+      end
+    end
+  end
+  lg.setColor(INK); lg.rectangle("fill", x0 - 1, y - 1, w + 2, hgt + 2)  -- the deck
+  lg.setColor(WOOD[1]); lg.rectangle("fill", x0, y, w, hgt)
+  lg.setColor(WOOD[2]); lg.rectangle("fill", x0, y, w, 1)
+  lg.setColor(WOOD[3]); lg.rectangle("fill", x0, y + hgt - 1, w, 1)
+  for x = x0 + 7, x1 - 2, 8 do lg.setColor(WOOD[3]); lg.rectangle("fill", x, y + 1, 1, hgt - 2) end   -- plank joints
+end
+-- its legs (behind Pepper): pairs of timbers down to the ground, or into the water (seen through it)
+local function drawWalkLegs(p, ox, foot, world)
+  local floorY = world and world.height or (foot + 56)
+  for lx = p.x0 + 6, p.x1 - 10, 60 do
+    local wet = false
+    for _, r in ipairs(world and world.water or {}) do if lx >= r.x0 and lx < r.x1 then wet = true end end
+    local bottom = wet and floorY or foot
+    local x = lx - ox
+    lg.setColor(INK); lg.rectangle("fill", x - 1, p.y1, 6, bottom - p.y1)
+    lg.setColor(0.30, 0.24, 0.20); lg.rectangle("fill", x, p.y1, 4, bottom - p.y1)
+    lg.setColor(0.42, 0.34, 0.27); lg.rectangle("fill", x, p.y1, 1, bottom - p.y1)
+    for by = p.y1 + 20, bottom - 30, 40 do                           -- cross ties
+      lg.setColor(INK); lg.rectangle("fill", x - 3, by - 1, 10, 4); lg.setColor(0.36, 0.29, 0.23); lg.rectangle("fill", x - 2, by, 8, 2)
+    end
+    if wet then                                                       -- under the surface: the water's colour over it
+      lg.setColor(0.33, 0.47, 0.52, 0.55); lg.rectangle("fill", x - 3, foot + 24, 10, bottom - foot - 24)
+    end
+  end
+end
+
+-- the rose arbour: a slat (crisp), its posts and roses (faded, behind)
+local function drawSlat(p, ox)
+  local x0, x1, y, hgt = p.x0 - ox, p.x1 - ox, p.y0, p.y1 - p.y0
+  lg.setColor(INK); lg.rectangle("fill", x0 - 1, y - 1, x1 - x0 + 2, hgt + 2)
+  lg.setColor(hex("e9e2d2")); lg.rectangle("fill", x0, y, x1 - x0, hgt)
+  lg.setColor(hex("fbf7ec")); lg.rectangle("fill", x0, y, x1 - x0, 1)
+  lg.setColor(hex("b3a993")); lg.rectangle("fill", x0, y + hgt - 1, x1 - x0, 1)
+  for x = x0 + 3, x1 - 4, 6 do                                      -- the rose hanging off its front, under the top
+    lg.setColor(ROSE[1]); lg.rectangle("fill", x, y + hgt - 2, 3, 3)
+    if math.floor(x / 6) % 2 == 0 then lg.setColor(hex("d9586e")); lg.rectangle("fill", x + 1, y + hgt, 2, 2) end
+  end
+end
+local function drawSlatPosts(p, ox, foot)
+  for _, px in ipairs({ p.x0 + 2, p.x1 - 7 }) do
+    local x = px - ox
+    lg.setColor(fadeC(hex("cfc6b3"))); lg.rectangle("fill", x, p.y1, 5, foot - p.y1)
+    lg.setColor(fadeC(hex("9d927c"))); lg.rectangle("fill", x + 4, p.y1, 1, foot - p.y1)
+    for y = p.y1 + 4, foot - 6, 7 do                                  -- a climbing rose round it
+      local s = math.floor(y / 7) % 2 == 0 and -1 or 5
+      lg.setColor(ROSE[1]); lg.rectangle("fill", x + s, y, 2, 4); lg.rectangle("fill", x + 1, y + 2, 3, 1)
+      if math.floor(y / 7) % 3 == 0 then lg.setColor(ROSE[2]); lg.rectangle("fill", x + s, y - 1, 2, 2); lg.setColor(ROSE[3]); lg.rectangle("fill", x + s, y - 1, 1, 1) end
+    end
+  end
+end
+
+-- the play tower: a yellow deck (crisp), grey posts (crisp, as the slide tower's)
+local function drawDeck(p, ox)
+  local x0, x1, y, hgt = p.x0 - ox, p.x1 - ox, p.y0, p.y1 - p.y0
+  lg.setColor(INK); lg.rectangle("fill", x0 - 1, y - 1, x1 - x0 + 2, hgt + 2)
+  lg.setColor(DECK[1]); lg.rectangle("fill", x0, y, x1 - x0, hgt)
+  lg.setColor(DECK[2]); lg.rectangle("fill", x0, y, x1 - x0, 1)
+  lg.setColor(DECK[3]); lg.rectangle("fill", x0, y + hgt - 1, x1 - x0, 1)
+end
+local function drawTowerPost(t, ox)
+  local x, w = t.x0 - ox, t.x1 - t.x0
+  lg.setColor(INK); lg.rectangle("fill", x - 1, t.y0, w + 2, t.y1 - t.y0)
+  lg.setColor(POST[1]); lg.rectangle("fill", x, t.y0, w, t.y1 - t.y0)
+  lg.setColor(POST[2]); lg.rectangle("fill", x, t.y0, 1, t.y1 - t.y0)
+  if w > 3 then lg.setColor(POST[3]); lg.rectangle("fill", x + w - 1, t.y0, 1, t.y1 - t.y0) end
+end
+
+-- the low bough (crisp): a thick bough over the walk, bending up into the canopy at its trunk's side
+local function drawLowBough(p, t, ox)
+  local x0, x1, y0, y1 = p.x0 - ox, p.x1 - ox, p.y0, p.y1
+  local side = t and ((t.x0 + t.x1) / 2 > (p.x0 + p.x1) / 2) and 1 or -1
+  local cols = {}
+  for x = x0, x1 - 1 do cols[#cols + 1] = { x, y0, y1 - y0 } end
+  local reach = 20
+  for i = 1, reach do                                               -- towards its trunk, rising into the leaves (no
+    local x = side > 0 and (x1 - 1 + i) or (x0 - i)                -- ledge: it rises 1 px a column, thinning)
+    local th = math.max(9, (y1 - y0) - math.floor(i / 3))
+    cols[#cols + 1] = { x, y0 - i, th }
+  end
+  lg.setColor(INK)
+  for _, c in ipairs(cols) do lg.rectangle("fill", c[1] - 1, c[2] - 1, 3, c[3] + 2) end
+  for _, c in ipairs(cols) do
+    lg.setColor(BARK[1]); lg.rectangle("fill", c[1], c[2], 1, c[3])
+    lg.setColor(BARK[2]); lg.rectangle("fill", c[1], c[2], 1, 2)
+    lg.setColor(BARK[3]); lg.rectangle("fill", c[1], c[2] + c[3] - 2, 1, 2)
+  end
+  lg.setColor(BARK[3])
+  for x = x0 + 4, x1 - 5, 9 do lg.rectangle("fill", x, y0 + 5, 3, 1); lg.rectangle("fill", x + 4, y0 + 10, 2, 1) end
+  tipTwig(side > 0 and x0 - 1 or x1, y0 + 3, -side)
+  local ex = side > 0 and (x1 + reach) or (x0 - reach)              -- where it goes into the leaves: a leafy clump
+  for i, q in ipairs({ { -3, -6 }, { 1, -9 }, { 4, -4 }, { -6, -1 }, { 0, -2 }, { 3, 1 }, { -2, 3 }, { 5, -8 } }) do
+    lg.setColor(INK); lg.rectangle("fill", ex + side * q[1] - 2, y0 - reach + q[2] - 1, 5, 4)
+  end
+  for i, q in ipairs({ { -3, -6 }, { 1, -9 }, { 4, -4 }, { -6, -1 }, { 0, -2 }, { 3, 1 }, { -2, 3 }, { 5, -8 } }) do
+    lg.setColor(LEAF[1 + i % 3]); lg.rectangle("fill", ex + side * q[1] - 1, y0 - reach + q[2], 3, 2)
+  end
+end
+
+-- the magpie's nest at the top of the big oak (the landmark: dark twigs, not faded, so it reads from below)
+local function drawNest(p, ox)
+  local x0, x1, y0, y1 = p.x0 - ox, p.x1 - ox, p.y0, p.y1
+  local w = x1 - x0
+  lg.setColor(INK)
+  for x = x0 - 1, x1 do
+    local u = (x - x0 + 0.5) / w * 2 - 1
+    local top = y0 + math.floor(3 * u * u + 0.5)
+    lg.rectangle("fill", x, top - 1, 1, y1 - top + 2)
+  end
+  for x = x0, x1 - 1 do
+    local u = (x - x0 + 0.5) / w * 2 - 1
+    local top = y0 + math.floor(3 * u * u + 0.5)
+    lg.setColor(hex("5a4130")); lg.rectangle("fill", x, top, 1, y1 - top)
+    lg.setColor(hex("8a6a4a")); if (x + top) % 3 == 0 then lg.rectangle("fill", x, top + 1 + (x % 4), 1, 1) end
+    lg.setColor(hex("3b2a1f")); if x % 5 == 0 then lg.rectangle("fill", x, top + 3, 2, 1) end
+  end
+  lg.setColor(hex("2a1d16")); lg.rectangle("fill", x0 + 3, y0 + 1, w - 6, 2)   -- its hollow
+  for _, s in ipairs({ { x0 - 3, y0 + 2, -1 }, { x1 + 1, y0 + 1, 1 }, { x0 + 6, y0 - 2, -1 }, { x1 - 8, y0 - 1, 1 } }) do   -- stray twigs
+    lg.setColor(INK); lg.rectangle("fill", s[1] - 1, s[2] - 1, 5, 3)
+    lg.setColor(hex("6e5038")); lg.rectangle("fill", s[1], s[2], 3, 1)
+  end
+end
+
+-- the tier's decoration, behind Pepper: trunks, posts, walk legs, canopies (called before the back props)
+function Sc.drawTreetops(def, camx, world)
+  if def.art ~= "park" then return end
+  local TI = tier(def)
+  if not TI then return end
+  local T = Sc.townArt("park")
+  local ox, foot = math.floor(camx), TI.foot
+  if not TI.extra then                                              -- trunks a canopy needs at its ends (dry ground)
+    TI.extra = {}
+    for _, c in ipairs(TI.canopies) do
+      for _, e in ipairs({ { c.x0 + 16, -1 }, { c.x1 - 16, 1 } }) do
+        local near = false
+        for _, t in ipairs(TI.trunks) do
+          if math.abs((t.x0 + t.x1) / 2 - e[1]) <= math.max(100, (t.x1 - t.x0) * 5) then near = true end
+        end
+        local wet = false
+        for _, r in ipairs(world and world.water or {}) do if e[1] >= r.x0 - 8 and e[1] < r.x1 + 8 then wet = true end end
+        if not near and not wet then
+          local t = { x0 = e[1] - 5, x1 = e[1] + 5, y0 = c.y1, y1 = foot, extra = true }
+          TI.extra[#TI.extra + 1] = t; TI.trunks[#TI.trunks + 1] = t
+        end
+      end
+    end
+    table.sort(TI.trunks, function(a, b) return a.x0 < b.x0 end)
+  end
+  local function canopyOver(t)                                       -- the canopy a trunk goes up into
+    for _, c in ipairs(TI.canopies) do if c.x0 <= t.x1 and c.x1 >= t.x0 and c.y1 <= t.y0 + 60 then return c end end
+  end
+  for _, t in ipairs(TI.trunks) do                                   -- trunks
+    if not t.art and t.x1 - ox > -20 and t.x0 - ox < 340 then
+      local c = canopyOver(t)
+      local top = c and math.floor((c.y0 + c.y1) / 2) or t.y0
+      drawTrunk(t, math.min(top, t.y0), foot, ox, t.x1 - t.x0 >= 24)
+    end
+  end
+  for _, c in ipairs(TI.canopies) do                                 -- canopies, over the trunks' tops
+    if c.x1 - ox > -120 and c.x0 - ox < 440 then drawCanopy(c, ox, T) end
+  end
+  for p, r in pairs(TI.role) do                                      -- posts and legs
+    if p.x1 - ox > -20 and p.x0 - ox < 340 then
+      if r == "walk" then drawWalkLegs(p, ox, foot, world)
+      elseif r == "slat" then drawSlatPosts(p, ox, foot)
+      elseif r == "towerpost" then drawTowerPost(p, ox) end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+
+-- a prop of the tier (drawPropArt): true if it is one (drawn here, or as decoration by Sc.drawTreetops)
+local function drawTierProp(p, camx, def)
+  local TI = tier(def)
+  local r = TI and TI.role[p]
+  if not r then return false end
+  local ox = math.floor(camx)
+  if r == "nest" then drawNest(p, ox)
+  elseif r == "walk" then drawWalk(p, ox)
+  elseif r == "slat" then drawSlat(p, ox)
+  elseif r == "deck" then drawDeck(p, ox)
+  elseif r == "lowbough" then drawLowBough(p, (trunkOf(TI, p)), ox)
+  elseif r == "branch" then
+    local t = trunkOf(TI, p)
+    if t and t.x0 < p.x1 and t.x1 > p.x0 then drawFork(p, t, ox)
+    elseif t then drawBranch(p, t, camx)
+    else drawFork(p, { x0 = p.x0, x1 = p.x1 }, ox) end
+  end
+  lg.setColor(1, 1, 1, 1)
+  return true
+end
+
 -- one prop of an art level. kicked: a leaf pile Pepper has run through.
 function Sc.drawPropArt(p, camx, def, kicked)
   local style = def.art
@@ -1248,6 +1685,7 @@ function Sc.drawPropArt(p, camx, def, kicked)
   end
   local n = p.name
   if p.hidden then return end
+  if style == "park" and def.foot and drawTierProp(p, camx, def) then return end   -- the treetop tier (tall parks)
   local d = dy()                                                  -- (the art's fixed lines follow the path line)
   if not n or n == "" then
     if style == "park" and underCrown(def, p) then drawBough(p, camx); return end

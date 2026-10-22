@@ -21,6 +21,31 @@ in `art/scene/` and pieces drawn in code. Pepper's files are untouched (`check_p
   loses "(greybox)"; export regenerated, `tools/make_citypark_tall.py` makes the same (checked with `--force` into
   a scratch copy). On the path the camera rests at the bottom of the world, so the low road now looks as City Park
   does today. `--physics` 82 of 82 as before.
+- **The treetop tier, dressed** (`scene.lua`: `Sc.drawTreetops`, called before the back props, and the tier's
+  ledges in `Sc.drawPropArt`). Only existing art and code-drawn pieces; no box or test changed. The tier is
+  found from the map: ledges 90 px or more over the path (`L.foot`), decoration 100 px or more over it; parts by
+  name, an unnamed ledge belongs to the named ledge over it, else to the one before it in the map:
+  - branches (the plane tree, the limes, the old oak's crown, twig and stub, the ash, the big oak's boughs): crisp
+    and outlined like the old oak's branches: a bough lying across its trunk (thick over it, thin at the tips,
+    leafy twigs at both tips), or a branch reaching out from the nearest trunk (`drawBranch`, as in City Park)
+  - trunks: the narrow decoration boxes, drawn faded down to the path with flaring roots and bark furrows, up into
+    their canopy; the big oak's 32 px trunk with knots. A canopy with no trunk near one end gets one there on dry
+    ground (the alders on the creek's far bank): nothing floats
+  - canopies: the crowns of `park_tree1`, `park_tree2` and `park_oak` (their trunks masked out, faded as
+    decoration), overlapping over each crown box; the big oak's crown is oak crowns over two rows of trees, the old
+    oak's top is one oak crown over its art
+  - the treetop walk and the alder walk: a plank deck (crisp, outlined), a rope hand-rail on posts behind Pepper,
+    timber legs with cross ties down to the path or into the water (seen through it, as the stepping stones are)
+  - the rose arbour: white slats (crisp) with a rose along their front, each on two faded posts with a climbing rose
+  - the play tower: yellow decks and grey posts, crisp, as the slide tower's art
+  - the low bough over the alder walk: a thick crisp bough bending up into the leaves towards its trunk
+  - the magpie's nest at the top of the big oak: dark twigs, not faded, a stray twig or two, so it reads from below
+- **The sky goes on above the old horizon.** In a tall art level with the look on, the sky rises with the far city
+  (factor 0.3, so the warm glow stays behind the skyline) and goes on 120 rows above its old top in five deeper
+  blue bands (City Park's script: `above`; a script without them carries its top step on upwards), with a second,
+  sparser row of high clouds (`L.cloudsHigh`). A flat level, or the look off, draws its sky as before.
+- **Checks.** `tools/tiled/check_tiled.lua`'s drag check knows a piece's `foot` moves with it. The tall tour
+  (`--test`) also shoots every screen on the low road (`ct_31`-`ct_39`) and up in the treetops (`ct_41`-`ct_49`).
 
 ## Branch `engine/round2`: the review's engine fixes and the rooftops mechanics (22 Oct)
 Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untouched (`check_pepper` UNCHANGED).

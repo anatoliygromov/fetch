@@ -500,6 +500,7 @@ function St:draw(debug)
   lg.push(); lg.translate(0, -camY)                                -- the world, up to the foreground band
   -- 6 quay back: railing and things behind Pepper
   use("back")
+  if style == "park" then Sc.drawTreetops(self.def, cam, self.world) end   -- a tall park's treetops: trunks, canopies
   for _, pr in ipairs(self.def.props) do if pr.layer == "back" then prop(pr, cam, C.back) end end
   if style then Sc.drawSpout(self.def, cam) end
   Sp.drawBack(self, cam)                                           -- code-drawn decoration (kiosks)
