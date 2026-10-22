@@ -308,6 +308,7 @@ function love.update(dt)
       stage:update(DT, presses); Talk.watch(stage, presses, DT); presses = {}; acc = acc - DT; steps = steps + 1
       local now = stage.lives * 10 + stage.hearts                 -- a heart (or a life) lost: no NO HIT medal
       if hl and now < hl then hit = true end; hl = now
+      if (stage.ballKnocks or 0) > 0 then hit = true end         -- (r6/engine) a hit that knocked the ball out: no NO HIT medal either
       if stage.clearT and not clearAt then clearAt = stage.t end                -- the ball given: the clear time
       if stage.events.over then state, t = "over", 0; over.sel = 1; S.music(false); S.play("over"); if run then Flow.runOver(stage.score) end; break end
       if stage.events.clear then

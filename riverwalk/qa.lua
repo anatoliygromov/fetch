@@ -3,6 +3,9 @@
 --                 in the air, she is knocked back (as a bike does, from either side) and followed for 1.5 s
 --   2 bike sweep: in each bike zone a real bike rides at her from the right while she stands, crouches or hops
 --   3 fuzz:       400 runs of 6 s of random play from random places
+--   4 ball sweep: (r6/engine) at every 24 px, on every surface she can stand on, she is hit from either side while
+--                 she carries the ball (St:hazardHit): the ball must come to rest within 3.3 s where she can pick
+--                 it up (not in a box, not in the water, within 160 px of where she was hit), or be given to Mia
 -- After every frame of every run: Pepper's body must not be inside a solid box (the pavement included, so
 -- "pushed underground" is caught; her feet span is checked, deeper than a 4 px step) and she must not be below
 -- the level (more than the fall rule's 24 px under the bottom of the world, stage.lua). A run that ends in the river or at a
@@ -143,6 +146,29 @@ return function(api)
         end, ("fuzz run %d from x %d y %d"):format(k, x, math.abs(fy)))
       end
     end
+    say("QA: ball sweep")
+    local hard = stage().hard; stage().hard = nil                 -- (hard mode keeps the old rule: no knock)
+    for x = 20, w.width - 20, 24 do
+      for _, fy in ipairs(floorsAt(w, x)) do
+        for _, side in ipairs(fy > 0 and { -1, 1 } or {}) do
+          place(stage(), x, fy, false)
+          local s2 = stage(); local p, b = s2.pepper, s2.ball
+          sim(s2, 2, function() return {} end, "settle")
+          if p.mode == "normal" and p.onGround then
+            b.state, b.knock, b.on, b.drop, p.carrying = "carried", nil, nil, nil, b; b.x, b.y = p:mouthPos()
+            p.invuln = 0; local hx = p.x
+            if p:hurt(p.x + side * 10, s2.world) then s2:hazardHit() end
+            local tag = ("ball knocked out, hit from the %s at x %d y %d"):format(side < 0 and "left" or "right", x, fy)
+            sim(s2, 200, function() return {} end, tag)
+            local onBoat = false                                     -- (on a boat or a lift it rides along: fine)
+            for _, m in ipairs(s2.movers) do if b.on == m then onBoat = true end end
+            local ok = b.state == "given" or (b.state == "rest" and not s2:ballLost() and (math.abs(b.x - hx) <= 160 or onBoat) and not s2.world:inWater(b.x, b.y))
+            if not ok then problems[#problems + 1] = ("%s: the ball is %s at x %.1f y %.1f"):format(tag, b.state, b.x, b.y) end
+          end
+        end
+      end
+    end
+    stage().hard = hard
     say(("QA: %d runs, %d frames, %d problems"):format(runs, frames, #problems))
     local kinds, order = {}, {}                                    -- one line per kind of problem, with a count
     for _, s2 in ipairs(problems) do

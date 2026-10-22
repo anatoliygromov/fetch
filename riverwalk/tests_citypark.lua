@@ -115,7 +115,8 @@ return function(mode, api)
           s.bikes = { { x = p.x + 90, y = 184, warn = 0, zone = s.def.bikes[1] } }; s.bikeT = 99 end },
       { during = 2.0 },
       { act = function(p) local s = api.stage(); report("picnic table: safe from the leaf cart", near(p.y, 156) and s.hearts == hearts, ("y %.0f hearts %d"):format(p.y, s.hearts)) end },
-      { act = function() tp(1510, 184); local s = api.stage(); hearts = s.hearts; s.bikes = { { x = 1330, y = 184, warn = 0, zone = s.def.bikes[1] } }; hold("right") end },
+      -- (r6/engine: she runs past the lamp at x 1624, and a lamp now gives a heart back: start with 3, the most)
+      { act = function() tp(1510, 184); local s = api.stage(); s.hearts = 3; hearts = 3; s.bikes = { { x = 1330, y = 184, warn = 0, zone = s.def.bikes[1] } }; hold("right") end },
       { cond = function(p, s) return s.bikes[1] and s.bikes[1].x - p.x < 92 end, act = function() jump("right", "jump") end, limit = 2 },
       { during = 1.2 },
       { act = function() local s = api.stage(); release(); report("leaf cart: a running jump clears it", s.hearts == hearts, ("hearts %d"):format(s.hearts)) end },
@@ -254,6 +255,7 @@ return function(mode, api)
           local ok = 0; for _, r in ipairs(results) do if r then ok = ok + 1 end end
           print(("%d of %d passed"):format(ok, #results)); love.event.quit() end },
     }) do steps[#steps + 1] = st end
+    require("tests_safety")(steps, api, report)                  -- the safety nets (r6/engine), before the summary
   elseif mode == "--auto" then
     love.filesystem.createDirectory("rec")
     local function at(cond, act, limit) return { cond = cond, act = act, limit = limit or 6 } end

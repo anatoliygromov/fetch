@@ -2,6 +2,56 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r6/engine`: safety nets, the same in every level (22 Oct)
+Built on `round1`. Benchmark principles 5, 6 and 7 (`docs/benchmark_22oct.md` section 4) in the engine, so every
+level gets them without level changes. Hard mode (`stage.hard`: `carry.hard` from the menu's `hard.txt`, or `--hard`)
+keeps the old rules everywhere. Pepper's files are untouched; music is untouched.
+- **A free first mistake** (stage.lua `St:hazardHit`, `St:knockBall`, `St:spotNear`, `St:ballLands`): when a hazard
+  hits Pepper while she carries the ball (bikes, leaf carts, trams and any other kind in `L.bikes`, geese, gulls, the
+  chase's barrels), the ball pops out with her knock-back and she keeps her hearts; she still gets the hurt sound,
+  the knock-back and 1.5 s of blinking, and Mia says "OOPS! GET THE BALL!". Without the ball a hit costs a heart as
+  before. The ball flies along with her (60% of her knock-back speed, up 150 px/s); if that flight would end in the
+  water or inside a box (`St:ballLands` runs it ahead), it pops straight up instead; if even that fails, it splashes
+  and comes back 0.6 to 1.2 s later on a spot fixed at the hit: the floor under her paws, the nearest clear spot
+  within 48 px (never a boat or a lift, they move on), else by the last lamp. critters.lua (goose, gull), chase.lua
+  (barrel) and the bike loop call `St:hazardHit`; a hazard added later only has to call it after `p:hurt`.
+  Not hits, unchanged: the water and a fall out of the world (a heart and back to the lamp, as before: returning her
+  to the bank where she fell was weighed and left out, because the "last safe ground" can be a crumbling plank, a
+  loose tile, a boat or a bike lane, and the tests and autopilots rely on the lamp), the chase's pin and hatches,
+  time up. In hard mode a hit costs a heart even with the ball, and the goose and the gull still knock it out.
+  main.lua (one line): a knocked-out ball also loses the NO HIT medal (a hit is a hit).
+  qa.lua: a 4th sweep, the ball sweep: at every 24 px on every surface, hit from either side while carrying, the
+  ball must come to rest where she can pick it up (or ride a boat, or reach Mia) within 3.3 s.
+- **Lamps heal** (stage.lua): lighting a checkpoint lamp gives back one heart, up to the most she can have, and a
+  red heart pops out of the lamp's light and floats up 26 px, fading, over 1.2 s; it rings the existing "heart"
+  chime instead of the lamp's "checkpoint" chime so the gift is heard (at full hearts the lamp chimes as before).
+  Not in hard mode (1 heart).
+- **Tells** (principle 7). Audit of every hazard's warning, at least 0.5 s and on screen before it can hit:
+  bikes, carts, trams (bell, honk or ding 1 s before the front reaches the screen edge, and the blinking sign at
+  that edge: OK); goose (0.5 s hiss, rearing pose and a "!" before the charge: OK at the minimum; a goose walked
+  into from behind or landed on from a jump has no hiss, it is in plain view); gull (squawk and its shadow on her
+  floor 0.9 s before the swoop: OK); steam (never hurts); loose roof tiles (0.6 s shake, clink and grit; they only
+  drop her, never fall on her); Night Harbour's crumbling planks (0.5 s shake and a scramble sound); the fox (never
+  hurts); hatches and water (static, in view). Added in code: **the chase's barrels** (chase.lua) now show a
+  blinking "!" as they come off the stack (with the existing "spring"), a "!" again with a rumble ("push") while
+  Pepper closes in within 110 px behind one (about a second at a run), and a shadow on the street; the playtest
+  found Soder Hill's barrels the costliest hazard for Mikael and Elsa (fix 9). Art-dependent tells left for the
+  art plan: a goose pose for "annoyed, about to turn" (so a goose walked into from behind warns too), a barrel
+  wobble frame on the stack, a cart keeper or tram driver waving as the bell rings.
+- **Tests** (`tests_safety.lua`, one line in each level's tests file): every level's `--physics` run ends with the
+  safety checks, found from the level itself: for each hazard type (each vehicle kind, goose, gull, barrel) a hit
+  while carrying (ball out, no heart, the ball at rest within 160 px where she can get it), a hit without the ball
+  (a heart), a hit in hard mode (a heart, as before); and the first checkpoint lamp (gives a heart and pops one,
+  never past 3, nothing in hard mode). `SAFETY_SHOTS=1` saves the first hit of each kind and the lamp's heart to
+  `shots_safety/` (the GIFs in `/home/claude/out/r6-engine/`). Three tests changed, with reasons: City Park's
+  "leaf cart: a running jump clears it" starts at 3 hearts (she runs past the lamp at x 1624, which now heals);
+  Downtown's goose bite while carrying now checks the ball out and no heart; the lab's pit fall has its respawn
+  lamp lit (as it is in play; lighting it would heal). Checks: `check_pepper` UNCHANGED (4591 steps),
+  `check_pepper_files` identical, flow 103 of 103, `check_tiled` all PASS, `--physics` all pass (citypark 82,
+  downtown 79, riverwalk 49, soder 29, night 40, lab_tall 43, citypark_tall 91, rooftops 97, downtown_tall 90; were
+  73, 70, 40, 23, 37, 40, 82, 88, 81), `--auto` 44.2, 51.6, 66.3, 73.3, 81.3, 25.9, 38.5, 54.1 (low road), 56.9 s,
+  unchanged, `--qa` 0 problems on City Park, Downtown and River Walk (ball sweep included).
+
 ## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
 Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of
 every level, the menus and the cards. The bug list with evidence: `docs/bugs_22oct.md`. Pepper's files are untouched.

@@ -21,6 +21,9 @@ local function img(p) local i = lg.newImage(p); i:setFilter("nearest", "nearest"
 local girlImg, ballImg, girlQ
 local GF = require("girl_frames")             -- the girl's SpriteCook animations: idle, wave, cheer, call
 local GIRL_ROW, GIRL_FPS = {}, { idle = 6, wave = 9, cheer = 9, call = 8, pet = 7 }
+local POP_T = 1.2                                                -- a lamp's heart rises and fades this long
+local HEART = { ".kk.kk.", "krrkrrk", "krwrrrk", "krrrrrk", ".krrrk.", "..krk..", "...k..." }   -- 7 x 7, drawn 2x
+local HCOL = { k = { 0.13, 0.08, 0.10 }, r = { 0.90, 0.20, 0.25 }, w = { 1, 0.85, 0.85 } }
 for i, r in ipairs(GF.rows) do GIRL_ROW[r.name] = i end
 
 -- def: the level (level/*.lua). carry (optional): { score, lives } carried over from the level before.
@@ -61,6 +64,7 @@ function St.new(def, carry)
   -- the cat (Downtown): it sits on the ball until a bark scares it off; then the ball drops
   if def.cat then s.cat = { x = def.cat.x, y = def.cat.y, state = "sit", t = 0, vx = 0, vy = 0, dir = 1 }; s.ball.state = "cat" end
   s.kicked = {}                                                   -- leaf piles Pepper has run through
+  s.pops = {}                                                     -- hearts popping out of a lamp (St:update, the lamps)
   s.cam = 0
   Vc.init(s)                                                      -- s.camY, the vertical camera (vcam.lua)
   s.fx = Ex.new()
@@ -180,6 +184,63 @@ function St:homeNear(x, y)
   end
   return { x = x, y = y }
 end
+-- a hazard hit Pepper (a bike, cart or tram, a goose, a gull, a barrel: p:hurt has already knocked her back and
+-- made her blink). The free first mistake (benchmark principle 6): while she carries the ball, the ball is knocked
+-- out of her mouth and she keeps her hearts; without the ball the hit costs a heart. Hard mode keeps the old rule:
+-- every hit costs a heart (dropsBall: this hazard knocked the ball out before, the goose and the gull). A hazard
+-- added later calls this after p:hurt. Returns true when the hit cost a heart.
+function St:hazardHit(dropsBall)
+  local p = self.pepper
+  if p.carrying and not self.hard then self:knockBall(); return false end
+  self:loseHeart()
+  if dropsBall and p.carrying then self:dropBall() end
+  return true
+end
+-- the ball pops out of her mouth with the knock-back and comes down on the ground near her. Its fallback spot is
+-- fixed now (b.knock): the ground under her when she was hit, never a boat or a lift (they move on), else by the
+-- last lamp. If the ball would land in the water or somewhere she can't reach, it is put back there.
+function St:knockBall()
+  local b, p, w = self.ball, self.pepper, self.world
+  local fy = w:floor(p.x - Pp.HW, p.x + Pp.HW, p.x, p.y - 0.5, w.height, p.y - 0.5)   -- (under her paws: she may
+  b.knock = fy and self:spotNear(p.x, fy) or self:homeNear(self.check.x, self.check.y) -- stand on a box's very edge)
+  self:dropBall()
+  -- it flies along with her, a little behind; if that flight would end in the water or out of reach, it pops
+  -- straight up instead (and if even that fails, it splashes and comes back at b.knock)
+  local vx = math.max(-90, math.min(90, p.vx * 0.6))
+  if w:solidIn(b.x - 3, b.x + 3, b.y - 6, b.y) or not self:ballLands(b.x, b.y, vx, -150) then vx = 0 end
+  b.vx, b.vy = vx, -150
+  self.ballKnocks = (self.ballKnocks or 0) + 1
+  self:say(self.def.knockSay or "OOPS! GET THE BALL!", 1.8)
+end
+-- a spot near (x, y) where a ball can rest and be picked up: on a floor within 8 px of y (not a boat or a lift,
+-- they move on), out of the water and clear of boxes, the nearest of x, x -+ 12, ... x -+ 48; nil if none
+function St:spotNear(x, y)
+  local w = self.world
+  for _, dx in ipairs({ 0, -12, 12, -24, 24, -36, 36, -48, 48 }) do
+    local bx = x + dx
+    local f, on = w:floor(bx - 2, bx + 2, bx, y - 8, y + 8, y - 8)
+    local moving = false
+    for _, m in ipairs(self.movers) do if on == m then moving = true end end
+    if f and not moving and bx >= 14 and bx <= w.width - 14 and not w:inWater(bx, f - 2)
+      and not w:solidIn(bx - 3, bx + 3, f - 6, f - 1) then return { x = bx, y = f } end
+  end
+end
+-- where a ball thrown from (x, y) at (vx, vy) comes down, with the air branch's rules (St:update): true if on a
+-- floor, out of the water and not inside a box
+function St:ballLands(x, y, vx, vy)
+  local w, dt = self.world, 1 / 60
+  for _ = 1, 150 do
+    vy = math.min(vy + 520 * dt, 400)
+    local ny = y + vy * dt
+    local nx = math.max(14, math.min(w.width - 14, x + vx * dt))
+    if w:solidIn(nx - 3, nx + 3, y - 6, y - 1) then vx = 0 else x = nx end
+    local f = w:floor(x - 3, x + 3, x, y - 0.5, ny, y)
+    if f then return not w:inWater(x, f) and not w:solidIn(x - 2, x + 2, f - 5, f - 1) and f < w.height - 4 end
+    y = ny
+    if w:inWater(x, y) or y > w.height then return false end
+  end
+  return false
+end
 -- a ball that came to rest where Pepper cannot get it (inside a solid box or terrain, or it fell out of the
 -- level) goes back to its home spot (the level's ball home, or where the magpie / cat let it go), with a line
 function St:ballLost()
@@ -276,6 +337,7 @@ function St:update(dt, presses)
     if w:solidIn(nx - 3, nx + 3, b.y - 6, b.y - 1) then b.vx = 0 else b.x = nx end   -- it bounces off walls, never into them
     local f, hit = w:floor(b.x - 3, b.x + 3, b.x, b.y - 0.5, ny, b.y, b.drop)    -- drop: knocked off a branch, falls through
     if f then b.y = f; b.state = "rest"; b.drop = nil; b.on = hit; b.airT = 0
+      if b.knock and self:ballLost() then b.state = "home"; self.ballBackT = 0.6 else b.knock = nil end   -- (knocked: see below)
       if math.abs(b.x - self.girl.x) < 30 and math.abs(b.y - self.girl.y) < 20 then self:giveBall() end
     else b.y = ny end
     if w:inWater(b.x, b.y) then b.state = "home"; self.ballBackT = 1.2; S.play("splash")
@@ -287,7 +349,10 @@ function St:update(dt, presses)
   end
   if b.state == "home" then
     self.ballBackT = (self.ballBackT or 0) - dt
-    if self.ballBackT <= 0 then
+    if self.ballBackT <= 0 and b.knock then                       -- a knocked-out ball comes back near where she was hit
+      b.x, b.y, b.state, b.on, b.knock = b.knock.x, b.knock.y, "rest", nil, nil; S.play("land")
+      if self:ballLost() then local h = self:homeNear(self.check.x, self.check.y); b.x, b.y = h.x, h.y end
+    elseif self.ballBackT <= 0 then
       b.x, b.y, b.state = b.home.x, b.home.y, "rest"; self:say(b.homeSay or self.def.ballBack or "THE BALL IS BACK ON THE BOAT", 2.2)
       if self:ballLost() then b.home = self:homeNear(self.check.x, self.check.y); b.x, b.y = b.home.x, b.home.y end   -- never a home it can't rest at
     end
@@ -306,7 +371,12 @@ function St:update(dt, presses)
   -- lamp posts: passing a checkpoint lamp saves Pepper's place
   for _, l in ipairs(self.lamps) do
     if l.checkpoint and not l.lit and p.x >= l.x - 6 and p.x <= l.x + 40 and p.y <= l.y + 2 and p.y >= l.y - 90 and p.mode == "normal" then
-      l.lit = true; l.litAt = self.t; self.check = { x = l.x, y = l.y }; S.play("checkpoint")
+      l.lit = true; l.litAt = self.t; self.check = { x = l.x, y = l.y }
+      -- a lamp is a gift (benchmark principle 5): it gives back one heart, up to the most she can have, and a heart
+      -- pops out of it (not in hard mode). The heart's chime instead of the lamp's, so the gift is heard.
+      if not self.hard and self.hearts < self.maxHearts then
+        self.hearts = self.hearts + 1; self.pops[#self.pops + 1] = { x = l.x, y = l.y, t = 0 }; S.play("heart")
+      else S.play("checkpoint") end
       if p.carrying and self.def.ballHomeAtLamps then                -- L.ballHomeAtLamps: a lost ball comes back here
         self.ball.home = self:homeNear(l.x, l.y); self.ball.homeSay = "THE BALL IS BACK BY THE LAMP"
       end
@@ -342,7 +412,7 @@ function St:update(dt, presses)
     if c.x < bk.endX or c.x < self.cam - 80 then table.remove(self.bikes, i)
     else
       local bx0, bx1, by0 = math.max(c.x - hw, bk.depot or -1e9), c.x + hw, c.y - h   -- (inside its shed it is gone)
-      if x1 > bx0 and x0 < bx1 and y1 > by0 and y0 < c.y and p:hurt(c.x, w) then self:loseHeart() end
+      if x1 > bx0 and x0 < bx1 and y1 > by0 and y0 < c.y and p:hurt(c.x, w) then self:hazardHit() end
     end
   end
 
@@ -365,6 +435,7 @@ function St:update(dt, presses)
     if pr.leaves and not self.kicked[pr] and x1 > pr.x0 and x0 < pr.x1 and y1 > pr.y0 then self.kicked[pr] = true end
   end
   for i = #self.rings, 1, -1 do local r = self.rings[i]; r.t = r.t + dt; if r.t > 0.4 then table.remove(self.rings, i) end end
+  for i = #self.pops, 1, -1 do local h = self.pops[i]; h.t = h.t + dt; if h.t > POP_T then table.remove(self.pops, i) end end
 
   -- the girl
   local g = self.girl
@@ -654,6 +725,21 @@ function St:draw(debug)
     lg.setColor(1, 1, 1, 1 - r.t / 0.4); lg.setLineWidth(1)
     lg.circle("line", math.floor(r.x - cam), math.floor(r.y), 6 + r.t * 70)
   end
+  for _, h in ipairs(self.pops) do                                 -- a heart pops out of a lamp: up 26 px, fading
+    local k = h.t / POP_T
+    local x = math.floor(h.x - cam + 0.5) - 7
+    local y = math.floor(h.y - (grey and 76 or 94) - 26 * (1 - (1 - k) ^ 2) + 0.5) - 7
+    local a = k < 0.7 and 1 or (1 - k) / 0.3
+    if k < 0.12 then x, y = x + 3, y + 3 end                       -- (a small pop first, then full size)
+    local sc = k < 0.12 and 1 or 2
+    for r, line in ipairs(HEART) do
+      for c = 1, #line do
+        local col = HCOL[line:sub(c, c)]
+        if col then lg.setColor(col[1], col[2], col[3], a); lg.rectangle("fill", x + (c - 1) * sc, y + (r - 1) * sc, sc, sc) end
+      end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
   use("play")
   if self.road then self.road:draw(cam, self.t, lk and Look.rowFactor) end            -- traffic in the near lane, in front of the promenade
   use("front")

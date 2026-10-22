@@ -162,6 +162,7 @@ return function(mode, api)
           print(("%d of %d passed"):format(ok, #results)); love.event.quit() end },
     }
     for _, st in ipairs(more) do steps[#steps + 1] = st end
+    require("tests_safety")(steps, api, report)                  -- the safety nets (r6/engine), before the summary
   elseif mode == "--auto" then
     love.filesystem.createDirectory("rec")
     local function sniff(t) return { act = function() hold("sniff") end }, { wait = t }, { act = function() release() end } end
