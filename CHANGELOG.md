@@ -22,6 +22,8 @@ Built on `round1`. Tools and docs only: no engine, level or map files changed.
   give the same levels; and every map, fresh and upgraded, dragged by (16, 80) with 10 rows added on top
   (`tools/tiled/move_map.py`) gives the same level with every position moved along. On the old maps that last
   check fails, as it should (night: 12 boat `from` / `to` left behind).
+- **`tools/tiled/render_map.py`** reads the drag-safe fields too (a boat's path, a goose's stretch); the old and
+  the upgraded Night Harbour map render to the same PNG.
 
 ## The old title is back (22 Oct, evening)
 - The hand-pixeled title (branch `title/redraw`) was rejected by the owner: the 19 Oct title has far more charm.

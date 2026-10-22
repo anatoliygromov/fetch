@@ -17,7 +17,21 @@ import xml.etree.ElementTree as ET
 from PIL import Image, ImageDraw, ImageFont
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from level_to_tiled import tmx_props  # noqa: E402
+from level_to_tiled import tmx_props, parse_lua, shift  # noqa: E402
+
+REL = {"relx": "x", "rely": "y", "relxy": "xy"}
+
+
+def absolute(p, x, y):
+    """relx. / rely. / relxy. properties (drag-safe offsets) back to the plain fields, as riverwalk/tiled.lua does."""
+    out = {k: v for k, v in p.items() if k.split(".", 1)[0] not in REL}
+    for k, v in p.items():
+        pre, _, field = k.partition(".")
+        if pre in REL and field:
+            if isinstance(v, str) and v.lstrip().startswith("{"):
+                v = parse_lua(v)
+            out[field] = shift(v, REL[pre], round(x), round(y))
+    return out
 
 TERR = {"#": (78, 82, 96), "~": (52, 104, 168), "/": (120, 100, 70), "\\": (120, 100, 70)}
 PROP = {"solid": (255, 150, 60), "oneway": (255, 220, 70), "decor": (150, 150, 160)}
@@ -48,7 +62,8 @@ def load(path):
             objs.append({"name": o.get("name", ""), "cls": o.get("type", o.get("class", "")) or el.get("name"),
                          "x": float(o.get("x")), "y": float(o.get("y")),
                          "w": float(o.get("width", 0)), "h": float(o.get("height", 0)),
-                         "point": o.find("point") is not None, "p": dict(tmx_props(o))})
+                         "point": o.find("point") is not None,
+                         "p": absolute(dict(tmx_props(o)), float(o.get("x")), float(o.get("y")))})
         layers.append((el.get("name"), objs))
     return w * 8, h * 8, rows, layers
 
