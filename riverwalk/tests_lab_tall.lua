@@ -139,6 +139,27 @@ return function(mode, api)
             ("platform bottom %.1f, her head %.1f"):format(m.y1, p.y - p:height())); hold("left") end },
       { wait = 0.6 }, { act = function() release() end }, { wait = 0.9 },
       { act = function() local m = lift(); report("she steps out: it comes down to F2", near(m.y0, 504, 0.01), ("y %.1f"):format(m.y0)) end },
+      -- 10b the review's case: crouched under the descending lift, then she lets go of Down and stands up. The lift
+      -- must wait at her standing height (26 px + 2), so she never stands up into the platform
+      { act = function() local m = lift(); m.k, m.dir, m.waitT, m.y0, m.y1 = 0.5, -1, 0, 344, 352; tp(920, 504); hold("down") end },
+      { wait = 4.0 },
+      { act = function(p) local m = lift()
+          report("crouched under the lift: it waits at her standing height", m.blocked and p.crouch and m.y1 <= p.y - Pp.H_STAND - 2 + 0.01,
+            ("platform bottom %.1f, standing head %.1f"):format(m.y1, p.y - Pp.H_STAND)); release() end },
+      { wait = 0.5 },
+      { act = function(p) local m = lift()
+          report("she lets go of Down and stands up: her head clear of the platform", not p.crouch and m.y1 <= p.y - p:height() + 0.01,
+            ("platform bottom %.1f, her head %.1f"):format(m.y1, p.y - p:height())) end },
+      -- 10c a lift already lower than that over her (she crawled under it) winds back up until she has room
+      { act = function(p) local m = lift(); m.dir, m.waitT = -1, 0; m.k = (504 - 486) / (504 - 184); m.y0, m.y1 = 486, 494
+          tp(920, 504); api.stage().pepper.crouch = true; hold("down") end },
+      { wait = 1.5 },
+      { act = function(p) local m = lift()
+          report("a lift too low over a crouched Pepper backs up to standing room", m.y1 <= p.y - Pp.H_STAND - 2 + 0.01 and m.y1 > p.y - Pp.H_STAND - 6,
+            ("platform bottom %.1f"):format(m.y1)); release() end },
+      { wait = 0.5 },
+      { act = function(p) local m = lift(); report("and she stands up under it, head clear", not p.crouch and m.y1 <= p.y - p:height() + 0.01, ("head %.1f"):format(p.y - p:height())); hold("left") end },
+      { wait = 0.8 }, { act = function() release() end }, { wait = 1.0 },
       -- 11 a fall into the pit: out of the bottom of the world, a heart, back to the lamp
       { act = function(p, s) s.check = { x = 100, y = 664 }; s.hearts = 3; tp(240, 600); p.onGround = false end },
       { during = 2.0 },

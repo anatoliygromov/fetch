@@ -2,6 +2,15 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `engine/round2`: the review's engine fixes and the rooftops mechanics (22 Oct)
+Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untouched (`check_pepper` UNCHANGED).
+- **The lift never waits at her crouched height** (review, SHOULD FIX 2). A lift coming down over a crouched Pepper
+  waited 16 px over her paws; when she let go of Down she stood up into the platform (pepper.lua's headroom test
+  sees only solids). `lift.lua` now keeps her standing room (26 px) plus 2 px (`Lf.CLEAR`) clear over her whether
+  she crouches or not, and a lift that is already lower than that over her (she crawled in under it) is wound back
+  up by its operator until she has room. lab_tall `--physics`: 4 new checks (the review's case, crouched then
+  standing; a lift too low over her backs up), 34 of 34.
+
 ## The old title is back (22 Oct, evening)
 - The hand-pixeled title (branch `title/redraw`) was rejected by the owner: the 19 Oct title has far more charm.
   Its merge is reverted on `round1`; the branch is kept for reference. The window is now called "FETCH!".

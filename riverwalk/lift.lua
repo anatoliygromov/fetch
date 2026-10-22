@@ -10,6 +10,7 @@
 -- the winch house at the top and the operator in it runs the lift up and down all day (drawn with the lift).
 -- It carries Pepper (and a ball resting on it) both ways. It never crushes her: if carrying her on would push her
 -- into a solid (a ceiling, a wall), or the platform would come down (or slide) into her, it waits until it can go.
+-- Over her it always leaves room for her standing (26 px) plus 2 px, even while she crouches (see Lf.CLEAR).
 local lg = love.graphics
 local Lf = {}
 
@@ -20,6 +21,17 @@ function Lf.new(m)
     k = 0, dir = 1, dx = 0, dy = 0, kind = "oneway", waitT = m.pause or 1, winch = m.winch, lift = true }
 end
 
+-- Over Pepper it keeps the room she needs STANDING (H_STAND) plus CLEAR px, even while she crouches: when she lets
+-- go of Down she stands up (pepper.lua's headroom test sees only solids, not movers), so a lift that waited at her
+-- crouched height would be inside her. A lift already lower than that over her backs up until there is room.
+Lf.CLEAR = 2
+
+-- the space a platform must keep out of: her body, as tall as she is standing (plus CLEAR) when not riding it
+local function room(p)
+  local x0, top, x1, bot = p:box()
+  return x0, math.min(top, bot - require("pepper").H_STAND - Lf.CLEAR), x1, bot
+end
+
 -- would this step (dx, dy) hurt Pepper? (she rides it into a solid, or it moves into her body)
 function Lf.blocked(s, m, dx, dy)
   local p, w = s.pepper, s.world
@@ -28,11 +40,20 @@ function Lf.blocked(s, m, dx, dy)
   if p.onGround and p.ground == m then                              -- on it: her body where it takes her is clear
     return w:solidIn(x0 + dx + 1, x1 + dx - 1, top + dy, bot + dy - 1) ~= nil
   end
+  x0, top, x1, bot = room(p)
   local nx0, nx1, ny0, ny1 = m.x0 + dx, m.x1 + dx, m.y0 + dy, m.y1 + dy
-  if nx1 > x0 and nx0 < x1 and ny1 > top and ny0 < bot - 0.01 then  -- the platform would be inside her body
+  if nx1 > x0 and nx0 < x1 and ny1 > top and ny0 < bot - 0.01 then  -- the platform would be inside her room
     return dy > 0 or dx ~= 0                                         -- (rising up under her it simply picks her up)
   end
   return false
+end
+
+-- the platform is in her standing room now (it came down while she was elsewhere and she crawled under it)
+local function inRoom(s, m)
+  local p = s.pepper
+  if p.mode == "gone" or p.mode == "drown" or (p.onGround and p.ground == m) then return false end
+  local x0, top, x1, bot = room(p)
+  return m.x1 > x0 and m.x0 < x1 and m.y1 > top + 0.01 and m.y0 < bot - 0.01
 end
 
 function Lf.update(s, m, dt)
@@ -43,7 +64,19 @@ function Lf.update(s, m, dt)
   if nk >= 1 then nk, arrive = 1, true elseif nk <= 0 then nk, arrive = 0, true end
   local nx, ny = m.from + (m.to - m.from) * nk, m.fromY + (m.toY - m.fromY) * nk
   local dx, dy = nx - m.x0, ny - m.y0
-  if Lf.blocked(s, m, dx, dy) then m.blocked = true; return end     -- it waits (the operator sees her)
+  if Lf.blocked(s, m, dx, dy) then                                  -- it waits (the operator sees her)
+    m.blocked = true
+    if inRoom(s, m) then                                             -- too low over her: the operator winds it back up
+      local up = (m.toY < m.fromY) and 1 or -1                       -- (the way along the line that goes up)
+      local bk = math.max(0, math.min(1, m.k + up * m.speed * dt / len))
+      local bx, by = m.from + (m.to - m.from) * bk, m.fromY + (m.toY - m.fromY) * bk
+      if by < m.y0 then
+        m.dx, m.dy = bx - m.x0, by - m.y0; m.x0, m.x1, m.y0, m.y1, m.k = bx, bx + m.w, by, by + m.h, bk
+        local b = s.ball; if b.state == "rest" and b.on == m then b.y = by end
+      end
+    end
+    return
+  end
   m.blocked = nil
   local p, b = s.pepper, s.ball
   local riding = p.onGround and p.ground == m and p.mode ~= "gone" and p.mode ~= "drown"
