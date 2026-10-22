@@ -1,0 +1,12 @@
+-- Level 3, Rooftops (greybox; not in levels.lua yet): love riverwalk --level rooftops.
+-- The level is the Tiled map maps/rooftops.tmx, exported to level/tiled/rooftops.lua (docs/tiled.md). Its first
+-- version is drawn by tools/make_rooftops.py from the paper map (tools/make_rooftops_sketch.py); edit the map in
+-- Tiled from now on. Design: docs/rooftops_beatsheet.md. Checks and autopilot: tests_rooftops.lua.
+--
+-- 6 x 4 screens (1920 x 960 px). The street (y 904), stairwells up to the flat roofs T1 (712) and T2 (520) and the
+-- roof terrace (328), where Mia waits. Steam puffs (L.steam, roofs.lua) lift Pepper on the high road over the roofs,
+-- loose tiles (props with loose = true) fall when she stands on them. At the top the terrace fan lifts her through
+-- the copper roof (232); a bark there makes the gull let go of the ball (its nest is on the chimney, y 136) and the
+-- sauna steam up: its puff carries her to the chimney's top. The ball, a step down onto the copper roof, Down + A to
+-- the terrace, and the fetch.
+return require("tiled").load("level/tiled/rooftops.lua")

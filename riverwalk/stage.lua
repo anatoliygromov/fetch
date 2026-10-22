@@ -13,6 +13,7 @@ local Ch = require("chase")                   -- Level 4: the scroll, the rollin
 local Nt = require("night")                   -- Level 5's night rules: darkness, sniffing, the fox, crumbling planks
 local Vc = require("vcam")                    -- the vertical camera (tall levels; s.camY is 0 in a 240 px world)
 local Lf = require("lift")                    -- movers on both axes (a goods lift): L.movers entries with fromY
+local Rf = require("roofs")                   -- steam puffs (L.steam) and loose tiles (props with loose = true)
 local St = {}
 St.__index = St
 local lg = love.graphics
@@ -65,6 +66,7 @@ function St.new(def, carry)
   s.fx = Ex.new()
   Sp.init(s, def, carry)                                          -- hard mode (carry.hard), rope ferries, secrets
   Cr.init(s, def)                                                 -- geese and gulls
+  Rf.init(s, def)                                                 -- steam puffs, loose tiles (roofs.lua)
   if def.scroll then Ch.init(s, def) end                          -- the chase (Level 4)
   if def.dark or def.fox then s.night = Nt.new(s, def) end         -- [night hook] Level 5 (night.lua)
   return s
@@ -226,6 +228,7 @@ function St:update(dt, presses)
     local wasAir = not p.onGround
     if not (self.night and Nt.sniffing(self, dt)) then p:update(dt, w, presses) end   -- [night hook] sniffing
     Cr.bounce(self, wasAir, dt)                                    -- a springy top launches her
+    Rf.update(self, dt)                                            -- a steam puff lifts her, a loose tile goes
     if p.mode == "drown" and not self.drownT then
       self.drownT = 1.0
       if p.carrying then p.carrying = nil; self.ball.state = "home"; self.ballBackT = 1.2 end
@@ -351,6 +354,7 @@ function St:update(dt, presses)
     if self.cat then self:barkAtCat() end
     if self.magpie then self:barkAtMagpie() end
     Cr.bark(self)
+    Rf.bark(self)                                                  -- someone turns a vent up
     if self.night then Nt.bark(self) end                           -- [night hook] the fox
   end
   if self.night then Nt.update(self, dt) end                       -- [night hook] the fox, crumbling planks
@@ -498,6 +502,7 @@ function St:draw(debug)
   for _, pr in ipairs(self.def.props) do if pr.layer == "back" then prop(pr, cam, C.back) end end
   if style then Sc.drawSpout(self.def, cam) end
   Sp.drawBack(self, cam)                                           -- code-drawn decoration (kiosks)
+  Rf.drawBack(self, cam, self.t)                                   -- steam columns (behind Pepper)
   if self.chase then Ch.drawBack(self, cam) end                    -- the chase: open cellar hatches
   if self.night then Nt.drawLights(self, cam) end                  -- [night hook] lanterns, windows
   -- 7 play layer: terrain (pavement art, painted once; see Sc.paintGround)
@@ -569,6 +574,7 @@ function St:draw(debug)
   end
   use("play")
   Sp.drawPlay(self, cam)                                           -- code-drawn obstacles (kennel, hollow log, awnings)
+  Rf.drawPlay(self, cam, Sc)                                       -- vent hoods, loose tiles
   use("ground")
   -- shadows of the girl, the ball and Pepper: on the floor right under them (smaller the higher they are)
   local g = self.girl
@@ -603,7 +609,9 @@ function St:draw(debug)
   if self.cat and self.cat.state ~= "gone" then
     if self.def.art then Sc.cat(self.cat, cam, self.t, self.pepper.x) else Sc.catGrey(self.cat, cam, self.t) end
   end
-  if self.magpie and self.magpie.state ~= "gone" then Sc.magpie(self.magpie, cam, self.t) end
+  if self.magpie and self.magpie.state ~= "gone" then
+    if self.def.magpie.look == "gull" then Cr.drawBird(self.magpie, cam, self.t) else Sc.magpie(self.magpie, cam, self.t) end   -- (a gull's nest)
+  end
   Cr.draw(self, cam, self.t)                                       -- geese and gulls
   if self.chase then Ch.draw(self, cam) end                        -- the chase: barrels
   if self.night then Nt.drawWorld(self, cam) end                   -- [night hook] the fox

@@ -50,6 +50,41 @@ Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untou
   28 of 31, Soder Hill 22 of 22; the others differ only in the debug view's FPS / MS counter
   (`/home/claude/out/engine-round2/debug_counter_diff.png`). lab_tall (its pit changed since round1) drawn with one
   big chunk and with 512 px chunks: 140 of 140 shots identical, across both chunk seams.
+- **Steam puffs** (`riverwalk/roofs.lua`, data from Tiled: objects of class `steam`, the level's `L.steam`). Fields:
+  `name`; the box `x0, x1, y0, y1` is the vent hood, a solid box (keep it 4 px tall so Pepper walks onto it; its
+  top `y0` is the mouth); `lift` (px: the puff's apex is `y0 - lift`, exactly); `every` (s, the whole cycle; 0 =
+  only on a bark); `warn` (s, default 0.8: the hood's flap rattles, a "!" over it, two wisps rise 8 px); `puff` (s,
+  default 0.9: a semi-transparent column of steam up to `y0 - lift - 16`, 3 frames, behind Pepper); `phase` (s into
+  the first rest, so neighbours do not puff together); `bark` (true: it never puffs by itself; a "?" shows over it);
+  `say` (the line the first time a bark turns it up); `source` (who makes it: a note). Cycle: rest
+  (`every - warn - puff`), warn, puff. A bark with Pepper within 80 px across and her feet within 60 px of `y0`
+  starts the warning now. While it puffs, Pepper over the mouth (feet x within `x0 - 6 .. x1 + 6`, feet y within
+  `y0 - lift .. y0 + 2`), not crouched, is launched once per puff: only her upward speed is set,
+  `vy = -sqrt(2 * 560 * (y - apex))`, and her jump base moved so letting go of A does not cut the rise short (as
+  the springy awnings' `bounce`); her controller is untouched. Steam never hurts; Down on the hood stays put.
+- **Loose tiles** (props with `loose = true`, one-way ledges 24 x 6; Night Harbour's crumbling planks made general,
+  for any level; Night's own planks are unchanged). The moment she stands on one it shakes (`Rf.SHAKE` = 0.6 s, 2 px
+  every 0.1 s, a clink, grit), then it is no floor: it falls with gravity and breaks on the roof below (it only
+  drops while she is on it, so it never falls on her); `Rf.GONE` = 3 s later it is back, once her box is out of its
+  place (a faint outline 0.6 s before).
+- **The gull's nest**: `L.magpie` with `look = "gull"` draws the magpie as a gull (`Cr.drawBird`); with one perch it
+  stays put, a bark within `bark` px (95) across and 110 px up or down makes it let go of the ball.
+- **Rooftops, playable greybox** (`rooftops`, not in `levels.lua`: `love riverwalk --level rooftops`).
+  `tools/make_rooftops.py` turns the paper map into `maps/rooftops.tmx`, exported to `level/tiled/rooftops.lua`
+  (`tools/check_tiled.sh` checks it is up to date); `level/rooftops.lua` loads it. From the sketch: hoods 4 px tall,
+  each lift set so its apex is 16 px over the floor it serves (108, the oven's 140), phases, the oven's vent 8 px
+  right on a 16 px longer chimney ledge (at x 1516 her body touched the chimney pot, which stopped the lift), the
+  nest as the gull's perch, hints (PICK UP, GIVE, BARK!, the kitchen fan's "HOLD: STAY PUT"). The finale: the
+  terrace fan lifts her through the copper roof; one bark there makes the gull drop the ball on the chimney and the
+  sauna steam up; its puff carries her to the chimney's top; the ball; a step down onto the sauna's hood, Down + A to
+  the terrace, the fetch. `tests_rooftops.lua`: `--physics` 42 of 42 (every vent's apex within 1 px, its landing
+  with no input and when steering, the 0.8 s warning before a lift, the cycle, one lift per puff, crouching, a bark
+  turns a vent up, the sauna only on a bark; a loose tile a floor for 0.6 s, back after 3 s and not while she is in
+  its place, the bridge of three crossed with running tap hops; the cafe table (jump on, crawl under), the walk
+  from the street to the terrace, the high road's plain jumps and the chimney pot's scramble, the step off the
+  chimney, Down + A off the copper roof; the nest; the fetch ends the level). `--auto`: the low road and the
+  finale, GOOD GIRL! in 21.8 s, 21/34 bones, no heart lost. `--qa`: 5509 runs, 0 problems. `--test`: a tour and
+  frames of a puff and a loose tile.
 
 ## The old title is back (22 Oct, evening)
 - The hand-pixeled title (branch `title/redraw`) was rejected by the owner: the 19 Oct title has far more charm.

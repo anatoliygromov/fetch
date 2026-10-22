@@ -40,6 +40,7 @@ mkdir -p "$TMP/fresh"
 for f in maps/*.tmx; do python3 tools/level_to_tiled.py --export "$f" "$TMP/fresh/$(basename "$f" .tmx).lua" > /dev/null || FAIL=1; done
 $CHECK pair riverwalk/level/tiled "$TMP/fresh" || FAIL=1
 $CHECK pair riverwalk/level/tiled "$TMP/fresh" citypark_tall || FAIL=1      # (a level drawn in Tiled, not in the play order)
+$CHECK pair riverwalk/level/tiled "$TMP/fresh" rooftops || FAIL=1           # (the same: Rooftops, engine/round2)
 
 echo "== 4. the levels as the game loads them"
 $CHECK game || FAIL=1

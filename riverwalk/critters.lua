@@ -267,6 +267,23 @@ function Cr.draw(s, cam, t)
   lg.setColor(1, 1, 1, 1)
 end
 
+-- a gull drawn where the magpie's code has it (L.magpie with look = "gull": the gull's nest on the rooftops),
+-- feet at (m.x, m.y), facing m.dir; it flaps while it flies
+function Cr.drawBird(m, cam, t)
+  local A = loadArt()
+  local x = m.x - cam
+  local flip = (m.dir or -1) < 0
+  if A then
+    local i = m.state == "fly" and 1 + math.floor(t * 10) % 6 or 1
+    lg.setColor(1, 1, 1, 1)
+    if flip then lg.draw(A.gull, A.uq[i], math.floor(x) + 13, math.floor(m.y) - 26, 0, -1, 1)
+    else lg.draw(A.gull, A.uq[i], math.floor(x) - 13, math.floor(m.y) - 26) end
+  else
+    sprite(GULL[(m.state == "fly" and math.floor(t * 8) % 2 or 0) + 1], GCOL, x - 7, m.y - 2, flip)
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+
 -- the bounce: a prop with bounce = h launches Pepper h px up when she lands on it (not when she holds Down).
 -- Only her upward speed is set; her jump base is moved so letting go of A does not cut the launch short.
 function Cr.bounce(s, wasAir, dt)
