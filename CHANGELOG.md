@@ -24,6 +24,11 @@ Built on `round1`. Tools and docs only: no engine, level or map files changed.
   check fails, as it should (night: 12 boat `from` / `to` left behind).
 - **`tools/tiled/render_map.py`** reads the drag-safe fields too (a boat's path, a goose's stretch); the old and
   the upgraded Night Harbour map render to the same PNG.
+- **`docs/tiled.md` brought up to date** (review item 9): which Tiled (1.8 or later, checks on 1.8.2, newer ones
+  call Type "Class"), the numbers that move with their object, lifts (`rely.fromY`, `rely.toY`, `relxy.winch`,
+  one-way, waits rather than squash), hints for one floor (a box: `minY`, `maxY`), barrels, tram depots, the
+  smallest gap she falls into (64 px), tall levels (the camera, adding rows at the bottom or at the top and what
+  moves with them), and a short "make a new level" walkthrough.
 
 ## The old title is back (22 Oct, evening)
 - The hand-pixeled title (branch `title/redraw`) was rejected by the owner: the 19 Oct title has far more charm.

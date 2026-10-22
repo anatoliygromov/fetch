@@ -1,9 +1,10 @@
 # Drawing levels in Tiled
 
-Tiled is a free map editor (mapeditor.org). Every FETCH! level is now also a Tiled map, so you can draw the
-ground, move a bench or add a bone with the mouse instead of typing numbers in Lua.
+Tiled is a free map editor (mapeditor.org). Every FETCH! level is also a Tiled map, so you can draw the ground,
+move a bench or add a bone with the mouse instead of typing numbers in Lua.
 
-City Park already plays from its Tiled map. The other four levels have Tiled maps too, ready to switch.
+City Park and the tall City Park play from their Tiled maps. The other four levels have Tiled maps too, ready to
+switch.
 
 ## The files
 
@@ -14,11 +15,17 @@ City Park already plays from its Tiled map. The other four levels have Tiled map
 | `riverwalk/level/tiled/<level>.lua` | The export the game reads. Tiled writes it when you press Ctrl+E. |
 | `riverwalk/level/<level>.lua` and `.map` | The old level files. They stay as the fallback. |
 
-Levels: `citypark`, `downtown`, `riverwalk`, `soder`, `night`.
+Levels: `citypark`, `downtown`, `riverwalk`, `soder`, `night`, and `citypark_tall` (drawn in Tiled only).
+
+## Which Tiled
+
+Tiled 1.8 or later. The checks here use Tiled 1.8.2. Newer versions (1.9, 1.10, 1.11) work the same way, with one
+difference: the field this guide calls **Class** was called **Type** in 1.8. The game reads both. Once you have
+saved a map in a newer Tiled, keep using that version or newer for it.
 
 ## Open a map
 
-1. Install Tiled 1.10 or later from mapeditor.org.
+1. Install Tiled from mapeditor.org.
 2. In Tiled: File > Open, pick `maps/citypark.tmx`.
 3. The Layers panel (right) shows the layers. Click an eye to hide a layer, the lock to stop editing it.
 4. Click an object to see its Properties (left): X, Y, Width, Height, Name, Class and its custom properties.
@@ -43,6 +50,7 @@ Pepper's limits (measure from the ground she stands on):
 | Tap hop (tap A) | 24 px up |
 | Held jump (hold A) | 46 px up, about 75 px forward from standing |
 | Jump and scramble | a ledge up to 58 px up (hold A and push towards it) |
+| Fall into a gap | the gap must be 64 px (8 cells) wide or more. Narrower, she walks or scrambles across it |
 
 ## The layers
 
@@ -51,7 +59,7 @@ Pepper's limits (measure from the ground she stands on):
 | terrain | The ground, drawn with tiles: solid, water, slope up, slope down. Empty cells are air. |
 | props | Benches, logs, branches, houses: rectangles. Also `pieces` (things drawn in code) and `passages`. |
 | zones | Bike, cart and tram zones (`bikes`), secrets, Söder's hatches and barrels. |
-| movers | Moving platforms: boats, the pontoon. |
+| movers | Moving platforms: boats, the pontoon, lifts. |
 | critters | Geese and gulls. |
 | lamps | Lamp posts (checkpoints). Night Harbour's light pools (`lights`). |
 | bones | Bones to collect. |
@@ -59,8 +67,8 @@ Pepper's limits (measure from the ground she stands on):
 
 How the game reads an object:
 
-- **Class** says which list the object belongs to: `props`, `bones`, `lamps`, `hints`... (Tiled 1.8 calls the
-  field Type.) The layer does not matter to the game, only to you.
+- **Class** says which list the object belongs to: `props`, `bones`, `lamps`, `hints`... The layer does not matter
+  to the game, only to you.
 - **Name** is the object's name (a prop's label, a secret's name, a boat's name).
 - **A rectangle** gives the box: left, right, top, bottom.
 - **A point** gives a position (x, feet y).
@@ -82,24 +90,44 @@ its class and properties.
 | hidden | true: not drawn (a collision box for something drawn in code) |
 | bounce | springy top: landing on it launches Pepper this many px up |
 | over, leaves | a leaf pile: drawn over the bones, flattens when she runs through |
-| art, ax, ay, depth | River Walk's pictures: which picture, and where it is anchored |
+| art, depth, relx.ax, rely.ay | River Walk's pictures: which picture, and where it is anchored |
 | crumble | Night Harbour: a plank that falls when she stands on it |
 
 Unnamed props carry a property `name` that is empty. You can leave it out on new ones.
 
+### Numbers that move with the object
+
+Some properties are positions that belong to the object: where a boat turns back, where a goose walks. Their names
+start with `relx.`, `rely.` or `relxy.`, and they count **from the object itself**:
+
+- `relx.` counts sideways from the object's left edge (a point: from its pin). `relx.to = 64`: 64 px to the right.
+- `rely.` counts up and down from its top edge (a point: from its pin). `rely.toY = -320`: 320 px higher.
+- `relxy.` is a point, sideways and up or down: `{ x = 24, y = -408 }`, or a list of them.
+
+0 means "where the object is now". Drag the object and these move with it. You never need to retype them.
+
+Older maps may still have the plain names (`from`, `to`, `fromY`...): those are spots on the map and
+stay put when you drag. They still work. One command turns them into the new kind (see "For the curious").
+
 ### zones, movers, critters
 
-- **bikes** (bikes, carts, trams): the band is the stretch where they come (`zoneX0` to `zoneX1`). Properties:
-  `kind` (empty for a bike, `cart`, `tram`), `every` (seconds), `speed` (px per second), `endX` (where they
-  leave), `start = enter` (the first one comes when she walks in). `minY` is not used by the game today.
+- **bikes** (bikes, carts, trams): a band above the map, the stretch where they come. Properties: `kind` (empty
+  for a bike, `cart`, `tram`), `every` (seconds), `speed` (px per second), `relx.endX` (where they leave),
+  `start = enter` (the first one comes when she walks in), trams: `relx.depot` (their shed). `minY` is not used by
+  the game today.
 - **secrets**: a box. Pepper's feet inside it count the secret. The name shows on the tally.
 - **hatches** (Söder Hill): left, right and top of a hole in the street.
-- **movers**: the box is the deck. `from` and `to` are where its left edge travels, `speed` in px per second,
-  `pause` in seconds. A rope ferry has `call` (where Pepper calls it, `{ from, to }`), `callSpeed` and `rope`.
-- **critters**: a goose is a point with `x0` and `x1`, the stretch it walks. A gull is a band with `every`.
-
-Watch out: these numbers do not move when you drag the object. Move a boat and also change its `from` and `to`.
-The same goes for a goose's `x0` and `x1`, River Walk's `ax` and `ay`, and a barrel's `trigger` and `rest`.
+- **barrels** (Söder Hill): a point. `relx.trigger` is where the rolling ball sets them off, `relxy.rest` the
+  barrels left in the stack.
+- **movers** (boats, the pontoon): the box is the deck. It travels sideways between `relx.from` and `relx.to` (its
+  left edge), `speed` in px per second, `pause` in seconds at each end. A rope ferry also has `relx.call` (the
+  stretch where Pepper calls it), `callSpeed` and `relx.rope` (where its rope is drawn).
+- **lifts** are movers that also go up and down: add `rely.fromY` and `rely.toY` (its top edge at each end). It can
+  go up and down only, or on a slant. It is one-way like a plank: she jumps up through it, Down + A drops off. It
+  carries Pepper and the ball, and waits rather than squash her. `relxy.winch` draws the motor house with the
+  operator, usually just above the top stop.
+- **critters**: a goose is a point with `relx.x0` and `relx.x1`, the stretch it walks. A gull is a band with
+  `every`.
 
 ### lamps, bones, story
 
@@ -108,12 +136,20 @@ The same goes for a goose's `x0` and `x1`, River Walk's `ax` and `ay`, and a bar
   points.
 - **start**, **ball**, **girl** (Mia), **cat**, **fox**: one each, a point at the feet.
 - **magpie.perches**, **fox.hideouts**: points, in order.
-- **hints**: a band above the map, from where to where on the level the hint shows. `text` is what is said.
-  With `btn` (`a`, `b`, `x`, `y`, `down`) it is Pepper's button hint, without it Mia says it. `need` adds a
-  condition (`ball`, `noball`, `goose`, `magpienear`...), `maxY` only shows it above that height.
+- **hints**: from where to where on the level the hint shows. `text` is what is said. With `btn` (`a`, `b`, `x`,
+  `y`, `down`) it is Pepper's button hint, without it Mia says it. `need` adds a condition (`ball`, `noball`,
+  `goose`, `magpienear`...).
+
+A hint for every height is a band above the map: only its left and right edges count. A hint for **one floor** is
+a box in the map: it shows only while Pepper's feet are inside the box. Its `box` property says which edges count:
+`x0,x1,minY,maxY` all four, `x0,x1,-,maxY` no top limit (everything above the bottom edge), `x0,x1,minY` no bottom
+limit. To give a band hint a height, change its `box` to `x0,x1,minY,maxY` and draw it over the floor.
 
 Bands above the map (hints, bike zones, gulls) only use their left and right edges. Their height and how high
 they sit are free.
+
+Tip: big hint boxes can sit over the things you want to click. Lock the story layer (the lock in the Layers
+panel) while you work on props.
 
 ## Notes for yourself
 
@@ -167,18 +203,51 @@ if USE_TILED then return require("tiled").load("level/tiled/citypark.lua") end
 
 Note: the old files do not follow your Tiled changes. Once you edit a map, the Tiled map is the level.
 
-## Taller levels
+## Tall levels
 
-A map can have any number of rows. Map > Resize Map makes it taller. Give it an offset to add the rows at the
-top, so the level moves down with everything on it. The game reads any height; it shows the extra height once
-the camera can scroll up and down (being added on another branch).
+A level can be as tall as you like. The camera follows Pepper up and down: standing, it keeps the floor she is on
+low on the screen; small hops do not move it; a long fall leads it down. Up held looks up, Down held while
+crouched looks down. Falling out of the bottom of the map costs a heart and sends her back to the last lamp.
+`citypark_tall` is a tall map to look at.
+
+**Add rows at the bottom:** Map > Resize Map, make it taller, offset 0. Nothing moves.
+
+**Add rows at the top:** Map > Resize Map, make it taller and set the Y offset to the number of new rows (so the
+level moves down). Every object moves down with the ground, and so does everything that belongs to it: the
+`relx.`, `rely.` and `relxy.` numbers and the hint boxes. Check after resizing:
+
+- Plain position numbers still in an older map (`from`, `fromY`, `x0` on a goose...) stay put. Upgrade the map
+  first (see "For the curious").
+- A bike zone's `minY` stays put (the game does not use it today).
+- Map properties are not objects and do not move. Today none of them holds a height.
+
+## Make a new level
+
+1. In Finder, copy `maps/citypark_tall.tmx` (or any map) and name the copy, for example `maps/harbour.tmx`.
+2. Open the copy in Tiled. **First** File > Export As, pick `riverwalk/level/tiled/harbour.lua`, format "Lua files".
+   (The copy still remembers its old export. Export As points it at the new file, so Ctrl+E cannot overwrite the
+   old level.) Save.
+3. Map > Resize Map for the size you want (one screen: 40 x 30 cells).
+4. Delete what you do not need. Keep one `start`, one `ball`, one `girl` (Mia) and at least one lamp with
+   `checkpoint = true`. If you delete all the magpie's perches, also delete the map properties starting with
+   `magpie.`.
+5. Map > Map Properties: change `name`, `title`, `number`, `time` (seconds), `intro` and `outro`.
+6. Draw the ground and place things. Save (Ctrl+S) and export (Ctrl+E).
+7. Make the level file `riverwalk/level/harbour.lua` with one line:
+   `return require("tiled").load("level/tiled/harbour.lua")`
+8. Play it: `love riverwalk --level harbour`. To put it in the game's order, add a line to
+   `riverwalk/levels.lua` (ask for help with that one).
 
 ## For the curious
 
+- `python3 tools/level_to_tiled.py --upgrade maps/*.tmx` turns the plain position numbers of older maps into the
+  `relx.` / `rely.` / `relxy.` kind and hints with a height into boxes, and exports them. The levels play exactly
+  the same; your notes and layers stay. Run it once on older maps.
 - `python3 tools/level_to_tiled.py citypark` makes `maps/citypark.tmx` again from the old files. **It overwrites
   your map**, so only use it on purpose.
 - `python3 tools/level_to_tiled.py --export maps/citypark.tmx` writes the export without Tiled.
 - `python3 tools/tiled/render_map.py maps/citypark.tmx preview.png --rows 3` draws a map to a PNG (needs Pillow).
-- `sh tools/check_tiled.sh` proves the Tiled maps give the game exactly the same levels. Once you change a map,
-  its "NOTE" lines list what is different from the old files. That is expected.
+- `sh tools/check_tiled.sh` proves the Tiled maps give the game exactly the same levels, and that dragging moves
+  everything that belongs to an object. Once you change a map, its "NOTE" lines list what is different from the
+  old files. That is expected.
 - The rules the game follows are at the top of `riverwalk/tiled.lua`.
