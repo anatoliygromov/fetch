@@ -64,6 +64,17 @@ Built on `round1`. The owner's new strategy (ten levels; five built, plus Roofto
   ground between the stump and the bench (48 px), so the crawl under the bench stays; the stump keeps clear of the
   lamp at 296 (a respawn there landed inside it in a first try: `--qa` found it). Two bones moved off the stump's
   box. The autopilot: the stump, down, the bench seat, the hedge (39.1 s).
+- **Downtown's cafe terrace** (level/downtown.lua, maps/downtown.tmx and its export, tests_downtown.lua): 46% of the
+  level's failures and 20 quits (Elsa had not found crawl yet, Anna missed the held jump onto the table). An apple
+  crate (x 300-332, 16 px) splits the jump: a tap hop onto it, a tap hop from it onto the table (10 px up). The
+  36 px of street between crate and table keep the crawl under both tables as the other way. Hints: TAP: HOP before
+  the crate and on it, CRAWL only on the street by the table. No parasol on the terrace bounces; the first springy
+  awning (BOUNCE ON IT, x 968) stays after it. New checks: a tapped hop onto the crate, a tapped hop from it onto
+  the table (72 of 72). Before/after: `/home/claude/out/r6-levels/downtown_terrace_before_after.png`.
+- **Tall Downtown, softer for kids** (maps/downtown_tall.tmx, tests_downtown_tall.lua): the same terrace crate, and
+  crate steps at its other two held jumps of the main road (the stall heatmap's next hot spots): before the market
+  stall (x 656-688: two tap hops onto the counter) and before the flower tub at the plaza (x 1368-1400: tap hops up
+  to the tub and the pedestal). Their hints say TAP: HOP now. Six new jump checks (87 of 87); autopilot 56.6 s.
 
 ## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
 Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of

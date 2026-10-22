@@ -54,6 +54,10 @@ L.props = {
   -- screen 2: cafe terrace. A table's box is only its top (y 158-165): 19 px to crawl under it, a held jump onto
   -- it. Its parasol (one-way, top y 114) is 44 px above the table top: a held jump. The shop sign (one-way, y 80)
   -- is 34 px above the second parasol: the gold bone.
+  -- (r6/levels: 46% of the level's failures and 20 quits were here: Elsa could not crawl yet, Anna missed the
+  -- held jump onto the table.) An apple crate splits the jump: a tap hop onto it (16 px), a tap hop from it onto the
+  -- table (10 px up). The 36 px of street between them keep the crawl under the tables as the other way.
+  { name = "CRATES",   kind = "solid",  layer = "play", x0 = 300,  x1 = 332,  y0 = 168, y1 = 184, label = "top" },
   { name = "",         kind = "decor",  layer = "back", x0 = 390,  x1 = 394,  y0 = 118, y1 = 158 },     -- parasol pole
   { name = "",         kind = "decor",  layer = "back", x0 = 372,  x1 = 376,  y0 = 165, y1 = 184 },     -- legs
   { name = "",         kind = "decor",  layer = "back", x0 = 408,  x1 = 412,  y0 = 165, y1 = 184 },
@@ -262,7 +266,9 @@ L.hints = {
   { x0 = 3400, x1 = 3520, btn = "x",    text = "GIVE",               need = "ball" },
   { x0 = 0,    x1 = 3520, btn = "y",    text = "BARK: SHOO!",        need = "goose" },
   { x0 = 0,    x1 = 152,  btn = "a",    text = "TAP: HOP" },            -- up the crates
-  { x0 = 300,  x1 = 368,  btn = "down", text = "CRAWL" },
+  { x0 = 336,  x1 = 368,  btn = "down", text = "CRAWL",              minY = 183 },   -- (r6/levels: the crate)
+  { x0 = 240,  x1 = 300,  btn = "a",    text = "TAP: HOP",           minY = 183 },   -- onto the crate
+  { x0 = 300,  x1 = 368,  btn = "a",    text = "TAP: HOP",           maxY = 169 },   -- from it onto the table
   { x0 = 640,  x1 = 688,  btn = "a",    text = "HOLD: BIG JUMP" },      -- onto the stall
   { x0 = 1384, x1 = 1440, btn = "a",    text = "HOLD: BIG JUMP" },      -- onto the pedestal
   { x0 = 1660, x1 = 1720, btn = "a",    text = "TAP: HOP" },            -- over the fountain

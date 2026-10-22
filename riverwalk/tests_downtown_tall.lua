@@ -153,7 +153,14 @@ return function(mode, api)
             -- the low road: Downtown, 240 px lower
             { "low: hop onto the low crate (16 px, tapped)", x = 124, y = STREET, dir = "right", tap = true, brake = 160, to = 408 },
             { "low: hop onto the high crate (16 px more)", x = 158, y = 408, dir = "right", tap = true, brake = 192, to = 392 },
-            { "low: held jump onto the cafe table (26 px)", x = 346, y = STREET, dir = "right", brake = 392, to = 398 },
+            { "low: held jump onto the cafe table (26 px)", x = 350, y = STREET, dir = "right", brake = 392, to = 398 },
+            -- (r6/levels) the crate steps: two tap hops instead of a held jump, at the terrace, the stall, the tub
+            { "low: hop onto the terrace crate (16 px, tapped)", x = 270, y = STREET, dir = "right", tap = true, brake = 316, to = 408 },
+            { "low: terrace crate -> the table (10 px, tapped)", x = 316, y = 408, dir = "right", tap = true, brake = 392, to = 398 },
+            { "low: hop onto the stall's crate (16 px, tapped)", x = 626, y = STREET, dir = "right", tap = true, brake = 672, to = 408 },
+            { "low: stall's crate -> the stall (12 px, tapped)", x = 672, y = 408, dir = "right", tap = true, brake = 720, to = 396 },
+            { "low: hop onto the plaza crate (16 px, tapped)", x = 1340, y = STREET, dir = "right", tap = true, brake = 1384, to = 408 },
+            { "low: plaza crate -> the tub and on up to the pedestal (tapped)", x = 1384, y = 408, dir = "right", tap = true, brake = 1424, to = 384 },
             { "low: table -> its parasol (44 px, straight up)", x = 392, y = 398, to = 354 },
             { "low: parasol -> parasol (running)", x = 372, y = 354, dir = "right", run = 412, to = 354 },
             { "low: parasol -> the shop sign (running, gold)", x = 480, y = 354, dir = "right", run = 518, to = 320 },
@@ -162,7 +169,7 @@ return function(mode, api)
             { "low: crates -> the second awning (40 px)", x = 846, y = 392, dir = "right", brake = 900, to = 352 },
             { "low: the springy awning launches her over the crate wall", x = 980, y = STREET, dir = "right", through = true, to = 360 },
             { "way up A: the springier awning reaches the bakery sign", x = 1180, y = STREET, dir = "right", run = 1204, brake = 1266, through = true, to = 304 },
-            { "low: onto the flower tub (28 px)", x = 1380, y = STREET, dir = "right", brake = 1410, to = 396 },
+            { "low: onto the flower tub (28 px)", x = 1350, y = STREET, dir = "right", brake = 1410, to = 396 },
             { "low: tub -> pedestal (12 px, tapped)", x = 1424, y = 396, dir = "right", tap = true, brake = 1460, to = 384 },
             { "low: street -> pedestal from the right (40 px, with the ball after the cat)", x = 1522, y = STREET, dir = "left", brake = 1470, to = 384 },
             { "low: pedestal -> the statue's arm (36 px)", x = 1470, y = 384, dir = "right", brake = 1488, to = 348 },
@@ -367,7 +374,11 @@ return function(mode, api)
       { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p) return p.onGround and p.y <= Y(153) end, function() hold("right") end),
       -- 2 cafe terrace: table, parasol, parasol, the shop sign (gold)
-      at(function(p) return p.x >= 322 and p.onGround and p.y > Y(183) end, function() jump("right", "jump") end),
+      at(function(p) return p.x >= 270 and p.onGround and p.y > Y(183) end, function() jump("right", "jump") end),   -- the crate (r6/levels)
+      { wait = 1 / 60 }, { act = function() hold("right") end },
+      at(function(p) return p.onGround and p.y <= Y(169) end, function() hold("right") end),
+      at(function(p) return p.x >= 318 end, function() jump("right", "jump") end),
+      { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p) return p.onGround and p.y <= Y(159) end, function() release() end),
       at(function(p) return math.abs(p.vx) < 1 end, function() jump("jump") end),
       at(function(p) return p.onGround and p.y <= Y(115) end, function() hold("left") end),
@@ -380,7 +391,7 @@ return function(mode, api)
       at(function(p) return p.x >= 604 end, function() release() end),
       at(function(p) return p.onGround and p.y >= Y(183) end, function() hold("right") end),
       -- 3 market: the stall, its awning, down, the crates, the second awning
-      at(function(p) return p.x >= 652 end, function() jump("right", "jump") end),
+      at(function(p) return p.x >= 628 end, function() jump("right", "jump") end),         -- (r6/levels: over the crate step)
       at(function(p) return p.onGround and p.y <= Y(157) end, function() release() end),
       at(function(p) return p.x >= 714 or math.abs(p.vx) < 1 end, function() jump("jump") end),
       at(function(p) return p.onGround and p.y <= Y(117) end, function() hold("right") end),

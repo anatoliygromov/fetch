@@ -10,7 +10,7 @@ return {
   tilewidth = 8,
   tileheight = 8,
   nextlayerid = 9,
-  nextobjectid = 199,
+  nextobjectid = 202,
   properties = {
     ["movers"] = "{}",
     ["art"] = "town",
@@ -181,6 +181,23 @@ return {
         },
         {
           id = 4,
+          name = "CRATES",
+          type = "props",
+          shape = "rectangle",
+          x = 300,
+          y = 168,
+          width = 32,
+          height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["kind"] = "solid",
+            ["layer"] = "play",
+            ["label"] = "top",
+          },
+        },
+        {
+          id = 5,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -197,7 +214,7 @@ return {
           },
         },
         {
-          id = 5,
+          id = 6,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -214,7 +231,7 @@ return {
           },
         },
         {
-          id = 6,
+          id = 7,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -231,7 +248,7 @@ return {
           },
         },
         {
-          id = 7,
+          id = 8,
           name = "TABLE",
           type = "props",
           shape = "rectangle",
@@ -248,7 +265,7 @@ return {
           },
         },
         {
-          id = 8,
+          id = 9,
           name = "PARASOL",
           type = "props",
           shape = "rectangle",
@@ -265,7 +282,7 @@ return {
           },
         },
         {
-          id = 9,
+          id = 10,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -282,7 +299,7 @@ return {
           },
         },
         {
-          id = 10,
+          id = 11,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -299,7 +316,7 @@ return {
           },
         },
         {
-          id = 11,
+          id = 12,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -316,7 +333,7 @@ return {
           },
         },
         {
-          id = 12,
+          id = 13,
           name = "TABLE",
           type = "props",
           shape = "rectangle",
@@ -333,7 +350,7 @@ return {
           },
         },
         {
-          id = 13,
+          id = 14,
           name = "PARASOL",
           type = "props",
           shape = "rectangle",
@@ -350,7 +367,7 @@ return {
           },
         },
         {
-          id = 14,
+          id = 15,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -367,7 +384,7 @@ return {
           },
         },
         {
-          id = 15,
+          id = 16,
           name = "SIGN",
           type = "props",
           shape = "rectangle",
@@ -384,7 +401,7 @@ return {
           },
         },
         {
-          id = 16,
+          id = 17,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -401,7 +418,7 @@ return {
           },
         },
         {
-          id = 17,
+          id = 18,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -418,7 +435,7 @@ return {
           },
         },
         {
-          id = 18,
+          id = 19,
           name = "STALL",
           type = "props",
           shape = "rectangle",
@@ -434,7 +451,7 @@ return {
           },
         },
         {
-          id = 19,
+          id = 20,
           name = "AWNING",
           type = "props",
           shape = "rectangle",
@@ -451,7 +468,7 @@ return {
           },
         },
         {
-          id = 20,
+          id = 21,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -468,7 +485,7 @@ return {
           },
         },
         {
-          id = 21,
+          id = 22,
           name = "CRATES",
           type = "props",
           shape = "rectangle",
@@ -485,7 +502,7 @@ return {
           },
         },
         {
-          id = 22,
+          id = 23,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -502,7 +519,7 @@ return {
           },
         },
         {
-          id = 23,
+          id = 24,
           name = "AWNING",
           type = "props",
           shape = "rectangle",
@@ -519,7 +536,7 @@ return {
           },
         },
         {
-          id = 24,
+          id = 25,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -536,7 +553,7 @@ return {
           },
         },
         {
-          id = 25,
+          id = 26,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -553,7 +570,7 @@ return {
           },
         },
         {
-          id = 26,
+          id = 27,
           name = "AWNING",
           type = "props",
           shape = "rectangle",
@@ -571,7 +588,7 @@ return {
           },
         },
         {
-          id = 27,
+          id = 28,
           name = "CRATES",
           type = "props",
           shape = "rectangle",
@@ -588,7 +605,7 @@ return {
           },
         },
         {
-          id = 28,
+          id = 29,
           name = "CRATES",
           type = "props",
           shape = "rectangle",
@@ -605,7 +622,7 @@ return {
           },
         },
         {
-          id = 29,
+          id = 30,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -622,7 +639,7 @@ return {
           },
         },
         {
-          id = 30,
+          id = 31,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -639,7 +656,7 @@ return {
           },
         },
         {
-          id = 31,
+          id = 32,
           name = "AWNING",
           type = "props",
           shape = "rectangle",
@@ -657,7 +674,7 @@ return {
           },
         },
         {
-          id = 32,
+          id = 33,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -674,7 +691,7 @@ return {
           },
         },
         {
-          id = 33,
+          id = 34,
           name = "SIGN",
           type = "props",
           shape = "rectangle",
@@ -691,7 +708,7 @@ return {
           },
         },
         {
-          id = 34,
+          id = 35,
           name = "TUB",
           type = "props",
           shape = "rectangle",
@@ -708,7 +725,7 @@ return {
           },
         },
         {
-          id = 35,
+          id = 36,
           name = "STATUE",
           type = "props",
           shape = "rectangle",
@@ -724,7 +741,7 @@ return {
           },
         },
         {
-          id = 36,
+          id = 37,
           name = "PEDESTAL",
           type = "props",
           shape = "rectangle",
@@ -740,7 +757,7 @@ return {
           },
         },
         {
-          id = 37,
+          id = 38,
           name = "ARM",
           type = "props",
           shape = "rectangle",
@@ -757,7 +774,7 @@ return {
           },
         },
         {
-          id = 38,
+          id = 39,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -774,7 +791,7 @@ return {
           },
         },
         {
-          id = 39,
+          id = 40,
           name = "HOUSE",
           type = "props",
           shape = "rectangle",
@@ -791,7 +808,7 @@ return {
           },
         },
         {
-          id = 40,
+          id = 41,
           name = "HOUSE",
           type = "props",
           shape = "rectangle",
@@ -808,7 +825,7 @@ return {
           },
         },
         {
-          id = 41,
+          id = 42,
           name = "HOUSE",
           type = "props",
           shape = "rectangle",
@@ -825,7 +842,7 @@ return {
           },
         },
         {
-          id = 42,
+          id = 43,
           name = "BALCONY",
           type = "props",
           shape = "rectangle",
@@ -842,7 +859,7 @@ return {
           },
         },
         {
-          id = 43,
+          id = 44,
           name = "BALCONY",
           type = "props",
           shape = "rectangle",
@@ -859,7 +876,7 @@ return {
           },
         },
         {
-          id = 44,
+          id = 45,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -876,7 +893,7 @@ return {
           },
         },
         {
-          id = 45,
+          id = 46,
           name = "TIER",
           type = "props",
           shape = "rectangle",
@@ -893,7 +910,7 @@ return {
           },
         },
         {
-          id = 46,
+          id = 47,
           name = "BALCONY",
           type = "props",
           shape = "rectangle",
@@ -910,7 +927,7 @@ return {
           },
         },
         {
-          id = 47,
+          id = 48,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -927,7 +944,7 @@ return {
           },
         },
         {
-          id = 48,
+          id = 49,
           name = "RIM",
           type = "props",
           shape = "rectangle",
@@ -944,7 +961,7 @@ return {
           },
         },
         {
-          id = 49,
+          id = 50,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -961,7 +978,7 @@ return {
           },
         },
         {
-          id = 50,
+          id = 51,
           name = "FOUNTAIN",
           type = "props",
           shape = "rectangle",
@@ -978,7 +995,7 @@ return {
           },
         },
         {
-          id = 51,
+          id = 52,
           name = "RIM",
           type = "props",
           shape = "rectangle",
@@ -995,7 +1012,7 @@ return {
           },
         },
         {
-          id = 52,
+          id = 53,
           name = "TRAM SHED",
           type = "props",
           shape = "rectangle",
@@ -1012,7 +1029,7 @@ return {
           },
         },
         {
-          id = 53,
+          id = 54,
           name = "KIOSK",
           type = "props",
           shape = "rectangle",
@@ -1028,7 +1045,7 @@ return {
           },
         },
         {
-          id = 54,
+          id = 55,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -1045,7 +1062,7 @@ return {
           },
         },
         {
-          id = 55,
+          id = 56,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -1062,7 +1079,7 @@ return {
           },
         },
         {
-          id = 56,
+          id = 57,
           name = "SHELTER",
           type = "props",
           shape = "rectangle",
@@ -1079,7 +1096,7 @@ return {
           },
         },
         {
-          id = 57,
+          id = 58,
           name = "TUB",
           type = "props",
           shape = "rectangle",
@@ -1096,7 +1113,7 @@ return {
           },
         },
         {
-          id = 58,
+          id = 59,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -1113,7 +1130,7 @@ return {
           },
         },
         {
-          id = 59,
+          id = 60,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -1130,7 +1147,7 @@ return {
           },
         },
         {
-          id = 60,
+          id = 61,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -1147,7 +1164,7 @@ return {
           },
         },
         {
-          id = 61,
+          id = 62,
           name = "TABLE",
           type = "props",
           shape = "rectangle",
@@ -1164,7 +1181,7 @@ return {
           },
         },
         {
-          id = 62,
+          id = 63,
           name = "PARASOL",
           type = "props",
           shape = "rectangle",
@@ -1182,7 +1199,7 @@ return {
           },
         },
         {
-          id = 63,
+          id = 64,
           name = "HOUSE",
           type = "props",
           shape = "rectangle",
@@ -1199,7 +1216,7 @@ return {
           },
         },
         {
-          id = 64,
+          id = 65,
           name = "BALCONY",
           type = "props",
           shape = "rectangle",
@@ -1216,7 +1233,7 @@ return {
           },
         },
         {
-          id = 65,
+          id = 66,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -1233,7 +1250,7 @@ return {
           },
         },
         {
-          id = 66,
+          id = 67,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -1250,7 +1267,7 @@ return {
           },
         },
         {
-          id = 67,
+          id = 68,
           name = "AWNING",
           type = "props",
           shape = "rectangle",
@@ -1268,7 +1285,7 @@ return {
           },
         },
         {
-          id = 68,
+          id = 69,
           name = "CRATES",
           type = "props",
           shape = "rectangle",
@@ -1285,7 +1302,7 @@ return {
           },
         },
         {
-          id = 69,
+          id = 70,
           name = "CRATES",
           type = "props",
           shape = "rectangle",
@@ -1302,7 +1319,7 @@ return {
           },
         },
         {
-          id = 70,
+          id = 71,
           name = "CRATES",
           type = "props",
           shape = "rectangle",
@@ -1319,7 +1336,7 @@ return {
           },
         },
         {
-          id = 71,
+          id = 72,
           name = "CRATES",
           type = "props",
           shape = "rectangle",
@@ -1336,7 +1353,7 @@ return {
           },
         },
         {
-          id = 72,
+          id = 73,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -1353,7 +1370,7 @@ return {
           },
         },
         {
-          id = 73,
+          id = 74,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -1370,7 +1387,7 @@ return {
           },
         },
         {
-          id = 74,
+          id = 75,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -1387,7 +1404,7 @@ return {
           },
         },
         {
-          id = 75,
+          id = 76,
           name = "PARASOL",
           type = "props",
           shape = "rectangle",
@@ -1405,7 +1422,7 @@ return {
           },
         },
         {
-          id = 76,
+          id = 77,
           name = "PARASOL",
           type = "props",
           shape = "rectangle",
@@ -1423,7 +1440,7 @@ return {
           },
         },
         {
-          id = 77,
+          id = 78,
           name = "PARASOL",
           type = "props",
           shape = "rectangle",
@@ -1441,7 +1458,7 @@ return {
           },
         },
         {
-          id = 78,
+          id = 79,
           name = "TRAM SHED",
           type = "props",
           shape = "rectangle",
@@ -1458,7 +1475,7 @@ return {
           },
         },
         {
-          id = 79,
+          id = 80,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -1475,7 +1492,7 @@ return {
           },
         },
         {
-          id = 80,
+          id = 81,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -1492,7 +1509,7 @@ return {
           },
         },
         {
-          id = 81,
+          id = 82,
           name = "SHELTER",
           type = "props",
           shape = "rectangle",
@@ -1509,7 +1526,7 @@ return {
           },
         },
         {
-          id = 82,
+          id = 83,
           name = "RIVER",
           type = "props",
           shape = "rectangle",
@@ -1525,7 +1542,7 @@ return {
           },
         },
         {
-          id = 83,
+          id = 84,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -1542,7 +1559,7 @@ return {
           },
         },
         {
-          id = 84,
+          id = 85,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -1559,7 +1576,7 @@ return {
           },
         },
         {
-          id = 85,
+          id = 86,
           name = "",
           type = "props",
           shape = "rectangle",
@@ -1591,12 +1608,12 @@ return {
       properties = {},
       objects = {
         {
-          id = 86,
+          id = 87,
           name = "",
           type = "bikes",
           shape = "rectangle",
           x = 1930,
-          y = -220,
+          y = -200,
           width = 190,
           height = 8,
           rotation = 0,
@@ -1604,24 +1621,24 @@ return {
           properties = {
             ["box"] = "zoneX0,zoneX1",
             ["kind"] = "tram",
-            ["relx.depot"] = 8,
-            ["relx.endX"] = -48,
             ["every"] = 6,
             ["h"] = 26,
             ["minY"] = 150,
             ["rail"] = true,
+            ["relx.depot"] = 8,
+            ["relx.endX"] = -48,
             ["speed"] = 110,
             ["start"] = "enter",
             ["w"] = 80,
           },
         },
         {
-          id = 87,
+          id = 88,
           name = "",
           type = "bikes",
           shape = "rectangle",
           x = 3120,
-          y = -210,
+          y = -190,
           width = 180,
           height = 8,
           rotation = 0,
@@ -1629,19 +1646,19 @@ return {
           properties = {
             ["box"] = "zoneX0,zoneX1",
             ["kind"] = "tram",
-            ["relx.depot"] = 48,
-            ["relx.endX"] = -8,
             ["every"] = 4,
             ["h"] = 26,
             ["minY"] = 150,
             ["rail"] = true,
+            ["relx.depot"] = 48,
+            ["relx.endX"] = -8,
             ["speed"] = 130,
             ["start"] = "enter",
             ["w"] = 80,
           },
         },
         {
-          id = 88,
+          id = 89,
           name = "SHOP SIGN",
           type = "secrets",
           shape = "rectangle",
@@ -1654,7 +1671,7 @@ return {
           properties = {},
         },
         {
-          id = 89,
+          id = 90,
           name = "STATUE HAT",
           type = "secrets",
           shape = "rectangle",
@@ -1667,7 +1684,7 @@ return {
           properties = {},
         },
         {
-          id = 90,
+          id = 91,
           name = "ROOFTOPS",
           type = "secrets",
           shape = "rectangle",
@@ -1680,7 +1697,7 @@ return {
           properties = {},
         },
         {
-          id = 91,
+          id = 92,
           name = "BAKERY SIGN",
           type = "secrets",
           shape = "rectangle",
@@ -1723,7 +1740,7 @@ return {
       properties = {},
       objects = {
         {
-          id = 92,
+          id = 93,
           name = "",
           type = "critters",
           shape = "point",
@@ -1740,7 +1757,7 @@ return {
           },
         },
         {
-          id = 93,
+          id = 94,
           name = "",
           type = "critters",
           shape = "point",
@@ -1772,7 +1789,7 @@ return {
       properties = {},
       objects = {
         {
-          id = 94,
+          id = 95,
           name = "",
           type = "lamps",
           shape = "point",
@@ -1787,7 +1804,7 @@ return {
           },
         },
         {
-          id = 95,
+          id = 96,
           name = "",
           type = "lamps",
           shape = "point",
@@ -1802,7 +1819,7 @@ return {
           },
         },
         {
-          id = 96,
+          id = 97,
           name = "",
           type = "lamps",
           shape = "point",
@@ -1817,7 +1834,7 @@ return {
           },
         },
         {
-          id = 97,
+          id = 98,
           name = "",
           type = "lamps",
           shape = "point",
@@ -1832,7 +1849,7 @@ return {
           },
         },
         {
-          id = 98,
+          id = 99,
           name = "",
           type = "lamps",
           shape = "point",
@@ -1847,7 +1864,7 @@ return {
           },
         },
         {
-          id = 99,
+          id = 100,
           name = "",
           type = "lamps",
           shape = "point",
@@ -1877,7 +1894,7 @@ return {
       properties = {},
       objects = {
         {
-          id = 100,
+          id = 101,
           name = "",
           type = "bones",
           shape = "point",
@@ -1890,7 +1907,7 @@ return {
           properties = {},
         },
         {
-          id = 101,
+          id = 102,
           name = "",
           type = "bones",
           shape = "point",
@@ -1903,7 +1920,7 @@ return {
           properties = {},
         },
         {
-          id = 102,
+          id = 103,
           name = "",
           type = "bones",
           shape = "point",
@@ -1916,7 +1933,7 @@ return {
           properties = {},
         },
         {
-          id = 103,
+          id = 104,
           name = "",
           type = "bones",
           shape = "point",
@@ -1929,7 +1946,7 @@ return {
           properties = {},
         },
         {
-          id = 104,
+          id = 105,
           name = "",
           type = "bones",
           shape = "point",
@@ -1942,7 +1959,7 @@ return {
           properties = {},
         },
         {
-          id = 105,
+          id = 106,
           name = "",
           type = "bones",
           shape = "point",
@@ -1955,7 +1972,7 @@ return {
           properties = {},
         },
         {
-          id = 106,
+          id = 107,
           name = "",
           type = "bones",
           shape = "point",
@@ -1968,7 +1985,7 @@ return {
           properties = {},
         },
         {
-          id = 107,
+          id = 108,
           name = "",
           type = "bones",
           shape = "point",
@@ -1981,7 +1998,7 @@ return {
           properties = {},
         },
         {
-          id = 108,
+          id = 109,
           name = "",
           type = "bones",
           shape = "point",
@@ -1994,7 +2011,7 @@ return {
           properties = {},
         },
         {
-          id = 109,
+          id = 110,
           name = "",
           type = "bones",
           shape = "point",
@@ -2007,7 +2024,7 @@ return {
           properties = {},
         },
         {
-          id = 110,
+          id = 111,
           name = "",
           type = "bones",
           shape = "point",
@@ -2020,7 +2037,7 @@ return {
           properties = {},
         },
         {
-          id = 111,
+          id = 112,
           name = "",
           type = "bones",
           shape = "point",
@@ -2033,7 +2050,7 @@ return {
           properties = {},
         },
         {
-          id = 112,
+          id = 113,
           name = "",
           type = "bones",
           shape = "point",
@@ -2048,7 +2065,7 @@ return {
           },
         },
         {
-          id = 113,
+          id = 114,
           name = "",
           type = "bones",
           shape = "point",
@@ -2061,7 +2078,7 @@ return {
           properties = {},
         },
         {
-          id = 114,
+          id = 115,
           name = "",
           type = "bones",
           shape = "point",
@@ -2074,7 +2091,7 @@ return {
           properties = {},
         },
         {
-          id = 115,
+          id = 116,
           name = "",
           type = "bones",
           shape = "point",
@@ -2087,7 +2104,7 @@ return {
           properties = {},
         },
         {
-          id = 116,
+          id = 117,
           name = "",
           type = "bones",
           shape = "point",
@@ -2100,7 +2117,7 @@ return {
           properties = {},
         },
         {
-          id = 117,
+          id = 118,
           name = "",
           type = "bones",
           shape = "point",
@@ -2113,7 +2130,7 @@ return {
           properties = {},
         },
         {
-          id = 118,
+          id = 119,
           name = "",
           type = "bones",
           shape = "point",
@@ -2126,7 +2143,7 @@ return {
           properties = {},
         },
         {
-          id = 119,
+          id = 120,
           name = "",
           type = "bones",
           shape = "point",
@@ -2139,7 +2156,7 @@ return {
           properties = {},
         },
         {
-          id = 120,
+          id = 121,
           name = "",
           type = "bones",
           shape = "point",
@@ -2152,7 +2169,7 @@ return {
           properties = {},
         },
         {
-          id = 121,
+          id = 122,
           name = "",
           type = "bones",
           shape = "point",
@@ -2165,7 +2182,7 @@ return {
           properties = {},
         },
         {
-          id = 122,
+          id = 123,
           name = "",
           type = "bones",
           shape = "point",
@@ -2178,7 +2195,7 @@ return {
           properties = {},
         },
         {
-          id = 123,
+          id = 124,
           name = "",
           type = "bones",
           shape = "point",
@@ -2191,7 +2208,7 @@ return {
           properties = {},
         },
         {
-          id = 124,
+          id = 125,
           name = "",
           type = "bones",
           shape = "point",
@@ -2204,7 +2221,7 @@ return {
           properties = {},
         },
         {
-          id = 125,
+          id = 126,
           name = "",
           type = "bones",
           shape = "point",
@@ -2217,7 +2234,7 @@ return {
           properties = {},
         },
         {
-          id = 126,
+          id = 127,
           name = "",
           type = "bones",
           shape = "point",
@@ -2232,7 +2249,7 @@ return {
           },
         },
         {
-          id = 127,
+          id = 128,
           name = "",
           type = "bones",
           shape = "point",
@@ -2245,7 +2262,7 @@ return {
           properties = {},
         },
         {
-          id = 128,
+          id = 129,
           name = "",
           type = "bones",
           shape = "point",
@@ -2258,7 +2275,7 @@ return {
           properties = {},
         },
         {
-          id = 129,
+          id = 130,
           name = "",
           type = "bones",
           shape = "point",
@@ -2271,7 +2288,7 @@ return {
           properties = {},
         },
         {
-          id = 130,
+          id = 131,
           name = "",
           type = "bones",
           shape = "point",
@@ -2284,7 +2301,7 @@ return {
           properties = {},
         },
         {
-          id = 131,
+          id = 132,
           name = "",
           type = "bones",
           shape = "point",
@@ -2297,7 +2314,7 @@ return {
           properties = {},
         },
         {
-          id = 132,
+          id = 133,
           name = "",
           type = "bones",
           shape = "point",
@@ -2310,7 +2327,7 @@ return {
           properties = {},
         },
         {
-          id = 133,
+          id = 134,
           name = "",
           type = "bones",
           shape = "point",
@@ -2323,7 +2340,7 @@ return {
           properties = {},
         },
         {
-          id = 134,
+          id = 135,
           name = "",
           type = "bones",
           shape = "point",
@@ -2336,7 +2353,7 @@ return {
           properties = {},
         },
         {
-          id = 135,
+          id = 136,
           name = "",
           type = "bones",
           shape = "point",
@@ -2349,7 +2366,7 @@ return {
           properties = {},
         },
         {
-          id = 136,
+          id = 137,
           name = "",
           type = "bones",
           shape = "point",
@@ -2362,7 +2379,7 @@ return {
           properties = {},
         },
         {
-          id = 137,
+          id = 138,
           name = "",
           type = "bones",
           shape = "point",
@@ -2375,7 +2392,7 @@ return {
           properties = {},
         },
         {
-          id = 138,
+          id = 139,
           name = "",
           type = "bones",
           shape = "point",
@@ -2390,7 +2407,7 @@ return {
           },
         },
         {
-          id = 139,
+          id = 140,
           name = "",
           type = "bones",
           shape = "point",
@@ -2403,7 +2420,7 @@ return {
           properties = {},
         },
         {
-          id = 140,
+          id = 141,
           name = "",
           type = "bones",
           shape = "point",
@@ -2416,7 +2433,7 @@ return {
           properties = {},
         },
         {
-          id = 141,
+          id = 142,
           name = "",
           type = "bones",
           shape = "point",
@@ -2429,7 +2446,7 @@ return {
           properties = {},
         },
         {
-          id = 142,
+          id = 143,
           name = "",
           type = "bones",
           shape = "point",
@@ -2442,7 +2459,7 @@ return {
           properties = {},
         },
         {
-          id = 143,
+          id = 144,
           name = "",
           type = "bones",
           shape = "point",
@@ -2455,7 +2472,7 @@ return {
           properties = {},
         },
         {
-          id = 144,
+          id = 145,
           name = "",
           type = "bones",
           shape = "point",
@@ -2468,7 +2485,7 @@ return {
           properties = {},
         },
         {
-          id = 145,
+          id = 146,
           name = "",
           type = "bones",
           shape = "point",
@@ -2481,7 +2498,7 @@ return {
           properties = {},
         },
         {
-          id = 146,
+          id = 147,
           name = "",
           type = "bones",
           shape = "point",
@@ -2496,7 +2513,7 @@ return {
           },
         },
         {
-          id = 147,
+          id = 148,
           name = "",
           type = "bones",
           shape = "point",
@@ -2509,7 +2526,7 @@ return {
           properties = {},
         },
         {
-          id = 148,
+          id = 149,
           name = "",
           type = "bones",
           shape = "point",
@@ -2522,7 +2539,7 @@ return {
           properties = {},
         },
         {
-          id = 149,
+          id = 150,
           name = "",
           type = "bones",
           shape = "point",
@@ -2535,7 +2552,7 @@ return {
           properties = {},
         },
         {
-          id = 150,
+          id = 151,
           name = "",
           type = "bones",
           shape = "point",
@@ -2548,7 +2565,7 @@ return {
           properties = {},
         },
         {
-          id = 151,
+          id = 152,
           name = "",
           type = "bones",
           shape = "point",
@@ -2561,7 +2578,7 @@ return {
           properties = {},
         },
         {
-          id = 152,
+          id = 153,
           name = "",
           type = "bones",
           shape = "point",
@@ -2574,7 +2591,7 @@ return {
           properties = {},
         },
         {
-          id = 153,
+          id = 154,
           name = "",
           type = "bones",
           shape = "point",
@@ -2587,7 +2604,7 @@ return {
           properties = {},
         },
         {
-          id = 154,
+          id = 155,
           name = "",
           type = "bones",
           shape = "point",
@@ -2600,7 +2617,7 @@ return {
           properties = {},
         },
         {
-          id = 155,
+          id = 156,
           name = "",
           type = "bones",
           shape = "point",
@@ -2613,7 +2630,7 @@ return {
           properties = {},
         },
         {
-          id = 156,
+          id = 157,
           name = "",
           type = "bones",
           shape = "point",
@@ -2626,7 +2643,7 @@ return {
           properties = {},
         },
         {
-          id = 157,
+          id = 158,
           name = "",
           type = "bones",
           shape = "point",
@@ -2639,7 +2656,7 @@ return {
           properties = {},
         },
         {
-          id = 158,
+          id = 159,
           name = "",
           type = "bones",
           shape = "point",
@@ -2652,7 +2669,7 @@ return {
           properties = {},
         },
         {
-          id = 159,
+          id = 160,
           name = "",
           type = "bones",
           shape = "point",
@@ -2665,7 +2682,7 @@ return {
           properties = {},
         },
         {
-          id = 160,
+          id = 161,
           name = "",
           type = "bones",
           shape = "point",
@@ -2678,7 +2695,7 @@ return {
           properties = {},
         },
         {
-          id = 161,
+          id = 162,
           name = "",
           type = "bones",
           shape = "point",
@@ -2691,7 +2708,7 @@ return {
           properties = {},
         },
         {
-          id = 162,
+          id = 163,
           name = "",
           type = "bones",
           shape = "point",
@@ -2704,7 +2721,7 @@ return {
           properties = {},
         },
         {
-          id = 163,
+          id = 164,
           name = "",
           type = "bones",
           shape = "point",
@@ -2717,7 +2734,7 @@ return {
           properties = {},
         },
         {
-          id = 164,
+          id = 165,
           name = "",
           type = "bones",
           shape = "point",
@@ -2730,7 +2747,7 @@ return {
           properties = {},
         },
         {
-          id = 165,
+          id = 166,
           name = "",
           type = "bones",
           shape = "point",
@@ -2743,7 +2760,7 @@ return {
           properties = {},
         },
         {
-          id = 166,
+          id = 167,
           name = "",
           type = "bones",
           shape = "point",
@@ -2756,7 +2773,7 @@ return {
           properties = {},
         },
         {
-          id = 167,
+          id = 168,
           name = "",
           type = "bones",
           shape = "point",
@@ -2769,7 +2786,7 @@ return {
           properties = {},
         },
         {
-          id = 168,
+          id = 169,
           name = "",
           type = "bones",
           shape = "point",
@@ -2782,7 +2799,7 @@ return {
           properties = {},
         },
         {
-          id = 169,
+          id = 170,
           name = "",
           type = "bones",
           shape = "point",
@@ -2795,7 +2812,7 @@ return {
           properties = {},
         },
         {
-          id = 170,
+          id = 171,
           name = "",
           type = "bones",
           shape = "point",
@@ -2808,7 +2825,7 @@ return {
           properties = {},
         },
         {
-          id = 171,
+          id = 172,
           name = "",
           type = "bones",
           shape = "point",
@@ -2821,7 +2838,7 @@ return {
           properties = {},
         },
         {
-          id = 172,
+          id = 173,
           name = "",
           type = "bones",
           shape = "point",
@@ -2834,7 +2851,7 @@ return {
           properties = {},
         },
         {
-          id = 173,
+          id = 174,
           name = "",
           type = "bones",
           shape = "point",
@@ -2847,7 +2864,7 @@ return {
           properties = {},
         },
         {
-          id = 174,
+          id = 175,
           name = "",
           type = "bones",
           shape = "point",
@@ -2875,7 +2892,7 @@ return {
       properties = {},
       objects = {
         {
-          id = 175,
+          id = 176,
           name = "",
           type = "start",
           shape = "point",
@@ -2888,7 +2905,7 @@ return {
           properties = {},
         },
         {
-          id = 176,
+          id = 177,
           name = "",
           type = "ball",
           shape = "point",
@@ -2901,7 +2918,7 @@ return {
           properties = {},
         },
         {
-          id = 177,
+          id = 178,
           name = "",
           type = "girl",
           shape = "point",
@@ -2914,7 +2931,7 @@ return {
           properties = {},
         },
         {
-          id = 178,
+          id = 179,
           name = "",
           type = "cat",
           shape = "point",
@@ -2929,12 +2946,12 @@ return {
           },
         },
         {
-          id = 179,
+          id = 180,
           name = "",
           type = "hints",
           shape = "rectangle",
           x = 0,
-          y = -200,
+          y = -180,
           width = 3520,
           height = 8,
           rotation = 0,
@@ -2947,12 +2964,12 @@ return {
           },
         },
         {
-          id = 180,
+          id = 181,
           name = "",
           type = "hints",
           shape = "rectangle",
           x = 0,
-          y = -190,
+          y = -170,
           width = 3520,
           height = 8,
           rotation = 0,
@@ -2965,12 +2982,12 @@ return {
           },
         },
         {
-          id = 181,
+          id = 182,
           name = "",
           type = "hints",
           shape = "rectangle",
           x = 3400,
-          y = -180,
+          y = -160,
           width = 120,
           height = 8,
           rotation = 0,
@@ -2983,12 +3000,12 @@ return {
           },
         },
         {
-          id = 182,
+          id = 183,
           name = "",
           type = "hints",
           shape = "rectangle",
           x = 0,
-          y = -170,
+          y = -150,
           width = 3520,
           height = 8,
           rotation = 0,
@@ -3001,12 +3018,12 @@ return {
           },
         },
         {
-          id = 183,
+          id = 184,
           name = "",
           type = "hints",
           shape = "rectangle",
           x = 0,
-          y = -160,
+          y = -140,
           width = 152,
           height = 8,
           rotation = 0,
@@ -3018,29 +3035,63 @@ return {
           },
         },
         {
-          id = 184,
+          id = 185,
           name = "",
           type = "hints",
           shape = "rectangle",
-          x = 300,
-          y = -150,
-          width = 68,
-          height = 8,
+          x = 336,
+          y = 183,
+          width = 32,
+          height = 57,
           rotation = 0,
           visible = true,
           properties = {
-            ["box"] = "x0,x1",
+            ["box"] = "x0,x1,minY",
             ["text"] = "CRAWL",
             ["btn"] = "down",
           },
         },
         {
-          id = 185,
+          id = 186,
+          name = "",
+          type = "hints",
+          shape = "rectangle",
+          x = 240,
+          y = 183,
+          width = 60,
+          height = 57,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["box"] = "x0,x1,minY",
+            ["text"] = "TAP: HOP",
+            ["btn"] = "a",
+          },
+        },
+        {
+          id = 187,
+          name = "",
+          type = "hints",
+          shape = "rectangle",
+          x = 300,
+          y = 0,
+          width = 68,
+          height = 169,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["box"] = "x0,x1,-,maxY",
+            ["text"] = "TAP: HOP",
+            ["btn"] = "a",
+          },
+        },
+        {
+          id = 188,
           name = "",
           type = "hints",
           shape = "rectangle",
           x = 640,
-          y = -140,
+          y = -130,
           width = 48,
           height = 8,
           rotation = 0,
@@ -3052,12 +3103,12 @@ return {
           },
         },
         {
-          id = 186,
+          id = 189,
           name = "",
           type = "hints",
           shape = "rectangle",
           x = 1384,
-          y = -130,
+          y = -120,
           width = 56,
           height = 8,
           rotation = 0,
@@ -3069,12 +3120,12 @@ return {
           },
         },
         {
-          id = 187,
+          id = 190,
           name = "",
           type = "hints",
           shape = "rectangle",
           x = 1660,
-          y = -120,
+          y = -110,
           width = 60,
           height = 8,
           rotation = 0,
@@ -3086,12 +3137,12 @@ return {
           },
         },
         {
-          id = 188,
+          id = 191,
           name = "",
           type = "hints",
           shape = "rectangle",
           x = 968,
-          y = -110,
+          y = -100,
           width = 42,
           height = 8,
           rotation = 0,
@@ -3103,7 +3154,7 @@ return {
           },
         },
         {
-          id = 189,
+          id = 192,
           name = "",
           type = "hints",
           shape = "rectangle",
@@ -3120,7 +3171,7 @@ return {
           },
         },
         {
-          id = 190,
+          id = 193,
           name = "",
           type = "hints",
           shape = "rectangle",
@@ -3137,7 +3188,7 @@ return {
           },
         },
         {
-          id = 191,
+          id = 194,
           name = "",
           type = "hints",
           shape = "rectangle",
@@ -3154,7 +3205,7 @@ return {
           },
         },
         {
-          id = 192,
+          id = 195,
           name = "",
           type = "hints",
           shape = "rectangle",
@@ -3171,7 +3222,7 @@ return {
           },
         },
         {
-          id = 193,
+          id = 196,
           name = "",
           type = "hints",
           shape = "rectangle",
@@ -3188,7 +3239,7 @@ return {
           },
         },
         {
-          id = 194,
+          id = 197,
           name = "",
           type = "hints",
           shape = "rectangle",
@@ -3205,7 +3256,7 @@ return {
           },
         },
         {
-          id = 195,
+          id = 198,
           name = "",
           type = "hints",
           shape = "rectangle",
@@ -3222,7 +3273,7 @@ return {
           },
         },
         {
-          id = 196,
+          id = 199,
           name = "",
           type = "hints",
           shape = "rectangle",
@@ -3238,7 +3289,7 @@ return {
           },
         },
         {
-          id = 197,
+          id = 200,
           name = "",
           type = "hints",
           shape = "rectangle",
@@ -3255,7 +3306,7 @@ return {
           },
         },
         {
-          id = 198,
+          id = 201,
           name = "",
           type = "hints",
           shape = "rectangle",
