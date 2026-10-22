@@ -231,7 +231,7 @@ return function(mode, api)
       { act = function(p) release(); local s = api.stage(); report("bakery: the second awning reaches the sign (gold)", near(p.y, 64) and s.secrets[4].found, ("x %.0f y %.0f"):format(p.x, p.y)) end },
       { act = function() local s = api.stage(); local k = s.critters[1]; k.state, k.x, k.y, k.dir, k.t = "walk", 2230, 184, -1, 0
           s.hearts = 3; hearts = 3; tp(2160, 184); carry(); s.pepper.face = 1; hold("right") end }, { during = 2.0 },
-      { act = function(p) release(); local s = api.stage(); report("geese: a bite costs a heart and knocks the ball out", s.hearts == hearts - 1 and not p.carrying, ("hearts %d, carrying %s"):format(s.hearts, tostring(p.carrying ~= nil))) end },
+      { act = function(p) release(); local s = api.stage(); report("geese: a bite knocks the ball out (no heart: r6/engine)", s.hearts == hearts and not p.carrying, ("hearts %d, carrying %s"):format(s.hearts, tostring(p.carrying ~= nil))) end },
       { act = function() local s = api.stage(); for _, k in ipairs(s.critters) do k.state, k.y = "gone", -999 end; tp(2300, 156); carry() end }, { wait = 0.2 },
       { act = function() hold("right") end }, { cond = function(p) return p.x >= 2306 end, act = function() jump("right", "jump") end, limit = 2 },
       { during = 0.3 }, { cond = function(p) return p.onGround and p.mode == "normal" and p.y < 100 end, act = function() end, limit = 3 },
@@ -280,6 +280,7 @@ return function(mode, api)
           local ok = 0; for _, r in ipairs(results) do if r then ok = ok + 1 end end
           print(("%d of %d passed"):format(ok, #results)); love.event.quit() end },
     }
+    require("tests_safety")(steps, api, report)                  -- the safety nets (r6/engine), before the summary
   elseif mode == "--auto" then
     love.filesystem.createDirectory("rec")
     local function at(cond, act, limit) return { cond = cond, act = act, limit = limit or 6 } end

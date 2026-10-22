@@ -203,7 +203,8 @@ return function(mode, api)
               return { right = true, jump = true, walk = true } end, "fell in")
         end },
       -- 11b a fall into the pit: out of the bottom of the world, a heart, back to the lamp
-      { act = function(p, s) s.check = { x = 100, y = 664 }; s.hearts = 3; tp(208, 600); p.onGround = false end },
+      -- (r6/engine: the lamp is lit, as it is in play when it is her checkpoint; lighting it would give a heart)
+      { act = function(p, s) s.check = { x = 100, y = 664 }; s.lamps[1].lit = true; s.hearts = 3; tp(208, 600); p.onGround = false end },
       { during = 2.0 },
       { act = function(p, s) report("the pit: falling out of the world costs a heart", s.hearts == 2, "hearts " .. s.hearts)
           report("the pit: back to the lamp, the camera with her", near(p.x, 100, 0.01) and near(p.y, 664, 0.01) and p.mode == "normal" and near(s.camY, camFor(664), 1),
@@ -219,6 +220,7 @@ return function(mode, api)
           local ok = 0; for _, r in ipairs(results) do if r then ok = ok + 1 end end
           print(("%d of %d passed"):format(ok, #results)); love.event.quit() end },
     }
+    require("tests_safety")(steps, api, report)                  -- the safety nets (r6/engine), before the summary
   elseif mode == "--auto" then
     love.filesystem.createDirectory("rec_lab_tall")
     -- a scripted autopilot (the route is fixed): each step holds buttons until its condition

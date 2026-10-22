@@ -38,6 +38,19 @@ keeps the old rules everywhere. Pepper's files are untouched; music is untouched
   found Soder Hill's barrels the costliest hazard for Mikael and Elsa (fix 9). Art-dependent tells left for the
   art plan: a goose pose for "annoyed, about to turn" (so a goose walked into from behind warns too), a barrel
   wobble frame on the stack, a cart keeper or tram driver waving as the bell rings.
+- **Tests** (`tests_safety.lua`, one line in each level's tests file): every level's `--physics` run ends with the
+  safety checks, found from the level itself: for each hazard type (each vehicle kind, goose, gull, barrel) a hit
+  while carrying (ball out, no heart, the ball at rest within 160 px where she can get it), a hit without the ball
+  (a heart), a hit in hard mode (a heart, as before); and the first checkpoint lamp (gives a heart and pops one,
+  never past 3, nothing in hard mode). `SAFETY_SHOTS=1` saves the first hit of each kind and the lamp's heart to
+  `shots_safety/` (the GIFs in `/home/claude/out/r6-engine/`). Three tests changed, with reasons: City Park's
+  "leaf cart: a running jump clears it" starts at 3 hearts (she runs past the lamp at x 1624, which now heals);
+  Downtown's goose bite while carrying now checks the ball out and no heart; the lab's pit fall has its respawn
+  lamp lit (as it is in play; lighting it would heal). Checks: `check_pepper` UNCHANGED (4591 steps),
+  `check_pepper_files` identical, flow 103 of 103, `check_tiled` all PASS, `--physics` all pass (citypark 82,
+  downtown 79, riverwalk 49, soder 29, night 40, lab_tall 43, citypark_tall 91, rooftops 97, downtown_tall 90; were
+  73, 70, 40, 23, 37, 40, 82, 88, 81), `--auto` 44.2, 51.6, 66.3, 73.3, 81.3, 25.9, 38.5, 54.1 (low road), 56.9 s,
+  unchanged, `--qa` 0 problems on City Park, Downtown and River Walk (ball sweep included).
 
 ## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
 Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of

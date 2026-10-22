@@ -143,6 +143,7 @@ return function(mode, api)
           local ok = 0; for _, r in ipairs(results) do if r then ok = ok + 1 end end
           print(("%d of %d passed"):format(ok, #results)); love.event.quit() end },
     }
+    require("tests_safety")(steps, api, report)                  -- the safety nets (r6/engine), before the summary
   elseif mode == "--auto" then
     love.filesystem.createDirectory("rec")
     -- a reactive autopilot: it runs right all the way, and at the set pieces (by x) it hops, jumps or crawls;
