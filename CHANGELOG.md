@@ -18,6 +18,18 @@ in `docs/playtest/curve_r7.md`. Pepper's files, music, sfx and the title are unt
   edge was a stuck in the lab). New checks: the parasols, the plaza parasol held and tapped, the way up A crate
   step, the flooded square tapped (98 of 98). `--auto` 56.2 s (was 56.6), no heart lost.
   Before/after: `/home/claude/out/r7-curve/downtown_tall_before_after.png`.
+- **Rooftops, a peak: a 13th screen, the drying yard** (tools/make_rooftops.py, maps/rooftops.tmx and its export,
+  tests_rooftops.lua): x 3344-3664 on T3 (568), between the balcony vent and the roof bar; everything from x 3344 on
+  moved 320 px right (the generator now inserts the screen; it also matches the map's Tiled edits again: LEVEL 4,
+  the outro, BARK on Y, HOP ON FAN, BOUNCE ON IT). The combined beat before the finale: a dip 144 px wide and 40 deep
+  with a staircase of two loose tiles over it up to a chimney stack (three held jumps, 32 px up each, no stopping:
+  a tile drops 0.6 s after she lands), under the roof bar's gull; a miss drops her into the dip (a held jump and a
+  scramble get her out, left). Off the stack's right side she drops onto the springy awning, which bounces her onto
+  the water tank. The high road crosses above at 456 (a ledge, two loose tiles) and its ledge 424 now starts over
+  the stack. Hint HOLD: BIG JUMPS! at the dip. 12 new bones (88). Checks 103 of 103 (new: the staircase held and
+  tapped, out of the dip, off the stack onto the tank; counts 14 vents, 21 tiles). `--auto` low road 58.1 s (was
+  54.1), high road 54.4 s (was 51.8). The goose spot (screen 9) was 43% of the failures; now 30%.
+  Before/after: `/home/claude/out/r7-curve/rooftops_before_after.png`.
 
 ## Branch `r6/engine`: safety nets, the same in every level (22 Oct)
 Built on `round1`. Benchmark principles 5, 6 and 7 (`docs/benchmark_22oct.md` section 4) in the engine, so every

@@ -21,6 +21,11 @@ Early afternoon over the roofs, sun on copper and tin. The first level that only
   making it: a baker, a dryer, a dishwasher, a sauna guest), a springy awning and hops. Every wall between the
   tiers is 96 px: too tall to jump (58 px with a scramble, checked), so the puffs are the way up.
 
+**r7/curve:** a 13th screen, the drying yard (x 3344-3664 on T3), was inserted; everything from x 3344 on in the
+tables below is 320 px further right in the map (4160 x 1200 px). It is a staircase of two loose tiles over a 40 px
+dip up to a chimney stack (three held jumps), under the gull; off the stack Pepper drops onto the springy awning.
+`--auto` 58.1 s (low road), 54.4 s (high road).
+
 ## The tiers (feet y, world px; y grows downwards)
 
 | Tier | y | x | What is there |

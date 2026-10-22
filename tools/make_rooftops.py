@@ -5,7 +5,7 @@ love riverwalk --level rooftops). Design and every number: docs/rooftops_beatshe
 
   python3 tools/make_rooftops.py [--force]
 
-10 x 5 screens: 3840 x 1200 px (400 x 150 cells). The skyline climbs to the right in five tiers (feet y):
+13 x 5 screens: 4160 x 1200 px (520 x 150 cells; r7/curve added the drying yard, x 3344-3664). The skyline climbs to the right in five tiers (feet y):
 the street 1144, T1 952, T1b 856, T2 760, T3 568, the roof terrace T4 376 (Mia's roof cafe), the copper roof 280,
 the nest chimney's top 184. The low road (the main route) walks and rides the steam puffs up the tiers; the high
 road floats over it on ledges, loose tiles and puffs (the golden bone on the bakery's chimney pot) and meets it on
@@ -194,18 +194,18 @@ bones = [
 hints = [
     {"x0": 0, "x1": 3840, "btn": "x", "text": "PICK UP", "need": "nearball"},
     {"x0": 3560, "x1": 3720, "btn": "x", "text": "GIVE", "need": "ball", "minY": 340, "maxY": 380},
-    {"x0": 3650, "x1": 3720, "btn": "b", "text": "BARK!", "need": "magpienear", "minY": 250, "maxY": 290},
-    {"x0": 3570, "x1": 3650, "btn": "a", "text": "STAND ON THE FAN", "minY": 340, "maxY": 380, "need": "magpie"},
+    {"x0": 3650, "x1": 3720, "btn": "y", "text": "BARK!", "need": "magpienear", "minY": 250, "maxY": 290},
+    {"x0": 3570, "x1": 3650, "btn": "a", "text": "HOP ON FAN", "minY": 340, "maxY": 380, "need": "magpie"},
     {"x0": 1200, "x1": 1280, "text": "STAND ON THE FAN: STEAM LIFTS YOU!", "minY": 900, "maxY": 956},
     {"x0": 1520, "x1": 1572, "text": "LOOSE TILES! RUN!", "minY": 820, "maxY": 860},
     {"x0": 2300, "x1": 2390, "text": "RIDE THE STEAM OVER THE CHIMNEYS", "minY": 720, "maxY": 764},
     {"x0": 3340, "x1": 3540, "btn": "down", "text": "DUCK!", "need": "gull", "minY": 400, "maxY": 572},
-    {"x0": 3370, "x1": 3410, "btn": "a", "text": "HOP ON THE AWNING", "minY": 540, "maxY": 572},
+    {"x0": 3370, "x1": 3410, "btn": "a", "text": "BOUNCE ON IT", "minY": 540, "maxY": 572},
     {"x0": 0, "x1": 3840, "text": "BRING ME THE BALL!", "need": "ball"},
 ]
 
 L = {
-    "name": "ROOFTOPS", "number": 3, "title": "Pepper: Rooftops (greybox)", "scenery": "greybox", "time": 300,
+    "name": "ROOFTOPS", "number": 4, "title": "Pepper: Rooftops (greybox)", "scenery": "greybox", "time": 300,
     "start": {"x": 40, "y": STREET},
     "ball": {"x": 3744, "y": NEST},          # in the gull's nest
     "girl": {"x": 3640, "y": T4},            # Mia at the roof cafe's table (she went up the building's stairs)
@@ -221,9 +221,57 @@ L = {
     "hints": hints,
     "ballBack": "THE BALL IS BACK BY THE LAMP", "ballHomeAtLamps": True,
     "bikes": [], "movers": [],
-    "intro": ["LEVEL 3", "ROOFTOPS", "A GULL TOOK THE BALL TO ITS NEST!", "MIA: MEET ME AT THE ROOF CAFE!"],
+    "intro": ["LEVEL 4", "ROOFTOPS", "A GULL TOOK THE BALL TO ITS NEST!", "MIA: MEET ME AT THE ROOF CAFE!"],
+    "outro": ["AFTERNOON ON SODER THE BALL", "SLIPPED AND ROLLED DOWN THE HILL..."],
 }
 
+
+# ---- r7/curve: one more screen, the drying yard (x 3344-3664 on T3, 568), between the balcony vent and the roof bar.
+# Everything from x 3344 on moves 320 px right (the roof bar, the terrace, the copper roof, the nest, Mia; the high
+# road's ledge 424 and the bar fan), and the drying yard is drawn into the gap. It is the level's combined beat
+# before the finale: loose tiles and held jumps together, under the roof bar's gull (its band now starts over the
+# yard). A dip 144 px wide and 40 deep, and over it a staircase of two loose tiles up to a chimney stack:
+# three held jumps (gaps 32, 32 px up each), no stopping on a tile (it drops 0.6 s after she lands). A hop that
+# should have been a held jump, or a tile left too late, drops her into the dip (no harm: a held jump and a scramble
+# get her back out onto the yard's floor, left). Off the stack's right side she drops onto the roof bar's springy
+# awning, which bounces her onto the water tank. The high road crosses above at 456 (a ledge, two loose tiles);
+# its ledge 424 now starts over the stack.
+CUT, D = 3344, 320
+COLS += D // 8
+rows = [r[:CUT // 8] + r[CUT // 8 - 1] * (D // 8) + r[CUT // 8:] for r in rows]
+
+
+def _shift(o):
+    if isinstance(o, dict):
+        for k in list(o):
+            if k in ("x", "x0", "x1") and isinstance(o[k], (int, float)):
+                o[k] = o[k] + D if o[k] >= CUT else o[k]
+            else:
+                _shift(o[k])
+    elif isinstance(o, list):
+        for e in o:
+            _shift(e)
+
+
+_shift(L)
+WELL3, WELL3_FLOOR = (3432, 3576), 608                   # 144 wide, 40 deep: she scrambles out (58 px)
+rows = [list(r) for r in rows]
+for j in range(T3 // 8, WELL3_FLOOR // 8):
+    for i in range(WELL3[0] // 8, WELL3[1] // 8):
+        rows[j][i] = "."
+rows = ["".join(r) for r in rows]
+props += [
+    P("DRYING YARD", "decor", 3352, 3424, 544, 568, layer="back", label="top"),
+    loose(3464, 536), loose(3520, 504),                  # the staircase over the well: held jumps, keep moving
+    P("CHIMNEY STACK", "solid", 3576, 3680, 472, 568, label="top"),
+    ow("", 3344, 3440, 456), loose(3472, 456), loose(3528, 456),   # the high road: on from the walkway's tiles
+]
+for pr in props:                                         # the high road's ledge 424 reaches back over the stack
+    if pr["x0"] == 3344 + D and pr["y0"] == 424:
+        pr["x0"] = 3600
+hints.insert(-1, {"x0": 3380, "x1": 3432, "btn": "a", "text": "HOLD: BIG JUMPS!", "minY": 540, "maxY": 572})
+bones += [B(3384, T3), B(3476, 536), B(3532, 504), B(3500, WELL3_FLOOR), B(3600, 472), B(3640, 472), B(3664, 472),
+          B(3700, T3), B(3392, 456), B(3484, 456), B(3540, 456), B(3628, 424)]
 
 def main(argv):
     tmx = os.path.join(T.MAPS, NAME + ".tmx")
