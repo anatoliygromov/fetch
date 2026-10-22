@@ -28,6 +28,8 @@ Built on `main` (v0.5). No SpriteCook, no image generation.
   rounded U, the bandana's folds run to its point, no sky shows through between her jaw and tongue; City Hall's
   tower and the Riddarholmen spire sit below the banner so the gold crowns show; sparkles are kept only where
   they lie wholly on open water; the PRESS box no longer touches her chest.
+- Third pass on Pepper's face: the tongue's highlight is a small wet glint on its left lobe (was a straight stripe),
+  her nostrils have lit rims, and the smiling cheek under the wink is its own small lit form.
 - Checks: `check_flow` 94/94, `check_pepper` UNCHANGED.
 
 ## Branch `assets/v2`: the tram fix and art for the new pieces (19 Oct)

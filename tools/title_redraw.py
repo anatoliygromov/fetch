@@ -608,6 +608,11 @@ put(shade_rim(mz, 3, -1, 0) & (YY < 132), P_SH)
 put(sheen(MUZZLE, 1, 4) & mz & (XX < 118) & (YY < 122), P_MD)
 put(sheen(MUZZLE, 1, 2) & mz & (XX < 112) & (YY < 118), P_HI)
 put(polyline([(98, 126), (100, 134), (104, 140)]) & mz, P_MD)            # the lip pad's lit roll
+# the smiling cheek pushed up under the wink: its own small form, lit on its upper left
+APPLE = ell(84, 131, 12, 8) & sk
+put(sheen(APPLE, 1, 4) & (XX < 92), P_MD)
+put(sheen(APPLE, 1, 2) & ell(78, 126, 5, 3), P_HI)
+put(shade_rim(APPLE, 2) & (YY > 132) & (XX < 94), P_SH)
 # jaw: under the grin, mostly in shadow, its front catches light
 put(jw, P_SH); put(sheen(jw, 1, 3) & (XX < 118) & (XX > 96), P_MD)
 # near ear: lit flap fold at the top, darker where it hangs against the cheek, its tip in shadow
@@ -690,7 +695,7 @@ NOSE = [
     ".OkMHHWWWHHHHMMMkkkkO.",
     "OkkMMHHHHHMMMMkkkkkkkO",
     "OkkkMMMMMMMkkkkkkkkkkO",
-    "OkkkkkkkkkkkkkkkkkkkkO",
+    "OkMMMMkkkkkkkkMMMMkkkO",
     "OkOOOOkkkkkkkkkOOOOkkO",
     "OOOOOOOkkkkkkkOOOOOOOO",
     ".OOOOOOkkkOOkkkOOOOOO.",
@@ -715,8 +720,8 @@ put(shift(polyline(UPPER[1:5]), 0, -1) & ~MOUTH, P_MD)                   # the l
 put(polyline([(84, 139), (82, 135)]), OUT)                               # the corner curls up into the cheek
 TONGUE = (poly([(100, 155), (110, 151), (124, 152), (129, 157), (128, 164), (102, 164)]) | ell(115, 167, 13, 12)) & (YY >= 151)
 put(TONGUE, TNG)
-put(TONGUE & ~shift(TONGUE, 2, 2), TNG_LT)
-put(ell(108, 158, 3, 2) & TONGUE, TNG_LT)
+put(ell(107, 163, 2, 3) & TONGUE, TNG_LT)                                 # a wet highlight on the left lobe
+put(sheen(TONGUE, 1, 2) & (YY > 166) & (XX < 112), TNG_LT)
 put(line(115, 158, 115, 172) & TONGUE, PK_DK)
 put(TONGUE & shift(MOUTH, 0, 2) & (YY < 157), PK_DK)                      # in the shadow of the upper lip
 put(inner_edge(TONGUE) & ~shift(TONGUE, -1, -1), PK_DK)
