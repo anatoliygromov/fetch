@@ -16,10 +16,9 @@ What changes from City Park (besides the shift), and why:
   * the hollow log is drawn as a plain box (setpieces.lua draws the hollow log down to y 184)
   * no park art (L.art): the art and the cart code assume the path at y 184 (docs/citypark_tall_beatsheet.md,
     "What the engine must add")
-  * the two leaf-cart zones are kept on a note layer "#carts" (the game skips layers named #...): today a cart
-    zone only starts while Pepper's feet are above y 184 and the cart drives at y 184, which is the treetop tier
-    here. They go back to class "bikes" once the engine reads a zone's y (their property y = 328 is ready); their
-    two hints ("CART! GET UP HIGH!", "ANOTHER CART! UP HIGH!", bike = true) are left out until then
+  * the two leaf-cart zones have roadY = 328 (engine/round2: a zone's road at any height; the cart drives on the
+    path and the zone counts Pepper in only on the low road, up to 90 px above it), with their two hints
+    ("CART! GET UP HIGH!", "ANOTHER CART! UP HIGH!", bike = true; on the low road only, minY 290)
 """
 import os
 import sys
@@ -178,17 +177,16 @@ def build():
         {"name": "GOLDEN BONE", "x0": 1756, "x1": 1788, "y0": 140, "y1": 152},
     ]
     L["magpie"]["perches"] = PERCHES
-    hints = [h for h in L["hints"] if not h.get("bike")]     # "CART! GET UP HIGH!": back with the carts
+    hints = list(L["hints"])
     for h in hints:                                           # City Park's hints for one spot: on the low road only
         if h["x1"] - h["x0"] < 600 and "minY" not in h:
             h["minY"] = 290
     k = next(i for i, h in enumerate(hints) if not h.get("need") or h["need"] not in ("magpienear", "nearball", "ball"))
     L["hints"] = hints[:k] + HINTS_HIGH + hints[k:]
-    # the leaf carts wait on a note layer until the engine reads a zone's y (see the docstring)
-    L["#carts"] = [dict(b, y=PATH) for b in L.pop("bikes")]
-    for b in L["#carts"]:
+    # the leaf carts drive on the low road (roadY: the zone's feet line, see the docstring)
+    L["bikes"] = [dict(b, roadY=PATH) for b in L["bikes"]]
+    for b in L["bikes"]:
         b.pop("minY", None)
-    L["bikes"] = []
     L["intro"] = ["LEVEL 1", "CITY PARK", "A MAGPIE STOLE MIA'S BALL!", "UP IN THE TREES OR DOWN ON THE PATH"]
     return L, rows
 

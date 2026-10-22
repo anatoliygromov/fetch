@@ -347,12 +347,96 @@ function Sc.drawFarGrey(L, camx, t)
   vpop(on)
 end
 
+-- The painted ground is cut into chunks of CHUNK x CHUNK px (the last ones smaller), each its own canvas, drawn
+-- only when on screen: one canvas as big as the world would take 15 to 20 MB of video memory in a tall, wide level
+-- and could pass the handheld's largest texture (2048 px assumed). Each chunk is painted by the same code, moved
+-- by the chunk's origin, so the pixels are exactly those of one big canvas. While a chunk is painted, clip() is the
+-- scissor in world coordinates (love's scissor ignores the transform).
+Sc.CHUNK = 512
+local chunkX, chunkY, chunkW, chunkH = 0, 0, 0, 0
+local function clip(x, y, w, h)
+  if not x then lg.setScissor(); return end
+  local x0, y0 = math.max(0, x - chunkX), math.max(0, y - chunkY)
+  local x1, y1 = math.min(chunkW, x + w - chunkX), math.min(chunkH, y + h - chunkY)
+  lg.setScissor(x0, y0, math.max(0, x1 - x0), math.max(0, y1 - y0))
+end
+-- the terrain runs { top, bottom } in column x, sorted and merged ("all": every slope cell over x counts, "first":
+-- only the first one, as the art levels' ground has it). Worked out once per world and column (the chunks share it).
+local function columnRuns(w, x, which)
+  w.columnRuns = w.columnRuns or { all = {}, first = {} }
+  local memo = w.columnRuns[which]
+  if memo[x] then return memo[x] end
+  local runs = {}
+  for _, r in ipairs(w.rects) do if r.terrain and x >= r.x0 and x < r.x1 then runs[#runs + 1] = { r.y0, r.y1 } end end
+  if which == "all" then
+    for _, sl in ipairs(w.slopes) do
+      if x >= sl.x0 and x < sl.x1 then
+        local i = x - sl.x0
+        runs[#runs + 1] = { sl.dir < 0 and (sl.y0 + i) or (sl.y1 - i - 1), sl.y1 }
+      end
+    end
+  else
+    local sl = w:slopeAt(x)
+    if sl then local i = x - sl.x0; runs[#runs + 1] = { sl.dir < 0 and (sl.y0 + i) or (sl.y1 - i - 1), sl.y1 } end
+  end
+  table.sort(runs, function(a, b) return a[1] < b[1] end)
+  local merged = {}
+  for _, r in ipairs(runs) do
+    local m = merged[#merged]
+    if m and r[1] <= m[2] then m[2] = math.max(m[2], r[2]) else merged[#merged + 1] = { r[1], r[2] } end
+  end
+  memo[x] = merged
+  return merged
+end
+
+local Ground = {}
+Ground.__index = Ground
+-- a chunk with no terrain or water in it (nor up to 16 px under it: the pavement art starts 12 px above a top) is
+-- left out: it would stay transparent (the sky of a tall level), so it takes no memory
+local function empty(w, x, y, cw, ch)
+  local function hit(r) return r.x1 > x and r.x0 < x + cw and r.y1 > y and r.y0 < y + ch + 16 end
+  for _, r in ipairs(w.rects) do if r.terrain and hit(r) then return false end end
+  for _, r in ipairs(w.water) do if hit(r) then return false end end
+  for _, r in ipairs(w.slopes) do if hit(r) then return false end end
+  return true
+end
+-- paint(xa, xb): draws the ground in world coordinates; it may skip the columns outside xa .. xb - 1 (the chunk)
+local function chunked(w, paint)
+  local g = setmetatable({ chunks = {}, width = w.width, height = w.height }, Ground)
+  local N = Sc.CHUNK
+  for cy = 0, w.height - 1, N do
+    for cx = 0, w.width - 1, N do
+      local cw, ch = math.min(N, w.width - cx), math.min(N, w.height - cy)
+      if not empty(w, cx, cy, cw, ch) then
+      local cv = lg.newCanvas(cw, ch)
+      cv:setFilter("nearest", "nearest")
+      lg.push("all"); lg.setCanvas(cv); lg.clear(0, 0, 0, 0); lg.origin(); lg.translate(-cx, -cy)
+      chunkX, chunkY, chunkW, chunkH = cx, cy, cw, ch
+      paint(cx, cx + cw)
+      lg.pop()
+      g.chunks[#g.chunks + 1] = { cv = cv, x = cx, y = cy, w = cw, h = ch }
+      end
+    end
+  end
+  chunkX, chunkY, chunkW, chunkH = 0, 0, 0, 0
+  return g
+end
+-- draw the chunks on screen (cam, camY: the camera; drawn in world y, inside the camera's y shift)
+function Ground:draw(cam, camY)
+  camY = camY or 0
+  for _, c in ipairs(self.chunks) do
+    if c.x - cam < 320 and c.x + c.w - cam > 0 and c.y - camY < 240 and c.y + c.h - camY > 0 then lg.draw(c.cv, c.x - cam, c.y) end
+  end
+end
+function Ground:release() for _, c in ipairs(self.chunks) do c.cv:release() end; self.chunks = {} end
+-- the video memory the ground takes (bytes, RGBA8) and its largest chunk side
+function Ground:bytes() local n, m = 0, 0; for _, c in ipairs(self.chunks) do n = n + c.w * c.h * 4; m = math.max(m, c.w, c.h) end; return n, m end
+Sc.Ground = Ground
+
 -- the greybox ground: every terrain column flat grey with a 1 px edge on top; the pond's water as a flat box
--- with a light surface line. Painted once into a canvas as wide as the level.
+-- with a light surface line. Painted once, in chunks (Sc.CHUNK).
 function Sc.paintGroundGrey(w)
-  local cv = lg.newCanvas(w.width, w.height)                       -- (as tall as the world: 240 in a flat level)
-  cv:setFilter("nearest", "nearest")
-  lg.push("all"); lg.setCanvas(cv); lg.clear(0, 0, 0, 0); lg.origin()
+  return chunked(w, function(xa, xb)                              -- (painted once per chunk: Sc.CHUNK)
   for _, r in ipairs(w.water) do
     box(C.pond, r.x0, r.y0, r.x1 - r.x0, r.y1 - r.y0)
   end
@@ -361,21 +445,8 @@ function Sc.paintGroundGrey(w)
     for _, q in ipairs(w.water) do if q ~= r and q.y1 == r.y0 and q.x0 < r.x1 and q.x1 > r.x0 then top = false end end
     if top then box(C.pondTop, r.x0, r.y0, r.x1 - r.x0, 1) end
   end
-  for x = 0, w.width - 1 do
-    local runs = {}
-    for _, r in ipairs(w.rects) do if r.terrain and x >= r.x0 and x < r.x1 then runs[#runs + 1] = { r.y0, r.y1 } end end
-    for _, sl in ipairs(w.slopes) do
-      if x >= sl.x0 and x < sl.x1 then
-        local i = x - sl.x0
-        runs[#runs + 1] = { sl.dir < 0 and (sl.y0 + i) or (sl.y1 - i - 1), sl.y1 }
-      end
-    end
-    table.sort(runs, function(a, b) return a[1] < b[1] end)
-    local merged = {}
-    for _, r in ipairs(runs) do
-      local m = merged[#merged]
-      if m and r[1] <= m[2] then m[2] = math.max(m[2], r[2]) else merged[#merged + 1] = { r[1], r[2] } end
-    end
+  for x = xa, xb - 1 do                                           -- (the chunk's columns)
+    local merged = columnRuns(w, x, "all")
     for _, m in ipairs(merged) do
       lg.setColor(C.ground); lg.rectangle("fill", x, m[1], 1, m[2] - m[1])
       lg.setColor(C.groundEdge); lg.rectangle("fill", x, m[1], 1, 1)
@@ -391,8 +462,7 @@ function Sc.paintGroundGrey(w)
       end
     end
   end
-  lg.pop()
-  return cv
+  end)
 end
 
 -- a greybox lamp post standing on the path at (x, y): a post and a lantern; lit = a passed checkpoint
@@ -611,7 +681,7 @@ function Sc.drawProp(p, camx, layerColour)
   end
 end
 
--- the ground of the play layer, painted once into a canvas as wide as the level. Every walkable top at or below
+-- the ground of the play layer, painted once (in chunks, Sc.CHUNK). Every walkable top at or below
 -- y 150 gets the pavement art, one column per pixel (it repeats every 320 px): its back edge is 12 px above the
 -- line Pepper walks on, then the kerb and the road. Higher terrain (the bridge pier) stays a greybox.
 function Sc.paintGround(w, props)
@@ -624,33 +694,20 @@ function Sc.paintGround(w, props)
   local rw, rh = road:getDimensions()
   local rq = {}
   for i = 0, rw - 1 do rq[i] = lg.newQuad(i, 0, 1, rh, rw, rh) end
-  local cv = lg.newCanvas(w.width, w.height)                       -- (as tall as the world: 240 in a flat level)
-  cv:setFilter("nearest", "nearest")
-  lg.push("all"); lg.setCanvas(cv); lg.clear(0, 0, 0, 0); lg.origin()
+  return chunked(w, function(xa, xb)                              -- (painted once per chunk: Sc.CHUNK)
   local high, flat = {}, {}
   for x = 0, w.width - 1 do
-    local runs = {}
-    for _, r in ipairs(w.rects) do if r.terrain and x >= r.x0 and x < r.x1 then runs[#runs + 1] = { r.y0, r.y1 } end end
-    for _, sl in ipairs(w.slopes) do
-      if x >= sl.x0 and x < sl.x1 then
-        local i = x - sl.x0
-        runs[#runs + 1] = { sl.dir < 0 and (sl.y0 + i) or (sl.y1 - i - 1), sl.y1 }
-      end
-    end
-    table.sort(runs, function(a, b) return a[1] < b[1] end)
-    local merged = {}
-    for _, r in ipairs(runs) do
-      local m = merged[#merged]
-      if m and r[1] <= m[2] then m[2] = math.max(m[2], r[2]) else merged[#merged + 1] = { r[1], r[2] } end
-    end
+    local merged = columnRuns(w, x, "all")
     for _, m in ipairs(merged) do
       if m[1] < 150 then high[#high + 1] = { x, m[1], m[2] }
       else
-        lg.setColor(1, 1, 1, 1)
-        lg.setScissor(x, 0, 1, m[2])
-        lg.draw(pave, q[x % pw], x, m[1] - 12)
-        lg.draw(road, rq[x % rw], x, m[1] + 15)                     -- rows 27+ of the paving art are the road
-        lg.setScissor()
+        if x >= xa and x < xb then                                  -- (drawn in the chunk's columns only)
+          lg.setColor(1, 1, 1, 1)
+          clip(x, 0, 1, m[2])
+          lg.draw(pave, q[x % pw], x, m[1] - 12)
+          lg.draw(road, rq[x % rw], x, m[1] + 15)                   -- rows 27+ of the paving art are the road
+          clip()
+        end
         if m[1] == 184 then flat[x] = true end
       end
     end
@@ -684,8 +741,7 @@ function Sc.paintGround(w, props)
       lg.setColor(C.groundEdge); lg.rectangle("fill", h[1], h[2], 1, 1)
     end
   end
-  lg.pop()
-  return cv
+  end)
 end
 
 -- Obstacles stand on the line Pepper walks on, so they read as in her way.
@@ -964,32 +1020,22 @@ end
 function Sc.paintGroundArt(w, style)
   local T = Sc.townArt(style)
   local gw, gh = T.ground:getDimensions()
-  local cv = lg.newCanvas(w.width, w.height)                       -- (as tall as the world: 240 in a flat level)
-  cv:setFilter("nearest", "nearest")
-  lg.push("all"); lg.setCanvas(cv); lg.clear(0, 0, 0, 0); lg.origin()
+  return chunked(w, function(xa, xb)                              -- (painted once per chunk: Sc.CHUNK)
   local cover = {}
   for x = 0, w.width - 1 do
-    local runs = {}
-    for _, r in ipairs(w.rects) do if r.terrain and x >= r.x0 and x < r.x1 then runs[#runs + 1] = { r.y0, r.y1 } end end
     local sl = w:slopeAt(x)
-    if sl then local i = x - sl.x0; runs[#runs + 1] = { sl.dir < 0 and (sl.y0 + i) or (sl.y1 - i - 1), sl.y1 } end
-    table.sort(runs, function(a, b) return a[1] < b[1] end)
-    local merged = {}
-    for _, r in ipairs(runs) do
-      local m = merged[#merged]
-      if m and r[1] <= m[2] then m[2] = math.max(m[2], r[2]) else merged[#merged + 1] = { r[1], r[2] } end
-    end
+    local merged = columnRuns(w, x, "first")
     cover[x] = merged
-    for _, m in ipairs(merged) do
+    for _, m in ipairs((x >= xa and x < xb) and merged or {}) do      -- (drawn in the chunk's columns only)
       local top = m[1]
       if top < 184 then top = 184 end                             -- the slide tower: the path goes on behind it
       local stair = sl and style == "town"
       if stair then top = 184 + math.floor((top - 184) / 4) * 4 end   -- the river stairs: 4 px steps
       lg.setColor(1, 1, 1, 1)
-      lg.setScissor(x, 0, 1, m[2])
+      clip(x, 0, 1, m[2])
       lg.draw(T.ground, T.groundQ[x % gw], x, top - 12)
       if top - 12 + gh < w.height then lg.draw(T.ground, T.groundQ[x % gw], x, top - 12 + gh) end
-      lg.setScissor()
+      clip()
       if stair then                                               -- each step: a light granite nosing
         lg.setColor(0.78, 0.75, 0.70); lg.rectangle("fill", x, top, 1, 1)
         lg.setColor(0.36, 0.34, 0.33); lg.rectangle("fill", x, top + 3, 1, 1)
@@ -1001,7 +1047,7 @@ function Sc.paintGroundArt(w, style)
     return false
   end
   lg.setColor(0.16, 0.13, 0.11)                                   -- cut faces (the banks): a dark edge
-  for x = 0, w.width - 1 do
+  for x = xa, xb - 1 do                                           -- (the chunk's columns)
     if not w:slopeAt(x) then
       for _, m in ipairs(cover[x]) do
         for y = math.max(m[1], 184), m[2] - 1 do
@@ -1012,8 +1058,7 @@ function Sc.paintGroundArt(w, style)
       end
     end
   end
-  lg.pop()
-  return cv
+  end)
 end
 
 -- an oak branch over its one-way box: 6 px thick by the trunk, 4 at the tip, its top row the ledge; between the

@@ -119,8 +119,18 @@ function Wd:wall(x, nx, hw, y, h, onGround)
   return hitX, hitR
 end
 
--- the ground under x, terrain only (pavement, quay, stairs; not the props): for the bikes
-function Wd:groundAt(x)
+-- the ground under x, terrain only (pavement, quay, stairs; not the props): for the bikes, carts and the cat.
+-- fromY (tall levels): the highest terrain floor at or below fromY, slopes included, at any height. Without it, as
+-- in the flat levels: the first slope at x, else the highest terrain top at or below y 150.
+function Wd:groundAt(x, fromY)
+  if fromY then
+    local best
+    for _, s in ipairs(self.slopes) do
+      if x >= s.x0 and x < s.x1 then local y = slopeY(s, x); if y >= fromY and (not best or y < best) then best = y end end
+    end
+    for _, r in ipairs(self.rects) do if r.terrain and x >= r.x0 and x < r.x1 and r.y0 >= fromY and (not best or r.y0 < best) then best = r.y0 end end
+    return best
+  end
   local sy = self:slopeFloor(x)
   if sy then return sy end
   local best

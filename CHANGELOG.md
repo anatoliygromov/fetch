@@ -2,6 +2,93 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `engine/round2`: the review's engine fixes and the rooftops mechanics (22 Oct)
+Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untouched (`check_pepper` UNCHANGED).
+- **The lift never waits at her crouched height** (review, SHOULD FIX 2). A lift coming down over a crouched Pepper
+  waited 16 px over her paws; when she let go of Down she stood up into the platform (pepper.lua's headroom test
+  sees only solids). `lift.lua` now keeps her standing room (26 px) plus 2 px (`Lf.CLEAR`) clear over her whether
+  she crouches or not, and a lift that is already lower than that over her (she crawled in under it) is wound back
+  up by its operator until she has room. lab_tall `--physics`: 4 new checks (the review's case, crouched then
+  standing; a lift too low over her backs up), 34 of 34.
+- **Traffic and ground at any height** (the flat levels' y 184 made a level's field). A bike, cart or tram zone in
+  `L.bikes` may give `roadY`, the feet line its road is at (default 184: every existing level is unchanged). The
+  vehicle drives at `roadY` (and follows the terrain from 34 px above it, as the bikes did from y 150), the
+  warning sign sits at its height, and a zone with `roadY` counts Pepper in only while her feet are on that road
+  or up to `band` px (default 90) above it, so a cart on the low road says nothing to her up in the trees.
+  `world:groundAt(x, fromY)` finds the highest terrain floor (slopes too) at or below any `fromY`; without
+  `fromY` it is the old search (below y 150). In a tall world (more than 240 px) the cat's run, the gull's target
+  floor (the floor right under her, ledges too) use it; the gull circles at its height on screen (camera y + 86),
+  so it swoops to the floor it targets at any height. The kennel and the hollow log stand on `pc.foot` (default
+  184). `qa.lua`'s bikes drive at their zone's `roadY`.
+- **The leaf carts are back in the tall City Park.** `tools/make_citypark_tall.py` keeps City Park's two cart zones
+  as zones (`roadY = 328`, the low road) with their hints ("CART! GET UP HIGH!", on the low road only), not on a
+  `#carts` note layer; `maps/citypark_tall.tmx` and its export regenerated (`check_tiled` passes).
+  `tests_citypark_tall.lua --physics` 82 of 82: 5 new cart checks (a cart sets off with its warning as she walks
+  in on the path, drives at y 328, hurts her there, passes under her on the picnic table, never comes while she is
+  on a treetop over the run). The autopilot (the high road) is unchanged: GOOD GIRL! in 38.5 s.
+- **QA in tall levels** (review 5). `qa.lua` flagged "below the level" at 4 px under the world, while the fall rule
+  (stage.lua) lets her drop 24 px out of the bottom before it takes her out of play: now 24 + 8 px. A QA run also
+  clears a pending fall and puts the vertical camera on her when it places her. `--qa` on lab_tall: 4283 runs,
+  0 problems (was 18 false ones); on citypark_tall: 11734 runs, 0 problems.
+- **The lab pit can be fallen into** (review 4). It was 32 px: Pepper's feet span 26 px, she has coyote time and
+  scrambles up 12 px, so she walked or scrambled across and the fall rule was only reached by tests. It is now
+  96 px (x 160-256, `tools/make_lab_tall.py`): a running held jump clears it, a running tap hop only just makes it
+  with a scramble at the far edge, walking off or running off the edge falls in (a heart, back to the lamp). The
+  hint is "RUN, HOLD: BIG JUMP", the bone over it moved onto the jump's arc. For designers (docs/tiled.md is on
+  another branch): a gap Pepper must not walk or scramble across is at least 64 px; a running held jump clears
+  about 110 px (from her numbers, not measured). lab_tall `--physics` 40 of 40 (6 new pit checks, all played, no
+  teleport), `--auto` GOOD GIRL! in 25.9 s, 13/13 bones, `--qa` 0 problems.
+- **The ground in chunks** (review 8). The painted ground (terrain, pavement, path) was one canvas as big as the
+  world (a 16 x 3 screen level: 15 to 20 MB of video memory, and wider or taller than the handheld's largest
+  texture). It is now cut into canvases of 512 x 512 px (`Sc.CHUNK`, the last ones smaller), each drawn only when
+  it is on screen, and a chunk with no terrain or water in it (the sky of a tall level) is not made at all
+  (lab_tall: 3 chunks, 1.6 MB instead of 2.6 MB). Each chunk is painted by the same code moved to its origin
+  (`clip()` is the scissor in world coordinates), drawing only its own columns; each column's terrain runs are
+  worked out once per world and shared. Load time as before (Soder Hill 38 ms, City Park 47 ms here).
+  `St.ground` is a `Sc.Ground` with `:draw(cam, camY)`, `:release()` and `:bytes()`. Proof: the `--test` tours
+  drawn on `round1` and on this branch are pixel identical: River Walk 24 of 26 shots, City Park 21 of 23, Downtown
+  28 of 31, Soder Hill 22 of 22; the others differ only in the debug view's FPS / MS counter
+  (`/home/claude/out/engine-round2/debug_counter_diff.png`). lab_tall (its pit changed since round1) drawn with one
+  big chunk and with 512 px chunks: 140 of 140 shots identical, across both chunk seams.
+- **Steam puffs** (`riverwalk/roofs.lua`, data from Tiled: objects of class `steam`, the level's `L.steam`). Fields:
+  `name`; the box `x0, x1, y0, y1` is the vent hood, a solid box (keep it 4 px tall so Pepper walks onto it; its
+  top `y0` is the mouth); `lift` (px: the puff's apex is `y0 - lift`, exactly); `every` (s, the whole cycle; 0 =
+  only on a bark); `warn` (s, default 0.8: the hood's flap rattles, a "!" over it, two wisps rise 8 px); `puff` (s,
+  default 0.9: a semi-transparent column of steam up to `y0 - lift - 16`, 3 frames, behind Pepper); `phase` (s into
+  the first rest, so neighbours do not puff together); `bark` (true: it never puffs by itself; a "?" shows over it);
+  `say` (the line the first time a bark turns it up); `source` (who makes it: a note). Cycle: rest
+  (`every - warn - puff`), warn, puff. A bark with Pepper within 80 px across and her feet within 60 px of `y0`
+  starts the warning now. While it puffs, Pepper over the mouth (feet x within `x0 - 6 .. x1 + 6`, feet y within
+  `y0 - lift .. y0 + 2`), not crouched, is launched once per puff: only her upward speed is set,
+  `vy = -sqrt(2 * 560 * (y - apex))`, and her jump base moved so letting go of A does not cut the rise short (as
+  the springy awnings' `bounce`); her controller is untouched. Steam never hurts; Down on the hood stays put.
+- **Loose tiles** (props with `loose = true`, one-way ledges 24 x 6; Night Harbour's crumbling planks made general,
+  for any level; Night's own planks are unchanged). The moment she stands on one it shakes (`Rf.SHAKE` = 0.6 s, 2 px
+  every 0.1 s, a clink, grit), then it is no floor: it falls with gravity and breaks on the roof below (it only
+  drops while she is on it, so it never falls on her); `Rf.GONE` = 3 s later it is back, once her box is out of its
+  place (a faint outline 0.6 s before).
+- **The gull's nest**: `L.magpie` with `look = "gull"` draws the magpie as a gull (`Cr.drawBird`); with one perch it
+  stays put, a bark within `bark` px (95) across and 110 px up or down makes it let go of the ball.
+- **Rooftops, playable greybox** (`rooftops`, not in `levels.lua`: `love riverwalk --level rooftops`).
+  `tools/make_rooftops.py` turns the paper map into `maps/rooftops.tmx`, exported to `level/tiled/rooftops.lua`
+  (`tools/check_tiled.sh` checks it is up to date); `level/rooftops.lua` loads it. From the sketch: hoods 4 px tall,
+  each lift set so its apex is 16 px over the floor it serves (108, the oven's 140), phases, the oven's vent 8 px
+  right on a 16 px longer chimney ledge (at x 1516 her body touched the chimney pot, which stopped the lift), the
+  nest as the gull's perch, hints (PICK UP, GIVE, BARK!, the kitchen fan's "HOLD: STAY PUT"). The finale: the
+  terrace fan lifts her through the copper roof; one bark there makes the gull drop the ball on the chimney and the
+  sauna steam up; its puff carries her to the chimney's top; the ball; a step down onto the sauna's hood, Down + A to
+  the terrace, the fetch. `tests_rooftops.lua`: `--physics` 42 of 42 (every vent's apex within 1 px, its landing
+  with no input and when steering, the 0.8 s warning before a lift, the cycle, one lift per puff, crouching, a bark
+  turns a vent up, the sauna only on a bark; a loose tile a floor for 0.6 s, back after 3 s and not while she is in
+  its place, the bridge of three crossed with running tap hops; the cafe table (jump on, crawl under), the walk
+  from the street to the terrace, the high road's plain jumps and the chimney pot's scramble, the step off the
+  chimney, Down + A off the copper roof; the nest; the fetch ends the level). `--auto`: the low road and the
+  finale, GOOD GIRL! in 21.8 s, 21/34 bones, no heart lost. `--qa`: 5509 runs, 0 problems. `--test`: a tour and
+  frames of a puff and a loose tile.
+- **For `docs/tiled.md`** (on another branch, not touched here): new fields to document are a zone's `roadY` and
+  `band`, the `steam` objects and their properties, props with `loose = true`, `magpie.look = "gull"`, a piece's
+  `foot`, and the minimum gap width (64 px). The loader (`tiled.lua`) needed no change: all of it passes through.
+
 ## The old title is back (22 Oct, evening)
 - The hand-pixeled title (branch `title/redraw`) was rejected by the owner: the 19 Oct title has far more charm.
   Its merge is reverted on `round1`; the branch is kept for reference. The window is now called "FETCH!".

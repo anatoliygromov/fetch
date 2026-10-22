@@ -123,7 +123,7 @@ function Sp.spawn(s, bk)
   local v = Sp.speed(s, bk)
   local hw = (bk.w or 48) / 2
   S.play(bk.bell or (bk.kind == "cart" and "honk") or (bk.kind == "tram" and "ding") or "bell")
-  return { x = s.cam + 320 + hw + v * Sp.WARN, y = 184, warn = Sp.WARN, zone = bk, speed = v }
+  return { x = s.cam + 320 + hw + v * Sp.WARN, y = bk.roadY or 184, warn = Sp.WARN, zone = bk, speed = v }   -- (roadY: tall)
 end
 -- the zone was just entered: a zone with start = "enter" sends its vehicle now
 function Sp.enterZone(s, bk, inside)
@@ -147,7 +147,7 @@ function Sp.drawWarnings(s, cam)
     local front = c.x - (bk.w or 48) / 2
     if front > cam + 320 and (c.warn or 0) > -1 then
       local w, h = 13, 13
-      local x, y = 320 - w - 2, 184 - (bk.h or 26) / 2 - h / 2 - 2
+      local x, y = 320 - w - 2, (bk.roadY or 184) - (bk.h or 26) / 2 - h / 2 - 2   -- (world y: drawn inside the camY shift)
       local sx0, sx1 = px0 - cam - 2, px1 - cam + 2
       if sx1 > x and sx0 < x + w and py1 > y - 2 and py0 < y + h + 2 then y = math.floor(py0) - h - 4 end
       if math.floor(s.t * 6) % 2 == 0 or front > cam + 320 + (c.speed or 100) * 0.5 then   -- blinks when it is close
@@ -209,15 +209,16 @@ end
 -- 19 px high on its right end that she crawls into. Collision: one solid box x0-x1, y0-door top.
 local function kennel(pc, cam)
   local x, y0, x1, dt = pc.x0 - cam, pc.y0, pc.x1 - cam, pc.door
+  local foot = pc.foot or 184                                      -- (the path it stands on; tall levels set foot)
   local w = x1 - x
   local A = art()
   if w == A.kennel:getWidth() and dt - y0 == 17 then lg.setColor(1, 1, 1, 1); lg.draw(A.kennel, math.floor(x), y0); return end
-  rect(INK, x, y0, w, 184 - y0)                                    -- outline and body
-  rect(WOOD, x + 1, y0 + 4, w - 2, 184 - y0 - 5)
-  for yy = y0 + 8, 182, 5 do rect(WOOD_D, x + 1, yy, w - 2, 1) end -- planks
+  rect(INK, x, y0, w, foot - y0)                                    -- outline and body
+  rect(WOOD, x + 1, y0 + 4, w - 2, foot - y0 - 5)
+  for yy = y0 + 8, foot - 2, 5 do rect(WOOD_D, x + 1, yy, w - 2, 1) end -- planks
   rect(RED, x + 1, y0 + 1, w - 2, 3); rect(INK, x, y0 + 4, w, 1)   -- the roof board
-  rect(INK, x + 3, dt - 1, w - 4, 184 - dt + 1)                    -- the doorway: dark, open to the right end
-  rect({ 0.12, 0.10, 0.12 }, x + 4, dt, w - 5, 184 - dt)
+  rect(INK, x + 3, dt - 1, w - 4, foot - dt + 1)                    -- the doorway: dark, open to the right end
+  rect({ 0.12, 0.10, 0.12 }, x + 4, dt, w - 5, foot - dt)
   rect(WOOD_L, x + 1, y0 + 6, 2, dt - y0 - 6)                      -- the left corner post, light side
   lg.setColor(1, 1, 1, 1)
 end
@@ -252,10 +253,11 @@ end
 local function hollowLog(pc, cam)
   local C = Sc.C
   local x, w, y0, y1 = pc.x0 - cam, pc.x1 - pc.x0, pc.y0, pc.y1
-  rect({ 0.16, 0.18, 0.22 }, x + 3, y1, w - 6, 184 - y1)          -- the dark inside
+  local foot = pc.foot or 184                                      -- (the path it lies on; tall levels set foot)
+  rect({ 0.16, 0.18, 0.22 }, x + 3, y1, w - 6, foot - y1)          -- the dark inside
   Sc.outlined(C.prop, C.propEdge, x, y0, w, y1 - y0 + 1)           -- the shell on top
-  Sc.outlined(C.prop, C.propEdge, x, y0, 4, 184 - y0)              -- the cut ends
-  Sc.outlined(C.prop, C.propEdge, x + w - 4, y0, 4, 184 - y0)
+  Sc.outlined(C.prop, C.propEdge, x, y0, 4, foot - y0)              -- the cut ends
+  Sc.outlined(C.prop, C.propEdge, x + w - 4, y0, 4, foot - y0)
   lg.setColor(Sc.C.ground); local tw = F.width("HOLLOW", 1); F.print("HOLLOW", math.floor(x + w / 2 - tw / 2), y1 + 4, 1)
   tw = F.width("LOG", 1); F.print("LOG", math.floor(x + w / 2 - tw / 2), y1 + 11, 1)
   lg.setColor(1, 1, 1, 1)

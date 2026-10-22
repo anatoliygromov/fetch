@@ -73,14 +73,16 @@ function Cr.update(s, dt)
       local inZone = p.x >= c.x0 and p.x <= c.x1
       if k.state == "circle" or k.state == "away" then
         local tx = math.max(c.x0, math.min(c.x1, p.x)) + math.sin(k.t * 1.3) * 60
-        k.x = k.x + (tx - k.x) * math.min(1, dt * 1.5); k.y = (k.state == "away" and 48 or 86) + math.sin(k.t * 2.1) * 6
-        -- (it circles below the top hint panel and the HUD, so it is always in view)
+        k.x = k.x + (tx - k.x) * math.min(1, dt * 1.5); k.y = (s.camY or 0) + (k.state == "away" and 48 or 86) + math.sin(k.t * 2.1) * 6
+        -- (it circles below the top hint panel and the HUD, so it is always in view: screen y, at any camera height)
         if k.state == "away" and k.t >= 4 then k.state, k.t = "circle", 0 end
         if k.state == "circle" and inZone and p.mode == "normal" then
           k.timer = k.timer - dt
           if k.timer <= 0 then                                      -- its shadow goes on the floor under her, even mid-jump
             k.state, k.t, k.tx = "warn", 0, p.x
-            k.ty = p.onGround and p.y or (w:groundAt(p.x) or p.y)
+            if w.height > 240 then                                  -- (a tall level: the floor right below her, ledges too)
+              k.ty = p.onGround and p.y or (w:floor(p.x - 4, p.x + 4, p.x, p.y - 0.5, w.height, p.y - 0.5) or p.y)
+            else k.ty = p.onGround and p.y or (w:groundAt(p.x) or p.y) end
             if not p.onGround then for _, m in ipairs(s.movers or {}) do if p.x > m.x0 and p.x < m.x1 and m.y0 >= p.y then k.ty = m.y0 end end end
             S.play("squawk")
           end
@@ -261,6 +263,23 @@ function Cr.draw(s, cam, t)
         end
       end
     end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+
+-- a gull drawn where the magpie's code has it (L.magpie with look = "gull": the gull's nest on the rooftops),
+-- feet at (m.x, m.y), facing m.dir; it flaps while it flies
+function Cr.drawBird(m, cam, t)
+  local A = loadArt()
+  local x = m.x - cam
+  local flip = (m.dir or -1) < 0
+  if A then
+    local i = m.state == "fly" and 1 + math.floor(t * 10) % 6 or 1
+    lg.setColor(1, 1, 1, 1)
+    if flip then lg.draw(A.gull, A.uq[i], math.floor(x) + 13, math.floor(m.y) - 26, 0, -1, 1)
+    else lg.draw(A.gull, A.uq[i], math.floor(x) - 13, math.floor(m.y) - 26) end
+  else
+    sprite(GULL[(m.state == "fly" and math.floor(t * 8) % 2 or 0) + 1], GCOL, x - 7, m.y - 2, flip)
   end
   lg.setColor(1, 1, 1, 1)
 end

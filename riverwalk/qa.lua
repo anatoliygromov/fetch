@@ -5,7 +5,7 @@
 --   3 fuzz:       400 runs of 6 s of random play from random places
 -- After every frame of every run: Pepper's body must not be inside a solid box (the pavement included, so
 -- "pushed underground" is caught; her feet span is checked, deeper than a 4 px step) and she must not be below
--- the level. A run that ends in the river or at a
+-- the level (more than the fall rule's 24 px under the bottom of the world, stage.lua). A run that ends in the river or at a
 -- checkpoint after losing all hearts is fine; a run that ends stuck inside something is not.
 local I = require("input")
 local Pp = require("pepper")
@@ -38,7 +38,9 @@ return function(api)
     local r = w:solidIn(p.x - 12.5, p.x + 12.5, p.y - h + 1.5, p.y - w.STEP - 0.5)
     if r and r.terrain and w:slopeNear(p.x - HW, p.x + HW) then r = nil end   -- on the stairs her paws are on two steps
     if r then return ("inside box %s x %d-%d y %d-%d"):format(r.name or (r.terrain and "terrain" or "?"), r.x0, r.x1, r.y0, r.y1) end
-    if p.y > w.height + 4 then return "below the level" end
+    -- (stage.lua's fall rule takes her out of play once her feet are 24 px under the bottom of the world: a pit in a
+    -- tall level; so "below the level" is only a problem past that, plus a frame's fall at top speed, 7 px)
+    if p.y > w.height + 24 + 8 then return "below the level" end
     return nil
   end
   local function place(s, x, y, crouch)
@@ -46,7 +48,8 @@ return function(api)
     p.x, p.y, p.vx, p.vy, p.onGround, p.ground, p.mode, p.crouch, p.invuln = x, y, 0, 0, true, nil, "normal", crouch, 0
     p.carrying = nil
     s.cam = math.max(0, math.min(s.world.width - 320, x - 140)); s.bikes = {}; s.bikeT = 999; s.hearts = 3; s.lives = 3
-    s.deadT = nil; s.events = {}
+    s.deadT, s.fallT = nil, nil; s.events = {}
+    require("vcam").snap(s)                                          -- (a tall level: the camera on her)
   end
   -- run n frames; inputs(f) returns the held buttons and presses for frame f; returns the first problem or nil
   local function sim(s, n, inputs, tag)
@@ -105,7 +108,7 @@ return function(api)
           for _, pose in ipairs(fy < 0 and { "crouch" } or { "stand", "crouch", "hop" }) do   -- under a bench: crouch only
             place(stage(), x, y, pose == "crouch")
             local s2 = stage()
-            s2.bikes = { { x = x + 90, y = 184, warn = 0, zone = z } }
+            s2.bikes = { { x = x + 90, y = z.roadY or 184, warn = 0, zone = z } }
             sim(s2, 120, function(f)
               if pose == "crouch" then return { down = true } end
               if pose == "hop" and f == 30 then return { jump = true }, { jump = true } end
@@ -134,7 +137,7 @@ return function(api)
             if held.jump then pr.jump = true end
             until_ = f + rnd:random(6, 40)
             local bz = stage().def.bikes                                   -- (a level without bike zones gets no bikes)
-            stage().bikes = (rnd:random() < 0.3 and (bz.zoneX0 or #bz > 0)) and { { x = stage().pepper.x + rnd:random(40, 160), y = 184, warn = 0 } } or stage().bikes
+            stage().bikes = (rnd:random() < 0.3 and (bz.zoneX0 or #bz > 0)) and { { x = stage().pepper.x + rnd:random(40, 160), y = (bz.zoneX0 and bz or bz[1]).roadY or 184, warn = 0 } } or stage().bikes
           end
           return held, pr
         end, ("fuzz run %d from x %d y %d"):format(k, x, math.abs(fy)))
