@@ -832,9 +832,9 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["rest"] = "{ { 1884, 120 }, { 1898, 120 }, { 1891, 106 } }",
+            ["relxy.rest"] = "{ { -32, 0 }, { -18, 0 }, { -25, -14 } }",
             ["speed"] = 30,
-            ["trigger"] = 1880,
+            ["relx.trigger"] = -36,
           },
         },
         {
@@ -849,9 +849,9 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["rest"] = "{ { 3132, 152 }, { 3146, 152 }, { 3139, 138 } }",
+            ["relxy.rest"] = "{ { -32, 0 }, { -18, 0 }, { -25, -14 } }",
             ["speed"] = 30,
-            ["trigger"] = 3130,
+            ["relx.trigger"] = -34,
           },
         },
         {

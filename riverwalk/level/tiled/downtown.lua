@@ -1604,8 +1604,8 @@ return {
           properties = {
             ["box"] = "zoneX0,zoneX1",
             ["kind"] = "tram",
-            ["depot"] = 1938,
-            ["endX"] = 1882,
+            ["relx.depot"] = 8,
+            ["relx.endX"] = -48,
             ["every"] = 6,
             ["h"] = 26,
             ["minY"] = 150,
@@ -1629,8 +1629,8 @@ return {
           properties = {
             ["box"] = "zoneX0,zoneX1",
             ["kind"] = "tram",
-            ["depot"] = 3168,
-            ["endX"] = 3112,
+            ["relx.depot"] = 48,
+            ["relx.endX"] = -8,
             ["every"] = 4,
             ["h"] = 26,
             ["minY"] = 150,
@@ -1735,8 +1735,8 @@ return {
           visible = true,
           properties = {
             ["kind"] = "goose",
-            ["x0"] = 2190,
-            ["x1"] = 2262,
+            ["relx.x0"] = -40,
+            ["relx.x1"] = 32,
           },
         },
         {
@@ -1752,8 +1752,8 @@ return {
           visible = true,
           properties = {
             ["kind"] = "goose",
-            ["x0"] = 2424,
-            ["x1"] = 2470,
+            ["relx.x0"] = -22,
+            ["relx.x1"] = 24,
           },
         },
       },
@@ -3108,16 +3108,15 @@ return {
           type = "hints",
           shape = "rectangle",
           x = 1008,
-          y = -100,
+          y = 0,
           width = 64,
-          height = 8,
+          height = 150,
           rotation = 0,
           visible = true,
           properties = {
-            ["box"] = "x0,x1",
+            ["box"] = "x0,x1,-,maxY",
             ["text"] = "HOLD: STAY ON",
             ["btn"] = "down",
-            ["maxY"] = 150,
           },
         },
         {

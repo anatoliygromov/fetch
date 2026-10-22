@@ -13,7 +13,7 @@
   <property name="magpie.look" value="gull"/>
   <property name="ballBack" value="THE BALL IS BACK BY THE LAMP"/>
   <property name="ballHomeAtLamps" type="bool" value="true"/>
-  <property name="intro" value='{ "LEVEL 3", "ROOFTOPS", "A GULL TOOK THE BALL TO ITS NEST!", "UP THE STAIRS OR OVER THE ROOFS!" }'/>
+  <property name="intro" value="{ &quot;LEVEL 3&quot;, &quot;ROOFTOPS&quot;, &quot;A GULL TOOK THE BALL TO ITS NEST!&quot;, &quot;UP THE STAIRS OR OVER THE ROOFS!&quot; }"/>
   <property name="name" value="ROOFTOPS"/>
   <property name="number" type="int" value="3"/>
   <property name="scenery" value="greybox"/>
@@ -522,42 +522,35 @@
     <property name="need" value="nearball"/>
    </properties>
   </object>
-  <object id="72" type="hints" x="1640" y="-50" width="160" height="8">
+  <object id="72" type="hints" x="1640" y="300" width="160" height="660">
    <properties>
-    <property name="box" value="x0,x1"/>
+    <property name="box" value="x0,x1,minY"/>
     <property name="text" value="GIVE"/>
     <property name="btn" value="x"/>
     <property name="need" value="ball"/>
-    <property name="minY" type="int" value="300"/>
    </properties>
   </object>
-  <object id="73" type="hints" x="1730" y="-40" width="70" height="8">
+  <object id="73" type="hints" x="1730" y="200" width="70" height="40">
    <properties>
-    <property name="box" value="x0,x1"/>
+    <property name="box" value="x0,x1,minY,maxY"/>
     <property name="text" value="BARK!"/>
     <property name="btn" value="b"/>
     <property name="need" value="magpienear"/>
-    <property name="maxY" type="int" value="240"/>
-    <property name="minY" type="int" value="200"/>
    </properties>
   </object>
-  <object id="74" type="hints" x="1600" y="-30" width="120" height="8">
+  <object id="74" type="hints" x="1600" y="300" width="120" height="30">
    <properties>
-    <property name="box" value="x0,x1"/>
+    <property name="box" value="x0,x1,minY,maxY"/>
     <property name="text" value="STAND ON THE FAN"/>
     <property name="btn" value="a"/>
     <property name="need" value="magpie"/>
-    <property name="maxY" type="int" value="330"/>
-    <property name="minY" type="int" value="300"/>
    </properties>
   </object>
-  <object id="75" type="hints" x="590" y="-20" width="90" height="8">
+  <object id="75" type="hints" x="590" y="700" width="90" height="12">
    <properties>
-    <property name="box" value="x0,x1"/>
+    <property name="box" value="x0,x1,minY,maxY"/>
     <property name="text" value="HOLD: STAY PUT"/>
     <property name="btn" value="down"/>
-    <property name="maxY" type="int" value="712"/>
-    <property name="minY" type="int" value="700"/>
    </properties>
   </object>
   <object id="76" type="hints" x="0" y="-10" width="1920" height="8">

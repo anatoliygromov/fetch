@@ -9,10 +9,10 @@
   <property name="ballBack" value="THE BALL IS BACK BY THE STATUE"/>
   <property name="ballHomeAtLamps" type="bool" value="true"/>
   <property name="greyStyle" value="town"/>
-  <property name="intro" value='{ "LEVEL 2", "DOWNTOWN", "A CAT IS SITTING ON THE BALL!", "BARK IT AWAY. BRING THE BALL!" }'/>
+  <property name="intro" value="{ &quot;LEVEL 2&quot;, &quot;DOWNTOWN&quot;, &quot;A CAT IS SITTING ON THE BALL!&quot;, &quot;BARK IT AWAY. BRING THE BALL!&quot; }"/>
   <property name="name" value="DOWNTOWN"/>
   <property name="number" type="int" value="2"/>
-  <property name="outro" value='{ "BY THE RIVER MIA THREW IT", "AGAIN. IT LANDED ON A FERRY..." }'/>
+  <property name="outro" value="{ &quot;BY THE RIVER MIA THREW IT&quot;, &quot;AGAIN. IT LANDED ON A FERRY...&quot; }"/>
   <property name="pickupSay" value="BRING ME THE BALL!"/>
   <property name="scenery" value="greybox"/>
   <property name="time" type="int" value="300"/>
@@ -682,8 +682,8 @@
    <properties>
     <property name="box" value="zoneX0,zoneX1"/>
     <property name="kind" value="tram"/>
-    <property name="depot" type="int" value="1938"/>
-    <property name="endX" type="int" value="1882"/>
+    <property name="relx.depot" type="int" value="8"/>
+    <property name="relx.endX" type="int" value="-48"/>
     <property name="every" type="int" value="6"/>
     <property name="h" type="int" value="26"/>
     <property name="minY" type="int" value="150"/>
@@ -697,8 +697,8 @@
    <properties>
     <property name="box" value="zoneX0,zoneX1"/>
     <property name="kind" value="tram"/>
-    <property name="depot" type="int" value="3168"/>
-    <property name="endX" type="int" value="3112"/>
+    <property name="relx.depot" type="int" value="48"/>
+    <property name="relx.endX" type="int" value="-8"/>
     <property name="every" type="int" value="4"/>
     <property name="h" type="int" value="26"/>
     <property name="minY" type="int" value="150"/>
@@ -719,16 +719,16 @@
   <object id="92" type="critters" x="2230" y="184">
    <properties>
     <property name="kind" value="goose"/>
-    <property name="x0" type="int" value="2190"/>
-    <property name="x1" type="int" value="2262"/>
+    <property name="relx.x0" type="int" value="-40"/>
+    <property name="relx.x1" type="int" value="32"/>
    </properties>
    <point/>
   </object>
   <object id="93" type="critters" x="2446" y="184">
    <properties>
     <property name="kind" value="goose"/>
-    <property name="x0" type="int" value="2424"/>
-    <property name="x1" type="int" value="2470"/>
+    <property name="relx.x0" type="int" value="-22"/>
+    <property name="relx.x1" type="int" value="24"/>
    </properties>
    <point/>
   </object>
@@ -1100,12 +1100,11 @@
     <property name="btn" value="a"/>
    </properties>
   </object>
-  <object id="189" type="hints" x="1008" y="-100" width="64" height="8">
+  <object id="189" type="hints" x="1008" y="0" width="64" height="150">
    <properties>
-    <property name="box" value="x0,x1"/>
+    <property name="box" value="x0,x1,-,maxY"/>
     <property name="text" value="HOLD: STAY ON"/>
     <property name="btn" value="down"/>
-    <property name="maxY" type="int" value="150"/>
    </properties>
   </object>
   <object id="190" type="hints" x="1288" y="-90" width="272" height="8">

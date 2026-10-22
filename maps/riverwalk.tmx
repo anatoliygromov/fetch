@@ -5,10 +5,10 @@
  </editorsettings>
  <properties>
   <property name="ballHomeAtLamps" type="bool" value="true"/>
-  <property name="intro" value='{ "LEVEL 3", "RIVER WALK", "THE BALL LANDED ON A BOAT.", "FETCH IT FOR MIA!" }'/>
+  <property name="intro" value="{ &quot;LEVEL 3&quot;, &quot;RIVER WALK&quot;, &quot;THE BALL LANDED ON A BOAT.&quot;, &quot;FETCH IT FOR MIA!&quot; }"/>
   <property name="name" value="RIVER WALK"/>
   <property name="number" type="int" value="3"/>
-  <property name="outro" value='{ "UP ON SODER MIA DROPPED", "THE BALL. IT ROLLED AWAY..." }'/>
+  <property name="outro" value="{ &quot;UP ON SODER MIA DROPPED&quot;, &quot;THE BALL. IT ROLLED AWAY...&quot; }"/>
   <property name="time" type="int" value="420"/>
  </properties>
  <tileset firstgid="1" name="terrain" tilewidth="8" tileheight="8" tilecount="4" columns="4">
@@ -107,8 +107,8 @@
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
     <property name="art" value="bench"/>
-    <property name="ax" type="int" value="90"/>
-    <property name="ay" type="int" value="184"/>
+    <property name="relx.ax" type="int" value="-3"/>
+    <property name="rely.ay" type="int" value="28"/>
     <property name="depth" type="int" value="5"/>
    </properties>
   </object>
@@ -132,8 +132,8 @@
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
     <property name="art" value="flowerbox_front"/>
-    <property name="ax" type="int" value="400"/>
-    <property name="ay" type="int" value="184"/>
+    <property name="relx.ax" type="int" value="-1"/>
+    <property name="rely.ay" type="int" value="32"/>
    </properties>
   </object>
   <object id="9" name="BIN" type="props" x="641" y="128" width="35" height="56">
@@ -141,8 +141,8 @@
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
     <property name="art" value="bin"/>
-    <property name="ax" type="int" value="640"/>
-    <property name="ay" type="int" value="184"/>
+    <property name="relx.ax" type="int" value="-1"/>
+    <property name="rely.ay" type="int" value="56"/>
    </properties>
   </object>
   <object id="10" type="props" x="1056" y="39" width="108" height="135">
@@ -158,8 +158,8 @@
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
     <property name="art" value="gritbox_front"/>
-    <property name="ax" type="int" value="830"/>
-    <property name="ay" type="int" value="184"/>
+    <property name="relx.ax" type="int" value="-1"/>
+    <property name="rely.ay" type="int" value="32"/>
    </properties>
   </object>
   <object id="12" name="PLANTER" type="props" x="990" y="154" width="44" height="30">
@@ -174,8 +174,8 @@
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
     <property name="art" value="flowerbox_front"/>
-    <property name="ax" type="int" value="1112"/>
-    <property name="ay" type="int" value="184"/>
+    <property name="relx.ax" type="int" value="-1"/>
+    <property name="rely.ay" type="int" value="32"/>
    </properties>
   </object>
   <object id="14" name="AWNING" type="props" x="736" y="112" width="88" height="4">
@@ -197,8 +197,8 @@
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
     <property name="art" value="ferry"/>
-    <property name="ax" type="int" value="1560"/>
-    <property name="ay" type="int" value="233"/>
+    <property name="relx.ax" type="int" value="-2"/>
+    <property name="rely.ay" type="int" value="27"/>
     <property name="noshadow" type="bool" value="true"/>
    </properties>
   </object>
@@ -258,8 +258,8 @@
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
     <property name="art" value="flowerbox_front"/>
-    <property name="ax" type="int" value="3080"/>
-    <property name="ay" type="int" value="184"/>
+    <property name="relx.ax" type="int" value="-1"/>
+    <property name="rely.ay" type="int" value="32"/>
    </properties>
   </object>
   <object id="25" name="SAND" type="props" x="3240" y="152" width="86" height="32">
@@ -267,8 +267,8 @@
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
     <property name="art" value="gritbox_front"/>
-    <property name="ax" type="int" value="3239"/>
-    <property name="ay" type="int" value="184"/>
+    <property name="relx.ax" type="int" value="-1"/>
+    <property name="rely.ay" type="int" value="32"/>
    </properties>
   </object>
   <object id="26" name="PLANTER" type="props" x="3372" y="154" width="44" height="30">
@@ -283,8 +283,8 @@
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
     <property name="art" value="bin"/>
-    <property name="ax" type="int" value="3415"/>
-    <property name="ay" type="int" value="184"/>
+    <property name="relx.ax" type="int" value="-1"/>
+    <property name="rely.ay" type="int" value="56"/>
    </properties>
   </object>
   <object id="28" name="GABLE" type="props" x="3626" y="-1" width="70" height="175">
@@ -306,8 +306,8 @@
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
     <property name="art" value="bench"/>
-    <property name="ax" type="int" value="3545"/>
-    <property name="ay" type="int" value="184"/>
+    <property name="relx.ax" type="int" value="-3"/>
+    <property name="rely.ay" type="int" value="28"/>
     <property name="depth" type="int" value="5"/>
    </properties>
   </object>
@@ -349,23 +349,23 @@
    <properties>
     <property name="box" value="x0,x1,y0"/>
     <property name="kind" value="kennel"/>
-    <property name="door" type="int" value="165"/>
+    <property name="rely.door" type="int" value="17"/>
    </properties>
   </object>
   <object id="36" type="pieces" x="736" y="112" width="88" height="8">
    <properties>
     <property name="box" value="x0,x1,y0"/>
     <property name="kind" value="kiosk"/>
-    <property name="bx0" type="int" value="748"/>
-    <property name="bx1" type="int" value="812"/>
+    <property name="relx.bx0" type="int" value="12"/>
+    <property name="relx.bx1" type="int" value="76"/>
    </properties>
   </object>
   <object id="37" type="pieces" x="888" y="112" width="80" height="8">
    <properties>
     <property name="box" value="x0,x1,y0"/>
     <property name="kind" value="kiosk"/>
-    <property name="bx0" type="int" value="900"/>
-    <property name="bx1" type="int" value="956"/>
+    <property name="relx.bx0" type="int" value="12"/>
+    <property name="relx.bx1" type="int" value="68"/>
    </properties>
   </object>
   <object id="38" type="pieces" x="2400" y="196" width="48" height="8">
@@ -380,7 +380,7 @@
   <object id="40" type="bikes" x="790" y="-190" width="438" height="8">
    <properties>
     <property name="box" value="zoneX0,zoneX1"/>
-    <property name="endX" type="int" value="600"/>
+    <property name="relx.endX" type="int" value="-190"/>
     <property name="every" type="float" value="5.5"/>
     <property name="minY" type="int" value="150"/>
     <property name="speed" type="int" value="125"/>
@@ -389,7 +389,7 @@
   <object id="41" type="bikes" x="3040" y="-180" width="430" height="8">
    <properties>
     <property name="box" value="zoneX0,zoneX1"/>
-    <property name="endX" type="int" value="2890"/>
+    <property name="relx.endX" type="int" value="-150"/>
     <property name="every" type="int" value="5"/>
     <property name="minY" type="int" value="150"/>
     <property name="speed" type="int" value="135"/>
@@ -402,28 +402,28 @@
  <objectgroup id="4" name="movers" color="#40c0ff" draworder="index">
   <object id="45" name="PONTOON" type="movers" x="1400" y="214" width="48" height="6">
    <properties>
-    <property name="call" value="{ 1150, 1398 }"/>
+    <property name="relx.call" value="{ -250, -2 }"/>
     <property name="callSpeed" type="int" value="60"/>
-    <property name="from" type="int" value="1400"/>
-    <property name="rope" value="{ 1392, 1562 }"/>
+    <property name="relx.from" type="int" value="0"/>
+    <property name="relx.rope" value="{ -8, 162 }"/>
     <property name="speed" type="int" value="30"/>
-    <property name="to" type="int" value="1504"/>
+    <property name="relx.to" type="int" value="104"/>
    </properties>
   </object>
   <object id="46" name="ROWBOAT" type="movers" x="2196" y="219" width="56" height="6">
    <properties>
-    <property name="from" type="int" value="2196"/>
+    <property name="relx.from" type="int" value="0"/>
     <property name="pause" type="float" value="1.5"/>
     <property name="speed" type="int" value="30"/>
-    <property name="to" type="int" value="2340"/>
+    <property name="relx.to" type="int" value="144"/>
    </properties>
   </object>
   <object id="47" name="ROWBOAT" type="movers" x="2456" y="219" width="56" height="6">
    <properties>
-    <property name="from" type="int" value="2456"/>
+    <property name="relx.from" type="int" value="0"/>
     <property name="pause" type="float" value="1.5"/>
     <property name="speed" type="int" value="34"/>
-    <property name="to" type="int" value="2580"/>
+    <property name="relx.to" type="int" value="124"/>
    </properties>
   </object>
  </objectgroup>
@@ -756,11 +756,10 @@
     <property name="text" value="HOP ON THE ROWING BOAT!"/>
    </properties>
   </object>
-  <object id="130" type="hints" x="2400" y="-50" width="48" height="8">
+  <object id="130" type="hints" x="2400" y="0" width="48" height="197">
    <properties>
-    <property name="box" value="x0,x1"/>
+    <property name="box" value="x0,x1,-,maxY"/>
     <property name="text" value="WAIT FOR THE NEXT BOAT!"/>
-    <property name="maxY" type="int" value="197"/>
    </properties>
   </object>
   <object id="131" type="hints" x="3040" y="-40" width="430" height="8">

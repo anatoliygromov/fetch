@@ -13,7 +13,7 @@
   <property name="intro" value="{ &quot;LEVEL 1&quot;, &quot;CITY PARK&quot;, &quot;A MAGPIE STOLE MIA'S BALL!&quot;, &quot;SNEAK UP AND BARK, PEPPER!&quot; }"/>
   <property name="name" value="CITY PARK"/>
   <property name="number" type="int" value="1"/>
-  <property name="outro" value='{ "OFF TO TOWN! BUT THE BALL", "ROLLED AWAY ACROSS THE PLAZA..." }'/>
+  <property name="outro" value="{ &quot;OFF TO TOWN! BUT THE BALL&quot;, &quot;ROLLED AWAY ACROSS THE PLAZA...&quot; }"/>
   <property name="scenery" value="greybox"/>
   <property name="time" type="int" value="300"/>
   <property name="title" value="Pepper: City Park"/>
@@ -426,7 +426,7 @@
    <properties>
     <property name="box" value="zoneX0,zoneX1"/>
     <property name="kind" value="cart"/>
-    <property name="endX" type="int" value="1300"/>
+    <property name="relx.endX" type="int" value="-76"/>
     <property name="every" type="int" value="6"/>
     <property name="minY" type="int" value="150"/>
     <property name="speed" type="int" value="100"/>
@@ -437,7 +437,7 @@
    <properties>
     <property name="box" value="zoneX0,zoneX1"/>
     <property name="kind" value="cart"/>
-    <property name="endX" type="int" value="2340"/>
+    <property name="relx.endX" type="int" value="-10"/>
     <property name="every" type="float" value="5.5"/>
     <property name="minY" type="int" value="150"/>
     <property name="speed" type="int" value="105"/>
@@ -451,12 +451,12 @@
  <objectgroup id="4" name="movers" color="#40c0ff" draworder="index">
   <object id="56" name="DUCK BOAT" type="movers" x="824" y="202" width="48" height="6">
    <properties>
-    <property name="call" value="{ 600, 830 }"/>
+    <property name="relx.call" value="{ -224, 6 }"/>
     <property name="callSpeed" type="int" value="48"/>
-    <property name="from" type="int" value="824"/>
-    <property name="rope" value="{ 816, 944 }"/>
+    <property name="relx.from" type="int" value="0"/>
+    <property name="relx.rope" value="{ -8, 120 }"/>
     <property name="speed" type="int" value="24"/>
-    <property name="to" type="int" value="888"/>
+    <property name="relx.to" type="int" value="64"/>
    </properties>
   </object>
  </objectgroup>
@@ -464,16 +464,16 @@
   <object id="57" type="critters" x="1160" y="184">
    <properties>
     <property name="kind" value="goose"/>
-    <property name="x0" type="int" value="1096"/>
-    <property name="x1" type="int" value="1224"/>
+    <property name="relx.x0" type="int" value="-64"/>
+    <property name="relx.x1" type="int" value="64"/>
    </properties>
    <point/>
   </object>
   <object id="58" type="critters" x="2360" y="184">
    <properties>
     <property name="kind" value="goose"/>
-    <property name="x0" type="int" value="2350"/>
-    <property name="x1" type="int" value="2372"/>
+    <property name="relx.x0" type="int" value="-10"/>
+    <property name="relx.x1" type="int" value="12"/>
    </properties>
    <point/>
   </object>
@@ -868,11 +868,10 @@
     <property name="btn" value="a"/>
    </properties>
   </object>
-  <object id="158" type="hints" x="800" y="-70" width="60" height="8">
+  <object id="158" type="hints" x="800" y="0" width="60" height="196">
    <properties>
-    <property name="box" value="x0,x1"/>
+    <property name="box" value="x0,x1,-,maxY"/>
     <property name="text" value="RIDE THE DUCK BOAT!"/>
-    <property name="maxY" type="int" value="196"/>
    </properties>
   </object>
   <object id="159" type="hints" x="1376" y="-60" width="184" height="8">

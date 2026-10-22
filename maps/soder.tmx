@@ -8,10 +8,10 @@
   <property name="movers" value="{}"/>
   <property name="ballBack" value="THE BALL IS BACK BY THE RAILING"/>
   <property name="greyStyle" value="town"/>
-  <property name="intro" value='{ "LEVEL 4", "SODER HILL", "THE BALL ROLLED DOWN THE HILL!", "CATCH IT, PEPPER! KEEP UP!" }'/>
+  <property name="intro" value="{ &quot;LEVEL 4&quot;, &quot;SODER HILL&quot;, &quot;THE BALL ROLLED DOWN THE HILL!&quot;, &quot;CATCH IT, PEPPER! KEEP UP!&quot; }"/>
   <property name="name" value="SODER HILL"/>
   <property name="number" type="int" value="4"/>
-  <property name="outro" value='{ "IT GOT DARK ON THE WAY", "HOME. A FOX TOOK THE BALL!" }'/>
+  <property name="outro" value="{ &quot;IT GOT DARK ON THE WAY&quot;, &quot;HOME. A FOX TOOK THE BALL!&quot; }"/>
   <property name="pickupSay" value="BRING ME THE BALL!"/>
   <property name="scenery" value="greybox"/>
   <property name="scroll.ballStop" type="int" value="5088"/>
@@ -350,17 +350,17 @@
   </object>
   <object id="42" type="barrels" x="1916" y="120">
    <properties>
-    <property name="rest" value="{ { 1884, 120 }, { 1898, 120 }, { 1891, 106 } }"/>
+    <property name="relxy.rest" value="{ { -32, 0 }, { -18, 0 }, { -25, -14 } }"/>
     <property name="speed" type="int" value="30"/>
-    <property name="trigger" type="int" value="1880"/>
+    <property name="relx.trigger" type="int" value="-36"/>
    </properties>
    <point/>
   </object>
   <object id="43" type="barrels" x="3164" y="152">
    <properties>
-    <property name="rest" value="{ { 3132, 152 }, { 3146, 152 }, { 3139, 138 } }"/>
+    <property name="relxy.rest" value="{ { -32, 0 }, { -18, 0 }, { -25, -14 } }"/>
     <property name="speed" type="int" value="30"/>
-    <property name="trigger" type="int" value="3130"/>
+    <property name="relx.trigger" type="int" value="-34"/>
    </properties>
    <point/>
   </object>

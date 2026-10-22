@@ -6,7 +6,7 @@
  <properties>
   <property name="bikes" value="{}"/>
   <property name="movers" value="{}"/>
-  <property name="intro" value='{ "LEVEL 3", "ROOFTOPS", "A GULL TOOK THE BALL TO ITS NEST!", "UP THE STAIRS OR OVER THE ROOFS!" }'/>
+  <property name="intro" value="{ &quot;LEVEL 3&quot;, &quot;ROOFTOPS&quot;, &quot;A GULL TOOK THE BALL TO ITS NEST!&quot;, &quot;UP THE STAIRS OR OVER THE ROOFS!&quot; }"/>
   <property name="name" value="ROOFTOPS"/>
   <property name="number" type="int" value="3"/>
   <property name="scenery" value="greybox"/>

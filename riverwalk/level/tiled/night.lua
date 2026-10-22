@@ -738,9 +738,9 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["from"] = 1324,
+            ["relx.from"] = 0,
             ["speed"] = 28,
-            ["to"] = 1500,
+            ["relx.to"] = 176,
           },
         },
         {
@@ -755,9 +755,9 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["from"] = 2604,
+            ["relx.from"] = 0,
             ["speed"] = 24,
-            ["to"] = 2652,
+            ["relx.to"] = 48,
           },
         },
         {
@@ -772,9 +772,9 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["from"] = 2736,
+            ["relx.from"] = 0,
             ["speed"] = 26,
-            ["to"] = 2788,
+            ["relx.to"] = 52,
           },
         },
         {
@@ -789,9 +789,9 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["from"] = 3244,
+            ["relx.from"] = 0,
             ["speed"] = 24,
-            ["to"] = 3340,
+            ["relx.to"] = 96,
           },
         },
         {
@@ -806,9 +806,9 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["from"] = 3804,
+            ["relx.from"] = 0,
             ["speed"] = 26,
-            ["to"] = 3884,
+            ["relx.to"] = 80,
           },
         },
         {
@@ -823,9 +823,9 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["from"] = 4000,
+            ["relx.from"] = 0,
             ["speed"] = 22,
-            ["to"] = 4028,
+            ["relx.to"] = 28,
           },
         },
       },

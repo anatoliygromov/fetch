@@ -8,10 +8,10 @@
   <property name="ballBack" value="THE BALL IS BACK UNDER THE JETTY"/>
   <property name="dark" type="bool" value="true"/>
   <property name="greyStyle" value="town"/>
-  <property name="intro" value='{ "LEVEL 5", "NIGHT HARBOUR", "A FOX SNATCHED THE BALL!", "SNIFF IT OUT: HOLD L1 OR Q" }'/>
+  <property name="intro" value="{ &quot;LEVEL 5&quot;, &quot;NIGHT HARBOUR&quot;, &quot;A FOX SNATCHED THE BALL!&quot;, &quot;SNIFF IT OUT: HOLD L1 OR Q&quot; }"/>
   <property name="name" value="NIGHT HARBOUR"/>
   <property name="number" type="int" value="5"/>
-  <property name="outro" value='{ "HOME AT LAST.", "MIA HUGGED PEPPER GOOD NIGHT." }'/>
+  <property name="outro" value="{ &quot;HOME AT LAST.&quot;, &quot;MIA HUGGED PEPPER GOOD NIGHT.&quot; }"/>
   <property name="pickupSay" value="BRING ME THE BALL, PEPPER!"/>
   <property name="scenery" value="greybox"/>
   <property name="time" type="int" value="420"/>
@@ -319,44 +319,44 @@
  <objectgroup id="4" name="movers" color="#40c0ff" draworder="index">
   <object id="34" name="ROWBOAT" type="movers" x="1324" y="196" width="56" height="6">
    <properties>
-    <property name="from" type="int" value="1324"/>
+    <property name="relx.from" type="int" value="0"/>
     <property name="speed" type="int" value="28"/>
-    <property name="to" type="int" value="1500"/>
+    <property name="relx.to" type="int" value="176"/>
    </properties>
   </object>
   <object id="35" name="BOAT" type="movers" x="2604" y="196" width="48" height="6">
    <properties>
-    <property name="from" type="int" value="2604"/>
+    <property name="relx.from" type="int" value="0"/>
     <property name="speed" type="int" value="24"/>
-    <property name="to" type="int" value="2652"/>
+    <property name="relx.to" type="int" value="48"/>
    </properties>
   </object>
   <object id="36" name="BOAT" type="movers" x="2736" y="196" width="48" height="6">
    <properties>
-    <property name="from" type="int" value="2736"/>
+    <property name="relx.from" type="int" value="0"/>
     <property name="speed" type="int" value="26"/>
-    <property name="to" type="int" value="2788"/>
+    <property name="relx.to" type="int" value="52"/>
    </properties>
   </object>
   <object id="37" name="ROWBOAT" type="movers" x="3244" y="196" width="56" height="6">
    <properties>
-    <property name="from" type="int" value="3244"/>
+    <property name="relx.from" type="int" value="0"/>
     <property name="speed" type="int" value="24"/>
-    <property name="to" type="int" value="3340"/>
+    <property name="relx.to" type="int" value="96"/>
    </properties>
   </object>
   <object id="38" name="BOAT" type="movers" x="3804" y="196" width="48" height="6">
    <properties>
-    <property name="from" type="int" value="3804"/>
+    <property name="relx.from" type="int" value="0"/>
     <property name="speed" type="int" value="26"/>
-    <property name="to" type="int" value="3884"/>
+    <property name="relx.to" type="int" value="80"/>
    </properties>
   </object>
   <object id="39" name="BOAT" type="movers" x="4000" y="196" width="48" height="6">
    <properties>
-    <property name="from" type="int" value="4000"/>
+    <property name="relx.from" type="int" value="0"/>
     <property name="speed" type="int" value="22"/>
-    <property name="to" type="int" value="4028"/>
+    <property name="relx.to" type="int" value="28"/>
    </properties>
   </object>
  </objectgroup>
