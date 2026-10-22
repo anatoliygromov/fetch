@@ -25,6 +25,9 @@ it still hooks in only through main.lua's `--playtest` flag. Method: `docs/playt
   sawtooth (no level more than 8 DI points above the hardest of the next two; the second half at least as hard as
   the first, the last level at least as hard as the first; kids and parents), T2 no spot over 35% of a level's
   failures, T3 Elsa clears every level in 50% of her playthroughs, T4 under 5% lost runs; exit 0 when all pass.
+- **The fox's sig** (pt_bot.lua): whether the fox was sniffed out at its hideout is part of the world sig, so a
+  persona who missed the shed roof on Night Harbour goes back to sniff before she barks (it was picked up after the
+  sniff, and the bark found no fox).
 
 ## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
 Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of

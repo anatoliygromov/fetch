@@ -67,7 +67,8 @@ bones, secrets, hints on screen; game time.
   run (`perfect`) records a **route map**: for every autopilot step, where it was first entered (x, y, on the ground
   or not, on a boat or lift or not, speed, the buttons held, whether a button was pressed as it began) and the
   **world sig** then: the ball (in her mouth, with the magpie / cat / fox, loose, given), the magpie's perch while
-  it has the ball, the fox's hideout, the cat sitting or not; and the x range and lowest floor the step ran over.
+  it has the ball, the fox's hideout (and whether it was sniffed out), the cat sitting or not;
+  and the x range and lowest floor the step ran over.
   - *Off the route*: Pepper stands for 0.3 s more than 72 px to the side of where the clean run ran during this
     step, or 20 px below the lowest floor it stood on (she missed a jump and ran on below, or past the place the
     step waits for): a failure (`offroute`) at this step, then recovery. (Before, the held direction carried her on

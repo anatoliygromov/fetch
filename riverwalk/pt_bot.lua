@@ -167,13 +167,14 @@ function Bot.new(api, persona, opts)
   b.done, b.result = false, nil
 
   -- the world's state as the route sees it (recovery v2): the ball (in her mouth, with a critter, loose, given) and
-  -- the critters that hold it (the magpie's perch while it has the ball, the fox's hideout, the cat sitting or not)
+  -- the critters that hold it (the magpie's perch while it has the ball, the fox's hideout and whether it was sniffed
+  -- out there, the cat sitting or not)
   local function sig(s)
     local p, bl = s.pepper, s.ball
     local bs = p.carrying and "held" or (bl.state == "given" and "given")
       or ((bl.state == "magpie" or bl.state == "cat" or bl.state == "fox") and bl.state) or "loose"
     local m = (s.magpie and bl.state == "magpie") and s.magpie.i or 0
-    local f = (s.night and s.night.fox) and s.night.fox.i or 0
+    local f = (s.night and s.night.fox) and (s.night.fox.i * 2 + (s.night.fox.found and 1 or 0)) or 0   -- (found: sniffed out)
     local c = s.cat and (s.cat.state == "sit" and 1 or 0) or 0
     return ("%s|%d|%d|%d"):format(bs, m, f, c)
   end
