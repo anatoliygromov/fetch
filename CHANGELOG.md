@@ -16,6 +16,11 @@ in `art/scene/` and pieces drawn in code. Pepper's files are untouched (`check_p
   identical (River Walk 24 of 26, City Park 21 of 23, Downtown 30 of 31, Night 24 of 25, Soder Hill 22 of 22,
   lab_tall 13 of 13, Rooftops 13 of 13); the 6 others differ only in the debug view's FPS / MS counter
   (x 8-30, y 456-470 of the 640 x 480 shot).
+- **The tall City Park has City Park's art.** `maps/citypark_tall.tmx` gets `art = "park"` and `foot = 328`, the
+  hollow log's piece back (standing on the path: `rely.foot`) with its prop hidden as in City Park, and the title
+  loses "(greybox)"; export regenerated, `tools/make_citypark_tall.py` makes the same (checked with `--force` into
+  a scratch copy). On the path the camera rests at the bottom of the world, so the low road now looks as City Park
+  does today. `--physics` 82 of 82 as before.
 
 ## Branch `engine/round2`: the review's engine fixes and the rooftops mechanics (22 Oct)
 Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untouched (`check_pepper` UNCHANGED).

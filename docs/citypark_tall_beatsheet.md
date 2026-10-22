@@ -1,7 +1,7 @@
 # Level 1, tall: City Park with a treetop tier (beat sheet)
 
 City Park as it plays today, moved down 18 rows, with a second road in the treetops above it and a finale that
-climbs the play tower into the big oak. Greybox: `love riverwalk --level citypark_tall` (not in the play order).
+climbs the play tower into the big oak, with City Park's art: `love riverwalk --level citypark_tall` (not in the play order).
 
 - **Size:** 9 screens x 48 rows: 2880 x 384 px (1.6 screens tall). The path (the low road) is at y 328. On the
   path the camera rests at the bottom of the world (camera y 144), so the low road looks exactly as City Park does
@@ -157,12 +157,12 @@ park, right over the swings where Mia waits. From the nest bough a Down + A drop
    cart's screen y (`y - s.camY`). The map already holds both zones on the `#carts` layer with `y = 328`: rename the
    layer to `zones` and the class to `bikes`, and add back the two hints `CART! GET UP HIGH!` and
    `ANOTHER CART! UP HIGH!` (`bike = true`).
-2. **The hollow log at any height.** `Sp` draws it from its shell down to y 184. Spec: down to its own floor
-   (`y1 + 19`, or the floor under it).
-3. **The park art at any height.** `Sc.drawPropArt` and the art ground (`scene.lua` around lines 985-1007 and 1212-1218)
-   place the bench, the bin and the path at y 184. Spec: from each prop's own box and the map's floor. Until then
-   the level has no `L.art`; the greybox draws everything.
-4. **The look** (`look.lua` line 234) finds the path by `y0 == 184`; it should use the floor under Pepper.
+2. **The hollow log at any height.** Done (engine/round2: `pc.foot`; r3/citypark-art: the map's piece stands on
+   `foot = 328`).
+3. **The park art at any height.** Done (r3/citypark-art): the art is placed from the level's path line `L.foot`
+   (328 here); the level has `L.art = "park"` and the low road looks exactly as City Park does.
+4. **The look.** Done (r3/citypark-art): the foreground band finds the flat ground at `L.foot`; the sky is extended
+   above the old horizon (see the CHANGELOG).
 
 ## Open questions for the owner
 
