@@ -1,4 +1,4 @@
--- Level 3, Rooftops (greybox; not in levels.lua yet): love riverwalk --level rooftops.
+-- Level 4, Rooftops (greybox): love riverwalk --level rooftops.
 -- The level is the Tiled map maps/rooftops.tmx, exported to level/tiled/rooftops.lua (docs/tiled.md). Its first
 -- version is drawn by tools/make_rooftops.py from the paper map (tools/make_rooftops_sketch.py); edit the map in
 -- Tiled from now on. Design: docs/rooftops_beatsheet.md. Checks and autopilot: tests_rooftops.lua.

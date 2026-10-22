@@ -1,4 +1,4 @@
--- Level 5: Night Harbour (greybox). Terrain is in night.map (tools/make_night_map.py); this file places the rest.
+-- Level 6: Night Harbour (greybox). Terrain is in night.map (tools/make_night_map.py); this file places the rest.
 -- Same format as the other levels. The quay (feet) is y 184; the water in the gaps starts at y 208. The level is
 -- 4480 px (14 screens). See docs/night_beatsheet.md.
 --
@@ -25,7 +25,7 @@
 -- one it falls into the water, and it is back 3 s later.
 local L = {}
 L.name = "NIGHT HARBOUR"
-L.number = 5
+L.number = 6
 L.title = "Pepper: Night Harbour"
 L.scenery = "greybox"
 L.greyStyle = "town"
@@ -186,5 +186,5 @@ L.hints = {
   { x0 = 3100, x1 = 4480, text = "GO BACK FOR THE BALL!",      need = "dropped" },
 }
 
-L.intro = { "LEVEL 5", "NIGHT HARBOUR", "A FOX SNATCHED THE BALL!", "SNIFF IT OUT: HOLD L1 OR Q" }
+L.intro = { "LEVEL 6", "NIGHT HARBOUR", "A FOX SNATCHED THE BALL!", "SNIFF IT OUT: HOLD L1 OR Q" }
 return L

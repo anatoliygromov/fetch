@@ -13,10 +13,10 @@ return {
   nextobjectid = 135,
   properties = {
     ["ballHomeAtLamps"] = true,
-    ["intro"] = "{ \"LEVEL 3\", \"RIVER WALK\", \"THE BALL LANDED ON A BOAT.\", \"FETCH IT FOR MIA!\" }",
+    ["intro"] = "{ \"LEVEL 1\", \"RIVER WALK\", \"MORNING! MIA THREW THE BALL...\", \"IT LANDED ON A FERRY. FETCH!\" }",
     ["name"] = "RIVER WALK",
-    ["number"] = 3,
-    ["outro"] = "{ \"UP ON SODER MIA DROPPED\", \"THE BALL. IT ROLLED AWAY...\" }",
+    ["number"] = 1,
+    ["outro"] = "{ \"LATE MORNING IN THE PARK.\", \"A MAGPIE SNATCHED THE BALL!\" }",
     ["time"] = 420,
   },
   tilesets = {

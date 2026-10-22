@@ -1,4 +1,4 @@
--- Level 4: Söder Hill (greybox), the chase. Terrain is in soder.map (written by tools/make_soder.py); this file
+-- Level 5: Söder Hill (greybox), the chase. Terrain is in soder.map (written by tools/make_soder.py); this file
 -- places everything else. Same format as citypark.lua; x, y in level pixels, y grows downwards, "feet" = the y
 -- Pepper stands on. The level is 5120 px (16 screens). See docs/soder_beatsheet.md.
 --
@@ -29,7 +29,7 @@
 --   16 The end        the ball stops against the railing; Mia comes down the stairs. Give it to her: GOOD GIRL!
 local L = {}
 L.name = "SODER HILL"
-L.number = 4
+L.number = 5
 L.title = "Pepper: Soder Hill"
 L.scenery = "greybox"
 L.greyStyle = "town"
@@ -174,5 +174,5 @@ L.hints = {
   { x0 = 4700, x1 = 5120, text = "BRING ME THE BALL!", need = "ball" },
 }
 
-L.intro = { "LEVEL 4", "SODER HILL", "THE BALL ROLLED DOWN THE HILL!", "CATCH IT, PEPPER! KEEP UP!" }
+L.intro = { "LEVEL 5", "SODER HILL", "THE BALL ROLLED DOWN THE HILL!", "CATCH IT, PEPPER! KEEP UP!" }
 return L

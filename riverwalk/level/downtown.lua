@@ -1,4 +1,4 @@
--- Level 2: Downtown (greybox). Terrain is in downtown.map; this file places everything else.
+-- Level 3: Downtown (greybox). Terrain is in downtown.map; this file places everything else.
 -- Same format as citypark.lua. x, y in level pixels; y grows downwards; "feet" = the y Pepper stands on.
 -- The street (feet) is y 184. The fountain's water starts at y 192. The level is 3520 px (11 screens). See
 -- docs/downtown_beatsheet.md (the first 6 screens) and docs/progression.md.
@@ -37,7 +37,7 @@
 -- rooftop route).
 local L = {}
 L.name = "DOWNTOWN"
-L.number = 2
+L.number = 3
 L.title = "Pepper: Downtown"
 L.scenery = "greybox"
 L.greyStyle = "town"
@@ -193,7 +193,7 @@ L.ballBack = "THE BALL IS BACK BY THE STATUE"
 L.pickupSay = "BRING ME THE BALL!"
 -- the girl waits at the top of the stairs down to the river
 L.girl = { x = 3460, y = 184 }
-L.outro = { "BY THE RIVER MIA THREW IT", "AGAIN. IT LANDED ON A FERRY..." }
+L.outro = { "AT THE STREET CAFE A GULL TOOK", "THE BALL UP TO ITS NEST!" }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
@@ -279,5 +279,5 @@ L.hints = {
   { x0 = 1720, x1 = 3520, text = "BRING ME THE BALL!", need = "ball" },
 }
 
-L.intro = { "LEVEL 2", "DOWNTOWN", "A CAT IS SITTING ON THE BALL!", "BARK IT AWAY. BRING THE BALL!" }
+L.intro = { "LEVEL 3", "DOWNTOWN", "A CAT IS SITTING ON THE BALL!", "BARK IT AWAY. BRING THE BALL!" }
 return L

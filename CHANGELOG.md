@@ -2,6 +2,24 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r6/levels`: the new level order, River Walk as the tutorial, the spikes smoothed (22 Oct)
+Built on `round1`. The owner's new strategy (ten levels; five built, plus Rooftops) and the synthetic playtest of
+22 Oct (`docs/playtest/report_22oct.md`). Pepper's files are untouched.
+- **The new order** (levels.lua, every level's intro and story card, main.lua's header, docs/progression.md, the
+  Rooftops beat sheet; its own commit so it can be reverted alone): 1 River Walk, 2 City Park, 3 Downtown,
+  4 Rooftops, 5 Soder Hill, 6 Night Harbour. The story is one day: in the morning Mia throws the ball by the river
+  and it lands on a ferry; late morning a magpie steals it in the park; at noon a cat sits on it on the plaza; early
+  in the afternoon a gull at the street cafe takes it up to its nest; in the afternoon it rolls down Soder Hill; on
+  the way home in the dark a fox takes it. New story cards: River Walk's ("LATE MORNING IN THE PARK. A MAGPIE
+  SNATCHED THE BALL!"), City Park's ("NOON IN TOWN..."), Downtown's (the gull), Rooftops' first one (Soder Hill).
+  **Rooftops is in** as level 4: its flow works (intro card, tally, its new story card, par time 87 s from its
+  54.1 s autopilot clear; `--flowtest` plays it in the run). Decision: the cards count the levels as they are played
+  (1 to 6), not the plan's slots (Soder Hill 6, Night Harbour 9), so a child never sees LEVEL 4 followed by LEVEL 6;
+  when Metro and the others are built, the numbers move up. The tall City Park and Downtown carry their twins'
+  numbers and story. Par times stay with their levels. Rooftops' button hints follow the panel's rule (one to three
+  words): "HOP ON FAN", "BOUNCE ON IT"; its BARK! hint showed the B button (sneak), now Y. LEVEL SELECT fits six
+  rows (26 px from y 40; flow.lua). `tests_flow.lua` runs City Park's talk checks where City Park now is (run 2).
+
 ## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
 Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of
 every level, the menus and the cards. The bug list with evidence: `docs/bugs_22oct.md`. Pepper's files are untouched.

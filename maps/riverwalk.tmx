@@ -5,10 +5,10 @@
  </editorsettings>
  <properties>
   <property name="ballHomeAtLamps" type="bool" value="true"/>
-  <property name="intro" value="{ &quot;LEVEL 3&quot;, &quot;RIVER WALK&quot;, &quot;THE BALL LANDED ON A BOAT.&quot;, &quot;FETCH IT FOR MIA!&quot; }"/>
+  <property name="intro" value="{ &quot;LEVEL 1&quot;, &quot;RIVER WALK&quot;, &quot;MORNING! MIA THREW THE BALL...&quot;, &quot;IT LANDED ON A FERRY. FETCH!&quot; }"/>
   <property name="name" value="RIVER WALK"/>
-  <property name="number" type="int" value="3"/>
-  <property name="outro" value="{ &quot;UP ON SODER MIA DROPPED&quot;, &quot;THE BALL. IT ROLLED AWAY...&quot; }"/>
+  <property name="number" type="int" value="1"/>
+  <property name="outro" value="{ &quot;LATE MORNING IN THE PARK.&quot;, &quot;A MAGPIE SNATCHED THE BALL!&quot; }"/>
   <property name="time" type="int" value="420"/>
  </properties>
  <tileset firstgid="1" name="terrain" tilewidth="8" tileheight="8" tilecount="4" columns="4">

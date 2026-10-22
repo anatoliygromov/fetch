@@ -1,4 +1,4 @@
--- Level 1: City Park (greybox). Terrain is in citypark.map; this file places everything else.
+-- Level 2: City Park (greybox). Terrain is in citypark.map; this file places everything else.
 -- Same format as riverwalk.lua. x, y in level pixels; y grows downwards; "feet" = the y Pepper stands on.
 -- The path (feet) is y 184. The pond's water starts at y 208. The level is 2880 px (9 screens). See
 -- docs/citypark_beatsheet.md (the first 6 screens) and docs/progression.md.
@@ -36,7 +36,7 @@ if USE_TILED then return require("tiled").load("level/tiled/citypark.lua") end
 
 local L = {}
 L.name = "CITY PARK"
-L.number = 1
+L.number = 2
 L.title = "Pepper: City Park"
 L.scenery = "greybox"
 L.art = "park"                -- scenery art (tools/make_town_art.py; drawn by Sc.drawPropArt from the boxes)
@@ -167,7 +167,7 @@ L.magpie = { flee = 110, fleeWalk = 40, bark = 95, dropSay = "IT DROPPED THE BAL
 L.ballBack = "THE BALL IS BACK BY THE LAMP"
 -- the girl waits by the swings at the far end of the park
 L.girl = { x = 2840, y = 184 }
-L.outro = { "OFF TO TOWN! BUT THE BALL", "ROLLED AWAY ACROSS THE PLAZA..." }
+L.outro = { "NOON IN TOWN. THE BALL", "ROLLED AWAY ACROSS THE PLAZA..." }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
@@ -246,5 +246,5 @@ L.hints = {
   { x0 = 1880, x1 = 2880, text = "GO BACK FOR THE BALL!", need = "noball" },
 }
 
-L.intro = { "LEVEL 1", "CITY PARK", "A MAGPIE STOLE MIA'S BALL!", "SNEAK UP AND BARK, PEPPER!" }
+L.intro = { "LEVEL 2", "CITY PARK", "A MAGPIE STOLE MIA'S BALL!", "SNEAK UP AND BARK, PEPPER!" }
 return L

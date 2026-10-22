@@ -95,7 +95,7 @@ return function(api)
     local h2 = (function() p.x = 60; return s:hint() end)()
     return h and h.btn == "a" and h.text == "TAP: HOP" and h2 and h2.btn == "b", ("walking at 120: %s; running at 60: %s"):format(h and h.text or "-", h2 and h2.text or "-")
   end))
-  add(check("bones: none is inside a solid (all five levels)", function()
+  add(check("bones: none is inside a solid (every level of levels.lua)", function()
     local bad = {}
     for _, L in ipairs(require("levels")) do
       local s = St.new(require("level." .. L.name)); local w = s.world
@@ -162,7 +162,7 @@ return function(api)
       add(check(("run %d: %s unlocked and saved"):format(k, name), function() return F.unlocked[name] and readSave("progress.txt"):find(name) ~= nil, (readSave("progress.txt"):gsub("\n", " ")) end))
     end
     add(wait(0.6), key("space"), state("play", 1), wait(0.2))
-    if k == 1 and name == "citypark" then
+    if name == "citypark" then                                   -- (r6/levels: level 2 now; River Walk opens the run)
       -- the talk panel: Pepper says the control hint at the start (the magpie is ahead: sneak)
       add(wait(0.4), check("talk: Pepper says [B] HOLD: SNEAK at the start", function()
         local l = said(); return l and l.who == "pepper" and l.btn == "b" and l.text == "HOLD: SNEAK", l and l.text or "nothing" end), shot("u1_pepper"))

@@ -9,10 +9,10 @@
   <property name="ballBack" value="THE BALL IS BACK BY THE STATUE"/>
   <property name="ballHomeAtLamps" type="bool" value="true"/>
   <property name="greyStyle" value="town"/>
-  <property name="intro" value="{ &quot;LEVEL 2&quot;, &quot;DOWNTOWN&quot;, &quot;A CAT IS SITTING ON THE BALL!&quot;, &quot;BARK IT AWAY. BRING THE BALL!&quot; }"/>
+  <property name="intro" value="{ &quot;LEVEL 3&quot;, &quot;DOWNTOWN&quot;, &quot;A CAT IS SITTING ON THE BALL!&quot;, &quot;BARK IT AWAY. BRING THE BALL!&quot; }"/>
   <property name="name" value="DOWNTOWN"/>
-  <property name="number" type="int" value="2"/>
-  <property name="outro" value="{ &quot;BY THE RIVER MIA THREW IT&quot;, &quot;AGAIN. IT LANDED ON A FERRY...&quot; }"/>
+  <property name="number" type="int" value="3"/>
+  <property name="outro" value="{ &quot;AT THE STREET CAFE A GULL TOOK&quot;, &quot;THE BALL UP TO ITS NEST!&quot; }"/>
   <property name="pickupSay" value="BRING ME THE BALL!"/>
   <property name="scenery" value="greybox"/>
   <property name="time" type="int" value="300"/>

@@ -1,4 +1,4 @@
--- Level 3: River Walk (greybox). Terrain is in riverwalk.map; this file places everything else.
+-- Level 1: River Walk (greybox). Terrain is in riverwalk.map; this file places everything else.
 -- x, y in level pixels; y grows downwards; "feet" = the y Pepper stands on.
 -- Upper promenade feet y = 184, lower quay y = 216, river surface y = 224. The level is 3840 px (12 screens).
 -- Manner: water and traffic (docs/progression.md). New here: the harbour's rowing boats and the gulls.
@@ -35,7 +35,7 @@
 -- y 174). Secrets (L.secrets, counted on the tally): the kennel, the kiosk roofs.
 local L = {}
 L.name = "RIVER WALK"
-L.number = 3
+L.number = 1
 L.map = "level/riverwalk.map"
 L.time = 420
 L.start = { x = 52, y = 184 }
@@ -151,7 +151,7 @@ L.critters = {
 
 L.ball = { x = FX + 108, y = 154 }
 L.girl = { x = 3780, y = 184 }
-L.outro = { "UP ON SODER MIA DROPPED", "THE BALL. IT ROLLED AWAY..." }
+L.outro = { "LATE MORNING IN THE PARK.", "A MAGPIE SNATCHED THE BALL!" }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
@@ -216,5 +216,5 @@ L.hints = {
   { x0 = 3620, x1 = 3840, text = "GO BACK FOR THE BALL!", need = "noball" },
 }
 
-L.intro = { "LEVEL 3", "RIVER WALK", "THE BALL LANDED ON A BOAT.", "FETCH IT FOR MIA!" }
+L.intro = { "LEVEL 1", "RIVER WALK", "MORNING! MIA THREW THE BALL...", "IT LANDED ON A FERRY. FETCH!" }
 return L

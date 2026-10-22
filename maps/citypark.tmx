@@ -10,10 +10,10 @@
   <property name="magpie.fleeWalk" type="int" value="40"/>
   <property name="art" value="park"/>
   <property name="ballBack" value="THE BALL IS BACK BY THE LAMP"/>
-  <property name="intro" value="{ &quot;LEVEL 1&quot;, &quot;CITY PARK&quot;, &quot;A MAGPIE STOLE MIA'S BALL!&quot;, &quot;SNEAK UP AND BARK, PEPPER!&quot; }"/>
+  <property name="intro" value="{ &quot;LEVEL 2&quot;, &quot;CITY PARK&quot;, &quot;A MAGPIE STOLE MIA'S BALL!&quot;, &quot;SNEAK UP AND BARK, PEPPER!&quot; }"/>
   <property name="name" value="CITY PARK"/>
-  <property name="number" type="int" value="1"/>
-  <property name="outro" value="{ &quot;OFF TO TOWN! BUT THE BALL&quot;, &quot;ROLLED AWAY ACROSS THE PLAZA...&quot; }"/>
+  <property name="number" type="int" value="2"/>
+  <property name="outro" value="{ &quot;NOON IN TOWN. THE BALL&quot;, &quot;ROLLED AWAY ACROSS THE PLAZA...&quot; }"/>
   <property name="scenery" value="greybox"/>
   <property name="time" type="int" value="300"/>
   <property name="title" value="Pepper: City Park"/>

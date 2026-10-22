@@ -177,12 +177,14 @@ function F.drawSelect(t)
   if F.hard then U.hardTag(244, 20) end
   -- (r5/bugs: rows of 30 px, so all five levels fit in the panel; at 46 px the fourth ran under the footer and the
   -- fifth, NIGHT HARBOUR, hung off the panel and the screen)
-  local step = math.min(46, math.floor(152 / #F.levels))
+  -- (r6/levels: six levels: rows of 26 px from y 40, the note 17 px under the title, the highlight the whole row)
+  local step = math.min(46, math.floor(156 / #F.levels))
+  local y0, ny = step < 30 and 40 or 42, 17                        -- the first row's y; the note's y in a row
   for i, l in ipairs(F.levels) do
-    local y = 42 + (i - 1) * step
+    local y = y0 + (i - 1) * step
     local on, open = F.pick.sel == i, F.isOpen(i)
     local ok = open and l.exists
-    if on then lg.setColor(U.EDGE); lg.rectangle("fill", 46, y - 3, 228, step - 1); lg.setColor(1, 1, 1, 1) end
+    if on then lg.setColor(U.EDGE); lg.rectangle("fill", 46, y - 3, 228, step < 30 and step or step - 1); lg.setColor(1, 1, 1, 1) end
     local col = ok and (on and U.GOLD or U.WHITE) or U.RIM
     U.center(tostring(l.number), 62, y + 4, 2, col)
     U.center(l.title, 164, y, 2, col)
@@ -195,10 +197,10 @@ function F.drawSelect(t)
       if bt then note = note .. "  " .. F.clock(bt) end
     end
     if ok and (F.levelBest(l.name) > 0 or F.levelTimeBest(l.name)) then     -- played: its best and its medals
-      U.text(note, 76, y + 17, U.WHITE)
+      U.text(note, 76, y + ny, U.WHITE)
       local m = F.medals(l.name)
-      for k, kind in ipairs(F.MEDALS) do U.medal(kind, 216 + (k - 1) * 14, y + 15, m[kind]) end
-    else U.center(note, 164, y + 17, 1, ok and U.WHITE or U.RIM) end
+      for k, kind in ipairs(F.MEDALS) do U.medal(kind, 216 + (k - 1) * 14, y + ny - 2, m[kind]) end
+    else U.center(note, 164, y + ny, 1, ok and U.WHITE or U.RIM) end
     if not ok then U.lock(253, y + 4, U.RIM, 2) end
   end
   U.center("A PLAY    B BACK", 160, 200, 1, U.RIM)
