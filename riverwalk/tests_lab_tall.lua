@@ -2,8 +2,9 @@
 --   --physics   the vertical camera (it follows up the stairs, a hop does not bob it, it leads down a tall drop,
 --               it settles on the new floor, Up / Down held still look up / down), floors at any height (stairs,
 --               4 px steps, one-way planks and dropping through them), the goods lift (it carries Pepper up and
---               down, waits rather than crush her, never comes down on her), a fall out of the world (a heart,
---               back to the lamp), a tall drop (no harm), the fetch to Mia; and the flat levels unchanged (240 px
+--               down, waits rather than crush her, never comes down on her, keeps her standing room while she
+--               crouches), the pit (a running held jump clears it, walking or running off falls in), a fall out of the
+--               world (a heart, back to the lamp), a tall drop (no harm), the fetch to Mia; and the flat levels unchanged (240 px
 --               high, camera y always 0, even looking up and down)
 --   --auto      plays the level on autopilot, saving every 3rd frame to rec_lab_tall/ (for the GIF)
 --   --test      a screenshot tour: every screen of the 3 x 3, looking up and down, the lift
@@ -160,8 +161,49 @@ return function(mode, api)
       { wait = 0.5 },
       { act = function(p) local m = lift(); report("and she stands up under it, head clear", not p.crouch and m.y1 <= p.y - p:height() + 0.01, ("head %.1f"):format(p.y - p:height())); hold("left") end },
       { wait = 0.8 }, { act = function() release() end }, { wait = 1.0 },
-      -- 11 a fall into the pit: out of the bottom of the world, a heart, back to the lamp
-      { act = function(p, s) s.check = { x = 100, y = 664 }; s.hearts = 3; tp(240, 600); p.onGround = false end },
+      -- 11a the pit (x 160-256, 96 px) in play: a running held jump clears it; walking or running off the edge, a
+      -- running tap hop only just makes it (a scramble at the far edge); once in she cannot scramble out
+      { act = function(p, s)
+          local function try(name, plan, want)
+            local st = St.new(s.def); st.critters = {}
+            local q = st.pepper
+            q.x, q.y = 100, 664
+            local out, maxX, t = "on the ground", 0, 0
+            for f = 1, 60 * 3 do
+              local held, press = plan(q, f)
+              I.force = held or {}
+              st:update(1 / 60, press and { jump = true } or {})
+              maxX = math.max(maxX, q.x)
+              if st.fallT or q.mode == "gone" then out = "fell in"; break end
+              if q.mode == "scramble" then out = "scrambled" end
+              if q.onGround and q.x > 256 + 14 and out ~= "scrambled" then out = "across"; break end
+            end
+            I.force = {}
+            report("pit (96 px): " .. name, out == want, ("%s, x %.0f"):format(out, maxX))
+          end
+          local jumped
+          local function runJump(at, holdJ)
+            jumped = nil
+            return function(q, f)
+              local h = { right = true }
+              if not jumped and q.x >= at then jumped = f; h.jump = holdJ or nil; return h, true end
+              if jumped and holdJ and f - jumped < 40 then h.jump = true end
+              return h
+            end
+          end
+          try("a running held jump at the edge clears it", runJump(166, true), "across")
+          try("a running held jump 6 px before the edge clears it", runJump(154, true), "across")
+          try("a running tap hop at the edge: only just, with a scramble", runJump(166, false), "scrambled")
+          try("walking off the edge falls in", function() return { right = true, walk = true } end, "fell in")
+          try("running off the edge (no jump) falls in", function() return { right = true } end, "fell in")
+          jumped = nil
+          try("from a walk, a held jump at x 150 falls in", function(q, f)
+              if q.x < 150 and f < 120 then return { right = true, walk = true } end
+              if not jumped then jumped = f; return { right = true, jump = true, walk = true }, true end
+              return { right = true, jump = true, walk = true } end, "fell in")
+        end },
+      -- 11b a fall into the pit: out of the bottom of the world, a heart, back to the lamp
+      { act = function(p, s) s.check = { x = 100, y = 664 }; s.hearts = 3; tp(208, 600); p.onGround = false end },
       { during = 2.0 },
       { act = function(p, s) report("the pit: falling out of the world costs a heart", s.hearts == 2, "hearts " .. s.hearts)
           report("the pit: back to the lamp, the camera with her", near(p.x, 100, 0.01) and near(p.y, 664, 0.01) and p.mode == "normal" and near(s.camY, camFor(664), 1),
@@ -196,8 +238,8 @@ return function(mode, api)
         { cond = function(p) return p.onGround and near(p.y, toY, 0.5) end, act = function() release() end, limit = 3 }
     end
     steps = { { wait = 1.2 }, { act = function() love.keypressed("space") end }, { wait = 0.3 },
-      run("right", 194),
-      { act = function() jump("right", "jump") end }, { wait = 1 / 60 }, { act = function() hold("right") end },  -- hop the pit
+      run("right", 166),
+      { act = function() jump("right", "jump") end }, { wait = 0.5 }, { act = function() hold("right") end },    -- the pit: a running held jump
       run("right", 598), settle(), goTo(606),
     }
     local ys = { 536, 504, 472, 440, 408 }

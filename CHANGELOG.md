@@ -30,6 +30,14 @@ Built on `round1`. Engine only, greybox, no SpriteCook. Pepper's files are untou
   (stage.lua) lets her drop 24 px out of the bottom before it takes her out of play: now 24 + 8 px. A QA run also
   clears a pending fall and puts the vertical camera on her when it places her. `--qa` on lab_tall: 4283 runs,
   0 problems (was 18 false ones); on citypark_tall: 11734 runs, 0 problems.
+- **The lab pit can be fallen into** (review 4). It was 32 px: Pepper's feet span 26 px, she has coyote time and
+  scrambles up 12 px, so she walked or scrambled across and the fall rule was only reached by tests. It is now
+  96 px (x 160-256, `tools/make_lab_tall.py`): a running held jump clears it, a running tap hop only just makes it
+  with a scramble at the far edge, walking off or running off the edge falls in (a heart, back to the lamp). The
+  hint is "RUN, HOLD: BIG JUMP", the bone over it moved onto the jump's arc. For designers (docs/tiled.md is on
+  another branch): a gap Pepper must not walk or scramble across is at least 64 px; a running held jump clears
+  about 110 px (from her numbers, not measured). lab_tall `--physics` 40 of 40 (6 new pit checks, all played, no teleport), `--auto` GOOD GIRL! in
+  25.9 s, 13/13 bones, `--qa` 0 problems.
 
 ## The old title is back (22 Oct, evening)
 - The hand-pixeled title (branch `title/redraw`) was rejected by the owner: the 19 Oct title has far more charm.

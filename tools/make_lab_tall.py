@@ -2,7 +2,7 @@
 """Writes riverwalk/level/lab_tall.map: the height engine's test level, 3 screens wide x 3 screens tall
 (120 x 90 cells of 8 px = 960 x 720 px). Greybox. The rest (ledges, lift, lamps, bones) is in level/lab_tall.lua.
 
-  ground floor   y 664, x 0-560, a pit at x 224-256 (open to the bottom of the world: a heart)
+  ground floor   y 664, x 0-560, a pit at x 160-256 (96 px, open to the bottom of the world: a heart)
   stairs         x 288-384, rising 96 px (12 slope cells) to the landing L1
   L1             y 568, x 384-560 (a solid block down to the ground)
   the pocket     ground floor x 560-816 under the ledges
@@ -22,7 +22,7 @@ def fill(x0, x1, y0, y1, ch='#'):
 
 
 fill(0, 944, 664, 720)                      # the ground floor
-fill(224, 256, 664, 720, '.')               # the pit
+fill(160, 256, 664, 720, '.')               # the pit: 96 px, a running held jump
 for k in range(12):                         # the stairs: '/' rises to the right, solid under each step
     i, j = 36 + k, 82 - k
     g[j][i] = '/'

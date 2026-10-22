@@ -4,8 +4,10 @@
 -- and down (vcam.lua). Coordinates are world pixels, y grows downwards, "feet" = the y Pepper stands on.
 --
 -- The route, bottom to top:
---   ground floor (y 664)  the start and a lamp; a pit (x 224-256, open to the bottom of the world: a heart, back
---                         to the lamp); tap A to hop it
+--   ground floor (y 664)  the start and a lamp; a pit (x 160-256, 96 px, open to the bottom of the world: a heart,
+--                         back to the lamp): run and hold A to jump it (walking off, running off, a running tap hop
+--                         all fall in; Pepper's feet span 26 px and she scrambles up 12 px, so a gap under 64 px
+--                         can be walked or scrambled across)
 --   stairs                up 96 px to the landing L1 (y 568); on it three 4 px steps up and down (walked onto)
 --   scaffold              one-way planks, 32 px apart, left and right of a tall gap (x 560-720), up to y 408
 --                         (hold A, jump up and across; Down + A drops through a plank)
@@ -65,7 +67,7 @@ L.ballBack = "THE BALL IS BACK ON THE ROOF"
 L.girl = { x = 600, y = 184 }
 
 L.bones = {
-  { x = 150, y = 664 }, { x = 240, y = 648 }, { x = 330, y = 622 }, { x = 492, y = 556 },
+  { x = 60, y = 664 }, { x = 208, y = 630 }, { x = 330, y = 622 }, { x = 492, y = 556 },
   { x = 600, y = 568 }, { x = 690, y = 536 }, { x = 590, y = 504 }, { x = 690, y = 472 }, { x = 590, y = 440 },
   { x = 780, y = 376 }, { x = 860, y = 504 }, { x = 920, y = 344, super = true }, { x = 780, y = 184 },
 }
@@ -75,7 +77,7 @@ L.secrets = {}
 L.hints = {
   { x0 = 0,   x1 = 960, btn = "x",    text = "PICK UP",          need = "nearball" },
   { x0 = 560, x1 = 700, btn = "x",    text = "GIVE",             need = "ball", maxY = 200 },
-  { x0 = 170, x1 = 224, btn = "a",    text = "TAP: HOP",         maxY = 670 },
+  { x0 = 110, x1 = 160, btn = "a",    text = "RUN, HOLD: BIG JUMP", maxY = 670 },
   { x0 = 560, x1 = 720, btn = "a",    text = "HOLD: BIG JUMP",   maxY = 640 },
   { x0 = 856, x1 = 896, text = "RIDE THE LIFT UP!", minY = 480, maxY = 504 },   -- (minY / maxY: on F2 only)
   { x0 = 0,   x1 = 960, text = "BRING ME THE BALL!", need = "ball" },
