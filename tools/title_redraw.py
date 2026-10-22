@@ -133,9 +133,11 @@ def stamp(rows, x, y, key, canvas=None, mask_out=None):
                 if mask_out is not None: mask_out[y + j, x + i] = True
 
 def bayer_band(m, y0, y1, c_top, c_bot):
-    # ordered 4x4 dither from c_top (at y0) to c_bot (at y1), only inside m
-    t = np.clip((YY - y0) / max(1, (y1 - y0)), 0, 1)
-    lower = (BAYER[YY % 4, XX % 4] + 0.5) / 16 < t
+    # ordered dither from c_top to c_bot over rows y0..y1, in three equal steps of a 2x2 pattern: 25%, 50% (a clean
+    # checker), 75%. No sparser levels, so there are no dotted lines, only even textures.
+    B2 = np.array([[0, 2], [3, 1]])
+    step = np.clip(((YY - y0) * 3) // max(1, (y1 - y0 + 1)), 0, 2) + 1      # 1, 2, 3 quarters of c_bot
+    lower = B2[YY % 2, XX % 2] < step
     C[m & ~lower] = c_top; C[m & lower] = c_bot
 
 def checker(m, c, phase=0):
@@ -216,12 +218,12 @@ def draw_text(s, x, y, c, canvas=None, shade=None):
 # ---- sky: four bands, joined by 4x4 ordered dither
 sky = rect(0, 0, W - 1, H - 1)
 put(sky, BLUE)
-bayer_band(rect(0, 18, W - 1, 34), 18, 34, BLUE, SKY2)
-put(rect(0, 35, W - 1, 62), SKY2)
-bayer_band(rect(0, 63, W - 1, 80), 63, 80, SKY2, RIM)
-put(rect(0, 81, W - 1, 98), RIM)
-bayer_band(rect(0, 99, W - 1, 112), 99, 112, RIM, SKY4)
-put(rect(0, 113, W - 1, 150), SKY4)
+bayer_band(rect(0, 20, W - 1, 31), 20, 31, BLUE, SKY2)
+put(rect(0, 32, W - 1, 65), SKY2)
+bayer_band(rect(0, 66, W - 1, 77), 66, 77, SKY2, RIM)
+put(rect(0, 78, W - 1, 100), RIM)
+bayer_band(rect(0, 101, W - 1, 109), 101, 109, RIM, SKY4)
+put(rect(0, 110, W - 1, 150), SKY4)
 
 # ---- clouds: cumulus heaps of puffs, each puff a shade ellipse with a white one up-left of it; flat bottoms
 def cloud(puffs, base_y):
@@ -282,13 +284,13 @@ for wy in (127, 132):
     for wx in (175, 179): put(rect(wx, wy, wx, wy + 2), NAVY)
 put(rect(171, 122, 183, 123), NAVY)
 sp = np.zeros((H, W), bool)
-for j in range(0, 24):                                            # the spire: 6 wide at the bottom, to a point
-    hw = 3 - (j * 3) // 24
+for j in range(0, 19):                                            # the spire: 6 wide at the bottom, to a point
+    hw = 3 - (j * 3) // 19
     y = 121 - j
     sp |= rect(177 - hw, y, 177 + hw, y)
 put(sp, NAVY)
 put(sp & (((YY // 2) % 2) == 0) & (XX == 177), RIM)              # openwork: the sky shows through the lattice
-put(rect(177, 94, 177, 97), NAVY)
+put(rect(177, 100, 177, 102), NAVY)
 
 # City Hall (Stadshuset): the long brick hall on the water and its square tower with the three gold crowns
 put(rect(204, 128, 252, 140), BRN)
@@ -298,21 +300,19 @@ for wx in range(207, 252, 4):                                      # arches on t
     put(rect(wx, 136, wx + 1, 140), BRN_DK); C[135, wx] = BRN_DK; C[135, wx + 1] = BRN_DK
 for wx in range(207, 252, 3): C[131, wx] = BRN_DK
 put(rect(204, 126, 216, 127), COPPER)                              # a copper roof on the left wing
-tower = rect(222, 104, 233, 128)
+tower = rect(222, 112, 233, 128)                                   # (all below the banner)
 put(tower, BRN)
-put(rect(222, 104, 224, 128), EYE_AM)                              # lit left face
-put(rect(232, 104, 233, 128), BRN_DK)                              # shaded right face
-for wy in range(108, 126, 5):
-    put(rect(226, wy, 226, wy + 2), BRN_DK); put(rect(229, wy, 229, wy + 2), BRN_DK)
-put(rect(221, 102, 234, 103), CREAM)                               # the white parapet
-put(rect(234, 102, 234, 103), SAND)
-put(poly([(223, 101), (232, 101), (230, 95), (225, 95)]), COPPER)  # the copper lantern
-put(rect(223, 98, 224, 101), SKY4)
-put(rect(231, 97, 232, 101), G_DK)
-put(rect(226, 88, 228, 94), COPPER); put(rect(228, 88, 228, 94), G_DK)
-put(rect(227, 85, 227, 87), COPPER)
-stamp(["Y.Y.Y", "YYYYY"], 225, 83, {'Y': LG_YE})                   # the three crowns (one crown sign, gold)
-C[82, 227] = LG_PL
+put(rect(222, 112, 224, 128), EYE_AM)                              # lit left face
+put(rect(232, 112, 233, 128), BRN_DK)                              # shaded right face
+for wy in (115, 120): put(rect(226, wy, 226, wy + 2), BRN_DK); put(rect(229, wy, 229, wy + 2), BRN_DK)
+put(rect(221, 110, 234, 111), CREAM)                               # the white parapet
+put(rect(234, 110, 234, 111), SAND)
+put(poly([(223, 109), (232, 109), (230, 105), (225, 105)]), COPPER)  # the copper lantern
+put(rect(223, 107, 224, 109), SKY4)
+put(rect(231, 106, 232, 109), G_DK)
+put(rect(226, 102, 228, 104), COPPER); put(rect(228, 102, 228, 104), G_DK)
+stamp(["Y.Y.Y", "YYYYY"], 225, 100, {'Y': LG_YE})                  # the three crowns, gold
+C[100, 227] = LG_PL
 
 house(253, 7, 9, CREAM, SAND, COPPER, 2)
 house(260, 9, 12, SAND, BRN, LG_RED, 2, gable=True)
@@ -326,9 +326,9 @@ for cx, cy, rx, ry in [(145, 138, 4, 3), (186, 139, 4, 2), (200, 139, 3, 2), (24
 # ---- water: from the light far water to the deep near water, ordered dither between
 water = rect(130, WATER_Y, W - 1, 186)
 put(water, RIM)
-bayer_band(water & (YY >= 147) & (YY <= 156), 147, 156, RIM, SKY2)
-put(water & (YY > 156) & (YY < 166), SKY2)
-bayer_band(water & (YY >= 166) & (YY <= 176), 166, 176, SKY2, BLUE)
+bayer_band(water & (YY >= 148) & (YY <= 156), 148, 156, RIM, SKY2)
+put(water & (YY > 156) & (YY < 168), SKY2)
+bayer_band(water & (YY >= 168) & (YY <= 176), 168, 176, SKY2, BLUE)
 put(water & (YY > 176), BLUE)
 
 # ---- the bridge (Riksbron style stone arches), far left, x 138..210, deck at y 142..145
@@ -536,10 +536,17 @@ PEP = np.zeros((H, W), np.uint8)
 FUR = [P_SH, P_BS, P_MD, P_HI]
 
 CHEST = poly([(0, 190), (12, 178), (26, 166), (40, 156), (52, 148), (66, 150), (90, 160), (112, 166), (128, 150),
-              (136, 138), (141, 150), (143, 170), (144, 192), (145, 212), (146, 239), (0, 239)])
-EAR_FAR = poly([(120, 81), (131, 82), (141, 86), (149, 93), (152, 103), (150, 116), (146, 128), (140, 136),
-                (135, 134), (133, 122), (132, 108), (128, 94)])
-SKULL = ell(96, 113, 42, 34) | ell(129, 142, 8, 12)       # the round head, and the far cheek under the ear
+              (136, 138), (141, 150), (142, 170), (141, 192), (141, 212), (141, 239), (0, 239)])
+EAR_FAR = poly([(116, 80), (128, 79), (139, 83), (147, 90), (151, 99), (152, 110), (150, 122), (146, 132),
+                (141, 139), (136, 136), (134, 122), (133, 108), (128, 94)])
+def head_shape(cx, cy, rx, ry, tilt):
+    # the skull: squarer on top (a superellipse, power 2.8) and round below (power 2), tilted with her head
+    a = np.radians(tilt)
+    u = (XX - cx) * np.cos(a) + (YY - cy) * np.sin(a)
+    v = -(XX - cx) * np.sin(a) + (YY - cy) * np.cos(a)
+    pw = np.where(v < 0, 2.8, 2.0)
+    return np.abs(u / rx) ** pw + np.abs(v / ry) ** pw <= 1.0
+SKULL = head_shape(95.5, 114, 41.5, 34, -7) | ell(129, 142, 8, 12)   # the head, and the far cheek under the ear
 CHEEK = ell(84, 142, 27, 22)
 MUZZLE = poly([(100, 113), (110, 110), (121, 112), (129, 117), (134, 124), (136, 132), (133, 140), (124, 144),
                (110, 145), (100, 142), (95, 134), (95, 121)])
@@ -579,13 +586,14 @@ en, ef, cs = part('ear_near'), part('ear_far'), part('chest')
 put(cs & shift(SKULL | CHEEK | JAW | EAR_NEAR, 2, 7), P_SH)
 put(shade_rim(cs, 7, -1, 0), P_SH)
 sh = part('shoulder')
-put(sheen(cs, 2, 6) & (YY > 170) & (XX < 30) & ~sh, P_MD)
+put(sheen(cs, 2, 6) & (YY > 170) & (XX > 6) & (XX < 30) & ~sh, P_MD)
 put(sheen(SHOULDER, 2, 7) & sh & (YY < 214), P_MD)
 put(sheen(SHOULDER, 3, 5) & sh & ell(14, 198, 10, 6), P_HI)
 put(shade_rim(sh, 3, -1, 0) & (YY > 200), P_SH)
 put(sh & shift(part('bandana'), 0, 3) & ~part('bandana'), P_SH)
 # far ear: in the head's shadow, its folded top edge lit
-put(ef, P_SH); put(sheen(ef, 1, 3) & (YY < 104), P_MD)
+put(ef, P_BS); put(shade_rim(ef, 3), P_SH); put(ef & (YY > 128), P_SH)
+put(sheen(ef, 1, 4) & (YY < 112), P_MD); put(sheen(ef, 1, 2) & (YY < 96) & (XX > 134), P_HI)
 # skull: a broad sheen over the forehead, a highlight stroke on the crown, shadow round the far side
 put(shade_rim(sk, 5), P_SH)
 put(sheen(SKULL, 2, 8) & sk & (XX < 116) & (YY < 112), P_MD)
@@ -623,8 +631,8 @@ put(bm & (f >= 0.82), PK_LT)
 put(bm & (f < 0.40), PK_DK)
 head_all = SKULL | CHEEK | JAW | EAR_NEAR | EAR_FAR
 put(bm & shift(head_all, 0, 2) & ~head_all, PK_DK)
-for pts in ([(46, 187), (66, 197), (84, 209), (98, 220)], [(64, 185), (82, 194), (96, 204), (105, 216)],
-            [(98, 181), (108, 190), (114, 202)]):
+for pts in ([(44, 187), (68, 199), (90, 213), (104, 224)], [(62, 185), (78, 193)],
+            [(128, 180), (120, 197), (111, 218)]):
     fold = polyline(pts) & bm
     put(fold, PK_DK); put(shift(fold, 0, -1) & bm & ~fold, PK_LT)
 put(KNOT, PK); put(ell(32, 176, 2, 1) & KNOT, PK_LT)
@@ -705,12 +713,12 @@ put(shift(polyline(UPPER), 0, -2) & ~MOUTH & ~polyline(UPPER), P_HI)     # the u
 put(outer_ring(MOUTH) & (YY > 146) & (XX < 122) & ~shift(MOUTH, 0, -1), P_MD)  # the lower lip's lit edge
 put(shift(polyline(UPPER[1:5]), 0, -1) & ~MOUTH, P_MD)                   # the lit edge of the upper lip
 put(polyline([(84, 139), (82, 135)]), OUT)                               # the corner curls up into the cheek
-TONGUE = poly([(99, 154), (110, 151), (124, 152), (130, 158), (130, 168), (126, 175), (118, 179), (110, 178),
-               (104, 172), (101, 163)])
+TONGUE = (poly([(100, 155), (110, 151), (124, 152), (129, 157), (128, 164), (102, 164)]) | ell(115, 167, 13, 12)) & (YY >= 151)
 put(TONGUE, TNG)
 put(TONGUE & ~shift(TONGUE, 2, 2), TNG_LT)
 put(ell(108, 158, 3, 2) & TONGUE, TNG_LT)
-put(line(116, 157, 116, 171) & TONGUE, PK_DK)
+put(line(115, 158, 115, 172) & TONGUE, PK_DK)
+put(TONGUE & shift(MOUTH, 0, 2) & (YY < 157), PK_DK)                      # in the shadow of the upper lip
 put(inner_edge(TONGUE) & ~shift(TONGUE, -1, -1), PK_DK)
 put(outer_ring(TONGUE) & ~MOUTH, OUT)
 tongue_all = TONGUE | outer_ring(TONGUE)
@@ -722,6 +730,9 @@ for pts, col in [([(84, 88), (94, 84), (106, 83)], P_HI), ([(80, 92), (90, 88)],
                  ([(10, 188), (22, 178), (34, 172)], P_MD), ([(14, 196), (24, 188)], P_MD),
                  ([(130, 200), (136, 186)], P_MD), ([(116, 230), (126, 214)], P_MD)]:
     put(polyline(pts) & pep & ~part('bandana') & (C != OUT), col)
+
+holes = ndi.binary_fill_holes(pep | MOUTH | TONGUE) & ~(pep | MOUTH | TONGUE)   # no sky through her
+put(holes, P_SH); pep = pep | holes
 
 deorphan(pep & ~rect(EYE_X - 1, EYE_Y - 1, EYE_X + 14, EYE_Y + 12) & ~rect(NOSE_X, NOSE_Y, NOSE_X + 22, NOSE_Y + 12)
          & ~tongue_all & ~rect(WINK_X, WINK_Y, WINK_X + 17, WINK_Y + 6))
@@ -821,7 +832,7 @@ draw_text(BAN_TXT, BAN_X + 6, BAN_Y + 4, WHITE, shade=OUT)
 
 # ---- PRESS ANY KEY TO START: the HUD's box (edge, rim, blue), the HUD's text
 PR_TXT = 'PRESS ANY KEY TO START'
-PR_W = text_width(PR_TXT) + 12
+PR_W = text_width(PR_TXT) + 10
 PR_H = 17
 PR_X, PR_Y = 214 - PR_W // 2, 189
 box(PR_X, PR_Y, PR_W, PR_H, EDGE, RIM, BLUE)
@@ -912,8 +923,13 @@ SPARKLES = [(150, 149, 3, WHITE), (172, 153, 2, SKY4), (186, 148, 4, WHITE), (20
             (282, 151, 2, WHITE), (300, 154, 3, SKY4), (160, 162, 3, WHITE), (194, 164, 2, SKY4),
             (212, 166, 4, WHITE), (230, 170, 3, SKY4), (264, 165, 2, WHITE), (296, 163, 4, WHITE),
             (176, 176, 3, SKY4), (204, 178, 4, WHITE), (240, 177, 2, SKY4), (290, 176, 3, WHITE),
-            (150, 172, 2, WHITE), (220, 182, 3, SKY4), (258, 180, 2, WHITE)]
+            (150, 172, 2, WHITE), (220, 182, 3, SKY4), (258, 180, 2, WHITE), (166, 156, 3, SKY4),
+            (182, 159, 2, WHITE), (200, 163, 3, WHITE), (244, 163, 3, SKY4), (226, 158, 2, WHITE),
+            (186, 171, 4, WHITE), (248, 168, 3, WHITE), (164, 180, 3, SKY4), (236, 183, 3, WHITE),
+            (196, 185, 2, SKY4), (278, 184, 3, WHITE), (144, 160, 2, SKY4)]
 BIRD_X, BIRD_Y = 96, 60
+# keep only the streaks that lie wholly on open water (not on a boat, the quay or a tree)
+SPARKLES = [sp for sp in SPARKLES if all(C[sp[1], x] in (RIM, SKY2, BLUE) and water[sp[1], x] for x in range(sp[0], sp[0] + sp[2]))]
 
 if __name__ == '__main__':
     write_all(sys.argv[1] if len(sys.argv) > 1 else None)

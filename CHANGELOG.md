@@ -23,6 +23,11 @@ Built on `main` (v0.5). No SpriteCook, no image generation.
   open sky, the logo shine is the logo one ramp step brighter, sparkles are placed by hand on the water.
   `title.lua` keeps the logo's outline and shadow within 5 px (was 3) when it draws the logo over the menus.
 - The window title is now "FETCH!".
+- Second pass: the sky and water gradients use three even steps of a 2x2 ordered pattern (no sparse dotted rows);
+  Pepper's skull is squarer on top and tilted with her head, her far ear has its own light, the tongue is a
+  rounded U, the bandana's folds run to its point, no sky shows through between her jaw and tongue; City Hall's
+  tower and the Riddarholmen spire sit below the banner so the gold crowns show; sparkles are kept only where
+  they lie wholly on open water; the PRESS box no longer touches her chest.
 - Checks: `check_flow` 94/94, `check_pepper` UNCHANGED.
 
 ## Branch `assets/v2`: the tram fix and art for the new pieces (19 Oct)
