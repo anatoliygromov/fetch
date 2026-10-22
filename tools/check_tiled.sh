@@ -1,6 +1,6 @@
 #!/bin/sh
 # The Tiled pipeline check (docs/tiled.md). Run from anywhere; needs python3 and lua5.1, luajit, lua or LÖVE.
-#  1. round trip: every level (riverwalk/level/<name>.lua + .map; citypark_tall: its committed export) -> a fresh
+#  1. round trip: every level (riverwalk/level/<name>.lua + .map; citypark_tall, rooftops, downtown_tall: the export) -> a fresh
 #     Tiled map (tools/level_to_tiled.py, with the drag-safe relx. / rely. / relxy. fields) -> its Lua export ->
 #     riverwalk/tiled.lua gives the identical table and terrain rows
 #  2. the same through Tiled itself (tiled --export-map lua), when Tiled is installed
@@ -22,8 +22,8 @@ elif command -v lua >/dev/null; then LUA="lua"; elif command -v love >/dev/null;
 else LUA="/Applications/love.app/Contents/MacOS/love tools/tiled/love_runner"; fi        # a Mac with only LOVE
 CHECK="$LUA tools/tiled/check_tiled.lua $REPO"
 
-LEVELS="citypark downtown riverwalk soder night lab_tall citypark_tall rooftops"     # the play order, the lab, the tall park
-MAPPED="citypark downtown riverwalk soder night citypark_tall rooftops"            # the ones with a committed maps/*.tmx
+LEVELS="citypark downtown riverwalk soder night lab_tall citypark_tall rooftops downtown_tall"   # the play order, the lab, the tall ones
+MAPPED="citypark downtown riverwalk soder night citypark_tall rooftops downtown_tall"   # the ones with a committed maps/*.tmx
 
 echo "== 1. round trip: level files -> Tiled map -> export -> tiled.lua ($LUA)"
 python3 tools/level_to_tiled.py $LEVELS --out "$TMP/maps" --export-dir "$TMP/export" > /dev/null || FAIL=1
@@ -49,6 +49,7 @@ for f in maps/*.tmx; do python3 tools/level_to_tiled.py --export "$f" "$TMP/fres
 $CHECK pair riverwalk/level/tiled "$TMP/fresh" || FAIL=1
 $CHECK pair riverwalk/level/tiled "$TMP/fresh" citypark_tall || FAIL=1      # (a level drawn in Tiled, not in the play order)
 $CHECK pair riverwalk/level/tiled "$TMP/fresh" rooftops || FAIL=1           # (the same: Rooftops, engine/round2)
+$CHECK pair riverwalk/level/tiled "$TMP/fresh" downtown_tall || FAIL=1      # (the same: the tall Downtown, r3/design)
 python3 tools/level_to_tiled.py --upgrade maps/*.tmx --out "$TMP/upgraded" --export-dir "$TMP/upexport" > /dev/null || FAIL=1
 for n in $MAPPED; do
   $CHECK pair riverwalk/level/tiled "$TMP/upexport" $n > "$TMP/out" || FAIL=1
