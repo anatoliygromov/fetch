@@ -14,6 +14,17 @@ it still hooks in only through main.lua's `--playtest` flag. Method: `docs/playt
   floor with the same sig and the autopilot goes on from there with the clean run's buttons; nothing on her floor:
   the lab moves her there and charges the walk (`lab_walks`). A step picked up out of sequence that errors counts as
   a stuck. Lost runs on the 22 Oct bot (5 seeds, every level): 127 of 320 (40%); with v2, see the baseline.
+- **Whole-game mode** (tools/run_campaign.py, pt_bot.lua `--carry`): a persona plays an order as one playthrough.
+  Lives and the tally score carry over as in the real flow; GAME OVER is TRY AGAIN (the level again, 3 lives, the
+  score it started with). Controls found stay known for the rest of the playthrough (trying time paid once); a hint
+  whose button glyph was on screen halves the trying time of a control not known yet. A level not cleared ends there
+  and the playthrough goes on at the next level as LEVEL SELECT starts it. One JSON per level of each playthrough.
+- **DI v2 and the acceptance test** (tools/check_curve.py): DI v2 takes the trying time out of the play minutes and
+  the clear time and does not count the failure that taught a control; learning seconds are reported on their own;
+  DI v1 stays beside it. `check_curve.py --order ...` runs whole-game mode for the eight personas and checks T1
+  sawtooth (no level more than 8 DI points above the hardest of the next two; the second half at least as hard as
+  the first, the last level at least as hard as the first; kids and parents), T2 no spot over 35% of a level's
+  failures, T3 Elsa clears every level in 50% of her playthroughs, T4 under 5% lost runs; exit 0 when all pass.
 
 ## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
 Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of
