@@ -45,6 +45,15 @@ in `docs/playtest/curve_r7.md`. Pepper's files, music, sfx and the title are unt
   slipway took 40 to 58% of the level's failures, a T2 fail). Autopilot: the first plank hop 6 px earlier.
   `--physics` 40 of 40, `--auto` 82.6 s (was 81.3), no heart lost.
   Before/after: `/home/claude/out/r7-curve/night_before_after.png`.
+- **The curve** (`docs/playtest/curve_r7.md`: six iterations, what moved and why, what is left): the tall order
+  passes T1 to T4 (exit 0). DI v2 kids / parents: River Walk 18.0 / 14.0, City Park (tall) 12.6 / 17.6, Downtown
+  (tall) 11.6 / 18.5 (was 24.1 / 26.0), Rooftops 20.0 / 16.5 (was 16.0 / 13.3), Soder Hill 15.7 / 14.7 (was
+  9.6 / 7.3), Night Harbour 19.2 / 24.7 (was 15.1 / 23.4); worst spots 21 to 33%; Elsa clears 80 to 100%; lost runs
+  0 to 3.8%. Chart `/home/claude/out/r7-curve/curve_tall.png`. Checks: `check_pepper` UNCHANGED (4591 steps),
+  `check_flow` 113 of 113, `check_tiled` PASSED, `--physics` riverwalk 54, citypark 85, downtown 81, citypark_tall
+  94, downtown_tall 98, rooftops 103, soder 29, night 40 (all pass), `--auto` 66.3, 44.6, 51.4, 39.1, 56.2, 58.1
+  (high road 54.4), 73.3, 82.6 s, `--qa` 0 problems on River Walk, City Park, Downtown, Downtown (tall), Rooftops
+  and Soder Hill, 1 on Night Harbour (the ball sweep at the slipway's edge, see the curve doc).
 
 ## Branch `r6/engine`: safety nets, the same in every level (22 Oct)
 Built on `round1`. Benchmark principles 5, 6 and 7 (`docs/benchmark_22oct.md` section 4) in the engine, so every
