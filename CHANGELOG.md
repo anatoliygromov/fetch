@@ -2,6 +2,12 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Pepper's file check narrowed to what she uses (22 Oct, evening)
+- `tools/check_pepper_files.sh` flagged world.lua: engine/round2 gave `Wd:groundAt` an optional `fromY` for carts,
+  bikes and the gull on tall levels. Pepper never calls it. The check now proves the rest of world.lua (all her
+  collision) byte-identical to aa38be5, with that one function left out, and fails if pepper.lua ever calls it.
+  The trace check (`check_pepper.sh`) was identical all along.
+
 ## Branch `r3/citypark-art`: the tall City Park gets City Park's art, and a treetop tier dressed to match (22 Oct)
 Built on `round1`. Scene and art only; no new generated art (no SpriteCook): the treetops use the approved park art
 in `art/scene/` and pieces drawn in code. Pepper's files are untouched (`check_pepper` UNCHANGED).
