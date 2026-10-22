@@ -7,10 +7,10 @@
 -- Still to come in the plan: Metro (after Rooftops), the building site and the funfair (after Soder Hill), home in
 -- the storm (after Night Harbour). When one is added, the numbers on the cards (L.number, L.intro) move up.
 -- par: the PAR TIME medal's time in seconds (the autopilot's clear time times about 1.6, rounded up). Autopilot
--- clear times: 66.3, 44.2, 51.6, 54.1, 73.3 (the scroll sets the pace), 81.3 s.
+-- clear times (r6/levels): 66.3, 44.6, 51.4, 54.1, 73.3 (the scroll sets the pace), 81.3 s.
 return {
   { name = "riverwalk", number = 1, title = "RIVER WALK", par = 107 },
-  { name = "citypark",  number = 2, title = "CITY PARK",  par = 71 },
+  { name = "citypark",  number = 2, title = "CITY PARK",  par = 72 },
   { name = "downtown",  number = 3, title = "DOWNTOWN",   par = 83 },
   { name = "rooftops",  number = 4, title = "ROOFTOPS",   par = 87 },
   { name = "soder",     number = 5, title = "SODER HILL", par = 118 },

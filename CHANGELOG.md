@@ -75,6 +75,17 @@ Built on `round1`. The owner's new strategy (ten levels; five built, plus Roofto
   crate steps at its other two held jumps of the main road (the stall heatmap's next hot spots): before the market
   stall (x 656-688: two tap hops onto the counter) and before the flower tub at the plaza (x 1368-1400: tap hops up
   to the tub and the pedestal). Their hints say TAP: HOP now. Six new jump checks (87 of 87); autopilot 56.6 s.
+- **Par times** (levels.lua): City Park's par is 72 s (its autopilot clear is 44.6 s with the wider frame); the others
+  are unchanged (River Walk 66.3 s, Downtown 51.4 s, Rooftops 54.1 s, Soder Hill 73.3 s, Night Harbour 81.3 s).
+- **Not done (time box): Rooftops and Soder Hill are still short for their slots.** Rooftops needs a 13th screen and
+  one combined beat (target 90 to 110 s; now 54.1 s on the low road), Soder Hill one combined beat (keep 70 to 90 s;
+  now 73.3 s). Rooftops is in the order anyway as level 4; it is the easiest-reading of the climbs for now.
+- Checks on this branch: `check_pepper` PEPPER UNCHANGED (4591 steps, the re-recorded trace), `check_pepper_lab`
+  1401 lab steps identical, `check_pepper_files` 5 files identical, `check_flow` 113 of 113, `check_tiled` all PASS,
+  `--physics` riverwalk 45, citypark 76, downtown 72, rooftops 88, soder 23, night 37, citypark_tall 85,
+  downtown_tall 87, lab_tall 40 (all pass), `--auto` 66.3, 44.6, 51.4, 54.1 (low road), 73.3, 81.3 s and
+  citypark_tall 39.1, downtown_tall 56.6, lab_tall 25.9 s (no heart lost), `--qa` 0 problems on River Walk, City
+  Park, Downtown and the tall City Park.
 
 ## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
 Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of
