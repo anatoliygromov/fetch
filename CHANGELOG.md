@@ -52,6 +52,39 @@ keeps the old rules everywhere. Pepper's files are untouched; music is untouched
   73, 70, 40, 23, 37, 40, 82, 88, 81), `--auto` 44.2, 51.6, 66.3, 73.3, 81.3, 25.9, 38.5, 54.1 (low road), 56.9 s,
   unchanged, `--qa` 0 problems on City Park, Downtown and River Walk (ball sweep included).
 
+## Branch `r6/lab`: the playtest lab, recovery v2, whole-game mode, DI v2 and the curve check (22 Oct)
+Built on `round1`. The lab only (`riverwalk/playtest.lua`, `riverwalk/pt_bot.lua`, `tools/`); no game file changes,
+it still hooks in only through main.lua's `--playtest` flag. Method: `docs/playtest/method.md`.
+- **Recovery v2** (pt_bot.lua, playtest.lua, tools/pt_common.py, tools/run_playtest.py): the clean run now records a
+  route map (where each autopilot step began: place, floor, mover, buttons, speed, and the world's sig: the ball, the
+  magpie's perch, the fox's hideout, the cat; and the x range and lowest floor each step ran over). The persona runs
+  get it (`--route`). A persona who leaves the route (more than 72 px beside it or 20 px below it for 0.3 s) fails
+  there at once (`offroute`) instead of running on into the water; after any failure the bot settles, fetches a
+  loose ball, chases the magpie if it sits where the clean run never saw it, else walks to the nearest step on her
+  floor with the same sig and the autopilot goes on from there with the clean run's buttons; nothing on her floor:
+  the lab moves her there and charges the walk (`lab_walks`). A step picked up out of sequence that errors counts as
+  a stuck. Lost runs on the 22 Oct bot (5 seeds, every level): 127 of 320 (40%); with v2, see the baseline.
+- **Whole-game mode** (tools/run_campaign.py, pt_bot.lua `--carry`): a persona plays an order as one playthrough.
+  Lives and the tally score carry over as in the real flow; GAME OVER is TRY AGAIN (the level again, 3 lives, the
+  score it started with). Controls found stay known for the rest of the playthrough (trying time paid once); a hint
+  whose button glyph was on screen halves the trying time of a control not known yet. A level not cleared ends there
+  and the playthrough goes on at the next level as LEVEL SELECT starts it. One JSON per level of each playthrough.
+- **DI v2 and the acceptance test** (tools/check_curve.py): DI v2 takes the trying time out of the play minutes and
+  the clear time and does not count the failure that taught a control; learning seconds are reported on their own;
+  DI v1 stays beside it. `check_curve.py --order ...` runs whole-game mode for the eight personas and checks T1
+  sawtooth (no level more than 8 DI points above the hardest of the next two; the second half at least as hard as
+  the first, the last level at least as hard as the first; kids and parents), T2 no spot over 35% of a level's
+  failures, T3 Elsa clears every level in 50% of her playthroughs, T4 under 5% lost runs; exit 0 when all pass.
+- **The fox's sig** (pt_bot.lua): whether the fox was sniffed out at its hideout is part of the world sig, so a
+  persona who missed the shed roof on Night Harbour goes back to sniff before she barks (it was picked up after the
+  sniff, and the bark found no fox).
+- **Baseline v2** (docs/playtest/baseline_v2_22oct.md, charts in /home/claude/out/r6-lab/): round1 as it is, three
+  orders (current; new: River Walk first, Rooftops 4th; tall: the tall City Park and Downtown) in whole-game mode,
+  8 personas x 10 seeds. No order passes; the tall order comes closest (only Downtown (tall) spikes; Elsa clears every
+  level in 80% or more). City Park and Downtown are the spikes of the other two, and the last three levels are flat
+  and easier than the middle in every order. Lost runs: 41% on 22 Oct, 2.3% now (Downtown 8.8%, City Park (tall)
+  7.5%, City Park 5.6% still over 5%). check_pepper: PEPPER UNCHANGED; check_flow: 103 of 103; City Park --auto 44.2 s.
+
 ## Branch `r5/bugs`: visual and presentation bugs, scale to the dog (22 Oct)
 Built on `round1`. The owner's report ("the bike is too small, the cars get cropped when they pass") and a sweep of
 every level, the menus and the cards. The bug list with evidence: `docs/bugs_22oct.md`. Pepper's files are untouched.
