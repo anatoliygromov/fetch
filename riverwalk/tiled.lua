@@ -16,6 +16,13 @@
 --             to whole pixels. The object's name is the field "name"; every custom property is copied as it is
 --             (a property wins over the shape, so a property "name" = "" survives). A text property that starts
 --             with "{" is a Lua table: "{ 600, 830 }".
+--   relative  a property named relx.<field>, rely.<field> or relxy.<field> holds <field> as an offset from the
+--             object's own position (its x and y: a rectangle's top left corner, a point's pin), so dragging the
+--             object in Tiled moves the field with it. relx: a number, or a list of numbers, each plus the object's
+--             x (named keys in the list stay as they are: rope = { 0, 128, dy = 3 }). rely: the same with y.
+--             relxy: a point { x =, y = } or { dx, dy }, or a list of points, plus (x, y). The result is <field>
+--             as an absolute value, as if it had been written so; it wins over a plain <field>. Older exports
+--             with absolute values load as before. (tools/level_to_tiled.py writes them, --upgrade converts.)
 --   notes     text objects, and layers or classes whose name starts with "#", are notes: they are skipped.
 --   the rest  map properties are the level's other fields; a dotted name sets a nested field ("magpie.flee").
 -- In the game the terrain rows are written to the save folder (tiled_<name>.map, like pepperlab.lua does) and L.map
@@ -54,6 +61,30 @@ local function props(p)
   if p[1] ~= nil then for _, q in ipairs(p) do out[q.name] = q.value end else for k, v in pairs(p) do out[k] = v end end
   return out
 end
+
+-- a relative value (relx / rely / relxy, see the top) plus the object's position (bx, by)
+local function shift(v, axis, bx, by)
+  if type(v) == "number" then return v + (axis == "y" and by or bx) end
+  if type(v) ~= "table" then return v end
+  local out = {}
+  for k, x in pairs(v) do out[k] = x end
+  if axis == "xy" then
+    if v.x ~= nil or v.y ~= nil then
+      if type(v.x) == "number" then out.x = v.x + bx end
+      if type(v.y) == "number" then out.y = v.y + by end
+    elseif type(v[1]) == "number" then
+      out[1] = v[1] + bx
+      if type(v[2]) == "number" then out[2] = v[2] + by end
+    else
+      for i, x in ipairs(v) do out[i] = shift(x, "xy", bx, by) end
+    end
+  else
+    for i, x in ipairs(v) do out[i] = shift(x, axis, bx, by) end
+  end
+  return out
+end
+
+local REL = { relx = "x", rely = "y", relxy = "xy" }
 
 local function sortedKeys(t)
   local ks = {}
@@ -134,6 +165,7 @@ local function object(o, layerName)
   local p = props(o.properties)
   local where = ("object %s (%s, %s)"):format(tostring(o.id), class, o.name ~= "" and o.name or "no name")
   local item = {}
+  local bx, by = round(o.x), round(o.y)
   if o.shape == "point" then
     item.x, item.y = round(o.x), round(o.y)
   elseif o.shape == "polyline" or o.shape == "polygon" then
@@ -149,7 +181,13 @@ local function object(o, layerName)
     end
   end
   if o.name and o.name ~= "" then item.name = o.name end
-  for k, v in pairs(p) do if k ~= "box" then item[key(k)] = value(v, where .. " property " .. k) end end
+  local rel = {}
+  for k, v in pairs(p) do
+    local pre, field = tostring(k):match("^(rel%a*)%.(.+)$")
+    if pre and REL[pre] then rel[#rel + 1] = { field, REL[pre], v, k }
+    elseif k ~= "box" then item[key(k)] = value(v, where .. " property " .. k) end
+  end
+  for _, r in ipairs(rel) do item[key(r[1])] = shift(value(r[3], where .. " property " .. r[4]), r[2], bx, by) end
   return class, item
 end
 
