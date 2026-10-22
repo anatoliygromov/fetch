@@ -24,6 +24,9 @@ every level, the menus and the cards. The bug list with evidence: `docs/bugs_22o
   3840 px the camera needs 1376 px, so over the last two screens the trees ended in a hard edge with bare sand-coloured
   sky beside them. The trees now go back and forth to 1600 px. The far skyline's range was fixed at 2880 px too, so
   it stood still over the last 640 px; it now uses the level's own width.
+- **LEVEL SELECT fits five levels** (flow.lua): the rows were 46 px, made for three levels; with five, SODER HILL ran
+  under the "A PLAY  B BACK" footer, NIGHT HARBOUR hung off the bottom of the panel and the screen, and the SOUND
+  pill sat on its text. Rows are now 30 px (the panel 208 px tall), so all five and the footer fit inside it.
 
 ## Branch `r4/playtest`: the playtest lab, ported to today's levels, and the level order checked (22 Oct)
 Built on `round1`. The lab from `ml/playtest` (6 Oct, never merged) rebuilt around the levels' own autopilots.
