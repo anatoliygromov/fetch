@@ -416,7 +416,7 @@ function St:updateCat(dt)
 end
 
 -- what is being said now (talk.lua draws it): nil or a line { who = "pepper" | "girl", btn, text, teach, msg }.
--- The level's L.hints, first match wins: { x0, x1, text, btn, need, maxY, bike }. A hint with a button (btn: "a",
+-- The level's L.hints, first match wins: { x0, x1, text, btn, need, maxY, minY, bike }. A hint with a button (btn: "a",
 -- "b", "x", "y", "down") is Pepper's: it teaches a control, in 1 to 3 words. One without is the girl's (a goal or
 -- a story line). need: "ball" (Pepper carries it), "noball", "nearball" (she can pick it up), "cat" (it sits on
 -- the ball), "catnear" (a bark would scare it), "magpie" (it has the ball), "magpienear" (a bark would make it
@@ -440,7 +440,7 @@ end
 function St:zoneHint()
   local p = self.pepper
   for _, h in ipairs(self.def.hints) do
-    if p.x >= h.x0 and p.x < h.x1 and (not h.maxY or p.y <= h.maxY) then
+    if p.x >= h.x0 and p.x < h.x1 and (not h.maxY or p.y <= h.maxY) and (not h.minY or p.y >= h.minY) then   -- (minY: tall levels)
       local ok = true
       if h.need == "ball" then ok = p.carrying ~= nil
       elseif h.need == "goose" then ok = Cr.near(self)

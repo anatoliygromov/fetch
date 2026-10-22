@@ -24,8 +24,17 @@ play and draw exactly as before. Greybox, no SpriteCook credits.
   up through it, Down + A drops off), carries Pepper and a resting ball both ways, and never crushes her: if carrying
   her would push her into a solid, or the platform would come down (or slide) into her, it waits. `winch = { x, y }`
   draws its motor house with the operator who runs it. Movers without `fromY` are moved exactly as before.
+- **Hints by height:** a hint in `L.hints` may have `minY` as well as `maxY` (her feet between them), so a tall
+  level can say different things on different floors.
 - **Falls.** Falling out of the bottom of the world costs a heart and goes back to the last lamp, as the water does
   (`fallT`; not on Soder Hill, whose hatches have their own rule). Landing on a lower floor costs nothing.
+- **The test level `lab_tall`** (`level/lab_tall.lua`, `.map` from `tools/make_lab_tall.py`; not in the play order:
+  `love riverwalk --level lab_tall`): 3 x 3 screens (960 x 720). The ground floor with a pit, stairs up, three 4 px
+  steps, a scaffold of one-way planks, a beam with a 128 px drop onto F2, the goods lift up to the roof, 3 lamps, 13
+  bones, Mia on the roof with the ball nearby: pick it up, give it to her.
+- **Checks:** `riverwalk/tests_lab_tall.lua`: `--physics` (30 checks: the camera up the stairs, no bob on a jump,
+  look up and down, the tall drop and the lead down, the lift up and down, waiting under a ceiling and over her head,
+  the pit, the fetch, and the five flat levels at camera y 0), `--auto` (clears it), `--test` (a screenshot tour).
 ## Branch `assets/v2`: the tram fix and art for the new pieces (19 Oct)
 Built on `levels/v2`.
 - **The trams end in tram sheds** (Downtown). Before, the first tram vanished in plain view before the fountain,
