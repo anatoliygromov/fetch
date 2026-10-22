@@ -29,6 +29,12 @@ every level, the menus and the cards. The bug list with evidence: `docs/bugs_22o
 - **LEVEL SELECT fits five levels** (flow.lua): the rows were 46 px, made for three levels; with five, SODER HILL ran
   under the "A PLAY  B BACK" footer, NIGHT HARBOUR hung off the bottom of the panel and the screen, and the SOUND
   pill sat on its text. Rows are now 30 px (the panel 208 px tall), so all five and the footer fit inside it.
+- **The bug list** (`docs/bugs_22oct.md`): 16 items, 7 fixed here; the rest need new art (the Downtown tram, its shed
+  and stop are toy-sized next to Pepper; the leaf cart keeper and the winch man are Mia's height; doors, the duck
+  boat, a treetop lantern) or an owner decision (near-lane cars framed off at the bottom). The art list with target
+  sizes goes to the asset plan. Checks: `check_pepper` UNCHANGED, `check_pepper_files` identical, flow 103 of 103,
+  `check_tiled` all PASS, `--physics` all levels as before (73, 70, 40, 23, 37, 40, 82, 88, 81), `--auto` 44.2, 51.6,
+  66.3, 73.3, 81.3 s unchanged (the wider bike hit box changes no autopilot time), `--qa` 0 problems.
 
 ## Branch `r4/playtest`: the playtest lab, ported to today's levels, and the level order checked (22 Oct)
 Built on `round1`. The lab from `ml/playtest` (6 Oct, never merged) rebuilt around the levels' own autopilots.
