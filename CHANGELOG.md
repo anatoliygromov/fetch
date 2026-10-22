@@ -12,7 +12,7 @@ Built on `round1` (the height engine, Tiled, music). Level design only: no engin
   tree and the treetop walk over the pond, seven lime trees, the old oak's crown and its top twig (the golden
   bone), the ash and the alder walk over the creek (a low bough to crawl under), the rose arbour, the play tower and
   the big oak, the magpie's nest at its top (its 12th and last perch; 3 new high perches on the way). 3 lamps up
-  high, 31 more bones, 4 secrets (TREETOP WALK and GOLDEN BONE are new; WILLOWS went with the willow branches).
+  high, 30 more bones (the 3 on the willows went), 4 secrets (TREETOP WALK and GOLDEN BONE are new; WILLOWS went with the willow branches).
   Greybox only: no `L.art`, the hollow log a plain box, and the leaf carts wait on a note layer `#carts` (a cart
   zone starts only while Pepper's feet are above y 184 and the cart drives at y 184: the engine must read a
   zone's y first; see the beat sheet).
@@ -24,6 +24,9 @@ Built on `round1` (the height engine, Tiled, music). Level design only: no engin
   3 perches that ignore a bark from below, the nest perch stays put, bones (none in a solid, all within a jump),
   the fetch ends the level. `--auto` plays the high road and the finale: GOOD GIRL! in 38.5 s, no heart lost,
   2 of 4 secrets. `--test` a screenshot tour. `tools/check_tiled.sh` also checks its export is up to date.
+- **`docs/citypark_tall_beatsheet.md`**: the four beats of the magpie idea, screen by screen on both roads, every
+  jump with Pepper's numbers, the 12 perches, secrets and the golden bone, timing (par 75 s), what the engine must
+  add (cart zones, the hollow log, the art and the look at any height), open questions.
 
 ## Branch `engine/height`: levels that climb and drop (22 Oct)
 Built on `main` (v0.5). The engine for the tall levels (rooftops, the building site, the metro); the five levels
