@@ -86,6 +86,8 @@ L.props = {
   { name = "",         kind = "solid",  layer = "play", x0 = 3510, x1 = 3542, y0 = 176, y1 = 192 },
   { name = "CRATES",   kind = "solid",  layer = "play", x0 = 3542, x1 = 3574, y0 = 160, y1 = 192, label = "top" },
   { name = "BALCONY",  kind = "oneway", layer = "play", x0 = 3590, x1 = 3770, y0 = 120, y1 = 124, label = "below" },
+  -- 12b (r7/curve) a third terrace with barrels, after the balcony's hatches (street y 192, 24 px up)
+  { name = "TERRACE",  kind = "solid",  layer = "play", x0 = 3776, x1 = 3832, y0 = 168, y1 = 192, label = "below" },
   -- 13 a crate on the way down to the quay (street y 208)
   { name = "CRATE",    kind = "solid",  layer = "play", x0 = 4000, x1 = 4032, y0 = 192, y1 = 208 },
   -- 14 the quay: a sign to crawl under, two bollards (14 px)
@@ -116,6 +118,7 @@ L.bikes = {}
 L.barrels = {
   { x = 1916, y = 120, trigger = 1880, speed = 30, rest = { { 1884, 120 }, { 1898, 120 }, { 1891, 106 } } },
   { x = 3164, y = 152, trigger = 3130, speed = 30, rest = { { 3132, 152 }, { 3146, 152 }, { 3139, 138 } } },
+  { x = 3820, y = 168, trigger = 3786, speed = 34, rest = { { 3788, 168 }, { 3802, 168 }, { 3795, 154 } } },   -- (r7/curve)
 }
 
 -- the ball starts where Mia dropped it at the top of the hill (it rolls at once); she waits at the bottom

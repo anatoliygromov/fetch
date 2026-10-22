@@ -30,6 +30,12 @@ in `docs/playtest/curve_r7.md`. Pepper's files, music, sfx and the title are unt
   tapped, out of the dip, off the stack onto the tank; counts 14 vents, 21 tiles). `--auto` low road 58.1 s (was
   54.1), high road 54.4 s (was 51.8). The goose spot (screen 9) was 43% of the failures; now 30%.
   Before/after: `/home/claude/out/r7-curve/rooftops_before_after.png`.
+- **Soder Hill, a step up** (level/soder.lua; maps/soder.tmx and its export written again from it with
+  `tools/level_to_tiled.py`): a third terrace with a barrel stack after the balcony's hatches (x 3776-3832, 24 px
+  over the street; the barrel at x 3820, set off when the ball passes x 3786, 34 px/s). A threat from ahead with the
+  barrels' tells (the "!" as it comes off the stack, the rumble and "!" when she closes in, its shadow); the screen
+  still pushes. `--physics` 29 of 29, `--auto` 73.3 s (unchanged), no heart lost.
+  Before/after: `/home/claude/out/r7-curve/soder_before_after.png`.
 
 ## Branch `r6/engine`: safety nets, the same in every level (22 Oct)
 Built on `round1`. Benchmark principles 5, 6 and 7 (`docs/benchmark_22oct.md` section 4) in the engine, so every
