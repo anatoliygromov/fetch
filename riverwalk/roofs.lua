@@ -96,17 +96,62 @@ end
 
 -- drawing (greybox) ----------------------------------------------------------------------------------------------
 local INK = { 0.11, 0.10, 0.09 }
--- behind Pepper's line: the steam column (semi-transparent, 3 frames), the warning's wisps
+-- the landmark from below: while the nest chimney is above the screen, a faded far copy of it (the chimney, the
+-- nest, the gull circling, the sauna's thread of steam) stands in the sky near the top of the screen, sliding
+-- slower than the world (a far layer), so the goal is in view from every tier. Drawn before the ground: the
+-- roofs cover it. Only decoration: faded, small, never over Pepper.
+function Rf.drawLandmark(s, cam, t)
+  local m = s.def.magpie and s.def.magpie.perches and s.def.magpie.perches[1]
+  if not (m and s.def.magpie.look == "gull") then return end
+  local camY = s.camY or 0
+  if m.y > camY + 8 then return end                              -- the real one is on screen
+  local sx = math.floor(160 + (m.x - (cam + 160)) * 0.3 + 0.5)
+  if sx < -20 or sx > 340 then return end
+  local sy = math.floor(camY + 22 + 0.5)                          -- (world y: the top of the sky on screen)
+  local a = 0.55
+  lg.setColor(0.52, 0.58, 0.68, a); lg.rectangle("fill", sx - 4, sy, 8, 46)            -- the chimney
+  lg.rectangle("fill", sx - 6, sy - 1, 12, 3)
+  lg.setColor(0.40, 0.33, 0.26, a); lg.rectangle("fill", sx - 7, sy - 4, 14, 3)        -- the nest
+  lg.setColor(0.97, 0.98, 1, a)                                                      -- the sauna's thread of steam
+  for i = 0, 5 do local k = (t * 0.4 + i / 6) % 1; lg.rectangle("fill", math.floor(sx - 9 + math.sin(t + i) * 2), math.floor(sy + 40 - k * 50), 2, 2) end
+  local gx, gy = sx + math.cos(t * 1.2) * 16, sy - 12 + math.sin(t * 2.4) * 4          -- the gull, circling
+  local fl = math.floor(t * 6) % 2
+  lg.setColor(0.30, 0.34, 0.42, 0.8)
+  lg.rectangle("fill", math.floor(gx) - 3, math.floor(gy) - fl, 3, 1); lg.rectangle("fill", math.floor(gx) + 1, math.floor(gy) - fl, 3, 1)
+  lg.rectangle("fill", math.floor(gx), math.floor(gy), 1, 1)
+end
+
+-- the steam's colours: a pale cloud with a crisp blue-grey outline and shading, so it reads on a light sky
+local STEAM_INK = { 0.30, 0.38, 0.50 }
+local STEAM_SHADE = { 0.72, 0.79, 0.88 }
+local STEAM_LIT = { 0.97, 0.98, 1.00 }
+-- one cloud blob: outline ring, pale body, shaded lower right, a lit spot upper left
+local function blob(x, y, r, a)
+  x, y, r = math.floor(x + 0.5), math.floor(y + 0.5), math.max(2, math.floor(r + 0.5))
+  lg.setColor(STEAM_INK[1], STEAM_INK[2], STEAM_INK[3], a); lg.circle("fill", x, y, r + 1)
+  lg.setColor(STEAM_SHADE[1], STEAM_SHADE[2], STEAM_SHADE[3], a); lg.circle("fill", x, y, r)
+  lg.setColor(STEAM_LIT[1], STEAM_LIT[2], STEAM_LIT[3], a); lg.circle("fill", x - 1, y - 1, r - 1)
+  if r >= 4 then lg.setColor(1, 1, 1, a); lg.rectangle("fill", x - math.floor(r / 2), y - math.floor(r / 2), 2, 1) end
+end
+Rf.blob = blob
+-- behind Pepper's line: the steam column (outlined cloud blobs, 3 frames), the warning's wisps and specks
 function Rf.drawBack(s, cam, t)
+  Rf.drawLandmark(s, cam, t)
   for _, v in ipairs(s.vents or {}) do
     local d = v.d
     local cx = (d.x0 + d.x1) / 2 - cam
     if cx > -60 and cx < 380 then
-      if v.st == "warn" then                                       -- two small wisps rise 8 px
-        for i = 0, 1 do
-          local k = (v.t * 2.5 + i * 0.5) % 1
-          lg.setColor(0.92, 0.94, 0.96, 0.7 * (1 - k))
-          lg.rectangle("fill", math.floor(cx - 4 + i * 6), math.floor(d.y0 - 2 - k * 8), 3, 2)
+      if v.st == "warn" then                                       -- small puffs and specks leak from under the cap
+        local k0 = v.t / (d.warn or 0.8)
+        for i = 0, 2 do
+          local k = (v.t * 2.2 + i * 0.33) % 1
+          blob(cx - 6 + i * 6 + math.sin(t * 9 + i) * 1.5, d.y0 - 3 - k * 14, 1.5 + k * 1.5 + k0, 0.95 * (1 - k * 0.7))
+        end
+        lg.setColor(STEAM_INK[1], STEAM_INK[2], STEAM_INK[3], 0.9)
+        for i = 0, 3 do                                            -- specks spat out sideways as the cap rattles
+          local k = (v.t * 3 + i * 0.25) % 1
+          local side = (i % 2 == 0) and -1 or 1
+          lg.rectangle("fill", math.floor(cx + side * (8 + k * 10)), math.floor(d.y0 - 2 - k * 6 + k * k * 8), 1, 1)
         end
       elseif v.st == "puff" then
         local top = Rf.apex(v) - 16
@@ -115,13 +160,15 @@ function Rf.drawBack(s, cam, t)
         local y0 = d.y0 - (d.y0 - top) * grow
         local fade = v.t > (d.puff or 0.9) - 0.25 and math.max(0, ((d.puff or 0.9) - v.t) / 0.25) or 1
         local hw = (d.x1 - d.x0) / 2
-        for y = math.floor(y0), d.y0 - 1, 6 do
-          local k = (d.y0 - y) / math.max(1, d.y0 - top)             -- wider and fainter as it rises
-          local wob = ((math.floor(y / 6) + f) % 3) - 1
-          local ww = math.floor(hw + 2 + k * 10)
-          lg.setColor(0.93, 0.95, 0.97, (0.55 - 0.3 * k) * fade)
-          lg.rectangle("fill", math.floor(cx - ww + wob), y, ww * 2, 6)
+        for y = d.y0 - 4, math.floor(y0), -7 do                      -- from the mouth up: wider as it rises
+          local k = (d.y0 - y) / math.max(1, d.y0 - top)
+          local wob = ((math.floor(y / 7) + f) % 3) - 1
+          local r = hw * 0.45 + 2 + k * 7
+          local a = (0.92 - 0.25 * k) * fade
+          blob(cx - r * 0.55 + wob, y, r * 0.75, a)
+          blob(cx + r * 0.55 - wob, y - 3, r * 0.75, a)
         end
+        blob(cx, y0, hw * 0.45 + 9, 0.85 * fade)                     -- the head of the column
       end
     end
   end
@@ -138,9 +185,18 @@ function Rf.drawPlay(s, cam, Sc)
       local w, h = d.x1 - d.x0, d.y1 - d.y0
       lg.setColor(INK); lg.rectangle("fill", x - 1, d.y0 - 1, w + 2, h + 1)
       lg.setColor(0.55, 0.57, 0.60); lg.rectangle("fill", x, d.y0, w, h)
-      local jig = v.st == "warn" and ((math.floor(v.t * 20) % 2 == 0) and -1 or 1) or 0
-      lg.setColor(0.78, 0.80, 0.82); lg.rectangle("fill", x + 2 + jig, d.y0 - (v.st == "warn" and 2 or 1), w - 4, 1)   -- the flap
-      if v.st == "warn" then lg.setColor(1, 0.85, 0.2); F.print("!", x + math.floor(w / 2) - 2, d.y0 - 14, 1) end
+      -- the cap: a lid on a short stem over the mouth; while it warns it hops 1 to 3 px and rattles sideways
+      local warn = v.st == "warn"
+      local jig = warn and ((math.floor(v.t * 20) % 2 == 0) and -1 or 1) or 0
+      local hop = warn and (math.floor(v.t * 15) % 3) or (v.st == "puff" and 3 or 0)
+      local cw = w - 2
+      local cxl = x + 1 + jig
+      local cy = d.y0 - 4 - hop
+      lg.setColor(INK); lg.rectangle("fill", x + math.floor(w / 2) - 2, cy + 2, 4, d.y0 - cy - 1)              -- the stem
+      lg.rectangle("fill", cxl - 1, cy - 1, cw + 2, 4)                                                       -- the lid
+      lg.setColor(warn and { 0.95, 0.62, 0.20 } or { 0.70, 0.72, 0.75 }); lg.rectangle("fill", cxl, cy, cw, 2)
+      lg.setColor(1, 1, 1, 0.8); lg.rectangle("fill", cxl + 1, cy, math.max(1, cw - 6), 1)
+      if warn then lg.setColor(1, 0.85, 0.2); F.print("!", x + math.floor(w / 2) - 2, d.y0 - 18 - hop, 1) end
       if d.bark and v.st == "rest" then lg.setColor(0.85, 0.85, 0.85, 0.8); F.print("?", x + math.floor(w / 2) - 2, d.y0 - 12, 1) end
     end
   end

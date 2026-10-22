@@ -16,6 +16,13 @@ untouched (`check_pepper` UNCHANGED).
   high road floats over it on ledges, 8 loose tiles and 4 puffs, with the golden bone on the bakery's chimney pot
   and the secret ROOF WALKWAY; it meets the low road on the copper roof. 14 vents, 17 loose tiles, 7 lamps, 76
   bones. Story: Mia takes the building's stairs up to the roof cafe; Pepper goes over the roofs.
+- **Steam you can read on a light sky** (`roofs.lua`). The column is now cloud blobs with a crisp blue-grey outline,
+  a shaded underside and a lit top (`Rf.blob`), still drawn behind Pepper. Every vent has a visible cap on a stem
+  over its mouth: at rest grey, while it warns it turns orange, hops 1 to 3 px and rattles sideways, with small
+  outlined wisps and dark specks leaking out and the "!" over it; during the puff it stands open. The landmark from
+  below (`Rf.drawLandmark`): while the nest chimney is above the screen, a faded far copy of it (the nest, the gull
+  circling, the sauna's thread of steam) stands at the top of the sky, sliding slower than the world, behind the
+  roofs.
 - **Checks** (`tests_rooftops.lua`): `--physics` 88 of 88 (every vent's apex, its landing with no input and when
   steering, the warning, the cycle, one lift per puff, crouching, a bark, the sauna; every vent runs; the loose
   tiles and all six bridges; every jump on both roads with Pepper's controller; the walls too tall to jump without a
