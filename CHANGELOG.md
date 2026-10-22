@@ -30,6 +30,18 @@ Built on `main` (v0.5). No SpriteCook, no image generation.
   they lie wholly on open water; the PRESS box no longer touches her chest.
 - Third pass on Pepper's face: the tongue's highlight is a small wet glint on its left lobe (was a straight stripe),
   her nostrils have lit rims, and the smiling cheek under the wink is its own small lit form.
+- **Round 2 on Pepper** (the lead's review): she is redrawn on her approved in-game portrait
+  (`art/portraits/pepper_talk.png`, mapped at 2.3x as the sketch) so she reads as a Labrador, not a pug: a flat
+  topped skull, a longer muzzle (about 40% of the head) with the nose at its end and a lit ridge from the stop,
+  long soft ears hanging below the jaw line, the far ear folding over on the right. A bigger, rounder open eye
+  with a catchlight and a ring of brown iris, a soft brow; the wink with a brow and a cheek lift; the grin with a
+  clean upper lip along the muzzle, a maroon mouth (the brown slot in the palette is now `MAROON`), a pink tongue
+  with a centre groove and a lighter top. The sheen ramp is lifted (`P_MD`, `P_HI` lighter), and a reflected-light
+  rim sits inside the outline wherever a form meets a dark form behind it (and against the lamp post), so head,
+  neck, ears and chest separate. A flatter shoulder and a lit chest front under the bandana; the bandana's knot is
+  one round cluster and two tails, its folds run from the knot. The blink layer fits the bigger eye.
+- **The tree**: clumps of four kinds (round, wide, drooping, tufts) in many sizes; the canopy is lit as one mass,
+  light along its upper-left edge and dark inside.
 - Checks: `check_flow` 94/94, `check_pepper` UNCHANGED.
 
 ## Branch `assets/v2`: the tram fix and art for the new pieces (19 Oct)

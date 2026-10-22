@@ -35,8 +35,8 @@ PAL_SRC = [  # name, colour (before snapping), ramp
     ('NAVY',   (24, 36, 93)),     # logo outline, banner, iron
     ('P_SH',   (26, 26, 44)),     # Pepper: shadow (cool, violet)
     ('P_BS',   (40, 42, 62)),     # Pepper: base black
-    ('P_MD',   (64, 72, 101)),    # Pepper: sheen
-    ('P_HI',   (105, 121, 154)),  # Pepper: highlight (cool blue-grey)
+    ('P_MD',   (69, 79, 113)),    # Pepper: sheen
+    ('P_HI',   (113, 132, 170)),  # Pepper: highlight (cool blue-grey)
     ('EDGE',   (4, 61, 150)),     # HUD edge blue; deep water
     ('BLUE',   (4, 109, 231)),    # HUD blue; sky top
     ('SKY2',   (40, 142, 239)),   # sky middle
@@ -57,7 +57,7 @@ PAL_SRC = [  # name, colour (before snapping), ramp
     ('PK_LT',  (251, 134, 190)),
     ('TNG',    (219, 85, 105)),   # tongue
     ('TNG_LT', (251, 154, 154)),
-    ('EYE_BR', (101, 40, 24)),    # eye, also dark brick
+    ('MAROON', (113, 24, 44)),    # inside the mouth, boat hull shadows
     ('EYE_AM', (194, 109, 36)),   # eye amber, ochre facades
     ('LG_RED', (206, 61, 20)),    # logo ramp: shadow orange-red to pale yellow
     ('LG_OR',  (243, 134, 28)),
@@ -384,9 +384,9 @@ def motorboat(x, y, w, hull, hull_sh, cabin=True):
     put(rect(x + 2, y + 1, x + w - 2, y + 1), EDGE)
 
 motorboat(158, 166, 18, WHITE, SKY4)
-motorboat(246, 172, 22, LG_RED, EYE_BR)
+motorboat(246, 172, 22, LG_RED, MAROON)
 motorboat(204, 157, 10, WHITE, SKY4, cabin=False)
-motorboat(176, 150, 8, LG_RED, EYE_BR, cabin=False)
+motorboat(176, 150, 8, LG_RED, MAROON, cabin=False)
 
 # ---- the near quay on the right: a stone quay running into the picture (its edge climbs 1 px every 4),
 # the wall face down to the water, a strip of grass with flowers, trees
@@ -515,165 +515,197 @@ for (a, b) in branches:
     m = line(*a, *b); m = grow(m, 1, np.ones((2, 2), bool)) if True else m
     put(m, BRN); put(line(*a, *b), BRN_DK) if False else None
     put(shift(line(*a, *b), 0, 1), BRN_DK)
-CANOPY_BACK = [(10, 8, 12), (32, 4, 12), (56, 6, 12), (80, 4, 11), (102, 8, 10), (118, 4, 8), (20, 28, 11),
-               (46, 30, 10), (70, 26, 10), (92, 24, 9), (110, 20, 7), (8, 44, 8), (34, 44, 7), (58, 44, 7),
-               (80, 40, 6)]
-CANOPY_FRONT = [(6, 4, 9), (26, 14, 9), (48, 12, 10), (72, 10, 9), (94, 12, 8), (112, 10, 6), (16, 32, 8),
-                (38, 34, 8), (62, 30, 8), (84, 30, 7), (100, 28, 5), (48, 48, 5), (70, 46, 5)]
-for cx, cy, r in CANOPY_BACK: leafclump(cx, cy, r, back=True)
+# the canopy: clumps of four kinds (round heaps, wide flat sprays, drooping clumps, small tufts) in many sizes.
+# Back clumps are dark; front clumps mid green with a dark lower rim. Then the canopy as a whole is lit: its
+# upper-left edge (the leaves facing the sun and the sky) gets the light greens, its deep interior goes dark.
+def clump_shape(kind, cx, cy, r):
+    e = lambda x, y, rx, ry: ell(int(x), int(y), max(1, int(rx)), max(1, int(ry)))
+    if kind == 'round':
+        return (e(cx, cy, r, r * 0.8) | e(cx - r * 0.7, cy + r * 0.3, r * 0.6, r * 0.5)
+                | e(cx + r * 0.7, cy + r * 0.25, r * 0.6, r * 0.5) | e(cx - r * 0.2, cy - r * 0.6, r * 0.6, r * 0.5))
+    if kind == 'wide':
+        return (e(cx, cy, r * 1.3, r * 0.55) | e(cx - r * 0.9, cy + 1, r * 0.6, r * 0.45)
+                | e(cx + r * 0.9, cy - 1, r * 0.6, r * 0.45) | e(cx + r * 0.2, cy - r * 0.45, r * 0.5, r * 0.4))
+    if kind == 'droop':
+        return (e(cx, cy, r, r * 0.7) | e(cx - r * 0.5, cy + r * 0.7, r * 0.45, r * 0.5)
+                | e(cx + r * 0.4, cy + r * 0.8, r * 0.4, r * 0.55) | e(cx + r * 0.6, cy - r * 0.3, r * 0.5, r * 0.4))
+    return e(cx, cy, r, r * 0.7) | e(cx - r, cy + r * 0.5, r * 0.6, r * 0.5) | e(cx + r, cy + r * 0.4, r * 0.6, r * 0.5)
+CANOPY_BACK = [('round', 10, 8, 12), ('wide', 36, 4, 11), ('round', 60, 6, 12), ('wide', 86, 6, 10),
+               ('round', 108, 8, 9), ('tuft', 122, 6, 5), ('droop', 22, 28, 10), ('round', 48, 30, 9),
+               ('wide', 74, 26, 9), ('round', 96, 24, 8), ('tuft', 112, 22, 5), ('droop', 8, 44, 8),
+               ('droop', 34, 44, 7), ('tuft', 58, 46, 5), ('droop', 80, 40, 6)]
+CANOPY_FRONT = [('round', 6, 2, 8), ('wide', 28, 14, 8), ('round', 50, 12, 9), ('droop', 74, 12, 8),
+                ('wide', 96, 14, 7), ('tuft', 114, 12, 4), ('round', 16, 32, 7), ('droop', 40, 34, 7),
+                ('wide', 64, 32, 6), ('tuft', 86, 32, 4), ('round', 102, 28, 4), ('droop', 50, 48, 4),
+                ('tuft', 70, 48, 3)]
+canopy = np.zeros((H, W), bool)
+for k, cx, cy, r in CANOPY_BACK:
+    m = clump_shape(k, cx, cy, r); canopy |= m
+    put(m, G_DK); put(sheen(m, 1, 2), G_MD)
 for (a, b) in branches:                                               # branches show between the clumps
     put(line(*a, *b) | shift(line(*a, *b), 0, -1), BRN); put(shift(line(*a, *b), 0, 1), BRN_DK)
-for cx, cy, r in CANOPY_FRONT: leafclump(cx, cy, r)
+for k, cx, cy, r in CANOPY_FRONT:
+    m = clump_shape(k, cx, cy, r); canopy |= m
+    put(m, G_MD); put(shade_rim(m, 2), G_DK); put(sheen(m, 1, 2), G_LT)
+# the canopy lit as one mass: a light top-left edge, a dark deep interior
+put(sheen(canopy, 1, 5) & np.isin(C, (G_MD, G_DK)) & (YY >= 5), G_LT)
+put(sheen(canopy, 1, 3) & (C == G_LT) & (YY >= 5) & ((XX + 2 * YY) % 7 < 3), G_HI)
+deep = canopy & shift(canopy, 7, 7) & shift(canopy, -3, -3) & np.isin(C, (G_MD, G_LT))
+put(deep & (YY > 18), G_DK)
+deorphan(canopy)
 
 # =============================================================================================== Pepper
-# Pepper is built as forms, back to front: chest, bandana, far ear, skull, near cheek, muzzle, jaw, near ear.
-# Proportions follow her in-game portrait (a wide grin, the wink in the middle of the face, the open eye high on
-# the right, the nose at the right edge); the old title was the sketch for size and place. Each form gets its own
-# dome of light (light_field), quantised into her 4-step fur ramp, so every form is lit on its upper left and
-# turns into shadow on its lower right. Creases between forms are short shadow lines; the silhouette is OUT.
-# Eyes, wink, nose, mouth and tongue are pixel grids and shapes placed by hand.
+# Pepper, round 2. The forms were sketched from her approved in-game portrait (riverwalk/art/portraits/
+# pepper_talk.png) mapped at 2.3x, with the muzzle drawn longer (about 40% of the head, the nose at its end) so she
+# reads as a Labrador: a flat-topped skull, a clear stop, long soft ears hanging below the jaw line.
+# Painting order, like a pixel artist: every form flat in the base black, then shadow shapes (rims on the lower
+# right, cast shadows under the head), then sheen shapes (inset bands on the upper left, in the cool blue-grey
+# ramp), then a reflected-light rim just inside the outline wherever a form meets a dark form behind it, so the
+# head separates from the neck and chest. Eyes, wink, nose, mouth and tongue are pixel grids and shapes by hand.
 PEP = np.zeros((H, W), np.uint8)
-FUR = [P_SH, P_BS, P_MD, P_HI]
-
-CHEST = poly([(0, 190), (12, 178), (26, 166), (40, 156), (52, 148), (66, 150), (90, 160), (112, 166), (128, 150),
-              (136, 138), (141, 150), (142, 170), (141, 192), (141, 212), (141, 239), (0, 239)])
-EAR_FAR = poly([(116, 80), (128, 79), (139, 83), (147, 90), (151, 99), (152, 110), (150, 122), (146, 132),
-                (141, 139), (136, 136), (134, 122), (133, 108), (128, 94)])
-def head_shape(cx, cy, rx, ry, tilt):
-    # the skull: squarer on top (a superellipse, power 2.8) and round below (power 2), tilted with her head
+def head_shape(cx, cy, rx, ry, tilt, p_top=3.0, p_bot=2.0):
+    # the skull: flat on top (a superellipse) and round below, tilted with her head
     a = np.radians(tilt)
     u = (XX - cx) * np.cos(a) + (YY - cy) * np.sin(a)
     v = -(XX - cx) * np.sin(a) + (YY - cy) * np.cos(a)
-    pw = np.where(v < 0, 2.8, 2.0)
+    pw = np.where(v < 0, p_top, p_bot)
     return np.abs(u / rx) ** pw + np.abs(v / ry) ** pw <= 1.0
-SKULL = head_shape(95.5, 114, 41.5, 34, -7) | ell(129, 142, 8, 12)   # the head, and the far cheek under the ear
-CHEEK = ell(84, 142, 27, 22)
-MUZZLE = poly([(100, 113), (110, 110), (121, 112), (129, 117), (134, 124), (136, 132), (133, 140), (124, 144),
-               (110, 145), (100, 142), (95, 134), (95, 121)])
-JAW = poly([(88, 154), (96, 161), (108, 166), (120, 165), (128, 159), (133, 150), (135, 156), (130, 166),
-            (118, 173), (104, 173), (93, 167)])
-EAR_NEAR = poly([(56, 89), (68, 84), (76, 86), (72, 95), (67, 106), (63, 120), (61, 134), (58, 146), (53, 154),
-                 (45, 157), (37, 152), (31, 141), (28, 128), (30, 114), (36, 103), (45, 94)])
-BANDANA = poly([(28, 178), (40, 171), (56, 170), (74, 174), (92, 177), (112, 177), (128, 171), (137, 166),
-                (141, 173), (136, 188), (127, 204), (117, 219), (109, 228), (101, 220), (86, 205), (68, 192),
-                (50, 185), (34, 184)])
-KNOT = ell(33, 177, 4, 3)
-FLAP1 = poly([(30, 179), (24, 184), (19, 191), (24, 191), (32, 182)])
-FLAP2 = poly([(34, 180), (35, 189), (38, 195), (42, 192), (38, 180)])
 
-SHOULDER = ell(26, 222, 28, 36) & CHEST                       # the near shoulder and leg, in front of the chest
-ORDER = [('chest', CHEST, 16, [0.40, 0.86, 0.97]),
-         ('shoulder', SHOULDER, 10, [0.4, 0.8, 0.9]),
-         ('bandana', BANDANA | KNOT | FLAP1 | FLAP2, None, None),
-         ('ear_far', EAR_FAR, 6, [0.46, 0.80, 0.93]),
-         ('skull', SKULL, 12, [0.36, 0.70, 0.88]),
-         ('cheek', CHEEK & ~(YY < 128), 9, [0.36, 0.68, 0.86]),
-         ('muzzle', MUZZLE, 6, [0.38, 0.68, 0.86]),
-         ('jaw', JAW, 4, [0.44, 0.74, 0.92]),
-         ('ear_near', EAR_NEAR, 7, [0.46, 0.80, 0.92])]
+CHEST = poly([(0, 192), (8, 182), (20, 174), (34, 168), (48, 164), (58, 158), (70, 162), (100, 168), (124, 162),
+              (134, 150), (139, 160), (141, 176), (141, 212), (141, 239), (0, 239)])
+SHOULDER = ell(16, 236, 36, 34) & CHEST
+EAR_FAR = poly([(114, 81), (127, 79), (139, 82), (147, 88), (152, 97), (154, 110), (152, 124), (148, 136),
+                (143, 145), (138, 143), (136, 130), (135, 114), (131, 98), (124, 88)])
+SKULL = head_shape(94, 112, 39, 32, -6)
+FARCHEEK = ell(131, 146, 9, 9)
+CHEEK = ell(84, 140, 24, 20)
+MUZZLE = poly([(98, 112), (104, 108), (112, 110), (124, 114), (134, 117), (140, 121), (143, 128), (141, 135),
+               (134, 140), (122, 143), (108, 144), (98, 141), (93, 132), (94, 120)])
+JAW = poly([(92, 147), (104, 152), (118, 153), (130, 150), (137, 144), (138, 151), (132, 160), (120, 167),
+            (106, 168), (96, 162)])
+EAR_NEAR = poly([(54, 96), (62, 91), (71, 89), (76, 92), (72, 102), (68, 116), (64, 131), (61, 146), (57, 160),
+                 (52, 169), (45, 171), (38, 166), (32, 156), (28, 142), (27, 128), (30, 115), (36, 106), (44, 99)])
+BANDANA = poly([(36, 172), (52, 170), (70, 174), (90, 177), (110, 177), (126, 172), (137, 165), (141, 172),
+                (136, 186), (128, 198), (118, 211), (110, 220), (103, 213), (90, 202), (72, 192), (54, 184),
+                (40, 180)])
+KNOT = ell(36, 175, 4, 3)
+TAIL1 = poly([(33, 177), (27, 183), (23, 189), (29, 189), (35, 180)])
+TAIL2 = poly([(37, 178), (38, 186), (41, 192), (45, 189), (40, 178)])
+
+ORDER = ['chest', 'shoulder', 'bandana', 'ear_far', 'skull', 'farcheek', 'cheek', 'muzzle', 'jaw', 'ear_near']
+FORM = {'chest': CHEST, 'shoulder': SHOULDER, 'bandana': BANDANA | KNOT | TAIL1 | TAIL2, 'ear_far': EAR_FAR,
+        'skull': SKULL, 'farcheek': FARCHEEK, 'cheek': CHEEK & (YY > 126), 'muzzle': MUZZLE, 'jaw': JAW,
+        'ear_near': EAR_NEAR}
 PARTS = {}
-for k, (nm, m, sig, cuts) in enumerate(ORDER, 1):
-    PEP[m] = k; PARTS[nm] = k
+for k, nm in enumerate(ORDER, 1):
+    PEP[FORM[nm]] = k; PARTS[nm] = k
 def part(nm): return PEP == PARTS[nm]
 pep = PEP > 0
-HEADALL = SKULL | CHEEK | MUZZLE | JAW
+FUR_ALL = pep & ~part('bandana')
+HEAD = SKULL | FARCHEEK | CHEEK | MUZZLE | JAW
 
-# every form starts flat in the base black; then shadow shapes, then sheen shapes, painted by these rules
-put(pep, P_BS)
-sk, ch, mz, jw = part('skull'), part('cheek'), part('muzzle'), part('jaw')
-en, ef, cs = part('ear_near'), part('ear_far'), part('chest')
-# chest: the head's cast shadow, the far side in shadow, a lit shoulder
-put(cs & shift(SKULL | CHEEK | JAW | EAR_NEAR, 2, 7), P_SH)
-put(shade_rim(cs, 7, -1, 0), P_SH)
-sh = part('shoulder')
-put(sheen(cs, 2, 6) & (YY > 170) & (XX > 6) & (XX < 30) & ~sh, P_MD)
-put(sheen(SHOULDER, 2, 7) & sh & (YY < 214), P_MD)
-put(sheen(SHOULDER, 3, 5) & sh & ell(14, 198, 10, 6), P_HI)
-put(shade_rim(sh, 3, -1, 0) & (YY > 200), P_SH)
-put(sh & shift(part('bandana'), 0, 3) & ~part('bandana'), P_SH)
-# far ear: in the head's shadow, its folded top edge lit
-put(ef, P_BS); put(shade_rim(ef, 3), P_SH); put(ef & (YY > 128), P_SH)
-put(sheen(ef, 1, 4) & (YY < 112), P_MD); put(sheen(ef, 1, 2) & (YY < 96) & (XX > 134), P_HI)
-# skull: a broad sheen over the forehead, a highlight stroke on the crown, shadow round the far side
-put(shade_rim(sk, 5), P_SH)
-put(sheen(SKULL, 2, 8) & sk & (XX < 116) & (YY < 112), P_MD)
-put(sheen(SKULL, 3, 5) & sk & ell(90, 86, 18, 8), P_HI)
-put(ell(101, 107, 3, 5) & sk, P_SH)                                        # the stop between the eyes
-# near cheek: lit on its upper left, shadow under it where it rounds into the jaw
-put(shade_rim(ch, 4) & (YY > 152), P_SH)
-put(sheen(CHEEK, 2, 6) & ch & (XX < 70) & (YY > 132) & (YY < 156), P_MD)
-put(sheen(CHEEK, 2, 4) & ch & ell(62, 140, 4, 6), P_HI)
-# muzzle: the lit bridge from the stop to the nose; the far side under the eye in shadow
-put(shade_rim(mz, 3, -1, 0) & (YY < 132), P_SH)
-put(sheen(MUZZLE, 1, 4) & mz & (XX < 118) & (YY < 122), P_MD)
-put(sheen(MUZZLE, 1, 2) & mz & (XX < 112) & (YY < 118), P_HI)
-put(polyline([(98, 126), (100, 134), (104, 140)]) & mz, P_MD)            # the lip pad's lit roll
-# the smiling cheek pushed up under the wink: its own small form, lit on its upper left
-APPLE = ell(84, 131, 12, 8) & sk
-put(sheen(APPLE, 1, 4) & (XX < 92), P_MD)
-put(sheen(APPLE, 1, 2) & ell(78, 126, 5, 3), P_HI)
-put(shade_rim(APPLE, 2) & (YY > 132) & (XX < 94), P_SH)
-# jaw: under the grin, mostly in shadow, its front catches light
-put(jw, P_SH); put(sheen(jw, 1, 3) & (XX < 118) & (XX > 96), P_MD)
-# near ear: lit flap fold at the top, darker where it hangs against the cheek, its tip in shadow
-put(shade_rim(en, 4, -1, 0), P_SH)
-put(en & ell(46, 158, 12, 7), P_SH)
-put(sheen(en, 2, 7) & (YY < 136), P_MD)
-put(sheen(en, 2, 4) & (YY < 112), P_HI)
-def crease(front, behind_names, col=P_SH, sides=((1, 0), (0, 1), (1, 1))):
+# ---- 1. flat base
+put(FUR_ALL, P_BS)
+sk, fc, ch, mz, jw = part('skull'), part('farcheek'), part('cheek'), part('muzzle'), part('jaw')
+en, ef, cs, sh = part('ear_near'), part('ear_far'), part('chest'), part('shoulder')
+
+# ---- 2. shadows
+put(cs & shift(HEAD | EAR_NEAR, 1, 5) & ~HEAD, P_SH)                     # the head's shadow on the neck
+put(shade_rim(cs, 6, -1, 0), P_SH)                                          # the far side of the chest
+put(shade_rim(sh, 3, -1, 0) & (YY > 204), P_SH)
+put(ef, P_SH); put(sheen(ef, 1, 5), P_BS)                                   # the far ear sits in the head's shade
+put(shade_rim(sk, 4), P_SH)
+put(shade_rim(fc, 3), P_SH)
+put(shade_rim(ch, 3) & (YY > 150), P_SH)
+put(shade_rim(mz, 3, 0, -1), P_SH)                                          # under the muzzle
+put(jw, P_SH)
+put(shade_rim(en, 3, -1, 0), P_SH); put(en & ell(46, 166, 12, 7), P_SH)    # the ear's inner side and its tip
+put(polyline([(99, 104), (102, 108), (102, 113)]) & sk, P_SH)              # the stop, where brow meets muzzle
+
+# ---- 3. sheen (the cool blue-grey ramp), lifted on the forehead, muzzle top, ear fold and shoulder
+put(sheen(SKULL, 2, 12) & sk & (XX < 120) & (YY < 114), P_MD)               # forehead
+put(sheen(SKULL, 3, 6) & sk & ell(84, 86, 22, 8), P_HI)                    # crown highlight
+put(sheen(MUZZLE, 1, 5) & mz & (YY < 124), P_MD)                            # the muzzle's top
+put(polyline([(103, 110), (112, 111), (124, 115), (133, 118)]) & mz, P_HI)  # its lit ridge to the nose
+put(sheen(CHEEK, 2, 7) & ch & (XX < 80) & (YY > 128) & (YY < 158), P_MD)  # the cheek's outer bulge
+put(sheen(CHEEK, 2, 4) & ch & ell(63, 140, 4, 6), P_HI)
+put(sheen(en, 2, 8) & (YY < 140), P_MD)                                     # the near ear's fold and flap
+put(sheen(en, 2, 4) & (YY < 116), P_HI)
+put(sheen(EAR_FAR, 1, 4) & ef & (YY < 114), P_MD)                           # the far ear's fold
+put(sheen(EAR_FAR, 1, 2) & ef & (YY < 98), P_HI)
+put(sheen(SHOULDER, 2, 8) & sh & (YY < 220), P_MD)                          # shoulder
+put(sheen(SHOULDER, 3, 5) & sh & ell(14, 206, 12, 6), P_HI)
+CHESTFRONT = ell(104, 236, 30, 26) & cs                                     # the chest under the point, lit
+put(sheen(CHESTFRONT, 2, 6) & ~shift(part('bandana'), 0, 2) & (XX < 112), P_MD)
+put(sheen(cs, 2, 6) & (XX > 6) & (XX < 34) & (YY > 168) & ~sh, P_MD)       # top of the near shoulder line
+for pts in ([(130, 196), (136, 182), (138, 172)], [(120, 228), (128, 212)]):  # the chest's front, right of the point
+    put(polyline(pts) & cs, P_MD)
+# the smiling cheek pushed up under the wink
+put(ell(80, 108, 13, 6) & ~ell(81, 110, 13, 6) & sk & (C == P_BS), P_MD)   # the brow over the wink
+APPLE = ell(80, 128, 11, 7) & (sk | ch)
+put(sheen(APPLE, 1, 3) & (XX < 90), P_MD)
+put(shade_rim(APPLE, 2) & (YY > 129) & (XX < 90), P_SH)
+
+# ---- 4. outlines: the silhouette in OUT; inside, OUT where a form overlaps a fur form behind it, and a
+# reflected-light rim (P_MD) one pixel inside that line on the overlapping form's lower and right sides
+put(inner_edge(pep), OUT)
+def overlap_line(front, behind):
     fm = part(front); bm = np.zeros((H, W), bool)
-    for b in behind_names: bm |= part(b)
-    e = np.zeros((H, W), bool)
-    for dx, dy in sides: e |= fm & shift(bm, -dx, -dy)
-    put(e, col)
-crease('muzzle', ['skull', 'cheek'], P_SH, ((0, 1), (-1, 1)))
+    for b in behind: bm |= part(b)
+    edge = fm & grow(bm, 1) & inner_edge(fm)
+    put(edge, OUT)
+    rim = fm & ~edge & grow(edge, 1) & (shift(edge, 0, -1) | shift(edge, -1, 0))
+    put(rim & np.isin(C, (P_SH, P_BS)), P_MD)
+overlap_line('ear_near', ['skull', 'cheek', 'chest', 'jaw'])
+overlap_line('jaw', ['chest'])
+overlap_line('skull', ['ear_far'])
+overlap_line('farcheek', ['ear_far', 'chest'])
+overlap_line('muzzle', ['ear_far', 'farcheek'])
+overlap_line('shoulder', ['chest'])
+put(part('bandana') & grow(cs | sh, 1) & inner_edge(part('bandana')), OUT)
 
-# --- the bandana: fuchsia, lit top-left, the chin's shadow along the top, folds to the point, a knot with tails
+# ---- 5. the bandana: around the neck under the chin, a knotted triangle; fuchsia lit top-left, the chin's
+# shadow along its top, two folds running to the point; the knot is one round cluster and two tails
 bm = part('bandana')
 f = light_field(bm, 6)
 put(bm, PK)
 put(bm & (f >= 0.82), PK_LT)
 put(bm & (f < 0.40), PK_DK)
-head_all = SKULL | CHEEK | JAW | EAR_NEAR | EAR_FAR
-put(bm & shift(head_all, 0, 2) & ~head_all, PK_DK)
-for pts in ([(44, 187), (68, 199), (90, 213), (104, 224)], [(62, 185), (78, 193)],
-            [(128, 180), (120, 197), (111, 218)]):
-    fold = polyline(pts) & bm
-    put(fold, PK_DK); put(shift(fold, 0, -1) & bm & ~fold, PK_LT)
-put(KNOT, PK); put(ell(32, 176, 2, 1) & KNOT, PK_LT)
-put(inner_edge(KNOT) & ~shift(KNOT, -1, -1), PK_DK)
-put((FLAP1 | FLAP2) & ~shift(FLAP1 | FLAP2, -1, 0), PK_DK)
-put((FLAP1 | FLAP2) & ~shift(FLAP1 | FLAP2, 1, 0) & ~shift(FLAP1 | FLAP2, 0, 1), PK_LT)
+put(bm & shift(HEAD | EAR_NEAR, 0, 2) & ~shift(HEAD | EAR_NEAR, 0, -1), PK_DK)
+for pts in ([(46, 178), (70, 185), (90, 194), (104, 206)], [(64, 177), (84, 184)]):   # folds from the knot
+    fold = polyline(pts) & bm & ~inner_edge(bm)
+    put(fold, PK_DK); put(shift(fold, 0, -1) & bm & ~fold & ~inner_edge(bm) & (C == PK), PK_LT)
+put(polyline([(131, 176), (124, 190), (115, 206)]) & bm & ~inner_edge(bm), PK)   # a fold lit in the shade
+put(KNOT | TAIL1 | TAIL2, PK)
+put(ell(35, 174, 2, 1), PK_LT)
+put(outer_ring(KNOT) & (TAIL1 | TAIL2), PK_DK)                              # the tails tuck under the knot
+put((TAIL1 | TAIL2) & ~shift(TAIL1 | TAIL2, -1, 0) & ~outer_ring(KNOT), PK_DK)
+put(inner_edge(KNOT | TAIL1 | TAIL2) & ~grow(bm & ~(KNOT | TAIL1 | TAIL2), 1), OUT)
+put(inner_edge(KNOT) & ~shift(KNOT, -1, -1) & ~(C == OUT), PK_DK)
 
-# --- outer silhouette, and lines where the ears / head sit over other forms
-put(inner_edge(pep), OUT)
-for front in ('ear_near', 'skull', 'cheek', 'jaw', 'shoulder'):
-    fm = part(front)
-    behind = pep & ~fm & (PEP < PARTS[front]) & ~part('skull') & ~part('cheek')
-    put(fm & grow(behind, 1) & inner_edge(fm), OUT)
-put(part('bandana') & grow(part('chest'), 1) & inner_edge(part('bandana')), OUT)
-
-# --- brows: a lit ridge over each eye
-put(ell(116, 99, 8, 3) & ~ell(117, 101, 8, 3) & SKULL, P_HI)
-
-# --- the eyes
+# ---- 6. the face
 EYE = [
-    "...OOOOOOO...",
-    ".OOObbbbbOOO.",
-    ".ObWWbOOObbO.",
-    "ObbWWOOOOObbO",
-    "ObbbOOOOOOObO",
-    "ObbaOOOOOOabO",
-    "ObaaOOOOOaabO",
-    ".ObaaaOOWaaO.",
-    ".OObaaaaaaOO.",
-    "...OOOOOOO...",
+    ".....OOOOO.....",
+    "...OOObbbbOO...",
+    "..ObbbbbbbbbO..",
+    ".OWWbbOOObbbbO.",
+    ".OWWWOOOOObbbO.",
+    "ObWWOOOOOOObbbO",
+    "ObbbOOOOOOOabbO",
+    "ObbaOOOOOOOaabO",
+    "ObaaaOOOOOaaabO",
+    ".OsaaaOOOWaaaO.",
+    ".OssaaaaaaaaOO.",
+    "..OOaaaaaaaO...",
+    "....OOOOOOO....",
 ]
-EYE_KEY = {'O': OUT, 'b': EYE_BR, 'a': EYE_AM, 'W': WHITE}
-EYE_X, EYE_Y = 110, 102
-put(ell(EYE_X + 6, EYE_Y + 11, 6, 1), P_MD)                              # the lit lower lid
+assert all(len(r) == 15 for r in EYE)
+EYE_KEY = {'O': OUT, 'b': BRN, 'a': EYE_AM, 'W': WHITE, 's': SKY4}
+EYE_X, EYE_Y = 108, 94
+stamp(["...HHHHHHH...", ".HH.......HH.", "H..........."], EYE_X, EYE_Y - 5, {'H': P_HI})   # the brow, lifted
+put(ell(EYE_X + 7, EYE_Y + 14, 6, 1) & ~ell(EYE_X + 7, EYE_Y + 13, 6, 1), P_MD)       # the lit lower lid
 stamp(EYE, EYE_X, EYE_Y, EYE_KEY)
-stamp(["OO", ".O"], EYE_X + 12, EYE_Y, {'O': OUT})                         # lashes at the outer corner
+stamp(["..O", ".O.", "O.."], EYE_X + 13, EYE_Y - 1, {'O': OUT})                      # lashes at the outer corner
 WINK = [
     "......HHHHH......",
     "...HHHOOOOOHHH...",
@@ -682,18 +714,18 @@ WINK = [
     "OOOMM.......MMOO.",
     "OO.............O.",
 ]
-WINK_X, WINK_Y = 74, 110
+WINK_X, WINK_Y = 70, 112
 stamp(WINK, WINK_X, WINK_Y, {'O': OUT, 'H': P_HI, 'M': P_MD})
-stamp(["O..", ".O.", "..."], WINK_X - 2, WINK_Y + 3, {'O': OUT})                # her lashes on the outer corner
+stamp(["O..", ".O.", "..."], WINK_X - 2, WINK_Y + 3, {'O': OUT})                       # her lashes
 stamp(["O.", ".O"], WINK_X - 1, WINK_Y + 1, {'O': OUT})
+stamp(["..HHHHHH...", "HH......HH."], WINK_X + 3, WINK_Y - 4, {'H': P_MD})             # the soft brow over it
 
-# --- the nose: big and shiny, lit on top
 NOSE = [
     ".....OOOOOOOOOOOO.....",
-    "...OOkMMMHHHHMMkkOO...",
-    "..OkMHHWWHHHHHMMkkkO..",
-    ".OkMHHWWWHHHHMMMkkkkO.",
-    "OkkMMHHHHHMMMMkkkkkkkO",
+    "...OOMMHHHHHHMMkkOO...",
+    "..OkMHHWWWHHHHHMMkkO..",
+    ".OkMHHWWWHHHHHHMMkkkO.",
+    "OkkMMHHHHHHHMMMMkkkkkO",
     "OkkkMMMMMMMkkkkkkkkkkO",
     "OkMMMMkkkkkkkkMMMMkkkO",
     "OkOOOOkkkkkkkkkOOOOkkO",
@@ -702,45 +734,38 @@ NOSE = [
     "..OOOOkkkOOOOkkkOOOO..",
     "....OOOOOO..OOOOOO....",
 ]
-NOSE_X, NOSE_Y = 110, 119
+NOSE_X, NOSE_Y = 122, 117
 stamp(NOSE, NOSE_X, NOSE_Y, {'O': OUT, 'k': P_SH, 'M': P_MD, 'H': P_HI, 'W': WHITE})
-put(rect(121, 131, 121, 141), OUT)                                       # nose to lip
 
-# --- the grin: the upper lip sweeps from the nose down and round to the corner under the wink; the mouth is open
-UPPER = [(121, 141), (114, 145), (104, 147), (95, 146), (88, 143), (84, 139)]
-UPPER_FAR = [(121, 141), (128, 144), (134, 142)]
-MOUTH = poly(UPPER + [(86, 147), (92, 154), (102, 160), (114, 162), (124, 159), (131, 152), (134, 145)]
-             + UPPER_FAR[::-1])
-put(MOUTH, EYE_BR)                                                     # inside of the mouth: dark red-brown
+# the grin: the upper lip runs cleanly along the muzzle's underside from the corner under the wink to below
+# the nose; the mouth is open (maroon inside), the tongue hangs out over the lower lip
+UPPER = [(86, 138), (90, 143), (98, 146), (110, 146), (122, 144), (132, 141), (137, 137)]
+LOWER = [(137, 137), (138, 145), (132, 153), (122, 159), (110, 160), (100, 156), (92, 149), (86, 138)]
+MOUTH = poly(UPPER + LOWER[1:])
+put(MOUTH, MAROON)
 put(inner_edge(MOUTH), OUT)
-put(polyline(UPPER), OUT); put(polyline(UPPER_FAR), OUT)
-put(shift(polyline(UPPER), 0, -2) & ~MOUTH & ~polyline(UPPER), P_HI)     # the upper lip catches the light
-put(outer_ring(MOUTH) & (YY > 146) & (XX < 122) & ~shift(MOUTH, 0, -1), P_MD)  # the lower lip's lit edge
-put(shift(polyline(UPPER[1:5]), 0, -1) & ~MOUTH, P_MD)                   # the lit edge of the upper lip
-put(polyline([(84, 139), (82, 135)]), OUT)                               # the corner curls up into the cheek
-TONGUE = (poly([(100, 155), (110, 151), (124, 152), (129, 157), (128, 164), (102, 164)]) | ell(115, 167, 13, 12)) & (YY >= 151)
+put(polyline(UPPER), OUT)
+put(shift(polyline(UPPER[1:6]), 0, -1) & ~MOUTH & ~polyline(UPPER), P_HI)    # the lit edge of the upper lip
+put(polyline([(86, 138), (84, 134)]), OUT)                                    # the corner curls up into the cheek
+put(rect(132, 129, 132, 140) & ~MOUTH, OUT)                                   # from the nose down to the lip
+TONGUE = (poly([(104, 150), (114, 147), (127, 148), (132, 153), (131, 160), (106, 160)]) | ell(118, 163, 12, 11)) & (YY >= 147)
 put(TONGUE, TNG)
-put(ell(107, 163, 2, 3) & TONGUE, TNG_LT)                                 # a wet highlight on the left lobe
-put(sheen(TONGUE, 1, 2) & (YY > 166) & (XX < 112), TNG_LT)
-put(line(115, 158, 115, 172) & TONGUE, PK_DK)
-put(TONGUE & shift(MOUTH, 0, 2) & (YY < 157), PK_DK)                      # in the shadow of the upper lip
-put(inner_edge(TONGUE) & ~shift(TONGUE, -1, -1), PK_DK)
+put(TONGUE & (YY <= 150), PK_DK)                                               # in the upper lip's shadow
+put(TONGUE & (YY >= 151) & (YY <= 152) & (XX < 127), TNG_LT)                   # a lighter top
+put(ell(110, 160, 2, 3) & TONGUE, TNG_LT)                                      # a wet glint on the left lobe
+put(line(118, 153, 118, 169) & TONGUE, PK_DK)                                  # the centre groove
+put(inner_edge(TONGUE) & ~shift(TONGUE, -1, -1) & (YY > 152), PK_DK)
 put(outer_ring(TONGUE) & ~MOUTH, OUT)
+put(sheen(jw, 1, 3) & (XX > 96) & (XX < 106) & (C == P_SH), P_MD)             # the chin's lit front
 tongue_all = TONGUE | outer_ring(TONGUE)
 
-# sheen strokes: clean arcs that follow the forms (forehead, cheek over the grin, ear fold, shoulder, chest)
-for pts, col in [([(84, 88), (94, 84), (106, 83)], P_HI), ([(80, 92), (90, 88)], P_MD),
-                 ([(64, 128), (68, 124), (74, 122)], P_MD),
-                 ([(40, 104), (48, 97), (58, 92)], P_HI), ([(36, 112), (42, 104)], P_MD),
-                 ([(10, 188), (22, 178), (34, 172)], P_MD), ([(14, 196), (24, 188)], P_MD),
-                 ([(130, 200), (136, 186)], P_MD), ([(116, 230), (126, 214)], P_MD)]:
-    put(polyline(pts) & pep & ~part('bandana') & (C != OUT), col)
-
+BG_DARK = ~pep & np.isin(C, (OUT, NAVY, EDGE, G_DK, BRN_DK))
+sil = inner_edge(pep) & grow(BG_DARK, 1) & (C == OUT)
+put(pep & ~inner_edge(pep) & grow(sil, 1) & np.isin(C, (P_SH, P_BS)), P_MD)  # a lighter rim against dark things
 holes = ndi.binary_fill_holes(pep | MOUTH | TONGUE) & ~(pep | MOUTH | TONGUE)   # no sky through her
 put(holes, P_SH); pep = pep | holes
-
-deorphan(pep & ~rect(EYE_X - 1, EYE_Y - 1, EYE_X + 14, EYE_Y + 12) & ~rect(NOSE_X, NOSE_Y, NOSE_X + 22, NOSE_Y + 12)
-         & ~tongue_all & ~rect(WINK_X, WINK_Y, WINK_X + 17, WINK_Y + 6))
+deorphan(pep & ~rect(EYE_X - 1, EYE_Y - 6, EYE_X + 16, EYE_Y + 15) & ~rect(NOSE_X, NOSE_Y, NOSE_X + 22, NOSE_Y + 12)
+         & ~tongue_all & ~rect(WINK_X - 2, WINK_Y - 4, WINK_X + 17, WINK_Y + 6) & ~part('bandana'))
 
 # ================================================================================================= the logo
 # Hand-lettered FETCH!: each letter is built from stroke boxes on a 44 px high grid (stems 10 px, arms 9-10 px),
@@ -856,28 +881,29 @@ def write_all(preview=None):
     os.makedirs(ART, exist_ok=True)
     rgb(C).save(os.path.join(ART, 'base.png'))
     rgb(press_off).save(os.path.join(ART, 'press_off.png'))
-    # eye closed: the eye and its lashes painted over with fur, then a lid arc
-    ex0, ey0, ew, eh = EYE_X - 1, EYE_Y - 1, 15, 11
+    # eye closed: the eye and its lashes painted over with fur, then a lid arc drawn like her wink
+    ex0, ey0, ew, eh = EYE_X - 1, EYE_Y - 2, 19, 17
     patch = C[ey0:ey0 + eh, ex0:ex0 + ew].copy()
-    eyem = np.zeros((H, W), bool); stamp(EYE, EYE_X, EYE_Y, EYE_KEY, canvas=np.zeros((H, W), np.uint8), mask_out=eyem)
-    stamp(["OO", ".O"], EYE_X + 12, EYE_Y, {'O': OUT}, canvas=np.zeros((H, W), np.uint8), mask_out=eyem)
+    eyem = np.zeros((H, W), bool); scratch = np.zeros((H, W), np.uint8)
+    stamp(EYE, EYE_X, EYE_Y, EYE_KEY, canvas=scratch, mask_out=eyem)
+    stamp(["..O", ".O.", "O.."], EYE_X + 13, EYE_Y - 1, {'O': OUT}, canvas=scratch, mask_out=eyem)
     em = eyem[ey0:ey0 + eh, ex0:ex0 + ew]
     patch[em] = P_BS
-    # the closed eye is drawn like her wink: a happy arc, lit above, with a lash at the outer corner
     BLINK = [
-        "....HHHHH....",
-        "..HHOOOOOHH..",
-        ".HOOOOOOOOOH.",
-        "HOOMMMMMMMOOH",
-        "OOM.......MOO",
-        "O...........O",
+        "....HHHHHH....",
+        "..HHOOOOOOHH..",
+        ".HOOOOOOOOOOH.",
+        "HOOOMMMMMMOOOH",
+        "OOMM......MMOO",
+        "O............O",
     ]
     alpha = em.copy()
     for j, r in enumerate(BLINK):
         for i, ch in enumerate(r):
             if ch != '.':
-                patch[2 + j, 1 + i] = {'O': OUT, 'H': P_HI, 'M': P_MD}[ch]; alpha[2 + j, 1 + i] = True
-    patch[6, 13] = OUT; alpha[6, 13] = True                                  # the lash
+                patch[7 + j, 2 + i] = {'O': OUT, 'H': P_HI, 'M': P_MD}[ch]; alpha[7 + j, 2 + i] = True
+    for (yy, xx) in ((11, 16), (10, 17)):                                      # the lash at the outer corner
+        patch[yy, xx] = OUT; alpha[yy, xx] = True
     rgb(patch, alpha.astype(float)).save(os.path.join(ART, 'eye_closed.png'))
     # the bird: a gull, three frames
     BIRD = [
