@@ -12,6 +12,18 @@ Built on `main` (v0.5). No SpriteCook credits. See `docs/tiled.md`.
   `riverwalk/level/tiled/<name>.lua`, the file the game reads; `--export` does the same without Tiled. The level
   table is read by running the level file in Lua (lua5.1, luajit or lua, else LOVE: `tools/tiled/love_runner`).
   All five levels converted.
+- **The loader** (`riverwalk/tiled.lua`): `require("tiled").load("level/tiled/<name>.lua")` gives back the terrain
+  rows and the table L the game uses today. It is generic: an object goes into the list named by its class (empty:
+  the layer's name; "magpie.perches" is a nested list; start, ball, girl, cat, fox and exit are single objects), a
+  rectangle gives x0, x1, y0, y1 (or the fields its "box" property names), a point x and y, a polyline its points,
+  and every custom property passes through, so new kinds of objects (lifts, vertical movers) need no change. Any
+  number of rows: a tall map just works. Text objects and layers named "#..." are notes. The terrain rows go to
+  the save folder as `tiled_<name>.map` (as `pepperlab.lua` does) and L.map names that file: no change to
+  `world.lua` or `stage.lua`.
+- **The check** (`tools/check_tiled.sh`, `tools/tiled/check_tiled.lua`): all five levels go level files -> Tiled
+  map -> export -> loader and come back identical (deep compare, lists in order, and every terrain row); the same
+  through Tiled's own Lua export (`tiled --export-map`, Tiled 1.8.2 here); the game's exports are up to date with
+  `maps/*.tmx`; a tall map (50 rows) with new kinds of objects loads; and which maps were changed in Tiled.
 ## Branch `assets/v2`: the tram fix and art for the new pieces (19 Oct)
 Built on `levels/v2`.
 - **The trams end in tram sheds** (Downtown). Before, the first tram vanished in plain view before the fountain,
