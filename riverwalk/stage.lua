@@ -378,7 +378,8 @@ function St:update(dt, presses)
       -- a lamp is a gift (benchmark principle 5): it gives back one heart, up to the most she can have, and a heart
       -- pops out of it (not in hard mode). The heart's chime instead of the lamp's, so the gift is heard.
       if not self.hard and self.hearts < self.maxHearts then
-        self.hearts = self.hearts + 1; self.pops[#self.pops + 1] = { x = l.x, y = l.y, t = 0 }; S.play("heart")
+        local lift = l.y < (self.def.foot or 184) - 40 and Sc.EDGE + 1 or 0   -- (a high road lamp stands lower: draw)
+        self.hearts = self.hearts + 1; self.pops[#self.pops + 1] = { x = l.x, y = l.y + lift, t = 0 }; S.play("heart")
       else S.play("checkpoint") end
       if p.carrying and self.def.ballHomeAtLamps then                -- L.ballHomeAtLamps: a lost ball comes back here
         self.ball.home = self:homeNear(l.x, l.y); self.ball.homeSay = "THE BALL IS BACK BY THE LAMP"
@@ -610,14 +611,17 @@ function St:draw(debug)
   if grey then                                                     -- greybox lamp posts on the path
     for _, l in ipairs(self.lamps) do if l.x - cam > -20 and l.x - cam < 340 then Sc.lampGrey(l.x - cam, l.y, l.lit, self.t - (l.litAt or -9), self.t) end end
   else
-  for _, l in ipairs(self.lamps) do if l.x - cam > -20 and l.x - cam < 340 then Sc.shadow(l.x - cam, l.y - Sc.EDGE - 1, 14) end end
+  -- (art/placement) a lamp on a tall level's high road stands on its ledge (a walk, a branch, a gallery): no
+  -- pavement there, so its foot goes on the ledge's top, behind its front edge, not EDGE px above it in the air
+  local function highLamp(l) return l.y < Sc.FOOT - 40 end
+  for _, l in ipairs(self.lamps) do if l.x - cam > -20 and l.x - cam < 340 and not highLamp(l) then Sc.shadow(l.x - cam, l.y - Sc.EDGE - 1, 14) end end
   use("back")
   lg.setColor(1, 1, 1, 1)
   for _, l in ipairs(self.lamps) do                                -- lamp posts; a passed checkpoint lights up
     local x = l.x - cam
     if x > -20 and x < 340 then
       local im = l.lit and art.lamp_lit or art.lamp_post
-      local lx, top = math.floor(x - im:getWidth() / 2), l.y - Sc.EDGE - im:getHeight()
+      local lx, top = math.floor(x - im:getWidth() / 2), l.y - (highLamp(l) and -1 or Sc.EDGE) - im:getHeight()
       lg.draw(im, lx, top)
       if l.lit then Sc.lampLight(lx + im:getWidth() / 2, top + 17, self.t - (l.litAt or -9), self.t) end
     end

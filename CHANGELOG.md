@@ -11,6 +11,12 @@ Built on main v0.6. No credits; Pepper untouched; approved art unchanged (its fi
   every 300 px, `LOOK_STEP`, at each height tier of a tall level), look on, no HUD.
 - **River Walk:** the road is no longer drawn under the bridge pier (x 1936-2072): road.lua took the pier's row at
   y 184 for promenade and painted asphalt and lane dashes over the quay; the quay pavement now runs through the passage.
+- **City Park (tall):** the lamp posts on the high road (x 864, 1696, 2624; Downtown's 1830 and 2420 too) stand on
+  their walk, branch, deck or gallery; they floated 10 px over it (stage.lua put every lamp's foot at the pavement's
+  back edge). The play tower's outer post was drawn as a 4 px tree trunk from the oak's canopy to the path; it is a
+  grey post again, under the tower's lower deck, which is now drawn (it was an invisible step left of the slide's
+  cage). Both tower posts reach the path. The low bough over the alder walk is drawn front-on, level over its box and
+  curving up into the leaves as it thins (it read as a crate seen from above at an angle).
 
 ## Regroup (23 Oct, evening): main v0.6, BIBLE and STATUS, the enforced gate, checks and releases on GitHub
 The owner's decisions of 23 Oct (merge list): round1 becomes main as v0.6; art/freefix merged with the approved River
