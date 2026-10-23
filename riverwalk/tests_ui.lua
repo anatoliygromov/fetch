@@ -31,14 +31,15 @@ return function(api)
     { act = function() local s = api.stage(); s.hearts = 2; s.taken = math.min(s.total, 12); s.score = 4250 end, wait = 0.3 },
     shot("hud_2"),
     { act = function() local s = api.stage(); s.hearts = 1; s.time = 9.5 end, wait = 0.2 }, shot("hud_low"),
-    { act = function() local s = api.stage(); s.time = 245; s.hearts = 3 end, wait = 0.1 },
+    { act = function() local s = api.stage(); s.time = 245; s.hearts = 3; s.hard = true end, wait = 0.1 }, shot("hud_hard"),
+    { act = function() api.stage().hard = nil end, wait = 0.1 },
     { act = function() api.setState("pause"); local p = api.pause(); p.sel, p.confirm = 1, nil end, wait = 0.2 }, shot("pause"),
     { act = function() api.pause().sel = 2 end, wait = 0.1 }, shot("pause_sound"),
     { act = function() api.pause().sel = 3 end, wait = 0.1 }, shot("pause_quit"),
     { act = function() api.pause().confirm = 1 end, wait = 0.1 }, shot("pause_confirm"),
     { act = function() local p = api.pause(); p.sel, p.confirm = 1, nil; api.setState("play") end, wait = 0.2 },
     { act = function() local s = api.stage(); s.ball.state = "carried"; s.pepper.carrying = s.ball; s:giveBall() end, wait = 6.5 },
-    shot("tally"),
+    shot("tally"), { wait = 0.4 }, shot("tally_2"), { wait = 0.4 }, shot("tally_3"),
   }
   local old = love.update
   love.update = function(dt)

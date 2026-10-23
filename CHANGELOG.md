@@ -2,6 +2,19 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `ui/hud-v8` step 3: the level tally "GOOD GIRL!" to the owner's target (23 Oct, night)
+- **Card (flow.lua, drawing only; same data and timing):** the smooth warm dim, the kit's gold panel 230 x 113, an
+  arched ribbon (a parabola: runs shorten evenly to the ends; tails folded behind) with GOOD GIRL! in the 17 px big
+  font, two columns in the 7 px small font: BONES, the level's bonus (FETCH), SECRETS, TIME BONUS, then SCORE in
+  gold (counting up); TIME, BEST and the three medals (15 px: a gold paw coin on a red ribbon when won, a plain bronze
+  disc when not) with NO HIT, ALL BONES, PAR 1:47. NEW BEST SCORE! / NEW BEST TIME! blink under SCORE; PRESS ANY
+  BUTTON sits on the frame's bottom line; HARD on a red plate on the frame. Centred, or at the top when Pepper would
+  be under it (it then ends at row 136, above her on the ground).
+- **Checks:** layout_qa8 ALL PASS on all 11 frames (62 on the tally: columns' edges, every label with its value on its
+  line, even pitch, medals and labels on one line 3 px apart, centred, nothing overlapping); qa_card PASS for
+  medal_on, medal_off, ribbon_tally, font7_cream / gold / dim, font17_ink; check_pepper PEPPER UNCHANGED;
+  check_flow 116 of 116.
+
 ## Branch `ui/hud-v8` step 2: the pause to the owner's target (23 Oct, night)
 - **Dim:** one full-screen dark brown rectangle (40,20,12) at 75 % (hud.lua U.dimWarm); no checker dither.
 - **Card (flow.lua, drawing only; the menu logic and inputs unchanged):** the kit's gold panel as a true 9-slice
