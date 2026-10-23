@@ -12,6 +12,13 @@ SpriteCook: 408 credits of the approved 528 (reserve unused), 1,078 left. Contac
   keeper, the road cyclist, the screen-1 building, houses, props) on their own ground and sky, with the three levels'
   sky bands. Uploaded as SpriteCook `8a64c999` into the new project FETCH, collection batch1, and used as the style
   reference for every generation.
+- **B1 to B5, people and bikes** (`tools/build_r8_people.py`, `tools/r8lib.py`, `tools/r8_browser_reduce.js`):
+  adult commuter cyclists at true scale (woman in a red coat, man in a green jacket; 84 px wheel to helmet, wheels
+  about 30 px, so Pepper reaches to the rider's knee) and the same riders at 92 px for the near lane, each with an
+  8-frame pedal loop at 1x; Mia's throw (8 frames from her standing pose, hood up); the cargo bike with the baker
+  (102 x 76, faces left; the 80 x 26 hit box is the cargo box and the front wheel) and its pedal loop. 230 credits.
+  The 1x animation sources were built in the browser (the only place that can upload to SpriteCook) with the same
+  steps as `r8lib.py` and kept in `source_sheets/r8_*_1x.png`; clip frames are cleaned (matte peeled, specks, outline).
 
 ## Branch `r7/curve`: the tall order's difficulty curve passes the acceptance test (22 Oct)
 Built on `round1`. The planned order with the tall levels (River Walk, City Park tall, Downtown tall, Rooftops,
