@@ -6,7 +6,7 @@ with a 1 px dark outline, decoration faded with no outline. See `scale_lineup.pn
 
 | Priority | Asset | Problem now | Target size (game px) | Notes |
 |---|---|---|---|---|
-| 1 | `town_tram.png` (Downtown tram) | 105 x 34: as tall as Pepper, a toy | about 300 x 150 (two-car Stockholm tram, about 3.3 m tall) | Needs a level change too: Pepper dodges it on the shelter and shed roofs (41-48 px). Options: the tram runs in a lane behind Pepper's line with a crossing to time, or the hazard becomes a tram arriving at a raised platform. Hit box and `w`, `h` in `level/downtown.lua` follow |
+| 1 | `town_tram.png` (Downtown tram; **r8/levels: D1 taken, the hazard is a cargo bike and the tram is back-lane scenery; hooks in docs/art_hooks_r8.md**) | 105 x 34: as tall as Pepper, a toy | about 300 x 150 (two-car Stockholm tram, about 3.3 m tall) | Needs a level change too: Pepper dodges it on the shelter and shed roofs (41-48 px). Options: the tram runs in a lane behind Pepper's line with a crossing to time, or the hazard becomes a tram arriving at a raised platform. Hit box and `w`, `h` in `level/downtown.lua` follow |
 | 1 | `town_tramshed70.png`, `town_tramshed96.png` | 41 px tall, smaller than Mia | at least 170 px tall to swallow the new tram | Goes with the tram |
 | 1 | `town_shelter.png` (tram stop) | 72 x 48: shorter than Mia | about 120 x 105 (2.3 m) | Its roof is a perch at 48 px today; at scale it is out of jump reach, so it becomes decoration or gets a step |
 | 2 | `park_keeper_cart.png` (leaf cart keeper, 8 frames of 82 x 82) | the man is 61 px, Mia's height | man about 80-84 px; frames about 104 x 104; the wheelbarrow about 34 px to the handles | Hit box stays the cart (48 x 26) so the picnic-table perch still works |

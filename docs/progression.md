@@ -66,6 +66,10 @@ One day, in play order: 1 River Walk (morning: Mia throws the ball by the river,
 (late morning: a magpie steals it), 3 Downtown (noon: a cat sits on it), 4 Rooftops (early afternoon: a gull takes it
 to its nest), 5 Soder Hill (afternoon: it rolls down the hill), 6 Night Harbour (a fox). Metro, the building site, the
 funfair and home in the storm come later; the cards number the levels as they are played.
+Since r8/levels (D2, 23 Oct) levels 2 and 3 are the tall City Park and the tall Downtown (`citypark_tall`,
+`downtown_tall`), with the same cards and story; the flat ones stay as fallbacks (levels.lua says how to switch). D1:
+Downtown's street hazard is the baker's cargo bike (it rides into courtyard gates, the old tram sheds); a vintage tram
+rolls by in the back lane as scenery.
 
 ## The story across five levels (19 Oct, the old order)
 1. City Park: a magpie steals Mia's ball.

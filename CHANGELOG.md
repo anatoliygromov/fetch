@@ -2,6 +2,76 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r8/levels`: the tall City Park and Downtown in the game, the cargo bike, hooks for the first art batch (23 Oct)
+Built on `round1`. The owner's decisions of 23 Oct: D2 (the tall City Park and Downtown replace the flat ones) and D1
+(Downtown's street hazard is a cargo bike with its rider; a true-scale vintage tram rolls by in the back lane as
+scenery). Pepper's files, music and sfx are untouched; no art was generated.
+- **D2: the tall levels are levels 2 and 3** (levels.lua, flow.lua, maps/downtown_tall.tmx and its export,
+  tests_flow.lua, tests_downtown_tall.lua): the order is River Walk, City Park (tall), Downtown (tall), Rooftops,
+  Soder Hill, Night Harbour. They carry the flat levels' titles, numbers, intro and story cards (already in their
+  maps); par times 63 s (39.1 s autopilot) and 90 s (56.2 s). The flat City Park and Downtown stay in `level/` as
+  fallbacks (their old lines are in levels.lua, commented out: put one back in place of its tall twin to switch).
+  A save that opened a flat level opens its tall twin (`was` in levels.lua, `F.load`). **The tall Downtown gets
+  Downtown's art** (`art = "town"`, `foot = 424`, as r3 did for the tall City Park): the street looks as Downtown
+  does; the high road's pieces are code-drawn until the roof kit lands (below). Four hints were longer than the
+  panel's three words and are now `HOLD: CLIMB UP` (the tall City Park's tree and tower, the tall Downtown's way
+  up from the bakery sign) and `HOLD: BOUNCE` (the plaza parasol); the generators say the same. New flow checks:
+  the order, every level's cards agree with levels.lua, an old save opens the tall twin; the City Park talk checks
+  run on the tall City Park (its path 144 px lower). `check_flow` 116 of 116.
+- **D1: the cargo bike** (level/downtown.lua, maps/downtown.tmx written again from it, maps/downtown_tall.tmx, their
+  exports, new `riverwalk/arthooks.lua`, stage.lua, scene.lua, tests_downtown.lua, tests_downtown_tall.lua): both
+  Downtowns' tram zones are cargo bike zones (`kind = "cargo"`), the same hit box (80 x 26: the cargo box and the
+  front wheel), the same speeds and rhythm (110 px/s every 6 s, 130 px/s every 4 s: about 9 and 11 km/h, a loaded
+  cargo bike's pace), so the kiosk, the shelter roof and the gates stay the same perches and the autopilots the
+  same times. The tell is the bell (1 s before it comes in, and little rings by the handlebar as it enters) and the
+  blinking sign. The baker's delivery man rides over the back wheel, drawn tall (about 76 px, like the leaf-cart
+  keeper) and never hurts. The bike is drawn behind the obstacles on Pepper's line (the kiosk and the gates hide
+  its wheels; Pepper on a perch is drawn over the rider), as River Walk's bikes. Placeholder: an outlined box bike
+  with a rider drawn in code (about 92 x 76), replaced by `art/scene/cargo_bike.png` (and `cargo_bike_pedal.png`)
+  when they exist. **The tram sheds are courtyard gates** (`GATE`, the same boxes, the same art without the rails,
+  the same `depot` code): the bike rides into the courtyard through the gateway. Girl lines: CARGO BIKE! GET UP
+  HIGH! and A FAST BIKE! GET UP!
+- **D1: the vintage tram in the back lane** (`L.trams`, arthooks.lua; `tools/level_to_tiled.py` and
+  `tools/tiled/check_tiled.lua` know the lane's `stop`): on both tram streets a true-scale tram (300 x 130, faded 40%
+  towards the haze: the far lane) comes in off the right edge of the screen, brakes to a halt with its front door at
+  a tram stop sign by the shelter, waits 3 s, and drives off to the left; one every 16 s while the screen is over the
+  street. Its driver sits in the front cab; a trolley pole reaches up. Rails at the street line minus 10 (behind
+  Pepper's line, where decoration stands); drawn before the back props, so everything on her line and Pepper are in
+  front of it. Never a hazard. Placeholder drawn in code; `art/scene/tram_vintage.png` when it exists. New checks
+  (tall Downtown): the cargo bike zones' kind and hit box, the two tram lanes, the tram comes in off screen, stops
+  at its sign for 3 s and leaves, no heart lost (102 of 102); flat Downtown 81 of 81. `--auto` 51.4 s and 56.2 s, as
+  before.
+- **Hooks for the first art batch** (arthooks.lua, road.lua, bonus.lua, scene.lua; `docs/art_hooks_r8.md` lists every
+  name, size and anchor; `tools/preview_art_hooks.py` writes labelled stand-ins into a LOVE save folder to check them
+  without committing art). Each piece looks for its file and falls back cleanly: the cargo bike and its pedal sheet,
+  the vintage tram (above); the promenade and road cyclists `cyclist_adult1-2.png` with `_pedal` sheets (else
+  `road_cyclist1-2`); Mia's throw `art/girl_throw.png` (8 frames in girl.png's cells) in the bonus round's throws
+  (else the wave and cheer clips); the row across the square `town_row.png` (else `town_facades.png`, both
+  Downtowns). The tall Downtown's old town: the roof kit `town_roof_<name>[<width>].png` over the high road's boxes
+  (loggia, galleries, chimney, dormer, flower roof), the stepped gable `town_roof_gable.png`, the other ledges
+  `town_roof_ledge.png` (a 3-slice), `town_footbridge.png`; the tall house fronts `town_front_tall1-3.png` filling
+  the back boxes under the roofs (drawn before the other back props, so Downtown's houses with balconies stand in
+  front); the far landmark `spire_riddarholmen.png`. Until they land, all of these are drawn in code (crisp and
+  outlined: stone ledges, an arcade, a balustrade, a brick chimney and gable, a copper dormer cap, flower boxes,
+  the footbridge's deck, rail and arch; faded: plaster fronts with windows, cornices and doors, the openwork spire)
+  instead of the grey labelled boxes. Checked with stand-ins for every file (all drawn at their anchors, the bonus
+  round's throw frames, River Walk's autopilot 66.3 s unchanged).
+- **Docs** (progression.md, the beat sheets of both City Parks and Downtowns, needs_art_22oct.md): D1 and D2 noted
+  where they change what the sheets say. The tall Downtown's `--test` tour has three new shots: the cargo bike
+  passing under Pepper on the kiosk, the vintage tram at its stop, a tram coming in on the second street.
+- **Checks on this branch:** `check_pepper` PEPPER UNCHANGED (4591 steps), `check_pepper_files` 5 files identical,
+  `check_flow` 116 of 116, `check_tiled` PASSED, `--physics` riverwalk 54, citypark 85, downtown 81, citypark_tall
+  94, downtown_tall 102, rooftops 103, soder 29, night 40, lab_tall 43 (all pass), `--auto` 66.3, 44.6, 51.4, 39.1,
+  56.2, 58.1 (high road 54.4), 73.3, 82.6, 25.9 s (no heart lost; unchanged), `--qa` 0 problems on every level but
+  Night Harbour (1, the slipway's known ball sweep spot, as on round1). **The curve** (`tools/check_curve.py --order
+  riverwalk,citypark_tall,downtown_tall,rooftops,soder,night --seeds 10`, out `/home/claude/out/r8-levels/curve_r8`):
+  T1 to T4 PASS; DI v2 kids / parents 18.0 / 14.0, 12.6 / 17.6, 11.6 / 18.5, 20.0 / 16.5, 15.7 / 14.7, 19.2 / 24.7,
+  the same as r7/curve (the cargo bike keeps the tram's numbers; the playtest lab never reads the art). Screenshots
+  of the cargo bike placeholder and the vintage tram: `/home/claude/out/r8-levels/` (sheet
+  `r8_cargo_bike_and_tram_sheet.png`).
+- **Left for later:** the art itself (the batch-1 files drop in by name); `tools/make_downtown_tall.py` still writes
+  the tall Downtown without `art`/`foot` (the map in Tiled is the source now); Rooftops' and Night Harbour's par times
+  still come from their r6 autopilot times (58.1 and 82.6 s since r7 would give 93 and 133).
 ## Branch `r7/curve`: the tall order's difficulty curve passes the acceptance test (22 Oct)
 Built on `round1`. The planned order with the tall levels (River Walk, City Park tall, Downtown tall, Rooftops,
 Soder Hill, Night Harbour), measured with `tools/check_curve.py --name tall --seeds 10`; every iteration's numbers are

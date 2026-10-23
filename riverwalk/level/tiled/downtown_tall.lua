@@ -10,11 +10,13 @@ return {
   tilewidth = 8,
   tileheight = 8,
   nextlayerid = 9,
-  nextobjectid = 275,
+  nextobjectid = 277,
   properties = {
     ["movers"] = "{}",
+    ["art"] = "town",
     ["ballBack"] = "THE BALL IS BACK BY THE STATUE",
     ["ballHomeAtLamps"] = true,
+    ["foot"] = 424,
     ["greyStyle"] = "town",
     ["intro"] = "{ \"LEVEL 3\", \"DOWNTOWN\", \"A CAT IS SITTING ON THE BALL!\", \"ON THE STREET OR OVER THE ROOFS\" }",
     ["name"] = "DOWNTOWN",
@@ -23,7 +25,7 @@ return {
     ["pickupSay"] = "BRING ME THE BALL!",
     ["scenery"] = "greybox",
     ["time"] = 300,
-    ["title"] = "Pepper: Downtown, tall (greybox)",
+    ["title"] = "Pepper: Downtown, tall",
   },
   tilesets = {
     {
@@ -1128,7 +1130,7 @@ return {
         },
         {
           id = 52,
-          name = "TRAM SHED",
+          name = "GATE",
           type = "props",
           shape = "rectangle",
           x = 1868,
@@ -1574,7 +1576,7 @@ return {
         },
         {
           id = 78,
-          name = "TRAM SHED",
+          name = "GATE",
           type = "props",
           shape = "rectangle",
           x = 3072,
@@ -2245,7 +2247,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "zoneX0,zoneX1",
-            ["kind"] = "tram",
+            ["kind"] = "cargo",
             ["every"] = 6,
             ["h"] = 26,
             ["rail"] = true,
@@ -2270,7 +2272,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "zoneX0,zoneX1",
-            ["kind"] = "tram",
+            ["kind"] = "cargo",
             ["every"] = 4,
             ["h"] = 26,
             ["rail"] = true,
@@ -2280,6 +2282,42 @@ return {
             ["speed"] = 130,
             ["start"] = "enter",
             ["w"] = 80,
+          },
+        },
+        {
+          id = 275,
+          name = "",
+          type = "trams",
+          shape = "rectangle",
+          x = 1700,
+          y = 284,
+          width = 600,
+          height = 130,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["dwell"] = 3,
+            ["every"] = 16,
+            ["relx.stop"] = 424,
+            ["speed"] = 110,
+          },
+        },
+        {
+          id = 276,
+          name = "",
+          type = "trams",
+          shape = "rectangle",
+          x = 3020,
+          y = 284,
+          width = 500,
+          height = 130,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["dwell"] = 3,
+            ["every"] = 16,
+            ["relx.stop"] = 292,
+            ["speed"] = 110,
           },
         },
         {
@@ -4087,7 +4125,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1,minY,maxY",
-            ["text"] = "HOLD: UP ON THE ROOFS",
+            ["text"] = "HOLD: CLIMB UP",
             ["btn"] = "a",
           },
         },
@@ -4257,7 +4295,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1,minY",
-            ["text"] = "HOLD: BOUNCE UP!",
+            ["text"] = "HOLD: BOUNCE",
             ["btn"] = "a",
             ["need"] = "ball",
           },
@@ -4377,7 +4415,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1",
-            ["text"] = "TRAM! GET UP HIGH!",
+            ["text"] = "CARGO BIKE! GET UP HIGH!",
             ["bike"] = true,
           },
         },
@@ -4394,7 +4432,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1",
-            ["text"] = "A FAST TRAM! GET UP!",
+            ["text"] = "A FAST BIKE! GET UP!",
             ["bike"] = true,
           },
         },

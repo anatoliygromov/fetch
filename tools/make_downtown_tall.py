@@ -131,7 +131,7 @@ BONES_HIGH = [
 HINTS_HIGH = [   # inserted after the need-based hints (BARK, PICK UP, GIVE), so those still win
     {"x0": 1440, "x1": 1536, "text": "BARK FROM UP HERE!", "need": "cat", "minY": 270, "maxY": 290},
     {"x0": 1416, "x1": 1536, "btn": "down", "text": "DOWN + A: DROP", "need": "noball", "minY": 270, "maxY": 290},
-    {"x0": 1262, "x1": 1312, "btn": "a", "text": "HOLD: UP ON THE ROOFS", "minY": 296, "maxY": 312},
+    {"x0": 1262, "x1": 1312, "btn": "a", "text": "HOLD: CLIMB UP", "minY": 296, "maxY": 312},
     {"x0": 1450, "x1": 1480, "btn": "a", "text": "HOLD: UP!", "minY": 306, "maxY": 322},
     {"x0": 1600, "x1": 1628, "btn": "a", "text": "HOLD: BIG JUMP", "minY": 240, "maxY": 262},
     {"x0": 2168, "x1": 2208, "btn": "a", "text": "BOUNCE UP", "minY": 250, "maxY": 280},

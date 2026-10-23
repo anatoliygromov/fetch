@@ -891,7 +891,9 @@ function Sc.townArt(style)
     T.tramshed = { [70] = img("town_tramshed70"), [96] = img("town_tramshed96") }   -- SpriteCook (tools/import_assets_v2.py)
     -- the two far layers sit further back than the back-edge decoration: faded more (as River Walk's far shore),
     -- so the street's obstacles and the climbable houses stand out against them
-    T.facades = fadeImg("town_facades", 0.40)
+    -- (r8/levels: art/scene/town_row.png, the row of old town houses across the square with volume, replaces
+    -- town_facades.png when it is there: the same layer, a strip that repeats, standing on y 178)
+    T.facades = fadeImg(love.filesystem.getInfo("art/scene/town_row.png") and "town_row" or "town_facades", 0.40)
     T.roofs = fadeImg("town_roofs", 0.45)
   end
   T.groundQ = colQuads(T.ground)
@@ -1243,12 +1245,17 @@ function Sc.spring(x, y, h)
   end
 end
 
--- the tram shed at the end of a tram line (Downtown): a brick front with a cornice (its roof is a perch) and a
--- dark arched doorway open on the right, where the tram drives in (stage.lua draws a tram only right of the door)
-function Sc.tramShed(p, camx)
+-- a courtyard gate at the end of a cargo bike's run (Downtown, r8/levels D1; until then the tram shed, the same art
+-- and the same `depot` code): a brick front with a cornice (its roof is a perch) and a dark arched gateway open on
+-- the right, where the cargo bike rides into the courtyard (it is drawn and hurts only right of the gateway)
+local gateQ = {}
+function Sc.courtyardGate(p, camx)
   local x, w, h = math.floor(p.x0 - camx), p.x1 - p.x0, p.y1 - p.y0
-  local im = Sc.townArt("town").tramshed[w]                       -- the art: its cornice on the box's top, the rails
-  if im then lg.setColor(1, 1, 1, 1); lg.draw(im, x, p.y0); return end   -- running in below the line
+  local im = Sc.townArt("town").tramshed[w]                       -- the art (town_tramshed70 / 96): its cornice on
+  if im then                                                      -- the box's top; the old tram rails below the
+    if not gateQ[im] then gateQ[im] = lg.newQuad(0, 0, w, math.min(h, im:getHeight()), im:getDimensions()) end   -- line are left out
+    lg.setColor(1, 1, 1, 1); lg.draw(im, gateQ[im], x, p.y0); return
+  end
   lg.setColor(INK); lg.rectangle("fill", x - 1, p.y0 - 1, w + 2, h + 1)
   lg.setColor(0.62, 0.36, 0.27); lg.rectangle("fill", x, p.y0 + 4, w, h - 4)               -- brick
   lg.setColor(0.52, 0.29, 0.22)
@@ -1694,6 +1701,8 @@ function Sc.drawPropArt(p, camx, def, kicked)
   if p.hidden then return end
   if style == "park" and def.foot and drawTierProp(p, camx, def) then return end   -- the treetop tier (tall parks)
   local d = dy()                                                  -- (the art's fixed lines follow the path line)
+  if style == "town" and def.foot and (package.loaded.arthooks or require("arthooks")).townPiece(p, camx, def) then return end   -- the
+  -- tall Downtown's roofs, fronts and spire (r8/levels: arthooks.lua, its art when it lands, else drawn in code)
   if not n or n == "" then
     if style == "park" and underCrown(def, p) then drawBough(p, camx); return end
     local o = owner(def, p)
@@ -1784,7 +1793,7 @@ function Sc.drawPropArt(p, camx, def, kicked)
           end
         end
       end
-    elseif n == "TRAM SHED" then Sc.tramShed(p, camx)
+    elseif n == "GATE" or n == "TRAM SHED" then Sc.courtyardGate(p, camx)
     elseif n == "STATUE" then at(T.statue, x - 1, p.y0 - 4)
     elseif n == "PEDESTAL" then shadowUnder(p, camx); at(T.pedestal, x, p.y0)
     elseif n == "ARM" then return
@@ -1875,7 +1884,8 @@ function Sc.drawMoverArt(m, camx, style)
   lg.setColor(1, 1, 1, 1)
 end
 
--- the hazards: the leaf cart (City Park) and the tram (Downtown), wheels on the line, centred on the hit box
+-- the hazards: the leaf cart (City Park) and the old toy-sized tram (Downtown before r8/levels; the cargo bike that
+-- replaced it is drawn by arthooks.lua), wheels on the line, centred on the hit box
 -- City Park: the park keeper pushes the leaf cart (art/scene/park_keeper_cart.png, 8 frames of 82 x 82, made facing
 -- right and drawn mirrored; tools/build_keeper.py). The barrow's middle (x 58) is on the hit box's middle, the
 -- feet and wheel on the line; the walk cycle steps with the distance he has covered, so his boots don't slide.

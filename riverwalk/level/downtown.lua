@@ -4,7 +4,7 @@
 -- docs/downtown_beatsheet.md (the first 6 screens) and docs/progression.md.
 --
 -- Screens (320 px each). Manner: bounce and carry. New here: springy awnings and parasols (bounce = h), and a
--- long carry: after the cat, Pepper carries the ball through five screens of water, geese and trams.
+-- long carry: after the cat, Pepper carries the ball through five screens of water, geese and cargo bikes.
 --   1  Old town lane  tap A to hop up the crate steps
 --   2  Cafe terrace   two cafe tables: crawl under them or jump on; their parasols are one-way tops, and from the
 --                     second parasol a jump reaches the shop sign (gold bone)
@@ -15,12 +15,13 @@
 --                     step up to the pedestal; the pedestal, the arm and the hat are a climb (gold bone on the hat)
 --   6  The fountain   carry the ball over the basin: hop from rim to fountain bowl to rim. Or the high route: from
 --                     the statue's arm along the balconies and over the fountain's top tier (gold bone)
---   7  Tram street    the tram zone: up on the kiosk and the shelter roof while the tram passes
+--   7  Tram street    the cargo bike zone: up on the kiosk and the shelter roof while the baker's cargo bike
+--                     passes (a vintage tram rolls by in the back lane, scenery)
 --   8  Flower market  two geese: a bite knocks the ball out. Bark them off, or go high: the tub, the cafe table, the
 --                     springy parasol, the balcony
 --   9  The canal      the awning at the edge launches Pepper over the water onto the crates on the far quay
 --  10  Flooded square three springy parasols in the water: bounce from one to the next, holding Right
---  11  Tram street    a faster tram, every 4 s: the kiosk, the shelter, then Mia at the stairs down to the river:
+--  11  Tram street    a faster cargo bike, every 4 s: the kiosk, the shelter, then Mia at the stairs down to the river:
 --                     give her the ball (X), GOOD GIRL!
 -- Falling in the water with the ball (fountain, canal) costs a heart; the ball goes back by the last lamp Pepper
 -- carried it past (L.ballHomeAtLamps), or to the statue.
@@ -121,10 +122,11 @@ L.props = {
   { name = "FOUNTAIN", kind = "solid",  layer = "play", x0 = 1776, x1 = 1808, y0 = 160, y1 = 240, label = "top" },
   { name = "RIM",      kind = "solid",  layer = "play", x0 = 1848, x1 = 1864, y0 = 168, y1 = 184, label = "top" },
   -- screen 7: tram street. The kiosk (36 px up) and the shelter roof (one-way, 12 px above the kiosk) are above
-  -- the tram (26 px). The stairs down to the river are at the end of the level (terrain slopes, x 3488-3520).
-  -- the tram shed (DEPOT) after the fountain: the end of the first tram line. Its roof (36 px up, a hop from the
-  -- fountain's rim) is a perch; the tram drives in through its door on the right (depot = 1938) and is gone.
-  { name = "TRAM SHED", kind = "solid", layer = "play", x0 = 1868, x1 = 1938, y0 = 148, y1 = 184, label = "top" },
+  -- the cargo bike's box (26 px). The stairs down to the river are at the end of the level (terrain slopes, x 3488-3520).
+  -- a courtyard gate after the fountain (r8/levels D1; it was the tram shed: the same art and box): the end of the
+  -- first cargo bike's run. Its roof (36 px up, a hop from the fountain's rim) is a perch; the bike rides into the
+  -- courtyard through the gateway on the right (depot = 1938) and is gone.
+  { name = "GATE", kind = "solid", layer = "play", x0 = 1868, x1 = 1938, y0 = 148, y1 = 184, label = "top" },
   { name = "KIOSK",    kind = "solid",  layer = "play", x0 = 1980, x1 = 2020, y0 = 148, y1 = 184 },
   { name = "",         kind = "decor",  layer = "back", x0 = 2052, x1 = 2056, y0 = 140, y1 = 184 },     -- shelter posts
   { name = "",         kind = "decor",  layer = "back", x0 = 2112, x1 = 2116, y0 = 140, y1 = 184 },
@@ -158,12 +160,11 @@ L.props = {
   { name = "PARASOL",  kind = "oneway", layer = "play", x0 = 2832, x1 = 2880, y0 = 136, y1 = 140, label = "below", bounce = 56 },
   { name = "PARASOL",  kind = "oneway", layer = "play", x0 = 2920, x1 = 2968, y0 = 136, y1 = 140, label = "below", bounce = 56 },
   { name = "PARASOL",  kind = "oneway", layer = "play", x0 = 3008, x1 = 3056, y0 = 136, y1 = 140, label = "below", bounce = 56 },
-  -- screen 11: tram street again (3104-3424): a faster tram, every 4 s (wait for two). The kiosk (the bounce
-  -- off the last parasol lands on it), then a shelter roof a running
-  -- jump away. Then Mia at the stairs down to the river.
-  -- the second tram line ends in a tram shed at the far side of the flooded square (no rails through the water):
-  -- the last bounce lands on its roof, and the tram drives in through its door (depot = 3168)
-  { name = "TRAM SHED", kind = "solid", layer = "play", x0 = 3072, x1 = 3168, y0 = 148, y1 = 184, label = "top" },
+  -- screen 11: tram street again (3104-3424): a faster cargo bike, every 4 s (wait for two). The gate's roof (the
+  -- bounce off the last parasol lands on it), then a shelter roof a running jump away. Then Mia at the stairs down
+  -- to the river. The second cargo bike's run ends in a courtyard gate at the far side of the flooded square: the
+  -- last bounce lands on its roof, and the bike rides in through its gateway (depot = 3168)
+  { name = "GATE", kind = "solid", layer = "play", x0 = 3072, x1 = 3168, y0 = 148, y1 = 184, label = "top" },
   { name = "",         kind = "decor",  layer = "back", x0 = 3240, x1 = 3244, y0 = 140, y1 = 184 },     -- shelter posts
   { name = "",         kind = "decor",  layer = "back", x0 = 3300, x1 = 3304, y0 = 140, y1 = 184 },
   { name = "SHELTER",  kind = "oneway", layer = "play", x0 = 3236, x1 = 3308, y0 = 136, y1 = 140, label = "below" },
@@ -179,7 +180,7 @@ L.lamps = {                    -- one every 1.5 screens or so (City Park: every 
   { x = 636,  y = 184, checkpoint = true },
   { x = 960,  y = 184, checkpoint = true },
   { x = 1620, y = 184, checkpoint = true },
-  { x = 1959, y = 184, checkpoint = true },    -- (between the tram shed and the kiosk: 42 px, room for her)
+  { x = 1959, y = 184, checkpoint = true },    -- (between the gate and the kiosk: 42 px, room for her)
   { x = 2528, y = 184, checkpoint = true },
   { x = 2764, y = 184, checkpoint = true },
 }
@@ -236,13 +237,23 @@ L.bones = {
   { x = 3148, y = 148 }, { x = 3260, y = 136 }, { x = 3284, y = 136 }, { x = 3432, y = 184 },
 }
 
--- the tram zones (the bike-zone code): a tram drives right to left while Pepper is in the zone, into its tram
--- shed: depot = the shed's door (the tram is drawn and hurts only right of it), endX = where it is all inside. w, h: its hit box (80 x 26); rail: it stays on the street's line (y 184)
--- instead of following the ground, so it does not drive down the river stairs. start = "enter": the tram sets
--- off when Pepper walks into the zone (its bell rings 1 s before it is on screen), then one every 6 s.
+-- the cargo bike zones (the bike-zone code; D1, r8/levels: they were tram zones with the same numbers): the
+-- baker's cargo bike rides right to left while Pepper is in the zone, into a courtyard through its gate: depot = the
+-- gateway (the bike is drawn and hurts only right of it), endX = where it is all inside. w, h: its hit box
+-- (80 x 26: the cargo box and the front wheel; the rider sits behind the box and is drawn tall, arthooks.lua);
+-- rail: it keeps to the street's line (y 184) instead of following the ground, so it does not ride down the river
+-- stairs. start = "enter": the first one sets off when Pepper walks into the zone (its bell rings 1 s before it is
+-- on screen), then one every 6 s (4 s). 110 and 130 px/s: about 9 and 11 km/h, a loaded cargo bike's pace; the
+-- tram's speeds, so the kiosk, the shelter and the gates are the same perches.
 L.bikes = {
-  { zoneX0 = 1930, zoneX1 = 2120, minY = 150, every = 6.0, speed = 110, endX = 1882, depot = 1938, kind = "tram", w = 80, h = 26, rail = true, start = "enter" },
-  { zoneX0 = 3120, zoneX1 = 3300, minY = 150, every = 4.0, speed = 130, endX = 3112, depot = 3168, kind = "tram", w = 80, h = 26, rail = true, start = "enter" },
+  { zoneX0 = 1930, zoneX1 = 2120, minY = 150, every = 6.0, speed = 110, endX = 1882, depot = 1938, kind = "cargo", w = 80, h = 26, rail = true, start = "enter" },
+  { zoneX0 = 3120, zoneX1 = 3300, minY = 150, every = 4.0, speed = 130, endX = 3112, depot = 3168, kind = "cargo", w = 80, h = 26, rail = true, start = "enter" },
+}
+-- the back lane's vintage tram (D1; scenery, arthooks.lua): it runs behind Pepper's line (rails at y 174) on both
+-- tram streets, stops at the tram stop sign by each shelter for 3 s and drives on to the left, now and then
+L.trams = {
+  { x0 = 1700, x1 = 2300, y0 = 44, y1 = 174, stop = 2124, every = 16, dwell = 3, speed = 110 },
+  { x0 = 3020, x1 = 3520, y0 = 44, y1 = 174, stop = 3312, every = 16, dwell = 3, speed = 110 },
 }
 -- the geese on the flower market (critters.lua): one on the cobbles before the tub, one under the balcony
 L.critters = {
@@ -277,8 +288,8 @@ L.hints = {
   { x0 = 1288, x1 = 1560, text = "THE CAT IS ON MY BALL!",    need = "cat" },
   { x0 = 1560, x1 = 3520, text = "GO BACK: BARK AT THE CAT!", need = "cat" },
   { x0 = 1600, x1 = 3520, text = "GO BACK FOR THE BALL!",     need = "noball" },
-  { x0 = 1930, x1 = 2120, text = "TRAM! GET UP HIGH!", bike = true },
-  { x0 = 3120, x1 = 3300, text = "A FAST TRAM! GET UP!", bike = true },
+  { x0 = 1930, x1 = 2120, text = "CARGO BIKE! GET UP HIGH!", bike = true },
+  { x0 = 3120, x1 = 3300, text = "A FAST BIKE! GET UP!", bike = true },
   { x0 = 2136, x1 = 2190, text = "GEESE! DON'T LOSE MY BALL!", need = "ball" },
   { x0 = 2464, x1 = 2500, text = "BOUNCE OVER THE CANAL!" },
   { x0 = 2784, x1 = 2832, btn = "a",    text = "BOUNCE ACROSS" },

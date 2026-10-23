@@ -27,7 +27,7 @@ local F = { prefix = "", save = true, unlocked = {}, bestRun = 0, hard = false }
 function F.list(src)
   local out = {}
   for i, l in ipairs(src or LEVELS) do
-    out[i] = { name = l.name, number = l.number or i, title = l.title or l.name:upper(), par = l.par or 60,
+    out[i] = { name = l.name, number = l.number or i, title = l.title or l.name:upper(), par = l.par or 60, was = l.was,
       exists = love.filesystem.getInfo("level/" .. l.name .. ".lua") ~= nil }
   end
   return out
@@ -41,6 +41,8 @@ local function write(n, s) if F.save then pcall(love.filesystem.write, F.prefix 
 function F.load()
   F.unlocked = {}
   for n in (read("progress.txt") or ""):gmatch("[%w_]+") do F.unlocked[n] = true end
+  for _, l in ipairs(F.levels) do if l.was and F.unlocked[l.was] then F.unlocked[l.name] = true end end   -- (D2: a save from
+  -- before the tall levels: the flat level it opened opens its tall twin)
   F.bestRun = tonumber(read("best_run.txt") or "") or 0
   F.hard = (read("hard.txt") or ""):match("1") ~= nil
 end

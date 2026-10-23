@@ -64,6 +64,31 @@ return function(api)
     end
     return ok, table.concat(d, ", ")
   end))
+  add(check("levels.lua: the order (D2: the tall City Park and Downtown are levels 2 and 3)", function()
+    local want = { "riverwalk", "citypark_tall", "downtown_tall", "rooftops", "soder", "night" }
+    local ok, d = #F.levels == #want, {}
+    for i, l in ipairs(F.levels) do ok = ok and l.name == want[i] and l.number == i; d[#d + 1] = l.name end
+    return ok, table.concat(d, ", ")
+  end))
+  add(check("levels.lua: every level's cards agree (number, name, intro, story)", function()
+    local bad, d = {}, {}
+    for i, l in ipairs(F.levels) do
+      local L = require("level." .. l.name)
+      local good = L.number == l.number and L.name == l.title and L.intro and L.intro[1] == "LEVEL " .. l.number
+        and L.intro[2] == l.title and (i == #F.levels or (L.outro and #L.outro > 0))
+      if not good then bad[#bad + 1] = l.name end
+      d[#d + 1] = ("%d %s"):format(L.number or -1, L.name or "?")
+    end
+    return #bad == 0, #bad == 0 and table.concat(d, ", ") or ("wrong: " .. table.concat(bad, ", "))
+  end))
+  add(check("levels.lua: a save with the flat City Park opens the tall one", function()
+    local u, sv, fr = F.unlocked, F.save, love.filesystem.read
+    F.save = false
+    love.filesystem.read = function(n, ...) if n == F.prefix .. "progress.txt" then return "riverwalk\ncitypark\n" end return fr(n, ...) end
+    F.load(); local ok = F.unlocked.citypark_tall == true and not F.unlocked.downtown_tall
+    love.filesystem.read = fr; F.unlocked, F.save = u, sv
+    return ok, ok and "citypark -> citypark_tall open" or "not carried over"
+  end))
   add(check("a run skips missing level files", function()
     local fake = { { name = "a", exists = true }, { name = "b", exists = false }, { name = "c", exists = true } }
     local r, real = F.newRun(1, fake), 0
@@ -163,7 +188,8 @@ return function(api)
       add(check(("run %d: %s unlocked and saved"):format(k, name), function() return F.unlocked[name] and readSave("progress.txt"):find(name) ~= nil, (readSave("progress.txt"):gsub("\n", " ")) end))
     end
     add(wait(0.6), key("space"), state("play", 1), wait(0.2))
-    if name == "citypark" then                                   -- (r6/levels: level 2 now; River Walk opens the run)
+    if name == "citypark" or name == "citypark_tall" then        -- (r6/levels: level 2 now; River Walk opens the run)
+      local dy = (require("level." .. name).foot or 184) - 184     -- (r8/levels: the tall City Park, its path at y 328)
       -- the talk panel: Pepper says the control hint at the start (the magpie is ahead: sneak)
       add(wait(0.4), check("talk: Pepper says [B] HOLD: SNEAK at the start", function()
         local l = said(); return l and l.who == "pepper" and l.btn == "b" and l.text == "HOLD: SNEAK", l and l.text or "nothing" end), shot("u1_pepper"))
@@ -175,13 +201,13 @@ return function(api)
         local n = T.nudge; return n.btn == "b" and n.why == "idle", tostring(n.btn) end), wait(0.25), shot("u3_nudge"))
       add(key("z"), wait(0.05), check("nudge: a button press ends it", function() return T.nudge.btn == nil, tostring(T.nudge.btn) end))
       -- pushing against the hedge for 2 s: the Down button
-      add({ act = function() tp(500, 184); api.stage().pepper.face = 1; hold("right") end }, wait(2.4),
+      add({ act = function() tp(500, 184 + dy); api.stage().pepper.face = 1; hold("right") end }, wait(2.4),
         check("nudge: 2 s pushing at the hedge shows Down", function() local n = T.nudge; return n.btn == "down" and n.why == "push", tostring(n.btn) end),
         { act = function() I.force = {} end })
       -- the girl's line: the magpie still has the ball, far off
-      add({ act = function() tp(1900, 184) end }, wait(0.5), check("talk: the girl says the magpie line", function()
+      add({ act = function() tp(1900, 184 + dy) end }, wait(0.5), check("talk: the girl says the magpie line", function()
         local l = said(); return l and l.who == "girl" and l.text:find("MAGPIE") ~= nil, l and l.text or "nothing" end), shot("u2_girl"))
-      add({ act = function() tp(1600, 216) end }, wait(0.1))
+      add({ act = function() tp(1600, 216 + dy) end }, wait(0.1))
     end
     if name == "riverwalk" then
       -- low on the quay the bottom panel would cover Pepper: it moves to the top

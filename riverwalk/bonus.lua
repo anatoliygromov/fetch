@@ -224,6 +224,13 @@ local function loadArt()
   art = { Sc = Sc, GF = GF, layers = Sc.buildArt(320, "park"), row = {} }
   art.girl = lg.newImage("art/girl.png"); art.girl:setFilter("nearest", "nearest")
   art.ball = lg.newImage("art/ball.png"); art.ball:setFilter("nearest", "nearest")
+  -- Mia's own throw (r8/levels, the first art batch): art/girl_throw.png, one row of frames in girl.png's 66 x 66
+  -- cells (feet centre 33, 66; facing right): 1 standing with the item, 2-5 the wind-up (behind her head, the step),
+  -- 6 the release (the hand at B.HAND), 7-8 the follow-through. Without it: the wave and cheer clips, as before.
+  if love.filesystem.getInfo("art/girl_throw.png") then
+    art.throw = lg.newImage("art/girl_throw.png"); art.throw:setFilter("nearest", "nearest"); art.throwQ = {}
+    for c = 1, math.floor(art.throw:getWidth() / GF.CW) do art.throwQ[c] = lg.newQuad((c - 1) * GF.CW, 0, GF.CW, GF.CH, art.throw:getDimensions()) end
+  end
   art.q = {}
   for r, rw in ipairs(GF.rows) do
     art.row[rw.name] = r; art.q[r] = {}
@@ -283,7 +290,12 @@ function B:drawScene()
   else fr = 1 + math.floor(m.t * 6) % 8 end
   local rw = GF.rows[row]
   lg.setColor(1, 1, 1, 1)
-  lg.draw(art.girl, art.q[row][fr], m.x, B.FEET, 0, 1, 1, rw.x, rw.y)
+  local tq = art.throwQ
+  if tq and #tq >= 8 and (m.state == "windup" or m.state == "throw") then   -- her own throw clip: the wind-up over
+    local f = m.state == "windup" and 1 + math.min(4, math.floor(m.t / B.WINDUP * 5))   -- frames 1-5, the release 6,
+      or 6 + math.min(2, math.floor(m.t / B.FOLLOW * 3))                     -- the follow-through 7-8
+    lg.draw(art.throw, tq[f], m.x, B.FEET, 0, 1, 1, 33, 66)
+  else lg.draw(art.girl, art.q[row][fr], m.x, B.FEET, 0, 1, 1, rw.x, rw.y) end
   if self.holding then drawItem(self.holding, self.holding.x, self.holding.y, self.t) end
   for _, it in ipairs(self.items) do
     local fade = (it.restT or 0) > B.REST - 1 and math.floor(it.restT * 8) % 2 == 0            -- blinks before it goes

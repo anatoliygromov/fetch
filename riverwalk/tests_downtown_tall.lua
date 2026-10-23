@@ -98,9 +98,10 @@ return function(mode, api)
           report("on the street (y 424) the camera rests at the bottom of the world", near(p.y, STREET) and s.camY == s.camYMax and s.camYMax == 240,
             ("feet %.0f, camY %.0f of %d: the street is at screen y %.0f, as in Downtown"):format(p.y, s.camY, s.camYMax, p.y - s.camY))
           local okZ = #s.def.bikes == 2
-          for _, z in ipairs(s.def.bikes) do okZ = okZ and z.roadY == STREET and z.kind == "tram" end
-          report("2 tram zones on the street (roadY 424)", okZ, ("%d zones"):format(#s.def.bikes))
-          report("no scenery art (greybox: the town art is drawn at y 184)", s.def.art == nil)
+          for _, z in ipairs(s.def.bikes) do okZ = okZ and z.roadY == STREET and z.kind == "cargo" and z.w == 80 and z.h == 26 end
+          report("2 cargo bike zones on the street (roadY 424, hit box 80 x 26)", okZ, ("%d zones"):format(#s.def.bikes))
+          report("Downtown's art, placed from the street line (art town, foot 424)", s.def.art == "town" and s.def.foot == STREET,
+            ("art %s, foot %s"):format(tostring(s.def.art), tostring(s.def.foot)))
         end },
       -- 0b the trams: one sets off as she walks in on the street, drives at y 424 and hurts her there; on the
       -- shelter roof it passes under her; on the roofs above tram street no tram comes
@@ -120,20 +121,44 @@ return function(mode, api)
             end
             I.force = {}
             local okY = #ys > 0; for _, y in ipairs(ys) do if not near(y, STREET, 0.01) then okY = false end end
-            report(("tram %d sets off as she walks in on the street, warned 1 s before, drives at y 424"):format(zi), sent ~= nil and sent > z.zoneX0 and sent < z.zoneX0 + 20 and warned and okY,
+            report(("cargo bike %d sets off as she walks in on the street, warned 1 s before, drives at y 424"):format(zi), sent ~= nil and sent > z.zoneX0 and sent < z.zoneX0 + 20 and warned and okY,
               ("at x %s, %d frames at y %s"):format(tostring(sent and math.floor(sent)), #ys, tostring(ys[1])))
-            report(("tram %d: standing on the street, it hurts her"):format(zi), hurt)
+            report(("cargo bike %d: standing on the street, it hurts her"):format(zi), hurt)
             local sh
             for _, pr in ipairs(st.def.props) do if pr.name == "SHELTER" and pr.x0 > z.zoneX0 and pr.x1 <= z.zoneX1 + 10 then sh = pr end end
             place(st, (sh.x0 + sh.x1) / 2, sh.y0); st.zoneIn[z] = true; st.bikeT = 0
             local passed = false
             for f = 1, 60 * 6 do st:update(1 / 60, {}); if st.bikes[1] and st.bikes[1].x < sh.x0 - 30 then passed = true end end
-            report(("tram %d: on the shelter roof (y 376) it passes under her"):format(zi), passed and st.hearts == 3 and near(st.pepper.y, sh.y0), ("hearts %d"):format(st.hearts))
+            report(("cargo bike %d: on the shelter roof (y 376) it passes under her"):format(zi), passed and st.hearts == 3 and near(st.pepper.y, sh.y0), ("hearts %d"):format(st.hearts))
           end
           local z = st.def.bikes[1]
           place(st, 2044, 248); local any = false
           for f = 1, 60 * 8 do st:update(1 / 60, {}); if #st.bikes > 0 then any = true end end
-          report("on the roofs over tram street no tram comes", not any and near(st.pepper.y, 248), ("y %.0f"):format(st.pepper.y))
+          report("on the roofs over cargo bike street no cargo bike comes", not any and near(st.pepper.y, 248), ("y %.0f"):format(st.pepper.y))
+        end },
+      -- 0c the back lane's vintage tram (scenery, D1): it comes in off the right edge, stops at its sign for its
+      -- dwell, drives off to the left and is gone off screen; it is never a hazard
+      { act = function()
+          local st = simStage()
+          report("2 tram lanes in the back lane (rails at y 414, behind Pepper's line)", #st.trams == 2 and st.def.trams[1].y1 == STREET - 10 and st.def.trams[2].y1 == STREET - 10,
+            ("%d lanes"):format(#st.trams))
+          place(st, 2000, STREET); st.trams[1].t = 0.5; st.trams[1].car = nil
+          local came, stopped, waited, left, hurt, cam0 = nil, nil, 0, false, false, st.cam
+          for f = 1, 60 * 25 do
+            st.bikes, st.bikeT = {}, 99
+            local h = st.hearts
+            st:update(1 / 60, {})
+            if st.hearts < h then hurt = true end
+            local c = st.trams[1].car
+            if c and not came then came = c.x - 150 - st.cam end
+            if c and c.state == "stop" then stopped = c.x; waited = waited + 1 / 60 end
+            if stopped and not c then left = true; break end
+          end
+          local l = st.def.trams[1]
+          report("the tram comes in off the right edge of the screen", came and came > 320, ("its front %s px from the left edge"):format(tostring(came and math.floor(came))))
+          report("it stops with its front door at the tram stop sign, waits 3 s, drives off left", stopped and near(stopped - 126, l.stop, 1) and near(waited, l.dwell, 0.05) and left,
+            ("stopped at %s (sign %d), waited %.2f s, gone %s"):format(tostring(stopped and math.floor(stopped - 126)), l.stop, waited, tostring(left)))
+          report("the tram is scenery: no heart lost, never in the hazards", not hurt and st.hearts == 3, ("hearts %d"):format(st.hearts))
         end },
       { act = function() tp(1852, 256) end }, { wait = 1.2 },
       { act = function(p, s) report("on the gallery (y 256) the camera follows her up", near(s.camY, 256 - Vc.FLOOR, 1),
@@ -176,11 +201,11 @@ return function(mode, api)
             { "low: onto the fountain's rim (tapped)", x = 1694, y = STREET, dir = "right", run = 1700, tap = true, brake = 1726, to = 408 },
             { "low: rim -> the fountain bowl (tapped, running)", x = 1724, y = 408, dir = "right", run = 1730, tap = true, brake = 1792, to = 400 },
             { "low: bowl -> the far rim (tapped, running)", x = 1792, y = 400, dir = "right", run = 1798, tap = true, brake = 1840, to = 408 },
-            { "low: rim -> the tram shed's roof (20 px)", x = 1856, y = 408, dir = "right", brake = 1900, to = 388 },
+            { "low: rim -> the gate's roof (20 px)", x = 1856, y = 408, dir = "right", brake = 1900, to = 388 },
             { "low: kiosk -> the shelter roof", x = 2004, y = 388, dir = "right", brake = 2070, to = 376 },
             { "low: tub -> table -> springy parasol -> the flower balcony", x = 2296, y = 396, dir = "right", run = 2306, through = true, to = 328 },
             { "low: the canal awning launches her over the water", x = 2470, y = 328, dir = "right", run = 2476, through = true, to = 360 },
-            { "low: the flooded square: crate -> three parasols -> tram shed", x = 2802, y = 408, dir = "right", through = true, to = 388 },
+            { "low: the flooded square: crate -> three parasols -> courtyard gate", x = 2802, y = 408, dir = "right", through = true, to = 388 },
             { "low (r7): the same with a tapped hop onto the first parasol (20 px)", x = 2802, y = 408, dir = "right", tap = true, through = true, to = 388 },
             -- way up B (with the ball): the hat to the loggia; (r7) or the plaza's springy parasol straight to the loggia
             { "way up B (r7): street -> the springy parasol -> the loggia (held jump left)", x = 1574, y = STREET, dir = "left", brake = 1546, through = true, to = 280 },
@@ -488,7 +513,15 @@ return function(mode, api)
     for _, st in ipairs({ { act = function() tp(1460, STREET) end }, { wait = 0.5 }, { act = function() hold("up") end }, { wait = 1.6 },
       shot("dt2_20_lookup_from_the_plaza"), { act = function() release() end },
       { act = function() local s = api.stage(); s.hearts = 3; s.bikes, s.zoneIn, s.bikeT = {}, {}, 2.5; tp(1910, STREET); hold("right") end },
-      { wait = 0.45 }, shot("dt2_21_tram_warning"), { act = function() release(); tp(2084, 376) end }, { wait = 1.6 }, shot("dt2_22_tram_under_the_shelter"),
+      { wait = 0.45 }, shot("dt2_21_cargo_warning"), { act = function() release(); tp(2084, 376) end }, { wait = 1.6 }, shot("dt2_22_cargo_under_the_shelter"),
+      -- r8/levels: the cargo bike passing under Pepper on the kiosk; the vintage tram at its stop in the back lane
+      { act = function() local s = api.stage(); tp(2000, 388); s.bikeT = 99; s.zoneIn[s.def.bikes[1]] = true; s.bikes = { { x = 2120, y = STREET, warn = -1, zone = s.def.bikes[1], speed = 110 } } end },
+      { wait = 0.5 }, shot("dt2_23_cargo_bike_passes"),
+      { act = function() local s = api.stage(); tp(2000, 388); s.bikes, s.bikeT = {}, 99; s.zoneIn[s.def.bikes[1]] = true; s.trams[1].car = nil; s.trams[1].t = 0.1 end },
+      { cond = function(p, s) local c = s.trams[1].car; return c and c.state == "stop" end, act = function() end, limit = 12 },
+      { wait = 1.0 }, shot("dt2_24_vintage_tram_at_its_stop"),
+      { act = function() local s = api.stage(); tp(3272, 376); s.bikes, s.bikeT = {}, 99; s.zoneIn[s.def.bikes[2]] = true; s.trams[2].car = nil; s.trams[2].t = 0.1 end },
+      { wait = 1.6 }, shot("dt2_25_vintage_tram_coming_in"),
       { act = function() love.event.quit() end } }) do steps[#steps + 1] = st end
   end
 

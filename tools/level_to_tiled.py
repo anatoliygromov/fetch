@@ -75,7 +75,7 @@ LAYERS = [
 # which layer a level field goes to (a field not named here gets a layer of its own)
 FIELD_LAYER = {
     "props": "props", "pieces": "props", "passages": "props",
-    "bikes": "zones", "hatches": "zones", "barrels": "zones", "secrets": "zones",
+    "bikes": "zones", "hatches": "zones", "barrels": "zones", "secrets": "zones", "trams": "zones",
     "movers": "movers", "critters": "critters",
     "lamps": "lamps", "lights": "lamps", "bones": "bones",
     "start": "story", "ball": "story", "girl": "story", "cat": "story", "fox": "story", "exit": "story",
@@ -101,6 +101,7 @@ REL = {
                                                     # a piece stands on (tall levels)
     "barrels": {"trigger": "x", "rest": "xy"},
     "bikes": {"endX": "x", "depot": "x"},           # (a band: x only; its minY is not used by the game)
+    "trams": {"stop": "x"},                         # the back lane's tram stop sign (r8/levels; arthooks.lua)
 }
 REL_PREFIX = {"x": "relx.", "y": "rely.", "xy": "relxy."}
 # hints with a height (minY, maxY: where her feet must be) are boxes in the map: top = minY, bottom = maxY
