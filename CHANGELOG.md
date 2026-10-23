@@ -19,6 +19,15 @@ SpriteCook: 408 credits of the approved 528 (reserve unused), 1,078 left. Contac
   (102 x 76, faces left; the 80 x 26 hit box is the cargo box and the front wheel) and its pedal loop. 230 credits.
   The 1x animation sources were built in the browser (the only place that can upload to SpriteCook) with the same
   steps as `r8lib.py` and kept in `source_sheets/r8_*_1x.png`; clip frames are cleaned (matte peeled, specks, outline).
+- **B6 to B11, Downtown scenery** (`tools/build_r8_scenery.py`): the vintage tram for the back lane (276 x 130,
+  decoration), the roof kit at the greybox widths (loggia 120, gallery halves 88 and 72, guild house gable 148,
+  chimney 24, dormer 56, window awning 56, ledges 32/48/64 x 8; obstacles with outline), three tall house fronts
+  (240 px, decoration), the row of house fronts across the square (247 x 130, replaces the flat `town_facades.png`),
+  the canal footbridge (160 wide) and Riddarholmen's spire (400 px). 178 credits. SpriteCook's pixel output came back
+  smaller than the targets for the big pieces, so they are built from the raw render (reduced 4x in the browser,
+  white ground keyed off, never scaled up). Fixes made in the build: the footbridge's painted dog removed and its
+  plank tops cut (front-on rule), the dormer's side face cut, the tram's see-through windows glazed, far-layer dark
+  tones lifted so nothing reads as a stroke.
 
 ## Branch `r7/curve`: the tall order's difficulty curve passes the acceptance test (22 Oct)
 Built on `round1`. The planned order with the tall levels (River Walk, City Park tall, Downtown tall, Rooftops,
