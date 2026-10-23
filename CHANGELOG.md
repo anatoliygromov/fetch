@@ -2,6 +2,16 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `art/placement`: placement audit of the three demo levels and its fixes (23 Oct)
+Built on main v0.6. No credits; Pepper untouched; approved art unchanged (its findings are listed for the owner).
+- **docs/placement_audit.md**: every screen of River Walk, City Park (tall) and Downtown (tall) checked for size against
+  Pepper (46 px a metre), cropping, grounding, front-on view, composition and quality; one table per level (asset, x,
+  problem, severity 1-3, fix, owner approval) with 3x evidence crops in docs/placement_audit/.
+- **tests_look.lua**: `LOOK_SWEEP=1 love riverwalk --level L --lookshots` saves every screen of a level (the camera
+  every 300 px, `LOOK_STEP`, at each height tier of a tall level), look on, no HUD.
+- **River Walk:** the road is no longer drawn under the bridge pier (x 1936-2072): road.lua took the pier's row at
+  y 184 for promenade and painted asphalt and lane dashes over the quay; the quay pavement now runs through the passage.
+
 ## Regroup (23 Oct, evening): main v0.6, BIBLE and STATUS, the enforced gate, checks and releases on GitHub
 The owner's decisions of 23 Oct (merge list): round1 becomes main as v0.6; art/freefix merged with the approved River
 Walk building, cafe and gable kept unchanged; art/haze merged with Downtown's facades at 0.25 (was 0.10 on the branch)
