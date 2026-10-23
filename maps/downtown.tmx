@@ -328,7 +328,7 @@
   <object id="36" name="STATUE" type="props" x="1450" y="80" width="28" height="64">
    <properties>
     <property name="kind" value="decor"/>
-    <property name="layer" value="back"/>
+    <property name="layer" value="play"/>
    </properties>
   </object>
   <object id="37" name="PEDESTAL" type="props" x="1440" y="144" width="48" height="40">

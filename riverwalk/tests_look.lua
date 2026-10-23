@@ -14,6 +14,10 @@ return function(api)
   }
   local name = ({ park = "citypark", town = "downtown" })[api.stage().def.art] or "riverwalk"
   local spots = SPOTS[name]
+  if os.getenv("LOOK_SPOTS") then                                  -- (art/fixes) custom spots "x,y;x,y", any level
+    spots = {}
+    for a, b in os.getenv("LOOK_SPOTS"):gmatch("(%-?%d+),(%-?%d+)") do spots[#spots + 1] = { tonumber(a), tonumber(b) } end
+  end
   local prefix = name == "riverwalk" and "look" or ("look_" .. name)
   local cv = love.graphics.newCanvas(320, 240)
   local T, i, phase = 0, 0, "start"

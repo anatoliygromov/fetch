@@ -635,7 +635,12 @@ function St:draw(debug)
       Rd.drawBike(cyc, -c.x, math.floor(c.x - cam + 0.5) - math.floor(cyc:getWidth() / 2), math.floor(c.y - cyc:getHeight() + 0.5), true)
     end                                                            -- the art faces right; bikes ride left, wheels rolling
   end
-  for _, pr in ipairs(self.def.props) do if pr.layer == "play" and not pr.over then use(pr.kind == "decor" and "back" or "play"); prop(pr, cam, C.prop) end end
+  -- decoration on her line takes the back look, except the pieces whose drawn parts she stands on (art/fixes:
+  -- the statue, its arm and hat are ledges): they are outlined obstacles and take the play look
+  local PLAYLOOK = { STATUE = true }
+  for _, pr in ipairs(self.def.props) do
+    if pr.layer == "play" and not pr.over then use((pr.kind == "decor" and not PLAYLOOK[pr.name]) and "back" or "play"); prop(pr, cam, C.prop) end
+  end
   use("play")
   Sp.drawRopes(self, cam)                                          -- the ropes the ferries run on
   for _, m in ipairs(self.movers) do

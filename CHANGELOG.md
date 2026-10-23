@@ -2,6 +2,44 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `art/qa`: the asset QA gate (23 Oct)
+Built on `art/fixes`. Tools and docs only; no art changed.
+- **tools/asset_qa.py**: every asset checked as the game draws it and in detail (alpha, slot, noise, stray, blotches,
+  specks, pinholes, outline, colours, ladder in every level it is drawn in, windows pixel by pixel, frames). Exit 1 on
+  any FAIL. Calibrated: the approved bench, bin, lamp, kiosks, planter and flower box pass; the plaza house windows,
+  the winch keeper's outline and batch 1's plaster fail.
+- **tools/qa_card.py**: one card per asset (as drawn 1x/2x, the file at 5x with flagged pixels boxed beside the
+  bench, bin and lamp, windows lined up at 8x, frames at 5x and GIFs). **tools/qa_triage.py**: the defect list.
+- **docs/asset_qa.md**: the gates (brief, pilot, make, clean, checks, card, independent review, owner), the review
+  checklist, the credit rule. **docs/art_ledger.md**: credits per asset. **docs/asset_qa_triage.md**: the library on
+  23 Oct (133 assets: 31 PASS, 36 WARN, 41 to fix free, 25 batch 1 rejected).
+- tools/measure_layers.py runs nothing on import now (asset_qa imports it).
+- An independent agent reviewed the tools against the game code; its findings (wrong look for the pier, unused
+  files, slot sizes, outline on decoration and front pieces, window grouping, merged messages) are fixed.
+
+## Branch `art/fixes`: the layer-ladder code fixes and a clean pass (23 Oct)
+Built on `round1` with `art/layers` merged (tools/measure_layers.py, tools/layer_shots.sh). No credits, no new art.
+Owner decisions of 23 Oct (Asset Library doc): all five recommendations accepted; decision 4 (lighten the plaza
+houses now) is done here.
+- **Statue tagged play** (maps/downtown.tmx, downtown_tall.tmx, level/downtown.lua and both exports): its arm and hat
+  are ledges, so it takes the play look (stage.lua, PLAYLOOK). Still decoration for collision; nothing moves.
+- **Winch keeper faded 35 %** (scene.lua): darks 17 -> 86 on screen.
+- **Plaza houses faded 28 %** (scene.lua, decision 4): darks 50-54 -> 96-99. Their outlines are baked in; the redraw
+  comes later under decision 2(a).
+- **Outlines completed** (tools/outline_complete.py, in place, no resize): town_pedestal (38 -> 100 %, the stone ink
+  29,24,22), town_stall (81 -> 100 %), town_shelter (82 -> 100 %). The ferry was checked and left as it is: every
+  deck edge Pepper stands on (hull, saloon roof, wheelhouse roof) is already outlined; the light edges are the
+  railings, mast and flag, which are decoration.
+- **Clean pass** (tools/cleanpass.py: a lone pixel takes its neighbours' majority colour only when that colour is
+  close, so eyes, highlights and outline corners stay; no new colours, edges and alpha untouched): tree, tree_far,
+  tree_near, rw_jetty (+ its outline ink unified), park_log, park_willow, park_willow_tall, park_swings, park_leaves,
+  park_leaves_flat, park_hedge, town_statue, town_ground (wraps), town_crate_front, town_stall, town_tramshed70/96
+  (22 -> 20 colours), goose (39 -> 24 colours), gull. Every file now under 5 % lone pixels.
+- **tools/fix_shots.sh** and `LOOK_SPOTS` in tests_look.lua: frames of chosen spots on any level (before / after).
+- **Checks:** check_pepper PEPPER UNCHANGED (4591 steps), check_flow 116 of 116, check_tiled PASSED (0 FAIL),
+  `--qa` downtown_tall and citypark_tall 0 problems, the curve (`check_curve.py --order riverwalk,citypark_tall,
+  downtown_tall,rooftops,soder,night --seeds 10`, fresh out) T1-T4 PASS with the same DI numbers as r8/levels.
+
 ## Branch `r8/levels`: the tall City Park and Downtown in the game, the cargo bike, hooks for the first art batch (23 Oct)
 Built on `round1`. The owner's decisions of 23 Oct: D2 (the tall City Park and Downtown replace the flat ones) and D1
 (Downtown's street hazard is a cargo bike with its rider; a true-scale vintage tram rolls by in the back lane as

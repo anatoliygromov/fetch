@@ -737,7 +737,7 @@ return {
           visible = true,
           properties = {
             ["kind"] = "decor",
-            ["layer"] = "back",
+            ["layer"] = "play",
           },
         },
         {
