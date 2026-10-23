@@ -29,7 +29,10 @@ local function load()
   local function img(n) local im = lg.newImage("art/scene/" .. n .. ".png"); im:setFilter("nearest", "nearest"); return im end
   for i = 1, 5 do art.cars[i] = img("road_car" .. i) end
   for i = 1, 2 do art.cyclists[i] = img("cyclist" .. i) end       -- the promenade bikes (stage.lua)
-  for i = 1, 2 do art.riders[i] = img("road_cyclist" .. i) end    -- the road's cyclists
+  -- the road's cyclists, also the promenade bikes (stage.lua). r8/levels: art/scene/cyclist_adult1.png and 2 (the
+  -- true-scale adult riders of the first art batch, facing right) replace road_cyclist1-2 when they are there
+  local function has(n) return love.filesystem.getInfo("art/scene/" .. n .. ".png") ~= nil end
+  for i = 1, 2 do art.riders[i] = img(has("cyclist_adult" .. i) and ("cyclist_adult" .. i) or ("road_cyclist" .. i)) end
   -- rolling wheels (tools/make_wheels.py): the same art in 4 frames, the spokes a quarter of a gap further each;
   -- px = how far the bike rolls per frame (wheel radius x spoke gap / 4)
   art.roll = {}
@@ -40,7 +43,16 @@ local function load()
     for f = 0, 3 do q[f] = lg.newQuad(f * w, 0, w, h, im:getWidth(), im:getHeight()) end
     art.roll[still] = { im = im, q = q, px = r * (2 * math.pi / spokes) / 4 }
   end
-  for i = 1, 2 do roll(art.cyclists[i], "cyclist" .. i, 9.5, 8); roll(art.riders[i], "road_cyclist" .. i, 14.5, 12) end
+  for i = 1, 2 do
+    roll(art.cyclists[i], "cyclist" .. i, 9.5, 8)
+    if has("cyclist_adult" .. i .. "_pedal") then                  -- a pedal loop: frames of the still's size side by
+      local still, im = art.riders[i], img("cyclist_adult" .. i .. "_pedal")   -- side; one frame per 6 px ridden
+      local w, h = still:getWidth(), still:getHeight()
+      local q = {}
+      for f = 0, math.floor(im:getWidth() / w) - 1 do q[f] = lg.newQuad(f * w, 0, w, h, im:getWidth(), im:getHeight()) end
+      art.roll[still] = { im = im, q = q, px = 6, n = #q + 1 }
+    elseif not has("cyclist_adult" .. i) then roll(art.riders[i], "road_cyclist" .. i, 14.5, 12) end
+  end
   return art
 end
 -- draws a bike's art with its wheels turned for the distance it has ridden (dist grows whichever way it goes);
@@ -49,7 +61,7 @@ function Rd.drawBike(still, dist, x, y, flip)
   local r = load().roll[still]
   local sx, ox = flip and -1 or 1, flip and still:getWidth() or 0
   if not r then lg.draw(still, x + ox, y, 0, sx, 1); return end
-  lg.draw(r.im, r.q[math.floor(dist / r.px) % 4], x + ox, y, 0, sx, 1)
+  lg.draw(r.im, r.q[math.floor(dist / r.px) % (r.n or 4)], x + ox, y, 0, sx, 1)
 end
 Rd.art = load
 Rd.CAR_TOP, Rd.RIDER_TOP = 192, 190                                -- below Pepper's feet (y 184)

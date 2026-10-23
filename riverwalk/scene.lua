@@ -891,7 +891,9 @@ function Sc.townArt(style)
     T.tramshed = { [70] = img("town_tramshed70"), [96] = img("town_tramshed96") }   -- SpriteCook (tools/import_assets_v2.py)
     -- the two far layers sit further back than the back-edge decoration: faded more (as River Walk's far shore),
     -- so the street's obstacles and the climbable houses stand out against them
-    T.facades = fadeImg("town_facades", 0.40)
+    -- (r8/levels: art/scene/town_row.png, the row of old town houses across the square with volume, replaces
+    -- town_facades.png when it is there: the same layer, a strip that repeats, standing on y 178)
+    T.facades = fadeImg(love.filesystem.getInfo("art/scene/town_row.png") and "town_row" or "town_facades", 0.40)
     T.roofs = fadeImg("town_roofs", 0.45)
   end
   T.groundQ = colQuads(T.ground)
@@ -1699,6 +1701,8 @@ function Sc.drawPropArt(p, camx, def, kicked)
   if p.hidden then return end
   if style == "park" and def.foot and drawTierProp(p, camx, def) then return end   -- the treetop tier (tall parks)
   local d = dy()                                                  -- (the art's fixed lines follow the path line)
+  if style == "town" and def.foot and (package.loaded.arthooks or require("arthooks")).townPiece(p, camx, def) then return end   -- the
+  -- tall Downtown's roofs, fronts and spire (r8/levels: arthooks.lua, its art when it lands, else drawn in code)
   if not n or n == "" then
     if style == "park" and underCrown(def, p) then drawBough(p, camx); return end
     local o = owner(def, p)

@@ -41,6 +41,21 @@ scenery). Pepper's files, music and sfx are untouched; no art was generated.
   (tall Downtown): the cargo bike zones' kind and hit box, the two tram lanes, the tram comes in off screen, stops
   at its sign for 3 s and leaves, no heart lost (102 of 102); flat Downtown 81 of 81. `--auto` 51.4 s and 56.2 s, as
   before.
+- **Hooks for the first art batch** (arthooks.lua, road.lua, bonus.lua, scene.lua; `docs/art_hooks_r8.md` lists every
+  name, size and anchor; `tools/preview_art_hooks.py` writes labelled stand-ins into a LOVE save folder to check them
+  without committing art). Each piece looks for its file and falls back cleanly: the cargo bike and its pedal sheet,
+  the vintage tram (above); the promenade and road cyclists `cyclist_adult1-2.png` with `_pedal` sheets (else
+  `road_cyclist1-2`); Mia's throw `art/girl_throw.png` (8 frames in girl.png's cells) in the bonus round's throws
+  (else the wave and cheer clips); the row across the square `town_row.png` (else `town_facades.png`, both
+  Downtowns). The tall Downtown's old town: the roof kit `town_roof_<name>[<width>].png` over the high road's boxes
+  (loggia, galleries, chimney, dormer, flower roof), the stepped gable `town_roof_gable.png`, the other ledges
+  `town_roof_ledge.png` (a 3-slice), `town_footbridge.png`; the tall house fronts `town_front_tall1-3.png` filling
+  the back boxes under the roofs (drawn before the other back props, so Downtown's houses with balconies stand in
+  front); the far landmark `spire_riddarholmen.png`. Until they land, all of these are drawn in code (crisp and
+  outlined: stone ledges, an arcade, a balustrade, a brick chimney and gable, a copper dormer cap, flower boxes,
+  the footbridge's deck, rail and arch; faded: plaster fronts with windows, cornices and doors, the openwork spire)
+  instead of the grey labelled boxes. Checked with stand-ins for every file (all drawn at their anchors, the bonus
+  round's throw frames, River Walk's autopilot 66.3 s unchanged).
 ## Branch `r7/curve`: the tall order's difficulty curve passes the acceptance test (22 Oct)
 Built on `round1`. The planned order with the tall levels (River Walk, City Park tall, Downtown tall, Rooftops,
 Soder Hill, Night Harbour), measured with `tools/check_curve.py --name tall --seeds 10`; every iteration's numbers are

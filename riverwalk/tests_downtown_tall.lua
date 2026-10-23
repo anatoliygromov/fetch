@@ -514,6 +514,14 @@ return function(mode, api)
       shot("dt2_20_lookup_from_the_plaza"), { act = function() release() end },
       { act = function() local s = api.stage(); s.hearts = 3; s.bikes, s.zoneIn, s.bikeT = {}, {}, 2.5; tp(1910, STREET); hold("right") end },
       { wait = 0.45 }, shot("dt2_21_cargo_warning"), { act = function() release(); tp(2084, 376) end }, { wait = 1.6 }, shot("dt2_22_cargo_under_the_shelter"),
+      -- r8/levels: the cargo bike passing under Pepper on the kiosk; the vintage tram at its stop in the back lane
+      { act = function() local s = api.stage(); s.bikes, s.bikeT = {}, 99; tp(2000, 388); s.bikes = { { x = 2120, y = STREET, warn = -1, zone = s.def.bikes[1], speed = 110 } } end },
+      { wait = 0.5 }, shot("dt2_23_cargo_bike_passes"),
+      { act = function() local s = api.stage(); s.bikes, s.bikeT = {}, 99; tp(2000, 388); s.trams[1].car = nil; s.trams[1].t = 0.1 end },
+      { cond = function(p, s) local c = s.trams[1].car; return c and c.state == "stop" end, act = function() end, limit = 12 },
+      { wait = 1.0 }, shot("dt2_24_vintage_tram_at_its_stop"),
+      { act = function() local s = api.stage(); s.bikes, s.bikeT = {}, 99; tp(3200, 388); s.trams[2].car = nil; s.trams[2].t = 0.1 end },
+      { wait = 2.6 }, shot("dt2_25_vintage_tram_coming_in"),
       { act = function() love.event.quit() end } }) do steps[#steps + 1] = st end
   end
 
