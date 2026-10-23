@@ -1,0 +1,49 @@
+# Checks on every pull request and every push to main; a Release on every push to main.
+# The checks are the ones docs/BIBLE.md requires before any merge (Pepper unchanged, flow, Tiled).
+# The Release carries FETCH.love. Its tag comes from VERSION (e.g. v0.6) the first time, then
+# VERSION plus the build number (v0.6.12), so no tag ever has to be pushed by hand.
+name: checks and release
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install LÖVE and a virtual display
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq love xvfb zip
+      - name: Pepper unchanged
+        run: SDL_AUDIODRIVER=dummy XDG_DATA_HOME=$(mktemp -d) sh tools/check_pepper.sh
+      - name: Flow
+        run: SDL_AUDIODRIVER=dummy XDG_DATA_HOME=$(mktemp -d) bash tools/check_flow.sh
+      - name: Tiled maps
+        run: SDL_AUDIODRIVER=dummy XDG_DATA_HOME=$(mktemp -d) bash tools/check_tiled.sh
+
+  release:
+    needs: checks
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build FETCH.love
+        run: cd riverwalk && zip -qr ../FETCH.love .
+      - name: Publish the Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          base="$(tr -d ' \n' < VERSION)"
+          if git rev-parse -q --verify "refs/tags/$base" >/dev/null; then tag="$base.${{ github.run_number }}"; else tag="$base"; fi
+          notes="Built from $(git rev-parse --short HEAD) on $(date -u +%Y-%m-%d). Changes: see CHANGELOG.md."
+          gh release create "$tag" FETCH.love --target "$GITHUB_SHA" --title "FETCH! $tag" --notes "$notes"

@@ -2,6 +2,20 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Regroup (23 Oct, evening): main v0.6, BIBLE and STATUS, the enforced gate, checks and releases on GitHub
+The owner's decisions of 23 Oct (merge list): round1 becomes main as v0.6; art/freefix merged with the approved River
+Walk building, cafe and gable kept unchanged; art/haze merged with Downtown's facades at 0.25 (was 0.10 on the branch)
+so their windows sit back until the Aseprite redraw; r8/art and title/pixels closed and kept as reference.
+- **docs/BIBLE.md** (the rules, each with its date) and **docs/STATUS.md** (the control tower) replace the 14 project
+  notes as what a session reads first (FETCH! Production Playbook).
+- **tools/qa_card.py** enforces the gate: an owner card needs an in-game frame (colour and greyscale on the card) and a
+  slot; otherwise it is refused and nothing is written. A wrong slot fails the card. `--draft` for working cards.
+- **.github/workflows/checks-and-release.yml**: check_pepper, check_flow and check_tiled on every pull request and push
+  to main; a Release with FETCH.love on every push to main, tagged from **VERSION** (v0.6), so no tag push is needed.
+- **Checks:** check_pepper PEPPER UNCHANGED (4591 steps), check_flow 116 of 116, check_tiled PASSED, the curve
+  (`--order riverwalk,citypark_tall,downtown_tall,rooftops,soder,night --seeds 10`) T1-T4 PASS, `--qa` riverwalk,
+  citypark_tall and downtown_tall 0 problems.
+
 ## Branch `art/freefix`: the "Fix free" list fixed at 0 credits (23 Oct)
 Built on `round1` (9d29233). No credits, no resize, no new colours, alpha binary, sizes unchanged; Pepper untouched.
 - **tools/blotch_clean.py**: a 2-24 px patch of one colour inside a near colour (asset_qa's blotch check) takes the

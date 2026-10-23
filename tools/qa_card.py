@@ -1,6 +1,13 @@
 """tools/qa_card.py: one QA card (PNG) per asset from tools/asset_qa.py's JSON (docs/asset_qa.md).
 
-  python3 -I tools/asset_qa.py --all --json out/qa.json ; python3 -I tools/qa_card.py out/qa.json out/cards [names]
+  python3 -I tools/asset_qa.py --all --json out/qa.json
+  python3 -I tools/qa_card.py out/qa.json out/cards NAME --frame NAME=ingame.png [--slot NAME=WxH]
+  python3 -I tools/qa_card.py out/qa.json out/drafts [names] --draft      (working cards, never shown to the owner)
+
+THE GATE (owner, 23 Oct; docs/BIBLE.md): a card for the owner is refused, and nothing is written, unless every asset
+on it has (1) an in-game frame (--frame, a screenshot of the asset where the game draws it), shown in colour and in
+greyscale, and (2) a slot: a size in asset_qa.SLOTS or one given with --slot, checked here. The 5x zoom with the
+approved bench, bin and lamp beside it is always on the card. --draft skips the gate and stamps DRAFT on the card.
 
 A card shows, top to bottom:
   - the verdict, the numbers against the layer's ladder row, every failed or warned check
@@ -57,7 +64,7 @@ def wrap(text, width_px, f):
     if cur: lines.append(cur)
     return lines
 
-def card(d, reg, out_dir):
+def card(d, reg, out_dir, frame=None, slot=None, draft=False):
     name = d["name"]
     raw = Image.open(d["_path"]).convert("RGBA")
     W0, H0 = raw.size
@@ -77,6 +84,9 @@ def card(d, reg, out_dir):
         for k, ln in enumerate(wrap(f"{c['sev'].upper()}  {c['id']}: {c['msg']}", 1880, F)):
             lines.append(("    " + ln if k else ln, F, col))
     if not d["checks"]: lines.append(("no findings", F, (90, 200, 110)))
+    if slot: lines.append((f"slot {slot[0]} x {slot[1]} px: " + ("OK" if (W0, H0) == tuple(slot) else f"WRONG ({W0} x {H0})"), F,
+                           (90, 200, 110) if (W0, H0) == tuple(slot) else (235, 70, 70)))
+    if draft: lines.insert(0, ("DRAFT: not passed through the gate, not for the owner", FB, (240, 190, 60)))
     hh = 14 + sum(28 if f is FB else 20 for _, f, _ in lines)
     blocks.append(("header", lines, hh))
     # 2 as drawn 1x and 2x
@@ -87,6 +97,14 @@ def card(d, reg, out_dir):
     ImageDraw.Draw(asd).text((8, 4), "as drawn (fade + look shader): 1x and 2x", font=FS, fill=DIM)
     asd.paste(a1, (8, 22)); asd.paste(a2, (a1.width + 22, 22))
     blocks.append(("img", asd))
+    # 2b the in-game frame, colour and greyscale (the gate)
+    if frame:
+        fr = Image.open(frame).convert("RGB"); fz = 2 if fr.width <= 480 else 1
+        fc = zoom(fr, fz); fg = fc.convert("L").convert("RGB")
+        fb = Image.new("RGB", (fc.width * 2 + 34, fc.height + 26), PANEL)
+        ImageDraw.Draw(fb).text((8, 4), f"in the game at {fz}x: colour, then greyscale (lightest layers at the back?)", font=FS, fill=DIM)
+        fb.paste(fc, (8, 22)); fb.paste(fg, (fc.width + 26, 22))
+        blocks.append(("img", fb))
     # 3 the file at z, flagged pixels boxed, the references beside (a sheet: every frame at 5x, wrapped)
     if d.get("frames"): z = 5 if d["frames"][0] <= 100 else 3
     big = zoom(on_bg(raw, checker(W0, H0)), z)
@@ -183,19 +201,44 @@ def card(d, reg, out_dir):
             y += b[2] + 12
         else:
             cv.paste(b[1], (12, y)); y += b[1].height + 12
-    path = os.path.join(out_dir, f"{d['verdict']}_{name}.png")
+    path = os.path.join(out_dir, ("DRAFT_" if draft else "") + f"{d['verdict']}_{name}.png")
     cv.save(path, optimize=True)
     return path
 
 def main():
-    data = json.load(open(sys.argv[1])); out = sys.argv[2]; only = set(sys.argv[3:])
-    os.makedirs(out, exist_ok=True)
+    args = sys.argv[1:]
+    draft = "--draft" in args
+    frames, slots, pos, k = {}, {}, [], 0
+    while k < len(args):
+        a = args[k]
+        if a in ("--frame", "--slot"):
+            n, v = args[k + 1].split("=", 1)
+            if a == "--frame": frames[n] = v
+            else: slots[n] = tuple(int(t) for t in v.lower().split("x"))
+            k += 2; continue
+        if a != "--draft": pos.append(a)
+        k += 1
+    data = json.load(open(pos[0])); out = pos[1]; only = set(pos[2:])
     reg = Q.registry()
-    for d in data:
-        if only and d["name"] not in only: continue
+    todo = [d for d in data if not only or d["name"] in only]
+    if not draft:
+        refused = []
+        for d in todo:
+            n = d["name"]
+            if n not in frames or not os.path.exists(frames[n]): refused.append(f"{n}: no in-game frame (--frame {n}=path)")
+            if n not in slots and n in Q.SLOTS: slots[n] = Q.SLOTS[n][:2]
+            if n not in slots: refused.append(f"{n}: no slot (add it to asset_qa.SLOTS or pass --slot {n}=WxH)")
+        if refused:
+            print("REFUSED by the gate, no card written:"); print("\n".join("  " + r for r in refused)); sys.exit(2)
+    os.makedirs(out, exist_ok=True)
+    for d in todo:
         d["_path"] = d["file"] if os.path.isabs(d["file"]) else os.path.join(Q.ROOT, d["file"])
         if not os.path.exists(d["_path"]) and d["name"] in reg: d["_path"] = reg[d["name"]]["path"]
-        print(card(d, reg, out))
+        sl = slots.get(d["name"])
+        if sl and Image.open(d["_path"]).size != tuple(sl):
+            w, h = Image.open(d["_path"]).size
+            d["verdict"] = "FAIL"; d["checks"].insert(0, {"id": "slot", "sev": "fail", "msg": f"{w} x {h} px, its slot is {sl[0]} x {sl[1]}"})
+        print(card(d, reg, out, frames.get(d["name"]), sl, draft))
 
 if __name__ == "__main__":
     main()
