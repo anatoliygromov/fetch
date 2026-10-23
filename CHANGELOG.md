@@ -72,6 +72,40 @@ scenery). Pepper's files, music and sfx are untouched; no art was generated.
 - **Left for later:** the art itself (the batch-1 files drop in by name); `tools/make_downtown_tall.py` still writes
   the tall Downtown without `art`/`foot` (the map in Tiled is the source now); Rooftops' and Night Harbour's par times
   still come from their r6 autopilot times (58.1 and 82.6 s since r7 would give 93 and 133).
+
+## Branch `r8/art`: art batch 1, proposals for the owner (23 Oct)
+Built on `round1`. The batch the owner approved this morning (docs/asset_plan_22oct.md section 5, D1 cargo bike + tram,
+D2 tall levels): new files only, in `riverwalk/art/r8/`, not loaded by the game yet; the level agent wires them by the
+names in `docs/art_batch1.md`. Pepper's files, Mia's sheet and every file in `riverwalk/art/scene/` are untouched.
+SpriteCook: 408 credits of the approved 528 (reserve unused), 1,078 left. Contact sheets: `/home/claude/out/r8-art/`.
+- **B0, the chapter 1 style sheet** (`tools/build_r8_stylesheet.py`, `source_sheets/r8_style_ch1_1x.png` and `_2x`):
+  River Walk, City Park and Downtown panels composited from approved 1x art (Pepper, Mia, the cat, the goose, the
+  keeper, the road cyclist, the screen-1 building, houses, props) on their own ground and sky, with the three levels'
+  sky bands. Uploaded as SpriteCook `8a64c999` into the new project FETCH, collection batch1, and used as the style
+  reference for every generation.
+- **B1 to B5, people and bikes** (`tools/build_r8_people.py`, `tools/r8lib.py`, `tools/r8_browser_reduce.js`):
+  adult commuter cyclists at true scale (woman in a red coat, man in a green jacket; 84 px wheel to helmet, wheels
+  about 30 px, so Pepper reaches to the rider's knee) and the same riders at 92 px for the near lane, each with an
+  8-frame pedal loop at 1x; Mia's throw (8 frames from her standing pose, hood up); the cargo bike with the baker
+  (102 x 76, faces left; the 80 x 26 hit box is the cargo box and the front wheel) and its pedal loop. 230 credits.
+  The 1x animation sources were built in the browser (the only place that can upload to SpriteCook) with the same
+  steps as `r8lib.py` and kept in `source_sheets/r8_*_1x.png`; clip frames are cleaned (matte peeled, specks, outline).
+- **B6 to B11, Downtown scenery** (`tools/build_r8_scenery.py`): the vintage tram for the back lane (276 x 130,
+  decoration), the roof kit at the greybox widths (loggia 120, gallery halves 88 and 72, guild house gable 148,
+  chimney 24, dormer 56, window awning 56, ledges 32/48/64 x 8; obstacles with outline), three tall house fronts
+  (240 px, decoration), the row of house fronts across the square (247 x 130, replaces the flat `town_facades.png`),
+  the canal footbridge (160 wide) and Riddarholmen's spire (400 px). 178 credits. SpriteCook's pixel output came back
+  smaller than the targets for the big pieces, so they are built from the raw render (reduced 4x in the browser,
+  white ground keyed off, never scaled up). Fixes made in the build: the footbridge's painted dog removed and its
+  plank tops cut (front-on rule), the dormer's side face cut, the tram's see-through windows glazed, far-layer dark
+  tones lifted so nothing reads as a stroke.
+- **QA, contact sheets, the record** (`tools/art_qa.py`, `tools/build_r8_sheets.py`, `docs/art_batch1.md`): the QA
+  script checks size against target, colour count, outline present (obstacles, characters) or absent (decoration),
+  lone and isolated pixels, semi-transparent pixels and the animator's grey matte: 28 of 28 files pass. One contact
+  sheet per line at 3x (each asset on its level's ground beside Pepper and Mia, alternates and old art beside it,
+  hit boxes in red) and an overview at 2x. `docs/art_batch1.md` lists every asset id, prompt, credit, variant choice,
+  the file names for the level agent with what each replaces, and the points for the owner's eye.
+
 ## Branch `r7/curve`: the tall order's difficulty curve passes the acceptance test (22 Oct)
 Built on `round1`. The planned order with the tall levels (River Walk, City Park tall, Downtown tall, Rooftops,
 Soder Hill, Night Harbour), measured with `tools/check_curve.py --name tall --seeds 10`; every iteration's numbers are
