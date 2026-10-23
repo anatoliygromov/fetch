@@ -885,8 +885,10 @@ function Sc.townArt(style)
     T.boat = img("park_boat_front")                               -- front-on (tools/make_front_view.py)
     T.table = img("park_table_front")                             -- front-on (tools/make_table_front.py)
   else
-    for _, n in ipairs({ "ground", "crate", "parasol", "table", "stall", "awning80", "awning64", "statue", "pedestal", "tram", "shelter", "kiosk", "shopsign", "rim", "bowl", "bollard", "tub", "house1", "house2", "house3", "tier" }) do T[n] = img("town_" .. n) end
-    for _, n in ipairs({ "door", "sign", "spout" }) do T[n] = fadeImg("town_" .. n) end
+    for _, n in ipairs({ "ground", "crate", "parasol", "table", "stall", "awning80", "awning64", "statue", "pedestal", "tram", "shelter", "kiosk", "shopsign", "rim", "bowl", "bollard", "tub", "tier" }) do T[n] = img("town_" .. n) end
+    -- the plaza houses are decoration on the back layer: faded like the rest of it (art/fixes, owner decision 4;
+    -- their balconies are separate play ledges, drawn in code)
+    for _, n in ipairs({ "door", "sign", "spout", "house1", "house2", "house3" }) do T[n] = fadeImg("town_" .. n) end
     T.crate, T.table = img("town_crate_front"), img("town_table_front")   -- front-on (tools/make_front_view.py)
     T.tramshed = { [70] = img("town_tramshed70"), [96] = img("town_tramshed96") }   -- SpriteCook (tools/import_assets_v2.py)
     -- the two far layers sit further back than the back-edge decoration: faded more (as River Walk's far shore),
@@ -1748,8 +1750,9 @@ function Sc.drawPropArt(p, camx, def, kicked)
       end
     elseif n == "WINCH" then                                       -- the second keeper at the duck boat's winch
       if not T.keeperWinch then                                   -- (art/scene/park_keeper_winch.png, 8 x 80 px,
-        T.keeperWinch = newImg("art/scene/park_keeper_winch.png") -- made facing right, drawn mirrored so the winch
-        T.keeperWinchQ = {}                                       -- faces the pond; drum middle x 60, feet y 79)
+        T.keeperWinch = fadeImg("park_keeper_winch", 0.35)       -- made facing right, drawn mirrored so the winch
+        T.keeperWinchQ = {}                                       -- faces the pond; drum middle x 60, feet y 79;
+                                                                  -- decoration on the back layer: faded 35 %, art/fixes)
         for i = 1, 8 do T.keeperWinchQ[i] = lg.newQuad((i - 1) * 80, 0, 80, 80, T.keeperWinch:getDimensions()) end
       end
       lg.setColor(1, 1, 1, 1)
@@ -1805,7 +1808,7 @@ function Sc.drawPropArt(p, camx, def, kicked)
     elseif n == "SHELTER" then shadowUnder({ x0 = p.x0, x1 = p.x1, y1 = 184 + d }, camx); at(T.shelter, x, p.y0)
     elseif n == "RIVER" then at(T.sign, x + w / 2 - T.sign:getWidth() / 2, 175 + d - T.sign:getHeight())
     elseif n == "TUB" then shadowUnder(p, camx); at(T.tub, x, p.y0 - 18)
-    elseif n == "HOUSE" then                                      -- crisp and outlined: their balconies are ledges
+    elseif n == "HOUSE" then                                      -- faded decoration; their balconies are the ledges
       local im = T["house" .. ((houseIndex(def, p) - 1) % 3 + 1)]
       at(im, x + w / 2 - im:getWidth() / 2, 175 + d - im:getHeight())
     elseif n == "BALCONY" then drawBalcony(p, camx)

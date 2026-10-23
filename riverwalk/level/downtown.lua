@@ -99,7 +99,7 @@ L.props = {
   -- pedestal, which is 12 px above it (40 px above the street: a held jump); the statue's arm is 36 px above the
   -- pedestal, its hat 32 px above the arm. The cat sits on the ball on the arm.
   { name = "TUB",      kind = "solid",  layer = "play", x0 = 1408, x1 = 1440, y0 = 156, y1 = 184, label = "top" },
-  { name = "STATUE",   kind = "decor",  layer = "back", x0 = 1450, x1 = 1478, y0 = 80,  y1 = 144 },
+  { name = "STATUE",   kind = "decor",  layer = "play", x0 = 1450, x1 = 1478, y0 = 80,  y1 = 144 },
   { name = "PEDESTAL", kind = "solid",  layer = "play", x0 = 1440, x1 = 1488, y0 = 144, y1 = 184 },
   { name = "ARM",      kind = "oneway", layer = "play", x0 = 1478, x1 = 1518, y0 = 108, y1 = 112, label = "below" },
   { name = "",         kind = "oneway", layer = "play", x0 = 1452, x1 = 1476, y0 = 76,  y1 = 80 },      -- the hat

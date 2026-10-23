@@ -92,7 +92,7 @@ add(["pile"], "rw", "front", group="River Walk")
 add(["park_treeline"], "cp", "shore", group="City Park")
 add(["park_tree1", "park_tree2"], "cp", "mid", 0.28, group="City Park")
 add(["park_oak", "park_willow", "park_willow_tall", "park_gate", "park_swings"], "cp", "back", 0.28, group="City Park")
-add(["park_keeper_winch"], "cp", "back", group="City Park")
+add(["park_keeper_winch"], "cp", "back", 0.35, group="City Park")   # scene.lua WINCH (art/fixes)
 add(["park_leaves"], "cp", "play", group="City Park")
 add(["park_slide"], "cp", "ground", group="City Park")   # unfaded art under the back shader
 add(["park_ground"], "cp", "ground", group="City Park")
@@ -102,7 +102,8 @@ add(["park_bush"], "cp", "front", group="City Park")
 add(["town_roofs"], "dt", "shore", 0.45, group="Downtown")
 add(["town_facades"], "dt", "mid", 0.40, group="Downtown")
 add(["town_door", "town_sign", "town_spout"], "dt", "back", 0.28, group="Downtown")
-add(["town_house1", "town_house2", "town_house3", "town_statue"], "dt", "back", group="Downtown")
+add(["town_house1", "town_house2", "town_house3"], "dt", "back", 0.28, group="Downtown")   # art/fixes, decision 4
+add(["town_statue"], "dt", "play", group="Downtown")   # art/fixes: tagged play
 add(["town_ground"], "dt", "ground", group="Downtown")
 add(["town_tramshed70", "town_tramshed96", "town_crate_front", "town_parasol", "town_table_front", "town_stall", "town_awning80",
      "town_awning64", "town_pedestal", "town_shelter", "town_kiosk", "town_tub", "town_rim", "town_bowl", "town_tier",
