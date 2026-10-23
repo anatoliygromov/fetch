@@ -1,7 +1,10 @@
 # Level 1, tall: City Park with a treetop tier (beat sheet)
 
 City Park as it plays today, moved down 18 rows, with a second road in the treetops above it and a finale that
-climbs the play tower into the big oak, with City Park's art: `love riverwalk --level citypark_tall` (not in the play order).
+climbs the play tower into the big oak, with City Park's art: `love riverwalk --level citypark_tall`.
+
+> **r8/levels (23 Oct):** this is the game's City Park now (level 2, D2); the flat City Park is the fallback (levels.lua). Its hints HOLD: UP THE TREE and HOLD: CLIMB THE TOWER are HOLD: CLIMB UP (the panel's three words).
+
 
 - **Size:** 9 screens x 48 rows: 2880 x 384 px (1.6 screens tall). The path (the low road) is at y 328. On the
   path the camera rests at the bottom of the world (camera y 144), so the low road looks exactly as City Park does

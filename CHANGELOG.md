@@ -56,6 +56,9 @@ scenery). Pepper's files, music and sfx are untouched; no art was generated.
   the footbridge's deck, rail and arch; faded: plaster fronts with windows, cornices and doors, the openwork spire)
   instead of the grey labelled boxes. Checked with stand-ins for every file (all drawn at their anchors, the bonus
   round's throw frames, River Walk's autopilot 66.3 s unchanged).
+- **Docs** (progression.md, the beat sheets of both City Parks and Downtowns, needs_art_22oct.md): D1 and D2 noted
+  where they change what the sheets say. The tall Downtown's `--test` tour has three new shots: the cargo bike
+  passing under Pepper on the kiosk, the vintage tram at its stop, a tram coming in on the second street.
 ## Branch `r7/curve`: the tall order's difficulty curve passes the acceptance test (22 Oct)
 Built on `round1`. The planned order with the tall levels (River Walk, City Park tall, Downtown tall, Rooftops,
 Soder Hill, Night Harbour), measured with `tools/check_curve.py --name tall --seeds 10`; every iteration's numbers are

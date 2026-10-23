@@ -1,7 +1,10 @@
 # Level 2, tall: Downtown with the roofs of the old town (beat sheet)
 
 Downtown as it plays today, moved down 30 rows, with a second road over the roofs of the old town above it.
-Greybox: `love riverwalk --level downtown_tall` (not in the play order).
+`love riverwalk --level downtown_tall`.
+
+> **r8/levels (23 Oct):** this is the game's Downtown now (level 3, D2), with Downtown's art (`art = "town"`, `foot = 424`; the high road's pieces drawn in code until the roof kit lands, docs/art_hooks_r8.md). D1: every tram below is now the baker's cargo bike (the same zones, hit box, speeds and perches; it rides into courtyard gates, the old tram sheds), and a vintage tram rolls by in the back lane as scenery. The hints HOLD: UP ON THE ROOFS and HOLD: BOUNCE UP! are HOLD: CLIMB UP and HOLD: BOUNCE.
+
 
 - **Size:** 11 screens x 2 screens: 3520 x 480 px (440 x 60 cells). The street (the low road) is at y 424. On the
   street the camera rests at the bottom of the world (camera y 240), so the low road looks exactly as Downtown does

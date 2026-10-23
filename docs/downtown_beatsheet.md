@@ -1,5 +1,7 @@
 # Level 2: Downtown (beat sheet)
 
+> **r8/levels (23 Oct):** D1: every tram below is now the baker's cargo bike (the same zones, hit box, speeds and perches; it rides into courtyard gates, the old tram sheds), and a vintage tram rolls by in the back lane as scenery. Since D2 this flat Downtown is the fallback; the game plays the tall one.
+
 The second level. A Stockholm old town street and its plaza: cafe tables with parasols, market stalls, a statue on a pedestal, a fountain, a tram street. A gentle step up from City Park: the moves it taught come back combined (a hop, then a held jump from what she hopped onto), and there are two new twists: carrying the ball over water, and waiting on perches for a long tram.
 
 - **Size:** 6 screens, 1920 px (240 x 30 cells of 8 px). Walking line (feet) y 184, like City Park.
