@@ -25,6 +25,12 @@ local function hex(h) return { tonumber(h:sub(1, 2), 16) / 255, tonumber(h:sub(3
 -- mid (City Park's near trees, Downtown's facades), water, back (decoration behind Pepper's line), ground,
 -- play (obstacles, the things Pepper uses), front (foreground props). bands = the sky, fg = the foreground's
 -- colours (dark, mid, rim, warm rim, how often the rim is warm), kinds = what the foreground clumps are.
+-- fade = the load-time distance step (scene.lua Sc.fadeK / Sc.fadeData): how far a layer's art is mixed towards that
+-- layer's own haze when the level loads, before the shader (art comes at full local colour; the game does the
+-- distance). Decision 3 (owner, 23 Oct): every load-time fade goes to the level's own haze for the layer, never to
+-- the old cool grey. The amounts keep the ladder (docs/layer_ladder.md): the further back, the lighter. A piece
+-- with its own amount (the park gate 28 %, the winch keeper 35 %, the vintage tram 40 %, the spire 45 %) keeps it
+-- and takes the haze.
 local function L(warm, cool, sat, haze, k) return { warm = warm, cool = cool, sat = sat, haze = hex(haze), k = k } end
 Look.scripts = {
   riverwalk = {                                                    -- summer morning
@@ -37,6 +43,7 @@ Look.scripts = {
               { 76, "b2c6da" }, { 89, "cbd1d4" }, { 101, "dfd7c9" }, { 112, "ecdabd" }, { 122, "f4dcb3" } },
     fg = { dark = hex("161c2c"), mid = hex("1f2b42"), rim = hex("4c5d7c"), warm = hex("9a8174"), warmK = 0.05 },
     kinds = { verge = 0.78, bollards = 0.22 },
+    fade = { back = 0.28 },                                        -- (as before: decoration, railing, kiosks)
   },
   citypark = {                                                     -- golden autumn afternoon
     layers = { clouds = L(1.2, 1.7, 1.0, "f9e0c0", 0.14), city = L(0.2, 1.9, 0.60, "b8a0c2", 0.52),
@@ -50,6 +57,10 @@ Look.scripts = {
     above = { { -120, "39579a" }, { -96, "4060a1" }, { -72, "4a68a7" }, { -48, "5571ad" }, { -24, "5f7ab3" } },
     fg = { dark = hex("1d1525"), mid = hex("2b1f33"), rim = hex("594257"), warm = hex("b5793f"), warmK = 0.22 },
     kinds = {},                                                    -- (the earth band is already the dark frame)
+    -- the round trees (mid) must read lighter than the willows and oaks in front of them (back), and darker than
+    -- the far tree line (shore): mid up from 28 %, back down from 28 % (the gate keeps 28 %: its dark ironwork),
+    -- the tree line faded too
+    fade = { shore = 0.35, mid = 0.48, back = 0.20 },
   },
   downtown = {                                                     -- bright midday
     layers = { clouds = L(0.5, 1.4, 1.0, "ffffff", 0.04), city = L(0.2, 1.7, 0.70, "a7bad6", 0.50),
@@ -61,6 +72,9 @@ Look.scripts = {
               { 80, "a7c3de" }, { 96, "c0d3e0" }, { 112, "d5e0e2" }, { 126, "e3e9e3" }, { 140, "ebefe5" } },
     fg = { dark = hex("141a26"), mid = hex("1e2838"), rim = hex("4a5a72"), warm = hex("8e8070"), warmK = 0.04 },
     kinds = {},                                                    -- (the quay wall is already the dark frame)
+    -- the far roofs (shore) must read lighter than the facades in front (mid), yet darker than the far city: roofs
+    -- up from 45 %, facades down from 40 % (this script's shore haze is darker than its mid haze)
+    fade = { shore = 0.70, mid = 0.10, back = 0.28 },
   },
 }
 Look.key = "riverwalk"

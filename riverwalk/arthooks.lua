@@ -8,26 +8,26 @@
 --                  stops at its tram stop sign (L.trams[i].stop) for a few seconds and drives on to the left. Its
 --                  driver sits in the front cab. art/scene/tram_vintage.png, else drawn in code (about 300 x 130)
 local Sc = require("scene")
+local Look = require("look")
 local lg = love.graphics
 local H = {}
 
 local INK = { 0.07, 0.07, 0.10 }                                    -- the 1 px dark outline of every obstacle
-local HAZE, FADE = { 200 / 255, 210 / 255, 222 / 255 }, Sc.DECOR_FADE
-local function faded(c, k) k = k or FADE; return { c[1] + (HAZE[1] - c[1]) * k, c[2] + (HAZE[2] - c[2]) * k, c[3] + (HAZE[3] - c[3]) * k } end
+-- decoration: k of the way to the level's back haze (scene.lua Sc.fadeC; k nil: the level's back amount)
+local function faded(c, k) return Sc.fadeC(c, k) end
 local function rect(c, x, y, w, h) lg.setColor(c[1], c[2], c[3], c[4] or 1); lg.rectangle("fill", math.floor(x), math.floor(y), w, h) end
 
 -- an optional picture: art/<name>.png, or false when it is not there (asked once). fade: decoration, faded
--- towards the haze as the scenery art is (no outline)
+-- towards the level's back haze as the scenery art is (no outline); cached per colour script
 local cache = {}
 function H.img(name, fade)
-  local key = name .. (fade and ("#" .. tostring(fade)) or "")
+  local key = name .. (fade and ("#" .. tostring(fade) .. "#" .. Look.key) or "")
   if cache[key] == nil then
     cache[key] = false
     local path = "art/" .. name .. ".png"
     if love.filesystem.getInfo(path) then
       local d = love.image.newImageData(path)
-      local k = type(fade) == "number" and fade or FADE              -- (a number: that much towards the haze)
-      if fade then d:mapPixel(function(_, _, r, g, b, a) return r + (HAZE[1] - r) * k, g + (HAZE[2] - g) * k, b + (HAZE[3] - b) * k, a end) end
+      if fade then Sc.fadeData(d, type(fade) == "number" and fade or nil) end   -- (a number: that much towards the haze)
       local im = lg.newImage(d); im:setFilter("nearest", "nearest"); cache[key] = im
     end
   end
@@ -185,7 +185,7 @@ local function stopSign(x, y)
 end
 local function tramCode(cx, y, x, c)
   local W, Hh = H.TRAM_W, H.TRAM_H
-  local function faded(c) return { c[1] + (HAZE[1] - c[1]) * H.TRAM_FADE, c[2] + (HAZE[2] - c[2]) * H.TRAM_FADE, c[3] + (HAZE[3] - c[3]) * H.TRAM_FADE } end
+  local function faded(c) return Sc.fadeC(c, H.TRAM_FADE) end
   local L = math.floor(cx - W / 2)
   local body, cream, roof, dark, glass = faded({ 0.24, 0.42, 0.66 }), faded({ 0.93, 0.88, 0.74 }), faded({ 0.42, 0.44, 0.48 }), faded({ 0.15, 0.17, 0.22 }), faded({ 0.62, 0.72, 0.80 })
   local top = y - Hh                                                -- the trolley pole up to the wire
@@ -388,7 +388,7 @@ local function frontCode(i, x, y0, y1, w)
 end
 local function spireCode(cx, y0, y1)
   local k = 0.45
-  local function f(c) return { c[1] + (HAZE[1] - c[1]) * k, c[2] + (HAZE[2] - c[2]) * k, c[3] + (HAZE[3] - c[3]) * k } end
+  local function f(c) return Sc.fadeC(c, k) end
   local tower, iron = f({ 0.62, 0.36, 0.28 }), f({ 0.20, 0.26, 0.26 })
   local tb = y1 - 150
   rect(tower, cx - 14, tb, 28, y1 - tb); rect(f({ 0.50, 0.28, 0.22 }), cx + 8, tb, 6, y1 - tb)

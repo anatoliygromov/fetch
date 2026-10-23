@@ -29,9 +29,24 @@ Sc.C.pond, Sc.C.pondTop = hex("8a9cb0"), hex("b9c6d3")
 local C = Sc.C
 Sc.speeds = { clouds = 0.05, city = 0.08, shore = 0.3, water = 0.5 }
 
--- decoration is faded DECOR_FADE of the way towards the haze, so it sits back and the obstacle course stands out
-Sc.DECOR_FADE = 0.28
-local HAZE = { 200 / 255, 210 / 255, 222 / 255 }
+-- decoration is faded part of the way towards the haze when the level loads, so it sits back and the obstacle course
+-- stands out. Decision 3 (owner, 23 Oct): the haze is the level's own, per layer (look.lua: the colour script of the
+-- level being played, Look.key), no longer one cool grey (200, 210, 222) for every level; the amounts per layer are
+-- the script's `fade` (River Walk's decoration 28 %, as before). The files are untouched: a copy is faded at load,
+-- and every faded image is cached per colour script.
+function Sc.haze(layer) local L = Look.scripts[Look.key].layers; return (L[layer or "back"] or L.back).haze end
+function Sc.fadeK(layer) return (Look.scripts[Look.key].fade or {})[layer or "back"] or 0 end
+-- a colour k of the way to the layer's haze (k: the layer's amount when nil)
+function Sc.fadeC(c, k, layer)
+  local h = Sc.haze(layer); k = k or Sc.fadeK(layer)
+  return { c[1] + (h[1] - c[1]) * k, c[2] + (h[2] - c[2]) * k, c[3] + (h[3] - c[3]) * k }
+end
+-- ImageData d, every pixel k of the way to the layer's haze (in place; returns d)
+function Sc.fadeData(d, k, layer)
+  local h = Sc.haze(layer); k = k or Sc.fadeK(layer)
+  if k > 0 then d:mapPixel(function(_, _, r, g, b, a) return r + (h[1] - r) * k, g + (h[2] - g) * k, b + (h[3] - b) * k, a end) end
+  return d
+end
 
 -- the characters' 1 px dark outline around an image's silhouette, outside the art (the result is 1 px bigger on
 -- every side). Used on everything Pepper can use: bench, bin, railing.
@@ -59,7 +74,7 @@ end
 --            to be safe from the bikes. Outlined as a whole, so the outline has no seams.
 local railCache = {}
 function Sc.railing(w, kind, h)
-  local key = kind .. w .. "x" .. (h or 0)
+  local key = kind .. w .. "x" .. (h or 0) .. Look.key            -- (decor is faded to the level's haze)
   if railCache[key] then return railCache[key] end
   local function piece(n) return love.image.newImageData("art/scene/" .. n .. ".png") end
   local d
@@ -88,8 +103,7 @@ function Sc.railing(w, kind, h)
     t:paste(d, 0, 16 + extra, 0, 16, d:getWidth(), rh - 16)
     d = Sc.outline(t)
   else
-    local k = Sc.DECOR_FADE
-    d:mapPixel(function(x, y, r, g, b, a) return r + (HAZE[1] - r) * k, g + (HAZE[2] - g) * k, b + (HAZE[3] - b) * k, a end)
+    Sc.fadeData(d)
   end
   local im = lg.newImage(d); im:setFilter("nearest", "nearest")
   railCache[key] = im
@@ -98,23 +112,19 @@ end
 
 -- art: loaded once. The images are used exactly as delivered; the two made here only rearrange their pixels
 -- or swap colours, so nothing is redrawn.
-local A
+local ARTS = {}                                                    -- one set per colour script (Look.key): its fades
 local function newImg(d) local i = lg.newImage(d); i:setFilter("nearest", "nearest"); return i end
 function Sc.art()
+  local A = ARTS[Look.key]
   if A then return A end
-  A = {}
+  A = {}; ARTS[Look.key] = A
   for _, n in ipairs({ "water", "skyline", "pavement", "road", "manhole", "drain" }) do A[n] = newImg("art/scene/" .. n .. ".png") end
   A.waterQ = {}                                                   -- one quad per row: each row of the river moves on its own
   for y = 0, A.water:getHeight() - 1 do A.waterQ[y] = lg.newQuad(0, y, A.water:getWidth(), 1, A.water:getDimensions()) end
-  -- decoration (pot, lamp posts, the houses and trees) is faded DECOR_FADE of the way towards the haze, so it sits back
-  -- and the obstacle course stands out. The files are untouched; this is done to a copy when the game loads.
+  -- decoration (pot, lamp posts, the houses and trees) is faded the back amount towards the level's back haze, so it
+  -- sits back and the obstacle course stands out. The files are untouched; this is done to a copy when the game loads.
   for _, n in ipairs({ "pot", "lamp_post", "building", "tree", "tree_near", "tree_far", "cafe", "gable" }) do
-    local d = love.image.newImageData("art/scene/" .. n .. ".png")
-    d:mapPixel(function(x, y, r, g, b, a)
-      local k = Sc.DECOR_FADE
-      return r + (HAZE[1] - r) * k, g + (HAZE[2] - g) * k, b + (HAZE[3] - b) * k, a
-    end)
-    A[n] = newImg(d)
+    A[n] = newImg(Sc.fadeData(love.image.newImageData("art/scene/" .. n .. ".png")))
   end
   -- things Pepper can use (stand on, jump onto) get the characters' 1 px dark outline, so they read as part of the
   -- obstacle course; decoration and background have none. The outline goes outside the art (image grows 1 px
@@ -160,14 +170,14 @@ function Sc.art()
   A.shore = newImg(d)
   -- lit lamp (a checkpoint Pepper has passed): the lantern glass (rows 12-23) glows warm.
   local lp = love.image.newImageData("art/scene/lamp_post.png")
+  local hz, fk = Sc.haze("back"), Sc.fadeK("back")
   local function is(r, g, b, R, G, B) return math.abs(r * 255 - R) < 1 and math.abs(g * 255 - G) < 1 and math.abs(b * 255 - B) < 1 end
   lp:mapPixel(function(x, y, r, g, b, a)                           -- lit lamp: warm glass (exact colours), the rest faded
     if y >= 12 and y <= 23 and a > 0 then
       if is(r, g, b, 187, 211, 233) then return 250 / 255, 214 / 255, 120 / 255, a          -- the light is not faded
       elseif is(r, g, b, 88, 109, 134) then return 201 / 255, 150 / 255, 72 / 255, a end
     end
-    local k = Sc.DECOR_FADE
-    return r + (HAZE[1] - r) * k, g + (HAZE[2] - g) * k, b + (HAZE[3] - b) * k, a
+    return r + (hz[1] - r) * fk, g + (hz[2] - g) * fk, b + (hz[3] - b) * fk, a
   end)
   A.lamp_lit = newImg(lp)
   return A
@@ -618,6 +628,7 @@ end
 
 -- layers 1 to 5 (everything behind the quay)
 function Sc.drawFar(L, camx, t)
+  local A = Sc.art()
   skyGap(); local on = vpush("sky")
   if Look.on then Look.sky() else                                  -- 1 sky (look.lua: the banded, dithered sky)
   for y = 0, 239 do
@@ -853,7 +864,7 @@ end
 -- placed from its prop's collision box, so a box and its art stay together.
 --   obstacles (things Pepper stands on, bumps into, crawls under): crisp, mid-tone, their own 1 px dark outline,
 --             standing on her line (y 184; in a tall level the path line Sc.FOOT, see dy() below)
---   decoration: faded DECOR_FADE towards the haze, no outline, its base on the back edge (y 174)
+--   decoration: faded towards the level's back haze (look.lua fade.back), no outline, its base on the back edge (y 174)
 --   foreground: dark, only below her lowest line (tops at y 221+), never over her
 -- ===================================================================================================================
 -- Any path height (tall levels): the art was drawn for the path at y 184. Sc.FOOT is the level's path line (its
@@ -863,12 +874,8 @@ end
 Sc.FOOT = 184
 local function dy() return Sc.FOOT - 184 end
 local TA = {}
-local function fadeImg(n, k)
-  local d = love.image.newImageData("art/scene/" .. n .. ".png")
-  k = k or Sc.DECOR_FADE
-  d:mapPixel(function(x, y, r, g, b, a) return r + (HAZE[1] - r) * k, g + (HAZE[2] - g) * k, b + (HAZE[3] - b) * k, a end)
-  return newImg(d)
-end
+-- an art file faded towards the level's haze for its layer (default: back), k of the way (default: the layer's amount)
+local function fadeImg(n, k, layer) return newImg(Sc.fadeData(love.image.newImageData("art/scene/" .. n .. ".png"), k, layer)) end
 local function img(n) return newImg("art/scene/" .. n .. ".png") end
 local function colQuads(im)
   local w, h = im:getDimensions()
@@ -877,11 +884,16 @@ local function colQuads(im)
   return q
 end
 function Sc.townArt(style)
-  if TA[style] then return TA[style] end
+  local key = style .. "/" .. Look.key                            -- (faded to the level's haze: one set per script)
+  if TA[key] then return TA[key] end
   local T = {}
   if style == "park" then
-    for _, n in ipairs({ "ground", "treeline", "bush", "log", "leaves", "leaves_flat", "table", "hedge", "stone", "boat", "cart", "slide", "frame", "hollowlog" }) do T[n] = img("park_" .. n) end
-    for _, n in ipairs({ "tree1", "tree2", "gate", "swings", "oak", "willow", "willow_tall", "winch" }) do T[n] = fadeImg("park_" .. n) end
+    for _, n in ipairs({ "ground", "bush", "log", "leaves", "leaves_flat", "table", "hedge", "stone", "boat", "cart", "slide", "frame", "hollowlog" }) do T[n] = img("park_" .. n) end
+    -- the far tree line (shore), the round trees (mid) and the back decoration, each faded to its own layer's haze
+    T.treeline = fadeImg("park_treeline", nil, "shore")
+    for _, n in ipairs({ "tree1", "tree2" }) do T[n] = fadeImg("park_" .. n, nil, "mid") end
+    for _, n in ipairs({ "swings", "oak", "willow", "willow_tall", "winch" }) do T[n] = fadeImg("park_" .. n) end
+    T.gate = fadeImg("park_gate", 0.28)                           -- (its own amount: dark ironwork, ladder darkest 80)
     T.boat = img("park_boat_front")                               -- front-on (tools/make_front_view.py)
     T.table = img("park_table_front")                             -- front-on (tools/make_table_front.py)
   else
@@ -891,18 +903,18 @@ function Sc.townArt(style)
     for _, n in ipairs({ "door", "sign", "spout", "house1", "house2", "house3" }) do T[n] = fadeImg("town_" .. n) end
     T.crate, T.table = img("town_crate_front"), img("town_table_front")   -- front-on (tools/make_front_view.py)
     T.tramshed = { [70] = img("town_tramshed70"), [96] = img("town_tramshed96") }   -- SpriteCook (tools/import_assets_v2.py)
-    -- the two far layers sit further back than the back-edge decoration: faded more (as River Walk's far shore),
-    -- so the street's obstacles and the climbable houses stand out against them
+    -- the two far layers sit further back than the back-edge decoration, each faded to its layer's haze (the
+    -- script's shore and mid amounts), so the street's obstacles and the climbable houses stand out against them
     -- (r8/levels: art/scene/town_row.png, the row of old town houses across the square with volume, replaces
     -- town_facades.png when it is there: the same layer, a strip that repeats, standing on y 178)
-    T.facades = fadeImg(love.filesystem.getInfo("art/scene/town_row.png") and "town_row" or "town_facades", 0.40)
-    T.roofs = fadeImg("town_roofs", 0.45)
+    T.facades = fadeImg(love.filesystem.getInfo("art/scene/town_row.png") and "town_row" or "town_facades", nil, "mid")
+    T.roofs = fadeImg("town_roofs", nil, "shore")
   end
   T.groundQ = colQuads(T.ground)
   local gw, gd = T.ground:getWidth(), { T.ground:getDimensions() }
   T.bankTop = lg.newQuad(0, 0, gw, style == "park" and 9 or 10, gd[1], gd[2])   -- the lawn / pavement's back edge
   T.bankEarth = lg.newQuad(0, 44, gw, 20, gd[1], gd[2])                        -- earth rows (the pond's far bank)
-  TA[style] = T
+  TA[key] = T
   return T
 end
 
@@ -1294,12 +1306,14 @@ end
 -- with no trunk near one end gets one there, on dry ground: nothing floats.
 local TIER_NAMES = { ["TREETOP WALK"] = "walk", ["ALDER WALK"] = "walk", ARBOUR = "slat", ["PLAY TOWER"] = "deck",
   ["LOW BOUGH"] = "lowbough" }
-local function fadeC(c, k) k = k or Sc.DECOR_FADE; return { c[1] + (HAZE[1] - c[1]) * k, c[2] + (HAZE[2] - c[2]) * k, c[3] + (HAZE[3] - c[3]) * k } end
-local FBARK = { fadeC(BARK[1]), fadeC(BARK[2]), fadeC(BARK[3]) }
+local function fadeC(c, k) return Sc.fadeC(c, k) end
+local FB = {}                                                      -- faded bark and roses, per colour script
+local function fbark() if not FB[Look.key] then FB[Look.key] = { fadeC(BARK[1]), fadeC(BARK[2]), fadeC(BARK[3]) } end return FB[Look.key] end
 local WOOD = { hex("a8784a"), hex("c99a63"), hex("6e4a2c") }           -- the walks' planks: light, top, dark
 local POST = { hex("8f969c"), hex("b9bfc4"), hex("5d646b") }           -- the play tower's grey posts (the slide's)
 local DECK = { hex("e2b23a"), hex("f3d36a"), hex("a77a1e") }           -- its yellow decks
-local ROSE = { fadeC(hex("4f7a3a")), fadeC(hex("d9586e")), fadeC(hex("f2a0b0")) }   -- vine, rose, rose light
+local FR = {}
+local function rose() if not FR[Look.key] then FR[Look.key] = { fadeC(hex("4f7a3a")), fadeC(hex("d9586e")), fadeC(hex("f2a0b0")) } end return FR[Look.key] end   -- vine, rose, rose light
 
 local function tier(def)
   if def._tier ~= nil then return def._tier end
@@ -1366,11 +1380,11 @@ local function drawTrunk(t, top, foot, ox, big)
     local fl = 0
     local e = foot - y
     if e <= 3 then fl = big and 6 or 3 elseif e <= 7 then fl = big and 3 or 1 elseif big and e <= 12 then fl = 1 end
-    lg.setColor(FBARK[1]); lg.rectangle("fill", x0 - fl, y, w + 2 * fl, 1)
-    lg.setColor(FBARK[2]); lg.rectangle("fill", x0 - fl, y, 1, 1)
-    lg.setColor(FBARK[3]); lg.rectangle("fill", x0 + w + fl - (w > 10 and 3 or 2), y, w > 10 and 3 or 2, 1)
+    lg.setColor(fbark()[1]); lg.rectangle("fill", x0 - fl, y, w + 2 * fl, 1)
+    lg.setColor(fbark()[2]); lg.rectangle("fill", x0 - fl, y, 1, 1)
+    lg.setColor(fbark()[3]); lg.rectangle("fill", x0 + w + fl - (w > 10 and 3 or 2), y, w > 10 and 3 or 2, 1)
   end
-  lg.setColor(FBARK[3])                                             -- bark furrows, broken now and then
+  lg.setColor(fbark()[3])                                             -- bark furrows, broken now and then
   for bx = x0 + 3, x0 + w - 4, 4 do
     local s = (bx * 7) % 11
     for y = top + s, foot - 6, 13 do lg.rectangle("fill", bx, y, 1, 8) end
@@ -1378,36 +1392,36 @@ local function drawTrunk(t, top, foot, ox, big)
   if big then                                                       -- knots on the big oak
     for _, k in ipairs({ 0.3, 0.55, 0.8 }) do
       local ky = math.floor(top + h * k)
-      lg.setColor(FBARK[3]); lg.rectangle("fill", x0 + math.floor(w * k), ky, 4, 3)
-      lg.setColor(FBARK[2]); lg.rectangle("fill", x0 + math.floor(w * k), ky - 1, 4, 1)
+      lg.setColor(fbark()[3]); lg.rectangle("fill", x0 + math.floor(w * k), ky, 4, 3)
+      lg.setColor(fbark()[2]); lg.rectangle("fill", x0 + math.floor(w * k), ky - 1, 4, 1)
     end
   end
 end
 
 -- a canopy: the crowns of the park's trees (faded), overlapping, covering its box and a little round it
-local crownQ
+local CROWNS = {}                                                  -- per colour script
 -- a tree's crown alone: the art down to its trunk's foot, minus the trunk (from row `from` down, only the leaves:
 -- the orange pixels, red well over blue), faded as decoration
 local function crownImg(n, rows, from)
   local src = love.image.newImageData("art/scene/" .. n .. ".png")
   local w = src:getWidth()
   local d = love.image.newImageData(w, rows)
-  local k = Sc.DECOR_FADE
+  local hz, k = Sc.haze("back"), Sc.fadeK("back")
   for y = 0, rows - 1 do
     for x = 0, w - 1 do
       local r, g, b, a = src:getPixel(x, y)
       if a > 0 and (y < from or r - b > 0.28) then
-        d:setPixel(x, y, r + (HAZE[1] - r) * k, g + (HAZE[2] - g) * k, b + (HAZE[3] - b) * k, a)
+        d:setPixel(x, y, r + (hz[1] - r) * k, g + (hz[2] - g) * k, b + (hz[3] - b) * k, a)
       end
     end
   end
   return newImg(d)
 end
 local function crowns()
-  if crownQ then return crownQ end
+  if CROWNS[Look.key] then return CROWNS[Look.key] end
   local function c(n, rows, from) local im = crownImg(n, rows, from); return { im = im, q = lg.newQuad(0, 0, im:getWidth(), rows, im:getDimensions()), w = im:getWidth(), h = rows } end
-  crownQ = { c("park_tree1", 78, 52), c("park_tree2", 78, 52), oak = c("park_oak", 76, 58) }
-  return crownQ
+  CROWNS[Look.key] = { c("park_tree1", 78, 52), c("park_tree2", 78, 52), oak = c("park_oak", 76, 58) }
+  return CROWNS[Look.key]
 end
 local function drawCanopy(c, ox, T)
   local Q = crowns()
@@ -1531,7 +1545,7 @@ local function drawSlat(p, ox)
   lg.setColor(hex("fbf7ec")); lg.rectangle("fill", x0, y, x1 - x0, 1)
   lg.setColor(hex("b3a993")); lg.rectangle("fill", x0, y + hgt - 1, x1 - x0, 1)
   for x = x0 + 3, x1 - 4, 6 do                                      -- the rose hanging off its front, under the top
-    lg.setColor(ROSE[1]); lg.rectangle("fill", x, y + hgt - 2, 3, 3)
+    lg.setColor(rose()[1]); lg.rectangle("fill", x, y + hgt - 2, 3, 3)
     if math.floor(x / 6) % 2 == 0 then lg.setColor(hex("d9586e")); lg.rectangle("fill", x + 1, y + hgt, 2, 2) end
   end
 end
@@ -1542,8 +1556,8 @@ local function drawSlatPosts(p, ox, foot)
     lg.setColor(fadeC(hex("9d927c"))); lg.rectangle("fill", x + 4, p.y1, 1, foot - p.y1)
     for y = p.y1 + 4, foot - 6, 7 do                                  -- a climbing rose round it
       local s = math.floor(y / 7) % 2 == 0 and -1 or 5
-      lg.setColor(ROSE[1]); lg.rectangle("fill", x + s, y, 2, 4); lg.rectangle("fill", x + 1, y + 2, 3, 1)
-      if math.floor(y / 7) % 3 == 0 then lg.setColor(ROSE[2]); lg.rectangle("fill", x + s, y - 1, 2, 2); lg.setColor(ROSE[3]); lg.rectangle("fill", x + s, y - 1, 1, 1) end
+      lg.setColor(rose()[1]); lg.rectangle("fill", x + s, y, 2, 4); lg.rectangle("fill", x + 1, y + 2, 3, 1)
+      if math.floor(y / 7) % 3 == 0 then lg.setColor(rose()[2]); lg.rectangle("fill", x + s, y - 1, 2, 2); lg.setColor(rose()[3]); lg.rectangle("fill", x + s, y - 1, 1, 1) end
     end
   end
 end
