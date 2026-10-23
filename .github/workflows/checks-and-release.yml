@@ -21,7 +21,7 @@ jobs:
       - name: Install LÖVE and a virtual display
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq love xvfb zip
+          sudo apt-get install -y -qq love xvfb zip python3-pil python3-numpy
       - name: Pepper unchanged
         run: SDL_AUDIODRIVER=dummy XDG_DATA_HOME=$(mktemp -d) sh tools/check_pepper.sh
       - name: Flow
