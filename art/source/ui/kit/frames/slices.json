@@ -1,0 +1,60 @@
+{
+ "panel_menu": {
+  "kind": "nine",
+  "left": 15,
+  "right": 15,
+  "top": 16,
+  "bottom": 16
+ },
+ "panel_wide": {
+  "kind": "nine",
+  "left": 16,
+  "right": 16,
+  "top": 16,
+  "bottom": 16
+ },
+ "panel_menu_cream": {
+  "kind": "nine",
+  "left": 20,
+  "right": 20,
+  "top": 20,
+  "bottom": 20
+ },
+ "panel_wide_cream": {
+  "kind": "nine",
+  "left": 16,
+  "right": 16,
+  "top": 16,
+  "bottom": 16
+ },
+ "row_normal": {
+  "kind": "three",
+  "left": 4,
+  "right": 4
+ },
+ "row_selected": {
+  "kind": "three",
+  "left": 17,
+  "right": 4
+ },
+ "row_disabled": {
+  "kind": "three",
+  "left": 4,
+  "right": 4
+ },
+ "ribbon": {
+  "kind": "three",
+  "left": 19,
+  "right": 19
+ },
+ "health_full": {
+  "kind": "three",
+  "left": 18,
+  "right": 6
+ },
+ "health_empty": {
+  "kind": "three",
+  "left": 18,
+  "right": 6
+ }
+}
