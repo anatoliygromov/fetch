@@ -23,6 +23,24 @@ Built on `round1` (9d29233). No credits, no resize, no new colours, alpha binary
   (median 41 vs 40: a code value), road_cyclist1_roll pinhole (a gap between spokes).
 - **Checks:** check_pepper PEPPER UNCHANGED (4591 steps), check_flow 116 of 116, check_tiled PASSED;
   check_pepper_files cannot run in this shallow clone (aa38be5 missing; Pepper's 5 files are identical to 9d29233).
+## Branch `art/haze`: every fade in the level's own haze (23 Oct)
+Built on `round1` (9d29233). Code and tools only; no art file changed. Owner decision 3: the cool-grey load-time fade
+is retired; the whole distance step is done in each level's own haze colour (look.lua's colour script, per layer).
+- **look.lua**: each colour script has a `fade` table, the load-time amount per layer. River Walk: back 28 % (as
+  before). City Park: tree line 35 % (was none), round trees 48 % (was 28 %), back 20 % (was 28 %). Downtown: roofs
+  70 % (was 45 %), facades 10 % (was 40 %), back 28 %. Own amounts kept: park gate 28 %, winch keeper 35 %, vintage
+  tram 40 %, spire 45 %.
+- **scene.lua**: Sc.haze, Sc.fadeK, Sc.fadeC, Sc.fadeData fade to the haze of the level being played (Look.key);
+  every faded image (Sc.art, the park and town art, the railing, the canopies, the bark and roses) is cached per
+  colour script. **setpieces.lua** (kiosks) and **arthooks.lua** (tram, tall fronts, spire, roof kit walls) use them.
+  **stage.lua** sets the colour script before the level's art is built.
+- Fixed: City Park's willows are darker than the round trees behind (median 156 / 159-166); Downtown's far roofs are
+  lighter than the facades (173/161 against 170/124, were 162/139 against 184/154); the winch keeper reads warm.
+- River Walk: decoration warmer by about R +12, G +4, B -10 and luma +5 on its pixels (0-16 % of a frame); nothing else.
+- **tools/measure_layers.py**: the model fades to the level's haze by the level's amounts (FADE, OWN); `--ladder`
+  prints the ladder per level. **tools/asset_qa.py** uses it (shared art takes each level's amount). Ladder results:
+  no new fail; one new warn (town_facades contrast 92, mid allows 85).
+- docs/layer_ladder.md: the fades and the ladder table per level.
 
 ## Branch `art/qa`: the asset QA gate (23 Oct)
 Built on `art/fixes`. Tools and docs only; no art changed.

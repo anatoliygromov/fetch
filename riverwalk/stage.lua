@@ -47,6 +47,7 @@ function St.new(def, carry)
     local mv = m.fromY and Lf.new(m) or { name = m.name, x0 = m.from, x1 = m.from + (m.x1 - m.x0), y0 = m.y0, y1 = m.y1, from = m.from, to = m.to, speed = m.speed, dir = 1, dx = 0, kind = "oneway", pause = m.pause }
     s.world:addMover(mv); s.movers[#s.movers + 1] = mv
   end
+  Look.level(def)                                                  -- (the colour script first: the art is faded to its haze)
   s.layers = def.scenery == "greybox" and Sc.buildGrey(s.world.width, def.greyStyle) or Sc.build(s.world.width)
   if def.art then s.layers = Sc.buildArt(s.world.width, def.art) end   -- art for a greybox level (City Park, Downtown)
   s.pepper = Pp.new(def.start.x, def.start.y)

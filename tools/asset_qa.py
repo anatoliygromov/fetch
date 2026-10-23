@@ -31,7 +31,7 @@ from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-import measure_layers as ML                                       # registry A, shader presets S, shade(), HAZE
+import measure_layers as ML                                       # registry A, shader presets S, shade(), fades
 
 ROOT, ART = ML.ROOT, ML.ART
 W601 = np.array([0.299, 0.587, 0.114])
@@ -128,9 +128,8 @@ def edge_mask(a):
     return a & ~(pa[:-2, 1:-1] & pa[2:, 1:-1] & pa[1:-1, :-2] & pa[1:-1, 2:])
 
 def as_drawn(rgb01, a, lvl, layer, fade):
-    """RGB 0-1 as on screen: the load-time fade towards the haze, then the layer's look shader"""
-    out = rgb01.copy()
-    if fade: out = out + (ML.HAZE - out) * fade
+    """RGB 0-1 as on screen: the load-time fade towards the level's haze for the layer, then the layer's look shader"""
+    out = ML.fade_to(rgb01.copy(), fade, lvl, layer if layer != "char" else None)
     if layer and layer != "char":
         flat = ML.shade(out[a], ML.S[lvl][layer]); out[a] = flat
     return out
@@ -506,7 +505,8 @@ def check(name, path, lvl, layer, fade, building=False, frames=None, levels=None
     # the ladder (on-screen lightness), under every level's look the art is drawn in
     if "p10" in row:
         for lv in (levels or (lvl,)):
-            dl = as_drawn(rgb255 / 255.0, a, lv, layer, fade)
+            fl = ML.fade_in(name, lv, layer) if (fade and lv != lvl) else fade   # (shared art: each level's amount)
+            dl = as_drawn(rgb255 / 255.0, a, lv, layer, fl)
             q10 = float(np.percentile((dl[a] @ W601) * 255, 10))
             if q10 < row["p10"] - 2:
                 r.add("ladder", "fail", f"darkest {q10:.0f} on screen in {lv}, the {cls} layer's darkest is {row['p10']}", pts(a & ((dl @ W601) * 255 < row["p10"]), 600))

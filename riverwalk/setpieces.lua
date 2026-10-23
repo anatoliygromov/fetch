@@ -10,6 +10,7 @@
 --                  hidden props in L.props with exactly the same boxes
 local S = require("sfx")
 local Sc = require("scene")
+local Look = require("look")
 local F = require("bigfont")
 local lg = love.graphics
 local Sp = {}
@@ -181,8 +182,7 @@ end
 -- code-drawn pieces -------------------------------------------------------------------------------------
 local function rect(c, x, y, w, h, a) lg.setColor(c[1], c[2], c[3], a or 1); lg.rectangle("fill", math.floor(x), math.floor(y), w, h) end
 local function hexc(h) return { tonumber(h:sub(1, 2), 16) / 255, tonumber(h:sub(3, 4), 16) / 255, tonumber(h:sub(5, 6), 16) / 255 } end
-local HAZE, FADE = { 200 / 255, 210 / 255, 222 / 255 }, Sc.DECOR_FADE
-local function faded(c) return { c[1] + (HAZE[1] - c[1]) * FADE, c[2] + (HAZE[2] - c[2]) * FADE, c[3] + (HAZE[3] - c[3]) * FADE } end
+local function faded(c) return Sc.fadeC(c) end                     -- decoration: to the level's back haze (scene.lua)
 local INK = { 0.07, 0.07, 0.10 }                                    -- the 1 px dark outline of every obstacle
 -- River Walk colours, taken from its art: the flower box's wood, the bench's green, the pot's terracotta
 local WOOD, WOOD_D, WOOD_L = hexc("b86a34"), hexc("8a4a22"), hexc("d98c4e")
@@ -190,13 +190,14 @@ local GREEN, GREEN_D = hexc("3f6b48"), hexc("2c4e35")
 local RED, WHITE, CREAM = hexc("c8473f"), hexc("efece4"), hexc("e8dcc0")
 
 -- art for the pieces (tools/make_riverwalk_pieces.py), same sizes as the boxes below; kiosks faded like decoration
-local pieceArt
+local ARTS = {}                                                    -- per colour script (the kiosks' fade)
 local function art()
-  if pieceArt then return pieceArt end
-  pieceArt = {}
+  if ARTS[Look.key] then return ARTS[Look.key] end
+  local pieceArt = {}
+  ARTS[Look.key] = pieceArt
   local function load(n, fade)
     local d = love.image.newImageData("art/scene/" .. n .. ".png")
-    if fade then d:mapPixel(function(_, _, r, g, b, a) return r + (HAZE[1] - r) * FADE, g + (HAZE[2] - g) * FADE, b + (HAZE[3] - b) * FADE, a end) end
+    if fade then Sc.fadeData(d) end
     local im = lg.newImage(d); im:setFilter("nearest", "nearest"); return im
   end
   pieceArt.kennel = load("kennel")
