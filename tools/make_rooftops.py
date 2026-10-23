@@ -5,7 +5,8 @@ love riverwalk --level rooftops). Design and every number: docs/rooftops_beatshe
 
   python3 tools/make_rooftops.py [--force]
 
-13 x 5 screens: 4160 x 1200 px (520 x 150 cells; r7/curve added the drying yard, x 3344-3664). The skyline climbs to the right in five tiers (feet y):
+7472 x 1200 px (934 x 150 cells; r7/curve added the drying yard, x 3344-3664; r9/rooftops the climb to
+the nest and the long roof down, x 4048-7472, in the r9 block at the end). The skyline climbs to the right in five tiers (feet y):
 the street 1144, T1 952, T1b 856, T2 760, T3 568, the roof terrace T4 376 (Mia's roof cafe), the copper roof 280,
 the nest chimney's top 184. The low road (the main route) walks and rides the steam puffs up the tiers; the high
 road floats over it on ledges, loose tiles and puffs (the golden bone on the bakery's chimney pot) and meets it on
