@@ -37,7 +37,9 @@ if target:
     sbs.save(f'{OUT}/sbs_{step}.png'); print(f'{OUT}/sbs_{step}.png')
 # crops: the union box of the bodies in each region (top-left, top-centre, top-right, bottom ...), at 5x
 regions = {}
+HUDN = {'health', 'clock', 'time', 'bone', 'bones', 'score', 'head', 'lives', 'hard'}
 for name, x0, y0, x1, y1 in boxes(shots[0]):
+    if step != 'hud' and name in HUDN: continue                        # (the HUD under the dim)
     key = ('T' if y0 < 80 else 'B' if y0 > 160 else 'M') + ('L' if x1 < 110 else 'R' if x0 > 210 else 'C')
     r = regions.setdefault(key, [x0, y0, x1, y1]); r[0] = min(r[0], x0); r[1] = min(r[1], y0); r[2] = max(r[2], x1); r[3] = max(r[3], y1)
 crops = []

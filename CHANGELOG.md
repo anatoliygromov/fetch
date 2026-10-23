@@ -2,6 +2,19 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `ui/hud-v8` step 2: the pause to the owner's target (23 Oct, night)
+- **Dim:** one full-screen dark brown rectangle (40,20,12) at 75 % (hud.lua U.dimWarm); no checker dither.
+- **Card (flow.lua, drawing only; the menu logic and inputs unchanged):** the kit's gold panel as a true 9-slice
+  (hud.lua U.panel, kit/frames/panel_menu), a straight PAUSED ribbon (13 px ink letters) over its top edge, the level in
+  the small font, three rows 140 x 19 (selected: gold with the 21 px paw coin over its left end; others dark and inset),
+  SOUND with one segment per volume step (10, the game's range) in a dark trough, the A / B coins (23 px) on the frame's
+  bottom line with OK / BACK on orange tabs hanging behind it. QUIT asks in the same card (QUIT TO THE MENU?, NO /
+  YES, QUIT). The card is centred, or at the top when Pepper would be under it.
+- **Checks:** layout_qa8 61 PASS on the four pause frames (rows, pitch, labels' edge and centre lines, everything
+  centred, cursor gap 3, the A / B group centred, every edge pixel the one outline or shadow colour); qa_card PASS
+  for btn_a, btn_b, tab, coin_paw, row_on, row_off, seg_on, seg_off, ribbon_pause; check_pepper PEPPER UNCHANGED;
+  check_flow 116 of 116.
+
 ## Branch `ui/hud-v8` step 1: the HUD to the owner's target (23 Oct, night)
 Built on main v0.6. 0 credits, no generated pixels: everything drawn on the pixel grid. Owner direction: the three
 target renders (art/source/ui/ref) are "this exact layout and quality"; fonts on a grid, one family.

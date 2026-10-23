@@ -49,5 +49,7 @@ if __name__ == "__main__":
         a = np.array(Image.open(f'{OUT}/{f}').convert('RGBA')); m = (a[..., 3] > 0) & ~np.all(a[..., :3] == S8.SHADOW, axis=-1)
         ys, xs = np.nonzero(m); lua.append(f'  {f[:-4]} = {{ {xs.min()}, {ys.min()}, {xs.max()}, {ys.max()} }},')
         print(f, a.shape[1], 'x', a.shape[0], 'body', xs.min(), ys.min(), xs.max(), ys.max())
+    for k in ('ribbon_pause', 'ribbon_tally'):                    # the ribbons' main band: x0, x1, top row, height
+        b = meta[k + '_body']; lua.append(f"  {k}_band = {{ {b['bx0']}, {b['bx1']}, {b['top']}, {b['Hb']} }},")
     lua.append('}')
     open(os.path.join(ROOT, 'riverwalk', 'uiart_data.lua'), 'w').write('\n'.join(lua) + '\n')

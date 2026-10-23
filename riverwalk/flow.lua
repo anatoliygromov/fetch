@@ -302,31 +302,64 @@ end
 -- SOUND: left / right turn the game's volume down or up (0 is off), A steps it up and wraps round to off
 F.pauseItems, F.confirmItems = { "GO ON", "SOUND", "QUIT" }, { "NO", "YES, QUIT" }
 F.PAUSE_SOUND, F.PAUSE_QUIT = 2, 3
+-- (ui/hud-v8) drawn to the owner's pause target: the smooth warm dim, the kit's gold panel, the PAUSED ribbon over
+-- its top edge, the level in the small font, three rows (the selected one gold with the paw coin over its left end),
+-- the A and B coins with their OK / BACK tabs across the bottom edge. Layout in game px; the card's top is P.Y.
+-- Offsets from the card's top (the ribbon's top). The card goes where it misses Pepper: centred, else at the top.
+F.P = { X = 75, W = 170, RIB = 0, PANEL = 10, SUB = 24, ROW0 = 35, ROW_H = 19, PITCH = 21, PAD = 15, H = 106,
+  BOX_H = 136, CUR_OUT = 6, LABEL_IN = 18, SEGS = 4 }
 function F.drawPause(pz, def, avoid)
-  U.dim(); shifted(F.placeY(82, 156, 60, 124, avoid) - 60, function() F.pauseCard(pz, def) end)
+  local P = F.P
+  local y = math.floor((240 - P.BOX_H) / 2)
+  local function miss(yy) local a = avoid; return not a or not (a[1] < P.X + P.W and a[3] > P.X and a[2] < yy + P.BOX_H and a[4] > yy) end
+  if not miss(y) and miss(2) then y = 2 end
+  U.dimWarm(); shifted(y, function() F.pauseCard(pz, def) end)
 end
 function F.pauseCard(pz, def)
   local Se = require("settings")
-  U.box(82, 60, 156, 124)
-  U.center("PAUSED", 160, 67, 2)
-  U.center(("LEVEL %d  %s"):format(def.number or 1, def.name or ""), 160, 85, 1, U.GOLD)
+  local P = F.P
+  local line = P.PANEL + P.H - 6                                  -- the frame's bottom gold line
+  local tabw = U.body("tab")
+  for _, cx in ipairs({ 131, 188 }) do U.put("tab", cx - (tabw - 1) / 2, line, "tab") end   -- (hanging behind the frame)
+  U.panel(P.X, P.PANEL, P.W, P.H)
+  U.ribbon("ribbon_pause", 159.5, P.RIB)
+  local tw = U.sayW(13, "PAUSED")
+  U.say(13, "ink", "PAUSED", math.floor(159.5 - (tw - 1) / 2 + 0.5), P.RIB + 2, "title")
   local items, sel = F.pauseItems, pz.sel
-  if pz.confirm then U.center("QUIT TO THE MENU?", 160, 104, 1); items, sel = F.confirmItems, pz.confirm end
+  local sub = ("LEVEL %d %s"):format(def.number or 1, (def.name or ""):upper())
+  if pz.confirm then sub, items, sel = "QUIT TO THE MENU?", F.confirmItems, pz.confirm end
+  local sw = U.sayW(7, sub)
+  U.say(7, "cream", sub, math.floor(159.5 - (sw - 1) / 2 + 0.5), P.SUB, "subtitle")
+  local rx = P.X + P.PAD
+  local rw = P.W - 2 * P.PAD
+  local th = U.sayH(13)
   for i, it in ipairs(items) do
-    local iy = (pz.confirm and 120 or 104) + (i - 1) * 19
+    local ry = P.ROW0 + (i - 1) * P.PITCH
     local on = sel == i
-    if on then lg.setColor(U.EDGE); lg.rectangle("fill", 88, iy - 3, 144, 17); lg.setColor(1, 1, 1, 1) end
-    if not pz.confirm and i == F.PAUSE_SOUND then
-      lg.setColor(U.SHADE); require("bigfont").print("SOUND", 97, iy + 1, 2)
-      lg.setColor(on and U.GOLD or U.WHITE); require("bigfont").print("SOUND", 96, iy, 2); lg.setColor(1, 1, 1, 1)
-      U.volumeBar(166, iy + 1, Se.volume, Se.MAX, 9)
-      if on then U.text("<", 160, iy + 2, U.GOLD); U.text(">", 219, iy + 2, U.GOLD) end
-    else
-      U.center(it, 160, iy, 2, on and U.GOLD or U.WHITE)
+    U.put(on and "row_on" or "row_off", rx, ry, "row")
+    local cy = ry + (P.ROW_H - 1) / 2
+    local ly = math.floor(cy - (th - 1) / 2 + 0.5)
+    if on then local _, ch = U.body("coin_paw"); U.put("coin_paw", rx - P.CUR_OUT, math.floor(cy - (ch - 1) / 2 + 0.5), "cursor") end
+    U.say(13, "cream", it, rx + P.LABEL_IN, ly, "label")
+    if not pz.confirm and i == F.PAUSE_SOUND then                -- the sound level: one segment a step, lit up to it
+      local segw, segh = U.body("seg_on")
+      local mw = (Se.MAX - 1) * P.SEGS + segw
+      local mx, my = rx + rw - 6 - mw, math.floor(cy - (segh - 1) / 2 + 0.5)
+      -- a dark trough under the meter (it reads on the gold row too): ink edge, the dark row's fill
+      lg.setColor(64 / 255, 11 / 255, 6 / 255); lg.rectangle("fill", mx - 2, my - 2, mw + 4, segh + 4)
+      lg.setColor(44 / 255, 22 / 255, 14 / 255); lg.rectangle("fill", mx - 1, my - 1, mw + 2, segh + 2); lg.setColor(1, 1, 1, 1)
+      for k = 1, Se.MAX do U.put(k <= Se.volume and "seg_on" or "seg_off", mx + (k - 1) * P.SEGS, my, "seg") end
+      U.logBox("meter", mx, my, mx + mw - 1, my + segh - 1)
     end
   end
-  Talk.glyph("a", 108, 172, "small"); U.text("OK", 118, 169)
-  Talk.glyph("b", 166, 172, "small"); U.text("BACK", 176, 169)
+  -- A and B: coins centred on the frame's bottom gold line, their tabs hanging under them with OK / BACK
+  local cw, ch = U.body("btn_a")
+  for k, b in ipairs({ { "btn_a", "OK" }, { "btn_b", "BACK" } }) do
+    local cx = k == 1 and 131 or 188
+    U.put(b[1], cx - (cw - 1) / 2, line - (ch - 1) / 2, "button")
+    local hw = U.sayW(7, b[2])
+    U.say(7, "cream", b[2], math.floor(cx - (hw - 1) / 2 + 0.5), line + (ch - 1) / 2 + 3, "hint")
+  end
 end
 
 -- after the last level: e = { score, best, newBest, lines (the last level's outro, optional) }

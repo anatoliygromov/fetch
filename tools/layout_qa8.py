@@ -21,11 +21,13 @@ M = 4; INK = (64, 11, 6); SH = (36, 8, 5)
 ok = True
 def check(cond, msg):
     global ok; print(('PASS ' if cond else 'FAIL ') + msg); ok &= bool(cond)
+HUDN = {'health', 'clock', 'time', 'bone', 'bones', 'score', 'head', 'lives', 'hard'}
 def load(shot):
     boxes = []
     for line in open(f'{D}/{shot}.txt'):
         p = line.split()
         if len(p) == 5: boxes.append(dict(name=p[0], x0=int(p[1]), y0=int(p[2]), x1=int(p[3]), y1=int(p[4])))
+    if not shot.startswith('hud'): boxes = [b for b in boxes if b['name'] not in HUDN]     # (the HUD under the dim)
     return np.array(Image.open(f'{D}/{shot}.png').convert('RGB')), boxes
 def c(b): return ((b['x0'] + b['x1']) / 2, (b['y0'] + b['y1']) / 2)
 def one(bs, n): r = [b for b in bs if b['name'] == n]; return r[0] if r else None
@@ -89,7 +91,7 @@ def pause(shot):
         r = min(rows, key=lambda r: abs(c(r)[1] - c(cur)[1])); check(abs(c(cur)[1] - c(r)[1]) <= 0.5, f'{shot}: cursor centred on its row')
     btn = many(bs, 'button')
     if btn: gc = (btn[0]['x0'] + btn[-1]['x1']) / 2; check(abs(gc - 159.5) <= 0.5, f'{shot}: A / B group centred ({gc})')
-    ov = overlaps(bs, skip=('panel', 'row', 'ribbon', 'tab', 'button', 'cursor', 'meter')); check(not ov, f'{shot}: no text overlapping {ov[:4]}')
+    ov = overlaps(bs, skip=('panel', 'row', 'ribbon', 'tab', 'button', 'cursor', 'meter', 'seg')); check(not ov, f'{shot}: no text overlapping {ov[:4]}')
     drawn(f, bs, shot); guides(f, bs, shot, [c(r)[1] for r in rows])
 
 def tally(shot):
@@ -116,7 +118,7 @@ def pieces():
     bad = []
     for p in sorted(glob.glob(f'{ROOT}/riverwalk/art/ui/*.png')):
         n = os.path.basename(p)[:-4]
-        if n.startswith('font17_ink') or n.startswith('font13_ink') or n in ('panel', 'head', 'row_off', 'seg_off'): continue   # ink (no outline); the kit frame; the v7 head (cream rim); inset rows
+        if n.startswith('font17_ink') or n.startswith('font13_ink') or n in ('panel', 'head', 'row_off', 'seg_off', 'tab'): continue   # ink (no outline); the kit frame; the v7 head (cream rim); inset rows; the tab's top hides under its coin
         a = np.array(Image.open(p).convert('RGBA')); op = a[..., 3] > 0
         pad = np.pad(op, 1); edge = op & ~(pad[:-2, 1:-1] & pad[2:, 1:-1] & pad[1:-1, :-2] & pad[1:-1, 2:])
         cols = {tuple(v) for v in a[edge][:, :3]}

@@ -2,7 +2,7 @@
 light direction for every coin, the shared outline (64,11,6) and 1 px shadow (36,8,5).
   bar_0..3      the v7 health capsule with its paw medallion, stretched by whole segments to 100 x 19 (+ shadow)
   coin_paw      the menu cursor: the v7 paw medallion at 21 px
-  btn_a, btn_b  A / B coin buttons, 25 px, the mid font's A / B in ink on the face
+  btn_a, btn_b  A / B coin buttons, 23 px, the mid font's A / B in ink on the face
   tab           the orange pill under a coin button (OK / BACK are drawn on it in the small font)
   row_on/off    menu rows: selected (gold, raised) and not selected (dark, inset)
   seg_on/off    one sound meter segment, lit and unlit
@@ -33,7 +33,7 @@ def outline_of(m, cross=True):
 
 def health_bar(n): return I7.health_bar(n, D=19, seg_w=23, seg_gap=3)
 
-def coin_letter(ch, D=25):
+def coin_letter(ch, D=23):
     disc, edge, rim, face, lit, ci = I7.disc_parts(D); img = np.zeros((D, D, 4), np.uint8)
     img[edge] = (*INK, 255); I7.paint_rim(img, rim, lit); img[face] = (238, 166, 38, 255); img[face & (lit > 0.3)] = (246, 182, 46, 255)
     g = S8.glyph(13, ch, 'ink'); gm = g[..., 3] > 0; ys, xs = np.nonzero(gm)
@@ -42,7 +42,7 @@ def coin_letter(ch, D=25):
     m = g[..., 3] > 0; img[oy:oy + gh, ox:ox + gw][m] = g[m]
     return img
 
-def tab(w=35, h=27):
+def tab(w=35, h=26):
     """a pill, open at the top (hidden under the coin): rounded bottom corners, orange with a lit top and a shaded foot"""
     m = np.zeros((h, w), bool); m[:, :] = True
     for d, cut in ((0, 3), (1, 1), (2, 1)):                       # bottom corners 3-1-1 (a round end)
@@ -71,7 +71,7 @@ def row(w, h, on):
         img[y0][body[y0]] = (*DARK['top'], 255); img[y1][body[y1]] = (*DARK['low'], 255)
     return img
 
-def seg(on, w=4, h=11):
+def seg(on, w=3, h=11):
     m = np.ones((h, w), bool)
     img = np.zeros((h + 2, w + 2, 4), np.uint8); M = np.zeros((h + 2, w + 2), bool); M[1:-1, 1:-1] = m
     put(img, outline_of(M, cross=True), INK)
@@ -88,10 +88,10 @@ def medal(on, D=15):
     # the ribbon: two tabs above the disc, pointing up-out (a V), red when won, dull when not
     rib = (214, 52, 60) if on else (120, 84, 70); ribd = (150, 30, 40) if on else (90, 60, 50)
     for x0, sx in ((ci - 4, 1), (ci + 1, -1)):
-        for y in range(5):
+        for y in range(1, 5):
             for x in range(x0, x0 + 4):
                 if 0 <= x < D: img[y, x] = (*(rib if (x - x0) in (1, 2) else ribd), 255)
-    tabs = img[..., 3] > 0; ring = outline_of(tabs) ; ring[o:, :] = False
+    tabs = img[..., 3] > 0; ring = outline_of(tabs)
     put(img, ring & (np.arange(D)[None, :] >= 0), INK)
     pal = RIM if on else BRONZE
     sub = np.zeros((D, D, 4), np.uint8); sub[edge] = (*INK, 255)
@@ -108,22 +108,21 @@ def medal(on, D=15):
 def ribbon(Wb, Hb, arch=0, tail=14, tuck=4, drop=5, notch=4):
     """a banner: the body Wb x Hb (its top raised by `arch` px in the middle, a parabola: runs shorten evenly to the
     ends), a tail behind each end, `drop` px lower, with a V notch, and a dark fold where it turns behind the body"""
-    W = Wb + 2 * (tail - tuck); H = arch + Hb + drop
-    bx0 = tail - tuck; bx1 = bx0 + Wb - 1
+    W = Wb + 2 * (tail - tuck) + 2; H = arch + Hb + drop + 2           # (1 px round it for the outline)
+    bx0 = tail - tuck + 1; bx1 = bx0 + Wb - 1
     def off(x):
-        if not arch: return 0
-        u = (x - (bx0 + bx1) / 2) / (Wb / 2); return arch - int(np.floor(arch * (1 - u * u) + 0.5))
+        if not arch: return 1
+        u = (x - (bx0 + bx1) / 2) / (Wb / 2); return 1 + arch - int(np.floor(arch * (1 - u * u) + 0.5))
     img = np.zeros((H, W, 4), np.uint8)
     th = Hb - 2                                                    # tail height
     for side in (0, 1):
         t = np.zeros((H, W), bool)
-        ty0 = arch + drop
+        ty0 = arch + drop + 1
         for x in range(tail):
             for y in range(ty0, ty0 + th):
-                d = min(x, tail - 1 - x) if False else x
                 yc = ty0 + (th - 1) / 2
                 if x < notch and abs(y - yc) < notch - x: continue      # the V cut into the outer end
-                X = x if side == 0 else W - 1 - x
+                X = 1 + x if side == 0 else W - 2 - x
                 t[y, X] = True
         e = outline_of(t, cross=False) & ~t
         put(img, e, INK); put(img, t, GOLD['mid'])
@@ -134,7 +133,7 @@ def ribbon(Wb, Hb, arch=0, tail=14, tuck=4, drop=5, notch=4):
         # the fold: the tail's inner end, under the body's end, in deep shade
         for y in range(ty0, ty0 + th):
             for k in range(tuck + 3):
-                X = (tail - 1 - k) if side == 0 else (W - tail + k)
+                X = (tail - k) if side == 0 else (W - 1 - tail + k)
                 if t[y, X]: img[y, X] = (*GOLD['deep'], 255)
     b = np.zeros((H, W), bool)
     for x in range(bx0, bx1 + 1):
@@ -164,7 +163,7 @@ def build(out):
     save('row_on', row(140, 19, True)); save('row_off', row(140, 19, False), sh=False)
     save('seg_on', seg(True), sh=False); save('seg_off', seg(False), sh=False)
     save('medal_on', medal(True)); save('medal_off', medal(False))
-    rp, mp = ribbon(93, 19, arch=0); save('ribbon_pause', rp); meta['ribbon_pause_body'] = mp
+    rp, mp = ribbon(92, 19, arch=0); save('ribbon_pause', rp); meta['ribbon_pause_body'] = mp
     rt, mt = ribbon(146, 25, arch=5, tail=22, tuck=6, drop=6, notch=6); save('ribbon_tally', rt); meta['ribbon_tally_body'] = mt
     return meta
 

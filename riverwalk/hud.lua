@@ -51,7 +51,12 @@ function U.art(name)
 end
 function U.body(name) local b = ART[name]; return b[3] - b[1] + 1, b[4] - b[2] + 1 end     -- body width, height
 -- U.log: when a table, every placed body is listed in it ({ name, x0, y0, x1, y1 }) for tools/layout_qa8.py
-local function log(name, x0, y0, x1, y1) if U.log then U.log[#U.log + 1] = { name, x0, y0, x1, y1 } end end
+local function log(name, x0, y0, x1, y1)
+  if not U.log then return end
+  local ax, ay = lg.transformPoint(x0, y0); local bx, by = lg.transformPoint(x1, y1)          -- (on screen: a card may be moved)
+  U.log[#U.log + 1] = { name, math.floor(ax + 0.5), math.floor(ay + 0.5), math.floor(bx + 0.5), math.floor(by + 0.5) }
+end
+U.logBox = log
 -- a piece with its body's top-left at x, y
 function U.put(name, x, y, logName)
   local b = ART[name]
@@ -123,6 +128,34 @@ function U.hardTag8(cx, y)
   lg.setColor(64 / 255, 11 / 255, 6 / 255); lg.rectangle("fill", x, y, w, 13)
   lg.setColor(U.RED); lg.rectangle("fill", x + 1, y + 1, w - 2, 11)
   U.say(7, "gold", "HARD", x + 2, y + 2, "hard")
+end
+-- the kit's gold panel (art/ui/panel.png, kit/frames/panel_menu: a true 9-slice, corners 15 x 16 as drawn, each
+-- edge one repeated column or row, a flat fill), body at x, y, w x h; every stretch is a copy of one pixel line
+local panelQ
+function U.panel(x, y, w, h, logName)
+  local im = U.art("panel"); local iw, ih = im:getDimensions()
+  local L, R, T, B = 15, 15, 16, 16
+  if not panelQ then
+    panelQ = {}
+    local function q(n, qx, qy, qw, qh) panelQ[n] = lg.newQuad(qx, qy, qw, qh, iw, ih) end
+    q("tl", 0, 0, L, T); q("tr", iw - R, 0, R, T); q("bl", 0, ih - B, L, B); q("br", iw - R, ih - B, R, B)
+    q("t", L, 0, 1, T); q("b", L, ih - B, 1, B); q("l", 0, T, L, 1); q("r", iw - R, T, R, 1); q("c", L, T, 1, 1)
+  end
+  local Q = panelQ; lg.setColor(1, 1, 1, 1)
+  lg.draw(im, Q.c, x + L, y + T, 0, w - L - R, h - T - B)
+  lg.draw(im, Q.t, x + L, y, 0, w - L - R, 1); lg.draw(im, Q.b, x + L, y + h - B, 0, w - L - R, 1)
+  lg.draw(im, Q.l, x, y + T, 0, 1, h - T - B); lg.draw(im, Q.r, x + w - R, y + T, 0, 1, h - T - B)
+  lg.draw(im, Q.tl, x, y); lg.draw(im, Q.tr, x + w - R, y); lg.draw(im, Q.bl, x, y + h - B); lg.draw(im, Q.br, x + w - R, y + h - B)
+  log(logName or "panel", x, y, x + w - 1, y + h - 1)
+end
+-- a title ribbon (ribbon_pause / ribbon_tally) with its main band's centre on cx and the band's top (in the middle,
+-- for the arched one) at y; logs the band (not the tails) as "ribbon". uiart_data <name>_band: x0, x1, top, height
+function U.ribbon(name, cx, y)
+  local b = ART[name .. "_band"]; local bw = b[2] - b[1] + 1
+  local x = math.floor(cx - (bw - 1) / 2 + 0.5)
+  lg.setColor(1, 1, 1, 1); lg.draw(U.art(name), x - b[1], y - b[3])
+  log("ribbon", x, y, x + bw - 1, y + b[4] - 1)
+  return x, bw
 end
 -- the smooth warm dim behind the pause and the tally (owner, 23 Oct: like the pause render, no dotted dither):
 -- one full-screen dark brown rectangle at 75 %
