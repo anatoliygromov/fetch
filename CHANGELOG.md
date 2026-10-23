@@ -18,6 +18,29 @@ scenery). Pepper's files, music and sfx are untouched; no art was generated.
   up from the bakery sign) and `HOLD: BOUNCE` (the plaza parasol); the generators say the same. New flow checks:
   the order, every level's cards agree with levels.lua, an old save opens the tall twin; the City Park talk checks
   run on the tall City Park (its path 144 px lower). `check_flow` 116 of 116.
+- **D1: the cargo bike** (level/downtown.lua, maps/downtown.tmx written again from it, maps/downtown_tall.tmx, their
+  exports, new `riverwalk/arthooks.lua`, stage.lua, scene.lua, tests_downtown.lua, tests_downtown_tall.lua): both
+  Downtowns' tram zones are cargo bike zones (`kind = "cargo"`), the same hit box (80 x 26: the cargo box and the
+  front wheel), the same speeds and rhythm (110 px/s every 6 s, 130 px/s every 4 s: about 9 and 11 km/h, a loaded
+  cargo bike's pace), so the kiosk, the shelter roof and the gates stay the same perches and the autopilots the
+  same times. The tell is the bell (1 s before it comes in, and little rings by the handlebar as it enters) and the
+  blinking sign. The baker's delivery man rides over the back wheel, drawn tall (about 76 px, like the leaf-cart
+  keeper) and never hurts. The bike is drawn behind the obstacles on Pepper's line (the kiosk and the gates hide
+  its wheels; Pepper on a perch is drawn over the rider), as River Walk's bikes. Placeholder: an outlined box bike
+  with a rider drawn in code (about 92 x 76), replaced by `art/scene/cargo_bike.png` (and `cargo_bike_pedal.png`)
+  when they exist. **The tram sheds are courtyard gates** (`GATE`, the same boxes, the same art without the rails,
+  the same `depot` code): the bike rides into the courtyard through the gateway. Girl lines: CARGO BIKE! GET UP
+  HIGH! and A FAST BIKE! GET UP!
+- **D1: the vintage tram in the back lane** (`L.trams`, arthooks.lua; `tools/level_to_tiled.py` and
+  `tools/tiled/check_tiled.lua` know the lane's `stop`): on both tram streets a true-scale tram (300 x 130, faded 40%
+  towards the haze: the far lane) comes in off the right edge of the screen, brakes to a halt with its front door at
+  a tram stop sign by the shelter, waits 3 s, and drives off to the left; one every 16 s while the screen is over the
+  street. Its driver sits in the front cab; a trolley pole reaches up. Rails at the street line minus 10 (behind
+  Pepper's line, where decoration stands); drawn before the back props, so everything on her line and Pepper are in
+  front of it. Never a hazard. Placeholder drawn in code; `art/scene/tram_vintage.png` when it exists. New checks
+  (tall Downtown): the cargo bike zones' kind and hit box, the two tram lanes, the tram comes in off screen, stops
+  at its sign for 3 s and leaves, no heart lost (102 of 102); flat Downtown 81 of 81. `--auto` 51.4 s and 56.2 s, as
+  before.
 ## Branch `r7/curve`: the tall order's difficulty curve passes the acceptance test (22 Oct)
 Built on `round1`. The planned order with the tall levels (River Walk, City Park tall, Downtown tall, Rooftops,
 Soder Hill, Night Harbour), measured with `tools/check_curve.py --name tall --seeds 10`; every iteration's numbers are

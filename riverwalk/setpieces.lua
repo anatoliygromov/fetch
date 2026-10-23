@@ -2,7 +2,7 @@
 --   hard mode      carry.hard (from the menu) or --hard (tests): 1 heart, bikes and the tram 25% faster
 --   rope ferries   a mover with `call` waits at its far end and is winched over to the near end when Pepper comes
 --                  near (it waits there for her), then carries her across when she stands on it
---   traffic        a bike, cart or tram is sent 1 s before it reaches the screen edge: a bell rings, and a small
+--   traffic        a bike, cart, cargo bike or tram is sent 1 s before it reaches the screen edge: a bell rings, and a small
 --                  warning sign shows at the edge it comes from until it is on screen. A zone with start = "enter"
 --                  sends its first one as soon as Pepper walks in (no global timer)
 --   secrets        L.secrets: hidden spots; reaching one counts it (stats: secrets, secretsTotal)

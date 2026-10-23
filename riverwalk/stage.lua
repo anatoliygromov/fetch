@@ -14,6 +14,7 @@ local Nt = require("night")                   -- Level 5's night rules: darkness
 local Vc = require("vcam")                    -- the vertical camera (tall levels; s.camY is 0 in a 240 px world)
 local Lf = require("lift")                    -- movers on both axes (a goods lift): L.movers entries with fromY
 local Rf = require("roofs")                   -- steam puffs (L.steam) and loose tiles (props with loose = true)
+local AH = require("arthooks")                -- r8: the cargo bike, the tram lane, optional art of the first batch
 local St = {}
 St.__index = St
 local lg = love.graphics
@@ -40,6 +41,7 @@ function St.new(def, carry)
     rings = {}, msg = nil, events = {}, bikeT = 2.5, bikes = {} }, St)
   s.world = Wd.load(def.map, def.props)
   if def.scenery ~= "greybox" then s.road = Rd.new(s.world) end    -- the greybox park has no road and no traffic
+  s.trams = AH.newTrams(def)                                       -- the back lane's vintage trams (scenery, L.trams)
   s.movers = {}
   for _, m in ipairs(def.movers) do
     local mv = m.fromY and Lf.new(m) or { name = m.name, x0 = m.from, x1 = m.from + (m.x1 - m.x0), y0 = m.y0, y1 = m.y1, from = m.from, to = m.to, speed = m.speed, dir = 1, dx = 0, kind = "oneway", pause = m.pause }
@@ -417,6 +419,7 @@ function St:update(dt, presses)
   end
 
   if self.road then self.road:update(dt, self.cam) end            -- passing cars and cyclists on the road (scenery)
+  AH.updateTrams(self, dt)                                         -- trams in the back lane (scenery)
   Ex.update(self.fx, self, dt)                                     -- dust and splashes: they only watch Pepper
 
   -- bark rings
@@ -573,6 +576,7 @@ function St:draw(debug)
   -- 6 quay back: railing and things behind Pepper
   use("back")
   if style == "park" then Sc.drawTreetops(self.def, cam, self.world) end   -- a tall park's treetops: trunks, canopies
+  AH.drawTrams(self, cam)                                          -- the back lane's tram and its stop sign (faded)
   for _, pr in ipairs(self.def.props) do if pr.layer == "back" then prop(pr, cam, C.back) end end
   if style then Sc.drawSpout(self.def, cam) end
   Sp.drawBack(self, cam)                                           -- code-drawn decoration (kiosks)
@@ -619,6 +623,10 @@ function St:draw(debug)
   end
   -- River Walk's bikes ride behind the obstacles on Pepper's line (r5/bugs): the adult's bike is taller than a flower
   -- box, so drawn in front of the box it rode through Pepper standing on it; behind it, the box hides its wheels
+  -- Downtown's cargo bikes too (r8/levels, D1): the kiosk and the gates hide their wheels; Pepper on a perch is
+  -- drawn over the tall rider (arthooks.lua)
+  use("play")
+  for _, c in ipairs(self.bikes) do if c.zone and c.zone.kind == "cargo" then AH.drawCargo(c, cam) end end
   if not style and not grey then
     use("play"); lg.setColor(1, 1, 1, 1)
     for _, c in ipairs(self.bikes) do
@@ -703,9 +711,11 @@ function St:draw(debug)
   use("play")
   for _, c in ipairs(self.bikes) do
     local x = c.x - cam
-    local depot = c.zone and c.zone.depot                                -- a tram entering its shed: drawn right of the door
+    local cargo = c.zone and c.zone.kind == "cargo"                      -- (drawn behind the obstacles, above)
+    local depot = not cargo and c.zone and c.zone.depot                  -- a tram entering its shed: drawn right of the door
     if depot then lg.setScissor(math.max(0, math.floor(depot - cam)), 0, 400, 240) end   -- (screen space: the whole height)
-    if style then Sc.drawHazardArt(c, cam, style)                        -- the leaf cart, the tram
+    if cargo then                                                        -- (the cargo bike: arthooks.lua, above)
+    elseif style then Sc.drawHazardArt(c, cam, style)                    -- the leaf cart, the tram
     elseif grey then
       local z = c.zone or {}
       local bw, bh = z.w or 48, z.h or 26

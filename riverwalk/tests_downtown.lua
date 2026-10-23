@@ -44,7 +44,7 @@ return function(mode, api)
           report("crawl gaps: both cafe tables 18-25 px", g1 >= 18 and g1 < Pp.H_STAND and g2 >= 18 and g2 < Pp.H_STAND, ("%d, %d px"):format(g1, g2))
           local tram = api.stage().def.bikes[1]
           local tops = { prop("KIOSK").y0, prop("SHELTER").y0 }
-          report("tram perches are above the tram", tops[1] < 184 - tram.h and tops[2] < 184 - tram.h, ("kiosk %d, shelter %d, tram top %d"):format(tops[1], tops[2], 184 - tram.h))
+          report("the perches are above the cargo bike's box", tops[1] < 184 - tram.h and tops[2] < 184 - tram.h, ("kiosk %d, shelter %d, box top %d"):format(tops[1], tops[2], 184 - tram.h))
         end },
       -- 1 held jump and tap hop
       { act = function() tp(260, 184); startY = 184; minY = 184 end }, { wait = 0.2 },
@@ -181,21 +181,21 @@ return function(mode, api)
       -- 9 the tram: it hurts on the street; on the kiosk and on the shelter roof it passes under Pepper
       { act = function() tp(1959, 184); hearts = api.stage().hearts; tram(2040) end },
       { during = 2.0 },
-      { act = function() local s = api.stage(); report("tram: hurts Pepper on the street", s.hearts == hearts - 1, ("hearts %d"):format(s.hearts)) end },
+      { act = function() local s = api.stage(); report("cargo bike: hurts Pepper on the street", s.hearts == hearts - 1, ("hearts %d"):format(s.hearts)) end },
       { act = function() tp(1959, 184); jump("right", "jump") end }, { during = 0.2 }, landed(),
       { act = function(p) release(); local s = api.stage(); hearts = s.hearts
           report("kiosk: a held jump lands on top", near(p.y, 148), ("x %.0f y %.0f"):format(p.x, p.y)); tram(p.x + 120) end },
       { during = 2.5 },
-      { act = function(p) local s = api.stage(); report("kiosk: safe from the tram", near(p.y, 148) and s.hearts == hearts, ("y %.0f hearts %d"):format(p.y, s.hearts)) end },
+      { act = function(p) local s = api.stage(); report("kiosk: safe from the cargo bike", near(p.y, 148) and s.hearts == hearts, ("y %.0f hearts %d"):format(p.y, s.hearts)) end },
       { act = function() tp(2004, 148); hold("right") end }, { during = 0.1 },
       { act = function() jump("right", "jump") end }, { during = 0.2 },
       { cond = function(p) return p.vy > 0 end, act = function() release() end, limit = 2 }, landed(),
       { act = function(p) local s = api.stage(); hearts = s.hearts
           report("shelter: a jump from the kiosk onto the roof", near(p.y, 136), ("x %.0f y %.0f"):format(p.x, p.y)); tram(p.x + 120) end },
       { during = 2.5 },
-      { act = function(p) local s = api.stage(); report("shelter: safe from the tram", near(p.y, 136) and s.hearts == hearts, ("y %.0f hearts %d"):format(p.y, s.hearts)) end },
+      { act = function(p) local s = api.stage(); report("shelter: safe from the cargo bike", near(p.y, 136) and s.hearts == hearts, ("y %.0f hearts %d"):format(p.y, s.hearts)) end },
       { act = function() tp(1980, 184); tram(2220) end }, { during = 0.5 },
-      { act = function() local c = api.stage().bikes[1]; report("tram: stays on its rail over the stairs", c and near(c.y, 184), c and ("x %.0f y %.0f"):format(c.x, c.y) or "none") end },
+      { act = function() local c = api.stage().bikes[1]; report("cargo bike: stays on its rail over the stairs", c and near(c.y, 184), c and ("x %.0f y %.0f"):format(c.x, c.y) or "none") end },
       -- 10 the rooftops (the high route): from the statue's arm along the balconies and the fountain's top tier,
       --    carrying the ball, down to the street by the lamp before tram street
       { act = function() tp(1500, 108); carry(); hold("right") end },
@@ -219,10 +219,10 @@ return function(mode, api)
       { act = function() tp(1910, 184); hold("right") end },
       { cond = function(p, s) return #s.bikes > 0 end, act = function(p, s) release(); local c = s.bikes[1]
           local lead = (c.x - 40 - (s.cam + 320)) / c.speed
-          report("tram: sets off as Pepper enters its zone", p.x > 1930 and p.x < 1945, ("x %.0f"):format(p.x))
-          report("tram: 1 s from the screen edge (bell)", math.abs(lead - 1) < 0.05, ("%.2f s"):format(lead)) end, limit = 2 },
+          report("cargo bike: sets off as Pepper enters its zone", p.x > 1930 and p.x < 1945, ("x %.0f"):format(p.x))
+          report("cargo bike: 1 s from the screen edge (bell)", math.abs(lead - 1) < 0.05, ("%.2f s"):format(lead)) end, limit = 2 },
       { act = function() local St = require("stage"); local h = St.new(api.stage().def, { hard = true })
-          report("hard mode: 1 heart, the tram 25% faster", h.hearts == 1 and Sp.speed(h, h.def.bikes[1]) == h.def.bikes[1].speed * 1.25,
+          report("hard mode: 1 heart, the cargo bike 25% faster", h.hearts == 1 and Sp.speed(h, h.def.bikes[1]) == h.def.bikes[1].speed * 1.25,
             ("hearts %d, speed %.1f"):format(h.hearts, Sp.speed(h, h.def.bikes[1]))) end },
       -- 12 the springy awnings and parasol (bounce), the geese, the canal, the second tram
       { act = function() tp(1076, 184); hold("right") end }, { during = 0.1 }, { act = function() jump("right", "jump") end }, { during = 1.6 },
@@ -255,7 +255,7 @@ return function(mode, api)
       { act = function() jump("right", "jump") end },
       { cond = function(p) return p.onGround and p.mode == "normal" and p.x > 3072 end, act = function() release() end, limit = 6 },
       { act = function(p) release(); local s = api.stage()
-          report("flooded square: holding Right she bounces across, onto the tram shed", near(p.y, 148) and s.hearts == hearts, ("x %.0f y %.0f hearts %d"):format(p.x, p.y, s.hearts)) end },
+          report("flooded square: holding Right she bounces across, onto the courtyard gate", near(p.y, 148) and s.hearts == hearts, ("x %.0f y %.0f hearts %d"):format(p.x, p.y, s.hearts)) end },
       { act = function() local s = api.stage(); s.hearts = 3; hearts = 3; tp(2770, 184); hold("right") end }, { during = 0.1 },
       { act = function() jump("right", "jump") end }, { during = 2.5 },
       { act = function(p) release(); local s = api.stage()
@@ -270,10 +270,10 @@ return function(mode, api)
       { act = function() local s = api.stage(); tp(3270, 136); s.bikes = { { x = 3420, y = 184, warn = 0, zone = s.def.bikes[2], speed = 130 } }; s.bikeT = 99; s.zoneIn[s.def.bikes[2]] = true; minY = 9999 end },
       { during = 3.0, each = function(p) local c = api.stage().bikes[1]; if c then minY = math.min(minY, c.x + 52) end end },
       { act = function() local s = api.stage()
-          report("tram 2: drives into its shed (gone past the door), not over the water", #s.bikes == 0 and minY <= 3168 + 2 and minY >= 3150, ("its back end reached x %.0f (door 3168)"):format(minY)) end },
+          report("cargo bike 2: drives into its courtyard (gone past the gateway), not over the water", #s.bikes == 0 and minY <= 3168 + 2 and minY >= 3150, ("its back end reached x %.0f (door 3168)"):format(minY)) end },
       { act = function() local z1, z2 = api.stage().def.bikes[1], api.stage().def.bikes[2]
-          local tops = { prop("TRAM SHED", 2).y0, prop("SHELTER", 2).y0 }
-          report("tram 2: faster and more often; its perches are above it", z2.speed > z1.speed and z2.every < z1.every and tops[1] < 184 - z2.h and tops[2] < 184 - z2.h,
+          local tops = { prop("GATE", 2).y0, prop("SHELTER", 2).y0 }
+          report("cargo bike 2: faster and more often; its perches are above it", z2.speed > z1.speed and z2.every < z1.every and tops[1] < 184 - z2.h and tops[2] < 184 - z2.h,
             ("speed %d, every %.1f s"):format(z2.speed, z2.every)) end },
       -- 11 the girl at the stairs: reaching her without the ball does nothing, giving her the ball clears
       { act = function() local s = api.stage(); s.ball.state = "rest"; s.pepper.carrying = nil; tp(2120, 184); hold("right") end },
@@ -464,7 +464,7 @@ return function(mode, api)
     add({ { act = function() tp(1424, 156) end }, { wait = 0.4 }, shot("dt_18_tub", 1310),
           { act = function() tp(1792, 104); carry() end }, { wait = 0.4 }, shot("dt_19_rooftops", 1580),
           { act = function() local s = api.stage(); s.pepper.carrying = nil; s.ball.state = "rest"; tp(1988, 148); s.bikes = { Sp.spawn(s, s.def.bikes[1]) } end },
-          { wait = 0.1 }, shot("dt_20_tram_warning", 1920) })
+          { wait = 0.1 }, shot("dt_20_cargo_warning", 1920) })
     -- the new screens: a bounce off the bakery awning, the geese, the flight over the canal
     add({ { act = function() local s = api.stage(); s.bikes = {}; tp(992, 184); hold("right") end }, { wait = 0.05 }, { act = function() jump("right", "jump") end },
           { cond = function(p) return p.vy < -200 and p.y < 140 end, act = function() end, limit = 3 }, { wait = 0.15 }, shot("dt_21_bounce", 960),
@@ -474,9 +474,9 @@ return function(mode, api)
           { act = function() release(); local s = api.stage(); s.pepper.carrying = nil; s.ball.state = "rest" end } })
     -- the trams drive into their sheds (Pepper on the shed roofs)
     add({ { act = function() local s = api.stage(); tp(1904, 148); s.zoneIn[s.def.bikes[1]] = true; s.bikes = { { x = 2010, y = 184, warn = 0, zone = s.def.bikes[1], speed = 110 } }; s.bikeT = 99 end },
-          { wait = 0.45 }, shot("dt_24_tram_shed1", 1780),
+          { wait = 0.45 }, shot("dt_24_gate1", 1780),
           { act = function() local s = api.stage(); tp(3110, 148); s.zoneIn[s.def.bikes[2]] = true; s.bikes = { { x = 3240, y = 184, warn = 0, zone = s.def.bikes[2], speed = 130 } }; s.bikeT = 99 end },
-          { wait = 0.45 }, shot("dt_25_tram_shed2", 2990), { act = function() api.stage().bikes = {} end } })
+          { wait = 0.45 }, shot("dt_25_gate2", 2990), { act = function() api.stage().bikes = {} end } })
     -- give the girl the ball: the tally
     steps[#steps + 1] = { act = function() local s = api.stage(); carry(); tp(s.girl.x - 30, 184); s.pepper.face = 1 end }
     steps[#steps + 1] = { wait = 0.2 }; steps[#steps + 1] = { act = function() love.keypressed("x") end }
@@ -493,7 +493,7 @@ return function(mode, api)
     local s = api.stage(); local p = s and s.pepper
     if mode == "--auto" then
       frame = frame + 1
-      if s and s.hearts ~= (lastHearts or s.maxHearts) then print(("  lost a heart at x %.0f y %.0f (step %d)%s"):format(p.x, p.y, i, s.bikes[1] and (" tram at %.0f"):format(s.bikes[1].x) or "")) end
+      if s and s.hearts ~= (lastHearts or s.maxHearts) then print(("  lost a heart at x %.0f y %.0f (step %d)%s"):format(p.x, p.y, i, s.bikes[1] and (" cargo bike at %.0f"):format(s.bikes[1].x) or "")) end
       lastHearts = s and s.hearts
       if os.getenv("AUTO_DEBUG") and s and #s.bikes ~= (lastBikes or 0) then print(("  bikes %d: pepper x %.0f cam %.0f bike x %s"):format(#s.bikes, p.x, s.cam, s.bikes[1] and ("%.0f"):format(s.bikes[1].x) or "-")) end
       lastBikes = s and #s.bikes

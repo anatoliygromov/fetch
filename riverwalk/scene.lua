@@ -1243,12 +1243,17 @@ function Sc.spring(x, y, h)
   end
 end
 
--- the tram shed at the end of a tram line (Downtown): a brick front with a cornice (its roof is a perch) and a
--- dark arched doorway open on the right, where the tram drives in (stage.lua draws a tram only right of the door)
-function Sc.tramShed(p, camx)
+-- a courtyard gate at the end of a cargo bike's run (Downtown, r8/levels D1; until then the tram shed, the same art
+-- and the same `depot` code): a brick front with a cornice (its roof is a perch) and a dark arched gateway open on
+-- the right, where the cargo bike rides into the courtyard (it is drawn and hurts only right of the gateway)
+local gateQ = {}
+function Sc.courtyardGate(p, camx)
   local x, w, h = math.floor(p.x0 - camx), p.x1 - p.x0, p.y1 - p.y0
-  local im = Sc.townArt("town").tramshed[w]                       -- the art: its cornice on the box's top, the rails
-  if im then lg.setColor(1, 1, 1, 1); lg.draw(im, x, p.y0); return end   -- running in below the line
+  local im = Sc.townArt("town").tramshed[w]                       -- the art (town_tramshed70 / 96): its cornice on
+  if im then                                                      -- the box's top; the old tram rails below the
+    if not gateQ[im] then gateQ[im] = lg.newQuad(0, 0, w, math.min(h, im:getHeight()), im:getDimensions()) end   -- line are left out
+    lg.setColor(1, 1, 1, 1); lg.draw(im, gateQ[im], x, p.y0); return
+  end
   lg.setColor(INK); lg.rectangle("fill", x - 1, p.y0 - 1, w + 2, h + 1)
   lg.setColor(0.62, 0.36, 0.27); lg.rectangle("fill", x, p.y0 + 4, w, h - 4)               -- brick
   lg.setColor(0.52, 0.29, 0.22)
@@ -1784,7 +1789,7 @@ function Sc.drawPropArt(p, camx, def, kicked)
           end
         end
       end
-    elseif n == "TRAM SHED" then Sc.tramShed(p, camx)
+    elseif n == "GATE" or n == "TRAM SHED" then Sc.courtyardGate(p, camx)
     elseif n == "STATUE" then at(T.statue, x - 1, p.y0 - 4)
     elseif n == "PEDESTAL" then shadowUnder(p, camx); at(T.pedestal, x, p.y0)
     elseif n == "ARM" then return
@@ -1875,7 +1880,8 @@ function Sc.drawMoverArt(m, camx, style)
   lg.setColor(1, 1, 1, 1)
 end
 
--- the hazards: the leaf cart (City Park) and the tram (Downtown), wheels on the line, centred on the hit box
+-- the hazards: the leaf cart (City Park) and the old toy-sized tram (Downtown before r8/levels; the cargo bike that
+-- replaced it is drawn by arthooks.lua), wheels on the line, centred on the hit box
 -- City Park: the park keeper pushes the leaf cart (art/scene/park_keeper_cart.png, 8 frames of 82 x 82, made facing
 -- right and drawn mirrored; tools/build_keeper.py). The barrow's middle (x 58) is on the hit box's middle, the
 -- feet and wheel on the line; the walk cycle steps with the distance he has covered, so his boots don't slide.
