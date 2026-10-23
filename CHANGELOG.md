@@ -2,6 +2,18 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r8/preview`: art batch 1 in the game, a preview for the owner (23 Oct)
+Built on `r8/preview` (round1 with `r8/art` merged). A preview build, not for round1 until the owner says yes: the
+batch-1 files (docs/art_batch1.md) put where their hooks look (docs/art_hooks_r8.md), the hooks adapted where the
+art differs, and every piece checked at its place. Pepper's files, frames and movement are untouched; no generation.
+Pictures: `/home/claude/out/r8-preview/`; the build: `/home/claude/out/r8-preview/FETCH_ART_PREVIEW.love`.
+- **The preview tour** (new `riverwalk/tests_artpreview.lua`, `--artpreview` in main.lua, `tools/art_preview.sh`,
+  `tools/art_preview.py`): shots and frame runs of every piece at its place (River Walk's promenade and road riders,
+  the bonus round's throw frame by frame, the tall Downtown's cargo bike, tram, roof kit, house fronts, the row and
+  the spire), talk panels off. `art_preview.sh before` runs the same tour on a copy of the game without the batch's
+  files (placeholders and old art), `after` on the game, `misfit` with the pieces that do not fit their boxes; the
+  .py makes before/after pairs at 1x and 3x, the Downtown tour, the GIFs and the overview sheet.
+
 ## Branch `r8/levels`: the tall City Park and Downtown in the game, the cargo bike, hooks for the first art batch (23 Oct)
 Built on `round1`. The owner's decisions of 23 Oct: D2 (the tall City Park and Downtown replace the flat ones) and D1
 (Downtown's street hazard is a cargo bike with its rider; a true-scale vintage tram rolls by in the back lane as

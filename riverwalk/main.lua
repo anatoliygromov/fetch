@@ -88,7 +88,7 @@ function love.load(args)
   local lv, test = argLevel(args), nil
   for _, a in ipairs(args or {}) do if a == "--bonus" then bonusArg = true end end
   for _, a in ipairs(args or {}) do
-    if a == "--test" or a == "--auto" or a == "--physics" or a == "--qa" or a == "--flowtest" or a == "--lookshots" then test = a end
+    if a == "--test" or a == "--auto" or a == "--physics" or a == "--qa" or a == "--flowtest" or a == "--lookshots" or a == "--artpreview" then test = a end
   end
   Se.save = not test
   for _, a in ipairs(args or {}) do if a == "--dev" then devMode = true end end
@@ -119,6 +119,7 @@ function love.load(args)
     if a == "--classic" then Look.on = false end                                        -- start with the look as before
     if a == "--lookshots" then require("tests_look")(api) end                                    -- start with the extras off
     if a == "--qa" then require("qa")({ stage = function() return stage end }) end
+    if a == "--artpreview" then require("tests_artpreview")(api, levelName, bonusArg) end        -- art batch 1 in context
     if a == "--flowtest" then require("tests_flow")(api) end
     if a == "--pepperlab" then require("pepperlab")() end                              -- Pepper alone in a test room
   end
