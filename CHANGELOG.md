@@ -2,6 +2,26 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r9/rooftops`: Rooftops climbs to the nest and runs down to the roof cafe (23 Oct)
+Built on `round1`. Pepper's files are untouched (PEPPER UNCHANGED), no art, no music. Design and every number:
+`docs/rooftops_beatsheet.md`.
+- **Eleven more screens** (tools/make_rooftops.py, its r9 block; maps/rooftops.tmx and its export written again
+  from it): the map is 7472 x 1200 px (was 4160). Both roads meet on the roof bar's terrace and climb together: the
+  hotel roof (two skylights of loose tiles under a second gull, a goose by the hotel kitchen's vent over a chimney
+  block), the light court (the tower: a drop to 664 and four puffs up three balconies, one of them loose tiles by
+  the hood), the tall block (lamp, goose), the scaffold (two loose boards, tap hops), the cafe awning's bounce, the
+  chimney stacks (held jumps up two loose tiles over a dip), the sauna roof (lamp, skylight, third gull). The nest
+  moves to the tallest chimney (top 88); the sauna's bark there drops the ball and lifts her up. The reward: four
+  pitched roofs down to the roof cafe (472), where Mia waits now. No new verb. New vents: HOTEL KITCHEN, COURT FAN,
+  LAUNDRY HOOD, KITCHEN HOOD, BATH FAN (each with someone running it); level time 420 s.
+- **Numbers:** `--auto` 92.4 s on both roads (was 58.1 and 54.4; they share the climb and ride the same puff).
+  Par 148 (was 87; levels.lua). Playtest lab, the game's order, 10 seeds: Rooftops DI v2 kids / parents 23.5 / 26.1
+  (was 20.0 / 16.5), Elsa 78%, T1 to T4 pass; 20 seeds: 21.2 / 22.1.
+- **Checks** (tests_rooftops.lua): `--physics` 139 of 139 (was 103): every new vent, jump, fall and bridge with
+  Pepper's own controller; every loose tile drops her safely; the ledge fall proof covers the court's balconies
+  (46 falls). `--qa` 0 problems (a post under the first balcony stops a ball knocked off the hotel roof). The
+  autopilot plays the new screens on both roads; the `--test` tour has 17 new spots. `check_flow` 116 of 116,
+  `check_tiled` passes. Route render: `tools/draw_routes.py` has the roads as built (r7 and r9).
 ## Branch `r9/night-ball`: a knocked ball that rolls off a boat comes back where Pepper was hit (23 Oct)
 Built on `round1`. Fixes the Night Harbour `--qa` problem left open in docs/playtest/curve_r7.md.
 - **The bug:** hit at the quay's edge before the slipway (x 3812) while carrying, the ball landed on the moving

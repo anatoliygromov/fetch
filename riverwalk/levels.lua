@@ -9,7 +9,7 @@
 -- par: the PAR TIME medal's time in seconds (the autopilot's clear time times about 1.6, rounded up). Autopilot
 -- clear times (r6/levels): 66.3, 44.6, 51.4, 54.1, 73.3 (the scroll sets the pace), 81.3 s; the tall City Park
 -- 39.1 s and the tall Downtown 56.2 s (r7/curve) give pars 63 and 90. (r7/curve made Rooftops 58.1 s and Night
--- Harbour 82.6 s; their pars were left as they were.)
+-- Harbour 82.6 s; their pars were left as they were.) r9/rooftops: Rooftops 92.4 s on both roads gives par 148.
 --
 -- D2 (owner, 23 Oct): the tall City Park and the tall Downtown are levels 2 and 3. They carry the flat levels'
 -- titles, numbers and story (the cards say CITY PARK and DOWNTOWN). `was` names the flat level a tall one replaces:
@@ -23,7 +23,7 @@ return {
   { name = "downtown_tall", number = 3, title = "DOWNTOWN",   par = 90, was = "downtown" },
   -- { name = "citypark",  number = 2, title = "CITY PARK",  par = 72 },   -- (flat, autopilot 44.6 s)
   -- { name = "downtown",  number = 3, title = "DOWNTOWN",   par = 83 },   -- (flat, autopilot 51.4 s)
-  { name = "rooftops",      number = 4, title = "ROOFTOPS",   par = 87 },
+  { name = "rooftops",      number = 4, title = "ROOFTOPS",   par = 148 },
   { name = "soder",         number = 5, title = "SODER HILL", par = 118 },
   { name = "night",         number = 6, title = "NIGHT HARBOUR", par = 135 },
 }

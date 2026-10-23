@@ -63,6 +63,8 @@ return function(mode, api)
     return { x = p.x, y = p.y, landed = p.onGround, minY = minY, hearts = st.hearts, timeout = true }
   end
   local function vent(st, name) for _, v in ipairs(st.vents) do if v.d.name == name then return v end end end
+  -- (r9) she stands on a vent hood that stands on floor y (the next puff's hood: as good as the floor)
+  local function onVentHood(st, y) local g = st.pepper.ground; return st.pepper.onGround and g and g.vent and near(g.y1, y) end
   local function puffNow(v) v.st, v.t = "warn", (v.d.warn or 0.8) - 1 / 60 end   -- its puff starts next frame
 
   -- every vent: name, where she lands with no input, the way to steer, the floor it serves, that floor's x range
@@ -76,7 +78,12 @@ return function(mode, api)
     { "BALCONY VENT", 660, "right", 568, 3328, 3872 },
     { "TANK VENT", 444, "right", 376, 3872, 4048 },
     { "TERRACE FAN", 280, nil, 280 },                           -- (up through the copper roof, onto it)
-    { "SAUNA", 276, "right", 184, 4048, 4080 },
+    { "HOTEL KITCHEN", 372, "right", 280, 4608, 4672 },         -- (r9) over the hotel's chimney block
+    { "COURT FAN", 660, "right", 568, 4920, 5000 },             -- (r9) up the light court: its four puffs
+    { "LAUNDRY HOOD", 564, "right", 472, 5008, 5088 },          --   (onto the loose tiles or the ledge by the hood)
+    { "KITCHEN HOOD", 468, "right", 376, 5096, 5200 },
+    { "BATH FAN", 372, "right", 280, 5200, 5424 },              --   onto the tall block
+    { "SAUNA", 180, "right", 88, 6400, 6432 },                  -- (r9) onto the nest chimney
     { "ATTIC FAN", 852, "right", 760, 1424, 1520 },
     { "LOFT VENT", 692, "right", 600, 1960, 2720 },
     { "BAKERY CHIMNEY", 596, "right", 456, 2984, 3200 },
@@ -94,7 +101,23 @@ return function(mode, api)
     { "the awning (552) from the roof bar: a tap hop", 3708, 568, "tap", "right", 432, nil, "bounce" },
     { "the awning's bounce onto the water tank (448), holding right", 3708, 568, "taphold", "right", 448, { 3800, 3872 } },
     { "copper roof -> Down + A -> the roof terrace (376)", 3990, 280, "downA", nil, 376 },
-    { "nest chimney -> step off left onto the sauna's hood (276)", 4052, 184, "walk", "left", 276 },
+    { "(r9) nest chimney -> step off left onto the sauna's hood (180)", 6404, 88, "walk", "left", 180 },
+    { "(r9) the hotel's chimney block (280) -> walk off its right side onto the hotel roof (376)", 4660, 280, "walk", "right", 376, { 4672, 4800 } },
+    { "(r9) the hotel roof's end -> walk off it, down into the light court (664)", 4780, 376, "walk", "right", 664, { 4800, 4884 } },
+    { "(r9) the light court's floor: a held jump left onto the balcony's post (624, 40 px up)", 4990, 664, "held", "left", 624, { 4924, 4932 } },
+    { "(r9) the balcony's post -> walk off its left side, back to the court fan (the floor or its hood)", 4928, 624, "walk", "left", 664, { 4800, 4924 } },
+    { "(r9) the scaffold: a board not hopped onto drops her into the gap (320)", 5404, 280, "walk", "right", 320 },
+    { "(r9) out of the scaffold's gap: a held jump and scramble back onto the tall block (280)", 5440, 320, "held", "left", 280, { 5200, 5424 } },
+    { "(r9) out of the scaffold's gap: a held jump and scramble onto the far side (280)", 5552, 320, "held", "right", 280, { 5568, 5696 } },
+    { "(r9) the cafe awning (264) from its roof: a tap hop", 5604, 280, "tap", "right", 432, nil, "bounce" },
+    { "(r9) the cafe awning's bounce onto the stacks' roof (184), holding right", 5604, 280, "taphold", "right", 184, { 5696, 5856 } },
+    { "(r9) the stacks: T6 (184) -> the first loose tile (152): held jump right", 5838, 184, "held", "right", 152, { 5888, 5912 } },
+    { "(r9) the stacks: a tapped hop does not reach it (into the dip, 40 px)", 5838, 184, "tap", "right", 224 },
+    { "(r9) out of the stacks' dip: a held jump and scramble back onto the roof (184)", 5876, 224, "held", "left", 184, { 5696, 5856 } },
+    { "(r9) the stacks: loose tile 152 -> loose tile 120: held jump right", 5900, 152, "held", "right", 120, { 5944, 5968 } },
+    { "(r9) the stacks: loose tile 120 -> the chimney stack (88): held jump right", 5956, 120, "held", "right", 88, { 6000, 6104 } },
+    { "(r9) the chimney stack (88) -> run off its right side onto the sauna roof (184)", 6090, 88, "run", "right", 184, { 6104, 6176 } },
+    { "(r9) the long roof: from the nest chimney a run down four pitched roofs to the roof cafe (472)", 6420, 88, "run", "right", 472, { 7136, 7472 } },
     { "(r7) the drying yard: T3 (568) -> the first loose tile (536): held jump right", 3414, 568, "held", "right", 536, { 3464, 3488 } },
     { "(r7) the drying yard: a tapped hop does not reach it (into the dip, 40 px)", 3414, 568, "tap", "right", 608 },
     { "(r7) out of the dip: a held jump and scramble back onto the yard (568)", 3452, 608, "held", "left", 568, { 3344, 3432 } },
@@ -116,6 +139,10 @@ return function(mode, api)
     { "high: ledge 760, two loose tiles (tap hops), ledge 760", 1440, 760, 1500, 1680, 760 },
     { "high: ledge 600, two loose tiles (tap hops), the chimney pot's ledge 600", 2630, 600, 2700, 2856, 600 },
     { "high: the walkway (456), two loose tiles (held jumps), ledge 424", 3110, 456, 3180, 3680, 424, "held" },
+    { "(r9) the hotel roof's first skylight: running straight across its three loose tiles", 4140, 376, nil, 4340, 376 },
+    { "(r9) the hotel roof's second skylight: running straight across its three loose tiles", 4330, 376, nil, 4500, 376 },
+    { "(r9) the scaffold: two loose boards (tap hops), the far side (280)", 5340, 280, 5404, 5584, 280 },
+    { "(r9) the sauna roof's skylight: running straight across its three loose tiles", 6116, 184, nil, 6300, 184 },
   }
 
   local steps
@@ -123,16 +150,16 @@ return function(mode, api)
     steps = {
       { wait = 0.6 }, { act = function() love.keypressed("space") end }, { wait = 0.3 },
       { act = function(p, s)
-          report("a tall map: 4160 x 1200 px (520 x 150 cells, 13 x 5 screens)", s.world.width == 4160 and s.world.height == 1200, ("%d x %d"):format(s.world.width, s.world.height))
-          report("14 steam vents, 21 loose tiles, the gull's nest, Mia at the roof cafe (r7: the drying yard)", #s.vents == 14 and #s.tiles == 21 and s.def.magpie.look == "gull"
-            and s.ball.state == "magpie" and near(s.girl.y, 376), ("%d vents, %d tiles"):format(#s.vents, #s.tiles))
+          report("a tall map: 7472 x 1200 px (934 x 150 cells, 23.4 x 5 screens; r9: the climb to the nest)", s.world.width == 7472 and s.world.height == 1200, ("%d x %d"):format(s.world.width, s.world.height))
+          report("19 steam vents, 36 loose tiles, the gull's nest (88), Mia at the roof cafe (472)", #s.vents == 19 and #s.tiles == 36 and s.def.magpie.look == "gull"
+            and s.ball.state == "magpie" and near(s.ball.y, 88, 12) and near(s.girl.y, 472), ("%d vents, %d tiles"):format(#s.vents, #s.tiles))
           local bad = {}
           for _, b in ipairs(s.def.bones) do
             if s.world:solidIn(b.x - 5, b.x + 5, b.y - 12, b.y - 7) then bad[#bad + 1] = ("%d,%d"):format(b.x, b.y) end
           end
           report(("no bone inside a solid (%d bones)"):format(#s.def.bones), #bad == 0, table.concat(bad, " "))
           local lamps = 0; for _, l in ipairs(s.def.lamps) do if l.checkpoint then lamps = lamps + 1 end end
-          report("7 lamps (5 on the low road, 2 on the high road), 2 secrets, a golden bone", lamps == 7 and #s.def.secrets == 2, ("%d lamps"):format(lamps))
+          report("9 lamps (7 on the low road and the climb, 2 on the high road), 2 secrets, a golden bone", lamps == 9 and #s.def.secrets == 2, ("%d lamps"):format(lamps))
         end },
       -- 1 every vent: apex exact; no input; steering to the floor it serves
       { act = function()
@@ -146,10 +173,12 @@ return function(mode, api)
             report(("%s: apex y0 - lift = %d (within 1 px)"):format(c[1], Rf.apex(v)), onHood and near(r.minY, Rf.apex(v), 1), ("top %.2f"):format(r.minY))
             report(("%s: no input, she lands on y %d"):format(c[1], c[2]), r.landed and near(r.y, c[2]) and r.hearts == 3, ("y %.1f x %.0f"):format(r.y, r.x))
             if c[3] then
-              st = fresh(); v = vent(st, c[1]); place(st, mid, d.y0); puffNow(v)
+              st = fresh(); v = vent(st, c[1]); place(st, mid, d.y0)
+              for _, q in ipairs(st.vents) do if q ~= v then q.st, q.t = "rest", 0 end end   -- (r9: no chained lift from a neighbour)
+              puffNow(v)
               r = run(st, function(p, f, air) if air then return { [c[3]] = true } end; return {} end, 4)
               report(("%s: steering %s she lands on the floor it serves (y %d)"):format(c[1], c[3], c[4]),
-                r.landed and near(r.y, c[4]) and r.x + 13 > c[5] and r.x - 13 < c[6] and r.hearts == 3, ("y %.1f x %.0f"):format(r.y, r.x))
+                r.landed and (near(r.y, c[4]) or onVentHood(st, c[4])) and r.x + 13 > c[5] and r.x - 13 < c[6] and r.hearts == 3, ("y %.1f x %.0f"):format(r.y, r.x))
             end
           end
         end },
@@ -189,12 +218,12 @@ return function(mode, api)
           report("the sauna never puffs by itself (8 s)", not any, v.st)
           st:update(1 / 60, { bark = true })
           local r = run(st, function(q, f, air) if air then return { right = true } end; return {} end, 4)
-          report("a bark: the sauna puffs and carries her onto the nest chimney (184)", r.landed and near(r.y, 184), ("y %.1f"):format(r.y))
+          report("a bark: the sauna puffs and carries her onto the nest chimney (88)", r.landed and near(r.y, 88), ("y %.1f"):format(r.y))
           -- every timed vent puffs by itself within its cycle, and neighbours start at different phases
           st = fresh(); local seen = {}
-          for _ = 1, 60 * 4 do st:update(1 / 60, {}); for _, q in ipairs(st.vents) do if q.st == "puff" then seen[q] = true end end end
+          for _ = 1, 60 * 5 do st:update(1 / 60, {}); for _, q in ipairs(st.vents) do if q.st == "puff" then seen[q] = true end end end
           local n = 0; for _ in pairs(seen) do n = n + 1 end
-          report("all 13 timed vents puff within 4 s (someone runs each one)", n == 13, ("%d"):format(n))
+          report("all 18 timed vents puff within 5 s (someone runs each one)", n == 18, ("%d"):format(n))
         end },
       -- 3 loose tiles
       { act = function()
@@ -248,7 +277,7 @@ return function(mode, api)
           end
           for _, j in ipairs(JUMPS) do
             st = fresh(); place(st, j[2], j[3])
-            local how, dir = j[4], j[5]
+            local how, dir, q0 = j[4], j[5], j[3]
             local plan
             if how == "held" then plan = function(q, f) return { [dir] = true, jump = f < 40 }, f == 1 end
             elseif how == "runjump" then plan = function(q, f) return { [dir] = true, jump = f < 40 }, f == 1 end
@@ -260,13 +289,17 @@ return function(mode, api)
               r = run(st, plan, 3, function(q) return q.vy < -300 end)
               report(j[1] .. ": it bounces her up", st.pepper.vy < -300, ("vy %.0f"):format(st.pepper.vy))
             else
-              if how == "run" then                                     -- (r7: off the stack, the awning bounces on)
+              if how == "run" and j[2] > 6400 then                     -- (r9: the long roof, all the way down)
+                r = run(st, plan, 10, function(q) return q.onGround and q.x > 7160 end)
+              elseif how == "run" and j[2] > 6000 then                 -- (r9: off the stack, onto the sauna roof)
+                r = run(st, plan, 4, function(q) return q.onGround and q.y > 180 and q.x > 6110 end)
+              elseif how == "run" then                                 -- (r7: off the stack, the awning bounces on)
                 r = run(st, plan, 4, function(q) return q.onGround and q.x > 3760 end)
               elseif how == "taphold" then                             -- (the landing on the awning bounces on)
-                r = run(st, plan, 4, function(q) return q.onGround and q.y < 548 end)
+                r = run(st, plan, 4, function(q) return q.onGround and q.y < q0 - 70 end)
               else r = run(st, plan, 3) end
               local inX = not j[7] or (r.x + 13 > j[7][1] and r.x - 13 < j[7][2])
-              report(j[1], r.landed and near(r.y, j[6]) and r.hearts == 3 and inX, ("y %.1f x %.0f"):format(r.y, r.x))
+              report(j[1], r.landed and (near(r.y, j[6]) or onVentHood(st, j[6])) and r.hearts == 3 and inX, ("y %.1f x %.0f"):format(r.y, r.x))
             end
           end
         end },
@@ -276,30 +309,48 @@ return function(mode, api)
           local n, bad = 0, {}
           for _, pr in ipairs(def.props) do
             if pr.kind == "oneway" and not pr.loose and not pr.bounce and pr.y0 ~= 664 and pr.y0 ~= 280 then
+              local hood = function(x) for _, v in ipairs(def.steam) do if x + 13 > v.x0 and x - 13 < v.x1 and near(v.y1, pr.y0) then return true end end end
+              local wall = function(x) return api.stage().world:solidIn(x, x + 2, pr.y0 - 20, pr.y0 - 2) end
               for _, how in ipairs({ "left", "right", "down" }) do
                 local st = fresh()
                 local x = how == "left" and pr.x0 + 14 or how == "right" and pr.x1 - 14 or pr.x0 + 20
+                if how == "down" and hood(x) then x = pr.x1 - 20 end
+                -- (r9: a balcony against a wall has no end to fall off there; a hood is no ledge to drop through)
+                local skip = (how == "right" and wall(pr.x1)) or (how == "left" and wall(pr.x0 - 2)) or (how == "down" and hood(x))
+                if not skip then
                 place(st, x, pr.y0)
                 local r
                 if how == "down" then r = run(st, function(q, f) if f < 4 then return { down = true }, f == 2 end; return {} end, 4)
                 else r = run(st, function() return { [how] = true, walk = true } end, 4) end
                 n = n + 1
                 if not (r.landed and r.y > pr.y0 and r.hearts == 3 and not r.fell) then bad[#bad + 1] = ("%d,%d %s -> y %.0f"):format(pr.x0, pr.y0, how, r.y) end
+                end
               end
             end
           end
-          report(("every fall off the high road (%d: off each end, Down + A) lands safely below"):format(n), #bad == 0, table.concat(bad, "; "))
+          report(("every fall off a ledge (the high road's, the light court's balconies; %d: off each end, Down + A) lands safely below"):format(n), #bad == 0, table.concat(bad, "; "))
+          -- (r9) every loose tile: she stands on it until it drops, and lands on a floor below with no heart lost
+          n, bad = 0, {}
+          for _, pr in ipairs(def.props) do
+            if pr.loose then
+              local st = fresh(); place(st, (pr.x0 + pr.x1) / 2, pr.y0)
+              local r = run(st, function() return {} end, 4)
+              n = n + 1
+              if not (r.landed and r.y >= pr.y0 and st.pepper.ground ~= pr and r.hearts == 3 and not r.fell) then bad[#bad + 1] = ("%d,%d -> y %.0f"):format(pr.x0, pr.y0, r.y) end
+            end
+          end
+          report(("every loose tile (%d) drops her onto a floor below, no heart lost"):format(n), #bad == 0, table.concat(bad, "; "))
         end },
       -- 6 the gull's nest and the fetch
-      { act = function(p, s) tp(4018, 276); p.face = 1 end }, { wait = 0.3 },
+      { act = function(p, s) tp(6366, 180); p.face = 1 end }, { wait = 0.3 },
       { act = function() love.keypressed("z") end }, { wait = 1.2 },
       { act = function(p, s)
-          report("a bark from the copper roof: the gull lets go, the ball lands on the chimney", s.ball.state == "rest" and near(s.ball.y, 184) and s.magpie.state ~= "perch",
+          report("a bark from the sauna's hood: the gull lets go, the ball lands on the nest chimney (88)", s.ball.state == "rest" and near(s.ball.y, 88) and s.magpie.state ~= "perch",
             ("ball %s y %.0f"):format(s.ball.state, s.ball.y)) end },
-      { act = function(p, s) tp(s.ball.x + 18, 184); p.face = -1 end }, { wait = 0.3 },
+      { act = function(p, s) tp(s.ball.x + 10, 88); p.face = -1 end }, { wait = 0.3 },
       { act = function() love.keypressed("x") end }, { wait = 0.5 },
       { act = function(p) report("on the chimney Pepper picks the ball up", p.carrying ~= nil) end },
-      { act = function(p, s) tp(3980, 376); p.face = -1 end }, { wait = 0.2 },
+      { act = function(p, s) tp(7290, 472); p.face = 1 end }, { wait = 0.2 },
       { act = function() love.keypressed("x") end }, { wait = 0.4 },
       { act = function(p, s) report("giving the ball to Mia at the roof cafe: GOOD GIRL (FETCH 2000)", s.ball.state == "given" and s.bonus and s.bonus[2] == 2000, s.ball.state) end },
       { wait = 2.6 },
@@ -387,20 +438,50 @@ return function(mode, api)
         ride("BAR FAN", "right", 280),
       }
     end
+    -- (r9) both roads meet on the roof bar's terrace (T4, 376): the high road walks off the copper roof's end
+    local nearGoose = function(s, p)
+      local best
+      for _, k in ipairs(s.critters) do
+        if k.kind == "goose" and k.state ~= "gone" and math.abs(k.y - p.y) < 24 and k.x > p.x - 20 and (not best or k.x < best.x) then best = k end
+      end
+      return best
+    end
     local finale = {
-      settle(), goTo(3932),                                             -- the terrace fan (the high road skips it)
-      at(function(p) return p.y < 300 or not p.onGround end, nil, 6),
-      at(function(p) return p.onGround and p.y < 300 end, function() release() end, 4), settle(),
-      goTo(4018), { act = function(p) p.face = 1; love.keypressed("z") end },    -- bark: the gull lets go, the sauna steams
+      settle(), runTo(4440),                                            -- (r9) the hotel roof: its skylights (run!),
+      at(function(p, s) local k = nearGoose(s, p); I.force = { right = true }          -- the goose by the hotel kitchen's vent
+        if k and math.abs(k.x - p.x) < 72 then release(); love.keypressed("z"); return true end
+        return not k or p.x > 4560 end, nil, 15), settle(),
+      ride("HOTEL KITCHEN", "right", 280),                              -- over its chimney block,
+      runTo(4824),                                                      -- and off it, down into the light court
+      at(function(p) return p.onGround and p.y > 650 end, function() release() end, 3), settle(),   -- down into the court
+      ride("COURT FAN", "right", 568), ride("LAUNDRY HOOD", "right", 472),   -- up the light court's balconies
+      ride("KITCHEN HOOD", "right", 376), ride("BATH FAN", "right", 280),    -- and onto the tall block
+      at(function(p, s) local k = nearGoose(s, p); I.force = { right = true }          -- the tall block's goose
+        if k and math.abs(k.x - p.x) < 72 then release(); love.keypressed("z"); return true end
+        return not k or p.x > 5414 end, nil, 15), settle(),
+      goTo(5404), { act = function() hold("right") end },              -- the scaffold's boards: tap hops
+      at(function(p) if p.onGround and p.x >= 5404 and p.x < 5554 and p.y < 300 then love.keypressed("space") end
+        return p.onGround and p.x >= 5574 and p.y < 300 end, function() release() end, 6), settle(),
+      goTo(5604), { act = function() hold("right"); love.keypressed("space") end },   -- the cafe awning bounces her onto T6
+      at(function(p) return p.onGround and p.y < 200 and p.x > 5694 end, function() release() end, 4), settle(),
+      goTo(5838),                                                       -- the chimney stacks: pot, loose tile, stack
+      { act = function() hold("right", "jump"); love.keypressed("space") end },
+      at(function(p) return p.onGround and p.y < 156 end, function() release() end, 3),
+      { act = function() hold("right", "jump"); love.keypressed("space") end },
+      at(function(p) return p.onGround and p.y < 124 end, function() release() end, 3),
+      { act = function() hold("right", "jump"); love.keypressed("space") end },
+      at(function(p) return p.onGround and p.y < 92 end, function() release() end, 3),
+      { act = function() hold("right") end },                         -- off the stack onto the sauna roof
+      at(function(p) return p.onGround and p.y > 180 and p.x > 6104 end, function() release() end, 4),
+      runTo(6334), goTo(6366),                                          -- the sauna roof's skylight (run!)
+      { act = function(p) p.face = 1; love.keypressed("z") end },    -- bark: the gull lets go, the sauna steams
       at(function(p) return not p.onGround end, function() hold("right") end, 4),
-      at(function(p) return p.onGround and p.y < 200 end, function() release() end, 4), settle(),
-      goTo(4052), { act = function(p) p.face = 1 end },
+      at(function(p) return p.onGround and p.y < 100 end, function() release() end, 4), settle(),
+      goTo(6422), { act = function(p) p.face = -1 end },
       at(function(p, s) return s.ball.state == "rest" end, function() love.keypressed("x") end, 4), { wait = 0.6 },
-      { act = function() hold("left", "walk") end },                   -- step off onto the sauna's hood
-      at(function(p) return p.onGround and p.y > 200 end, function() release() end, 4), settle(),
-      goTo(3992), { act = function() hold("down"); love.keypressed("space") end }, { wait = 0.2 }, { act = function() release() end },
-      at(function(p) return p.onGround and p.y > 300 end, function() release() end, 4), settle(),
-      goTo(3990), { act = function(p) p.face = -1; love.keypressed("x") end },
+      at(function(p) return p.carrying ~= nil end, nil, 2),
+      runTo(7236),                                                      -- the long roof down to the roof cafe
+      goTo(7276), { act = function(p) p.face = 1; love.keypressed("x") end },
       { wait = 6 }, { act = function(p, s)
           local st = s:stats()
           print(("AUTOPILOT (%s road) %s: bones %d/%d, secrets %d/%d, lives %d hearts %d, %.1f s played"):format(high and "high" or "low",
@@ -408,7 +489,6 @@ return function(mode, api)
             st.bones, st.total, st.secrets, st.secretsTotal, st.lives, st.hearts, s.def.time - st.time)); io.stdout:flush()
           love.event.quit() end },
     }
-    if high then table.remove(finale, 2); table.remove(finale, 2); table.remove(finale, 2); table.remove(finale, 2) end
     steps = flat({ { wait = 1.2 }, { act = function() love.keypressed("space") end }, { wait = 0.3 } })
     for _, e in ipairs(flat(route)) do steps[#steps + 1] = e end
     for _, e in ipairs(flat(finale)) do steps[#steps + 1] = e end
@@ -418,7 +498,9 @@ return function(mode, api)
     steps = { { act = function() api.setState("intro") end }, { wait = 0.6 }, shot("rt_00_intro"),
       { act = function() love.keypressed("space") end }, { wait = 0.3 } }
     local spots = { { 60, 1144 }, { 640, 1080 }, { 1100, 952 }, { 1500, 856 }, { 1900, 856 }, { 2840, 760 },
-      { 3110, 664 }, { 3720, 568 }, { 3910, 376 }, { 3960, 280 }, { 4064, 184 },
+      { 3110, 664 }, { 3720, 568 }, { 3910, 376 }, { 3960, 280 },
+      { 4300, 376 }, { 4640, 280 }, { 4860, 664 }, { 5040, 472 }, { 5300, 280 }, { 5560, 320 }, { 5880, 152 },
+      { 6050, 88 }, { 6200, 184 }, { 6366, 180 }, { 6416, 88 }, { 6700, 280 }, { 7290, 472 },
       { 1470, 760 }, { 1820, 728 }, { 2020, 600 }, { 2908, 552 }, { 3090, 456 }, { 3720, 424 } }
     for i, sp in ipairs(spots) do
       steps[#steps + 1] = { act = function() tp(sp[1], sp[2]) end }
