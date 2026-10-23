@@ -13,8 +13,10 @@ return {
   nextobjectid = 275,
   properties = {
     ["movers"] = "{}",
+    ["art"] = "town",
     ["ballBack"] = "THE BALL IS BACK BY THE STATUE",
     ["ballHomeAtLamps"] = true,
+    ["foot"] = 424,
     ["greyStyle"] = "town",
     ["intro"] = "{ \"LEVEL 3\", \"DOWNTOWN\", \"A CAT IS SITTING ON THE BALL!\", \"ON THE STREET OR OVER THE ROOFS\" }",
     ["name"] = "DOWNTOWN",
@@ -23,7 +25,7 @@ return {
     ["pickupSay"] = "BRING ME THE BALL!",
     ["scenery"] = "greybox",
     ["time"] = 300,
-    ["title"] = "Pepper: Downtown, tall (greybox)",
+    ["title"] = "Pepper: Downtown, tall",
   },
   tilesets = {
     {
@@ -4087,7 +4089,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1,minY,maxY",
-            ["text"] = "HOLD: UP ON THE ROOFS",
+            ["text"] = "HOLD: CLIMB UP",
             ["btn"] = "a",
           },
         },
@@ -4257,7 +4259,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1,minY",
-            ["text"] = "HOLD: BOUNCE UP!",
+            ["text"] = "HOLD: BOUNCE",
             ["btn"] = "a",
             ["need"] = "ball",
           },

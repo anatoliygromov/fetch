@@ -144,9 +144,9 @@ PERCHES = [
 HINTS_HIGH = [   # inserted after the need-based hints (BARK, PICK UP, GIVE), so those still win
     {"x0": 2560, "x1": 2880, "text": "IT FLEW UP TO ITS NEST IN THE BIG OAK!", "need": "magpie"},
     {"x0": 2768, "x1": 2880, "btn": "down", "text": "DOWN + A: DROP", "need": "ball", "maxY": 160},
-    {"x0": 528, "x1": 600, "btn": "a", "text": "HOLD: UP THE TREE", "minY": 250, "maxY": 262},
+    {"x0": 528, "x1": 600, "btn": "a", "text": "HOLD: CLIMB UP", "minY": 250, "maxY": 262},
     {"x0": 1744, "x1": 1800, "btn": "a", "text": "HOLD: UP!", "minY": 238, "maxY": 250},
-    {"x0": 2560, "x1": 2660, "btn": "a", "text": "HOLD: CLIMB THE TOWER", "minY": 250},
+    {"x0": 2560, "x1": 2660, "btn": "a", "text": "HOLD: CLIMB UP", "minY": 250},
     {"x0": 2196, "x1": 2216, "btn": "down", "text": "CRAWL", "minY": 190, "maxY": 210},
 ]
 

@@ -5,8 +5,10 @@
  </editorsettings>
  <properties>
   <property name="movers" value="{}"/>
+  <property name="art" value="town"/>
   <property name="ballBack" value="THE BALL IS BACK BY THE STATUE"/>
   <property name="ballHomeAtLamps" type="bool" value="true"/>
+  <property name="foot" type="int" value="424"/>
   <property name="greyStyle" value="town"/>
   <property name="intro" value='{ "LEVEL 3", "DOWNTOWN", "A CAT IS SITTING ON THE BALL!", "ON THE STREET OR OVER THE ROOFS" }'/>
   <property name="name" value="DOWNTOWN"/>
@@ -15,7 +17,7 @@
   <property name="pickupSay" value="BRING ME THE BALL!"/>
   <property name="scenery" value="greybox"/>
   <property name="time" type="int" value="300"/>
-  <property name="title" value="Pepper: Downtown, tall (greybox)"/>
+  <property name="title" value="Pepper: Downtown, tall"/>
  </properties>
  <tileset firstgid="1" name="terrain" tilewidth="8" tileheight="8" tilecount="4" columns="4">
   <image source="terrain.png" width="32" height="8"/>
@@ -1456,7 +1458,7 @@
   <object id="245" type="hints" x="1262" y="296" width="50" height="16">
    <properties>
     <property name="box" value="x0,x1,minY,maxY"/>
-    <property name="text" value="HOLD: UP ON THE ROOFS"/>
+    <property name="text" value="HOLD: CLIMB UP"/>
     <property name="btn" value="a"/>
    </properties>
   </object>
@@ -1526,7 +1528,7 @@
   <object id="272" type="hints" x="1556" y="380" width="48" height="100">
    <properties>
     <property name="box" value="x0,x1,minY"/>
-    <property name="text" value="HOLD: BOUNCE UP!"/>
+    <property name="text" value="HOLD: BOUNCE"/>
     <property name="btn" value="a"/>
     <property name="need" value="ball"/>
    </properties>

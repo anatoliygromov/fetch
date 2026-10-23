@@ -3661,7 +3661,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1,minY,maxY",
-            ["text"] = "HOLD: UP THE TREE",
+            ["text"] = "HOLD: CLIMB UP",
             ["btn"] = "a",
           },
         },
@@ -3695,7 +3695,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1,minY",
-            ["text"] = "HOLD: CLIMB THE TOWER",
+            ["text"] = "HOLD: CLIMB UP",
             ["btn"] = "a",
           },
         },

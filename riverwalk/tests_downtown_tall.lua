@@ -100,7 +100,8 @@ return function(mode, api)
           local okZ = #s.def.bikes == 2
           for _, z in ipairs(s.def.bikes) do okZ = okZ and z.roadY == STREET and z.kind == "tram" end
           report("2 tram zones on the street (roadY 424)", okZ, ("%d zones"):format(#s.def.bikes))
-          report("no scenery art (greybox: the town art is drawn at y 184)", s.def.art == nil)
+          report("Downtown's art, placed from the street line (art town, foot 424)", s.def.art == "town" and s.def.foot == STREET,
+            ("art %s, foot %s"):format(tostring(s.def.art), tostring(s.def.foot)))
         end },
       -- 0b the trams: one sets off as she walks in on the street, drives at y 424 and hurts her there; on the
       -- shelter roof it passes under her; on the roofs above tram street no tram comes

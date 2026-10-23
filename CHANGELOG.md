@@ -2,6 +2,22 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r8/levels`: the tall City Park and Downtown in the game, the cargo bike, hooks for the first art batch (23 Oct)
+Built on `round1`. The owner's decisions of 23 Oct: D2 (the tall City Park and Downtown replace the flat ones) and D1
+(Downtown's street hazard is a cargo bike with its rider; a true-scale vintage tram rolls by in the back lane as
+scenery). Pepper's files, music and sfx are untouched; no art was generated.
+- **D2: the tall levels are levels 2 and 3** (levels.lua, flow.lua, maps/downtown_tall.tmx and its export,
+  tests_flow.lua, tests_downtown_tall.lua): the order is River Walk, City Park (tall), Downtown (tall), Rooftops,
+  Soder Hill, Night Harbour. They carry the flat levels' titles, numbers, intro and story cards (already in their
+  maps); par times 63 s (39.1 s autopilot) and 90 s (56.2 s). The flat City Park and Downtown stay in `level/` as
+  fallbacks (their old lines are in levels.lua, commented out: put one back in place of its tall twin to switch).
+  A save that opened a flat level opens its tall twin (`was` in levels.lua, `F.load`). **The tall Downtown gets
+  Downtown's art** (`art = "town"`, `foot = 424`, as r3 did for the tall City Park): the street looks as Downtown
+  does; the high road's pieces are code-drawn until the roof kit lands (below). Four hints were longer than the
+  panel's three words and are now `HOLD: CLIMB UP` (the tall City Park's tree and tower, the tall Downtown's way
+  up from the bakery sign) and `HOLD: BOUNCE` (the plaza parasol); the generators say the same. New flow checks:
+  the order, every level's cards agree with levels.lua, an old save opens the tall twin; the City Park talk checks
+  run on the tall City Park (its path 144 px lower). `check_flow` 116 of 116.
 ## Branch `r7/curve`: the tall order's difficulty curve passes the acceptance test (22 Oct)
 Built on `round1`. The planned order with the tall levels (River Walk, City Park tall, Downtown tall, Rooftops,
 Soder Hill, Night Harbour), measured with `tools/check_curve.py --name tall --seeds 10`; every iteration's numbers are

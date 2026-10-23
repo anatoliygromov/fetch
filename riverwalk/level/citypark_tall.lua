@@ -1,4 +1,5 @@
--- Level 2, tall: City Park with a treetop tier (not in levels.lua yet): love riverwalk --level citypark_tall.
+-- Level 2: City Park with a treetop tier, the game's City Park since r8/levels (D2; the flat level/citypark.lua is
+-- the fallback, see levels.lua): love riverwalk --level citypark_tall.
 -- It has City Park's art (L.art = "park", placed from the path line L.foot = 328; the treetops: scene.lua's Sc.drawTreetops).
 -- The level is the Tiled map maps/citypark_tall.tmx, exported to level/tiled/citypark_tall.lua (docs/tiled.md).
 -- Its first version was drawn by tools/make_citypark_tall.py from City Park; edit the map in Tiled from now on.

@@ -1,12 +1,14 @@
--- Level 3, tall: Downtown with the roofs of the old town (greybox; not in levels.lua): love riverwalk --level
--- downtown_tall. The level is the Tiled map maps/downtown_tall.tmx, exported to level/tiled/downtown_tall.lua
--- (docs/tiled.md). Its first version was drawn by tools/make_downtown_tall.py from Downtown; edit the map in Tiled
+-- Level 3: Downtown with the roofs of the old town, the game's Downtown since r8/levels (D2; the flat
+-- level/downtown.lua is the fallback, see levels.lua): love riverwalk --level downtown_tall. It has Downtown's art
+-- (L.art = "town", placed from the street line L.foot = 424); the high road's pieces are drawn in code until the
+-- roof kit's art lands (arthooks.lua, docs/art_hooks_r8.md). The level is the Tiled map maps/downtown_tall.tmx,
+-- exported to level/tiled/downtown_tall.lua (docs/tiled.md). Its first version was drawn by tools/make_downtown_tall.py from Downtown; edit the map in Tiled
 -- from now on. Design: docs/downtown_tall_beatsheet.md. Checks and autopilot: tests_downtown_tall.lua.
 --
 -- 11 screens x 60 rows (3520 x 480 px). Downtown moved down 30 rows: the street (the low road) is at y 424, and on
 -- the street the camera rests at the bottom of the world, so the low road looks exactly as Downtown does. Above
 -- it the high road (y 232 to 280): from the bakery sign onto a balcony and the loggia over the statue (bark the cat
 -- off from up there), the guild house's roof and its chimney (the golden bone), the gallery over the fountain, the
--- roof ledges over tram street and the flower market with a springy window awning, the footbridge over the canal.
+-- roof ledges over cargo bike street and the flower market with a springy window awning, the footbridge over the canal.
 -- Both roads meet before the flooded square. Every drop off the high road lands on a floor below, never in water.
 return require("tiled").load("level/tiled/downtown_tall.lua")
