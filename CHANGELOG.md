@@ -40,6 +40,9 @@ Pictures: `/home/claude/out/r8-preview/`; the build: `/home/claude/out/r8-previe
   now stands behind the row in the mid layer (Sc.farLandmark), moving with it (0.5) and where its box is when the
   screen is centred on the box, its base on the row's base, so the row hides its tower and the spire rises over the
   roofs.
+- **Docs** (docs/art_hooks_r8.md): what batch 1 changed in each hook (the tram's width, door and driver, the near
+  lane's riders, the footbridge's rail rows, the ledge at its box's width, Mia's hand, the spire behind the row), and
+  which pieces are not wired.
 
 ## Branch `r8/levels`: the tall City Park and Downtown in the game, the cargo bike, hooks for the first art batch (23 Oct)
 Built on `round1`. The owner's decisions of 23 Oct: D2 (the tall City Park and Downtown replace the flat ones) and D1
