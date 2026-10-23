@@ -2,6 +2,21 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `art/pilot-oldtown`: Downtown's Old Town row built from stamped parts, pilot house (23 Oct)
+Built on main v0.6 (1b5a30f). 0 credits, no generation, no resampling, no new colour (the strip's own 12), alpha binary.
+Aseprite was not built yet on this machine, so the build is a script.
+- **tools/build_oldtown.py** builds `riverwalk/art/scene/town_facades.png` from parts drawn once (window 7 x 11 with
+  lintel, sill and its shadow; attic window 7 x 9; double door; gable step; cornice, string course, plinth) and
+  stamped on an integer grid; the houses not rebuilt yet come pixel for pixel from
+  **source_scenery/town_facades_v06.png** (the strip as on v0.6). `--check` fails if the file differs from the build;
+  `--house NAME=path` writes one house alone for asset_qa and the card.
+- **Pilot: the red stepped-gable house** (x 42-78): 3 storeys of 16 px, 3 identical windows per storey 4 px apart, the
+  ground floor's 2 windows and door on the same columns, a gable as wide as the wall of 6 levels of 5 px with 2 px
+  treads, 3 attic windows; flat wall with one shade band (right edge), light from the upper left. asset_qa
+  (`--building`, mid, dt): WARN (contrast 106, as the old row's 103), lone pixels 0.0 %, every storey's windows
+  identical, 8 colours. The row's lone pixels 1.9 % -> 1.5 %; the row still fails on the other houses' windows.
+- **Checks:** check_pepper PEPPER UNCHANGED (4591 steps), check_flow 116 of 116.
+
 ## Regroup (23 Oct, evening): main v0.6, BIBLE and STATUS, the enforced gate, checks and releases on GitHub
 The owner's decisions of 23 Oct (merge list): round1 becomes main as v0.6; art/freefix merged with the approved River
 Walk building, cafe and gable kept unchanged; art/haze merged with Downtown's facades at 0.25 (was 0.10 on the branch)
