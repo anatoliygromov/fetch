@@ -13,6 +13,19 @@ Pictures: `/home/claude/out/r8-preview/`; the build: `/home/claude/out/r8-previe
   the spire), talk panels off. `art_preview.sh before` runs the same tour on a copy of the game without the batch's
   files (placeholders and old art), `after` on the game, `misfit` with the pieces that do not fit their boxes; the
   .py makes before/after pairs at 1x and 3x, the Downtown tour, the GIFs and the overview sheet.
+- **The art in place** (new `tools/wire_r8_art.py`, road.lua): 23 hook files from `art/r8/`, by copy or whole-pixel
+  steps only. Cargo bike and its 8-frame pedal sheet as they are (102 x 76, faces left, the 80 x 26 hit box is the
+  left 80 px and bottom 26 rows). The tram mirrored to face left (it drives left; its trolley pole now trails).
+  Mia's throw re-laid from 57 x 60 cells into girl.png's 66 x 66 at (5, 6): frame 1 then matches her idle frame 1
+  pixel for pixel but 13, feet on row 65 and centred on x 33. The promenade riders are the 84 px pair
+  (`cyclist_adult1-2` and `_pedal`); the road's near lane gets the 92 px pair as new `cyclist_adult1-2_near` (road.lua:
+  `art.near`, the same riders one step closer, as art_batch1.md meant; the promenade keeps the 84s). Roof kit: loggia,
+  both galleries, the ledge (64 px as the 3-slice, 48 px exact), the footbridge. Decoration: the three tall house
+  fronts, the row across the square (`town_row.png` from `facades_square.png`, 247 wide, repeats by whole houses),
+  the spire. **Not wired, they do not fit their boxes** (shown anyway in `misfit_pieces.png`): the stepped gable (4
+  steps of about 20 px; the level's are 15 steps of 4 px), the chimney (24 wide on a 16 px box, its pots 7 px over the
+  top where the golden bone sits), the dormer (a pitched roof over a flat 56 px box: Pepper would stand 19 px in the
+  air at its left end), and the awning (not hooked; drawn from the side).
 
 ## Branch `r8/levels`: the tall City Park and Downtown in the game, the cargo bike, hooks for the first art batch (23 Oct)
 Built on `round1`. The owner's decisions of 23 Oct: D2 (the tall City Park and Downtown replace the flat ones) and D1

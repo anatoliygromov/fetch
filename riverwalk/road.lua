@@ -43,15 +43,22 @@ local function load()
     for f = 0, 3 do q[f] = lg.newQuad(f * w, 0, w, h, im:getWidth(), im:getHeight()) end
     art.roll[still] = { im = im, q = q, px = r * (2 * math.pi / spokes) / 4 }
   end
+  -- r8/preview: the near lane is one step closer to the camera than the promenade, so the road's cyclists are the
+  -- same riders drawn bigger when the batch has them: cyclist_adult1_near.png and 2 (92 px; the promenade's are 84)
+  art.near = {}
+  for i = 1, 2 do art.near[i] = has("cyclist_adult" .. i .. "_near") and img("cyclist_adult" .. i .. "_near") or art.riders[i] end
+  local function pedal(still, name)                                 -- a pedal loop: frames of the still's size side by
+    local im = img(name)                                            -- side; one frame per 6 px ridden
+    local w, h = still:getWidth(), still:getHeight()
+    local q = {}
+    for f = 0, math.floor(im:getWidth() / w) - 1 do q[f] = lg.newQuad(f * w, 0, w, h, im:getWidth(), im:getHeight()) end
+    art.roll[still] = { im = im, q = q, px = 6, n = #q + 1 }
+  end
   for i = 1, 2 do
     roll(art.cyclists[i], "cyclist" .. i, 9.5, 8)
-    if has("cyclist_adult" .. i .. "_pedal") then                  -- a pedal loop: frames of the still's size side by
-      local still, im = art.riders[i], img("cyclist_adult" .. i .. "_pedal")   -- side; one frame per 6 px ridden
-      local w, h = still:getWidth(), still:getHeight()
-      local q = {}
-      for f = 0, math.floor(im:getWidth() / w) - 1 do q[f] = lg.newQuad(f * w, 0, w, h, im:getWidth(), im:getHeight()) end
-      art.roll[still] = { im = im, q = q, px = 6, n = #q + 1 }
+    if has("cyclist_adult" .. i .. "_pedal") then pedal(art.riders[i], "cyclist_adult" .. i .. "_pedal")
     elseif not has("cyclist_adult" .. i) then roll(art.riders[i], "road_cyclist" .. i, 14.5, 12) end
+    if art.near[i] ~= art.riders[i] and has("cyclist_adult" .. i .. "_near_pedal") then pedal(art.near[i], "cyclist_adult" .. i .. "_near_pedal") end
   end
   return art
 end
@@ -151,7 +158,7 @@ function Rd:update(dt, cam)
     self.list[#self.list + 1] = { im = im, x = right and (cam - w - 4) or (cam + 324), w = w, vx = right and vx or -vx, base = vx,
       top = Rd.CAR_TOP, flip = right, sp = sp, bob = 0, f = f, cam0 = cam }      -- (car art faces left)
   else                                                              -- a cyclist, either way
-    local im = art.riders[rng:random(1, #art.riders)]
+    local im = art.near[rng:random(1, #art.near)]
     local w, right = im:getWidth(), rng:random() < 0.5
     local vx = 190 + rng:random() * 50
     local f = rowF(Rd.RIDER_TOP, im)
