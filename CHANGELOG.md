@@ -2,6 +2,17 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `r8/art`: art batch 1, proposals for the owner (23 Oct)
+Built on `round1`. The batch the owner approved this morning (docs/asset_plan_22oct.md section 5, D1 cargo bike + tram,
+D2 tall levels): new files only, in `riverwalk/art/r8/`, not loaded by the game yet; the level agent wires them by the
+names in `docs/art_batch1.md`. Pepper's files, Mia's sheet and every file in `riverwalk/art/scene/` are untouched.
+SpriteCook: 408 credits of the approved 528 (reserve unused), 1,078 left. Contact sheets: `/home/claude/out/r8-art/`.
+- **B0, the chapter 1 style sheet** (`tools/build_r8_stylesheet.py`, `source_sheets/r8_style_ch1_1x.png` and `_2x`):
+  River Walk, City Park and Downtown panels composited from approved 1x art (Pepper, Mia, the cat, the goose, the
+  keeper, the road cyclist, the screen-1 building, houses, props) on their own ground and sky, with the three levels'
+  sky bands. Uploaded as SpriteCook `8a64c999` into the new project FETCH, collection batch1, and used as the style
+  reference for every generation.
+
 ## Branch `r7/curve`: the tall order's difficulty curve passes the acceptance test (22 Oct)
 Built on `round1`. The planned order with the tall levels (River Walk, City Park tall, Downtown tall, Rooftops,
 Soder Hill, Night Harbour), measured with `tools/check_curve.py --name tall --seeds 10`; every iteration's numbers are
