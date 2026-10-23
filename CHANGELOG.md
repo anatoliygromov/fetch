@@ -2,6 +2,28 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `art/freefix`: the "Fix free" list fixed at 0 credits (23 Oct)
+Built on `round1` (9d29233). No credits, no resize, no new colours, alpha binary, sizes unchanged; Pepper untouched.
+- **tools/blotch_clean.py**: a 2-24 px patch of one colour inside a near colour (asset_qa's blotch check) takes the
+  surrounding colour; silhouette edges never change. **tools/stamp_windows.py**: per storey (or wall) one clean
+  reference window (consensus of the windows, glass one colour, equal panes, frame sides one colour) stamped into
+  every window on the storey's grid. **tools/freefix.py**: the recipe per asset (stamp, blotch, clean, outline,
+  pixel patches) re-run from 9d29233. tools/outline_complete.py: `--skip-bottom`, `--frames`, `--tile`.
+- **asset_qa windows check**: panes must be equal and on one grid; before, any window with two rows of panes failed.
+- **Fixed** (41 on the list: 13 PASS, 21 WARN, 7 still FAIL): the plaza houses' windows stamped (town_house1/2 one
+  window per wall, town_house3 per storey; house1's attic bar 2 px for equal panes); blotches cleaned wherever the check found them;
+  outlines completed on the awnings, parasol, table, kiosk, hedge, keeper cart and, as drawn-with-outline decoration,
+  park_gate, park_keeper_winch (the crank is now ink), town_house3, pier; ferry 24 -> 20 colours (4 near duplicates);
+  cloud8's darkest shade merged into the next (ladder); specks off both cyclist2 sheets and the skyline; flicker
+  pixels on the rowboat and gull.
+- **Approved River Walk art changed (owner to approve)**: building (blotches, noise, stray: the glass streaks went),
+  cafe (blotches, stray), gable (4 blotches). Their windows are not stamped (painted glass).
+- **Still failing**: town_facades, cafe, gable windows (painted glass; need a redraw), ferry outline and pinholes
+  (inking the railings cluttered the deck: reverted), park_leaves_flat stray (leaf texture), town_bollard ladder
+  (median 41 vs 40: a code value), road_cyclist1_roll pinhole (a gap between spokes).
+- **Checks:** check_pepper PEPPER UNCHANGED (4591 steps), check_flow 116 of 116, check_tiled PASSED;
+  check_pepper_files cannot run in this shallow clone (aa38be5 missing; Pepper's 5 files are identical to 9d29233).
+
 ## Branch `art/qa`: the asset QA gate (23 Oct)
 Built on `art/fixes`. Tools and docs only; no art changed.
 - **tools/asset_qa.py**: every asset checked as the game draws it and in detail (alpha, slot, noise, stray, blotches,

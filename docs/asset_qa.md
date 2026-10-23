@@ -10,7 +10,7 @@ until it has passed the gates below. Read `claude/art-learnings.md` (project doc
 | 0 Brief | One card per asset: layer, slot size (px), scale (46 px/m on Pepper's line), palette ramps, outline rule, view (front-on), its repeated parts (windows, wheels, posts), the approved pieces it must match. | 0 | the owner approves briefs in batches |
 | 1 Pilot | One piece of each kind goes through gates 2 to 6 before the rest of its batch is generated. A failed pilot changes the brief, not the batch. | the pilot only | gate 4 to 6 |
 | 2 Make | Small pieces drawn at game size (Pixel Engine); bigger ones on their own pixel grid. Buildings are BUILT: each repeated part drawn once and stamped on an integer grid. Never resample by a non-integer factor. | after gate 0 | the maker |
-| 3 Clean | `tools/cleanpass.py` (stray pixels), `tools/outline_complete.py` (outline gaps), palette locked across frames. | 0 | the maker |
+| 3 Clean | `tools/stamp_windows.py` (buildings: one clean window stamped on the storey grid), `tools/blotch_clean.py` (blotches), `tools/cleanpass.py` (stray pixels), `tools/outline_complete.py` (outline gaps), palette locked across frames. `tools/freefix.py` is the recipe per asset of the 23 Oct pass. | 0 | the maker |
 | 4 Checks | `python3 -I tools/asset_qa.py --file X.png --layer L --level rw\|cp\|dt [--fade F] [--building] [--frames WxH]`. Any FAIL: back to gate 3, or to gate 2 if the drawing is wrong. | 0 | the script |
 | 5 Card | `tools/qa_card.py`: the asset as drawn at 1x and 2x, the file at 5x with every flagged pixel boxed, the approved bench, bin and lamp beside it, the windows lined up, the frames at 5x and a GIF; plus an in-game frame in colour and greyscale (`tools/fix_shots.sh` with `LOOK_SPOTS`). | 0 | the maker |
 | 6 Review | An agent that did not make the asset goes through the card with the checklist below and lists every defect with its pixel position, or "none" per item. Defects go back to gate 3. | 0 | a fresh agent |
@@ -35,7 +35,7 @@ batch 1's plaster) fail.
 | outline | a play piece or character with a broken 1 px dark outline; decoration drawn with a broken outline |
 | colours | more colours than the layer allows |
 | ladder | darker than the layer's darkest on screen, in any level it is drawn in |
-| windows | buildings: windows of one storey and wall not pixel-identical (a 1 px shift counts), panes unequal or speckled |
+| windows | buildings: windows of one storey and wall not pixel-identical (a 1 px shift counts), panes unequal, off one grid, or speckled (a 2 x 2 window is fine since art/freefix) |
 | frames | sheets: not whole frames; a colour in one frame only (flicker); warnings for a colour lost in one frame, feet moving, size jumps |
 
 ## The review checklist (gate 6): what the script cannot judge

@@ -360,7 +360,11 @@ def window_check(r, rgb255, a):
                                            (f"{' and ' if d[0] else ''}shifted {d[1][0]:+d},{d[1][1]:+d} px" if d[1] != (0, 0) else ""))
         for w in st:                                                # inside a window: panes alike and filled
             ps = w["panes"]
-            if len({(p["w"], p["h"]) for p in ps}) > 1 or len({p["y"] for p in ps}) > 1:
+            # panes the same size and on one grid (a 2 x 2 window has two rows of panes: each row on one line, each
+            # column on one line); before 23 Oct (art/freefix) any second row of panes failed here
+            gx, gy = sorted({p["x"] for p in ps}), sorted({p["y"] for p in ps})
+            if len({(p["w"], p["h"]) for p in ps}) > 1 or len(ps) != len(gx) * len(gy) or \
+               {(p["x"], p["y"]) for p in ps} != {(x_, y_) for x_ in gx for y_ in gy}:
                 rec["problems"].append(f"window at x {w['x']}: its panes differ in size or height")
                 for p in ps: flagged += [[p["x"] + xx, p["y"]] for xx in range(p["w"])]
             for p in ps:
