@@ -37,23 +37,97 @@ function U.sign(x, y, w)
 end
 local function txt(s, x, y, col) lg.setColor(col or U.WHITE); F.print(s, x, y, 1); lg.setColor(1, 1, 1, 1) end
 
--- g: { lives, hearts, bones, total, time (seconds left), score }
-function U.status(g)
-  local y = 3
-  U.sign(4, y, 62)
-  lg.draw(dogIcon, 8, y + 3)
-  txt("x" .. g.lives, 20, y + 3)
-  for i = 1, 3 do lg.setColor(i <= g.hearts and U.WHITE or U.RIM); lg.draw(heart, 34 + (i - 1) * 7, y + 4) end
-  U.sign(72, y, 66)
-  lg.setColor(1, 1, 1, 1); lg.draw(boneIcon, 77, y + 4)
-  txt(("%02d/%02d"):format(g.bones, g.total), 90, y + 3)
-  U.sign(146, y, g.hard and 56 or 62)                           -- hard mode: a shorter sign, the HARD tag after it
-  local low = g.time < 30 and math.floor(love.timer.getTime() * 4) % 2 == 0
-  txt(("TIME %03d"):format(math.max(0, math.ceil(g.time))), 152, y + 3, low and U.RIM or U.WHITE)
-  if g.hard then U.hardTag(208, y + 1) end
-  U.sign(238, y, 74)
-  txt(("SCORE %06d"):format(g.score), 243, y + 3)
+-- ---- v8 (ui/hud-v8): the HUD, the pause and the tally in the Lion King kit, after the owner's three target renders
+-- (art/source/ui/ref). Pieces are drawn on the pixel grid (art/source/ui/v8, built into art/ui by build8.py) and
+-- placed by their drawn bodies, never their drop shadows (the v6 layout spec): margin M to every body, one centre
+-- line per row, 3 px from an icon to its number, one outline (64,11,6) and one shadow (36,8,5).
+local UF = require("uifont")
+local ART = require("uiart_data")
+U.M, U.ICON_GAP = 4, 3
+local arts = {}
+function U.art(name)
+  if not arts[name] then arts[name] = lg.newImage("art/ui/" .. name .. ".png"); arts[name]:setFilter("nearest", "nearest") end
+  return arts[name]
 end
+function U.body(name) local b = ART[name]; return b[3] - b[1] + 1, b[4] - b[2] + 1 end     -- body width, height
+-- U.log: when a table, every placed body is listed in it ({ name, x0, y0, x1, y1 }) for tools/layout_qa8.py
+local function log(name, x0, y0, x1, y1) if U.log then U.log[#U.log + 1] = { name, x0, y0, x1, y1 } end end
+-- a piece with its body's top-left at x, y
+function U.put(name, x, y, logName)
+  local b = ART[name]
+  lg.setColor(1, 1, 1, 1); lg.draw(U.art(name), x - b[1], y - b[2])
+  log(logName or name, x, y, x + b[3] - b[1], y + b[4] - b[2])
+end
+-- text with its outlined box (the bodies and the 1 px outline round them) at x, y; returns the box's width
+function U.say(size, style, s, x, y, logName)
+  local w = UF.width(size, s)
+  UF.print(size, style, s, x + 1, y + 1)
+  log(logName or "text", x, y, x + w + 1, y + UF.height(size) + 1)
+  return w + 2
+end
+function U.sayW(size, s) return UF.width(size, s) + 2 end                 -- an outlined box's width and height
+function U.sayH(size) return UF.height(size) + 2 end
+-- the top of a box h tall centred on the line cy (cy may be .5)
+local function top(cy, h) return math.floor(cy - (h - 1) / 2 + 0.5) end
+local function hits(a, x0, y0, x1, y1) return a and a[1] < x1 and a[3] > x0 and a[2] < y1 and a[4] > y0 end
+
+-- g: { lives, hearts, bones, total, time (seconds left), score, hard }. avoid: Pepper's sprite on screen
+-- ({ x0, y0, x1, y1 }, while playing): a group she is under steps aside (is not drawn), the others stay.
+-- Top row on one centre line: the health bar left, the watch and the time in the middle, the bone and its count
+-- right with the score under them; bottom left: Pepper's head and the lives.
+U.TOP_C = U.M + 10                                               -- the watch (21 rows, the tallest) fills rows 4-24
+function U.status(g, avoid)
+  local M, G = U.M, U.ICON_GAP
+  -- health: the paw medallion capsule, one segment a heart
+  local bw, bh = U.body("bar_3")
+  if not hits(avoid, M, top(U.TOP_C, bh), M + bw, top(U.TOP_C, bh) + bh) then
+    U.put("bar_" .. math.max(0, math.min(3, g.hearts)), M, top(U.TOP_C, bh), "health")
+  end
+  -- the watch and the time left, one group centred on the screen; the last 30 s blink
+  local tstr = ("%03d"):format(math.max(0, math.ceil(g.time)))
+  local cw, ch = U.body("clock")
+  local tw, th = U.sayW(13, tstr), U.sayH(13)
+  local gx = math.floor(159.5 - (cw + G + tw - 1) / 2 + 0.5)
+  if not hits(avoid, gx, M, gx + cw + G + tw, M + 21 + (g.hard and 14 or 0)) then
+    U.put("clock", gx, top(U.TOP_C, ch), "clock")
+    local low = g.time < 30 and math.floor(love.timer.getTime() * 4) % 2 == 0
+    U.say(13, low and "dim" or "gold", tstr, gx + cw + G, top(U.TOP_C, th), "time")
+    if g.hard then U.hardTag8(159.5, top(U.TOP_C, ch) + ch + 2) end
+  end
+  -- bones (the bone and the count) right-aligned at the margin, the score under the count, right-aligned too
+  local bstr = ("%02d/%02d"):format(g.bones, g.total)
+  local ow, oh = U.body("bone")
+  local nw = U.sayW(13, bstr)
+  local sstr = ("%06d"):format(g.score)
+  local sw = U.sayW(13, sstr)
+  local bx = 319 - M - nw + 1 - G - ow
+  local sy = top(U.TOP_C, th) + th + 3                           -- 2 clear rows under the count (its shadow takes one)
+  if not hits(avoid, math.min(bx, 319 - M - sw), M, 320, sy + th) then
+    U.put("bone", bx, top(U.TOP_C, oh), "bone")
+    U.say(13, "gold", bstr, 319 - M - nw + 1, top(U.TOP_C, th), "bones")
+    U.say(13, "gold", sstr, 319 - M - sw + 1, sy, "score")
+  end
+  -- lives: Pepper's head and x3, bottom left, on one centre line, the head's bottom at the margin
+  local hw, hh = U.body("head")
+  local cy = 239 - M - (hh - 1) / 2
+  if not hits(avoid, M, 239 - M - hh, M + hw + G + U.sayW(13, "x" .. g.lives), 240) then
+    U.put("head", M, 239 - M - hh + 1, "head")
+    U.say(13, "gold", "x" .. g.lives, M + hw + G, top(cy, th), "lives")
+  end
+end
+-- HARD (hard mode): small gold letters on a dark red plate, centred on cx, its top at y
+function U.hardTag8(cx, y)
+  local w = U.sayW(7, "HARD") + 4
+  local x = math.floor(cx - (w - 1) / 2 + 0.5)
+  lg.setColor(36 / 255, 8 / 255, 5 / 255); lg.rectangle("fill", x + 1, y + 1, w, 13)
+  lg.setColor(64 / 255, 11 / 255, 6 / 255); lg.rectangle("fill", x, y, w, 13)
+  lg.setColor(U.RED); lg.rectangle("fill", x + 1, y + 1, w - 2, 11)
+  U.say(7, "gold", "HARD", x + 2, y + 2, "hard")
+end
+-- the smooth warm dim behind the pause and the tally (owner, 23 Oct: like the pause render, no dotted dither):
+-- one full-screen dark brown rectangle at 75 %
+U.DIM = { 40 / 255, 20 / 255, 12 / 255, 0.75 }
+function U.dimWarm() lg.setColor(U.DIM); lg.rectangle("fill", 0, 0, 320, 240); lg.setColor(1, 1, 1, 1) end
 
 -- FETCH FRENZY (bonus.lua): g = { time (seconds left), catches, need (catches for the extra life), points }.
 -- Three signs: the catches against the goal (gold once reached), the countdown (blinks in the last 5 s), points.

@@ -88,7 +88,7 @@ function love.load(args)
   local lv, test = argLevel(args), nil
   for _, a in ipairs(args or {}) do if a == "--bonus" then bonusArg = true end end
   for _, a in ipairs(args or {}) do
-    if a == "--test" or a == "--auto" or a == "--physics" or a == "--qa" or a == "--flowtest" or a == "--lookshots" then test = a end
+    if a == "--test" or a == "--auto" or a == "--physics" or a == "--qa" or a == "--flowtest" or a == "--lookshots" or a == "--uishots" then test = a end
   end
   Se.save = not test
   for _, a in ipairs(args or {}) do if a == "--dev" then devMode = true end end
@@ -117,6 +117,7 @@ function love.load(args)
     elseif a == "--test" or a == "--auto" or a == "--physics" then require(levelName == "riverwalk" and "tests" or ("tests_" .. levelName))(a, api) end
     if a == "--noextras" then Ex.enabled = false end
     if a == "--classic" then Look.on = false end                                        -- start with the look as before
+    if a == "--uishots" then require("tests_ui")(api) end                                        -- the UI's frames (ui/hud-v8)
     if a == "--lookshots" then require("tests_look")(api) end                                    -- start with the extras off
     if a == "--qa" then require("qa")({ stage = function() return stage end }) end
     if a == "--flowtest" then require("tests_flow")(api) end
@@ -390,8 +391,9 @@ function love.draw()
   end
   stage:draw(debugView)
   local st = stage:stats()
-  local pp = stage.pepper                                         -- the status signs step aside while Pepper is up under them
-  if pp.y - math.floor((stage.camY or 0) + 0.5) - 44 > 18 or state ~= "play" then U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard }) end
+  -- the HUD (hud.lua): while playing, a group Pepper is up under steps aside (ui/hud-v8: per group, not the whole HUD)
+  U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard },
+    state == "play" and { Talk.pepperRect(stage) } or nil)
   if state == "intro" then
     U.dim()
     love.graphics.push(); love.graphics.translate(0, Flow.placeY(60, 200, 70, 76, { Talk.pepperRect(stage) }) - 70)

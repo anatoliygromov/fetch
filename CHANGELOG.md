@@ -2,6 +2,27 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `ui/hud-v8` step 1: the HUD to the owner's target (23 Oct, night)
+Built on main v0.6. 0 credits, no generated pixels: everything drawn on the pixel grid. Owner direction: the three
+target renders (art/source/ui/ref) are "this exact layout and quality"; fonts on a grid, one family.
+- **Fonts (art/source/ui/v8/font):** one family, three sizes, each glyph drawn pixel by pixel: **7 px small** (new:
+  stems 2, bars 1, corners cut 1, for body text and subtitles), **13 px mid** (v7 unchanged, plus a comma), **17 px
+  big** (new, for titles: stems 4, bars 3, serifs 2 rows; kit/font_big, generated lettering, only as the guide).
+  geomqa8.py on all three: 0 issues (one cap line and baseline per size, symmetric letters mirror-symmetric, no lone
+  pixels, no hairlines, no empty side columns, so letters sit evenly apart). style8.py: the v5 styling at every size.
+- **Pieces (v8/tools/icons8.py):** the v7 health capsule stretched by whole segments to 100 x 19, coins, tabs, rows,
+  meter, medals, ribbons; **build8.py** writes them, the font atlases and their metrics into riverwalk/art/ui,
+  uifont_data.lua and uiart_data.lua (each piece's body box, shadow left out).
+- **HUD (hud.lua U.status, replaces the blue signs, no flag):** health bar top left, the watch and the time centred,
+  the bone and its count top right with the score under it, Pepper's head and x3 bottom left. The v6 spec: 4 px
+  margins, one centre line (14) for the top row, 3 px icon gaps, one outline and one shadow colour; the last 30 s blink
+  dim; HARD on a red plate under the time. While playing, a group Pepper is under steps aside (main.lua passes her rect).
+  **uifont.lua** draws the fonts at whole pixels. The other screens' helpers (blue boxes, 5x7 text) are unchanged.
+- **Tools:** `love riverwalk --uishots` (tests_ui.lua) shoots the HUD, pause and tally and logs every placed body;
+  tools/ui_frames.py (frames at 1x), tools/layout_qa8.py (the v6 checks on real frames: 42 PASS on the HUD),
+  tools/ui_card.py (side-by-side with the target, the screen card).
+- **Checks:** check_pepper PEPPER UNCHANGED (4591 steps); check_flow 116 of 116 (with a fresh XDG_DATA_HOME).
+
 ## Regroup (23 Oct, evening): main v0.6, BIBLE and STATUS, the enforced gate, checks and releases on GitHub
 The owner's decisions of 23 Oct (merge list): round1 becomes main as v0.6; art/freefix merged with the approved River
 Walk building, cafe and gable kept unchanged; art/haze merged with Downtown's facades at 0.25 (was 0.10 on the branch)
