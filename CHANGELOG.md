@@ -26,6 +26,20 @@ Pictures: `/home/claude/out/r8-preview/`; the build: `/home/claude/out/r8-previe
   steps of about 20 px; the level's are 15 steps of 4 px), the chimney (24 wide on a 16 px box, its pots 7 px over the
   top where the golden bone sits), the dormer (a pitched roof over a flat 56 px box: Pepper would stand 19 px in the
   air at its left end), and the awning (not hooked; drawn from the side).
+- **Hooks adapted to the art, not the art to the hooks** (arthooks.lua, bonus.lua, scene.lua, stage.lua,
+  tests_downtown_tall.lua). The tram: its width and front door come from the art (274 px, door 40 px from the front;
+  were 300 and 24), so it still stops with its door at the sign (the check now asks the hook). The render has no
+  driver and flat glass windows, so a small faded driver (cap, face, collar, uniform) is drawn in the front cab window
+  over the art. The footbridge: 21 rows of rail and lamp above the deck's outline row (was 12). The roof kit pieces
+  are their box's width with the outline inside (the hooks asked for width + 2): they are drawn on the box, and the
+  ledge 3-slice now spans the box exactly; a ledge with its own width file (`town_roof_ledge48.png`) is drawn as is.
+  Mia's throw: the item sits in the clip's hand in frames 1 to 5 (measured in the art, over the render's grey ball,
+  which it covers) and leaves her hand where the release frame has it, (24, -41) from her feet (was (15, -33), the old
+  cheer clip's arm); the throws still land where they did (B.launch solves from the hand). **Z-order: the spire**
+  was drawn in the world's back layer, in front of the row of houses across the square (nearer, and faded less): it
+  now stands behind the row in the mid layer (Sc.farLandmark), moving with it (0.5) and where its box is when the
+  screen is centred on the box, its base on the row's base, so the row hides its tower and the spire rises over the
+  roofs.
 
 ## Branch `r8/levels`: the tall City Park and Downtown in the game, the cargo bike, hooks for the first art batch (23 Oct)
 Built on `round1`. The owner's decisions of 23 Oct: D2 (the tall City Park and Downtown replace the flat ones) and D1

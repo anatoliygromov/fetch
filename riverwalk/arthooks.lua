@@ -142,10 +142,23 @@ end
 -- drives off to the left; it is gone once it is wholly off screen. Trams run every `every` seconds. Pure scenery:
 -- it never touches Pepper and is drawn behind everything on her line.
 H.TRAM_W, H.TRAM_H = 300, 130
+H.TRAM_DOOR = 24                                                    -- the front door's middle, from the front end
 H.TRAM_FADE = 0.4                                                   -- (the far lane: further back than the props' 0.28)
+-- r8/preview: with the art the tram is the art's width, its front door 40 px from the front end (the batch's tram is
+-- 274 wide, mirrored to face left: tools/wire_r8_art.py), and its cab gets a driver (the render has none, its windows
+-- are flat glass): H.TRAM_CAB is the front cab window (x, y from the art's top-left, w, h)
+H.TRAM_ART_DOOR, H.TRAM_CAB = 40, { 17, 51, 8, 30 }
+local function tramArt() return H.img("scene/tram_vintage", H.TRAM_FADE) end
+local function tramDims()
+  local im = tramArt()
+  if im then return im:getWidth(), H.TRAM_ART_DOOR end
+  return H.TRAM_W, H.TRAM_DOOR
+end
+H.tramDims = tramDims
 function H.newTrams(def) local out = {}; for i, l in ipairs(def.trams or {}) do out[i] = { lane = l, t = l.first or 2.0 } end; return out end
 function H.updateTrams(s, dt)
   local cam = s.cam
+  local W, door = tramDims()
   for _, tl in ipairs(s.trams or {}) do
     local l, c = tl.lane, tl.car
     local mid = cam + 160
@@ -154,13 +167,13 @@ function H.updateTrams(s, dt)
         tl.t = tl.t - dt
         if tl.t <= 0 then                                         -- sent: just off the right edge of the screen
           tl.t = l.every or 16
-          c = { x = cam + 320 + H.TRAM_W / 2 + 8, v = l.speed or 110, state = "run" }
-          if l.stop + H.TRAM_W / 2 - 24 > c.x then c.state = "go" end   -- (its stop is behind it: no stop)
+          c = { x = cam + 320 + W / 2 + 8, v = l.speed or 110, state = "run" }
+          if l.stop + W / 2 - door > c.x then c.state = "go" end   -- (its stop is behind it: no stop)
           tl.car = c
         end
       end
     else
-      local stopX = l.stop + H.TRAM_W / 2 - 24                      -- its middle, with the front door at the sign
+      local stopX = l.stop + W / 2 - door                           -- its middle, with the front door at the sign
       local vmax = l.speed or 110
       if c.state == "run" then
         local d = c.x - stopX
@@ -171,7 +184,7 @@ function H.updateTrams(s, dt)
         if c.wait <= 0 then c.state = "go" end
       else c.v = math.min(vmax, c.v + 40 * dt) end                 -- pulls away
       c.x = c.x - c.v * dt
-      if c.x + H.TRAM_W / 2 < cam - 16 or c.x - H.TRAM_W / 2 > cam + 900 then tl.car = nil end
+      if c.x + W / 2 < cam - 16 or c.x - W / 2 > cam + 900 then tl.car = nil end
     end
   end
 end
@@ -214,14 +227,29 @@ local function tramCode(cx, y, x, c)
   rect(faded({ 0.99, 0.90, 0.60 }), L + 8, top + 84, 3, 3)         -- its headlamp
 end
 -- drawn in the back layer (behind the back props and everything on Pepper's line)
+-- the driver in the art's front cab window (x0, y0: the window's top-left on screen), faded as the tram
+local function driver(x0, y0)
+  local f = function(c) return { c[1] + (HAZE[1] - c[1]) * H.TRAM_FADE, c[2] + (HAZE[2] - c[2]) * H.TRAM_FADE, c[3] + (HAZE[3] - c[3]) * H.TRAM_FADE } end
+  local cw = H.TRAM_CAB[3]
+  local navy, skin = f({ 0.10, 0.12, 0.20 }), f({ 0.93, 0.74, 0.60 })
+  rect(navy, x0 + 1, y0 + 16, cw - 2, 14)                                  -- shoulders, uniform (to the sill)
+  rect(f({ 0.95, 0.93, 0.86 }), x0 + 3, y0 + 16, 2, 2)                      -- shirt collar
+  rect(skin, x0 + 2, y0 + 10, 4, 5); rect(skin, x0 + 1, y0 + 12, 1, 1)      -- face (looking ahead: left), nose
+  rect(navy, x0 + 2, y0 + 7, 5, 3); rect(navy, x0 + 1, y0 + 9, 2, 1)        -- cap, its peak
+  rect(f({ 0.80, 0.66, 0.30 }), x0 + 3, y0 + 8, 2, 1)                       -- cap badge
+end
 function H.drawTrams(s, cam)
+  local W = tramDims()
   for _, tl in ipairs(s.trams or {}) do
     local l = tl.lane
     local c = tl.car
-    if c and c.x + H.TRAM_W / 2 - cam > -10 and c.x - H.TRAM_W / 2 - cam < 330 then
-      local im = H.img("scene/tram_vintage", H.TRAM_FADE)
+    if c and c.x + W / 2 - cam > -10 and c.x - W / 2 - cam < 330 then
+      local im = tramArt()
       local x = math.floor(c.x - cam + 0.5)
-      if im then lg.setColor(1, 1, 1, 1); lg.draw(im, x - math.floor(im:getWidth() / 2), l.y1 - im:getHeight())
+      if im then
+        local L, T = x - math.floor(im:getWidth() / 2), l.y1 - im:getHeight()
+        lg.setColor(1, 1, 1, 1); lg.draw(im, L, T)
+        driver(L + H.TRAM_CAB[1], T + H.TRAM_CAB[2])
       else tramCode(x, l.y1, c.x, c) end
     end
     if l.stop - cam > -20 and l.stop - cam < 340 then stopSign(math.floor(l.stop - cam), l.y1) end   -- (in front of it)
@@ -248,7 +276,7 @@ end
 -- or more and 100 tall or more) are filled left to right with art/scene/town_front_tall1.png, 2, 3 (in turn), each
 -- standing on the box's bottom and cut at its top (the roofline Pepper walks on) and at its right end; the far
 -- landmark (RIDDARHOLMEN) is art/scene/spire_riddarholmen.png, faded 45%, centred on its box, standing on its bottom.
-H.BRIDGE_RAIL = 12
+H.BRIDGE_RAIL = 21                                                  -- (r8/preview: the batch's bridge has 21 rows of rail and lamp)
 local function tallTown(def) return def.art == "town" and def.foot ~= nil end
 local function high(def, p) return p.y0 <= def.foot - 120 end           -- the high road (the street is def.foot)
 local function slug(n) return (n:lower():gsub("[^%w]+", "_")) end
@@ -321,17 +349,19 @@ end
 local function drawImgOn(im, p, x, ytop)
   lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(x + (p.x1 - p.x0) / 2 - im:getWidth() / 2), math.floor(ytop))
 end
+-- r8/preview: the batch's pieces are their box's width with the outline inside it (the hooks first asked for the
+-- width + 2), so the 3-slice spans the box: left 4 px at x, the middle repeated, the right 4 px ending at x + w
 local function threeSlice(im, x, y, w)
   local iw, ih = im:getDimensions()
   if not quads[im] then quads[im] = { lg.newQuad(0, 0, 4, ih, iw, ih), lg.newQuad(4, 0, iw - 8, ih, iw, ih), lg.newQuad(iw - 4, 0, 4, ih, iw, ih) } end
   local q = quads[im]
-  lg.setColor(1, 1, 1, 1); lg.draw(im, q[1], x - 1, y - 1)
+  lg.setColor(1, 1, 1, 1); lg.draw(im, q[1], x, y - 1)
   local mw = iw - 8
-  for xx = x + 3, x + w - 3, mw do
-    local ww = math.min(mw, x + w - 3 - xx)
+  for xx = x + 4, x + w - 5, mw do
+    local ww = math.min(mw, x + w - 4 - xx)
     if ww > 0 then lg.draw(im, lg.newQuad(4, 0, ww, ih, iw, ih), xx, y - 1) end
   end
-  lg.draw(im, q[3], x + w - 3, y - 1)
+  lg.draw(im, q[3], x + w - 4, y - 1)
 end
 -- a high road piece or a back piece of the tall Downtown (from Sc.drawPropArt): true when it is drawn (or drawn
 -- elsewhere: the fronts and the spire, H.drawTownBack)
@@ -358,7 +388,9 @@ function H.townPiece(p, camx, def)
       local im = H.img("scene/town_roof_" .. slug(n) .. w) or H.img("scene/town_roof_" .. slug(n))
       if im then drawImgOn(im, p, x, p.y0 - 1); return true end
     else
-      local im = H.img("scene/town_roof_ledge")
+      local im = H.img("scene/town_roof_ledge" .. w)                 -- (a ledge drawn at its box's width, else the 3-slice)
+      if im then drawImgOn(im, p, x, p.y0 - 1); return true end
+      im = H.img("scene/town_roof_ledge")
       if im then threeSlice(im, x, p.y0, w); return true end
     end
     kitCode(p, x, def); return true
@@ -401,16 +433,30 @@ local function spireCode(cx, y0, y1)
   end
   rect(iron, cx - 1, y0, 2, 10); rect(iron, cx - 3, y0 + 3, 6, 1)
 end
+-- r8/preview: the far landmark stands BEHIND the row of houses across the square (the mid layer, 0.5), not in the
+-- world's back layer: drawn there, a spire faded more than the row stood in front of it at the street's back edge.
+-- It moves with the row (0.5) and is where its box is when the screen is centred on the box; it stands on the row's
+-- base (y 178 of the mid layer), so the row hides its tower and the spire rises over the roofs.
+-- landmark(s): the function scene.lua calls inside the mid layer (Sc.farLandmark), or nil
+H.SPIRE_PAR, H.SPIRE_BASE = 0.5, 178
+function H.landmark(s)
+  local def = s.def
+  if not tallTown(def) then return nil end
+  local sp
+  for _, p in ipairs(def.props) do if p.name == "RIDDARHOLMEN" then sp = p end end
+  if not sp then return nil end
+  return function(camx)
+    local cx = 160 + ((sp.x0 + sp.x1) / 2 - 160 - camx) * H.SPIRE_PAR
+    if cx < -60 or cx > 380 then return end
+    local im = H.img("scene/spire_riddarholmen", 0.45)
+    if im then lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(cx - im:getWidth() / 2), H.SPIRE_BASE - im:getHeight())
+    else spireCode(math.floor(cx), H.SPIRE_BASE - (sp.y1 - sp.y0), H.SPIRE_BASE) end
+    lg.setColor(1, 1, 1, 1)
+  end
+end
 function H.drawTownBack(s, cam)
   local def = s.def
   if not tallTown(def) then return end
-  for _, p in ipairs(def.props) do
-    if p.name == "RIDDARHOLMEN" and p.x1 - cam > -40 and p.x0 - cam < 360 then
-      local im = H.img("scene/spire_riddarholmen", 0.45)
-      if im then lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor((p.x0 + p.x1) / 2 - cam - im:getWidth() / 2), p.y1 - im:getHeight())
-      else spireCode(math.floor((p.x0 + p.x1) / 2 - cam), p.y0, p.y1) end
-    end
-  end
   local i = 0
   for _, p in ipairs(def.props) do
     if isFront(p) then

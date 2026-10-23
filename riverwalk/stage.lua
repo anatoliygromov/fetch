@@ -569,6 +569,7 @@ function St:draw(debug)
     if style then Sc.drawPropArt(pr, c, self.def, kicked) else Sc.drawProp(pr, c, colour) end
   end
   Sc.vshift = Vc.parallax(self, camY)                              -- (tall levels: the layers rise slower than the world)
+  Sc.farLandmark = style and AH.landmark(self) or nil               -- (the tall Downtown's spire: arthooks.lua)
   if style then Sc.drawFarArt(self.layers, cam, self.t, self.world)
   elseif grey then Sc.drawFarGrey(self.layers, cam, self.t) else Sc.drawFar(self.layers, cam, self.t) end
   Sc.vshift = nil

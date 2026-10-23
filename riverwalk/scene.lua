@@ -1010,6 +1010,7 @@ function Sc.drawFarArt(L, camx, t, w)
     Look.use("shore")
     strip(T.roofs, camx, 0.25, 160)                               -- 4 far roofs and spires
     vpop(on); on = vpush("mid")
+    if Sc.farLandmark then Look.use("shore"); Sc.farLandmark(camx) end   -- (r8/preview: the tall Downtown's spire, behind 5)
     Look.use("mid")
     strip(T.facades, camx, 0.5, 178)                              -- 5 old town facades (faded)
   end

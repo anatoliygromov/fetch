@@ -143,6 +143,8 @@ return function(mode, api)
           report("2 tram lanes in the back lane (rails at y 414, behind Pepper's line)", #st.trams == 2 and st.def.trams[1].y1 == STREET - 10 and st.def.trams[2].y1 == STREET - 10,
             ("%d lanes"):format(#st.trams))
           place(st, 2000, STREET); st.trams[1].t = 0.5; st.trams[1].car = nil
+          local TW, door = require("arthooks").tramDims()                 -- (the art's width and door, or 300 and 24)
+          local half, toDoor = TW / 2, TW / 2 - door
           local came, stopped, waited, left, hurt, cam0 = nil, nil, 0, false, false, st.cam
           for f = 1, 60 * 25 do
             st.bikes, st.bikeT = {}, 99
@@ -150,14 +152,14 @@ return function(mode, api)
             st:update(1 / 60, {})
             if st.hearts < h then hurt = true end
             local c = st.trams[1].car
-            if c and not came then came = c.x - 150 - st.cam end
+            if c and not came then came = c.x - half - st.cam end
             if c and c.state == "stop" then stopped = c.x; waited = waited + 1 / 60 end
             if stopped and not c then left = true; break end
           end
           local l = st.def.trams[1]
           report("the tram comes in off the right edge of the screen", came and came > 320, ("its front %s px from the left edge"):format(tostring(came and math.floor(came))))
-          report("it stops with its front door at the tram stop sign, waits 3 s, drives off left", stopped and near(stopped - 126, l.stop, 1) and near(waited, l.dwell, 0.05) and left,
-            ("stopped at %s (sign %d), waited %.2f s, gone %s"):format(tostring(stopped and math.floor(stopped - 126)), l.stop, waited, tostring(left)))
+          report("it stops with its front door at the tram stop sign, waits 3 s, drives off left", stopped and near(stopped - toDoor, l.stop, 1) and near(waited, l.dwell, 0.05) and left,
+            ("stopped at %s (sign %d), waited %.2f s, gone %s"):format(tostring(stopped and math.floor(stopped - toDoor)), l.stop, waited, tostring(left)))
           report("the tram is scenery: no heart lost, never in the hazards", not hurt and st.hearts == 3, ("hearts %d"):format(st.hearts))
         end },
       { act = function() tp(1852, 256) end }, { wait = 1.2 },

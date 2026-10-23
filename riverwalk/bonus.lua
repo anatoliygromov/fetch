@@ -34,6 +34,16 @@ B.KIND = {
 B.WIND = { { 2, -13, -27 }, { 3, -15, -39 }, { 4, -11, -45 } }       -- { wave frame, hand dx, dy }
 B.HAND = { 15, -33 }
 B.WINDUP, B.FOLLOW = 0.36, 0.3                                     -- seconds before and after she lets go
+-- r8/preview: with her own throw clip (art/girl_throw.png) the item sits in the clip's hand: frames 1-5 (her hand
+-- measured in the art, where the render's grey ball is, so the game's item covers it), and it leaves her hand where
+-- it is in the release frame 6 (the art's arm reaches further forward and higher than the old cheer clip's)
+B.THROW_ART = love.filesystem.getInfo("art/girl_throw.png") ~= nil
+B.ART_HAND = { { -8, -23 }, { -13, -24 }, { -24, -38 }, { -24, -45 }, { -13, -46 } }
+if B.THROW_ART then B.HAND = { 24, -41 } end
+function B.throwFrame(m)                                            -- her clip's frame (1-8) in the wind-up and the throw
+  if m.state == "windup" then return 1 + math.min(4, math.floor(m.t / B.WINDUP * 5)) end
+  return 6 + math.min(2, math.floor(m.t / B.FOLLOW * 3))
+end
 
 -- the throws: { kind, where it lands (x), how high it goes over her hand (px), seconds since the throw before }.
 -- Short and long balls first (to learn the arc), then the round's own mix. All land on the lawn (tests_bonus).
@@ -188,8 +198,13 @@ function B:update(dt, presses)
   end
   if m.state == "throw" and m.t > B.FOLLOW then m.state, m.t = "idle", 0 end
   if self.holding then                                              -- the item follows her hand
-    local f = math.min(#B.WIND, 1 + math.floor(m.t / B.WINDUP * #B.WIND))
-    self.holding.x, self.holding.y = m.x + B.WIND[f][2], B.FEET + B.WIND[f][3]
+    if B.THROW_ART and m.state == "windup" then
+      local h = B.ART_HAND[B.throwFrame(m)]
+      self.holding.x, self.holding.y = m.x + h[1], B.FEET + h[2]
+    else
+      local f = math.min(#B.WIND, 1 + math.floor(m.t / B.WINDUP * #B.WIND))
+      self.holding.x, self.holding.y = m.x + B.WIND[f][2], B.FEET + B.WIND[f][3]
+    end
   end
   -- the items: fly, land, roll; Pepper's body box catches them
   local x0, y0, x1, y1 = p:box()
@@ -292,9 +307,7 @@ function B:drawScene()
   lg.setColor(1, 1, 1, 1)
   local tq = art.throwQ
   if tq and #tq >= 8 and (m.state == "windup" or m.state == "throw") then   -- her own throw clip: the wind-up over
-    local f = m.state == "windup" and 1 + math.min(4, math.floor(m.t / B.WINDUP * 5))   -- frames 1-5, the release 6,
-      or 6 + math.min(2, math.floor(m.t / B.FOLLOW * 3))                     -- the follow-through 7-8
-    lg.draw(art.throw, tq[f], m.x, B.FEET, 0, 1, 1, 33, 66)
+    lg.draw(art.throw, tq[B.throwFrame(m)], m.x, B.FEET, 0, 1, 1, 33, 66)   -- frames 1-5, the release 6, then 7-8
   else lg.draw(art.girl, art.q[row][fr], m.x, B.FEET, 0, 1, 1, rw.x, rw.y) end
   if self.holding then drawItem(self.holding, self.holding.x, self.holding.y, self.t) end
   for _, it in ipairs(self.items) do
