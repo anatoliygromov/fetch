@@ -3,7 +3,7 @@
   fix free     a script fixes it at 0 credits: noise/stray (tools/cleanpass.py), outline gaps
                (tools/outline_complete.py), specks and pinholes (a pixel patch), blotches (cleanpass, wider),
                uneven windows (stamp one clean window into every opening)
-               (to build: blotch cleanup = cleanpass on 2-24 px patches; window stamping), colours (palette merge),
+               (tools/blotch_clean.py; tools/stamp_windows.py, built on art/freefix), colours (palette merge),
                ladder (a fade or shader value in code), flicker (a pixel patch)
   redraw       the drawing itself is wrong: wrong slot size, a sheet that is not whole frames; hand-pixel or
                regenerate (credits only after a brief is approved)
