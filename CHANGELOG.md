@@ -2,6 +2,21 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `art/qa`: the asset QA gate (23 Oct)
+Built on `art/fixes`. Tools and docs only; no art changed.
+- **tools/asset_qa.py**: every asset checked as the game draws it and in detail (alpha, slot, noise, stray, blotches,
+  specks, pinholes, outline, colours, ladder in every level it is drawn in, windows pixel by pixel, frames). Exit 1 on
+  any FAIL. Calibrated: the approved bench, bin, lamp, kiosks, planter and flower box pass; the plaza house windows,
+  the winch keeper's outline and batch 1's plaster fail.
+- **tools/qa_card.py**: one card per asset (as drawn 1x/2x, the file at 5x with flagged pixels boxed beside the
+  bench, bin and lamp, windows lined up at 8x, frames at 5x and GIFs). **tools/qa_triage.py**: the defect list.
+- **docs/asset_qa.md**: the gates (brief, pilot, make, clean, checks, card, independent review, owner), the review
+  checklist, the credit rule. **docs/art_ledger.md**: credits per asset. **docs/asset_qa_triage.md**: the library on
+  23 Oct (133 assets: 31 PASS, 36 WARN, 41 to fix free, 25 batch 1 rejected).
+- tools/measure_layers.py runs nothing on import now (asset_qa imports it).
+- An independent agent reviewed the tools against the game code; its findings (wrong look for the pier, unused
+  files, slot sizes, outline on decoration and front pieces, window grouping, merged messages) are fixed.
+
 ## Branch `art/fixes`: the layer-ladder code fixes and a clean pass (23 Oct)
 Built on `round1` with `art/layers` merged (tools/measure_layers.py, tools/layer_shots.sh). No credits, no new art.
 Owner decisions of 23 Oct (Asset Library doc): all five recommendations accepted; decision 4 (lighten the plaza

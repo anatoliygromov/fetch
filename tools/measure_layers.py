@@ -7,11 +7,14 @@ from PIL import Image
 import os, subprocess, tempfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ART = os.path.join(ROOT, "riverwalk/art/")
-# batch 1 art lives on branch r8/art: extract it to a temp folder
-R8 = tempfile.mkdtemp() + "/"
-REF = next((r for r in ("r8/art", "origin/r8/art") if subprocess.run(["git", "-C", ROOT, "rev-parse", "-q", "--verify", r], capture_output=True).returncode == 0), None)
-for f in (subprocess.run(["git", "-C", ROOT, "ls-tree", "-r", "--name-only", REF, "riverwalk/art/r8/"], capture_output=True, text=True).stdout.split() if REF else []):
-    open(R8 + os.path.basename(f), "wb").write(subprocess.run(["git", "-C", ROOT, "show", REF + ":" + f], capture_output=True).stdout)
+# batch 1 art lives on branch r8/art: extracted to a temp folder when the script runs (r8_dir(); asset_qa.py imports
+# this file for its registry and maths, so nothing runs on import)
+R8 = tempfile.mkdtemp(prefix="r8art_") + "/"
+def r8_dir():
+    REF = next((r for r in ("r8/art", "origin/r8/art") if subprocess.run(["git", "-C", ROOT, "rev-parse", "-q", "--verify", r], capture_output=True).returncode == 0), None)
+    for f in (subprocess.run(["git", "-C", ROOT, "ls-tree", "-r", "--name-only", REF, "riverwalk/art/r8/"], capture_output=True, text=True).stdout.split() if REF else []):
+        open(R8 + os.path.basename(f), "wb").write(subprocess.run(["git", "-C", ROOT, "show", REF + ":" + f], capture_output=True).stdout)
+    return R8
 
 def hx(h): return np.array([int(h[i:i+2], 16) / 255 for i in (0, 2, 4)])
 def L(warm, cool, sat, haze, k): return dict(warm=warm, cool=cool, sat=sat, haze=hx(haze), k=k)
@@ -119,12 +122,14 @@ add(["cargobike", "roof_gable", "roof_chimney", "roof_loggia", "roof_gallery72",
      "roof_ledge32", "roof_awning56", "footbridge"], "dt", "play", base=R8, group="Batch 1 (rejected)")
 add(["mia_throw"], "rw", None, base=R8, group="Batch 1 (rejected)")
 
-rows = []
-for g, n, p, lvl, layer, fade in A:
-    try: s = stats(p, lvl, layer, fade, shader=layer is not None)
-    except Exception as e: print("skip", n, e, file=sys.stderr); continue
-    s.update(group=g, name=n, lvl=lvl, layer=layer or "char", fade=fade); rows.append(s)
-json.dump(rows, open(sys.argv[1], "w"), indent=0)
-for r in rows:
-    print(f"{r['group'][:10]:10} {r['name']:20} {r['layer']:6} f{r['fade']:.2f} {r['w']:4}x{r['h']:<4} "
-          f"L {r['p10']:3}/{r['med']:3}/{r['p90']:3} col {r['ncol']:3} lone {r['lone']:5} edgeDk {r['dark_edge']:3}% dith {r['dither']:4} semi {r['semi']}")
+if __name__ == "__main__":
+    r8_dir()
+    rows = []
+    for g, n, p, lvl, layer, fade in A:
+        try: s = stats(p, lvl, layer, fade, shader=layer is not None)
+        except Exception as e: print("skip", n, e, file=sys.stderr); continue
+        s.update(group=g, name=n, lvl=lvl, layer=layer or "char", fade=fade); rows.append(s)
+    json.dump(rows, open(sys.argv[1], "w"), indent=0)
+    for r in rows:
+        print(f"{r['group'][:10]:10} {r['name']:20} {r['layer']:6} f{r['fade']:.2f} {r['w']:4}x{r['h']:<4} "
+              f"L {r['p10']:3}/{r['med']:3}/{r['p90']:3} col {r['ncol']:3} lone {r['lone']:5} edgeDk {r['dark_edge']:3}% dith {r['dither']:4} semi {r['semi']}")
