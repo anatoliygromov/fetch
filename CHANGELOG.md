@@ -28,6 +28,12 @@ SpriteCook: 408 credits of the approved 528 (reserve unused), 1,078 left. Contac
   white ground keyed off, never scaled up). Fixes made in the build: the footbridge's painted dog removed and its
   plank tops cut (front-on rule), the dormer's side face cut, the tram's see-through windows glazed, far-layer dark
   tones lifted so nothing reads as a stroke.
+- **QA, contact sheets, the record** (`tools/art_qa.py`, `tools/build_r8_sheets.py`, `docs/art_batch1.md`): the QA
+  script checks size against target, colour count, outline present (obstacles, characters) or absent (decoration),
+  lone and isolated pixels, semi-transparent pixels and the animator's grey matte: 28 of 28 files pass. One contact
+  sheet per line at 3x (each asset on its level's ground beside Pepper and Mia, alternates and old art beside it,
+  hit boxes in red) and an overview at 2x. `docs/art_batch1.md` lists every asset id, prompt, credit, variant choice,
+  the file names for the level agent with what each replaces, and the points for the owner's eye.
 
 ## Branch `r7/curve`: the tall order's difficulty curve passes the acceptance test (22 Oct)
 Built on `round1`. The planned order with the tall levels (River Walk, City Park tall, Downtown tall, Rooftops,
