@@ -11,10 +11,10 @@ TAG="${1:-after}"; OUT="${2:-/home/claude/out/r8-preview}"
 GAME=riverwalk
 if [ "$TAG" = before ]; then
   GAME="$(mktemp -d)/riverwalk"; cp -r riverwalk "$GAME"
-  for f in $(python3 tools/wire_r8_art.py --list); do rm -f "$GAME/$f"; done
+  for f in $(python3 tools/wire_r8_art.py --list); do rm -f "${GAME:?}/${f:?}"; done
 fi
 mkdir -p "$OUT/$TAG"
-RUNS='--level_riverwalk --level_downtown_tall --bonus'
+RUNS="${AP_RUNS:---level_riverwalk --level_downtown_tall --bonus}"   # (AP_RUNS: some of them)
 [ "$TAG" = misfit ] && RUNS='--level_downtown_tall'
 for r in $RUNS; do
   run="$(echo "$r" | tr _ ' ' | sed 's/downtown tall/downtown_tall/')"
@@ -23,6 +23,6 @@ for r in $RUNS; do
   XDG_DATA_HOME="$D" SDL_AUDIODRIVER=dummy AP_TAG="$TAG" xvfb-run -a love "$GAME" $run --artpreview > "$D/log.txt" 2>&1
   grep -i 'error\|STUCK' "$D/log.txt" | head -5
   cp -r "$D"/love/pepper_riverwalk/"$TAG"_* "$OUT/$TAG/" 2>/dev/null
-  rm -rf "$D"
+  rm -rf "${D:?}"
 done
 echo "$TAG: $(ls "$OUT/$TAG" | wc -l) shots and runs in $OUT/$TAG"

@@ -43,6 +43,18 @@ Pictures: `/home/claude/out/r8-preview/`; the build: `/home/claude/out/r8-previe
 - **Docs** (docs/art_hooks_r8.md): what batch 1 changed in each hook (the tram's width, door and driver, the near
   lane's riders, the footbridge's rail rows, the ledge at its box's width, Mia's hand, the spire behind the row), and
   which pieces are not wired.
+- **For the owner's eye (what still looks wrong in context):** the near lane's 92 px riders show only from the
+  waist up (their top must stay at y 190, under Pepper's feet), so the bike is lost below the frame; the promenade
+  riders' wheels span 79 px on a 70 px hit box (4 to 5 px past it each side; growing the box changes River Walk's
+  golden trace); the cargo bike's bread crates stand about 44 px over the street on a 26 px hit box; Mia's throw ends
+  mid-stride and snaps back to standing, and her render's grey ball peeks past a stick or frisbee; the tram's driver
+  is a few code pixels, not art; the loggia's columns end in the air over the statue, and the footbridge floats over
+  the street with nothing under its abutments (the level's places, not the art); the tall house fronts are cut flat
+  at the roof boxes; the spire, now behind the row, shows only its lower openwork over the roofs at the street.
+- **Checks:** `check_pepper` PEPPER UNCHANGED (4591 steps), `check_pepper_files` 5 files identical, `check_flow`
+  116 of 116, `check_tiled` PASSED; `--physics` riverwalk 54, citypark_tall 94, downtown_tall 102, rooftops 103,
+  soder 29, night 40, bonus 23 (all pass); `--auto` 66.3, 39.1, 56.2, 58.1, 73.3, 82.6 s, no heart lost (unchanged);
+  `--qa` riverwalk and downtown_tall 0 problems. Build: `FETCH_ART_PREVIEW.love` (zip of riverwalk/).
 
 ## Branch `r8/levels`: the tall City Park and Downtown in the game, the cargo bike, hooks for the first art batch (23 Oct)
 Built on `round1`. The owner's decisions of 23 Oct: D2 (the tall City Park and Downtown replace the flat ones) and D1
