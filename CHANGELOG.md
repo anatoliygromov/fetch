@@ -59,6 +59,19 @@ scenery). Pepper's files, music and sfx are untouched; no art was generated.
 - **Docs** (progression.md, the beat sheets of both City Parks and Downtowns, needs_art_22oct.md): D1 and D2 noted
   where they change what the sheets say. The tall Downtown's `--test` tour has three new shots: the cargo bike
   passing under Pepper on the kiosk, the vintage tram at its stop, a tram coming in on the second street.
+- **Checks on this branch:** `check_pepper` PEPPER UNCHANGED (4591 steps), `check_pepper_files` 5 files identical,
+  `check_flow` 116 of 116, `check_tiled` PASSED, `--physics` riverwalk 54, citypark 85, downtown 81, citypark_tall
+  94, downtown_tall 102, rooftops 103, soder 29, night 40, lab_tall 43 (all pass), `--auto` 66.3, 44.6, 51.4, 39.1,
+  56.2, 58.1 (high road 54.4), 73.3, 82.6, 25.9 s (no heart lost; unchanged), `--qa` 0 problems on every level but
+  Night Harbour (1, the slipway's known ball sweep spot, as on round1). **The curve** (`tools/check_curve.py --order
+  riverwalk,citypark_tall,downtown_tall,rooftops,soder,night --seeds 10`, out `/home/claude/out/r8-levels/curve_r8`):
+  T1 to T4 PASS; DI v2 kids / parents 18.0 / 14.0, 12.6 / 17.6, 11.6 / 18.5, 20.0 / 16.5, 15.7 / 14.7, 19.2 / 24.7,
+  the same as r7/curve (the cargo bike keeps the tram's numbers; the playtest lab never reads the art). Screenshots
+  of the cargo bike placeholder and the vintage tram: `/home/claude/out/r8-levels/` (sheet
+  `r8_cargo_bike_and_tram_sheet.png`).
+- **Left for later:** the art itself (the batch-1 files drop in by name); `tools/make_downtown_tall.py` still writes
+  the tall Downtown without `art`/`foot` (the map in Tiled is the source now); Rooftops' and Night Harbour's par times
+  still come from their r6 autopilot times (58.1 and 82.6 s since r7 would give 93 and 133).
 ## Branch `r7/curve`: the tall order's difficulty curve passes the acceptance test (22 Oct)
 Built on `round1`. The planned order with the tall levels (River Walk, City Park tall, Downtown tall, Rooftops,
 Soder Hill, Night Harbour), measured with `tools/check_curve.py --name tall --seeds 10`; every iteration's numbers are

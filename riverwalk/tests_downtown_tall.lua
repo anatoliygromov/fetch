@@ -520,8 +520,8 @@ return function(mode, api)
       { act = function() local s = api.stage(); tp(2000, 388); s.bikes, s.bikeT = {}, 99; s.zoneIn[s.def.bikes[1]] = true; s.trams[1].car = nil; s.trams[1].t = 0.1 end },
       { cond = function(p, s) local c = s.trams[1].car; return c and c.state == "stop" end, act = function() end, limit = 12 },
       { wait = 1.0 }, shot("dt2_24_vintage_tram_at_its_stop"),
-      { act = function() local s = api.stage(); tp(3120, 388); s.bikes, s.bikeT = {}, 99; s.zoneIn[s.def.bikes[2]] = true; s.trams[2].car = nil; s.trams[2].t = 0.1 end },
-      { wait = 2.6 }, shot("dt2_25_vintage_tram_coming_in"),
+      { act = function() local s = api.stage(); tp(3272, 376); s.bikes, s.bikeT = {}, 99; s.zoneIn[s.def.bikes[2]] = true; s.trams[2].car = nil; s.trams[2].t = 0.1 end },
+      { wait = 1.6 }, shot("dt2_25_vintage_tram_coming_in"),
       { act = function() love.event.quit() end } }) do steps[#steps + 1] = st end
   end
 
