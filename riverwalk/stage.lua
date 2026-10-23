@@ -571,7 +571,7 @@ function St:draw(debug)
     if style then Sc.drawPropArt(pr, c, self.def, kicked) else Sc.drawProp(pr, c, colour) end
   end
   Sc.vshift = Vc.parallax(self, camY)                              -- (tall levels: the layers rise slower than the world)
-  if style then Sc.drawFarArt(self.layers, cam, self.t, self.world)
+  if style then Sc.drawFarArt(self.layers, cam, self.t, self.world, self.def)
   elseif grey then Sc.drawFarGrey(self.layers, cam, self.t) else Sc.drawFar(self.layers, cam, self.t) end
   Sc.vshift = nil
   lg.push(); lg.translate(0, -camY)                                -- the world, up to the foreground band

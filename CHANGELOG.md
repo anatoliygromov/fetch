@@ -17,6 +17,16 @@ Built on main v0.6. No credits; Pepper untouched; approved art unchanged (its fi
   grey post again, under the tower's lower deck, which is now drawn (it was an invisible step left of the slide's
   cage). Both tower posts reach the path. The low bough over the alder walk is drawn front-on, level over its box and
   curving up into the leaves as it thins (it read as a crate seen from above at an angle).
+- **Downtown (tall):** the code placeholders of the high road are replaced by art built from stamped parts at 0
+  credits (cards in out_place/, not committed): **tools/build_tall_fronts.py** (town_front_tall1-3: a door, a shop
+  front and a carriage gate, one ground-floor bay each at true scale, a door 2.0 m = 92 px), **tools/build_roof_kit.py**
+  (the stepped gable, chimney, two galleries, loggia, dormer, flower roof, the ledge 3-slice, the footbridge: crisp,
+  outlined, front-on), **tools/build_spire.py** (Riddarholmen's brick tower and openwork iron spire). Each `--check`
+  proves its files are what it builds. arthooks.lua: a back box is one building, split into bays (or its `fronts`),
+  in one plaster (`plaster`, swapped by exact colour), a stone coping on the cut; the spire is drawn on the far roofs
+  layer behind the old town row (it stood at scroll 1.0 in front of it). maps/downtown_tall.tmx: houses (decoration,
+  no collision) under every high road piece that floated in the sky (the galleries, two ledges, the window awning,
+  both ends of the footbridge); the guild house's box starts under its gable. docs/art_hooks_r8.md: the new slots.
 
 ## Regroup (23 Oct, evening): main v0.6, BIBLE and STATUS, the enforced gate, checks and releases on GitHub
 The owner's decisions of 23 Oct (merge list): round1 becomes main as v0.6; art/freefix merged with the approved River

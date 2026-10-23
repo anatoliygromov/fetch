@@ -64,11 +64,11 @@ mid trees (both faded); the ladder holds by the dark planks.
 
 | Asset | x (y) | Problem | Sev | Fix | Owner | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| tall house fronts (town_front_tall1-3) | BAKERY 1180-1320, 1320-1400, 1404-1548, GUILD HOUSE 1552-1700, 1912-2180, 2296-2384 (tops 238-300, base 414) | Code placeholders: flat yellow and salmon blocks with grey squares for windows; the largest shapes on the high road screens, and as light as the facade row behind them (no depth step). `dt_fronts_placeholder` | 3 | redraw: three fronts from stamped parts at true scale (door 2.2 m, storey 3 m), in their 80 / 88 / 96 x 240 slots | no (placeholders) | to redraw |
-| high road ledges with nothing under them | GALLERY 1816-1888 (256, 40 px over the house below), the ledge 2016-2072 (248, 22 px over its roofline), the ledge 2416-2464 (248, 48 px over the house), AWNING 2208-2264 (272: a window awning with no wall), FOOTBRIDGE 2480-2640 (272: both ends in the air). `dt_gallery_float`, `dt_awning_float`, `dt_footbridge_float` | Float in the sky over the facade row | 3 | compose: tall fronts (decoration back boxes, no collision) under them, so each is a cornice, a window awning or a bridge between two houses | no | to fix |
+| tall house fronts (town_front_tall1-3) | BAKERY 1180-1320, 1320-1400, 1404-1548, GUILD HOUSE 1552-1700, 1912-2180, 2296-2384 (tops 238-300, base 414) | Code placeholders: flat yellow and salmon blocks with grey squares for windows; the largest shapes on the high road screens, and as light as the facade row behind them (no depth step). `dt_fronts_placeholder` | 3 | redraw: three ground-floor bays (door, shop front, carriage gate) from stamped parts at true scale (door 2.0 m = 92 px, plinth, cornice at 3.1 m), every feature under row 131; each box is one building in one plaster (`fronts`, `plaster` in the map), a stone coping on the cut | no (placeholders) | **redrawn**: `tools/build_tall_fronts.py`; cards out_place/cards/PASS_town_front_tall1-3.png |
+| high road ledges with nothing under them | GALLERY 1816-1888 (256, 40 px over the house below), the ledge 2016-2072 (248, 22 px over its roofline), the ledge 2416-2464 (248, 48 px over the house), AWNING 2208-2264 (272: a window awning with no wall), FOOTBRIDGE 2480-2640 (272: both ends in the air). `dt_gallery_float`, `dt_awning_float`, `dt_footbridge_float` | Float in the sky over the facade row | 3 | compose: tall fronts (decoration back boxes, no collision) under them, so each is a cornice, a window awning or a bridge between two houses | no | **fixed** (maps/downtown_tall.tmx, decoration only) |
 | lamp posts on the high road | 1830 (256), 2420 (248) | Float 10 px over the gallery and the ledge (as City Park). `dt_gallery_float` | 3 | code (stage.lua, as City Park) | no | **fixed** |
-| roof kit placeholders | LOGGIA 1416, GALLERY 1680 and 1816, DORMER 1920, FLOWER ROOF 2288, GUILD ROOF 1560, the ledges, FOOTBRIDGE 2480 | Code placeholders (flat beige boxes, a stepped brick line, a plank and a thin arch). `dt_gable_kit` | 2 | redraw each in its hook slot (docs/art_hooks_r8.md) | no | to redraw |
-| RIDDARHOLMEN spire | 3380-3412 (24-414) | Code placeholder (a salmon block and a grey cone with white dashes); drawn at scroll 1.0 in front of the 0.5 facade row, so the far landmark stands in front of nearer houses. `dt_spire` | 3 | redraw (32 x about 390, brick tower and openwork iron spire) and draw it on a slower layer behind the row | no | listed |
+| roof kit placeholders | LOGGIA 1416, GALLERY 1680 and 1816, DORMER 1920, FLOWER ROOF 2288, GUILD ROOF 1560, the ledges, FOOTBRIDGE 2480 | Code placeholders (flat beige boxes, a stepped brick line, a plank and a thin arch). `dt_gable_kit` | 2 | redraw each in its hook slot (docs/art_hooks_r8.md) | no | **redrawn**: `tools/build_roof_kit.py` (gable 122 x 40, chimney, galleries 90 and 74 x 32, loggia 122 x 26, dormer, flower roof, ledge 3-slice, footbridge 162 x 52); cards out_place/cards/PASS_town_roof_*.png, PASS_town_footbridge.png |
+| RIDDARHOLMEN spire | 3380-3412 (24-414) | Code placeholder (a salmon block and a grey cone with white dashes); drawn at scroll 1.0 in front of the 0.5 facade row, so the far landmark stands in front of nearer houses. `dt_spire` | 3 | redraw (32 x about 390, brick tower and openwork iron spire) and draw it on a slower layer behind the row | no | **redrawn and moved**: `tools/build_spire.py` (36 x 260), drawn on the far roofs layer (scroll 0.3, shore haze) behind the row; card out_place/cards/WARN_spire_riddarholmen.png (warn: the iron lattice is 58 % of its edge, by design) |
 | town_house1-3 | HOUSE 1536, 1644, 1832, 2404 | Scale: doors about 12 x 25 px (0.55 m), the whole house 2.6 m: a quarter of true size; Pepper is a third of a house. Their balconies are perches 80-96 px up (gameplay). `dt_houses_scale` | 3 | scale-by-redraw (decision 2, true-scale buildings) | yes (decision 2) | listed |
 | DOOR | 0-28 (360-424) | town_door 34 x 58: 1.25 m door (2.1 m = 97 px). `dt_door_scale` | 2 | scale-by-redraw | yes | listed |
 | market tables, parasols, stall, awnings, shelter | 368-536, 688, 872, 1008, 1232, 2048, 2336, 3236 | Scale: table tops 0.56 m, parasols 1.35 m, stall roof 1.5 m, shelter roof 1.0 m (2.2-2.5 m real): set by the perches (shelter: owner exception) | 2 | design (perch heights) | yes | listed |
@@ -76,16 +76,18 @@ mid trees (both faded); the ladder holds by the dark planks.
 | town_facades | the near row | Owned by the facades track (art/pilot-oldtown) | - | - | - | not touched |
 
 Composition: the street is busy and readable; the high road was a row of pieces floating over the facade row (fixed
-by the fronts under them). Greyscale (before): the code fronts were as light as the facades behind; the redrawn
-fronts sit one step darker than the row and lighter than Pepper's line.
+by houses under them: every ledge is now a cornice, the awning hangs over a shop front, the footbridge spans the
+canal between two houses). Greyscale (before): the code fronts were as light as the facades behind; the redrawn
+fronts sit a step darker than the row and lighter than Pepper's line. With true-scale doors behind them, the
+plaza houses (town_house1-3) and the market pieces now read clearly as a quarter of true size: see the owner list.
 
 ## Counts
 
-| Level | Sev 3 | Sev 2 | Sev 1 | Fixed or redrawn here | For the owner |
+| Level | Sev 3 | Sev 2 | Sev 1 | Fixed or redrawn here | For the owner (approved art, design) |
 | --- | --- | --- | --- | --- | --- |
-| River Walk | 2 | 8 | 4 | 1 | 11 |
-| City Park | 2 | 4 | 5 | 4 | 3 |
-| Downtown | 5 | 3 | 1 | 4 | 4 |
+| River Walk | 2 | 8 | 4 | 1 (road under the pier) | 11 |
+| City Park | 2 | 2 | 7 | 3 (lamps, tower post and deck, low bough) | 3 |
+| Downtown | 5 | 3 | 1 | 5 (fronts, floating pieces, lamps, roof kit, spire) | 3 |
 
 ## For the owner (approved art and design calls; nothing changed)
 
@@ -93,4 +95,7 @@ fronts sit one step darker than the row and lighter than Pepper's line.
 2. River Walk's lamp posts (2.2 m), railing (0.65 m), trees (2-3 m): true scale would be 4 m, 1.1 m, 8-12 m.
 3. The home tree's crown is cut flat along its top row under the cornice: may it be rounded?
 4. The ferry (5.5 m), the kiosks (1.6 m), the market tables, parasols and shelter: perch heights set their size.
-5. Downtown's town_house1-3 at a quarter of true size (decision 2).
+5. Downtown's town_house1-3 at a quarter of true size (decision 2): beside the new true-scale doors they read as
+   dolls' houses; their balconies are perches 80-96 px up, so a true-scale version is a shop front with a canopy.
+6. The new Downtown fronts, roof kit and spire (cards in out_place/cards/) are 0-credit builds from stamped parts:
+   approve, fix or redraw on the board. The Old Town facade row itself is the facades track's (not touched).

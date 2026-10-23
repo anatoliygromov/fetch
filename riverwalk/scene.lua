@@ -1001,7 +1001,7 @@ function Sc.buildArt(levelW, style)
 end
 
 -- layers 1 to 5 of an art level, and the water of its pond or fountain basin with the far bank behind it
-function Sc.drawFarArt(L, camx, t, w)
+function Sc.drawFarArt(L, camx, t, w, def)
   local T, A = Sc.townArt(L.style), Sc.art()
   skyAndClouds(L, camx, t)
   local on = vpush("far")
@@ -1023,6 +1023,8 @@ function Sc.drawFarArt(L, camx, t, w)
   else
     Look.use("shore")
     strip(T.roofs, camx, 0.25, 160)                               -- 4 far roofs and spires
+    if def then (package.loaded.arthooks or require("arthooks")).drawFarSpire(def, camx, w.width) end   -- (art/placement:
+    -- the tall Downtown's landmark, Riddarholmen's spire, behind the old town row on this layer)
     vpop(on); on = vpush("mid")
     Look.use("mid")
     strip(T.facades, camx, 0.5, 178)                              -- 5 old town facades (faded)
