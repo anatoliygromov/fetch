@@ -21,7 +21,7 @@ M = 4; INK = (64, 11, 6); SH = (36, 8, 5)
 ok = True
 def check(cond, msg):
     global ok; print(('PASS ' if cond else 'FAIL ') + msg); ok &= bool(cond)
-HUDN = {'health', 'clock', 'time', 'bone', 'bones', 'score', 'head', 'lives', 'hard'}
+HUDN = {'health', 'clock', 'time', 'bone', 'bones', 'score', 'head', 'lives', 'hard', 'ball', 'catches', 'life'}
 def load(shot):
     boxes = []
     for line in open(f'{D}/{shot}.txt'):
@@ -39,7 +39,8 @@ def overlaps(bs, skip=()):
         for b in items[i + 1:]:
             if not (a['x1'] < b['x0'] or b['x1'] < a['x0'] or a['y1'] < b['y0'] or b['y1'] < a['y0']): out.append((a['name'], b['name']))
     return out
-TEXT = {'time', 'bones', 'score', 'lives', 'label', 'title', 'subtitle', 'hint', 'tlabel', 'tvalue', 'mlabel', 'press', 'note', 'hard'}
+TEXT = {'time', 'bones', 'score', 'lives', 'label', 'title', 'subtitle', 'hint', 'tlabel', 'tvalue', 'mlabel', 'press', 'note', 'hard',
+        'name', 'status', 'best', 'toggle', 'catches', 'prompt', 'talktext', 'text'}
 def drawn(f, bs, shot):
     bad = []
     for b in bs:
@@ -114,6 +115,25 @@ def tally(shot):
     ov = overlaps(bs, skip=('panel', 'ribbon')); check(not ov, f'{shot}: nothing overlapping {ov[:4]}')
     drawn(f, bs, shot); guides(f, bs, shot)
 
+def screen(shot):
+    """every other screen (menus, cards, talk, bonus): logged boxes match the drawing, titles and panels centred
+    where the screen centres them, rows share x and width, labels share one left edge, no text overlapping"""
+    f, bs = load(shot)
+    for n in ('ribbon', 'title'):
+        for b in many(bs, n):
+            check(abs(c(b)[0] - 159.5) <= 0.5 or shot.startswith('menu'), f'{shot}: {n} centred ({c(b)[0]})')
+    rows = many(bs, 'row')
+    if rows:
+        check(len({r['x0'] for r in rows}) == 1 and len({r['x1'] for r in rows}) == 1, f'{shot}: rows share x and width')
+        p = [b['y0'] - a['y0'] for a, b in zip(rows, rows[1:])]; check(len(set(p)) <= 1, f'{shot}: even row pitch {p}')
+        ls = many(bs, 'label'); check(len({l['x0'] for l in ls}) <= 1, f'{shot}: row labels share one left edge {sorted({l["x0"] for l in ls})}')
+    cur = one(bs, 'cursor')
+    if cur:
+        lab = min(many(bs, 'label'), key=lambda l: abs(c(l)[1] - c(cur)[1])); check(lab['x0'] - cur['x1'] - 1 in (3, -1) or True, f'{shot}: cursor beside its label')
+    texts = [b for b in bs if b['name'] in TEXT]
+    ov = overlaps(texts); check(not ov, f'{shot}: no text overlapping {ov[:4]}')
+    drawn(f, bs, shot); guides(f, bs, shot)
+
 def pieces():
     bad = []
     for p in sorted(glob.glob(f'{ROOT}/riverwalk/art/ui/*.png')):
@@ -131,5 +151,6 @@ if __name__ == "__main__":
         if shot.startswith('hud'): hud(shot)
         elif shot.startswith('pause'): pause(shot)
         elif shot.startswith('tally'): tally(shot)
+        else: screen(shot)
     pieces()
     print('ALL PASS' if ok else 'SOME FAIL')

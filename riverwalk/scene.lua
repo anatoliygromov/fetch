@@ -507,8 +507,8 @@ function Sc.catGrey(c, camx, t)
   box(C.catEdge, x + ear * 7 - 2, top - 3, 2, 3); box(C.catEdge, x + ear * 7 + 1, top - 3, 2, 3)
   box(C.catEdge, x - ear * 11 - (ear > 0 and 3 or 0), top + 3, 3, 2)   -- tail
   lg.setColor(C.label); F.print("CAT", x - 8, top + 5, 1)
-  if c.state == "scared" or c.state == "leap" then lg.setColor(C.gold); F.print("!", x - 2, top - 12, 1)
-  elseif c.state == "sit" and c.heard then lg.setColor(C.label); F.print("?", x - 2, top - 12, 1) end
+  if c.state == "scared" or c.state == "leap" then require("uifont").print(7, "gold", "!", x - 1, top - 12)
+  elseif c.state == "sit" and c.heard then require("uifont").print(7, "cream", "?", x - 3, top - 12) end
   lg.setColor(1, 1, 1, 1)
 end
 
@@ -536,8 +536,8 @@ function Sc.cat(c, camx, t, px)
   if c.state ~= "leap" then Sc.shadow(x, y - 1, 16) end
   lg.setColor(1, 1, 1, 1)
   lg.draw(catImg, catQ[row][fr], x, y, 0, face, 1, 24, 44)
-  if c.state == "scared" or c.state == "leap" then lg.setColor(C.gold); F.print("!", x - 2, y - 44, 1)
-  elseif c.state == "sit" and c.heard then lg.setColor(C.label); F.print("?", x - 2, y - 44, 1) end
+  if c.state == "scared" or c.state == "leap" then require("uifont").print(7, "gold", "!", x - 1, y - 44)
+  elseif c.state == "sit" and c.heard then require("uifont").print(7, "cream", "?", x - 3, y - 44) end
   lg.setColor(1, 1, 1, 1)
 end
 
@@ -622,7 +622,7 @@ function Sc.magpie(m, camx, t)
       end
     end
   end
-  if m.heard and t - m.heard < 0.8 then lg.setColor(C.label); F.print("?", x - 2, y - 26, 1) end
+  if m.heard and t - m.heard < 0.8 then require("uifont").print(7, "cream", "?", x - 3, y - 26) end
   lg.setColor(1, 1, 1, 1)
 end
 

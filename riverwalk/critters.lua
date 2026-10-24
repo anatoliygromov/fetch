@@ -247,7 +247,7 @@ function Cr.draw(s, cam, t)
           local bob = (k.state == "walk" and math.floor(k.t * 6) % 2 == 0) and 1 or 0
           sprite(rows, GCOL, x - 13, k.y - bob, k.dir < 0)            -- drawn facing right, mirrored when it walks left
         end
-        if k.state == "hiss" then lg.setColor(1, 0.85, 0.2); require("bigfont").print("!", math.floor(x) - 2, k.y - 40, 1) end
+        if k.state == "hiss" then require("uifont").print(7, "gold", "!", math.floor(x) - 1, k.y - 40) end
       else
         if k.state == "warn" then                                  -- its shadow where it will come down
           lg.setColor(0.09, 0.11, 0.17, 0.45 + 0.3 * math.sin(k.t * 20)); lg.ellipse("fill", math.floor(k.tx - cam), k.ty - 1, 17, 3)   -- wider than her

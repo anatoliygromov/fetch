@@ -10,7 +10,6 @@
 --   3 s where a control hint applies, the button she needs bounces above her head until a button is pressed.
 --   It reads Pepper from outside (position, speed, the buttons held) and is never drawn over her.
 --   No hints and no nudges in hard mode (St:hint() returns only messages then, and T.watch does nothing).
-local F = require("bigfont")
 local U = require("hud")
 local I = require("input")
 local T = {}
@@ -35,66 +34,28 @@ local function loadPorts()
   end
 end
 
--- pixel circles (no smoothing): a filled disc of radius r
-local discs = {}
-local function disc(r)
-  if not discs[r] then
-    local n = r * 2
-    local d = love.image.newImageData(n, n)
-    for y = 0, n - 1 do for x = 0, n - 1 do
-      if (x + 0.5 - r) ^ 2 + (y + 0.5 - r) ^ 2 <= r * r then d:setPixel(x, y, 1, 1, 1, 1) end
-    end end
-    discs[r] = lg.newImage(d); discs[r]:setFilter("nearest", "nearest")
-  end
-  return discs[r]
-end
-
--- the RG35XX face buttons (A right, B bottom, X top, Y left) and the d-pad
+-- the RG35XX face buttons (A right, B bottom, X top, Y left) and the d-pad, as the kit's gold coins (ui/hud-v8):
+-- big 23 px (btn_a .. btn_y, dpad_up ..), small 15 px to sit in a 13 px row (sbtn_a .., sdpad_up ..)
 local LETTER = { a = "A", b = "B", x = "X", y = "Y" }
-local KNOB = { 0.93, 0.93, 0.96 }
-local INK = { 22/255, 26/255, 40/255 }
-T.SIZE = { big = 10, small = 7 }                                 -- the glyph's radius
--- a button picture centred on cx, cy: a round button with its letter, or the d-pad with one arm lit
+T.SIZE = { big = 11, small = 7 }                                 -- the glyph's half size
+local UF = require("uifont")
+-- a button picture centred on cx, cy
 function T.glyph(btn, cx, cy, size)
-  local r = T.SIZE[size or "big"]
-  cx, cy = math.floor(cx + 0.5), math.floor(cy + 0.5)
-  if LETTER[btn] then
-    lg.setColor(U.SHADE); lg.draw(disc(r), cx - r + 1, cy - r + 1)
-    lg.setColor(INK); lg.draw(disc(r), cx - r, cy - r)
-    lg.setColor(KNOB); lg.draw(disc(r - 1), cx - r + 1, cy - r + 1)
-    lg.setColor(INK)
-    if r >= 10 then F.print(LETTER[btn], cx - 4, cy - 7, 2) else F.print(LETTER[btn], cx - 2, cy - 3, 1) end
-  else                                                           -- the d-pad: a cross, the arm to press lit
-    local a = r >= 10 and 6 or 4                                 -- arm width
-    local function cross(col, dx, dy)
-      lg.setColor(col)
-      lg.rectangle("fill", cx - a / 2 + dx, cy - r + dy, a, 2 * r); lg.rectangle("fill", cx - r + dx, cy - a / 2 + dy, 2 * r, a)
-    end
-    cross(U.SHADE, 1, 1); cross(INK, 0, 0)
-    local arm = { down = { 0, 1 }, up = { 0, -1 }, left = { -1, 0 }, right = { 1, 0 } }
-    local d = arm[btn] or arm.down
-    lg.setColor(KNOB)
-    local lx, ly = cx - a / 2 + 1, cy - a / 2 + 1                -- the lit arm, inside the cross's outline
-    if d[1] == 0 then lg.rectangle("fill", lx, d[2] > 0 and cy or cy - r + 1, a - 2, r - 1)
-    else lg.rectangle("fill", d[1] > 0 and cx or cx - r + 1, ly, r - 1, a - 2) end
-    lg.setColor(INK)                                              -- an arrow on the lit arm
-    local tx, ty = cx + d[1] * (r - 4), cy + d[2] * (r - 4)
-    for i = 0, 1 do
-      if d[1] == 0 then lg.rectangle("fill", tx - (1 - i), ty + d[2] * (i - 1), 3 - 2 * i, 1)
-      else lg.rectangle("fill", tx + d[1] * (i - 1), ty - (1 - i), 1, 3 - 2 * i) end
-    end
-  end
-  lg.setColor(1, 1, 1, 1)
+  local small = size == "small"
+  local name = LETTER[btn] and ((small and "sbtn_" or "btn_") .. btn)
+    or ((small and "sdpad_" or "dpad_") .. (({ up = "up", left = "left", right = "right" })[btn] or "down"))
+  local w, h = U.body(name)
+  U.put(name, math.floor(cx - (w - 1) / 2 + 0.5), math.floor(cy - (h - 1) / 2 + 0.5), "button")
 end
 
--- word wrap to at most two lines of width w at scale s (nil if it does not fit)
+-- word wrap to at most two lines of width w in font size s (nil if it does not fit)
 local function wrap(text, w, s)
-  if F.width(text, s) <= w then return { text } end
+  if UF.width(s, text) <= w then return { text } end
   local words = {}
   for wd in text:gmatch("%S+") do words[#words + 1] = wd end
   for k = #words - 1, 1, -1 do
     local a, b = table.concat(words, " ", 1, k), table.concat(words, " ", k + 1)
-    if F.width(a, s) <= w and F.width(b, s) <= w then return { a, b } end
+    if UF.width(s, a) <= w and UF.width(s, b) <= w then return { a, b } end
   end
 end
 
@@ -120,13 +81,13 @@ function T.layout(line, where)
   loadPorts()
   local p = PORT[line.who] or PORT.girl
   local pic = T.picFor(line)
-  local gw = (line.btn and 2 * T.SIZE.big + GAP or 0) + (pic and U.PICT_W + GAP or 0)   -- the button, the picture
-  local scale, rows = 2, wrap(line.text, TEXT_W - gw, 2)
+  local gw = (line.btn and 2 * T.SIZE.big + 1 + GAP or 0) + (pic and U.PICT_W + GAP or 0)   -- the button, the picture
+  local scale, rows = 13, wrap(line.text, TEXT_W - gw, 13)        -- (scale: the font size, 13 mid or 7 small)
   if line.btn and rows and #rows > 1 then rows = nil end         -- a control hint stays on one row (smaller words)
-  if not rows then scale, rows = 1, wrap(line.text, TEXT_W - gw, 1) or { line.text } end
+  if not rows then scale, rows = 7, wrap(line.text, TEXT_W - gw, 7) or { line.text } end
   local tw = 0
-  for _, r in ipairs(rows) do tw = math.max(tw, F.width(r, scale)) end
-  local w = 3 + p.w + 5 + gw + tw + 6                            -- portrait, words, margins
+  for _, r in ipairs(rows) do tw = math.max(tw, UF.width(scale, r) + 2) end
+  local w = 3 + p.w + 5 + gw + tw + 9                            -- portrait, words, margins (inside the gold frame)
   local by = where == "top" and 30 or 198                        -- the box; the portrait stands up out of it
   local x0 = line.who == "pepper" and 2 or 318 - w
   return { x0 = x0, y0 = by + BOX_H - 1 - p.h, x1 = x0 + w, y1 = by + BOX_H, by = by, w = w, rows = rows, scale = scale,
@@ -183,25 +144,24 @@ function T.drawPanel(stage)
   local L = T.placed(stage)
   if not L then return end
   local c = T.cur
-  U.box(L.x0, L.by, L.w, BOX_H)
+  U.panel(L.x0, L.by, L.w, BOX_H, "talk")
   local p = L.port
   local talkFor = math.min(2.4, 0.6 + 0.06 * #c.line.text)        -- the loop plays while the line is being said
   local f = c.t < talkFor and 1 + math.floor(c.t * T.FPS) % T.FRAMES or 1
   local px = c.line.who == "pepper" and L.x0 + 3 or L.x1 - 3 - p.w
   lg.setColor(1, 1, 1, 1); lg.draw(p.img, p.q[f], px, L.y1 - 1 - p.h)
-  local x = c.line.who == "pepper" and px + p.w + 5 or L.x0 + 6
-  local cy = L.by + BOX_H / 2
+  local x = c.line.who == "pepper" and px + p.w + 5 or L.x0 + 9
+  local cy = L.by + (BOX_H - 1) / 2
   if c.line.btn then
     T.glyph(c.line.btn, x + T.SIZE.big, cy, "big")
-    if L.pic then U.pict(L.pic, x + 2 * T.SIZE.big + GAP, math.floor(cy - U.PICT_H / 2)) end
+    if L.pic then U.pict(L.pic, x + 2 * T.SIZE.big + 1 + GAP, math.floor(cy - (U.PICT_H - 1) / 2 + 0.5)) end
     x = x + L.gw
   end
-  local lh = L.scale * 7
-  local total = #L.rows * lh + (#L.rows - 1) * 3
+  local lh = U.sayH(L.scale)
+  local total = #L.rows * lh + (#L.rows - 1) * 2
+  local style = c.line.who == "pepper" and "cream" or "gold"
   for i, r in ipairs(L.rows) do
-    local y = math.floor(cy - total / 2 + (i - 1) * (lh + 3) + 0.5)
-    lg.setColor(U.SHADE); F.print(r, x + 1, y + 1, L.scale)
-    lg.setColor(c.line.who == "pepper" and U.WHITE or U.GOLD); F.print(r, x, y, L.scale)
+    U.say(L.scale, style, r, x, math.floor(cy - (total - 1) / 2 + (i - 1) * (lh + 2) + 0.5), "talktext")
   end
   lg.setColor(1, 1, 1, 1)
 end

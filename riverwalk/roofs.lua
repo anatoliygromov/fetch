@@ -196,8 +196,8 @@ function Rf.drawPlay(s, cam, Sc)
       lg.rectangle("fill", cxl - 1, cy - 1, cw + 2, 4)                                                       -- the lid
       lg.setColor(warn and { 0.95, 0.62, 0.20 } or { 0.70, 0.72, 0.75 }); lg.rectangle("fill", cxl, cy, cw, 2)
       lg.setColor(1, 1, 1, 0.8); lg.rectangle("fill", cxl + 1, cy, math.max(1, cw - 6), 1)
-      if warn then lg.setColor(1, 0.85, 0.2); F.print("!", x + math.floor(w / 2) - 2, d.y0 - 18 - hop, 1) end
-      if d.bark and v.st == "rest" then lg.setColor(0.85, 0.85, 0.85, 0.8); F.print("?", x + math.floor(w / 2) - 2, d.y0 - 12, 1) end
+      if warn then require("uifont").print(7, "gold", "!", x + math.floor(w / 2) - 1, d.y0 - 18 - hop) end
+      if d.bark and v.st == "rest" then require("uifont").print(7, "cream", "?", x + math.floor(w / 2) - 3, d.y0 - 12) end
     end
   end
   for _, k in ipairs(s.tiles or {}) do

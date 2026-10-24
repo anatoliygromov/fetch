@@ -220,7 +220,7 @@ function Ch.draw(s, cam)
       Sc.shadow(br.x - cam, br.y - 1, 14)
       barrel(br.x - cam, br.y, true, s.t)
       if (br.t or 0) < 0.8 or br.close then                         -- the tell: a blinking "!" over it
-        if math.floor(s.t * 8) % 2 == 0 then lg.setColor(1, 0.85, 0.2); require("bigfont").print("!", math.floor(br.x - cam) - 2, math.floor(br.y) - 28, 1); lg.setColor(1, 1, 1, 1) end
+        if math.floor(s.t * 8) % 2 == 0 then require("uifont").print(7, "gold", "!", math.floor(br.x - cam) - 1, math.floor(br.y) - 28) end
       end
       for _, o in ipairs(br.def.rest or {}) do barrel(o[1] - cam, o[2], false, 0) end
     else for _, o in ipairs(br.def.rest or {}) do barrel(o[1] - cam, o[2], false, 0) end end

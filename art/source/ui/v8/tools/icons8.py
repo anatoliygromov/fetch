@@ -33,10 +33,10 @@ def outline_of(m, cross=True):
 
 def health_bar(n): return I7.health_bar(n, D=19, seg_w=23, seg_gap=3)
 
-def coin_letter(ch, D=23):
+def coin_letter(ch, D=23, size=13):
     disc, edge, rim, face, lit, ci = I7.disc_parts(D); img = np.zeros((D, D, 4), np.uint8)
     img[edge] = (*INK, 255); I7.paint_rim(img, rim, lit); img[face] = (238, 166, 38, 255); img[face & (lit > 0.3)] = (246, 182, 46, 255)
-    g = S8.glyph(13, ch, 'ink'); gm = g[..., 3] > 0; ys, xs = np.nonzero(gm)
+    g = S8.glyph(size, ch, 'ink'); gm = g[..., 3] > 0; ys, xs = np.nonzero(gm)
     g = g[ys.min():ys.max() + 1, xs.min():xs.max() + 1]; gh, gw = g.shape[:2]
     oy, ox = ci - (gh - 1) // 2 - 0, ci - (gw - 1) // 2
     m = g[..., 3] > 0; img[oy:oy + gh, ox:ox + gw][m] = g[m]
@@ -152,13 +152,61 @@ def ribbon(Wb, Hb, arch=0, tail=14, tuck=4, drop=5, notch=4):
         for y in range(y0 + 1, y0 + Hb - 1): img[y, x] = (*GOLD['mid'], 255)
     return img, dict(bx0=bx0, bx1=bx1, top=off((bx0 + bx1) // 2), Hb=Hb, arch=arch)
 
+
+def dpad(arm, S=23, a=9):
+    """the d-pad in the kit's gold: a cross (ink outline, a lit top-left edge, a shaded bottom-right edge); the arm to
+    press cream, with an ink arrow in the middle of it pointing out"""
+    c = S // 2; h = a // 2
+    m = np.zeros((S, S), bool); m[c - h:c + h + 1, :] = True; m[:, c - h:c + h + 1] = True
+    edge = m & ~ndimage.binary_erosion(m, structure=CROSS, border_value=0); body = m & ~edge
+    img = np.zeros((S, S, 4), np.uint8); put(img, edge, INK); put(img, body, GOLD['gold'])
+    up = np.zeros_like(body); up[1:] = edge[:-1]; lf = np.zeros_like(body); lf[:, 1:] = edge[:, :-1]
+    dn = np.zeros_like(body); dn[:-1] = edge[1:]; rt = np.zeros_like(body); rt[:, :-1] = edge[:, 1:]
+    yy, xx = np.mgrid[0:S, 0:S]
+    d = {'up': (0, -1), 'down': (0, 1), 'left': (-1, 0), 'right': (1, 0)}[arm]
+    lit = body & (((yy - c) * d[1] > h) if d[0] == 0 else ((xx - c) * d[0] > h))
+    put(img, body & (dn | rt) & ~lit, GOLD['mid']); put(img, body & (up | lf) & ~lit, GOLD['light'])
+    put(img, lit, (255, 240, 190)); put(img, lit & (dn | rt), (240, 214, 150))
+    L = c - h                                                       # the arm's length beyond the centre square
+    n = (a - 3) // 2                                                # triangle rows: 1, 3 .. px
+    mid = c + (d[0] or d[1]) * (h + 1 + (L - 1) // 2 + (n - 1) // 2)
+    for k in range(n):
+        for j in range(-k, k + 1):
+            if d[0] == 0: img[mid - d[1] * k, c + j] = (*INK, 255)
+            else: img[c + j, mid - d[0] * k] = (*INK, 255)
+    return img
+
+def padlock():
+    """a small gold padlock: an ink-outlined grey shackle over a gold body 11 x 8 with a keyhole (1 px clear round it)"""
+    W, H = 11, 15; img = np.zeros((H, W, 4), np.uint8)
+    sh = np.zeros((H, W), bool)
+    sh[1, 4:7] = True; sh[2, 3] = sh[2, 7] = True; sh[2, 4:7] = False
+    for y in range(2, 7): sh[y, 3] = sh[y, 7] = True
+    sh[1, 3] = sh[1, 7] = False
+    body = np.zeros((H, W), bool); body[7:15, 0:11] = True
+    e = outline_of(sh, cross=False) & ~body & ~sh
+    put(img, e, INK); put(img, sh, (214, 214, 220))
+    be = body & ~ndimage.binary_erosion(body, structure=CROSS, border_value=0); bi = body & ~be
+    put(img, be, INK); put(img, bi, GOLD['gold']); img[8, 1:10] = (*GOLD['light'], 255); img[13, 1:10] = (*GOLD['dark'], 255)
+    img[9, 4:7] = (*INK, 255); img[10:13, 5] = (*INK, 255)
+    return img
+
+def ball(D=15):
+    disc, edge, rim, face, lit, ci = I7.disc_parts(D); img = np.zeros((D, D, 4), np.uint8)
+    put(img, edge, INK); inner = disc & ~edge
+    put(img, inner, (228, 52, 44)); put(img, inner & (lit < -0.5), (160, 28, 28)); put(img, inner & (lit > 0.55), (255, 124, 108))
+    img[3, 4:6] = (255, 236, 220, 255); img[4, 3] = (255, 236, 220, 255)
+    return img
+
 def build(out):
     os.makedirs(out, exist_ok=True); meta = {}
     def save(name, a, sh=True):
         a = shadow(a) if sh else a; Image.fromarray(a).save(f'{out}/{name}.png'); meta[name] = (a.shape[1], a.shape[0])
     for n in range(4): save(f'bar_{n}', health_bar(n))
     save('coin_paw', I7.medallion(21))
-    save('btn_a', coin_letter('A')); save('btn_b', coin_letter('B'))
+    for ch in 'ABXY': save('btn_' + ch.lower(), coin_letter(ch)); save('sbtn_' + ch.lower(), coin_letter(ch, D=15, size=7))
+    for arm in ('up', 'down', 'left', 'right'): save('dpad_' + arm, dpad(arm)); save('sdpad_' + arm, dpad(arm, S=15, a=7))
+    save('padlock', padlock()); save('ball', ball())
     save('tab', tab())
     save('row_on', row(140, 19, True)); save('row_off', row(140, 19, False), sh=False)
     save('seg_on', seg(True), sh=False); save('seg_off', seg(False), sh=False)

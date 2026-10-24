@@ -324,16 +324,19 @@ function B:draw()
   local F = require("flow")
   U.bonusStatus({ time = self.time, catches = self.catches, need = B.LIFE_AT, points = self.points })
   local avoid = { self:pepperRect() }
-  if self.phase == "intro" then
-    U.dim()
-    local y = F.placeY(50, 220, 50, 92, avoid)
-    U.box(50, y, 220, 92)
-    U.center("FETCH FRENZY!", 160, y + 8, 2, U.GOLD)
-    U.center("A GOLDEN BONE BONUS", 160, y + 28, 1)
-    U.center("CATCH WHAT MIA THROWS!", 160, y + 44, 1)
-    U.center(("%d CATCHES: EXTRA LIFE"):format(B.LIFE_AT), 160, y + 58, 1, U.GOLD)
-    U.center(B.NAMES[self.variant], 160, y + 74, 1, U.RIM)
-    if self.t > 0.5 and (self.t % 1.1) < 0.75 then U.prompt("PRESS ANY BUTTON") end
+  if self.phase == "intro" then                                   -- (ui/hud-v8) the kit card, like the level intro
+    U.dimWarm()
+    local w = 230
+    local y = F.placeY(45, w, 50, 100, avoid)
+    local line = y + 10 + 86 - 6
+    U.panel(45, y + 10, w, 86)
+    local tw = U.sayW(13, "FETCH FRENZY!")
+    U.ribbon3(159.5, y, tw + 20)
+    U.say(13, "ink", "FETCH FRENZY!", math.floor(159.5 - (tw - 1) / 2 + 0.5), y + 2, "title")
+    local rows = { { "A GOLDEN BONE BONUS", "cream" }, { "CATCH WHAT MIA THROWS!", "cream" },
+      { ("%d CATCHES: EXTRA LIFE"):format(B.LIFE_AT), "gold" }, { B.NAMES[self.variant], "dim" } }
+    for i, r in ipairs(rows) do U.say(7, r[2], r[1], math.floor(159.5 - (U.sayW(7, r[1]) - 1) / 2 + 0.5), y + 26 + (i - 1) * 11, "text") end
+    if self.t > 0.5 and (self.t % 1.1) < 0.75 then F.onEdge("PRESS ANY BUTTON", line) end
   elseif self.phase == "ready" then
     U.center(self.t < 0.8 and "READY..." or "GO!", 160, 60, 3, U.GOLD)
   elseif self.phase == "play" and self.time <= 5 then
@@ -348,29 +351,39 @@ function B:draw()
   end
 end
 
-function B:drawResult(avoid)
+function B:drawResult(avoid)                                       -- (ui/hud-v8) the kit card, like the tally
   local F = require("flow")
   local life = self.catches >= B.LIFE_AT
   local w, h = 220, 104
-  local y, clear = F.placeY(50, w, 24, h, avoid)
-  if not clear then U.dim() end
-  U.box(50, y, w, h)
+  local y = F.placeY(50, w, 24, h + 10, avoid)
+  U.dimWarm()
+  local line = y + 10 + h - 6
+  U.panel(50, y + 10, w, h)
   local bounce = (self.t < 0.6) and math.floor(math.sin(self.t * 20) * 2) or 0
-  U.center("FETCH FRENZY!", 160, y + 6 + bounce, 2, U.GOLD)
+  local tw = U.sayW(13, "FETCH FRENZY!")
+  U.ribbon3(159.5, y, tw + 20)
+  U.say(13, "ink", "FETCH FRENZY!", math.floor(159.5 - (tw - 1) / 2 + 0.5), y + 2 + bounce, "title")
   local L, R = 70, 250
   local rows = { { "CATCHES", ("%d"):format(self.catches) }, { "IN THE AIR", tostring(self.air) }, { "POINTS", tostring(self.points) } }
   for i, rr in ipairs(rows) do
-    if self.t > 0.2 + i * 0.25 then U.text(rr[1], L, y + 20 + i * 11, i == 3 and U.GOLD or U.WHITE); U.text(rr[2], R - 6 * #rr[2], y + 20 + i * 11, i == 3 and U.GOLD or U.WHITE) end
+    if self.t > 0.2 + i * 0.25 then
+      local st = i == 3 and "gold" or "cream"
+      U.say(7, st, rr[1], L, y + 15 + i * 11, "tlabel"); U.say(7, st, rr[2], R - U.sayW(7, rr[2]) + 1, y + 15 + i * 11, "tvalue")
+    end
   end
   if self.t > 1.2 then
     if life then
-      if math.floor(self.t * 3) % 2 == 0 then U.center("EXTRA LIFE!", 160, y + 66, 2, U.GOLD) end
-      U.dog(232, y + 70, U.GOLD, 1); U.text("+1", 245, y + 69, U.GOLD)
+      local s = "EXTRA LIFE!"
+      local ew = U.sayW(13, s); local hw, hh = U.body("head")
+      local x = math.floor(159.5 - (ew + 3 + hw - 1) / 2 + 0.5)
+      if math.floor(self.t * 3) % 2 == 0 then U.say(13, "gold", s, x, y + 67, "text") end
+      U.put("head", x + ew + 3, y + 74 - (hh - 1) / 2, "life")
     else
-      U.center(("%d CATCHES FOR AN EXTRA LIFE"):format(B.LIFE_AT), 160, y + 66, 1, U.RIM)
-      U.center("GOOD TRY, PEPPER!", 160, y + 77, 1)
+      local s = ("%d CATCHES FOR AN EXTRA LIFE"):format(B.LIFE_AT)
+      U.say(7, "dim", s, math.floor(159.5 - (U.sayW(7, s) - 1) / 2 + 0.5), y + 66, "text")
+      U.say(7, "cream", "GOOD TRY, PEPPER!", math.floor(159.5 - (U.sayW(7, "GOOD TRY, PEPPER!") - 1) / 2 + 0.5), y + 78, "text")
     end
   end
-  if self.t > 1.5 and (self.t % 1.1) < 0.75 then U.center("PRESS ANY BUTTON", 160, y + 90, 1) end
+  if self.t > 1.5 and (self.t % 1.1) < 0.75 then F.onEdge("PRESS ANY BUTTON", line) end
 end
 return B

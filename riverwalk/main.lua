@@ -111,7 +111,8 @@ function love.load(args)
   local api = { stage = function() return stage end, setState = function(s) state = s end, getState = function() return state end, newRun = newRun,
     run = function() return run end, tally = function() return tally end, flow = Flow, talk = Talk,
     bonus = function() return bonus end, startBonus = function() startBonus(true) end, startRun = startRun, levelName = function() return levelName end,
-    over = function() return over end, pause = function() return pz end }
+    over = function() return over end, pause = function() return pz end,
+    setStory = function(l) story = l end, setEnding = function(e) ending = e end, setT = function(v) t = v end }   -- (setStory, setEnding, setT: tests_ui.lua)
   for _, a in ipairs(args or {}) do
     if (a == "--auto" or a == "--physics") and bonusArg then require("tests_bonus")(a, api)          -- the bonus round's checks
     elseif a == "--test" or a == "--auto" or a == "--physics" then require(levelName == "riverwalk" and "tests" or ("tests_" .. levelName))(a, api) end
@@ -363,7 +364,7 @@ end
 local function drawTuning()
   if not tuning then return end
   local x, y, w, h = 168, 22, 148, 14 + #TUNE * 10
-  love.graphics.setColor(0.08, 0.12, 0.22, 0.9); love.graphics.rectangle("fill", x, y, w, h)
+  U.plate(x, y, w, h)                                             -- (the kit's dark plate, ui/hud-v8)
   for i, r in ipairs(TUNE) do
     local col = (i == tuneRow) and { 252/255, 214/255, 60/255 } or U.WHITE
     U.text(i .. " " .. r[2]:upper(), x + 4, y + 3 + (i - 1) * 10, col)
@@ -393,15 +394,9 @@ function love.draw()
   local st = stage:stats()
   -- the HUD (hud.lua): while playing, a group Pepper is up under steps aside (ui/hud-v8: per group, not the whole HUD)
   U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard },
-    state == "play" and { Talk.pepperRect(stage) } or nil)
+    state == "play" and { Talk.pepperRect(stage) } or nil, state == "play" and Talk.placed(stage) or nil)   -- (the talk panel hides the lives)
   if state == "intro" then
-    U.dim()
-    love.graphics.push(); love.graphics.translate(0, Flow.placeY(60, 200, 70, 76, { Talk.pepperRect(stage) }) - 70)
-    U.box(60, 70, 200, 76)
-    U.center(def.intro[1], 160, 78, 2, U.GOLD); U.center(def.intro[2], 160, 96, 2, U.GOLD)
-    U.center(def.intro[3], 160, 118, 1); U.center(def.intro[4], 160, 130, 1)
-    love.graphics.pop()
-    if t > 0.5 and (t % 1.1) < 0.75 then U.prompt("PRESS ANY BUTTON") end
+    Flow.drawIntro(def.intro, t, { Talk.pepperRect(stage) })      -- (flow.lua, ui/hud-v8)
   elseif state == "play" then
     Talk.draw(stage)
     drawTuning()

@@ -434,7 +434,7 @@ function Nt.draw(s, cam)
       if f.found and math.floor(s.t * 1.3) % 3 ~= 0 then
         lg.setColor(0.95, 0.85, 0.35); lg.rectangle("fill", math.floor(ex) - 3, math.floor(ey) + 2, 1, 1); lg.rectangle("fill", math.floor(ex) + 1, math.floor(ey) + 2, 1, 1)
       end
-      if f.heard and s.t - f.heard < 0.8 then lg.setColor(Sc.C.label); F.print("?", math.floor(ex) - 2, math.floor(ey) - 14, 1) end
+      if f.heard and s.t - f.heard < 0.8 then require("uifont").print(7, "cream", "?", math.floor(ex) - 3, math.floor(ey) - 14) end
     else
       lg.setColor(0.95, 0.85, 0.35); lg.rectangle("fill", math.floor(ex + f.dir * 9), math.floor(ey) - 1, 1, 1)
     end
