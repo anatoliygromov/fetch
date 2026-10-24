@@ -23,6 +23,8 @@
                     still's (head_frames.pant)
        eye.png      her blink: the open eye in 3 frames (the still, half shut, shut), drawn on the still's pixels
      Every frame of mouth.png and eye.png is the still outside the pixels that change (checked here).
+  5. (24 Oct) base.png is then replaced by the regridded composite (build_title_regrid.py, from art/source/title/regrid/),
+     with its own logo and plate layers; title.lua T.LOGO / T.TAGLINE = "regrid" by default.
 """
 import os, sys, json
 import numpy as np
@@ -177,6 +179,10 @@ def main():
     lua.append('}')
     open(os.path.join(ROOT, 'riverwalk', 'title_data.lua'), 'w').write('\n'.join(lua) + '\n')
     print('palette', len(pal), 'colours; base colours', len(np.unique(base.reshape(-1, 3), axis=0)), '; sparkle streaks', len(runs), '; bird px', nbird)
+    # the game's picture is now the regridded composite (24 Oct): base.png and the "regrid" layers are rebuilt from
+    # art/source/title/regrid/ by build_title_regrid.py; this pipeline's own layers (the older logos and plates, the
+    # mouth, eye and bird frames) stay as written above
+    import build_title_regrid; build_title_regrid.main()
 
 if __name__ == "__main__":
     main()
