@@ -100,9 +100,10 @@ function T.hintRows(text)
   return require("flow").wrap(13, t, T.ROW_W)
 end
 -- the buttons as the device used last shows them (hud.lua pieces, 13 px)
-T.GLYPHS = { pad = { a = "g_a", b = "g_b", x = "g_x", y = "g_y", down = "g_down", right = "g_right", up = "g_dpad", sniff = "g_l" },
+T.GLYPHS = { pad = { a = "h_a", b = "h_b", x = "h_x", y = "h_y", down = "g_down", right = "g_right", up = "g_dpad", sniff = "g_l" },
   key = { a = "k_space", b = "k_shift", x = "k_x", y = "k_z", down = "k_down", right = "k_right", up = "k_up", sniff = "k_q" } }
--- (review fix 3: sniff is taught by a bubble with the L1 shoulder or the Q key, like every other action)
+-- (review fix 3: sniff is taught by a bubble with the L1 shoulder or the Q key, like every other action; review fix 4:
+-- the face buttons are the 15 px hint coins, their letters in ink on a flat face, legible at 1x)
 function T.glyphFor(btn) local G = T.GLYPHS[I.last] or T.GLYPHS.key; return G[btn] or G.a end
 T.B_PAD, T.B_GAP, T.B_PITCH, T.B_AWAY = 6, 4, 15, 4
 -- the bubble for a line { btn, text, pic } near Pepper: above her head (tail down), else beside her (tail toward

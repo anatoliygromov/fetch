@@ -12,7 +12,9 @@ outline (64,11,6), 1 px shadow (36,8,5), the kit's golds, one light direction (t
   tail_d, tail_u, tail_l, tail_r   the bubble's tail toward Pepper (drawn over the bubble's edge)
   ball                 a red ball coin (the bonus round's catches, the tally's FETCH line)
   stamp                NEW BEST! as a red stamp plate (cream letters, the small font... the mid font)
-  pic_<kind>           the hint pictures (24 x 20): Pepper in cream as a pictogram and what she uses in gold
+  pic_<kind>           the hint pictures (about 34 x 23, review fix 4): Pepper in her own colours, drawn on the grid
+                       at half her size after her frames, and what she uses in gold
+  h_a, h_b, h_x, h_y   the hint bubble's button coins (15 px, the letter in ink on a flat face)
 """
 import os, sys
 import numpy as np
@@ -243,70 +245,195 @@ def stamp():
     sub = img[2:2 + th, 3:3 + tw]; sub[tm] = t[tm]
     return img
 
-# ---- the hint pictures (24 x 18 inside a 1 px outline: 26 x 20, then the shadow). Pepper as a pictogram: cream with a
-# pink bandana pixel, facing right; what she uses in gold; the ball red; arrows and motion marks gold. Each element is
-# outlined on its own (cross), in the order listed, so overlapping shapes stay apart.
-DOG = {
-    'stand': ["..........###.", ".........#####", "#........####.", "#........###..", ".##########...", ".##########...", ".##########...",
-              ".##......##...", ".##......##..."],
-    'low':   [".............###.", "#...........#####", ".############....", ".############....", ".##.........##..."],
-    'jump':  ["..........###.", ".........#####", "#.......####..", ".#########....", ".#########....", "##.......##...", "#.........#..."],
-}
-FEAT = {'stand': ((9, 4), (11, 1)), 'low': ((12, 2), (14, 0)), 'jump': ((8, 3), (11, 1))}   # the bandana, the eye
+# ---- the props in the hint pictures: Mia, a bird, arrows (each outlined on its own, cross, in the order listed)
 GIRL = [".###.", "#####", ".###.", "..#..", "#####", ".###.", ".###.", ".#.#.", ".#.#."]
 BIRD = ["#.....#", "##...##", ".##.##.", "..###..", "...#..."]
 _UP = ["...#...", "..###..", ".#####.", "#######", "..###..", "..###..", "..###.."]
 ARROWS = {'up': _UP, 'down': _UP[::-1], 'right': [''.join(r[y] for r in _UP[::-1]) for y in range(7)]}
-BANDANA = (236, 84, 140)
 def mask(rows): return np.array([[c == '#' for c in r.ljust(max(len(x) for x in rows), '.')] for r in rows])
-def picture(elems, W=28, H=20):
-    """elems: (kind, x, y, extra) on the 24 x 18 grid; drawn into 26 x 20 with each element's outline"""
-    img = np.zeros((H + 2, W + 2, 4), np.uint8)
+# (review fix 4) the hint pictures with Pepper in her own colours: a black Labrador with her pink bandana, drawn on the
+# grid at half her size after her approved frames (art/pepper.png: idle, crouch, jump, crawl, sniff, bark; her
+# palette exactly: outline, shade, coat, the blue-grey sheen on her back, the bandana's three pinks), each pose about
+# 20 px tall, with a 1 px light rim so the black dog reads on the bubble's dark fill (as the HUD head's rim). What
+# she uses stays gold and outlined in ink; motion marks gold. No "z" for SNEAK: the low crouch says it.
+PEP = {'o': (1, 1, 2), 's': (23, 24, 31), 'b': (57, 56, 71), 'h': (112, 132, 156), 'P': (250, 100, 200), 'p': (196, 60, 150),
+       'q': (155, 46, 118)}
+PEP_RIM = CREAM_LO
+PEPPER = {
+'stand': [
+"..................oooo....",
+".................ohhhbo...",
+"................obsbbbboo.",
+"o...............obsbobbbbo",
+"oo..............obsbbbbbbo",
+"obo.............obssbbbooo",
+".obo.ooooooooooPPpsbbo....",
+"..obohhhhhhhhhhbPPpoo.....",
+"...obbbbbbbbbbbbbPpo......",
+"...obbbbbbbbbbbbbbpo......",
+"...obbbbbbbbbbbbbbbo......",
+"...osbbbbbbbbbbbbbbo......",
+"...ossbbbsssssbbbbbo......",
+"...obbbsooooooosbbbo......",
+"...obbsso....obsbbo.......",
+"...obbsso....obsbbo.......",
+"...obbsso....obsbbo.......",
+"...obbo.o....o.obbo.......",
+"..obbbo........obbbo......",
+"..oooo.........oooo.......",
+],
+'low': [
+"....................oooo....",
+"...................ohhhbo...",
+"..................obsbbbboo.",
+"o.................obsbobbbbo",
+"oo....ooooooooooooobsbbbbbbo",
+".oo.oohhhhhhhhhhhhPPssbbooo.",
+"..oobbbbbbbbbbbbbbbPPpbo....",
+"...obbbbbbbbbbbbbbbbPpo.....",
+"...obbbbbbbbbbbbbbbbbpo.....",
+"...osbbbbbbbbbbbbbbbbbo.....",
+"...ossbbbsssssssssbbbbo.....",
+"..obbbsoooooooooosbbbo......",
+".obbbbo.........obbbbbo.....",
+".ooooo..........oooooo......",
+],
+'jump': [
+".....................oooo...",
+"....................ohhhbo..",
+"...................obsbbbboo",
+"..................obsbobbbbo",
+"............ooooo.obsbbbbbbo",
+"........oooohhhhhoPPssbbbooo",
+"o....oooohhbbbbbbbbPPpbo....",
+"oooooohhbbbbbbbbbbbbPpo.....",
+".ooobbbbbbbbbbbbbbbbbpo.....",
+"....obbbbbbbbbbbbbbbbbo.....",
+"....obbbbssssssbbbbbbboo....",
+"...obbbsoooooooosbbbobbo....",
+"..obbso.........obbo.obbo...",
+".obbso..........obo...ooo...",
+"obbo...........obo..........",
+"ooo............oo...........",
+],
+'crawl': [
+"......................oooo....",
+".....................ohhhbo...",
+".......oooooooooooooobsbbbboo.",
+"o....oohhhhhhhhhhhhhobsbobbbbo",
+"oooooobbbbbbbbbbbbbPPsbbbbbbbo",
+".ooobbbbbbbbbbbbbbbbPPpsbbooo.",
+"...obbbbbbbbbbbbbbbbbPpoooo...",
+"...osbbbbsssssssssbbbbpo......",
+"..obbbbbooooooooooobbbbbo.....",
+".obbbbbbo........obbbbbbbo....",
+".ooooooo.........ooooooooo....",
+],
+'sniff': [
+"o...........................",
+"oo..........................",
+"obo.........................",
+".obo.ooooooooooooo..........",
+"..obohhhhhhhhhhhhhoo........",
+"...obbbbbbbbbbbbbbbbo.......",
+"...obbbbbbbbbbbbbbbbbo......",
+"...obbbbbbbbbbbbbbbPPbo.....",
+"...osbbbbbbbbbbbbbbbPPbo....",
+"...ossbbbsssssbbbbbbbPpo....",
+"...obbbsoooooooosbbbbbpoo...",
+"...obbsso....obsbbo.obbhho..",
+"...obbsso....obsbbo.osbbbbo.",
+"...obbsso....obsbbo.osbobbbo",
+"...obbsso....obsbbo.osbbbbbo",
+"...obbsso....obsbbo..obbbbbo",
+"...obbo.o....o.obbo...ooooo.",
+"..obbbo........obbbo........",
+"..oooo.........oooo.........",
+],
+'bark': [
+"..................oooo....",
+".................ohhhbo...",
+"................obsbbbboo.",
+"o...............obsbobbbbo",
+"oo..............obsbbbooo.",
+"obo.............obssbPPo..",
+".obo.ooooooooooPPpsbbooo..",
+"..obohhhhhhhhhhbPPpoo.....",
+"...obbbbbbbbbbbbbPpo......",
+"...obbbbbbbbbbbbbbpo......",
+"...obbbbbbbbbbbbbbbo......",
+"...osbbbbbbbbbbbbbbo......",
+"...ossbbbsssssbbbbbo......",
+"...obbbsooooooosbbbo......",
+"...obbsso....obsbbo.......",
+"...obbsso....obsbbo.......",
+"...obbsso....obsbbo.......",
+"...obbo.o....o.obbo.......",
+"..obbbo........obbbo......",
+"..oooo.........oooo.......",
+],
+}
+
+def picture2(W, H, elems):
+    """elems: (kind, x, y, ...) drawn in order into W x H; a Pepper pose's x, y is its rim's top-left"""
+    img = np.zeros((H, W, 4), np.uint8)
     for e in elems:
-        k, x, y = e[0], e[1] + 1, e[2] + 1
-        if k == 'box':
-            m = np.zeros((e[4], e[3]), bool); m[:] = True; col = GOLD['gold']
-        elif k in DOG: m = mask(DOG[k]); col = CREAM
+        k, x, y = e[0], e[1], e[2]
+        if k in PEPPER:
+            rows = PEPPER[k]; h, w = len(rows), max(len(r) for r in rows)
+            m = np.zeros((H, W), bool); sub = np.zeros((H, W, 4), np.uint8)
+            for yy, r in enumerate(rows):
+                for xx, c in enumerate(r):
+                    if c in PEP: m[y + 1 + yy, x + 1 + xx] = True; sub[y + 1 + yy, x + 1 + xx] = (*PEP[c], 255)
+            put(img, outline_of(m, cross=True), PEP_RIM); img[m] = sub[m]
+            continue
+        if k == 'box': m = np.ones((e[4], e[3]), bool); col = GOLD['gold']
         elif k == 'girl': m = mask(GIRL); col = CREAM
         elif k == 'bird': m = mask(BIRD); col = CREAM
         elif k == 'ball': m = mask([".##.", "####", "####", ".##."]); col = BALL['mid']
         elif k in ARROWS: m = mask(ARROWS[k]); col = GOLD['light']
         elif k == 'dot': m = np.ones((2, 2), bool); col = GOLD['light']
         elif k == 'wave': m = mask(e[3]); col = GOLD['light']
-        M = np.zeros(img.shape[:2], bool); h, w = m.shape; M[y:y + h, x:x + w] = m
+        M = np.zeros((H, W), bool); h, w = m.shape; M[y:y + h, x:x + w] = m
         put(img, outline_of(M, cross=True), INK); put(img, M, col)
-        if k == 'box':                                              # a lit top row and a dark foot on gold blocks
-            put(img, M & np.roll(~M, 1, axis=0), GOLD['light']); put(img, M & np.roll(~M, -1, axis=0) & (np.arange(img.shape[0])[:, None] > y), GOLD['dark'])
-        if k in DOG:                                                # the bandana at her neck, the eye in ink
-            (nx, ny), (ex, ey) = FEAT[k]
-            if M[y + ny, x + nx]: img[y + ny, x + nx] = (*BANDANA, 255)
-            if M[y + ey, x + ex]: img[y + ey, x + ex] = (*INK, 255)
+        if k == 'box':
+            put(img, M & np.roll(~M, 1, axis=0), GOLD['light']); put(img, M & np.roll(~M, -1, axis=0) & (np.arange(H)[:, None] > y), GOLD['dark'])
         if k == 'ball': img[y, x + 1] = (*BALL['light'], 255)
-        if k == 'girl':                                             # Mia's hair gold, her hoodie dark
+        if k == 'girl':
             for (yy, xx) in ((0, 1), (0, 2), (0, 3), (1, 0), (1, 4), (2, 1), (2, 3)): img[y + yy, x + xx] = (*GOLD['gold'], 255)
             for yy in range(4, 7):
                 for xx in range(5):
                     if M[y + yy, x + xx]: img[y + yy, x + xx] = (*DARK['line'], 255)
     return img
-GROUND = ('box', 0, 18, 28, 2)
 WAVE_S = ["#.", ".#", ".#", "#."]; WAVE_L = ["#..", ".#.", "..#", "..#", ".#.", "#.."]
-ZED = [('box', 1, 1, 6, 1), ('box', 5, 2, 1, 1), ('box', 4, 3, 1, 1), ('box', 3, 4, 1, 1), ('box', 2, 5, 1, 1), ('box', 1, 6, 6, 1)]
-PICTURES = {
-    'run':    [GROUND, ('box', 0, 11, 4, 1), ('box', 1, 14, 4, 1), ('stand', 6, 9), ('right', 21, 10)],
-    'hop':    [GROUND, ('box', 17, 15, 8, 3), ('dot', 1, 15), ('dot', 4, 11), ('dot', 7, 7), ('jump', 11, 2)],
-    'jump':   [GROUND, ('box', 18, 8, 9, 10), ('dot', 0, 15), ('dot', 2, 10), ('dot', 5, 5), ('jump', 7, 0)],
-    'climb':  [GROUND, ('box', 18, 3, 10, 15), ('stand', 1, 9), ('up', 10, 1)],
-    'crawl':  [GROUND, ('box', 1, 8, 26, 2), ('box', 2, 10, 2, 8), ('box', 24, 10, 2, 8), ('low', 5, 13)],
-    'duck':   [GROUND, ('low', 1, 13), ('bird', 18, 1), ('dot', 16, 8), ('dot', 13, 10)],
-    'stay':   [('box', 0, 12, 28, 2), ('low', 3, 7), ('down', 21, 0), ('dot', 2, 17), ('dot', 9, 18), ('dot', 16, 17), ('dot', 23, 18)],
-    'drop':   [('box', 0, 9, 28, 2), GROUND, ('stand', 1, 0), ('down', 20, 11)],
-    'bounce': [('box', 2, 17, 20, 2), ('dot', 4, 15), ('dot', 18, 15), ('jump', 5, 5), ('up', 21, 2)],
-    'pickup': [GROUND, ('stand', 1, 9), ('ball', 21, 14), ('down', 20, 4)],
-    'give':   [GROUND, ('stand', 0, 9), ('ball', 15, 4), ('girl', 22, 9)],
-    'bark':   [GROUND, ('stand', 1, 9), ('wave', 17, 8, WAVE_S), ('wave', 21, 7, WAVE_L)],
-    'sneak':  [GROUND, ('stand', 13, 9), ('dot', 2, 16), ('dot', 7, 16)] + ZED,
-    'sniff':  [GROUND, ('low', 1, 13), ('dot', 20, 15), ('dot', 23, 12), ('dot', 25, 15)],   # (review fix 3) nose down, scent dots
+PICTURES = {   # W, H, elements (Pepper's poses: stand 28 x 22 with the rim, low 30 x 16, jump 30 x 18, crawl 32 x 13, sniff 30 x 21, bark 28 x 22)
+    'run':    (35, 23, [('box', 1, 7, 4, 1), ('box', 2, 11, 4, 1), ('box', 1, 15, 4, 1), ('stand', 7, 0)]),
+    'hop':    (33, 24, [('box', 19, 20, 11, 2), ('jump', 0, 0)]),
+    'jump':   (34, 24, [('box', 23, 11, 9, 11), ('jump', 0, 0)]),
+    'climb':  (36, 26, [('box', 29, 1, 5, 23), ('up', 9, 1), ('jump', 0, 7)]),
+    'crawl':  (36, 22, [('box', 1, 1, 34, 2), ('box', 1, 3, 2, 17), ('box', 33, 3, 2, 17), ('crawl', 2, 7)]),
+    'duck':   (34, 25, [('bird', 25, 1), ('low', 0, 9)]),
+    'stay':   (33, 24, [('down', 9, 1), ('box', 1, 21, 31, 2), ('low', 1, 5)]),
+    'drop':   (38, 26, [('box', 1, 22, 26, 2), ('down', 30, 16), ('stand', 0, 0)]),
+    'bounce': (38, 24, [('box', 2, 21, 26, 2), ('up', 30, 3), ('jump', 0, 0)]),
+    'pickup': (35, 23, [('sniff', 0, 0), ('ball', 29, 17)]),
+    'give':   (39, 23, [('stand', 0, 1), ('ball', 25, 7), ('girl', 33, 12)]),
+    'bark':   (35, 23, [('bark', 0, 0), ('wave', 28, 6, WAVE_S), ('wave', 31, 5, WAVE_L)]),
+    'sneak':  (32, 22, [('dot', 1, 19), ('dot', 6, 19), ('low', 2, 4)]),
+    'sniff':  (36, 23, [('sniff', 0, 1), ('dot', 31, 18), ('dot', 33, 14), ('dot', 31, 10)]),
 }
+
+def hint_coin(ch, D=15):
+    """(review fix 4) the bubble's button coin, 15 px: a flat gold face (no light change behind the letter) and the
+    small font's letter (7 rows) in ink, 2 px of face round it, so the letter reads at 1x"""
+    from menu8 import letter7
+    disc, edge, rim, face, lit, ci = I7.disc_parts(D); img = np.zeros((D, D, 4), np.uint8)
+    img[disc] = (*GOLD['gold'], 255)
+    in1 = disc & ~edge; ring = in1 & ~ndimage.binary_erosion(in1, structure=CROSS, border_value=0)
+    I7.paint_rim(img, ring, lit); img[edge] = (*INK, 255)
+    m = letter7(ch); h, w = m.shape; oy, ox = ci - (h - 1) // 2, ci - (w - 1) // 2
+    put(img, m, INK, oy, ox)
+    return img
 
 def build(out):
     meta = {}
@@ -323,7 +450,8 @@ def build(out):
     save('tail_d', d, sh=False); save('tail_u', u, sh=False); save('tail_l', l, sh=False); save('tail_r', r, sh=False)
     save('ball', ball())
     rw, mw = ribbon(160, 19, arch=0); save('ribbon_wide', rw); meta['ribbon_wide_body'] = mw     # FETCH FRENZY!
-    for k, el in PICTURES.items(): save('pic_' + k, picture(el))
+    for k, (w, h, el) in PICTURES.items(): save('pic_' + k, picture2(w, h, el))
+    for ch in 'ABXY': save('h_' + ch.lower(), hint_coin(ch))
     from menu8 import dpad
     save('g_right', dpad(lit=['right']))
     save('stamp', stamp())
