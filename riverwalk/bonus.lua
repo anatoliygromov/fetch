@@ -56,7 +56,10 @@ local C = {
   { "frisbee", 180, 25, 1.5 }, { "ball", 270, 60, 1.6 },
 }
 B.VARIANTS = { A, Bv, C }
-B.NAMES = { "BALL RALLY", "STICK TIME", "FRISBEE FLOAT" }
+B.NAMES = { "BALL RALLY", "STICK TIME", "FRISBEE FLOAT" }   -- (the rounds' names for the checks only; the screens say FETCH FRENZY!)
+B.INTRO_TEXT, B.INTRO_H = 32, 100                              -- (review fix 5) the intro card: its line's top, its height
+-- (review fix 5) every throw of the round caught before the clock ran out: the end says ALL CAUGHT!, not TIME UP!
+function B:allCaught() return self.k > #self.list and self.catches >= #self.list end
 function B.variantFor(levelNumber) return ((math.max(1, levelNumber or 1) - 1) % 3) + 1 end
 
 -- one step of an item's flight (the game and B.flight share it)
@@ -332,16 +335,15 @@ function B:draw()
   local function big(s3, y) U.sayC(17, "gold", s3, 159.5, y, "big") end
   if self.phase == "intro" then
     U.dimWarm()
-    local w, h = 240, 126
+    local w, h = 240, B.INTRO_H
     local y = F.cardTop(40, w, h, avoid)
     U.panel(40, y + 10, w, h - 10)
     U.ribbon("ribbon_wide", 159.5, y)
     U.sayC(13, "ink", "FETCH FRENZY!", 159.5, y + 2, "title")
-    U.sayC(7, "cream", "A GOLDEN BONE BONUS", 159.5, y + 25, "subtitle")
-    U.sayC(17, "gold", B.NAMES[self.variant], 159.5, y + 36, "name")
+    -- (review fix 5) one name for the round: FETCH FRENZY! on the ribbon, no second title; under it the line and the goal
     local rows = F.wrap(13, "CATCH WHAT MIA THROWS!", 210)
-    for i, r in ipairs(rows) do U.sayC(13, "cream", r, 159.5, y + 58 + (i - 1) * 16, "story") end
-    local gy = y + 58 + #rows * 16 + 1                             -- the goal: the ball, the catches, Pepper's head +1
+    for i, r in ipairs(rows) do U.sayC(13, "cream", r, 159.5, y + B.INTRO_TEXT + (i - 1) * 16, "story") end
+    local gy = y + B.INTRO_TEXT + #rows * 16 + 1                   -- the goal: the ball, the catches, Pepper's head +1
     local bw, bh = U.body("ball")
     local gs = ("%d CATCHES"):format(B.LIFE_AT)
     local gw = U.sayW(7, gs)
@@ -356,7 +358,7 @@ function B:draw()
     if self.t > 0.5 then U.strip({ { "ok", "GO" } }) end
   elseif self.phase == "ready" then big(self.t < 0.8 and "READY..." or "GO!", 60)
   elseif self.phase == "play" and self.time <= 5 then big(tostring(math.ceil(self.time)), 44)       -- the last seconds, big
-  elseif self.phase == "timeup" then big("TIME UP!", 60)
+  elseif self.phase == "timeup" then big(self:allCaught() and "ALL CAUGHT!" or "TIME UP!", 60)
   elseif self.phase == "result" or self.phase == "done" then
     self:drawResult(avoid)
   end

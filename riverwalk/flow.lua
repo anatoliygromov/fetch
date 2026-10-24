@@ -292,7 +292,8 @@ end
 -- it. Left / right slide the next card in (0.12 s, ease out) with a sound; arrows either side, a dot per level
 -- under the card, the controls strip at the bottom.
 F.SEL = { X = 40, W = 240, PANEL = 16, H = 192, RIB = 6, PIC_Y = 33, NAME = 158, STATS = 191, ARROW_OUT = 7, DOTS = 211,
-  DOT_PITCH = 11, SLIDE = 0.12, LOCKED = { 0.26, 0.23, 0.27, 1 } }
+  DOT_PITCH = 11, SLIDE = 0.12, LOCKED = { 0.26, 0.23, 0.27, 1 },
+  PEPPER = { 58, 60, 116, 99 } }   -- (review fix 1) Pepper's box in every picture (tools/card_shots.py puts her there)
 local cards = {}
 function F.cardImage(name)
   if cards[name] == nil then
@@ -308,7 +309,6 @@ function F.selectCard(i)
   local rib = "LEVEL " .. l.number
   U.ribbon("ribbon_pause", 159.5, S3.RIB)
   U.sayC(13, "ink", rib, 159.5, S3.RIB + 2, "title")
-  if F.hard then U.hardTag8(S3.X + S3.W - 30, S3.RIB + 4) end
   local im = F.cardImage(l.name)
   local pw, ph = 216, 118
   if im then pw, ph = im:getDimensions() end
@@ -317,8 +317,13 @@ function F.selectCard(i)
   else lg.setColor(44 / 255, 22 / 255, 14 / 255); lg.rectangle("fill", px, S3.PIC_Y, pw, ph); lg.setColor(1, 1, 1, 1)
     U.nine("frame_s", px - 4, S3.PIC_Y - 4, pw + 8, ph + 8, 4, true, "picture") end
   local pcx, pcy = px + (pw - 1) / 2, S3.PIC_Y + (ph - 1) / 2
+  -- (review fix 6) HARD fully inside the card: on the picture's top right corner (Pepper is two fifths across, lower)
+  if F.hard then local hw = U.sayW(7, "HARD") + 4; U.hardTag8(px + pw - 1 - 4 - (hw - 1) / 2, S3.PIC_Y + 4) end
   if not l.exists then U.sayC(13, "cream", "COMING SOON", pcx, math.floor(pcy - 7 + 0.5), "soon")
-  elseif not open then U.putC("lock_big", pcx, pcy, "lock") end
+  elseif not open then                                           -- (review fix 1) the padlock right of Pepper, never over her
+    U.putC("lock_big", px + math.floor(pw * 3 / 4), pcy, "lock")
+    local pp = S3.PEPPER; U.logBox("cardpepper", px + pp[1], S3.PIC_Y + pp[2], px + pp[3], S3.PIC_Y + pp[4])
+  end
   U.sayC(17, "gold", l.title, 159.5, S3.NAME, "name")
   -- the stats row on one centre line: the medals from the picture's left edge, the time and points to its right edge
   local cy = S3.STATS
@@ -363,7 +368,8 @@ function F.drawSelect(t)
   local dw = U.body("dot_on")
   local x0 = math.floor(159.5 - ((n - 1) * S3.DOT_PITCH + dw - 1) / 2 + 0.5)
   for i = 1, n do U.put(i == p.sel and "dot_on" or "dot_off", x0 + (i - 1) * S3.DOT_PITCH, S3.DOTS, "dot") end
-  U.strip({ { "lr", "BROWSE" }, { "ok", "PLAY" }, { "back", "BACK" } })
+  if F.levels[p.sel].exists and F.isOpen(p.sel) then U.strip({ { "lr", "BROWSE" }, { "ok", "PLAY" }, { "back", "BACK" } })
+  else U.strip({ { "lr", "BROWSE" }, { "back", "BACK" } }) end                     -- (review fix 1) no PLAY on a locked card
 end
 
 -- a card's top on the level: y if the card misses Pepper's sprite (avoid = { x0, y0, x1, y1 } on screen), else
@@ -491,7 +497,10 @@ F.CARD_WAIT = 2                   -- seconds before A leaves a story card
 -- (a new best score or time); then the controls strip. Any button skips to the end (main.lua). Same numbers as
 -- before; F.tallyStep runs the clock and the sounds. Offsets from the card's top (the ribbon's top).
 F.T = { X = 36, W = 248, PANEL = 18, H = 115, ICON = 48, LABEL = 71, VALUE = 188, ROW0 = 38, PITCH = 18, RULE = 92, TOTAL = 96,
-  MEDAL_X = 197, MEDAL0 = 38, MPITCH = 21, SECRETS = 104, NOTE = 116, BOX_H = 134, STAMP_Y = 125, STAMP_OUT = 6 }
+  MEDAL_X = 197, MEDAL0 = 38, MPITCH = 21, SECRETS = 104, NOTE = 116, BOX_H = 134, STAMP_Y = 128, STAMP_IN = 8, FOOT = 25 }
+-- (review fix 6) a tally with NEW BEST! or HARD gets a foot row inside its panel (FOOT px taller): the stamp lands at its
+-- right, 8 px in from the frame, the HARD badge on its left; nothing hangs off the panel
+function F.tallyFoot(tl) return (F.tallyPlan(tl).stampT or tl.hard) and F.T.FOOT or 0 end
 -- the show's timetable: when each line comes (rows: { label, value, kind, at }), the bones' count, the total's
 -- count, the medals and the stamp; tl.tEnd when it is over
 function F.tallyPlan(tl)
@@ -541,12 +550,13 @@ function F.tallySkip(tl)
   local P = F.tallyPlan(tl)
   tl.t = math.max(tl.t, P.tEnd); tl.shown, tl.done = tl.points, true
 end
-function F.tallyBox(avoid)
+function F.tallyBox(avoid, tl)
   local T = F.T
-  return T.X, F.cardTop(T.X, T.W, T.BOX_H, avoid), T.W, T.BOX_H
+  local h = T.BOX_H + (tl and F.tallyFoot(tl) or 0)
+  return T.X, F.cardTop(T.X, T.W, h, avoid), T.W, h
 end
 function F.drawTally(tl, avoid)
-  local _, y = F.tallyBox(avoid)
+  local _, y = F.tallyBox(avoid, tl)
   U.dimWarm(); shifted(y, function() F.tallyCard(tl) end)
   if tl.done then U.strip({ { "ok", "OK" } }) end
 end
@@ -555,7 +565,7 @@ local function slide(t, at) if t < at then return nil end; local u = math.min(1,
 function F.tallyCard(tl)
   local T, P = F.T, F.tallyPlan(tl)
   local t = tl.t
-  U.panel(T.X, T.PANEL, T.W, T.H)
+  U.panel(T.X, T.PANEL, T.W, T.H + F.tallyFoot(tl))
   U.ribbon("ribbon_tally", 159.5, 0)
   local bounce = (t < 0.6) and math.floor(math.sin(t * 20) * 2) or 0
   U.sayC(17, "ink", "GOOD GIRL!", 159.5, 4 + bounce, "title")
@@ -601,12 +611,12 @@ function F.tallyCard(tl)
     U.say(7, tl.newBestTime and "gold" or "cream", ts, T.ICON, T.NOTE, "note")
     if P.secrets then U.say(7, "cream", "SECRETS " .. P.secrets, T.MEDAL_X, T.SECRETS, "secrets") end
   end
-  if tl.hard then U.hardTag8(T.X + 34, T.PANEL + 4) end
-  if P.stampT and t >= P.stampT then                               -- NEW BEST! lands across the frame's bottom right
-    local sw = U.body("stamp")
+  local sw, sh = U.body("stamp")
+  if tl.hard then U.hardTag8(T.ICON + 16, T.STAMP_Y + math.floor((sh - 13) / 2)) end      -- (review fix 6) in the foot row
+  if P.stampT and t >= P.stampT then                               -- NEW BEST! lands in the foot row, right
     local k = math.floor((t - P.stampT) / (1 / 30))                -- it lands with a thud: a 2 px jolt for 4 frames
     local jx = (k < 4) and ((k % 2 == 0) and 2 or -1) or 0
-    U.put("stamp", T.X + T.W - 1 + T.STAMP_OUT - sw + 1 + jx, T.STAMP_Y + ((k < 2) and 1 or 0), "stamp")
+    U.put("stamp", T.X + T.W - 1 - T.STAMP_IN - sw + 1 + jx, T.STAMP_Y + ((k < 2) and 1 or 0), "stamp")
   end
 end
 

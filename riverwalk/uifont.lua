@@ -26,11 +26,13 @@ local function cell(size, ch)
   local u = ch:upper(); if c[u] then return u, c[u] end
 end
 
+-- (review fix 3) one character at a time, UTF-8 aware, so a glyph like the Ö of SÖDER is one cell, not two bytes
+local CHAR = "[%z\1-\127\194-\244][\128-\191]*"
 UF.height = function(size) return D[size].h end
 -- the width of the glyph bodies of s (no outline)
 function UF.width(size, s)
   local f, w, n = D[size], 0, 0
-  for ch in s:gmatch(".") do
+  for ch in s:gmatch(CHAR) do
     if ch == " " then w = w + f.space
     else local _, c = cell(size, ch); if c then w = w + c[2] + f.gap; n = n + 1 end end
   end
@@ -43,7 +45,7 @@ function UF.print(size, style, s, x, y)
   x, y = math.floor(x + 0.5), math.floor(y + 0.5)
   local x0 = x
   lg.setColor(1, 1, 1, 1)
-  for ch in s:gmatch(".") do
+  for ch in s:gmatch(CHAR) do
     if ch == " " then x = x + f.space
     else
       local k, c = cell(size, ch)

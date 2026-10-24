@@ -5,10 +5,10 @@
  </editorsettings>
  <properties>
   <property name="ballHomeAtLamps" type="bool" value="true"/>
-  <property name="intro" value='{ "LEVEL 1", "RIVER WALK", "MORNING! MIA THREW THE BALL...", "IT LANDED ON A FERRY. FETCH!" }'/>
+  <property name="intro" value="{ &quot;LEVEL 1&quot;, &quot;RIVER WALK&quot;, &quot;THE BALL IS ON A BOAT!&quot; }"/>
   <property name="name" value="RIVER WALK"/>
   <property name="number" type="int" value="1"/>
-  <property name="outro" value='{ "LATE MORNING IN THE PARK.", "A MAGPIE SNATCHED THE BALL!" }'/>
+  <property name="outro" value="{ &quot;A BIRD TOOK THE BALL!&quot; }"/>
   <property name="time" type="int" value="420"/>
  </properties>
  <tileset firstgid="1" name="terrain" tilewidth="8" tileheight="8" tilecount="4" columns="4">
@@ -800,20 +800,20 @@
   <object id="135" type="hints" x="1290" y="-70" width="110" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
-    <property name="text" value="RIDE THE PONTOON!"/>
+    <property name="text" value="RIDE THE RAFT!"/>
    </properties>
   </object>
   <object id="136" type="hints" x="1550" y="-60" width="250" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
-    <property name="text" value="CLIMB UP TO THE WHEELHOUSE!"/>
+    <property name="text" value="CLIMB UP ON THE BOAT!"/>
     <property name="need" value="noball"/>
    </properties>
   </object>
   <object id="137" type="hints" x="2100" y="-50" width="96" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
-    <property name="text" value="HOP ON THE ROWING BOAT!"/>
+    <property name="text" value="HOP ON THE LITTLE BOAT!"/>
    </properties>
   </object>
   <object id="138" type="hints" x="2400" y="0" width="48" height="197">

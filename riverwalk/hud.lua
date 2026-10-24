@@ -67,18 +67,19 @@ function U.status(g, avoid)
     U.say(13, low and "dim" or "gold", tstr, gx + cw + G, top(U.TOP_C, th), "time")
     if g.hard then U.hardTag8(159.5, top(U.TOP_C, ch) + ch + 2) end
   end
-  -- bones (the bone and the count) right-aligned at the margin, the score under the count, right-aligned too
+  -- bones (the bone and the count) right-aligned at the margin, the score under the count, right-aligned too.
+  -- (review fix 7) the score is secondary: the 7 px font (docs/ui_design.md), smaller than the 13 px count
   local bstr = ("%02d/%02d"):format(g.bones, g.total)
   local ow, oh = U.body("bone")
   local nw = U.sayW(13, bstr)
   local sstr = ("%06d"):format(g.score)
-  local sw = U.sayW(13, sstr)
+  local sw, sh7 = U.sayW(7, sstr), U.sayH(7)
   local bx = 319 - M - nw + 1 - G - ow
-  local sy = top(U.TOP_C, th) + th + 3                           -- 2 clear rows under the count (its shadow takes one)
-  if not hits(avoid, math.min(bx, 319 - M - sw), M, 320, sy + th) then
+  local sy = top(U.TOP_C, th) + th + 2                           -- a clear row under the count (its shadow takes one)
+  if not hits(avoid, math.min(bx, 319 - M - sw), M, 320, sy + sh7) then
     U.put("bone", bx, top(U.TOP_C, oh), "bone")
     U.say(13, "gold", bstr, 319 - M - nw + 1, top(U.TOP_C, th), "bones")
-    U.say(13, "gold", sstr, 319 - M - sw + 1, sy, "score")
+    U.say(7, "gold", sstr, 319 - M - sw + 1, sy, "score")
   end
   -- lives: Pepper's head and x3, bottom left, on one centre line, the head's bottom at the margin
   local hw, hh = U.body("head")
@@ -184,6 +185,7 @@ function U.glyph(list, x, y, logName)
 end
 -- items: { { "ok", "OK" }, { "back", "BACK" } }; device: "pad" or "key" (default: the one used last)
 function U.strip(items, device)
+  if U.toastInStrip and require("settings").showing() then return end   -- (review fix 6) the sound toast has its place
   local G = U.GLYPHS[device or require("input").last] or U.GLYPHS.key
   local th = U.sayH(7)
   local w = 0
@@ -222,20 +224,26 @@ function U.bonusStatus(g)
 end
 
 -- shown for a moment when the volume buttons are pressed: (step 3) a small gold panel with SOUND (7 px) and the 9
--- segments, centred; y: its top (under the HUD while playing, above the controls strip over menus and cards)
+-- segments, centred; y: its top (under the HUD while playing). (review fix 6) Over menus and cards it takes the
+-- controls strip's place at the bottom for that moment (the strip waits, U.toastInStrip): the hint bubble's frame,
+-- 18 px tall, so it never covers a card's words (no card reaches below the strip's top less 6 px)
 function U.volumeToast(level, max, y)
   y = y or 30
   local segw, segh = U.body("seg_on")
   local mw = (max - 1) * 4 + segw
   local lw = U.sayW(7, "SOUND")
-  local w = 14 + lw + 6 + mw + 14
+  local small = y == U.TOAST_MENU
+  local pad = small and 8 or 14
+  local w = pad + lw + 6 + mw + pad
   local x = math.floor(159.5 - (w - 1) / 2 + 0.5)
-  U.panel(x, y, w, 32, "toast")
-  local cy = y + 15.5
-  U.say(7, "cream", "SOUND", x + 14, math.floor(cy - (U.sayH(7) - 1) / 2 + 0.5), "toastlabel")
-  local mx = x + 14 + lw + 6
+  local h = small and 18 or 32
+  if small then U.nine("bubble", x, y, w, h, 4, false, "toast") else U.panel(x, y, w, 32, "toast") end
+  local cy = y + (h - 1) / 2
+  U.say(7, "cream", "SOUND", x + pad, math.floor(cy - (U.sayH(7) - 1) / 2 + 0.5), "toastlabel")
+  local mx = x + pad + lw + 6
   for k = 1, max do U.put(k <= level and "seg_on" or "seg_off", mx + (k - 1) * 4, math.floor(cy - (segh - 1) / 2 + 0.5), "seg") end
 end
-U.TOAST_PLAY, U.TOAST_MENU = 30, 239 - U.M - 12 - 6 - 32
+U.TOAST_PLAY, U.TOAST_MENU = 30, 239 - U.M - 18 + 1
+U.toastInStrip = true
 
 return U

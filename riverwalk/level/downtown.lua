@@ -194,11 +194,11 @@ L.movers = {}
 -- street. If Pepper falls in the water with the ball, it goes back there (or by the last lamp she carried it to).
 L.ball = { x = 1508, y = 108 }
 L.cat = { x = 1508, y = 102, range = 90 }
-L.ballBack = "THE BALL IS BACK BY THE STATUE"
+L.ballBack = "THE BALL IS BY THE STATUE!"
 L.pickupSay = "BRING ME THE BALL!"
 -- the girl waits at the top of the stairs down to the river
 L.girl = { x = 3460, y = 184 }
-L.outro = { "AT THE STREET CAFE A GULL TOOK", "THE BALL UP TO ITS NEST!" }
+L.outro = { "A SEAGULL TOOK THE BALL!" }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
@@ -288,13 +288,13 @@ L.hints = {
   { x0 = 1288, x1 = 1560, text = "THE CAT IS ON MY BALL!",    need = "cat" },
   { x0 = 1560, x1 = 3520, text = "GO BACK: BARK AT THE CAT!", need = "cat" },
   { x0 = 1600, x1 = 3520, text = "GO BACK FOR THE BALL!",     need = "noball" },
-  { x0 = 1930, x1 = 2120, text = "CARGO BIKE! GET UP HIGH!", bike = true },
+  { x0 = 1930, x1 = 2120, text = "BIG BIKE! GET UP HIGH!", bike = true },
   { x0 = 3120, x1 = 3300, text = "A FAST BIKE! GET UP!", bike = true },
   { x0 = 2136, x1 = 2190, text = "GEESE! DON'T LOSE MY BALL!", need = "ball" },
-  { x0 = 2464, x1 = 2500, text = "BOUNCE OVER THE CANAL!" },
+  { x0 = 2464, x1 = 2500, text = "BOUNCE OVER THE WATER!" },
   { x0 = 2784, x1 = 2832, btn = "a",    text = "BOUNCE ACROSS" },
   { x0 = 1720, x1 = 3520, text = "BRING ME THE BALL!", need = "ball" },
 }
 
-L.intro = { "LEVEL 3", "DOWNTOWN", "A CAT IS SITTING ON THE BALL!", "BARK IT AWAY. BRING THE BALL!" }
+L.intro = { "LEVEL 3", "DOWNTOWN", "A CAT SITS ON THE BALL!" }
 return L

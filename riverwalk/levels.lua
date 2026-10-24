@@ -24,6 +24,6 @@ return {
   -- { name = "citypark",  number = 2, title = "CITY PARK",  par = 72 },   -- (flat, autopilot 44.6 s)
   -- { name = "downtown",  number = 3, title = "DOWNTOWN",   par = 83 },   -- (flat, autopilot 51.4 s)
   { name = "rooftops",      number = 4, title = "ROOFTOPS",   par = 148 },
-  { name = "soder",         number = 5, title = "SODER HILL", par = 118 },
+  { name = "soder",         number = 5, title = "SÖDER HILL", par = 118 },
   { name = "night",         number = 6, title = "NIGHT HARBOUR", par = 135 },
 }

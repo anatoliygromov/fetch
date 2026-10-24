@@ -55,12 +55,12 @@ return function(api)
     { act = function() api.startRun(F.index("soder")) end, wait = 0.04 }, shot("intro_drop"), { wait = 0.8 }, shot("intro_soder"),
     { act = function() I.last = "key"; api.startRun(F.index("night")) end, wait = 0.8 }, shot("intro_night"),
     { act = function() api.startRun(F.index("citypark_tall")) end, wait = 0.8 }, shot("intro_citypark"),
-    -- the talk panel: the girl's lines (one row, two rows), at the bottom and (Pepper low on the quay) at the top
+    -- the talk panel: the girl's lines (one row, two rows; the longest line in the game), at the bottom and (Pepper low on the quay) at the top
     { act = function() api.startRun(1) end, wait = 0.6 }, { act = function() api.setState("play"); tp(760, 184) end, wait = 0.3 },
     { act = function() api.talk.reset(); say("GOOD GIRL, PEPPER!") end, wait = 0.03 }, shot("talk_rise"), { wait = 0.5 }, shot("talk_short"),
-    { act = function() api.talk.reset(); say("THE BALL IS BACK ON THE BOAT") end, wait = 0.5 }, shot("talk_long"),
+    { act = function() api.talk.reset(); say("THE BALL IS ON THE BOAT!") end, wait = 0.5 }, shot("talk_long"),
     { act = function() api.talk.reset(); tp(1340, 216); say("OOPS! GET THE BALL!") end, wait = 0.5 }, shot("talk_top"),
-    { act = function() api.talk.reset(); tp(2400, 184); say("IT LANDED ON A FERRY! RIDE THE PONTOON!") end, wait = 0.5 }, shot("talk_3rows"),
+    { act = function() api.talk.reset(); tp(2400, 184); say("THE SEAGULL DROPPED THE BALL!") end, wait = 0.5 }, shot("talk_longest"),
     { act = function() local st = api.stage(); st.msg = nil; api.talk.reset() end, wait = 0.1 },
     -- the hint bubbles (River Walk's tutorial zones) and the nudges, the gamepad's glyphs then the keyboard's
     { act = function() I.last = "pad"; tp(230, 184) end, wait = 0.03 }, shot("hint_rise"), { wait = 0.4 }, shot("hint_hop"),
@@ -78,6 +78,8 @@ return function(api)
     { act = function() extra = function() places({ { 50, 110, "HOLD: CLIMB", "a" } }) end end, wait = 0.1 }, shot("hint_side"),
     { act = function() extra = function() places({ { 270, 104, "PICK UP", "x" } }) end end, wait = 0.1 }, shot("hint_side_left"),
     { act = function() extra = function() places({ { 160, 52, "HOLD: SNEAK", "b" } }) end end, wait = 0.1 }, shot("hint_under"),
+    { act = function() extra = function() places({ { 160, 150, "HOLD: SNIFF", "sniff" } }) end end, wait = 0.1 }, shot("hint_sniff"),
+    { act = function() I.last = "key" end, wait = 0.1 }, shot("hint_sniff_key"), { act = function() I.last = "pad" end, wait = 0.05 },
     { act = function() extra = nil; api.talk.reset() end, wait = 0.1 },
     -- the pause: each row, the question, the controls page; the keyboard's glyphs too
     { act = function() I.last = "pad"; tp(760, 184); api.stage().msg = nil; api.talk.reset(); local st = api.stage(); st.taken = 12
@@ -119,6 +121,8 @@ return function(api)
     { act = function() local b = api.bonus(); b.phase, b.t = "play", 0; b.catches, b.points, b.time = 7, 700, 12 end, wait = 0.05 }, shot("bonus_play"),
     { act = function() local b = api.bonus(); b.catches, b.points, b.time = 11, 1350, 3.5 end, wait = 0.03 }, shot("bonus_last"),
     { act = function() local b = api.bonus(); b.phase, b.t = "timeup", 0.2 end, wait = 0.02 }, shot("bonus_timeup"),
+    { act = function() local b = api.bonus(); b.k, b.catches = #b.list + 1, #b.list end, wait = 0.02 }, shot("bonus_allcaught"),
+    { act = function() local b = api.bonus(); b.k, b.catches = 1, 11 end, wait = 0.02 },
     { act = function() local b = api.bonus(); b.phase, b.t, b.air = "result", 1.8, 4 end, wait = 0.02 }, shot("bonus_result_life"),
     { act = function() local b = api.bonus(); b.catches, b.t = 6, 1.8 end, wait = 0.02 }, shot("bonus_result_try"),
     { act = function() api.setState("select"); I.last = "pad"; sel(1) end, wait = 0.3 }, shot("select_1_pad"),

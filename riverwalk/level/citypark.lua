@@ -169,10 +169,10 @@ L.magpie = { flee = 110, fleeWalk = 40, bark = 95, dropSay = "IT DROPPED THE BAL
     { x = 2640, y = 124 },     -- the slide tower's rail (the ball lands on the tower)
     { x = 2752, y = 136 },     -- the climbing frame's top bar: its last perch
   } }
-L.ballBack = "THE BALL IS BACK BY THE LAMP"
+L.ballBack = "THE BALL IS BY THE LAMP!"
 -- the girl waits by the swings at the far end of the park
 L.girl = { x = 2840, y = 184 }
-L.outro = { "NOON IN TOWN. THE BALL", "ROLLED AWAY ACROSS THE PLAZA..." }
+L.outro = { "THE BALL ROLLED INTO TOWN!" }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
@@ -248,10 +248,10 @@ L.hints = {
   { x0 = 1376, x1 = 1560, text = "CART! GET UP HIGH!", bike = true },
   { x0 = 2350, x1 = 2576, text = "ANOTHER CART! UP HIGH!", bike = true },
   { x0 = 1040, x1 = 1100, text = "A GOOSE! BARK AT IT!" },
-  { x0 = 300,  x1 = 2880, text = "THE MAGPIE STILL HAS MY BALL!", need = "magpie" },
+  { x0 = 300,  x1 = 2880, text = "THE BIRD STILL HAS MY BALL!", need = "magpie" },
   { x0 = 1880, x1 = 2880, text = "BRING ME THE BALL!", need = "ball" },
   { x0 = 1880, x1 = 2880, text = "GO BACK FOR THE BALL!", need = "noball" },
 }
 
-L.intro = { "LEVEL 2", "CITY PARK", "A MAGPIE STOLE MIA'S BALL!", "SNEAK UP AND BARK, PEPPER!" }
+L.intro = { "LEVEL 2", "CITY PARK", "A BIRD TOOK THE BALL!" }
 return L

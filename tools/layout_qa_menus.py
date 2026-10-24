@@ -119,7 +119,11 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
         sc = many(bs, 'score')
         if sc: check(sc[0]['x1'] == Pic['x1'] - 4, f'{shot}: points end at the picture\'s right edge ({sc[0]["x1"]} vs {Pic["x1"] - 4})')
         lk = many(bs, 'lock')
-        if lk: check(abs(cx(lk[0]) - cx(Pic)) <= 0.5 and abs(cy(lk[0]) - cy(Pic)) <= 0.5, f'{shot}: padlock centred on the picture')
+        if lk:                                                              # (review fix 1) on the picture's middle line, off Pepper
+            pp = many(bs, 'cardpepper')
+            check(abs(cy(lk[0]) - cy(Pic)) <= 0.5 and Pic['x0'] < lk[0]['x0'] and lk[0]['x1'] < Pic['x1'], f'{shot}: padlock inside the picture on its middle line')
+            check(pp and not overlaps([lk[0], pp[0]]), f'{shot}: padlock clear of Pepper')
+            check(len(many(bs, 'strip')) == 2, f'{shot}: the strip shows BROWSE and BACK only on a locked card')
         dots = many(bs, 'dot')
         check(abs((min(b['x0'] for b in dots) + max(b['x1'] for b in dots)) / 2 - 159.5) <= 0.5 and min(b['y0'] for b in dots) > P['y1'] and max(b['y1'] for b in dots) < s[0]['y0'] - 2, f'{shot}: dots centred between the card and the strip')
         items = [T, N] + row + many(bs, 'lock', 'hard') + s + dots
@@ -240,13 +244,35 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
         check(not row, f'{shot}: no HUD row under the card {row[:4]}')
     top = [b for b in Ps + many(bs, 'ribbon')]
     check(top and min(b['y0'] for b in top) >= 4, f'{shot}: the card 4 px or more from the screen\'s top ({min(b["y0"] for b in top) if top else "-"})')
+# (review fix 6) pieces never off their panels: the HARD badge and the NEW BEST! stamp fully inside a panel (or the
+# badge fully on the ribbon); the sound toast over nothing written
+WORDS = {'title', 'name', 'label', 'story', 'tlabel', 'tvalue', 'mlabel', 'note', 'secrets', 'score', 'time', 'medal', 'soon', 'subtitle', 'goal', 'try', 'life', 'talk', 'hint'}
+for f in sorted(glob.glob(f'{D}/*.txt')):
+    shot = os.path.basename(f)[:-4]; bs = load(shot)
+    Ps = many(bs, 'panel', 'storypanel'); R = many(bs, 'ribbon')
+    def within(b, P, m=0): return b['x0'] >= P['x0'] + m and b['x1'] <= P['x1'] - m and b['y0'] >= P['y0'] + m and b['y1'] <= P['y1'] - m
+    for b in many(bs, 'hard'):
+        if Ps or R: check(any(within(b, P, 10) for P in Ps) or any(within(b, r) for r in R), f'{shot}: HARD fully inside the card or on the ribbon')
+    for b in many(bs, 'stamp'): check(any(within(b, P, 6) for P in Ps), f'{shot}: NEW BEST! fully inside the panel')
+    for b in many(bs, 'toast'): check(not [w for w in bs if w['name'] in WORDS and overlaps([b, w])], f'{shot}: the sound toast over nothing written')
+# (review fix 7) the HUD's score smaller than the bone count, right-aligned under it
+for f in sorted(glob.glob(f'{D}/*.txt')):
+    shot = os.path.basename(f)[:-4]; bs = load(shot); Bn = many(bs, 'bones'); Sc = many(bs, 'score')
+    if Bn and Sc and Sc[0]['y0'] > Bn[0]['y1']:
+        b, c = Bn[0], Sc[0]
+        check(c['y1'] - c['y0'] < b['y1'] - b['y0'] and c['x1'] == b['x1'] and 1 <= c['y0'] - b['y1'] - 1 <= 3, f'{shot}: the score smaller than the bone count, right-aligned under it')
+# (review fix 5) every ribbon's words keep 4 px or more from the ribbon's band ends
+for f in sorted(glob.glob(f'{D}/*.txt')):
+    shot = os.path.basename(f)[:-4]; bs = load(shot); R = many(bs, 'ribbon'); T = many(bs, 'title')
+    if R and T: check(T[0]['x0'] - R[0]['x0'] >= 4 and R[0]['x1'] - T[0]['x1'] >= 4, f'{shot}: the ribbon\'s words 4 px or more from its ends ({T[0]["x0"] - R[0]["x0"]}, {R[0]["x1"] - T[0]["x1"]})')
 check(len(set(strips.values())) == 1, f'strip: the same place on every screen {sorted(set(strips.values()))}')
 # pieces
 INK = (64, 11, 6); SH = (36, 8, 5)
 for n in ['g_a', 'g_b', 'g_x', 'g_y', 'g_l', 'g_r', 'g_start', 'g_dpad', 'g_lr', 'g_down', 'k_space', 'k_esc', 'k_shift', 'k_enter', 'k_x', 'k_z', 'k_q',
           'k_left', 'k_right', 'k_up', 'k_down', 'tog_on', 'tog_off', 'handheld', 'ribbon_menu',
           'arrow_l', 'arrow_r', 'lock', 'lock_big', 'dot_on', 'dot_off', 'frame_s', 'bubble', 'ball', 'stamp',
-          'medal_nohit_on', 'medal_nohit_off', 'medal_bones_on', 'medal_bones_off', 'medal_par_on', 'medal_par_off']:
+          'medal_nohit_on', 'medal_nohit_off', 'medal_bones_on', 'medal_bones_off', 'medal_par_on', 'medal_par_off',
+          'h_a', 'h_b', 'h_x', 'h_y', 'ribbon_wide']:
     a = np.array(Image.open(f'{ROOT}/riverwalk/art/ui/{n}.png').convert('RGBA')); op = a[..., 3] > 0
     p = np.pad(op, 1); edge = op & ~(p[:-2, 1:-1] & p[2:, 1:-1] & p[1:-1, :-2] & p[1:-1, 2:])
     cols = {tuple(c) for c in a[edge][:, :3]}

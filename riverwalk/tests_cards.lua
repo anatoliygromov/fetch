@@ -7,13 +7,15 @@ local St = require("stage")
 local Vc = require("vcam")
 local Talk = require("talk")
 local LEVELS = require("levels")
--- the characteristic spot of each level (Pepper's x; y: the ground found under her, the lowest one unless top)
+-- the characteristic spot of each level (Pepper's x; y: the ground found under her, the lowest one unless top;
+-- nobones: the greybox levels' placeholder bones are left out of the picture)
 local SPOTS = {
   riverwalk = { { 960 } }, citypark_tall = { { 1080 } }, downtown_tall = { { 1320 } },
-  rooftops = { { 3640 } }, soder = { { 1280 } }, night = { { 560 } },
+  rooftops = { { 3640, nobones = true } }, soder = { { 1280, nobones = true } }, night = { { 560, nobones = true } },
 }
 return function(api)
   local lg = love.graphics
+  require("bigfont").print = function() end                        -- (review fix 1) no greybox debug labels on a card
   local canvas = lg.newCanvas(320, 240)
   local only = os.getenv("CARDS_ALL")                              -- set: every eighth of each level, to choose spots
   -- the ground surfaces at x (tops of solid ground with 40 px clear above), lowest first
@@ -50,6 +52,7 @@ return function(api)
           if s.chase then s.chase = nil end
           for _ = 1, 40 do s:update(1 / 60, {}) end
           p.invuln = 0
+          if sp.nobones then for _, bn in ipairs(s.bones) do bn.taken = true end end
           lg.setCanvas(canvas); lg.clear(0, 0, 0, 1); lg.origin()
           s:draw(false)
           lg.setCanvas()

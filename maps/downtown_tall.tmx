@@ -6,14 +6,14 @@
  <properties>
   <property name="movers" value="{}"/>
   <property name="art" value="town"/>
-  <property name="ballBack" value="THE BALL IS BACK BY THE STATUE"/>
+  <property name="ballBack" value="THE BALL IS BY THE STATUE!"/>
   <property name="ballHomeAtLamps" type="bool" value="true"/>
   <property name="foot" type="int" value="424"/>
   <property name="greyStyle" value="town"/>
-  <property name="intro" value='{ "LEVEL 3", "DOWNTOWN", "A CAT IS SITTING ON THE BALL!", "ON THE STREET OR OVER THE ROOFS" }'/>
+  <property name="intro" value="{ &quot;LEVEL 3&quot;, &quot;DOWNTOWN&quot;, &quot;A CAT SITS ON THE BALL!&quot; }"/>
   <property name="name" value="DOWNTOWN"/>
   <property name="number" type="int" value="3"/>
-  <property name="outro" value='{ "AT THE STREET CAFE A GULL TOOK", "THE BALL UP TO ITS NEST!" }'/>
+  <property name="outro" value="{ &quot;A SEAGULL TOOK THE BALL!&quot; }"/>
   <property name="pickupSay" value="BRING ME THE BALL!"/>
   <property name="scenery" value="greybox"/>
   <property name="time" type="int" value="300"/>
@@ -1660,7 +1660,7 @@
   <object id="259" type="hints" x="1930" y="-30" width="190" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
-    <property name="text" value="CARGO BIKE! GET UP HIGH!"/>
+    <property name="text" value="BIG BIKE! GET UP HIGH!"/>
     <property name="bike" type="bool" value="true"/>
    </properties>
   </object>
@@ -1681,7 +1681,7 @@
   <object id="262" type="hints" x="2464" y="380" width="36" height="100">
    <properties>
     <property name="box" value="x0,x1,minY"/>
-    <property name="text" value="BOUNCE OVER THE CANAL!"/>
+    <property name="text" value="BOUNCE OVER THE WATER!"/>
    </properties>
   </object>
   <object id="263" type="hints" x="2784" y="380" width="48" height="100">

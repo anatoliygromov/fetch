@@ -15,16 +15,16 @@ return {
     ["bikes"] = "{}",
     ["movers"] = "{}",
     ["magpie.bark"] = 95,
-    ["magpie.dropSay"] = "THE GULL LET GO OF THE BALL!",
+    ["magpie.dropSay"] = "THE SEAGULL DROPPED THE BALL!",
     ["magpie.flee"] = 0,
     ["magpie.fleeWalk"] = 0,
     ["magpie.look"] = "gull",
-    ["ballBack"] = "THE BALL IS BACK BY THE LAMP",
+    ["ballBack"] = "THE BALL IS BY THE LAMP!",
     ["ballHomeAtLamps"] = true,
-    ["intro"] = "{ \"LEVEL 4\", \"ROOFTOPS\", \"A GULL TOOK THE BALL TO ITS NEST!\", \"MIA: MEET ME AT THE ROOF CAFE!\" }",
+    ["intro"] = "{ \"LEVEL 4\", \"ROOFTOPS\", \"THE SEAGULL HAS THE BALL!\" }",
     ["name"] = "ROOFTOPS",
     ["number"] = 4,
-    ["outro"] = "{ \"AFTERNOON ON SODER THE BALL\", \"SLIPPED AND ROLLED DOWN THE HILL...\" }",
+    ["outro"] = "{ \"THE BALL ROLLED DOWN THE HILL!\" }",
     ["scenery"] = "greybox",
     ["time"] = 420,
     ["title"] = "Pepper: Rooftops (greybox)",
@@ -4245,7 +4245,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1,minY,maxY",
-            ["text"] = "STAND ON THE FAN: STEAM LIFTS YOU!",
+            ["text"] = "STAND ON THE FAN!",
           },
         },
         {
@@ -4277,7 +4277,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1,minY,maxY",
-            ["text"] = "RIDE THE STEAM OVER THE CHIMNEYS",
+            ["text"] = "FLOAT ON THE STEAM!",
           },
         },
         {

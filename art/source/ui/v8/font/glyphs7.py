@@ -49,6 +49,8 @@ G = {
 "'": ["##", "##", "..", "..", "..", "..", ".."],
 }
 G['0'] = list(G['O'])
+# (review fix 3) Ö for SÖDER HILL (the pause's subtitle): 2 px dots on row 0 over the stems, a row clear, O 5 rows tall
+G['Ö'] = ['##..##', '......', '.####.', '##..##', '##..##', '##..##', '.####.']
 G['9'] = [r[::-1] for r in G['6'][::-1]]
 # metrics: a column that is empty in every row is a side bearing, not part of the letter; trimmed, so every pair of
 # letters sits exactly GAP px apart (v7's B, D and 1 carried one)

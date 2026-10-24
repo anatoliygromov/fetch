@@ -46,7 +46,7 @@ function T.port(who) loadPorts(); return PORT[who] or PORT.girl end   -- (the st
 T.PICS = {
   { "CLIMB", "climb" }, { "HOLD: UP", "climb" }, { "BIG JUMP", "jump" }, { "BOUNCE", "bounce" }, { "HOP", "hop" },
   { "SNEAK", "sneak" }, { "CRAWL", "crawl" }, { "DUCK", "duck" }, { "STAY ON", "stay" }, { "DROP", "drop" },
-  { "PICK UP", "pickup" }, { "GIVE", "give" }, { "BARK", "bark" }, { "RUN", "run" },
+  { "PICK UP", "pickup" }, { "GIVE", "give" }, { "BARK", "bark" }, { "RUN", "run" }, { "SNIFF", "sniff" },
 }
 function T.picFor(line)
   if not line.btn then return nil end
@@ -100,8 +100,10 @@ function T.hintRows(text)
   return require("flow").wrap(13, t, T.ROW_W)
 end
 -- the buttons as the device used last shows them (hud.lua pieces, 13 px)
-T.GLYPHS = { pad = { a = "g_a", b = "g_b", x = "g_x", y = "g_y", down = "g_down", right = "g_right", up = "g_dpad" },
-  key = { a = "k_space", b = "k_shift", x = "k_x", y = "k_z", down = "k_down", right = "k_right", up = "k_up" } }
+T.GLYPHS = { pad = { a = "h_a", b = "h_b", x = "h_x", y = "h_y", down = "g_down", right = "g_right", up = "g_dpad", sniff = "g_l" },
+  key = { a = "k_space", b = "k_shift", x = "k_x", y = "k_z", down = "k_down", right = "k_right", up = "k_up", sniff = "k_q" } }
+-- (review fix 3: sniff is taught by a bubble with the L1 shoulder or the Q key, like every other action; review fix 4:
+-- the face buttons are the 15 px hint coins, their letters in ink on a flat face, legible at 1x)
 function T.glyphFor(btn) local G = T.GLYPHS[I.last] or T.GLYPHS.key; return G[btn] or G.a end
 T.B_PAD, T.B_GAP, T.B_PITCH, T.B_AWAY = 6, 4, 15, 4
 -- the bubble for a line { btn, text, pic } near Pepper: above her head (tail down), else beside her (tail toward
@@ -297,7 +299,7 @@ end
 -- bubble of its own near her, bouncing: the button, its picture and its word (a guess while pushing: Down to
 -- crawl, else A to hop)
 T.NUDGE = { a = { "HOP", "hop" }, down = { "CRAWL", "crawl" }, b = { "SNEAK", "sneak" }, x = { "PICK UP", "pickup" },
-  y = { "BARK!", "bark" }, right = { "RUN", "run" } }
+  y = { "BARK!", "bark" }, right = { "RUN", "run" }, sniff = { "SNIFF", "sniff" } }
 function T.drawNudge(stage)
   local n = T.nudge
   if not n.btn then return end
