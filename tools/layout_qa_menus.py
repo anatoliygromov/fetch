@@ -255,6 +255,12 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
         if Ps or R: check(any(within(b, P, 10) for P in Ps) or any(within(b, r) for r in R), f'{shot}: HARD fully inside the card or on the ribbon')
     for b in many(bs, 'stamp'): check(any(within(b, P, 6) for P in Ps), f'{shot}: NEW BEST! fully inside the panel')
     for b in many(bs, 'toast'): check(not [w for w in bs if w['name'] in WORDS and overlaps([b, w])], f'{shot}: the sound toast over nothing written')
+# (review fix 7) the HUD's score smaller than the bone count, right-aligned under it
+for f in sorted(glob.glob(f'{D}/*.txt')):
+    shot = os.path.basename(f)[:-4]; bs = load(shot); Bn = many(bs, 'bones'); Sc = many(bs, 'score')
+    if Bn and Sc and Sc[0]['y0'] > Bn[0]['y1']:
+        b, c = Bn[0], Sc[0]
+        check(c['y1'] - c['y0'] < b['y1'] - b['y0'] and c['x1'] == b['x1'] and 1 <= c['y0'] - b['y1'] - 1 <= 3, f'{shot}: the score smaller than the bone count, right-aligned under it')
 # (review fix 5) every ribbon's words keep 4 px or more from the ribbon's band ends
 for f in sorted(glob.glob(f'{D}/*.txt')):
     shot = os.path.basename(f)[:-4]; bs = load(shot); R = many(bs, 'ribbon'); T = many(bs, 'title')

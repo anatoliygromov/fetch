@@ -67,18 +67,19 @@ function U.status(g, avoid)
     U.say(13, low and "dim" or "gold", tstr, gx + cw + G, top(U.TOP_C, th), "time")
     if g.hard then U.hardTag8(159.5, top(U.TOP_C, ch) + ch + 2) end
   end
-  -- bones (the bone and the count) right-aligned at the margin, the score under the count, right-aligned too
+  -- bones (the bone and the count) right-aligned at the margin, the score under the count, right-aligned too.
+  -- (review fix 7) the score is secondary: the 7 px font (docs/ui_design.md), smaller than the 13 px count
   local bstr = ("%02d/%02d"):format(g.bones, g.total)
   local ow, oh = U.body("bone")
   local nw = U.sayW(13, bstr)
   local sstr = ("%06d"):format(g.score)
-  local sw = U.sayW(13, sstr)
+  local sw, sh7 = U.sayW(7, sstr), U.sayH(7)
   local bx = 319 - M - nw + 1 - G - ow
-  local sy = top(U.TOP_C, th) + th + 3                           -- 2 clear rows under the count (its shadow takes one)
-  if not hits(avoid, math.min(bx, 319 - M - sw), M, 320, sy + th) then
+  local sy = top(U.TOP_C, th) + th + 2                           -- a clear row under the count (its shadow takes one)
+  if not hits(avoid, math.min(bx, 319 - M - sw), M, 320, sy + sh7) then
     U.put("bone", bx, top(U.TOP_C, oh), "bone")
     U.say(13, "gold", bstr, 319 - M - nw + 1, top(U.TOP_C, th), "bones")
-    U.say(13, "gold", sstr, 319 - M - sw + 1, sy, "score")
+    U.say(7, "gold", sstr, 319 - M - sw + 1, sy, "score")
   end
   -- lives: Pepper's head and x3, bottom left, on one centre line, the head's bottom at the margin
   local hw, hh = U.body("head")
