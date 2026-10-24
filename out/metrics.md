@@ -1,6 +1,29 @@
 # Grid and palette track: metrics
 
-## Round 2 (producer fixes), final numbers
+## Round 3 (review fixes), final numbers
+
+| Gate | Result | Pass |
+|---|---|---|
+| Off-palette / mixels | 0 / 0 | yes |
+| Form whole picture / visible background only | 2.49 / 7.83 and 2.39 / 7.48 | yes |
+| Checker phase | 1.0 (2225 px; continuous coat bands) | yes |
+| Pepper outline L-corners / gaps / staircase | 0 / 0 / 1.0 | yes |
+| Strokes L-corners / gaps | 0 / 0 | yes |
+| Staircase, all named shapes | 0.96 to 1.0 | yes |
+| Boundary distance | 0.19 to 0.32 block | yes |
+| IoU | Pepper 0.988, clouds 0.955 / 0.917 / 0.907, bandana 0.943, others 0.63 to 0.83 | partly |
+| Colours used by 3 px or fewer, in the visible background | 1 (was 15 in the composite) | yes |
+| Single-pixel specks, visible background | 652 (was 1465 in round 1) | see notes |
+
+Round 3 rules: arches rebuilt symmetric from the painting's openings (6 arches) and the deck
+as continuous rows; railing balusters as 1 px bars at the painted bar centres (48 bars), only
+where the painting has a bar; coat checker zones closed, filled and island-free; spire taper
+monotone; bird as a 1 px pixel-perfect polyline; halo rule for sails; 1 px nub rule in sky,
+clouds, city, water, pavement, stone, foliage; water, foliage and city reduced to the shades
+covering 92 to 93 % of their pixels; straight bodies (bin, left lamp post) column-uniform;
+windows on facades, the tower and boats kept as their own cells; stricter specks in pavement,
+water, sky and clouds; colours used 3 times or fewer snap to their material ramp.
+
 
 | Gate | Result | Pass |
 |---|---|---|

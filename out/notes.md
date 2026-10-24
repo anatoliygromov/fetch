@@ -97,26 +97,23 @@ geometry (IoU and mean symmetric boundary distance in blocks after uniform re-up
 blur of luma against per cell means of the painting, refined cells with `--grid`); checker phase (per
 colour pair with 8+ checker pixels, share on the majority parity). Every gate is also a function.
 
-## 5. Remaining defects I can see (10x comparisons, round 2)
+## 5. Remaining defects I can see (10x comparisons, round 3)
 
-Fixed in round 2 (checked at 10x): the mast starts within a cell of the painted top; the right sail is
-two-tone cream and light grey; the bridge windows are blue in a row (no grey); the lantern glass has no
-red, black or teal strays; the cloud's warm beige shading is kept; the railing has single rails and
-continuous 1 px bars in front of the foliage; the bench legs are thin; the stone wall's mortar lines are
-continuous bands.
+Fixed and checked: the bridge arches are the same size and shape with one continuous deck
+line; the balusters stand at the painting's spacing, 1 px each, with no moire; the coat dither
+forms continuous bands; the spire tapers without a bump; the bird is a clean 1 px V; the pavement
+has fewer blue specks; the lamp post's highlight is one unbroken column; the rare colours are gone.
 
 Still visible:
-* Sailboats: the right boat's upper mast is pale mauve (the painting's pale strip), not the slate edge
-  beside it; a few tan cells remain at the lower left of the right sail.
-* Bridge: the first window is a lighter blue than the others (the painting's is lighter too,
-  #256598 against #0b588c); the stone band under the windows still mixes two colours in places.
-* Lamp: the post's light edge is thinner than painted.
-* Railing: the top rail is two rows thick (the painting's is about 1.5 blocks); posts read darker
-  navy than the painting's grey-brown.
-* Water: a few sparkle dashes are one cell shorter.
-* Pepper's body: 1 px outline (painting 1 to 1.5 blocks); coat checker is a regular 50 % checker.
-* Specks: 820 remain; 580 are single painted blocks I kept because the speck rule would otherwise
-  erase the bridge windows, water sparkles and coat squares (see metrics.md).
+* Yacht at x135-160, y150-165: still muddled (hull and windows blur into the shore greens).
+* The grey block building keeps only part of its window grid; its warm lit windows read as grey.
+* The tower windows are fewer and softer than painted.
+* sail_right IoU went from 0.76 to 0.71 (halo rule trims its pale edge); the right sail's mast
+  top is still pale mauve.
+* The bin (x275-290) and its base are darker and flatter than painted.
+* Foliage stays mottled in places; the mid-right trees are better clumped than in round 2, but
+  not as clean as the painting's leaf clumps.
+* Pepper's coat checker is regular 50 % where the painting is sparser.
 
 ## Research used
 
