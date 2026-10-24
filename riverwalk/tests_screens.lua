@@ -121,7 +121,6 @@ return function(api)
     { act = function() local b = api.bonus(); b.phase, b.t = "timeup", 0.2 end, wait = 0.02 }, shot("bonus_timeup"),
     { act = function() local b = api.bonus(); b.phase, b.t, b.air = "result", 1.8, 4 end, wait = 0.02 }, shot("bonus_result_life"),
     { act = function() local b = api.bonus(); b.catches, b.t = 6, 1.8 end, wait = 0.02 }, shot("bonus_result_try"),
-    { act = function() Se.shownAt = love.timer.getTime(); api.setState("select"); sel(1) end, wait = 0.1 }, shot("toast_menu"),
     { act = function() api.setState("select"); I.last = "pad"; sel(1) end, wait = 0.3 }, shot("select_1_pad"),
     { act = function() sel(2) end, wait = 0.1 }, shot("select_2_pad"),
     { act = function() sel(3) end, wait = 0.1 }, shot("select_3_pad"),
@@ -131,6 +130,7 @@ return function(api)
     { act = function() sel(4) end, wait = 0.1 }, shot("select_4_key"),
     { act = function() F.hard = true; sel(2) end, wait = 0.1 }, shot("select_hard"),
     { act = function() F.hard = false; sel(1); F.selectInput("right") end, wait = 0.05 }, shot("select_slide"),
+    { act = function() sel(1); Se.shownAt = love.timer.getTime() end, wait = 0.1 }, shot("toast_menu"),
   }
   local old = love.update
   love.update = function(dt)

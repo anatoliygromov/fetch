@@ -100,6 +100,9 @@ tools/layout_qa_menus.py out_ui/step3/frames`.
 - **Old code removed:** hud.lua's blue signs, boxes, prompt banner, 5x7 text, the dotted checker dim, the old lock, dog,
   medal, volume bar and HARD tag, the code-drawn picture signs; talk.lua's round button glyphs and the old panel;
   flow.lua's checker backdrop. Nothing in the UI uses bigfont.lua any more.
+- **All screens:** out_ui/step3/all_screens.png (every UI screen at 2x, 24 frames: title, menu, options, controls,
+  level select, intro, talk, hints, nudge, pause, quit, controls from the pause, tally, story, game over, ending,
+  bonus intro / play / result, sound toast), looked at: nothing old left.
 - **Left as they are (not UI screens):** the in-world tells drawn with bigfont.lua ("!" over a hissing goose, the cat,
   a bike; "?" when an animal hears a bark; chase.lua, critters.lua, scene.lua, roofs.lua, night.lua) and the greybox
   prop labels (CAT, HOLLOW LOG, CRATES, TERRACE...; scene.lua, setpieces.lua), which go when those levels get art;
