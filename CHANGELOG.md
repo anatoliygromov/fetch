@@ -212,6 +212,13 @@ Follows docs/ui_design.md (the owner's UI design, 24 Oct). Stops here for the ow
   wink is redrawn by hand as one clean lid stroke with three lashes. The far city keeps its texture (its windows).
   Lone pixels 4.2 % -> 1.0 % (Pepper 3.8 % -> 0.4 %), 62 -> 48 colours. The pant and blink frames are rebuilt from
   the cleaned head. Gate: tools/cleanup_gate.py.
+- **Pepper's hand shading pass (art/source/title/tools/shade.py):** her coat repainted on a 5-step blue-black ramp
+  plus two cool sheen colours, one key light from the upper left, a cool rim on the far ear and cheek; the forms
+  (domed forehead, brow over the open eye, muzzle top, near cheek, ear folds) as clean clusters, crisp sheen shapes
+  on the forehead, brow, muzzle top and ear edges; the wink an arched 2 px stroke with three lashes and the cheek
+  pushed up under it; the nose's noise gone, its wet highlight kept; one clean tongue groove; the bandana's folds
+  and the chest redrawn as clean shapes; blink lid takes the brow's lid colour. Lone pixels on Pepper 0.36 % ->
+  0.23 % (whole picture 0.95 %). Gate: art/source/title/tools/sheen_gate.py (out_sheen/).
 - **Gates:** tools/title_frames.py (frames at 3x, colour and greyscale, the title loop GIF at 2x),
   tools/layout_qa_menus.py (226 checks, all pass), tools/pilot2_cards.py: out_ui/pilot2/card_title.png and
   card_menus.png.
