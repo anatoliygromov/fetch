@@ -119,3 +119,12 @@ blur 0 / 0.5 / 0.7 / 1.0 cell, islands 1 / 3 / 4 / 6, mode filter 0 / 1 / 2 pass
 50 % only or 25/50/75 % Bayer levels: p95 8.5 to 9.1; the ones under 8.6 leave islands.
 Also fixed: despeckling no longer erases 25 % / 75 % Bayer dots (they have a same-colour
 cell two away); this alone took p95 from 8.02 to 7.96 without the ear bands.
+
+## Final (producer's call): round 3 coat and ear + round 4 wink
+
+Ear bands off (`EAR_BANDS=False`), round 3 despeckling, near-black-to-`#222231` only in
+the lash box. Against 721f620 the output differs in 35 cells, all in the lash box
+(rows 114-121, cols 76-89). Gates: IoU head .962, left ear .958, right ear .921, eye
+.926, nose .950, tongue .927, bandana .959; worst boundary distance 0.303; L-corners 0,
+gaps 0, staircase 0.960; off-palette 0, anti-aliasing dots 0; checker 834 of 834 in
+phase; form mean 2.43, p95 7.97. All gates pass.

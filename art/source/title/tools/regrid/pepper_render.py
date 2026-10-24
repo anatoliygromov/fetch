@@ -29,7 +29,7 @@ NX, NY = 320, 240
 CW, CH = S.CW, S.CH
 P = dict(BLACK_W=24.0, THICK_AT=14.5, MIN_LINE=20, INSET=2.5, DARK_FRAC=0.0, SIGMA=3.0, SIGMA_PART=3.0,
          SHAPE_SIGMA=3.0, LINE_S=6.0, LIT_L=28.0, LIT_W=13.0, LIT_MIN=50, FOLD_W=13.0, FOLD_MIN=25, RIDGE_SIZE=17, RIDGE_D=18.0, RIDGE_D_T=10.0, CREASE_W=18.0, FOLD_MIN_B=60,
-         DITH_W=23, DITH_OP=5, DITH_T=0.7, DITH_R=0.15, DITH_SC=0.025, MASK_SIGMA=4.0, UNDER_OUTLINE=4.0, OUT_S=12.0, REFINE=True, DETAILS=True, JAW_TONE=1, TONGUE_S=8.0, EAR_BANDS=True, EAR_SIGMA=0.7, EAR_ISLAND=6, EAR_NO_CHECK=[], EAR_QUARTERS=(1, 2, 3), EAR_MODE=2, CLEAR_TONE=1, DITH_REG=True, DITH_MIN=6, PINK_RAMP=[8, 9, 44, 23], RARE_MAX=3, JAW_RUN=5, JAW_BOX=(118, 124, 150, 166), HL_ID=5, HL_COVER=0.3, HL_STRAY=[60, 27, 53, 10, 52, 48, 12, 7], NOSE_MAP=(([10, 53, 27, 60], 22), ([7, 12, 48, 52], 35)), DUP_FRAC=0.5, SIL_NEAR=2.0, SIL_CLOSE=0, OUT_K=26, REFINE_PASSES=8, MIX_W=40.0, OUT_CORNER=75.0, OUT_STRAIGHT=2.5, SPUR=12, BLACK_SPUR=18, BLACK_EXTRA=[2], PURE_FRAC=0.4, NEARBLACK_W=0.0, DARK_SIDES=0.4,
+         DITH_W=23, DITH_OP=5, DITH_T=0.7, DITH_R=0.15, DITH_SC=0.025, MASK_SIGMA=4.0, UNDER_OUTLINE=4.0, OUT_S=12.0, REFINE=True, DETAILS=True, JAW_TONE=1, TONGUE_S=8.0, EAR_BANDS=False, EAR_SIGMA=0.7, EAR_ISLAND=6, EAR_NO_CHECK=[], EAR_QUARTERS=(1, 2, 3), EAR_MODE=2, CLEAR_TONE=1, DITH_REG=True, DITH_MIN=6, PINK_RAMP=[8, 9, 44, 23], RARE_MAX=3, JAW_RUN=5, JAW_BOX=(118, 124, 150, 166), HL_ID=5, HL_COVER=0.3, HL_STRAY=[60, 27, 53, 10, 52, 48, 12, 7], NOSE_MAP=(([10, 53, 27, 60], 22), ([7, 12, 48, 52], 35)), DUP_FRAC=0.5, SIL_NEAR=2.0, SIL_CLOSE=0, OUT_K=26, REFINE_PASSES=8, MIX_W=40.0, OUT_CORNER=75.0, OUT_STRAIGHT=2.5, SPUR=12, BLACK_SPUR=18, BLACK_EXTRA=[2], PURE_FRAC=0.4, NEARBLACK_W=0.0, DARK_SIDES=0.4,
          PAIRS=[(0, 1), (0, 7), (7, 11), (0, 11), (7, 10), (1, 2), (10, 12), (8, 9), (9, 44)],
          MERGE={3: 2, 13: 2})
 
@@ -503,7 +503,10 @@ def render(params=None, verbose=True):
     if p['DETAILS']:
         # near-black cleared around the traced strokes becomes the coat's darkest tone,
         # so the strokes keep the painting's dark surround without merging into a blob
-        Lf[clr & nearblack & D] = p['CLEAR_TONE']
+        lb = DT.CLEAR_BOXES[0]       # the lash box only (round 3 elsewhere)
+        lash_box = np.zeros(L.shape, bool)
+        lash_box[lb[1] - S.BOX[1]:lb[3] - S.BOX[1], lb[0] - S.BOX[0]:lb[2] - S.BOX[0]] = True
+        Lf[clr & nearblack & D & lash_box] = p['CLEAR_TONE']
     p['_Lf'] = Lf; p['_valid'] = D & ~black_rep & ~(darkm & (edge_dist <= p['INSET'] + p['UNDER_OUTLINE']))
     p['_Lfull'] = np.where(np.isin(L, g['line']), Lf, L)
     pairs = [pr for pr in p['PAIRS'] if max(pr) < len(pal)]
@@ -876,7 +879,7 @@ def mode_label(L, path, ids):
     return int(u[n.argmax()])
 
 
-def despeckle(idx, protect, linecells):
+def despeckle(idx, protect, linecells, keep_dots=False):
     """a single cell whose colour no 8-neighbour shares, surrounded by one colour on
     at least 6 of 8 sides, takes that colour (protected colours stay)."""
     out = idx.copy()
@@ -891,8 +894,8 @@ def despeckle(idx, protect, linecells):
             if (nb_ == c).any():
                 continue
             # a dot of a regular 2 x 2 pattern (same colour two cells away) stays
-            if (j >= 2 and idx[j - 2, i] == c) or (j + 2 < H and idx[j + 2, i] == c) or \
-               (i >= 2 and idx[j, i - 2] == c) or (i + 2 < W and idx[j, i + 2] == c):
+            if keep_dots and ((j >= 2 and idx[j - 2, i] == c) or (j + 2 < H and idx[j + 2, i] == c) or
+                              (i >= 2 and idx[j, i - 2] == c) or (i + 2 < W and idx[j, i + 2] == c)):
                 continue
             u, n = np.unique(nb_[nb_ >= 0], return_counts=True)
             if len(u) and n.max() >= 6:

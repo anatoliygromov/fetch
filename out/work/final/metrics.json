@@ -1,12 +1,12 @@
 {
  "geometry": {
   "head": {
-   "iou": 0.962,
-   "bd_cells": 0.28
+   "iou": 0.9622,
+   "bd_cells": 0.279
   },
   "earL": {
-   "iou": 0.957,
-   "bd_cells": 0.274
+   "iou": 0.9581,
+   "bd_cells": 0.267
   },
   "earR": {
    "iou": 0.921,
@@ -42,19 +42,19 @@
  "colour": {
   "off_palette": 0,
   "colours": 25,
-  "in_cell": 0.9214,
-  "in_cell_or_nb": 0.985,
-  "mixels_strict": 146,
+  "in_cell": 0.9448,
+  "in_cell_or_nb": 0.9918,
+  "mixels_strict": 152,
   "mixel_dots": 0
  },
  "pattern": {
-  "pattern_cells": 1021,
+  "pattern_cells": 834,
   "in_phase": 1.0
  },
  "form": {
-  "mean": 2.665,
-  "p95": 9.099
+  "mean": 2.431,
+  "p95": 7.967
  },
  "cells": 11624,
- "seconds": 32.9
+ "seconds": 31.8
 }
