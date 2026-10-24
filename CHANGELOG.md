@@ -2,6 +2,12 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Portraits as busts, no frames (24 Oct, owner)
+The owner: Mia was cropped in the UI and he did not like the frame around Mia and the dog. The talk panel and the
+story card now draw each portrait as a cut-out bust at 1x, its whole head and hood, with a 1 px light rim, standing on
+the panel's end with its shoulders tucked behind the panel; no frame. No HUD under the story card between levels
+(Mia's head rose into it). Checks: PEPPER UNCHANGED, check_flow 125 of 125.
+
 ## Branch `ui/hud-v8` step 3: every remaining screen in the kit (24 Oct)
 Follows docs/ui_design.md. Drawing only: logic, inputs and saves as they were unless a line says otherwise. Frames:
 `python3 tools/screen_frames.py` (out_ui/step3/frames, colour and greyscale at 3x), checks: `python3
