@@ -29,7 +29,7 @@ NX, NY = 320, 240
 CW, CH = S.CW, S.CH
 P = dict(BLACK_W=24.0, THICK_AT=14.5, MIN_LINE=20, INSET=2.5, DARK_FRAC=0.0, SIGMA=3.0, SIGMA_PART=3.0,
          SHAPE_SIGMA=3.0, LINE_S=6.0, LIT_L=28.0, LIT_W=13.0, LIT_MIN=50, FOLD_W=13.0, FOLD_MIN=25, RIDGE_SIZE=17, RIDGE_D=18.0, RIDGE_D_T=10.0, CREASE_W=18.0, FOLD_MIN_B=60,
-         DITH_W=23, DITH_OP=5, DITH_T=0.7, DITH_R=0.15, DITH_SC=0.025, MASK_SIGMA=4.0, UNDER_OUTLINE=4.0, OUT_S=12.0, REFINE=True, DETAILS=True, JAW_TONE=1, JAW_RUN=5, JAW_BOX=(118, 124, 150, 166), HL_ID=5, HL_COVER=0.3, HL_STRAY=[60, 27, 53, 10, 52, 48, 12, 7], NOSE_MAP=(([10, 53, 27, 60], 22), ([7, 12, 48, 52], 35)), DUP_FRAC=0.5, SIL_NEAR=2.0, SIL_CLOSE=0, OUT_K=26, REFINE_PASSES=8, MIX_W=40.0, OUT_CORNER=75.0, OUT_STRAIGHT=2.5, SPUR=12, BLACK_SPUR=18, BLACK_EXTRA=[2], PURE_FRAC=0.4, NEARBLACK_W=0.0, DARK_SIDES=0.4,
+         DITH_W=23, DITH_OP=5, DITH_T=0.7, DITH_R=0.15, DITH_SC=0.025, MASK_SIGMA=4.0, UNDER_OUTLINE=4.0, OUT_S=12.0, REFINE=True, DETAILS=True, JAW_TONE=1, TONGUE_S=8.0, DITH_REG=True, DITH_MIN=6, PINK_RAMP=[8, 9, 44, 23], RARE_MAX=3, JAW_RUN=5, JAW_BOX=(118, 124, 150, 166), HL_ID=5, HL_COVER=0.3, HL_STRAY=[60, 27, 53, 10, 52, 48, 12, 7], NOSE_MAP=(([10, 53, 27, 60], 22), ([7, 12, 48, 52], 35)), DUP_FRAC=0.5, SIL_NEAR=2.0, SIL_CLOSE=0, OUT_K=26, REFINE_PASSES=8, MIX_W=40.0, OUT_CORNER=75.0, OUT_STRAIGHT=2.5, SPUR=12, BLACK_SPUR=18, BLACK_EXTRA=[2], PURE_FRAC=0.4, NEARBLACK_W=0.0, DARK_SIDES=0.4,
          PAIRS=[(0, 1), (0, 7), (7, 11), (0, 11), (7, 10), (1, 2), (10, 12), (8, 9), (9, 44)],
          MERGE={3: 2, 13: 2})
 
@@ -461,7 +461,7 @@ def render(params=None, verbose=True):
 
     # ---- 2b. hand-traced details (lashes, brow) ---------------------------------
     if p['DETAILS']:
-        clr = DT.clear_mask(L.shape, S.BOX)
+        clr = DT.clear_mask(L.shape, S.BOX, LN)
         # automatic black lines that run mostly inside a clear box are replaced
         keep_lines = []
         for item in lines:
@@ -476,7 +476,7 @@ def render(params=None, verbose=True):
             th = st.get('thick', 1)
             cl = raster_line(q, False, th)
             d_ = dict(cells=set(cl), poly=q - [x0, y0], width=8.0 * th, path=(q - [x0, y0]), thick=th, name=st['name'])
-            lines.append((set(cl), line_id, 3, d_))
+            lines.append((set(cl), st.get('colour', line_id), st.get('layer', 3), d_))
         nearblack = np.isin(L, [line_id] + p['BLACK_EXTRA'])
         # the wink's thick arc stays (it is below the lash box); the blob around the lashes goes
         replaced |= clr & nearblack
@@ -518,7 +518,10 @@ def render(params=None, verbose=True):
     SHAPES = ('eye', 'nose', 'tongue', 'bandana')
     taken = np.zeros((NY, NX), bool); taken_px = np.zeros(L.shape, bool)
     for k in SHAPES:
-        shp[k] = shape_cells(parts[k], I, J, p['SHAPE_SIGMA'] if k != 'bandana' else p['MASK_SIGMA']) & own & ~taken
+        if k == 'tongue' and p['DETAILS']:
+            shp[k] = poly_cells(parts[k], p['TONGUE_S'], x0, y0) & own & ~taken
+        else:
+            shp[k] = shape_cells(parts[k], I, J, p['SHAPE_SIGMA'] if k != 'bandana' else p['MASK_SIGMA']) & own & ~taken
         taken |= shp[k]
     rest = own & ~taken
     for k in SHAPES:
@@ -532,6 +535,13 @@ def render(params=None, verbose=True):
     if miss.any():
         _, (my, mx) = ndi.distance_transform_edt(miss | ~own, return_indices=True)
         cls[miss] = cls[my[miss], mx[miss]]
+
+    if p['DETAILS'] and p['DITH_REG']:
+        coat_d = [1000 + 4 * k + lv for k, pr in enumerate(pairs) if not set(pr) & ({2, 4} | set(g['pink'])) for lv in (1, 2, 3)]
+        sel_ = own & ~(shp['eye'] | shp['nose'] | shp['tongue'])
+        cls = regularize_dither(cls, sel_, p['DITH_MIN'], set(coat_d), pairs)
+        dark_d = [1000 + 4 * k + lv for k, pr in enumerate(pairs) if set(pr) == {1, 2} for lv in (1, 2, 3)]
+        cls = regularize_dither(cls, sel_, p['DITH_MIN'], set(dark_d), pairs, iters=1, join=False)
 
     # ---- 4. compose ------------------------------------------------------------
     jj, ii = np.indices((NY, NX))
@@ -615,6 +625,7 @@ def render(params=None, verbose=True):
                                      protect=protect, passes=p['REFINE_PASSES'], mix_w=p['MIX_W'])
         if p['DETAILS']:
             before = idx2.copy()
+            p['_pal'] = pal
             idx2, cmap = detail_cells(idx2, cmap, fixed_idx, oc, shp, parts, L, I, J, line_id, p)
             # the detail cells stay; a second refinement adapts the fill around them
             chg = (idx2 != before) & alive
@@ -647,6 +658,60 @@ def ids_dark(L, path, pal):
     v = L[path[:, 1].astype(int), path[:, 0].astype(int)]
     y = _lum(pal[v].astype(np.float32))
     return list(np.unique(v[y <= np.median(y)]))
+
+
+def poly_cells(mask, smooth, x0, y0):
+    """cells whose centre lies inside the mask's smoothed outer contour (a convex part
+    such as the tongue then gets an even staircase)."""
+    import cv2
+    cnts, _ = cv2.findContours(mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    c = max(cnts, key=len)[:, 0, :].astype(float)
+    q = resample_closed(SH.smooth_contour(c, s=smooth, k=26, thr=75.0, straight_tol=2.5))
+    jj, ii = np.indices((NY, NX))
+    return points_in_polys([q], (ii + 0.5) * CW - x0, (jj + 0.5) * CH - y0)
+
+
+def regularize_dither(cls, sel, min_cells, dclasses, pairs, iters=3, join=True):
+    """Checker areas as continuous bands (cell level): a dither cell with at most 3 of
+    its 3 x 3 neighbourhood in its class takes the neighbourhood's most common class; a
+    plain cell with at least 6 neighbours of one dither class joins it (holes filled);
+    dither islands under min_cells take their surroundings' most common plain class."""
+    cls = cls.copy()
+    p_join = 5
+    H, W = cls.shape
+    for _ in range(iters):
+        new = cls.copy()
+        for j in range(1, H - 1):
+            for i in range(1, W - 1):
+                if not sel[j, i]:
+                    continue
+                win = cls[j - 1:j + 2, i - 1:i + 2].ravel()
+                win = win[win >= 0]
+                c = cls[j, i]
+                u, n = np.unique(win, return_counts=True)
+                if c in dclasses and (win == c).sum() <= 3:
+                    a_, b_ = pairs[(c - 1000) // 4]
+                    o = [(k, x) for x, k in zip(u, n) if x != c and (x in dclasses or x in (a_, b_))]
+                    if o:
+                        new[j, i] = max(o)[1]
+                elif join and 0 <= c < 1000:
+                    o = [(k, x) for x, k in zip(u, n) if x in dclasses and k >= p_join and c in pairs[(x - 1000) // 4]]
+                    if o:
+                        new[j, i] = max(o)[1]
+        cls = np.where(sel, new, cls)
+    for c in np.unique(cls[sel]):
+        if c not in dclasses:
+            continue
+        lab, n = ndi.label((cls == c) & sel)
+        for k in range(1, n + 1):
+            m = lab == k
+            if m.sum() >= min_cells:
+                continue
+            ring = ndi.binary_dilation(m, np.ones((3, 3))) & ~m & (cls >= 0) & (cls < 1000)
+            if ring.any():
+                u, nn = np.unique(cls[ring], return_counts=True)
+                cls[m] = u[nn.argmax()]
+    return cls
 
 
 def detail_cells(idx, cmap, fixed_idx, oc, shp, parts, L, I, J, line_id, p):
@@ -687,6 +752,44 @@ def detail_cells(idx, cmap, fixed_idx, oc, shp, parts, L, I, J, line_id, p):
         # warm greys and tan become the nose's own cool gloss tones of similar value
         for src_ids, dst in p['NOSE_MAP']:
             mm = near & np.isin(idx, src_ids)
+            idx[mm] = dst; cmap[mm] = dst
+    # dark specks left in the traced-detail boxes (not on a stroke): neighbours' colour
+    for bx0, by0, bx1, by1 in DT.CLEAR_BOXES:
+        i0_, i1_ = int(bx0 / CW), int(np.ceil(bx1 / CW)); j0_, j1_ = int(by0 / CH), int(np.ceil(by1 / CH))
+        for j_ in range(max(1, j0_), min(NY - 1, j1_)):
+            for i_ in range(max(1, i0_), min(NX - 1, i1_)):
+                if fixed_idx[j_, i_] >= 0 or idx[j_, i_] not in [line_id] + p['BLACK_EXTRA']:
+                    continue
+                win = idx[j_ - 1:j_ + 2, i_ - 1:i_ + 2].ravel()
+                darkn = np.isin(win, [line_id] + p['BLACK_EXTRA']).sum() - 1
+                if darkn <= 1:
+                    v = win[(win >= 0) & ~np.isin(win, [line_id] + p['BLACK_EXTRA'])]
+                    if len(v):
+                        u, n = np.unique(v, return_counts=True)
+                        idx[j_, i_] = u[n.argmax()]; cmap[j_, i_] = u[n.argmax()]
+    # eye: catchlight and sclera crescent as hand-placed cells (pepper_detail.py)
+    want = np.zeros(idx.shape, bool)
+    for j_, i_ in DT.EYE_CREAM:
+        want[j_, i_] = True
+    want &= (fixed_idx < 0)
+    old_cream = shp['eye'] & (idx == cream) & ~want & (fixed_idx < 0)
+    for j_, i_ in zip(*np.nonzero(old_cream)):
+        y0_, y1_ = np.nonzero(J == j_)[0][[0, -1]]; x0_, x1_ = np.nonzero(I == i_)[0][[0, -1]]
+        v = L[y0_:y1_ + 1, x0_:x1_ + 1].ravel(); v = v[v != cream]
+        u, n = np.unique(v, return_counts=True)
+        c = int(u[n.argmax()]) if len(u) else line_id
+        idx[j_, i_] = c; cmap[j_, i_] = c
+    idx[want] = cream; cmap[want] = cream
+    # single-use colours in the bandana snap to the bandana's pink ramp
+    ramp = p['PINK_RAMP']
+    labp = S.srgb_to_lab(p['_pal'])
+    band = shp['bandana'] & (fixed_idx < 0)
+    for c in np.unique(idx[band]):
+        if c in ramp or c < 0:
+            continue
+        mm = band & (idx == c)
+        if (idx == c).sum() <= p['RARE_MAX']:
+            dst = ramp[int(np.argmin([np.linalg.norm(labp[c] - labp[r]) for r in ramp]))]
             idx[mm] = dst; cmap[mm] = dst
     return idx, cmap
 

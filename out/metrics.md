@@ -82,3 +82,23 @@ wider coverage); form mean 2.41, p95 7.96; 26 colours.
 | r2h | 0.926 | 0.292 | 0.961 | 0 | 1002 | 2.44 | 8.06 | nose gloss: grey/tan to cool nose tones, not navy |
 | r2i | 0.926 | 0.292 | 0.960 | 0 | 985 | 2.42 | 8.02 | brow 2 px as painted |
 | final | 0.926 | 0.292 | 0.960 | 0 | 904 | 2.41 | 7.96 | checker coverage threshold 0.7 for form margin |
+
+## Round 3 (Fable review)
+
+Final: IoU head .962, left ear .958, right ear .921, eye .926, nose .950, tongue .927,
+bandana .959 (owned .983); worst boundary distance 0.303 (right ear); L-corners 0,
+gaps 0, staircase 0.960; off-palette 0, anti-aliasing dots 0, strict ramp mixels 149;
+checker 829 of 829 in phase; form mean 2.42, p95 7.95; 25 colours.
+
+| Run | min IoU | max bd | p95 | change |
+|---|---|---|---|---|
+| r3a | 0.896 | 0.722 | 8.83 | checker regularization on all pairs (broke the ear crease) |
+| r3c | 0.923 | 0.296 | 8.16 | regularization on coat pairs only; clear only near strokes |
+| r3d | 0.923 | 0.296 | 7.91 | wink arc one smooth 3 px stroke (2 px left it 12 luma too light) |
+| r3f | 0.923 | 0.296 | 7.94 | tongue from smoothed polygon; eye catchlight and crescent cells; knot crease |
+| final | 0.921 | 0.303 | 7.95 | dark-checker islands removed, specks in detail boxes cleaned |
+
+Not changed: the single-use pinks at (49,179), (59,177), (62,181), (71,194) are outside
+this track's mask (transparent here, grid track pixels); (53,173) is `#751249`, the
+bandana ramp's darkest step (34 cells). Wider checker coverage (946 cells) dropped the
+right-ear IoU to 0.917, so coverage stays at 829 cells.

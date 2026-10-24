@@ -1,16 +1,16 @@
 {
  "geometry": {
   "head": {
-   "iou": 0.9631,
-   "bd_cells": 0.273
+   "iou": 0.9622,
+   "bd_cells": 0.279
   },
   "earL": {
-   "iou": 0.9585,
-   "bd_cells": 0.263
+   "iou": 0.9581,
+   "bd_cells": 0.267
   },
   "earR": {
-   "iou": 0.9312,
-   "bd_cells": 0.266
+   "iou": 0.921,
+   "bd_cells": 0.303
   },
   "eye": {
    "iou": 0.9257,
@@ -21,8 +21,8 @@
    "bd_cells": 0.229
   },
   "tongue": {
-   "iou": 0.9308,
-   "bd_cells": 0.279
+   "iou": 0.9268,
+   "bd_cells": 0.293
   },
   "bandana": {
    "iou": 0.9588,
@@ -41,22 +41,22 @@
  },
  "colour": {
   "off_palette": 0,
-  "colours": 26,
-  "in_cell": 0.9501,
-  "in_cell_or_nb": 0.9911,
-  "mixels_strict": 157,
+  "colours": 25,
+  "in_cell": 0.9449,
+  "in_cell_or_nb": 0.9917,
+  "mixels_strict": 149,
   "mixel_dots": 0
  },
  "pattern": {
-  "pattern_cells": 904,
+  "pattern_cells": 829,
   "in_phase": 1.0
  },
  "form": {
-  "mean": 2.405,
-  "p95": 7.961
+  "mean": 2.424,
+  "p95": 7.946
  },
  "cells": 11624,
- "seconds": 33.2,
+ "seconds": 33.1,
  "grid_alignment": {
   "uniform_320": 0.4189,
   "local_refined": 0.7969
@@ -71,5 +71,5 @@
    226
   ]
  },
- "palette_size": 26
+ "palette_size": 25
 }

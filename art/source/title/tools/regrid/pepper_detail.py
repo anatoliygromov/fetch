@@ -12,14 +12,20 @@ from scipy import ndimage as ndi
 
 STROKES = [
     # wink lashes, from tip to the wink's end (blocks at x 588-600 y 854-862 -> 620-640 y 884-890 etc.)
-    dict(name='lash_left', pts=[(594, 858), (611, 868), (626, 878), (634, 888)]),
+    dict(name='lash_left', pts=[(600, 860), (614, 870), (626, 879), (634, 888)]),
     dict(name='lash_mid', pts=[(650, 857), (644, 868), (639, 879)]),
     dict(name='lash_right', pts=[(662, 877), (652, 887), (646, 896)]),
+    # the wink's arc: one smooth curve of constant 2 px weight (centreline from the
+    # column centroids of the painted arc, x 490-640)
+    dict(name='wink', thick=3, pts=[(490, 954), (508, 943), (528, 928), (550, 914), (574, 906), (600, 903), (622, 904), (642, 909)]),
+    # the knot's crease between the left tail and the knot body (darkest pink #751249)
+    dict(name='knot_crease', colour=58, layer=2, pts=[(352, 1262), (358, 1280), (372, 1291), (390, 1295), (404, 1306)]),
     # brow arc over the open eye (black blocks x 792-798 y 740-748 up to x 836-852 y 706-716)
     dict(name='brow', thick=2, pts=[(797, 750), (801, 736), (808, 725), (819, 716), (833, 712), (847, 713), (858, 717)]),
 ]
 CLEAR_BOXES = [
     (580, 848, 672, 892),     # the lash area above the wink's thick arc
+    (470, 890, 660, 966),     # the wink's arc
     (786, 702, 858, 754),     # the brow arc
 ]
 # the knot's tip: inside this box the dog mask is limited to the bandana plus one
@@ -28,11 +34,17 @@ KNOT_BOX = (230, 1230, 330, 1430)
 KNOT_OUTLINE_PX = 9
 
 
-def clear_mask(shape, box0):
+def clear_mask(shape, box0, LN=None, radius=13):
+    """near the traced strokes only (within `radius` px of a stroke), inside the boxes."""
+    import cv2
     m = np.zeros(shape, bool)
     for x0, y0, x1, y1 in CLEAR_BOXES:
         m[max(0, y0 - box0[1]):y1 - box0[1], max(0, x0 - box0[0]):x1 - box0[0]] = True
-    return m
+    near = np.zeros(shape, np.uint8)
+    for st in STROKES:
+        q = np.array(st['pts'], float) - [box0[0], box0[1]]
+        cv2.polylines(near, [np.round(q).astype(np.int32).reshape(-1, 1, 2)], False, 1, 2 * radius + 1)
+    return m & near.astype(bool)
 
 
 def trim_knot(D, B, box0):
@@ -48,3 +60,10 @@ def trim_knot(D, B, box0):
         sz = ndi.sum(out, lab, range(1, n + 1))
         out = lab == (np.argmax(sz) + 1)
     return out
+
+
+# the open eye's cream cells (output cell (j, i)): the catchlight (2 x 3 with the
+# top-left corner cut, as painted) and the sclera crescent stepping evenly down-left
+EYE_CREAM = [(105, 113), (105, 114), (106, 112), (106, 113), (106, 114), (107, 112), (107, 113), (107, 114),
+             (109, 117), (109, 118), (110, 117), (110, 118), (111, 117), (111, 118), (112, 117), (112, 118),
+             (113, 117), (113, 118), (114, 116), (114, 117), (115, 115), (115, 116), (116, 114), (116, 115)]

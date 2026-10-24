@@ -108,3 +108,19 @@ then re-rasterize), pixel-perfect line rule (no L-corner doubles), clean stairca
 - Remaining: the forehead checker is still patchier than painted at its left end; the
   left ear's checker is denser on its lower half than its upper half; form p95 (7.96)
   sits close to its limit.
+
+## Round 3 changes
+
+- Wink: the arc is one hand-traced stroke of constant 3 px weight (centreline from the
+  painted arc's column centroids), no hook; the left lash is shorter, so the three
+  lashes fan out from the arc's end as painted.
+- Knot: the left tail's crease is a traced `#751249` stroke from the knot down-right.
+- Eye: the catchlight is 2 x 3 with its top-left corner cut; the sclera crescent is
+  2 cells wide, stepping one column per row (cells from the painting's cream coverage).
+- Tongue: its cells are those inside its smoothed contour, so the right edge steps
+  evenly (+1 per row in, 0 along the side, -1 per row out).
+- Coat checker: cell-level regularization of the coat dither classes (lone dither cells
+  join their neighbourhood, plain cells surrounded by 5+ cells of a dither of their own
+  tone join it, islands under 6 cells removed); dark (1, 2) checker islands removed.
+  Remaining: the left ear's upper half is still mostly plain where the painting has a
+  three-tone checker; the cheek checker is lower in contrast than painted.
