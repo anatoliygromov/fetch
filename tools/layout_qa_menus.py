@@ -119,7 +119,11 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
         sc = many(bs, 'score')
         if sc: check(sc[0]['x1'] == Pic['x1'] - 4, f'{shot}: points end at the picture\'s right edge ({sc[0]["x1"]} vs {Pic["x1"] - 4})')
         lk = many(bs, 'lock')
-        if lk: check(abs(cx(lk[0]) - cx(Pic)) <= 0.5 and abs(cy(lk[0]) - cy(Pic)) <= 0.5, f'{shot}: padlock centred on the picture')
+        if lk:                                                              # (review fix 1) on the picture's middle line, off Pepper
+            pp = many(bs, 'cardpepper')
+            check(abs(cy(lk[0]) - cy(Pic)) <= 0.5 and Pic['x0'] < lk[0]['x0'] and lk[0]['x1'] < Pic['x1'], f'{shot}: padlock inside the picture on its middle line')
+            check(pp and not overlaps([lk[0], pp[0]]), f'{shot}: padlock clear of Pepper')
+            check(len(many(bs, 'strip')) == 2, f'{shot}: the strip shows BROWSE and BACK only on a locked card')
         dots = many(bs, 'dot')
         check(abs((min(b['x0'] for b in dots) + max(b['x1'] for b in dots)) / 2 - 159.5) <= 0.5 and min(b['y0'] for b in dots) > P['y1'] and max(b['y1'] for b in dots) < s[0]['y0'] - 2, f'{shot}: dots centred between the card and the strip')
         items = [T, N] + row + many(bs, 'lock', 'hard') + s + dots

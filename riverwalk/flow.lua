@@ -292,7 +292,8 @@ end
 -- it. Left / right slide the next card in (0.12 s, ease out) with a sound; arrows either side, a dot per level
 -- under the card, the controls strip at the bottom.
 F.SEL = { X = 40, W = 240, PANEL = 16, H = 192, RIB = 6, PIC_Y = 33, NAME = 158, STATS = 191, ARROW_OUT = 7, DOTS = 211,
-  DOT_PITCH = 11, SLIDE = 0.12, LOCKED = { 0.26, 0.23, 0.27, 1 } }
+  DOT_PITCH = 11, SLIDE = 0.12, LOCKED = { 0.26, 0.23, 0.27, 1 },
+  PEPPER = { 58, 60, 116, 99 } }   -- (review fix 1) Pepper's box in every picture (tools/card_shots.py puts her there)
 local cards = {}
 function F.cardImage(name)
   if cards[name] == nil then
@@ -318,7 +319,10 @@ function F.selectCard(i)
     U.nine("frame_s", px - 4, S3.PIC_Y - 4, pw + 8, ph + 8, 4, true, "picture") end
   local pcx, pcy = px + (pw - 1) / 2, S3.PIC_Y + (ph - 1) / 2
   if not l.exists then U.sayC(13, "cream", "COMING SOON", pcx, math.floor(pcy - 7 + 0.5), "soon")
-  elseif not open then U.putC("lock_big", pcx, pcy, "lock") end
+  elseif not open then                                           -- (review fix 1) the padlock right of Pepper, never over her
+    U.putC("lock_big", px + math.floor(pw * 3 / 4), pcy, "lock")
+    local pp = S3.PEPPER; U.logBox("cardpepper", px + pp[1], S3.PIC_Y + pp[2], px + pp[3], S3.PIC_Y + pp[4])
+  end
   U.sayC(17, "gold", l.title, 159.5, S3.NAME, "name")
   -- the stats row on one centre line: the medals from the picture's left edge, the time and points to its right edge
   local cy = S3.STATS
@@ -363,7 +367,8 @@ function F.drawSelect(t)
   local dw = U.body("dot_on")
   local x0 = math.floor(159.5 - ((n - 1) * S3.DOT_PITCH + dw - 1) / 2 + 0.5)
   for i = 1, n do U.put(i == p.sel and "dot_on" or "dot_off", x0 + (i - 1) * S3.DOT_PITCH, S3.DOTS, "dot") end
-  U.strip({ { "lr", "BROWSE" }, { "ok", "PLAY" }, { "back", "BACK" } })
+  if F.levels[p.sel].exists and F.isOpen(p.sel) then U.strip({ { "lr", "BROWSE" }, { "ok", "PLAY" }, { "back", "BACK" } })
+  else U.strip({ { "lr", "BROWSE" }, { "back", "BACK" } }) end                     -- (review fix 1) no PLAY on a locked card
 end
 
 -- a card's top on the level: y if the card misses Pepper's sprite (avoid = { x0, y0, x1, y1 } on screen), else
