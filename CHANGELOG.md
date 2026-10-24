@@ -2,6 +2,9 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `art/title-light`: a light-touch cleanup of the title picture, as a switch (24 Oct, 0 credits)
+- **New picture "light", default unchanged:** `T.PICTURE` in riverwalk/title.lua is "clean" (the material cleanup, as before) or "light": riverwalk/art/title/base_light.png, mouth_light.png, eye_light.png, bird_light.png, made by art/source/title/tools/light_clean.py from the painting on its native grid (art/source/title/painting_layers/, the eac9c04 build). Only 1 to 2 px specks change (4-connected, more than 12 luma from the median round them, recoloured to the ring's majority within their material); lines, ink strokes, eye, nose, city windows, boats and flowers are kept; no ramps, no blur. 3.5 % of pixels change; form check vs the painting (5x5 luma blur): Pepper 1.17 mean / 4.88 p95, all 0.73 / 3.97 (the clean picture: 2.94 / 8.73 and 3.26 / 16.18). The pant and blink frames are animated by diff on the light still. build_title.py runs light_clean.py at the end. check_flow passes with either picture.
+
 ## Branch `ui/panel-hud`: no HUD row under the cards (24 Oct)
 - **Drawing only (main.lua, bonus.lua, flow.lua):** while a centred card is up over the game (level intro, story, pause and QUIT?, controls from the pause, GAME OVER, GOOD GIRL! tally, FETCH FRENZY intro and result) the HUD row is not drawn at all; the warm dim and the controls strip stay. The pause already shows the bones found, the tally the level's points. The ending card moved 4 px down and a card dropping in never rises above the 4 px top margin, so no ribbon or frame is cut by the screen's top. Talk panel and hint bubbles unchanged. Checks: layout_qa_menus.py checks no HUD piece outside a card's panel and the 4 px top margin; layout_qa8.py checks no HUD row under a card (instead of filtering it out). Sheet: out/panel_hud_before_after.png (not committed).
 

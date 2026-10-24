@@ -7,6 +7,9 @@
 -- cleanly.)
 local D = require("title_data")
 local T = {}
+-- which picture: "clean" (default, the material cleanup, a1e0e15) or "light" (the painting on its native grid with
+-- only its specks removed: art/source/title/tools/light_clean.py; its own pant, blink and bird frames)
+T.PICTURE = "clean"
 local lg = love.graphics
 local I
 local function img(n) local i = lg.newImage("art/title/" .. n .. ".png"); i:setFilter("nearest", "nearest"); return i end
@@ -18,7 +21,8 @@ end
 
 function T.load()
   if I then return end
-  I = { base = img("base"), bird = img("bird"), mouth = img("mouth"), eye = img("eye"), logos = {},
+  local sfx = T.PICTURE == "light" and "_light" or ""
+  I = { base = img("base" .. sfx), bird = img("bird" .. sfx), mouth = img("mouth" .. sfx), eye = img("eye" .. sfx), logos = {},
     tagline = { caps = img("tagline_caps"), lower = img("tagline_lower") } }
   for _, m in ipairs({ "clean", "bands", "gradient", "steps6" }) do I.logos[m] = { fill = img("logo_" .. m), hi = img("logo_hi_" .. m) } end
   I.stars = img("stars"); I.starQ = {}

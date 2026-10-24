@@ -23,6 +23,9 @@
                     still's (head_frames.pant)
        eye.png      her blink: the open eye in 3 frames (the still, half shut, shut), drawn on the still's pixels
      Every frame of mouth.png and eye.png is the still outside the pixels that change (checked here).
+  5. The second picture, "light" (T.PICTURE in riverwalk/title.lua; default "clean", the layers above):
+     base_light.png, mouth_light.png, eye_light.png, bird_light.png from the painting's layers before step 3c
+     (art/source/title/painting_layers/) with only their specks removed (light_clean.py).
 """
 import os, sys, json
 import numpy as np
@@ -30,7 +33,7 @@ import cv2
 from PIL import Image
 from skimage.color import rgb2lab
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
-import title_native, title_palette as TP, unbox, head_frames as HF, logo as LG, stars as ST, cleanup as CL
+import title_native, title_palette as TP, unbox, head_frames as HF, logo as LG, stars as ST, cleanup as CL, light_clean as LC
 from register import register
 from vsample import sample as vsample
 ROOT = os.path.normpath(os.path.join(HERE, '..', '..', '..', '..'))
@@ -177,6 +180,7 @@ def main():
     lua.append('}')
     open(os.path.join(ROOT, 'riverwalk', 'title_data.lua'), 'w').write('\n'.join(lua) + '\n')
     print('palette', len(pal), 'colours; base colours', len(np.unique(base.reshape(-1, 3), axis=0)), '; sparkle streaks', len(runs), '; bird px', nbird)
+    LC.build()                                                         # 5. the "light" picture
 
 if __name__ == "__main__":
     main()
