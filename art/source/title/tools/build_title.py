@@ -159,10 +159,10 @@ def main():
     mouth = [idx.copy()]
     for k in (18, 21):
         o, m = HF.pant(crop_idx, crop_rgb, vs[k]); f = idx.copy(); f[BY:BY + BH, BX:BX + BW] = o; mouth.append(f)
-    ink, fur = idx[104, 110], idx[110, 104]
+    ink, fur = idx[104, 110], idx[97, 108]          # the lid: the colour of the brow's lid plane above the eye (shade.py)
     arc = [(108, 106), (109, 107), (110, 108), (111, 108), (112, 109), (113, 109), (114, 109), (115, 109), (116, 108), (117, 108), (118, 107), (119, 106)]
     closed, _ = HF.blink(idx, L, range(99, 118), arc + [(x, y + 1) for x, y in arc[3:-3]], ink, fur)
-    half, _ = HF.blink(idx, L, range(99, 107), [(x, 108) for x in range(108, 120)] + [(x, 107) for x in range(110, 118)], ink, fur)
+    half, _ = HF.blink(idx, L, range(99, 107), [(x, 108) for x in range(108, 120)] + [(x, 107) for x in range(110, 119)], ink, fur)
     eye = [idx.copy(), half, closed]
     for name, fr in (('mouth', mouth), ('eye', eye)):
         ch = np.zeros((H, W), bool)

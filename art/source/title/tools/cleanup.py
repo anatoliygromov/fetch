@@ -7,7 +7,8 @@ cell by cell copies its texture noise. Steps:
   3. crumbs(): per material, lone pixels and 2-pixel crumbs merge into the shade round them (a mode filter on the
      material's mask only; 1 px lines longer than 2 px, such as railing bars and outlines, are left alone)
   4. the colours of all materials merged where they are near twins (dE < 6) until there are at most MAX_COLOURS
-  5. head.py finishes Pepper's head by hand (pixel lists)."""
+  5. head.py finishes Pepper's head by hand (pixel lists)
+  6. shade.py repaints her coat, nose, tongue line and bandana in a hand shading pass (ramp, forms, sheen, rim)."""
 import os
 import numpy as np
 from scipy import ndimage
@@ -166,7 +167,7 @@ def crumbs(img, mats, passes=3, maxsize=2):
             if not changed: break
     return out
 
-def merge_colours(img, protect=None, max_colours=MAX_COLOURS, max_de=10.0):
+def merge_colours(img, protect=None, max_colours=MAX_COLOURS, max_de=10.0, frozen=None):
     """the colours merged pair by pair (the closest pair in Lab, the rarer colour into the commoner) until at most
     max_colours, never two colours further apart than max_de"""
     out = img.copy()
@@ -179,6 +180,10 @@ def merge_colours(img, protect=None, max_colours=MAX_COLOURS, max_de=10.0):
             pk = {tuple(c) for c in protect}
             pr = np.array([tuple(c) in pk for c in cols])
             d[np.ix_(pr, pr)] = 1e9
+        if frozen is not None:                    # frozen colours (the shading pass's) never merge with anything
+            fk = {tuple(c) for c in frozen}
+            fr = np.array([tuple(c) in fk for c in cols])
+            d[fr, :] = 1e9; d[:, fr] = 1e9
         i, j = np.unravel_index(d.argmin(), d.shape)
         if d[i, j] > max_de: break
         src, dst = (i, j) if cnt[i] < cnt[j] else (j, i)
@@ -198,7 +203,7 @@ def lone(a, mask=None):
 
 def run(img, keep, masks_dir=None):
     """the whole cleanup; returns the cleaned picture, the materials and the numbers"""
-    import head as HD
+    import head as HD, shade as SH
     mats = segment(img, keep)
     if masks_dir: save_masks(mats, masks_dir)
     a, R = ramps(img, mats)
@@ -208,8 +213,9 @@ def run(img, keep, masks_dir=None):
     c = crumbs(c, mats, passes=2)
     f = HD.finish(c, img, mats)
     f = crumbs(f, {'nose': mats['nose']}, maxsize=1)
-    f = merge_colours(f, protect=prot)
-    pep = mats['coat'] | mats['nose'] | mats['eye'] | mats['tongue'] | mats['bandana']
+    f, _ = SH.paint(f, mats, img)                  # Pepper's hand shading pass (shade.py)
+    f = merge_colours(f, protect=prot, frozen=np.concatenate([SH.PAL, np.array(SH.BANDANA)]))
+    pep = (mats['coat'] & ~SH.NOT_PEPPER) | mats['nose'] | mats['eye'] | mats['tongue'] | mats['bandana']
     nk = ~keep
     stats = dict(colours=len(np.unique(f[nk].reshape(-1, 3), axis=0)), lone_all=lone(f, nk), lone_pepper=lone(f, pep),
                  before_all=lone(img, nk), before_pepper=lone(img, pep))
