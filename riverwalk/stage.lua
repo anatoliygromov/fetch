@@ -622,6 +622,13 @@ function St:draw(debug)
     if x > -20 and x < 340 then
       local im = l.lit and art.lamp_lit or art.lamp_post
       local lx, top = math.floor(x - im:getWidth() / 2), l.y - (highLamp(l) and -1 or Sc.EDGE) - im:getHeight()
+      if highLamp(l) then                                          -- (its whole foot on the ledge: Downtown's lamp at
+        for _, pr in ipairs(self.def.props) do                     -- 2420 stood half off the ledge's end; drawing only)
+          if pr.kind ~= "decor" and pr.y0 == l.y and l.x >= pr.x0 and l.x < pr.x1 then
+            lx = math.max(math.floor(pr.x0 - cam), math.min(math.floor(pr.x1 - cam) - im:getWidth(), lx))
+          end
+        end
+      end
       lg.draw(im, lx, top)
       if l.lit then Sc.lampLight(lx + im:getWidth() / 2, top + 17, self.t - (l.litAt or -9), self.t) end
     end

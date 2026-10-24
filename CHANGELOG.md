@@ -27,6 +27,8 @@ Built on main v0.6. No credits; Pepper untouched; approved art unchanged (its fi
   layer behind the old town row (it stood at scroll 1.0 in front of it). maps/downtown_tall.tmx: houses (decoration,
   no collision) under every high road piece that floated in the sky (the galleries, two ledges, the window awning,
   both ends of the footbridge); the guild house's box starts under its gable. docs/art_hooks_r8.md: the new slots.
+- **High road lamps:** a lamp's foot is drawn wholly on its ledge (Downtown's lamp at x 2420 stood half off the
+  ledge's left end); drawing only, the checkpoints keep their x. All five high lamps checked in a frame each.
 
 ## Regroup (23 Oct, evening): main v0.6, BIBLE and STATUS, the enforced gate, checks and releases on GitHub
 The owner's decisions of 23 Oct (merge list): round1 becomes main as v0.6; art/freefix merged with the approved River
