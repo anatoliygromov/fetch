@@ -1,16 +1,14 @@
--- The talk panel and the stuck nudge (drawing and watching only: nothing here changes Pepper).
---   The panel: what St:hint() says now, as a short dialogue line. Pepper says the control hints: a button
---   picture and 1 to 3 words ([B] HOLD: SNEAK). The girl says the goal and story lines (BRING ME THE BALL!).
---   Pepper's portrait sits bottom left, the girl's bottom right; the portrait plays its talking loop
---   (art/portraits, 8 frames, 9 fps) while the line is being said, then rests on frame 1. A control hint also shows
---   a picture sign (T.picFor, hud.lua's U.pict) between the button and the words, for children who cannot read.
---   The panel sits low on the pavement; if Pepper's sprite would touch it, it moves to the top of the screen, and
---   if she would touch that too it is not drawn. A girl's line goes away after a few seconds; a control hint stays while it applies.
+-- The talk panel, the hint bubbles and the stuck nudge (drawing and watching only: nothing here changes Pepper).
+--   What St:hint() says now. The girl's (Mia's) goal and story lines: the speech panel (the kit's gold panel sized to
+--   the words, 13 px, her portrait in a thin gold frame on its side, playing its talking loop, art/portraits, 8
+--   frames, 9 fps, while the line is said), low at the right, or under the HUD when Pepper is low, never over her;
+--   it goes after a few seconds. Pepper's control hints: a small bubble near her (step 3, docs/ui_design.md screen
+--   9): the button as the device used last shows it, a picture of the action (T.picFor), at most 3 words; it stays
+--   while the hint applies.
 --   The nudge: when Pepper has pushed against something for 2 s without getting anywhere, or has stood still for
---   3 s where a control hint applies, the button she needs bounces above her head until a button is pressed.
---   It reads Pepper from outside (position, speed, the buttons held) and is never drawn over her.
---   No hints and no nudges in hard mode (St:hint() returns only messages then, and T.watch does nothing).
-local F = require("bigfont")
+--   3 s where a control hint applies, the hint's bubble bounces (or a bubble of its own with the button she needs)
+--   until a button is pressed. It reads Pepper from outside (position, speed, the buttons held) and is never drawn
+--   over her. No hints and no nudges in hard mode (St:hint() returns only messages then, and T.watch does nothing).
 local U = require("hud")
 local I = require("input")
 local T = {}
@@ -40,70 +38,9 @@ local function loadPorts()
   end
 end
 
--- pixel circles (no smoothing): a filled disc of radius r
-local discs = {}
-local function disc(r)
-  if not discs[r] then
-    local n = r * 2
-    local d = love.image.newImageData(n, n)
-    for y = 0, n - 1 do for x = 0, n - 1 do
-      if (x + 0.5 - r) ^ 2 + (y + 0.5 - r) ^ 2 <= r * r then d:setPixel(x, y, 1, 1, 1, 1) end
-    end end
-    discs[r] = lg.newImage(d); discs[r]:setFilter("nearest", "nearest")
-  end
-  return discs[r]
-end
+function T.port(who) loadPorts(); return PORT[who] or PORT.girl end   -- (the story card draws Mia's too)
 
--- the RG35XX face buttons (A right, B bottom, X top, Y left) and the d-pad
-local LETTER = { a = "A", b = "B", x = "X", y = "Y" }
-local KNOB = { 0.93, 0.93, 0.96 }
-local INK = { 22/255, 26/255, 40/255 }
-T.SIZE = { big = 10, small = 7 }                                 -- the glyph's radius
--- a button picture centred on cx, cy: a round button with its letter, or the d-pad with one arm lit
-function T.glyph(btn, cx, cy, size)
-  local r = T.SIZE[size or "big"]
-  cx, cy = math.floor(cx + 0.5), math.floor(cy + 0.5)
-  if LETTER[btn] then
-    lg.setColor(U.SHADE); lg.draw(disc(r), cx - r + 1, cy - r + 1)
-    lg.setColor(INK); lg.draw(disc(r), cx - r, cy - r)
-    lg.setColor(KNOB); lg.draw(disc(r - 1), cx - r + 1, cy - r + 1)
-    lg.setColor(INK)
-    if r >= 10 then F.print(LETTER[btn], cx - 4, cy - 7, 2) else F.print(LETTER[btn], cx - 2, cy - 3, 1) end
-  else                                                           -- the d-pad: a cross, the arm to press lit
-    local a = r >= 10 and 6 or 4                                 -- arm width
-    local function cross(col, dx, dy)
-      lg.setColor(col)
-      lg.rectangle("fill", cx - a / 2 + dx, cy - r + dy, a, 2 * r); lg.rectangle("fill", cx - r + dx, cy - a / 2 + dy, 2 * r, a)
-    end
-    cross(U.SHADE, 1, 1); cross(INK, 0, 0)
-    local arm = { down = { 0, 1 }, up = { 0, -1 }, left = { -1, 0 }, right = { 1, 0 } }
-    local d = arm[btn] or arm.down
-    lg.setColor(KNOB)
-    local lx, ly = cx - a / 2 + 1, cy - a / 2 + 1                -- the lit arm, inside the cross's outline
-    if d[1] == 0 then lg.rectangle("fill", lx, d[2] > 0 and cy or cy - r + 1, a - 2, r - 1)
-    else lg.rectangle("fill", d[1] > 0 and cx or cx - r + 1, ly, r - 1, a - 2) end
-    lg.setColor(INK)                                              -- an arrow on the lit arm
-    local tx, ty = cx + d[1] * (r - 4), cy + d[2] * (r - 4)
-    for i = 0, 1 do
-      if d[1] == 0 then lg.rectangle("fill", tx - (1 - i), ty + d[2] * (i - 1), 3 - 2 * i, 1)
-      else lg.rectangle("fill", tx + d[1] * (i - 1), ty - (1 - i), 1, 3 - 2 * i) end
-    end
-  end
-  lg.setColor(1, 1, 1, 1)
-end
-
--- word wrap to at most two lines of width w at scale s (nil if it does not fit)
-local function wrap(text, w, s)
-  if F.width(text, s) <= w then return { text } end
-  local words = {}
-  for wd in text:gmatch("%S+") do words[#words + 1] = wd end
-  for k = #words - 1, 1, -1 do
-    local a, b = table.concat(words, " ", 1, k), table.concat(words, " ", k + 1)
-    if F.width(a, s) <= w and F.width(b, s) <= w then return { a, b } end
-  end
-end
-
--- the picture sign of a control hint (hud.lua's U.pict, r6/levels): what the hint asks, drawn, so a child who
+-- the picture of a control hint (art/ui/pic_<kind>.png, step 3): what the hint asks, drawn, so a child who
 -- cannot read knows it from the button and the picture. A hint can name one (pic = "climb"); otherwise its words
 -- choose it, first match wins.
 T.PICS = {
@@ -117,10 +54,6 @@ function T.picFor(line)
   for _, m in ipairs(T.PICS) do if line.text:find(m[1], 1, true) then return m[2] end end
 end
 
--- the panel's layout for a line: its rect (x0, y0, x1, y1, the portrait included) at the bottom or the top
-local BOX_H = 40
-local GAP = 4                                                    -- between the button picture and the words
-local TEXT_W = 238                                               -- room for the words (and a button) beside a portrait
 -- (step 3) a story line (no button): the kit's gold panel sized to the words (13 px, at most SAY_W wide, split
 -- where its halves are most even), the speaker's portrait in the thin gold frame on its side (the girl right,
 -- Pepper left), standing up out of it. Bottom: the group's bottom at the margin; top: under the HUD.
@@ -318,27 +251,6 @@ function T.drawPanel(stage)
     local n = T.nudge
     T.drawBubble(L, rise + ((n.btn and n.btn == c.line.btn) and nudgeBob(L) or 0)); return
   end
-  U.box(L.x0, L.by, L.w, BOX_H)
-  local p = L.port
-  local talkFor = math.min(2.4, 0.6 + 0.06 * #c.line.text)        -- the loop plays while the line is being said
-  local f = c.t < talkFor and 1 + math.floor(c.t * T.FPS) % T.FRAMES or 1
-  local px = c.line.who == "pepper" and L.x0 + 3 or L.x1 - 3 - p.w
-  lg.setColor(1, 1, 1, 1); lg.draw(p.img, p.q[f], px, L.y1 - 1 - p.h)
-  local x = c.line.who == "pepper" and px + p.w + 5 or L.x0 + 6
-  local cy = L.by + BOX_H / 2
-  if c.line.btn then
-    T.glyph(c.line.btn, x + T.SIZE.big, cy, "big")
-    if L.pic then U.pict(L.pic, x + 2 * T.SIZE.big + GAP, math.floor(cy - U.PICT_H / 2)) end
-    x = x + L.gw
-  end
-  local lh = L.scale * 7
-  local total = #L.rows * lh + (#L.rows - 1) * 3
-  for i, r in ipairs(L.rows) do
-    local y = math.floor(cy - total / 2 + (i - 1) * (lh + 3) + 0.5)
-    lg.setColor(U.SHADE); F.print(r, x + 1, y + 1, L.scale)
-    lg.setColor(c.line.who == "pepper" and U.WHITE or U.GOLD); F.print(r, x, y, L.scale)
-  end
-  lg.setColor(1, 1, 1, 1)
 end
 
 -- the nudge: watches Pepper and the buttons every game step (presses: the buttons pressed this step)

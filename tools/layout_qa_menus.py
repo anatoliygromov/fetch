@@ -207,6 +207,24 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
         st = many(bs, 'stamp')
         if st: check(st[0]['x1'] <= 315 and not overlaps(st + many(bs, 'note', 'secrets', 'medal', 'tvalue')), f'{shot}: the stamp on screen, over nothing written')
         if 'end' in shot or 'medals_' in shot or shot.endswith('medals') is False and ('_g_' in shot or '_h_' in shot): strip(shot, bs)
+    elif shot.split('_')[0] in ('story', 'over', 'ending', 'bonus', 'toast'):
+        kind = shot.split('_')[0]
+        if kind == 'toast': continue                                        # (over the level select: a moment's toast)
+        Ps = many(bs, 'panel', 'storypanel')
+        cen = ['ribbon', 'title', 'name', 'big', 'end'] + (['score'] if kind == 'ending' else [])
+        for b in many(bs, *cen): check(abs(cx(b) - 159.5) <= 0.5, f'{shot}: {b["name"]} centred ({cx(b)})')
+        names = {'story': ['story', 'portrait'], 'over': ['label', 'cursor'], 'ending': ['story', 'label', 'best', 'thanks'],
+                 'bonus': ['story', 'subtitle', 'goal', 'tlabel', 'tvalue', 'try', 'life', 'gicon'] + (['head'] if 'result' in shot else [])}[kind]
+        txt = many(bs, *names)
+        if Ps and shot.split('_')[0] != 'toast':
+            P = Ps[0]
+            inside = [b for b in txt if b['name'] != 'portrait']
+            check(all(b['x0'] >= P['x0'] + 8 and b['x1'] <= P['x1'] - 8 and b['y0'] >= P['y0'] + 6 and b['y1'] <= P['y1'] - 6 for b in inside), f'{shot}: the words inside the panel with room')
+            check(all(b['x0'] >= 4 and b['x1'] <= 315 and b['y0'] >= 0 and b['y1'] <= 235 for b in Ps + txt), f'{shot}: on the screen')
+        st = [b for b in many(bs, 'glyph', 'strip') if b['y0'] >= 200]
+        if st: strip(shot, bs)
+        items = [b for b in txt if b['name'] != 'portrait'] + many(bs, *[c for c in cen if c != 'ribbon']) + st
+        check(not overlaps(items), f'{shot}: nothing overlaps {overlaps(items)}')
 check(len(set(strips.values())) == 1, f'strip: the same place on every screen {sorted(set(strips.values()))}')
 # pieces
 INK = (64, 11, 6); SH = (36, 8, 5)

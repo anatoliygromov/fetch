@@ -5,6 +5,7 @@
 -- placed, for tools/layout_qa_menus.py) in the save folder, prints "SCREENSHOTS <folder>" and quits.
 -- tools/screen_frames.py turns them into 320 x 240 frames in colour and greyscale.
 local I = require("input")
+local Se = require("settings")
 local U = require("hud")
 return function(api)
   I.testing = true
@@ -102,6 +103,25 @@ return function(api)
       tl.medals = { nohit = true, bones = true, par = true } end, wait = 0.1 }, shot("tally_g_allmedals_key"),
     { act = function() I.last = "pad"; local tl = api.tally(); tl.hard = nil; tl.newBestTime = false; tl.plan = nil; F.tallySkip(tl)
       tl.medals = { nohit = false, bones = false, par = false } end, wait = 0.1 }, shot("tally_h_nomedals"),
+    -- the story card, GAME OVER, the ending
+    { act = function() local tl = api.tally(); if tl then tl.done = true end; api.setStory(require("level.riverwalk").outro); api.setState("story"); api.setT(0.04) end, wait = 0.01 }, shot("story_drop"),
+    { act = function() api.setT(0.6) end, wait = 0.02 }, shot("story_talk"),
+    { act = function() api.setT(2.5) end, wait = 0.05 }, shot("story_ready"),
+    { act = function() api.setStory(require("level.soder").outro); I.last = "key"; api.setT(2.5) end, wait = 0.05 }, shot("story_soder_key"),
+    { act = function() I.last = "pad"; local o = api.over(); o.sel, o.from, o.moved = 1, 1, -1; api.setState("over"); api.setT(0.5) end, wait = 0.02 }, shot("over_wait"),
+    { act = function() api.setT(1.5) end, wait = 0.05 }, shot("over_1"),
+    { act = function() local o = api.over(); o.sel, o.from = 2, 2 end, wait = 0.05 }, shot("over_2"),
+    { act = function() api.setEnding({ score = 23450, best = 23450, newBest = true, lines = require("level.night").outro }); api.setState("ending"); api.setT(0.8) end, wait = 0.02 }, shot("ending_best"),
+    { act = function() api.setEnding({ score = 18320, best = 23450, newBest = false, lines = require("level.night").outro }); api.setT(2.6) end, wait = 0.05 }, shot("ending_ready"),
+    -- the bonus round: its intro, READY, GO, the last seconds, TIME UP, the result (an extra life, then not)
+    { act = function() api.startBonus() end, wait = 0.6 }, shot("bonus_intro"),
+    { act = function() local b = api.bonus(); b.phase, b.t = "ready", 0.3 end, wait = 0.02 }, shot("bonus_ready"),
+    { act = function() local b = api.bonus(); b.phase, b.t = "play", 0; b.catches, b.points, b.time = 7, 700, 12 end, wait = 0.05 }, shot("bonus_play"),
+    { act = function() local b = api.bonus(); b.catches, b.points, b.time = 11, 1350, 3.5 end, wait = 0.03 }, shot("bonus_last"),
+    { act = function() local b = api.bonus(); b.phase, b.t = "timeup", 0.2 end, wait = 0.02 }, shot("bonus_timeup"),
+    { act = function() local b = api.bonus(); b.phase, b.t, b.air = "result", 1.8, 4 end, wait = 0.02 }, shot("bonus_result_life"),
+    { act = function() local b = api.bonus(); b.catches, b.t = 6, 1.8 end, wait = 0.02 }, shot("bonus_result_try"),
+    { act = function() Se.shownAt = love.timer.getTime(); api.setState("select"); sel(1) end, wait = 0.1 }, shot("toast_menu"),
     { act = function() api.setState("select"); I.last = "pad"; sel(1) end, wait = 0.3 }, shot("select_1_pad"),
     { act = function() sel(2) end, wait = 0.1 }, shot("select_2_pad"),
     { act = function() sel(3) end, wait = 0.1 }, shot("select_3_pad"),

@@ -185,8 +185,6 @@ function F.selectInput(a)
   elseif a == "back" then S.play("tick"); return "back" end
 end
 
--- the menus' background: the title picture, animated, dimmed
-local function backdrop(t) Title.draw(t, nil, true); U.dim() end
 local function blink(t) return (t % 1.1) < 0.75 end
 
 -- the cursor's place: eased from the row it left to the new one (6 frames, ease out), with a 1 px bob
@@ -440,16 +438,44 @@ function F.drawIntro(def, t, avoid)
   if t > 0.5 then U.strip({ { "ok", "GO" } }) end
 end
 
--- between two levels: what happened at the end of the level just cleared (its L.outro)
-function F.drawStory(lines, t, avoid)
-  U.dim()
-  shifted(F.placeY(36, 248, 76, 70, avoid) - 76, function() F.storyCard(lines, t) end)
+-- between two levels: what happened at the end of the level just cleared (its L.outro). (step 3) A story moment, so
+-- the portrait panel: the warm dim, Mia telling it in the kit's gold panel (13 px, each outro line split where its
+-- halves are most even), her portrait (the talking loop while the lines are read) in the thin gold frame on the
+-- panel's right end; the group centred where it misses Pepper. After CARD_WAIT the strip shows (A) GO ON (only A).
+F.ST = { W_TEXT = 200, PAD_X = 16, PAD_Y = 12, PITCH = 16, IN = 8 }
+function F.storyLayout(lines)
+  local S3, Talk = F.ST, require("talk")
+  local rows = {}
+  for _, l in ipairs(lines or {}) do for _, r in ipairs(F.wrap(13, l, S3.W_TEXT)) do rows[#rows + 1] = r end end
+  local tw = 0
+  for _, r in ipairs(rows) do tw = math.max(tw, U.sayW(13, r)) end
+  local p = Talk.port("girl")
+  local fw, fh = p.win.w + 8, p.win.h + 8
+  local th = (#rows - 1) * S3.PITCH + U.sayH(13)
+  local pw, ph = tw + 2 * S3.PAD_X, math.max(fh + 8, th + 2 * S3.PAD_Y)
+  local w = pw + fw - S3.IN
+  return { rows = rows, tw = tw, th = th, pw = pw, ph = ph, fw = fw, fh = fh, w = w, x = math.floor(159.5 - (w - 1) / 2 + 0.5), port = p }
 end
-function F.storyCard(lines, t)
-  U.box(36, 76, 248, 70)
-  U.dog(150, 86, U.GOLD, 2)
-  for i, s in ipairs(lines) do U.center(s, 160, 108 + (i - 1) * 12, 1) end
-  if t >= F.CARD_WAIT and blink(t) then Talk.glyph("a", 270, 134, "small") end   -- ready: A goes on
+function F.drawStory(lines, t, avoid)
+  local L = F.storyLayout(lines)
+  U.dimWarm()
+  shifted(F.cardTop(L.x, L.w, L.ph, avoid) + dropIn(t), function() F.storyCard(lines, t, L) end)
+  if t >= F.CARD_WAIT then U.strip({ { "ok", "GO ON" } }) end
+end
+function F.storyCard(lines, t, L)
+  L = L or F.storyLayout(lines)
+  local S3, p = F.ST, L.port
+  U.panel(L.x, 0, L.pw, L.ph, "storypanel")
+  local y0 = math.floor((L.ph - 1) / 2 - (L.th - 1) / 2 + 0.5)
+  local vis = L.pw - S3.IN
+  for i, r in ipairs(L.rows) do U.say(13, "cream", r, math.floor(L.x + (vis - U.sayW(13, r)) / 2 + 0.5), y0 + (i - 1) * S3.PITCH, "story") end
+  local fx, fy = L.x + L.w - L.fw, math.floor((L.ph - L.fh) / 2 + 0.5)
+  local talkFor = math.min(3.0, 0.6 + 0.04 * #table.concat(lines or {}, " "))
+  local Talk = require("talk")
+  local f = t < talkFor and 1 + math.floor(t * Talk.FPS) % Talk.FRAMES or 1
+  lg.setColor(Talk.WIN_FILL); lg.rectangle("fill", fx + 4, fy + 4, p.win.w, p.win.h)
+  lg.setColor(1, 1, 1, 1); lg.draw(p.img, p.wq[f], fx + 4, fy + 4)
+  U.nine("frame_s", fx, fy, L.fw, L.fh, 4, true, "portrait")
 end
 F.CARD_WAIT = 2                   -- seconds before A leaves a story card
 
@@ -584,19 +610,26 @@ end
 -- GAME OVER: o = { sel } (1 TRY AGAIN, 2 MENU)
 F.OVER_WAIT = 1.2
 F.overItems = { "TRY AGAIN", "MENU" }
+-- (step 3) the warm dim, the kit's panel with the GAME OVER ribbon, after OVER_WAIT the two rows as plain outlined text
+-- (the selected one gold, the paw coin before it) and the strip (A) OK
+F.OV = { X = 80, W = 160, RIB = 0, PANEL = 10, ROW0 = 35, PITCH = 20, H = 70, LABEL_IN = 44, CUR_IN = 19 }
 function F.drawOver(o, t, avoid)
-  U.dim(); shifted(F.placeY(86, 148, 76, 92, avoid) - 76, function() F.overCard(o, t) end)
+  local V = F.OV
+  U.dimWarm(); shifted(F.cardTop(V.X, V.W, V.PANEL + V.H, avoid) + dropIn(t), function() F.overCard(o, t) end)
+  if t >= F.OVER_WAIT then U.strip({ { "ok", "OK" } }) end
 end
 function F.overCard(o, t)
-  U.box(86, 76, 148, 92); U.center("GAME OVER", 160, 84, 2)
+  local V = F.OV
+  U.panel(V.X, V.PANEL, V.W, V.H)
+  U.ribbon("ribbon_menu", 159.5, V.RIB)
+  U.sayC(13, "ink", "GAME OVER", 159.5, V.RIB + 2, "title")
   if t < F.OVER_WAIT then return end
-  for i, it in ipairs(F.overItems) do
-    local iy = 108 + (i - 1) * 20
-    local on = o.sel == i
-    if on then lg.setColor(U.EDGE); lg.rectangle("fill", 92, iy - 3, 136, 19); lg.setColor(1, 1, 1, 1) end
-    U.center(it, 160, iy + 1, 2, on and U.GOLD or U.WHITE)
-  end
-  Talk.glyph("a", 144, 156, "small"); U.text("OK", 154, 153)
+  local th = U.sayH(13)
+  local function rowY(i) return V.ROW0 + (i - 1) * V.PITCH end
+  for i, it in ipairs(F.overItems) do U.say(13, o.sel == i and "gold" or "cream", it, V.X + V.LABEL_IN, rowY(i), "label") end
+  local cw, ch = U.body("coin_paw")
+  local cy = cursorY({ sel = o.sel, from = o.from or o.sel, moved = o.moved }, rowY) + (th - 1) / 2
+  U.put("coin_paw", V.X + V.CUR_IN, math.floor(cy - (ch - 1) / 2 + 0.5) - bob(), "cursor")
 end
 -- the cursor of a two-item card: "up" / "down" move it, returns the item on "ok"
 function F.cursor(o, a, n)
@@ -666,22 +699,35 @@ function F.pauseCard(pz, def, st)
   U.put("coin_paw", P.X + P.CUR_IN, math.floor(cy - (ch - 1) / 2 + 0.5) - bob(), "cursor")
 end
 
--- after the last level: e = { score, best, newBest, lines (the last level's outro, optional) }
+-- after the last level: e = { score, best, newBest, lines (the last level's outro, optional) }. (step 3) The title
+-- picture under the warm dim, the kit's panel under the arched GOOD GIRL! ribbon: the outro (13 px), FINAL SCORE (7 px)
+-- and the run's score (17 px gold), NEW BEST RUN! (13 px gold, blinking) or the best run (7 px), THE END (17 px) and
+-- THANKS FOR PLAYING (7 px); the strip (A) OK once a button leaves it.
+F.EN = { X = 30, W = 260, PANEL = 18, TEXT_W = 228 }
 function F.drawEnding(e, t)
-  backdrop(t)
-  U.box(40, 14, 240, 200)
+  local E = F.EN
+  backdropWarm(t)
+  local rows = {}
+  for _, l in ipairs(e.lines or {}) do for _, r in ipairs(F.wrap(13, l, E.TEXT_W)) do rows[#rows + 1] = r end end
+  local y = 40
+  local items = {}
+  local function add(h, f) items[#items + 1] = { y, f }; y = y + h end
+  for _, r in ipairs(rows) do add(16, function(yy) U.sayC(13, "cream", r, 159.5, yy, "story") end) end
+  y = y + 5
+  add(11, function(yy) U.sayC(7, "cream", "FINAL SCORE", 159.5, yy, "label") end)
+  add(22, function(yy) U.sayC(17, "gold", ("%06d"):format(e.score), 159.5, yy, "score") end)
+  if e.newBest then add(18, function(yy) if math.floor(t * 3) % 2 == 0 then U.sayC(13, "gold", "NEW BEST RUN!", 159.5, yy, "best") end end)
+  else add(14, function(yy) U.sayC(7, "cream", ("BEST RUN %06d"):format(e.best), 159.5, yy, "best") end) end
+  y = y + 4
+  add(22, function(yy) U.sayC(17, "gold", "THE END", 159.5, yy, "end") end)
+  add(11, function(yy) U.sayC(7, "cream", "THANKS FOR PLAYING", 159.5, yy, "thanks") end)
+  local h = y + 10 - E.PANEL
+  U.panel(E.X, E.PANEL, E.W, h)
+  U.ribbon("ribbon_tally", 159.5, 0)
   local bounce = (t < 0.6) and math.floor(math.sin(t * 20) * 2) or 0
-  U.center("GOOD GIRL!", 160, 34 + bounce, 3, U.GOLD)
-  local y = 70
-  for _, s in ipairs(e.lines or {}) do U.center(s, 160, y, 1); y = y + 10 end
-  U.center("FINAL SCORE", 160, y + 4, 1)
-  U.center(("%06d"):format(e.score), 160, y + 16, 2, U.GOLD)
-  if e.newBest then if math.floor(t * 3) % 2 == 0 then U.center("NEW BEST RUN!", 160, y + 38, 1, U.GOLD) end
-  else U.center(("BEST RUN %06d"):format(e.best), 160, y + 38, 1) end
-  lg.setColor(U.RIM); lg.rectangle("fill", 72, y + 56, 176, 1); lg.setColor(1, 1, 1, 1)
-  U.center("THE END", 160, y + 68, 2)
-  U.center("THANKS FOR PLAYING", 160, y + 88, 1)
-  if t > F.ENDING_WAIT and blink(t) then U.center("PRESS ANY BUTTON", 160, 196, 1) end
+  U.sayC(17, "ink", "GOOD GIRL!", 159.5, 4 + bounce, "title")
+  for _, it in ipairs(items) do it[2](it[1]) end
+  if t > F.ENDING_WAIT then U.strip({ { "ok", "OK" } }) end
 end
 F.ENDING_WAIT = 2                 -- seconds before a key leaves the ending
 return F

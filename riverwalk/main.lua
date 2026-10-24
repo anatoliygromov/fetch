@@ -112,7 +112,8 @@ function love.load(args)
   local api = { stage = function() return stage end, setState = function(s) state = s end, getState = function() return state end, newRun = newRun,
     run = function() return run end, tally = function() return tally end, flow = Flow, talk = Talk,
     bonus = function() return bonus end, startBonus = function() startBonus(true) end, startRun = startRun, levelName = function() return levelName end,
-    over = function() return over end, pause = function() return pz end }
+    over = function() return over end, pause = function() return pz end,
+    setStory = function(l) story = l end, setEnding = function(e) ending = e end, setT = function(v) t = v end }   -- (the screens' frames)
   for _, a in ipairs(args or {}) do
     if (a == "--auto" or a == "--physics") and bonusArg then require("tests_bonus")(a, api)          -- the bonus round's checks
     elseif a == "--test" or a == "--auto" or a == "--physics" then require(levelName == "riverwalk" and "tests" or ("tests_" .. levelName))(a, api) end
@@ -376,17 +377,17 @@ function love.update(dt)
   frameMs = (love.timer.getTime() - t0) * 1000
 end
 
-local function drawTuning()
+local function drawTuning()                                       -- (dev, Tab) in the v8 small font (ui step 3)
   if not tuning then return end
-  local x, y, w, h = 168, 22, 148, 14 + #TUNE * 10
-  love.graphics.setColor(0.08, 0.12, 0.22, 0.9); love.graphics.rectangle("fill", x, y, w, h)
+  local x, y, w, h = 160, 30, 156, 16 + #TUNE * 10
+  love.graphics.setColor(40 / 255, 20 / 255, 12 / 255, 0.92); love.graphics.rectangle("fill", x, y, w, h); love.graphics.setColor(1, 1, 1, 1)
   for i, r in ipairs(TUNE) do
-    local col = (i == tuneRow) and { 252/255, 214/255, 60/255 } or U.WHITE
-    U.text(i .. " " .. r[2]:upper(), x + 4, y + 3 + (i - 1) * 10, col)
+    local style = (i == tuneRow) and "gold" or "cream"
+    U.say(7, style, i .. " " .. r[2]:upper(), x + 4, y + 3 + (i - 1) * 10)
     local v = tostring(Pp.P[r[1]]) .. r[4]
-    U.text(v, x + w - 4 - 6 * #v, y + 3 + (i - 1) * 10, col)
+    U.say(7, style, v, x + w - 4 - U.sayW(7, v), y + 3 + (i - 1) * 10)
   end
-  U.text("- + CHANGE", x + 4, y + h - 10, U.RIM)
+  U.say(7, "dim", "- + CHANGE", x + 4, y + h - 11)
 end
 
 function love.draw()
@@ -398,7 +399,7 @@ function love.draw()
     or (state == "bonus" and function() bonus:draw() end)
   if screen then                                                  -- the screens drawn without a level behind them
     screen()
-    if Se.showing() then U.volumeToast(Se.volume, Se.MAX, 218) end
+    if Se.showing() then U.volumeToast(Se.volume, Se.MAX, U.TOAST_MENU) end
     love.graphics.setCanvas()
     local ww, wh = love.graphics.getDimensions()
     local s = math.max(1, math.floor(math.min(ww / W, wh / H)))
@@ -431,11 +432,11 @@ function love.draw()
     love.graphics.setColor(1, 1, 1, 1); stage.pepper:draw(math.floor(stage.cam + 0.5))
     love.graphics.pop()
   end
-  if Se.showing() then U.volumeToast(Se.volume, Se.MAX, state == "play" and 20 or 218) end
+  if Se.showing() then U.volumeToast(Se.volume, Se.MAX, state == "play" and U.TOAST_PLAY or U.TOAST_MENU) end
   if debugView then
-    U.text(("%d FPS  %.1f MS"):format(fps, frameMs), 4, 228, { 1, 1, 0.4 })
+    U.say(7, "gold", ("%d FPS  %.1f MS"):format(fps, frameMs), 4, 228)
     local p = stage.pepper
-    U.text(("X %d Y %d %s"):format(p.x, p.y, p.onGround and "GROUND" or "AIR"), 160, 228, { 1, 1, 0.4 })
+    U.say(7, "gold", ("X %d Y %d %s"):format(p.x, p.y, p.onGround and "GROUND" or "AIR"), 160, 228)
   end
   love.graphics.setCanvas()
   local ww, wh = love.graphics.getDimensions()

@@ -22,7 +22,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, '..', '..', 'v7_icons', 'tools')); sys.path.insert(0, os.path.join(HERE, '..', 'font')); sys.path.insert(0, HERE)
 import icons7 as I7
 import style8 as S8
-from icons8 import GOLD, DARK, INK, CROSS, BRONZE, RIM, put, outline_of, shadow, MINI_PAW
+from icons8 import GOLD, DARK, INK, CROSS, BRONZE, RIM, put, outline_of, shadow, MINI_PAW, ribbon
 
 CREAM = (246, 232, 200); CREAM_HI = (255, 252, 240); CREAM_LO = (214, 190, 150)
 RED = dict(light=(255, 120, 112), mid=(214, 52, 60), dark=(150, 30, 40))
@@ -303,6 +303,7 @@ def build(out):
     d, u, l, r = tails()
     save('tail_d', d, sh=False); save('tail_u', u, sh=False); save('tail_l', l, sh=False); save('tail_r', r, sh=False)
     save('ball', ball())
+    rw, mw = ribbon(160, 19, arch=0); save('ribbon_wide', rw); meta['ribbon_wide_body'] = mw     # FETCH FRENZY!
     for k, el in PICTURES.items(): save('pic_' + k, picture(el))
     from menu8 import dpad
     save('g_right', dpad(lit=['right']))

@@ -78,8 +78,35 @@ tools/layout_qa_menus.py out_ui/step3/frames`.
   next press goes on as before. The update moved from main.lua into F.tallyStep (the show's own timetable; the
   tally is done when the show ends, about 4 to 6 s, was 1.8 s).
 - **Flow test change:** new check "tally: any button skips the show to its end" (the clean clear). 125 of 125 pass.
+- **Story card between levels (flow.lua F.drawStory, F.storyCard):** a story moment, so the portrait panel: the warm
+  dim, Mia telling the outro in the kit's gold panel (13 px, each line split where its halves are most even), her
+  portrait (talking while it is read) in the thin gold frame on the panel's right end; the card drops in; after
+  2 s the strip `(A) GO ON` (only A, as before) replaces the small blinking A button.
+- **GAME OVER (F.drawOver, F.overCard):** the warm dim, the gold panel with the GAME OVER ribbon, TRY AGAIN / MENU as
+  plain outlined text (only the selected one gold, the paw coin before it, eased), the strip `(A) OK`.
+- **The ending (F.drawEnding):** the title picture under the warm dim, the gold panel under the arched GOOD GIRL!
+  ribbon: the outro (13 px), FINAL SCORE (7 px) and the score (17 px gold), NEW BEST RUN! (13 px gold, blinking) or
+  BEST RUN (7 px), THE END (17 px gold), THANKS FOR PLAYING (7 px), the strip `(A) OK` after 2 s.
+- **FETCH FRENZY (bonus.lua, hud.lua U.bonusStatus):** the HUD row in the v8 style (the ball and CATCHES against the
+  goal, gold and +1 once reached; the watch and the seconds, the last 5 blinking; the points); the intro card (the
+  gold panel, a new wide ribbon FETCH FRENZY!, A GOLDEN BONE BONUS, the round's name in 17 px gold, CATCH WHAT MIA
+  THROWS! in 13 px, the goal as the ball, 11 CATCHES, +1 and Pepper's head; was "11 CATCHES: EXTRA LIFE"; the
+  strip `(A) GO`); READY..., GO!, the last seconds and TIME UP! in the 17 px gold font; the result card like the
+  tally (CATCHES, IN THE AIR, POINTS; EXTRA LIFE! with Pepper's head, or GOOD TRY, PEPPER! and the goal in 7 px;
+  the strip `(A) OK`); the +100 pops in the 7 px font.
+- **The sound toast (hud.lua U.volumeToast):** a small gold panel with SOUND (7 px) and the 9 segments, under the HUD
+  while playing, above the controls strip over menus and cards.
+- **Dev panels (main.lua):** the tuning panel (Tab) and the debug line (G) in the 7 px font on the warm dark.
+- **Old code removed:** hud.lua's blue signs, boxes, prompt banner, 5x7 text, the dotted checker dim, the old lock, dog,
+  medal, volume bar and HARD tag, the code-drawn picture signs; talk.lua's round button glyphs and the old panel;
+  flow.lua's checker backdrop. Nothing in the UI uses bigfont.lua any more.
+- **Left as they are (not UI screens):** the in-world tells drawn with bigfont.lua ("!" over a hissing goose, the cat,
+  a bike; "?" when an animal hears a bark; chase.lua, critters.lua, scene.lua, roofs.lua, night.lua) and the greybox
+  prop labels (CAT, HOLLOW LOG, CRATES, TERRACE...; scene.lua, setpieces.lua), which go when those levels get art;
+  the dithered dust puffs (extras.lua), pavement fades (scene.lua) and lantern light (night.lua) are level art;
+  the title's logo dither is the title track's.
 - **Pieces (art/source/ui/v8/tools/screens8.py, built by build8.py):** arrow_l / arrow_r, lock / lock_big, dot_on /
-  dot_off, frame_s, medal_<kind>_on / _off, bubble and its tails, ball, stamp, pic_<kind>, g_right (the d-pad, right lit).
+  dot_off, frame_s, medal_<kind>_on / _off, bubble and its tails, ball, stamp, pic_<kind>, g_right (the d-pad, right lit), ribbon_wide.
 
 ## Branch `ui/hud-v8` pilot 2: the title on its native grid, Pepper pants and blinks, the new main menu (24 Oct)
 Follows docs/ui_design.md (the owner's UI design, 24 Oct). Stops here for the owner's yes.

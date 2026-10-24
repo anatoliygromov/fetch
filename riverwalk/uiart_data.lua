@@ -68,6 +68,7 @@ return {
   ribbon_menu = { 0, 1, 145, 23 },
   ribbon_pause = { 0, 1, 113, 23 },
   ribbon_tally = { 0, 1, 179, 35 },
+  ribbon_wide = { 0, 1, 181, 23 },
   row_off = { 0, 0, 139, 18 },
   row_on = { 0, 0, 139, 18 },
   seg_off = { 0, 0, 4, 12 },
@@ -83,4 +84,5 @@ return {
   ribbon_pause_band = { 11, 102, 1, 19 },
   ribbon_tally_band = { 17, 162, 1, 25 },
   ribbon_menu_band = { 11, 134, 1, 19 },
+  ribbon_wide_band = { 11, 170, 1, 19 },
 }
