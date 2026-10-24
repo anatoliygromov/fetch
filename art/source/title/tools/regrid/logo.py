@@ -528,7 +528,8 @@ def min_run_of(k):
     return 1 if d in (0, 3, 4, 5, 8) else 2    # sparse densities are never a lone dotted row
 
 
-def ramp_rows(tl, table, w, jump=0.02):
+def ramp_rows(tl, table, w, jump=0.02, allow=None, gpen=None):
+    gpen = np.zeros_like(table) if gpen is None else gpen
     """Levels per row minimising the weighted squared error between the painting's row luma
     tl[i] and the luma the level really gives on that row's cells (table[i, level]); sparse
     densities are held for at least two rows, and jumps of more than one level cost a little,
@@ -541,10 +542,12 @@ def ramp_rows(tl, table, w, jump=0.02):
     dz = np.array([0.0 if k in (-8, 0, 8, 16) else 3.0 ** 2 for k in LEVELS])
     cost = np.full((n, nl, R + 1), INF); back = np.zeros((n, nl, R + 1, 2), int)
     for k in range(nl):
-        cost[0, k, 1] = w[0] * ((tl[0] - table[0, k]) ** 2 + dz[k])
+        cost[0, k, 1] = w[0] * ((tl[0] - table[0, k]) ** 2 + dz[k] + gpen[0, k]) + (0 if allow is None or allow[0, k] else INF)
     for i in range(1, n):
         for k in range(nl):
-            c = w[i] * ((tl[i] - table[i, k]) ** 2 + dz[k])
+            c = w[i] * ((tl[i] - table[i, k]) ** 2 + dz[k] + gpen[i, k])
+            if allow is not None and not allow[i, k]:
+                continue
             for r in range(1, R + 1):
                 rr = min(r + 1, R)
                 v = cost[i - 1, k, r] + c
@@ -571,7 +574,7 @@ def ramp_rows(tl, table, w, jump=0.02):
     return out
 
 
-def row_ramp(fill, skip, stripes_mask, src_luma_cells):
+def row_ramp(fill, skip, stripes_mask, src_luma_cells, ofrac=None):
     """Per shape (letter, pad, toe), per cell row: the painting's mean luma over the shape's
     dithered cells (not stripes, not edge cells when the row has inner cells) is the target;
     each candidate level is scored by the luma it really gives on exactly those cells."""
@@ -589,9 +592,10 @@ def row_ramp(fill, skip, stripes_mask, src_luma_cells):
         rows = np.flatnonzero(body.any(1))
         if not len(rows):
             continue
-        tl, ws, table = [], [], []
+        tl, ws, table, ns = [], [], [], []
         for r in rows:
             sel = core[r] if core[r].sum() >= 2 else body[r]
+            ns.append(int(sel.sum()))
             tl.append(src_luma_cells[r][sel].mean()); ws.append(max(int(body[r].sum()), 1))
             row = []
             for k in LEVELS:
@@ -599,7 +603,36 @@ def row_ramp(fill, skip, stripes_mask, src_luma_cells):
                 frac = pats[d][r][sel].mean()
                 row.append(T[b] + (T[a2] - T[b]) * frac)
             table.append(row)
-        lv = ramp_rows(np.array(tl), np.array(table), np.array(ws, float))
+        # where dither may go: the solid top stays solid down to the first row where the
+        # painting's interior shows orange paint (its fade start); toes are too small for
+        # dither, each toe row is solid yellow or solid orange
+        allow = np.ones((len(rows), len(LEVELS)), bool)
+        LV = np.array(LEVELS)
+        if m.sum() < 40:
+            allow[:] = np.isin(LV, [0, 8])[None]
+        elif ofrac is not None:
+            # fade start: the first row from which the painting stays at least 4 luma darker
+            # than solid yellow for three rows running (its first sparse orange)
+            dk = np.array(tl) <= LY - 4
+            start = next((i for i in range(len(rows)) if dk[i:i + 3].all()), len(rows))
+            allow[:start] = (LV == 0)[None]
+            allow[start:] &= (LV >= 0)[None]
+        # the row-luma gate as a hard constraint on rows that can hold a fine density (>= 5
+        # cells): every level within 5.9 luma of the painting is allowed there, overriding the
+        # solid top only when no solid level is close enough
+        err = np.abs(np.array(table) - np.array(tl)[:, None])
+        pen = np.zeros_like(err)
+        for i in range(len(rows)):
+            if m.sum() < 40 or ns[i] < 5:
+                continue
+            ok = err[i] <= 5.9
+            if not (allow[i] & ok).any() and (ok & (LV >= 0)).any():
+                allow[i] |= ok & (LV >= 0)       # the painting's own fade starts here
+                for j in (i - 1, i + 1):         # and its neighbour, so a sparse density
+                    if 0 <= j < len(rows):        # can be held for two rows
+                        allow[j] |= ok & (LV >= 0) & (err[j] <= 5.9)
+            pen[i] = np.where(ok, 0.0, 4e3)       # soft: the DP stays feasible
+        lv = ramp_rows(np.array(tl), np.array(table), np.array(ws, float), allow=allow, gpen=pen)
         for r, k in zip(rows, lv):
             level[r][m[r]] = k
         info[int(c)] = (rows.tolist(), [round(float(v), 1) for v in tl], lv.tolist())
@@ -677,7 +710,10 @@ def build(verbose=True):
     lite &= ~hi & ~red
     # the fill: an ordered-dither ramp per letter, row by row from the painting's luma
     src_l = cell_mean(luma(load_src()[Y0:Y1, X0:X1]))
-    level, ramp = row_ramp(fill, np.zeros_like(fill), hi | red | lite, src_l)
+    ofr = cell_mean((L == IDX['orange']).astype(np.float32))
+    toes = G['pawc'] & ~largest(G['pawc'])
+    red &= ~toes                       # toes: solid tone plus the painted 1-cell highlight
+    level, ramp = row_ramp(fill, np.zeros_like(fill), hi | red | lite, src_l, ofr)
     gk, gnames = gap_colours(L, gap)
     P = lambda n: pal[IDX[n]]
     idx = np.full((NY, NX), -1, np.int16)     # palette index map (into PROTO), -1 transparent

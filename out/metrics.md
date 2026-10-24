@@ -153,3 +153,14 @@ form 5x5 5.37/16.96, form fair 5.24/17.16 (both fail; painting's own cells 4.45/
 Still different (2x, 5x, 10x): the painting's sparse dots are 1.2-cell squares, ours single cells, so
 our fade reads finer-grained; a few sparse dots in the yellow top of C and H; toes still a little
 smaller and more dotted than painted; top outline 2 cells vs painted 1.7.
+
+
+# Round 4 : metrics_r4.json
+- Row-luma gate as a soft constraint in the ramp DP; solid top kept solid down to the painting's
+  fade start (first row staying 4+ luma darker than yellow for 3 rows), unlocked only where the
+  painting itself is darker. Dither rows (>= 5 cells) max |diff|: x286 3.92, x193 5.29, x252 4.74, x144 5.69, x218 5.45, x170 5.60, x282 5.50 (all < 6, pass).
+- Toes: solid yellow rows and solid orange rows only, painted 1-cell highlight on top, no red, no dots.
+  Per-row luma of toes is not comparable (painting fades inside 6 rows; short-row max up to 65).
+- Top outline stays 2 cells: painted 1.73 cells reads as 3.5 px at 2x; 2 cells = 4 px, 1 cell = 2 px (thin).
+- lone dithered rows 0; pattern violations 0; checker out of phase 0/425;
+  L-corners 0, stripe gaps 0, off-palette 0; form 5.40/17.19, fair 5.28/17.30 (fail).
