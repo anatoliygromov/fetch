@@ -325,7 +325,7 @@ function St:update(dt, presses)
     if p.carrying then
       if nearGirl(self) then self:giveBall() else self:dropBall() end
     elseif nearBall(self) then
-      self.ball.state = "carried"; self.ball.picked = true; p.carrying = self.ball; p:grab(); S.play("key")
+      self.ball.state = "carried"; self.ball.picked = true; self.ball.knock = nil; p.carrying = self.ball; p:grab(); S.play("key")
       self:say(self.def.pickupSay or "BRING ME THE BALL!", 2.4)
     end
   end
@@ -340,7 +340,9 @@ function St:update(dt, presses)
     if w:solidIn(nx - 3, nx + 3, b.y - 6, b.y - 1) then b.vx = 0 else b.x = nx end   -- it bounces off walls, never into them
     local f, hit = w:floor(b.x - 3, b.x + 3, b.x, b.y - 0.5, ny, b.y, b.drop)    -- drop: knocked off a branch, falls through
     if f then b.y = f; b.state = "rest"; b.drop = nil; b.on = hit; b.airT = 0
-      if b.knock and self:ballLost() then b.state = "home"; self.ballBackT = 0.6 else b.knock = nil end   -- (knocked: see below)
+      local onMover = false                                         -- (a boat or a lift moves on: a knocked ball
+      for _, m in ipairs(self.movers) do if hit == m then onMover = true end end   -- that rolls off it later still
+      if b.knock and self:ballLost() then b.state = "home"; self.ballBackT = 0.6 elseif not onMover then b.knock = nil end   -- comes back by b.knock)
       if math.abs(b.x - self.girl.x) < 30 and math.abs(b.y - self.girl.y) < 20 then self:giveBall() end
     else b.y = ny end
     if w:inWater(b.x, b.y) then b.state = "home"; self.ballBackT = 1.2; S.play("splash")
