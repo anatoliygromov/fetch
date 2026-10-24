@@ -414,6 +414,9 @@ function F.cardTop(x, w, h, avoid)
 end
 -- a card dropping in: 6 frames, ease out, from 10 px up
 local function dropIn(t) local u = math.min(1, (t or 1) / 0.1); return -math.floor(10 * (1 - u) * (1 - u) + 0.5) end
+-- (ui/panel-hud) a card's top while it drops in: never closer than the margin (4 px) to the screen's top, so its
+-- ribbon and frame are never cut by the edge (a card placed at the top simply appears there)
+local function dropTop(y, t) return math.max(U.M, y + dropIn(t)) end
 
 -- the level intro card (step 3): the warm dim, the kit's panel with the LEVEL n ribbon, the level's name in the 17 px
 -- font and the story (intro lines 3 and 4) in the 13 px font, the controls strip (A GO) once a button starts it
@@ -428,7 +431,7 @@ function F.drawIntro(def, t, avoid)
   local I = F.I
   local lines, h = F.introLayout(def)
   U.dimWarm()
-  shifted(F.cardTop(I.X, I.W, h, avoid) + dropIn(t), function()
+  shifted(dropTop(F.cardTop(I.X, I.W, h, avoid), t), function()
     U.panel(I.X, I.PANEL, I.W, h - I.PANEL)
     U.ribbon("ribbon_pause", 159.5, I.RIB)
     U.sayC(13, "ink", def.intro[1] or "", 159.5, I.RIB + 2, "title")
@@ -459,7 +462,7 @@ end
 function F.drawStory(lines, t, avoid)
   local L = F.storyLayout(lines)
   U.dimWarm()
-  shifted(F.cardTop(L.x, L.w, L.ph, avoid) + dropIn(t), function() F.storyCard(lines, t, L) end)
+  shifted(dropTop(F.cardTop(L.x, L.w, L.ph, avoid), t), function() F.storyCard(lines, t, L) end)
   if t >= F.CARD_WAIT then U.strip({ { "ok", "GO ON" } }) end
 end
 function F.storyCard(lines, t, L)
@@ -615,7 +618,7 @@ F.overItems = { "TRY AGAIN", "MENU" }
 F.OV = { X = 80, W = 160, RIB = 0, PANEL = 10, ROW0 = 35, PITCH = 20, H = 70, LABEL_IN = 44, CUR_IN = 19 }
 function F.drawOver(o, t, avoid)
   local V = F.OV
-  U.dimWarm(); shifted(F.cardTop(V.X, V.W, V.PANEL + V.H, avoid) + dropIn(t), function() F.overCard(o, t) end)
+  U.dimWarm(); shifted(dropTop(F.cardTop(V.X, V.W, V.PANEL + V.H, avoid), t), function() F.overCard(o, t) end)
   if t >= F.OVER_WAIT then U.strip({ { "ok", "OK" } }) end
 end
 function F.overCard(o, t)
@@ -702,8 +705,9 @@ end
 -- after the last level: e = { score, best, newBest, lines (the last level's outro, optional) }. (step 3) The title
 -- picture under the warm dim, the kit's panel under the arched GOOD GIRL! ribbon: the outro (13 px), FINAL SCORE (7 px)
 -- and the run's score (17 px gold), NEW BEST RUN! (13 px gold, blinking) or the best run (7 px), THE END (17 px) and
--- THANKS FOR PLAYING (7 px); the strip (A) OK once a button leaves it.
-F.EN = { X = 30, W = 260, PANEL = 18, TEXT_W = 228 }
+-- THANKS FOR PLAYING (7 px); the strip (A) OK once a button leaves it. (ui/panel-hud) The whole card TOP (4 px, the
+-- margin) down from the screen's top, so the arched ribbon is never cut by the edge.
+F.EN = { X = 30, W = 260, PANEL = 18, TEXT_W = 228, TOP = 4 }
 function F.drawEnding(e, t)
   local E = F.EN
   backdropWarm(t)
@@ -722,11 +726,13 @@ function F.drawEnding(e, t)
   add(22, function(yy) U.sayC(17, "gold", "THE END", 159.5, yy, "end") end)
   add(11, function(yy) U.sayC(7, "cream", "THANKS FOR PLAYING", 159.5, yy, "thanks") end)
   local h = y + 10 - E.PANEL
-  U.panel(E.X, E.PANEL, E.W, h)
-  U.ribbon("ribbon_tally", 159.5, 0)
-  local bounce = (t < 0.6) and math.floor(math.sin(t * 20) * 2) or 0
-  U.sayC(17, "ink", "GOOD GIRL!", 159.5, 4 + bounce, "title")
-  for _, it in ipairs(items) do it[2](it[1]) end
+  shifted(E.TOP, function()
+    U.panel(E.X, E.PANEL, E.W, h)
+    U.ribbon("ribbon_tally", 159.5, 0)
+    local bounce = (t < 0.6) and math.floor(math.sin(t * 20) * 2) or 0
+    U.sayC(17, "ink", "GOOD GIRL!", 159.5, 4 + bounce, "title")
+    for _, it in ipairs(items) do it[2](it[1]) end
+  end)
   if t > F.ENDING_WAIT then U.strip({ { "ok", "OK" } }) end
 end
 F.ENDING_WAIT = 2                 -- seconds before a key leaves the ending

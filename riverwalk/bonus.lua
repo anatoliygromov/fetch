@@ -322,7 +322,10 @@ end
 function B:draw()
   self:drawScene()
   local F = require("flow")
-  U.bonusStatus({ time = self.time, catches = self.catches, need = B.LIFE_AT, points = self.points })
+  -- the HUD row only while the round runs (READY, play, TIME UP); not under the intro and result cards (ui/panel-hud)
+  if self.phase == "ready" or self.phase == "play" or self.phase == "timeup" then
+    U.bonusStatus({ time = self.time, catches = self.catches, need = B.LIFE_AT, points = self.points })
+  end
   local avoid = { self:pepperRect() }
   -- (ui step 3) the cards in the kit: the warm dim, the gold panel, the wide ribbon, the 13 px font, the strip;
   -- READY / GO / the last seconds / TIME UP in the 17 px gold font over the scene
