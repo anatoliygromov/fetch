@@ -169,7 +169,7 @@ def main(src=None, dst=None):
     import qa
     for _ in range(4):
         n_m, mm = qa.mixels(out, np.ones(m.shape, bool))
-        mm &= ndi.binary_dilation(m, iterations=1)
+        mm &= ndi.binary_dilation(m, iterations=3)
         if not mm.any():
             break
         for j, i in np.argwhere(mm):

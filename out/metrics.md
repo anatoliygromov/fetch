@@ -145,7 +145,7 @@ average (95 % within 2.5 px, never more than 4 px) from k * 7.5.
 
 ## Plate removed (result_bg_noplate_320.png)
 
-Plate found at cells x 154-272, y 191-206, plus its pale glow rows 207-208 (2289 cells; 1,985 px
+Plate found at cells x 154-272, y 191-206, plus its pale glow rows 207-208 (2289 cells; 2,220 px
 changed against result_bg_320.png). Filled by rule (noplate.py): 18 bars continue on the round 4
 pitch down to the curb, the posts continue, slot backgrounds continue the slot rows above
 (mirrored), one straight bottom rail (row 199), one dark green hedge band, one brown curb row
