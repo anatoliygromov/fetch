@@ -48,6 +48,29 @@ target renders (art/source/ui/ref) are "this exact layout and quality"; fonts on
   tools/ui_frames.py (frames at 1x), tools/layout_qa8.py (the v6 checks on real frames: 42 PASS on the HUD),
   tools/ui_card.py (side-by-side with the target, the screen card).
 - **Checks:** check_pepper PEPPER UNCHANGED (4591 steps); check_flow 116 of 116 (with a fresh XDG_DATA_HOME).
+## Branch `art/pilot-oldtown`: Downtown's Old Town row built from stamped parts (23 Oct)
+Built on main v0.6 (1b5a30f). 0 credits, no generation, no resampling, no new colour (the strip's own 12), alpha binary.
+Aseprite was not built yet on this machine, so the build is a script.
+- **tools/build_oldtown.py** builds `riverwalk/art/scene/town_facades.png` from parts drawn once (window 7 x 11 with
+  lintel, sill and its shadow; attic window 7 x 9; double door; gable step; cornice, string course, plinth) and
+  stamped on an integer grid; what is not rebuilt comes pixel for pixel from **source_scenery/town_facades_v06.png**
+  (the strip as on v0.6). `--check` fails if the file differs from the build; `--houses DIR` writes each house alone
+  for asset_qa and the cards; `--parts out.png` a sheet of the parts at 8x.
+- **Pilot: the red stepped-gable house** (x 42-78): 3 storeys of 16 px, 3 identical windows per storey 4 px apart, the
+  ground floor's 2 windows and door on the same columns, a gable as wide as the wall of 6 levels of 5 px with 2 px
+  treads, 3 attic windows; flat wall with one shade band (right edge), light from the upper left. asset_qa
+  (`--building`, mid, dt): WARN (contrast 106, as the old row's 103), lone pixels 0.0 %, every storey's windows
+  identical, 8 colours. The row's lone pixels 1.9 % -> 1.5 %; the row still fails on the other houses' windows.
+- **The whole row rebuilt** from the same parts (added: narrow window, dormer, single door, shop window, balcony, bell
+  gable shoulder and cap, chimney, downpipe): yellow bell gable, the red stepped gable (pilot, unchanged), cream
+  pediment with balconies, grey stone under a mansard with two dormers, ochre mansard with one dormer, narrow yellow
+  bell gable, narrow red pediment; each its own colour, height, top and door. Houses of one wall colour keep their
+  windows on the same rows or 5 px apart. Only the pavement rows (111 on) come from the v0.6 file.
+  asset_qa per house: yellow_bell, red_gable, cream_pediment, stone_mansard WARN (contrast 102-106 only), ochre_mansard,
+  yellow_narrow, red_narrow PASS; lone pixels 0.0 % each, every storey's windows identical, 8-10 colours. The row:
+  FAIL -> WARN (contrast 102, was 103), lone pixels 1.9 % -> 0.1 %, 31 storeys all identical, 12 colours.
+- check_flow is flaky under load on this machine (111-116 of 116, the same on the v0.6 file); 116 of 116 on a clean run.
+- **Checks:** check_pepper PEPPER UNCHANGED (4591 steps), check_flow 116 of 116.
 
 ## Regroup (23 Oct, evening): main v0.6, BIBLE and STATUS, the enforced gate, checks and releases on GitHub
 The owner's decisions of 23 Oct (merge list): round1 becomes main as v0.6; art/freefix merged with the approved River
