@@ -83,3 +83,34 @@ Remaining defects I can see:
 3. The right-facing edges in the orange half carry no light edge (the painting has a faint yellow edge there on F, E, H).
 4. Blue gaps are smaller than the painting's (pushed 2 cells from the fill); between H and "!" the blue strip is narrower.
 5. Highlight corner cells at the top-left of letters are plain yellow where the pixel-perfect rule removed the L joint.
+
+# Round 2 (producer notes) : metrics_r2.json
+Changes: three distinct bands (solid yellow, exact one-cell checker, solid orange) placed from the
+painting's luma-based tone share per cell (row luma vs painting: mean diff -1.3, mean |diff| 4.6
+over all letter rows); the painted checker squares measure 9 to 10 px (1.2 to 1.3 cells) in every
+letter, so nowhere is it coarse enough for 2x2 blocks and the checker stays one cell; a second
+red-orange row under each letter where painted (bottom rows now within 5 luma of the painting);
+light yellow edge on right- and top-facing edges in the orange half and red-orange on the right of
+the "!" where painted; each letter extruded down/left by its measured painted depth (cells, down /
+left: F 4.9/3.9, E 4.8/3.3, T 5.1/4.3, C 5.4/2.4, H 4.3/4.4, "!" -/3.1); pad at its painted shape
+and place (IoU 0.926), toes at painted size (+5 to +35 % over the hard mask) and place; gaps and
+counters as painted, only kept off the letters (7 fill cells sit 1 navy cell from a blue gap).
+
+| gate | result |
+|---|---|
+| letters IoU / boundary | 0.932 to 0.947 / 0.27 to 0.30 (pass) |
+| toes / pad | 0.67 to 0.81 / 0.926 (toes fail, floor ~0.8) |
+| silhouette | 0.962 / 0.503 (boundary fails: 2-cell outline and extruded depth) |
+| gaps | 0.653 / 2.27 |
+| L-corners, stripe gaps | 0, 0 |
+| outer outline >= 2 cells | 0 violations |
+| off-palette | 0 (9 colours) |
+| mixels | 88, all designed stripe orders |
+| checker | 0 / 1501 out of phase |
+| form (5x5 box, per cell) | 5.72 / 17.0 (fail) |
+| form fair (Gaussian 1.5 cells vs box-averaged painting) | 5.58 / 17.3 (fail, target 4 / 10); per-cell mode of the painting itself scores 4.45 / 13.3 |
+
+Still different at 5x / 10x: band edges are hard lines where the painting fades through sparse
+squares; toes still read a little smaller than painted (one navy cell kept between pads); the outer
+navy is 2 cells where the painting's top outline is 1.7; form error sits at letter edges and band
+boundaries.

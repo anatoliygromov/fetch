@@ -231,7 +231,7 @@ def colour_gate(R, rgba, palette_hex):
 # ------------------------------------------------------------------ pattern
 def pattern_gate(R):
     G = R['G']; idx = R['idx']; lvl = R['level']
-    fill = G['fill'] & ~R['hi'] & ~R['red']
+    fill = G['fill'] & ~R['hi'] & ~R['red'] & ~R.get('lite', np.zeros_like(G['fill']))
     org = idx == LG.IDX['orange']
     exp = LG.dither(lvl)
     wrong = fill & (org != exp)
@@ -265,3 +265,15 @@ def lumps_notches(m):
     op = ndi.binary_opening(mp, structure=k)[3:-3, 3:-3]
     cl = ndi.binary_closing(mp, structure=k)[3:-3, 3:-3]
     return m & ~op, cl & ~m
+
+
+def form_gate_fair(rgba, mask, sigma=1.5):
+    """Fair form test asked by the producer: Gaussian blur (sigma 1.5 cells) of the luma of
+    the result (painting box average outside the owned cells) vs the same blur of the painting
+    box-averaged to 320 x 240; target mean < 4, p95 < 10."""
+    from PIL import Image
+    src = Image.open(SRC).convert('RGB').resize((NX, NY), Image.BOX)
+    orig = luma(np.array(src))
+    res = np.where(rgba[..., 3] > 0, luma(rgba[..., :3]), orig)
+    d = np.abs(ndi.gaussian_filter(orig, sigma) - ndi.gaussian_filter(res, sigma))[mask]
+    return dict(mean=float(d.mean()), p95=float(np.percentile(d, 95)), max=float(d.max()))

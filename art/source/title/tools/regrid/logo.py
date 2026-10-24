@@ -178,79 +178,105 @@ def raster_ellipse(cx, cy, a, b):
     return (((xx + 0.5 - cx) / a) ** 2 + ((yy + 0.5 - cy) / b) ** 2) <= 1.0
 
 
-def paw_cells_axis(F, axis_shift):
-    """Main pad: the painted pad mirrored about its vertical axis, smoothed, rasterized
-    symmetric about a snapped axis. Toes: axis-aligned pixel ellipses, centres on a half
-    cell so each toe is mirror symmetric, sizes and centres chosen for the best overlap with
-    the painted toe among shapes with no one-pixel tips, kept clear of the
-    pad and of each other by one navy cell, as in the painting (pads are about 1.2 cells apart; two cells would shrink the toes)."""
+def paw_cells(F):
+    """Main pad: the painted pad, smoothed and rasterized where it is painted. Toes: round
+    pixel blobs (axis-aligned pixel ellipses with no one-pixel tips) at the painted size
+    (area +5 % to +35 % over the painted toe mask, which the painting's soft edges undercount) and position, best overlap with the painted
+    toe, one navy cell clear of the pad and of each other as painted."""
     toes, pad = paw_parts(F)
     out = np.zeros((NY, NX), bool)
     info = []
     I, J = cell_index(H_SRC, W_SRC)
     if pad is not None:
-        ys, xs = np.nonzero(pad)
-        ax = xs.mean() + 0.5                       # vertical axis in crop px
-        mir = np.zeros_like(pad)
-        xm = np.round(2 * ax - 1 - xs).astype(int)
-        ok = (xm >= 0) & (xm < pad.shape[1])
-        mir[ys[ok], xm[ok]] = True
-        sym = ndi.gaussian_filter(pad.astype(np.float32) + mir.astype(np.float32), 2.0) > 1.0
-        pol = smooth_polys(sym, s=6.0, straight_tol=2.0, pre=2.0, min_area=200, thr=60.0)
+        pol = smooth_polys(pad, s=6.0, straight_tol=2.0, pre=2.0, min_area=200, thr=60.0)
         P = fill_polys(pol, pad.shape)
-        cov = coverage(to_full(P), I, J)
-        axc = np.floor((ax + X0) / PX) + 0.5 + axis_shift   # axis on a cell centre: odd width, so the
-                                                   # checker is mirror symmetric too
-        k2 = int(round(2 * axc))                   # mirror: cell i <-> k2 - 1 - i
-        ii = np.arange(NX); im = k2 - 1 - ii
-        okm = (im >= 0) & (im < NX)
-        covm = np.zeros_like(cov); covm[:, okm] = cov[:, im[okm]]
-        padc = (cov + covm) / 2 >= 0.5
-        padc = notch_bump_clean(padc)
-        out |= padc; info.append(('pad', axc))
-    order = sorted(toes, key=lambda m: -m.sum())
-    for m in order:
+        padc = notch_bump_clean(coverage(to_full(P), I, J) >= 0.5)
+        out |= padc
+        ys, xs = np.nonzero(padc); info.append(('pad', int(xs.min()), int(xs.max()), int(ys.min()), int(ys.max())))
+    for m in sorted(toes, key=lambda m: -m.sum()):
         ys, xs = np.nonzero(m)
         y0, y1, x0, x1 = ys.min() + Y0 - 30, ys.max() + Y0 + 30, xs.min() + X0 - 30, xs.max() + X0 + 30
         Jw, Iw = J[y0:y1, x0:x1], I[y0:y1, x0:x1]
         tgt = to_full(m)[y0:y1, x0:x1]
+        area = m.sum() / (PX * PY)
         cx = (xs.mean() + X0 + 0.5) / PX; cy = (ys.mean() + Y0 + 0.5) / PY
         a0, b0 = 2 * xs.std() / PX, 2 * ys.std() / PY
         dist = ndi.distance_transform_edt(~out)
         best = None
-        for sep in (2.0, 1.5):
-            for scx in np.arange(np.floor(cx) - 0.5, np.floor(cx) + 1.6, 1.0):   # cell centres only
-                for scy in np.arange(np.floor(cy * 2) / 2 - 1, np.ceil(cy * 2) / 2 + 1.01, 0.5):
-                    for fa in np.arange(0.85, 1.36, 0.05):
-                        for fb in np.arange(0.85, 1.36, 0.05):
-                            e = raster_ellipse(scx, scy, a0 * fa, b0 * fb)
-                            rows = e.sum(1)[e.any(1)]; cols = e.sum(0)[e.any(0)]
-                            if len(rows) < 3 or rows[0] < 2 or rows[-1] < 2 or cols[0] < 2 or cols[-1] < 2:
-                                continue
-                            if np.abs(np.diff(rows)).max() > 2 or np.abs(np.diff(cols)).max() > 2:
-                                continue
-                            if dist[e].min() < sep:
-                                continue
-                            ef = e[Jw, Iw]
-                            iou = (ef & tgt).sum() / max((ef | tgt).sum(), 1)
-                            if best is None or iou > best[0]:
-                                best = (iou, e, scx, scy, a0 * fa, b0 * fb, sep)
-            if best is not None:
-                break
+        for scx in np.arange(np.round(cx * 2) / 2 - 1, np.round(cx * 2) / 2 + 1.01, 0.5):
+            for scy in np.arange(np.round(cy * 2) / 2 - 1, np.round(cy * 2) / 2 + 1.01, 0.5):
+                for fa in np.arange(0.85, 1.41, 0.05):
+                    for fb in np.arange(0.85, 1.41, 0.05):
+                        e = raster_ellipse(scx, scy, a0 * fa, b0 * fb)
+                        if not (1.05 * area <= e.sum() <= 1.35 * area):   # painted blobs read larger than their hard mask
+                            continue
+                        rows = e.sum(1)[e.any(1)]; cols = e.sum(0)[e.any(0)]
+                        if len(rows) < 3 or rows[0] < 2 or rows[-1] < 2 or cols[0] < 2 or cols[-1] < 2:
+                            continue
+                        if np.abs(np.diff(rows)).max() > 2 or np.abs(np.diff(cols)).max() > 2:
+                            continue
+                        if dist[e].min() < 2.0:
+                            continue
+                        ef = e[Jw, Iw]
+                        iou = (ef & tgt).sum() / max((ef | tgt).sum(), 1)
+                        if best is None or iou > best[0]:
+                            best = (iou, e, scx, scy, a0 * fa, b0 * fb)
         out |= best[1]
-        info.append(('toe', best[2], best[3], round(best[4], 2), round(best[5], 2), round(best[0], 3), best[6]))
+        info.append(('toe', best[2], best[3], round(best[4], 2), round(best[5], 2), round(best[0], 3), int(best[1].sum()), round(area, 1)))
     return out, info
 
 
-def paw_cells(F):
-    """Try the pad axis on the two nearest cell centres; keep the paw whose toes fit best."""
-    best = None
-    for sh in (-1.0, 0.0):
-        out, info = paw_cells_axis(F, sh)
-        score = sum(t[5] for t in info if t[0] == 'toe')
-        if best is None or score > best[0]:
-            best = (score, out, info)
-    return best[1], best[2]
+def painted_depth(M, letter_crop):
+    """Median painted navy thickness (cells) below and left of one painted letter: from each
+    bottom- / left-facing paint edge, through navy, to sky or a blue gap."""
+    F, C = M['F'], M['C']
+    H, W = F.shape
+    out = {}
+    for name, (dy, dx), P in (('down', (1, 0), PY), ('left', (0, -1), PX)):
+        edge = letter_crop & ~shift(letter_crop, dy, dx)
+        ys, xs = np.nonzero(edge)
+        runs = []
+        for y, x in zip(ys[::3], xs[::3]):
+            k = 0; yy, xx = y + dy, x + dx
+            while 0 <= yy < H and 0 <= xx < W and C[yy, xx] and not F[yy, xx] and k < 200:
+                k += 1; yy += dy; xx += dx
+            if 0 <= yy < H and 0 <= xx < W and not F[yy, xx] and not C[yy, xx] and k < 8 * P:
+                runs.append(k)          # longer runs cross into another letter's navy
+        out[name] = float(np.median(runs)) / P if runs else 0.0
+    return out
+
+
+def extrude_letters(fill, M):
+    """Each letter's fill swept down by (depth_down - 2) and left by (depth_left - 2) cells,
+    the painted depth minus the outline that wraps it, so outline plus extrusion is as thick as
+    painted below and left of every letter."""
+    I, J = cell_index(H_SRC, W_SRC)
+    Jc, Ic = J[Y0:Y1, X0:X1], I[Y0:Y1, X0:X1]
+    lab, n = ndi.label(M['F'])
+    rl, rn = ndi.label(fill)
+    ext = fill.copy()
+    depth = {}
+    for c in range(1, n + 1):
+        m = lab == c
+        if m.sum() < 3000:
+            continue
+        v = rl[Jc[m], Ic[m]]; v = v[v > 0]
+        if not len(v):
+            continue
+        rc = np.bincount(v).argmax()
+        d = painted_depth(M, m)
+        td = max(0, int(np.floor(d['down'] + 0.5)) - int(T_OUT))
+        tl = max(0, int(np.floor(d['left'] + 0.5)) - int(T_OUT))
+        f = rl == rc
+        e = f.copy()
+        for k in range(1, td + 1):
+            e |= shift(f, -k, 0)            # value from k rows above: the shape moves down
+        e2 = e.copy()
+        for k in range(1, tl + 1):
+            e2 |= shift(e, 0, k)            # moves left
+        ext |= e2
+        depth[int(rc)] = (round(d['down'], 2), round(d['left'], 2), td, tl)
+    return ext, depth
 
 
 def carve_letters(fill, sep=3.0):
@@ -296,15 +322,18 @@ def geometry(L, M, s=12.0, tol=7.0):
     fill = carve_letters(fill)
     pawc, pawinfo = paw_cells(M['F'])
     fill = (fill & ~cell_disk_dilate(pawc, 2.0)) | pawc   # the paw sits in front of the "!"
-    # 2. constant outline in cell space: every cell within T_OUT cells of the fill
-    base = cell_disk_dilate(fill, T_OUT)
-    # 3. the painting's own silhouette: depth faces beyond the base outline
+    # 2. the painting's own silhouette
     opol = smooth_polys2(M['CL'], s=8.0, rms_tol=3.0, max_tol=8.0, pre=2.0, min_area=200)
     outP = fill_polys(opol, M['CL'].shape)
     painted = cov(outP) >= 0.5
-    extra = painted & ~base
+    # 3. depth faces: each letter extruded down and left by its painted depth (measured per
+    #    letter in cells), then the constant 2-cell outline around fill and extrusion
+    ext, depth = extrude_letters(fill & ~pawc, M)
+    base = cell_disk_dilate(fill, T_OUT)
+    ext_base = cell_disk_dilate(ext, T_OUT) & ndi.binary_dilation(painted)
+    extra = painted & ~base & ~ext_base
     extra = ndi.binary_opening(extra, structure=np.ones((2, 2)))   # no one-cell slivers or lumps
-    outer = base | extra
+    outer = base | ext_base | extra
     outer = ndi.binary_fill_holes(ndi.binary_closing(np.pad(outer, 4), structure=np.ones((4, 4)))[4:-4, 4:-4])
     outer = notch_bump_clean(outer) | base
     # lumps one cell deep and up to three long on the outer contour (a 3x3 opening removes
@@ -315,24 +344,19 @@ def geometry(L, M, s=12.0, tol=7.0):
     for c in range(1, n + 1):
         if (lab == c).sum() <= 3:
             outer &= ~(lab == c)
-    # 4. gaps: the painting's blue inside, never closer than T_OUT cells to the fill
+    # 4. gaps and counters as open as painted: the painting's blue inside, only kept off the
+    #    fill itself (never touching a letter, so the letter keeps a navy edge)
     gpol = smooth_polys2(M['GAP'], s=6.0, rms_tol=3.0, max_tol=8.0, pre=2.0, min_area=150)
     gapP = fill_polys(gpol, M['GAP'].shape)
-    gap = (cov(gapP) >= 0.5) & outer & ~base
-    gap = clean_mask(gap, 4, 0)
-    # inlets of sky reaching in from outside: keep only where at least two cells wide
-    touch = ndi.binary_dilation(~outer) & gap
-    lab, n = ndi.label(gap)
-    inlet = np.isin(lab, np.unique(lab[touch])[1:]) if n else np.zeros_like(gap)
-    wide = ndi.binary_opening(gap, structure=np.ones((2, 2)))
-    gap = (gap & ~inlet) | (inlet & wide)
-    gap = clean_mask(gap, 4, 0)
-    lab, n = ndi.label(gap)            # small inlets read as notches in the outline: navy
+    gap = (cov(gapP) >= 0.5) & outer & ~ndi.binary_dilation(fill, structure=np.ones((3, 3)))
+    gap = clean_mask(gap, 3, 0)
+    lab, n = ndi.label(gap)            # tiny inlets read as notches in the outline: navy
     for c in range(1, n + 1):
         m = lab == c
-        if (m & ndi.binary_dilation(~outer)).any() and m.sum() < 10:
+        if (m & ndi.binary_dilation(~outer)).any() and m.sum() < 4:
             gap &= ~m
-    return dict(outer=outer, fill=fill, gap=gap, base=base, painted=painted, fillP=fillP, pawc=pawc, pawinfo=pawinfo)
+    return dict(outer=outer, fill=fill, gap=gap, base=base, painted=painted, fillP=fillP, pawc=pawc, pawinfo=pawinfo,
+                ext=ext, depth=depth)
 
 
 # ------------------------------------------------------------------ colour
@@ -372,20 +396,29 @@ def gradient_levels(L, fill, sigma=12.0, smooth=1.0, min_cells=8):
     # side faces say nothing about the gradient; the normalised blur carries it to the edges
     inner = ndi.binary_erosion(MAT[L] == 'F', structure=np.ones((3, 3)), iterations=9)
     Yl = (L == IDX['yellow']) & inner; Ol = (L == IDX['orange']) & inner
-    num = ndi.gaussian_filter(Ol.astype(np.float32), sigma)
-    den = ndi.gaussian_filter((Yl | Ol).astype(np.float32), sigma)
+    # tone share from the painting's own luma (its anti-aliased checker edges are mid-orange,
+    # which makes the painted bands read darker than a pure yellow/orange count says)
+    a = load_src()[Y0:Y1, X0:X1]
+    lu = luma(a); pal = None
+    ly, lo = 187.4, 133.8                     # luma of #febd03 and #fe6202
+    t = np.clip((ly - lu) / (ly - lo), 0, 1)
+    mid = inner & np.isin(L, [IDX['yellow'], IDX['orange']])
+    num = ndi.gaussian_filter((t * mid).astype(np.float32), sigma)
+    den = ndi.gaussian_filter(mid.astype(np.float32), sigma)
     u = num / np.maximum(den, 1e-3)
     # wider blur where the interior is far (cells along the edges), so every fill cell has
     # an estimate from the nearest interior paint
-    num2 = ndi.gaussian_filter(Ol.astype(np.float32), 2 * sigma)
-    den2 = ndi.gaussian_filter((Yl | Ol).astype(np.float32), 2 * sigma)
+    num2 = ndi.gaussian_filter((t * mid).astype(np.float32), 2 * sigma)
+    den2 = ndi.gaussian_filter(mid.astype(np.float32), 2 * sigma)
     u = np.where(den > 0.05, u, num2 / np.maximum(den2, 1e-4))
     uc = cell_mean(u)
     lab, n = ndi.label(fill)
     # 2-D field: the painting's gradient follows each stroke, so no per-row model
     a = ndi.gaussian_filter(np.where(fill, uc, 0.0), smooth); b = ndi.gaussian_filter(fill.astype(float), smooth)
     ufit = np.where(fill, a / np.maximum(b, 1e-6), 0.0)
-    level = np.clip(np.floor(ufit * 4 + 0.5), 0, 4).astype(np.int8)
+    # three distinct bands as painted: solid yellow, exact one-cell checker (the painted
+    # checker squares are 9 to 10 px = 1.2 to 1.3 cells, measured per letter), solid orange
+    level = np.where(ufit < 0.2, 0, np.where(ufit < 0.7, 2, 4)).astype(np.int8)
     level = merge_small_levels(level, fill, min_cells)
     level = min_row_runs(level, fill, ufit)
     return level, ufit, uc, lab
@@ -493,9 +526,13 @@ def build(verbose=True):
     red = (red & ~pw) | (pw & D['down'] & ~D['up'])
     hi, red = clean_stripes(hi, red, fill)
     hi, red = complete_runs(hi, red, fill)
-    hi, red = complete_sides(hi, red, fill, level)
+    hi, red, lite = complete_sides(hi, red, fill, level, L)
     level, org, hi, red = paw_colours(G, level, org, hi, red)
     hi, red = clean_stripes(hi, red, fill)
+    lite &= ~hi & ~red & ~G['pawc']
+    red = deep_bottom(red, fill & ~G['pawc'], L, hi)
+    hi, red = clean_stripes(hi, red, fill)
+    lite &= ~hi & ~red
     gk, gnames = gap_colours(L, gap)
     P = lambda n: pal[IDX[n]]
     idx = np.full((NY, NX), -1, np.int16)     # palette index map (into PROTO), -1 transparent
@@ -504,8 +541,9 @@ def build(verbose=True):
         idx[gap & (gk == i)] = IDX[g]
     idx[fill] = IDX['yellow']
     idx[fill & org] = IDX['orange']
+    idx[lite] = IDX['yellow']
     idx[hi] = IDX['hilite']; idx[red] = IDX['red']
-    return dict(L=L, pal=pal, M=M, G=G, level=level, ufit=ufit, uc=uc, hi=hi, red=red, idx=idx, gk=gk)
+    return dict(L=L, pal=pal, M=M, G=G, level=level, ufit=ufit, uc=uc, hi=hi, red=red, lite=lite, idx=idx, gk=gk)
 
 
 def clean_stripes(hi, red, fill):
@@ -547,28 +585,73 @@ def complete_runs(hi, red, fill):
     return hi, red
 
 
-def complete_sides(hi, red, fill, level):
-    """Side faces: each 8-connected chain of left- or right-facing edge cells, split where the
-    gradient turns from the yellow half to the orange half, becomes one stripe end to end
-    when the painting marks at least 30 % (highlight) or 40 % (red) of it, and none otherwise (no dashed lines)."""
+def evidence(L):
+    """Per cell: share of painted highlight (grown 1 px), red-orange (grown 1 px) and of
+    flat light paint (yellow or highlight, not grown) inside the cell."""
+    g = lambda m: cell_mean(ndi.maximum_filter(m, size=3).astype(np.float32))
+    e_hi = g(L == IDX['hilite']); e_red = g(L == IDX['red'])
+    e_lite = cell_mean(np.isin(L, [IDX['yellow'], IDX['hilite']]).astype(np.float32))
+    return e_hi, e_red, e_lite
+
+
+def chains(m, horizontal=False):
+    st = np.array([[0, 0, 0], [1, 1, 1], [0, 0, 0]]) if horizontal else np.ones((3, 3))
+    lab, n = ndi.label(m, structure=st)
+    return [lab == c for c in range(1, n + 1)]
+
+
+def complete_sides(hi, red, fill, level, L):
+    """Side and orange-half edges as whole chains, decided by the painting's evidence along
+    the chain (no dashed lines). Left faces: highlight in the yellow half, red-orange in the
+    orange half. Right faces: red-orange where painted (the right side of the "!"), else a
+    light (yellow) edge in the orange half where painted. Top faces in the orange half: the
+    light (yellow) edge as painted, highlight only where the painting has highlight there.
+    Returns hi, red and lite (cells drawn in flat yellow over the dither)."""
+    e_hi, e_red, e_lite = evidence(L)
     D = ring_dirs(fill)
+    lite = np.zeros_like(fill)
     side = {k: D[k] & ~D['up'] & ~D['down'] for k in ('left', 'right')}
+    yz, oz = level == 0, level >= 2
     for k in ('left', 'right'):
-        for zone in (level <= 1, level >= 2):
-            f = side[k] & zone
-            lab, n = ndi.label(f, structure=np.ones((3, 3)))
-            for c in range(1, n + 1):
-                m = lab == c
-                if m.sum() < 3:
-                    hi &= ~m; red &= ~m
-                    continue
-                fh, fr = (hi & m).sum() / m.sum(), (red & m).sum() / m.sum()
+        for zname, zone in (('y', yz), ('o', oz)):
+            for m in chains(side[k] & zone):
                 hi &= ~m; red &= ~m
-                if fh >= 0.3 and fh >= fr:
+                if m.sum() < 3:
+                    continue
+                h, r, l = e_hi[m].mean(), e_red[m].mean(), e_lite[m].mean()
+                if k == 'left' and zname == 'y' and h >= 0.3:
                     hi |= m
-                elif fr >= 0.4:
+                elif k == 'left' and zname == 'o' and r >= 0.35:
                     red |= m
-    return hi, red
+                elif k == 'right' and r >= (0.25 if zname == 'y' else 0.35):
+                    red |= m
+                elif k == 'right' and zname == 'y' and h >= 0.4:
+                    hi |= m
+                elif k == 'right' and zname == 'o' and l >= 0.65:
+                    lite |= m
+    for m in chains(D['up'] & oz & ~D['down'], horizontal=True):
+        if m.sum() < 2:
+            continue
+        hi &= ~m
+        if e_hi[m].mean() >= 0.4:
+            hi |= m
+        elif e_lite[m].mean() >= 0.65:
+            lite |= m
+    return hi, red, lite
+
+
+def deep_bottom(red, fill, L, hi):
+    """The painted red-orange under each letter is 10 to 15 px (1.5 to 2 cells): a run of
+    the bottom stripe gets a second row above it where the painting is red-orange there."""
+    e_red = cell_mean((L == IDX['red']).astype(np.float32))
+    D = ring_dirs(fill)
+    bottom = red & D['down']
+    cand = fill & shift(bottom, 1, 0) & ~bottom & ~hi
+    add = np.zeros_like(fill)
+    for m in chains(cand, horizontal=True):
+        if e_red[m].mean() >= 0.3:
+            add |= m
+    return red | add
 
 
 def paw_colours(G, level, org, hi, red):
