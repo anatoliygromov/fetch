@@ -19,8 +19,15 @@ return function(api)
   local pending
   local function shot(name) return { act = function() love.graphics.captureScreenshot("s_" .. name .. ".png"); U.log = {}; pending = name end, wait = 0.12 } end
   local oldDraw = love.draw
+  local extra, xcv                                                  -- drawn over the game's frame (a made-up case)
   love.draw = function()
     oldDraw()
+    if extra then                                                   -- drawn at 1x on a canvas of its own, shown at 2x
+      xcv = xcv or love.graphics.newCanvas(320, 240)
+      love.graphics.push(); love.graphics.origin()
+      love.graphics.setCanvas(xcv); love.graphics.clear(0, 0, 0, 0); extra(); love.graphics.setCanvas()
+      love.graphics.setColor(1, 1, 1, 1); love.graphics.draw(xcv, 0, 0, 0, 2, 2); love.graphics.pop()
+    end
     if pending then
       local out = {}
       for _, b in ipairs(U.log or {}) do out[#out + 1] = table.concat(b, " ") end
@@ -32,6 +39,15 @@ return function(api)
     st.cam = math.max(0, math.min(st.world.width - 320, x - 140)); st.bikes = {}; st.bikeT = 99
   end
   local function say(text, t) local st = api.stage(); st:say(text, t or 6) end
+  local function places(list)
+    for _, c in ipairs(list) do
+      local fake = { pepper = { x = c[1], y = c[2], face = 1 }, cam = 0, camY = 0 }
+      love.graphics.setColor(0.2, 0.2, 0.2, 1); local x0, y0, x1, y1 = api.talk.pepperRect(fake)
+      love.graphics.rectangle("line", x0 + 0.5, y0 + 0.5, x1 - x0 - 1, y1 - y0 - 1); love.graphics.setColor(1, 1, 1, 1)
+      local L = api.talk.bubble({ btn = c[4], text = c[3] }, fake); if L then api.talk.drawBubble(L, 0) end
+      U.logBox("pepper", x0, y0, x1 - 1, y1 - 1)
+    end
+  end
   local function sel(i) local p = F.pick; p.sel, p.from, p.moved = i, i, -1 end
   local steps = {
     { wait = 0.8 }, { act = function() I.last = "pad" end, wait = 0.05 }, shot("intro_riverwalk"),
@@ -45,6 +61,23 @@ return function(api)
     { act = function() api.talk.reset(); tp(1340, 216); say("OOPS! GET THE BALL!") end, wait = 0.5 }, shot("talk_top"),
     { act = function() api.talk.reset(); tp(2400, 184); say("IT LANDED ON A FERRY! RIDE THE PONTOON!") end, wait = 0.5 }, shot("talk_3rows"),
     { act = function() local st = api.stage(); st.msg = nil; api.talk.reset() end, wait = 0.1 },
+    -- the hint bubbles (River Walk's tutorial zones) and the nudges, the gamepad's glyphs then the keyboard's
+    { act = function() I.last = "pad"; tp(230, 184) end, wait = 0.03 }, shot("hint_rise"), { wait = 0.4 }, shot("hint_hop"),
+    { act = function() tp(360, 184) end, wait = 0.5 }, shot("hint_bigjump"),
+    { act = function() tp(120, 184) end, wait = 0.5 }, shot("hint_crawl"),
+    { act = function() tp(30, 184) end, wait = 0.5 }, shot("hint_run"),
+    { act = function() I.last = "key"; tp(360, 184) end, wait = 0.5 }, shot("hint_bigjump_key"),
+    { act = function() tp(230, 184) end, wait = 0.4 }, shot("hint_hop_key"),
+    { act = function() I.last = "pad"; tp(230, 184); local n = api.talk.nudge; n.btn, n.why, n.t = "a", "idle", 0.3 end, wait = 0.05 }, shot("nudge_same"),
+    { act = function() local n = api.talk.nudge; n.btn = nil; tp(1000, 184) end, wait = 0.3 },
+    { act = function() local n = api.talk.nudge; n.btn, n.why, n.t = "down", "push", 0.1 end, wait = 0.05 }, shot("nudge_push"),
+    -- made-up places: Pepper high on the screen (the bubble beside her) and at the very top (under her); her sprite's
+    -- box drawn as a thin line
+    { act = function() api.talk.nudge.btn = nil; api.stage().msg = nil; extra = function() end end, wait = 0.1 }, shot("hint_none"),
+    { act = function() extra = function() places({ { 50, 110, "HOLD: CLIMB", "a" } }) end end, wait = 0.1 }, shot("hint_side"),
+    { act = function() extra = function() places({ { 270, 104, "PICK UP", "x" } }) end end, wait = 0.1 }, shot("hint_side_left"),
+    { act = function() extra = function() places({ { 160, 52, "HOLD: SNEAK", "b" } }) end end, wait = 0.1 }, shot("hint_under"),
+    { act = function() extra = nil; api.talk.reset() end, wait = 0.1 },
     { act = function() api.setState("select"); I.last = "pad"; sel(1) end, wait = 0.3 }, shot("select_1_pad"),
     { act = function() sel(2) end, wait = 0.1 }, shot("select_2_pad"),
     { act = function() sel(3) end, wait = 0.1 }, shot("select_3_pad"),

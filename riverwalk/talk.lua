@@ -146,22 +146,97 @@ function T.sayLayout(line, where)
   return { x0 = x0, y0 = gy0, x1 = x0 + w, y1 = gy0 + h, by = by, w = w, rows = rows, tw = tw, port = p, say = true,
     px = px, pw = pw, ph = ph, fx = fx, fy = gy0 + h - fh, fw = fw, fh = fh }
 end
-function T.layout(line, where)
+-- (step 3) a control hint (a line with a button): a small bubble near Pepper (T.bubble) with the button as the device
+-- used last shows it, the picture of the action and at most 3 words; stage: to place it by her (nil: at 0, 0)
+function T.layout(line, where, stage)
   if not line.btn then return T.sayLayout(line, where) end
-  loadPorts()
-  local p = PORT[line.who] or PORT.girl
+  return T.bubble(line, stage)
+end
+
+-- the hint bubble's words: at most 3 words in one or two rows of the 13 px font (docs/ui_design.md: pictures first).
+-- The level files keep their texts (the tests and the zones read them); only what is shown is shortened:
+-- "TAP: " goes (a tap is the plain press), "HOLD: X" and "A, B" become two rows without the colon or comma, a row wider
+-- than T.ROW_W is split at a space, and SHORT lists the one hint that was longer than 3 words.
+T.SHORT = { ["RUN, HOLD: BIG JUMP"] = { "HOLD", "BIG JUMP" } }
+T.ROW_W = 92
+function T.hintRows(text)
+  if T.SHORT[text] then return T.SHORT[text] end
+  local t = text:gsub("^TAP: ", "")
+  local a, b = t:match("^(.-)[:,] (.+)$")
+  if a then return { a, b } end
+  return require("flow").wrap(13, t, T.ROW_W)
+end
+-- the buttons as the device used last shows them (hud.lua pieces, 13 px)
+T.GLYPHS = { pad = { a = "g_a", b = "g_b", x = "g_x", y = "g_y", down = "g_down", right = "g_right", up = "g_dpad" },
+  key = { a = "k_space", b = "k_shift", x = "k_x", y = "k_z", down = "k_down", right = "k_right", up = "k_up" } }
+function T.glyphFor(btn) local G = T.GLYPHS[I.last] or T.GLYPHS.key; return G[btn] or G.a end
+T.B_PAD, T.B_GAP, T.B_PITCH, T.B_AWAY = 6, 4, 15, 4
+-- the bubble for a line { btn, text, pic } near Pepper: above her head (tail down), else beside her (tail toward
+-- her), else above at the screen's top, else under her; the first that is on screen and clear of her sprite
+-- (T.pepperRect) and, above, clear of the HUD's top row. Returns { x0, y0, x1, y1, side, tx, ty, rows, ... }.
+function T.bubble(line, stage)
+  local rows = T.hintRows(line.text)
   local pic = T.picFor(line)
-  local gw = (line.btn and 2 * T.SIZE.big + GAP or 0) + (pic and U.PICT_W + GAP or 0)   -- the button, the picture
-  local scale, rows = 2, wrap(line.text, TEXT_W - gw, 2)
-  if line.btn and rows and #rows > 1 then rows = nil end         -- a control hint stays on one row (smaller words)
-  if not rows then scale, rows = 1, wrap(line.text, TEXT_W - gw, 1) or { line.text } end
+  local gl = T.glyphFor(line.btn)
+  local gw, gh = U.body(gl)
+  local pw, ph = 0, 0
+  if pic then pw, ph = U.body("pic_" .. pic) end
   local tw = 0
-  for _, r in ipairs(rows) do tw = math.max(tw, F.width(r, scale)) end
-  local w = 3 + p.w + 5 + gw + tw + 6                            -- portrait, words, margins
-  local by = where == "top" and 30 or 198                        -- the box; the portrait stands up out of it
-  local x0 = line.who == "pepper" and 2 or 318 - w
-  return { x0 = x0, y0 = by + BOX_H - 1 - p.h, x1 = x0 + w, y1 = by + BOX_H, by = by, w = w, rows = rows, scale = scale,
-    gw = gw, tw = tw, port = p, pic = pic }
+  for _, r in ipairs(rows) do tw = math.max(tw, U.sayW(13, r)) end
+  local th = (#rows - 1) * T.B_PITCH + U.sayH(13)
+  local w = T.B_PAD + gw + T.B_GAP + (pic and pw + T.B_GAP + 1 or 0) + tw + T.B_PAD
+  local h = math.max(th, ph, gh) + 2 * T.B_PAD
+  local L = { rows = rows, pic = pic, glyph = gl, gw = gw, gh = gh, pw = pw, ph = ph, tw = tw, th = th, w = w, h = h }
+  if not stage then L.x0, L.y0, L.x1, L.y1, L.by = 0, 0, w, h, 0; return L end
+  local px0, py0, px1, py1 = T.pepperRect(stage)
+  local pcx = (px0 + px1) / 2
+  local A = T.B_AWAY
+  local function clampX(x) return math.max(U.M, math.min(320 - U.M - w, x)) end
+  local function clampY(y) return math.max(U.M, math.min(240 - U.M - h, y)) end
+  local hy = py0 + 14                                             -- her head's height on the sprite
+  local cands = {
+    { "down", clampX(math.floor(pcx - w / 2 + 0.5)), py0 - A - h, 30 },
+    { "left", px1 + A, clampY(math.floor(hy - h / 2 + 0.5)) },          -- (right of her, the tail on its left)
+    { "right", px0 - A - w, clampY(math.floor(hy - h / 2 + 0.5)) },
+    { "down", clampX(math.floor(pcx - w / 2 + 0.5)), py0 - A - h, U.M },
+    { "up", clampX(math.floor(pcx - w / 2 + 0.5)), py1 + A },
+  }
+  for _, c in ipairs(cands) do
+    local x, y = c[2], c[3]
+    if x >= U.M and x + w <= 320 - U.M and y >= (c[4] or U.M) and y + h <= 240 - U.M
+      and not (x < px1 and x + w > px0 and y < py1 and y + h > py0) then
+      L.x0, L.y0, L.x1, L.y1, L.by, L.side = x, y, x + w, y + h, y, c[1]
+      if c[1] == "down" or c[1] == "up" then L.tx = math.max(x + 8, math.min(x + w - 9, math.floor(pcx + 0.5)))
+      else L.ty = math.max(y + 6, math.min(y + h - 7, math.floor(hy + 0.5))) end
+      return L
+    end
+  end
+  return nil
+end
+-- draws a bubble laid out by T.bubble, moved by dy (the nudge's bounce, the rise as it appears)
+function T.drawBubble(L, dy)
+  lg.push(); lg.translate(0, dy or 0)
+  local x, y, w, h = L.x0, L.y0, L.w, L.h
+  U.nine("bubble", x, y, w, h, 4, false, "bubble")
+  if L.side == "down" then U.put("tail_d", L.tx - 4, y + h - 2, "tail")
+  elseif L.side == "up" then U.put("tail_u", L.tx - 4, y - 3, "tail")
+  elseif L.side == "left" then U.put("tail_l", x - 3, L.ty - 4, "tail")
+  elseif L.side == "right" then U.put("tail_r", x + w - 2, L.ty - 4, "tail") end
+  local cy = y + (h - 1) / 2
+  local cx = x + T.B_PAD
+  U.put(L.glyph, cx, math.floor(cy - (L.gh - 1) / 2 + 0.5), "glyph")
+  cx = cx + L.gw + T.B_GAP
+  if L.pic then U.put("pic_" .. L.pic, cx, math.floor(cy - (L.ph - 1) / 2 + 0.5), "pic"); cx = cx + L.pw + T.B_GAP + 1 end
+  local ty = math.floor(cy - (L.th - 1) / 2 + 0.5)
+  for i, r in ipairs(L.rows) do U.say(13, "cream", r, math.floor(cx + (L.tw - U.sayW(13, r)) / 2 + 0.5), ty + (i - 1) * T.B_PITCH, "hint") end
+  lg.pop()
+end
+-- the bounce while a nudge asks for this button (up and down 0 to 3 px, never toward her)
+local function nudgeBob(L)
+  local n = T.nudge
+  local b = math.floor(math.abs(math.sin((n.t or 0) * 5)) * 3 + 0.5)
+  if L.side == "up" then return b end
+  return -b
 end
 
 -- Pepper's sprite on screen (her art reaches 30 px either side of her x and 41 px above her feet; a carried ball
@@ -204,6 +279,7 @@ function T.placed(stage)
   local c = T.cur
   if not c then return nil end
   local px0, py0, px1, py1 = T.pepperRect(stage)
+  if c.line.btn then local L = T.layout(c.line, nil, stage); if L and not overlaps(L, px0, py0, px1, py1) then return L end; return nil end
   for _, where in ipairs({ "bottom", "top" }) do
     local L = T.layout(c.line, where)
     if not overlaps(L, px0, py0, px1, py1) then return L end
@@ -236,6 +312,12 @@ function T.drawPanel(stage)
   if not L then return end
   local c = T.cur
   if L.say then T.drawSay(L, c); return end
+  if L.side then
+    local u = math.min(1, c.t / 0.1)
+    local rise = math.floor(4 * (1 - u) * (1 - u) + 0.5) * (L.side == "up" and -1 or 1)
+    local n = T.nudge
+    T.drawBubble(L, rise + ((n.btn and n.btn == c.line.btn) and nudgeBob(L) or 0)); return
+  end
   U.box(L.x0, L.by, L.w, BOX_H)
   local p = L.port
   local talkFor = math.min(2.4, 0.6 + 0.06 * #c.line.text)        -- the loop plays while the line is being said
@@ -299,21 +381,23 @@ function T.guess(stage, dir)
   if w:solidIn(x0, x1, p.y - Pp.H_STAND, p.y - 1) and not w:solidIn(x0, x1, p.y - Pp.H_CROUCH, p.y - 1) then return "down" end
   return "a"
 end
--- the button above her head, bouncing; beside her if there is no room above (never over her sprite)
+-- the nudge (step 3): when the hint on screen asks for the same button, its bubble bounces (T.drawPanel); otherwise a
+-- bubble of its own near her, bouncing: the button, its picture and its word (a guess while pushing: Down to
+-- crawl, else A to hop)
+T.NUDGE = { a = { "HOP", "hop" }, down = { "CRAWL", "crawl" }, b = { "SNEAK", "sneak" }, x = { "PICK UP", "pickup" },
+  y = { "BARK!", "bark" }, right = { "RUN", "run" } }
 function T.drawNudge(stage)
   local n = T.nudge
   if not n.btn then return end
-  local r = T.SIZE.big
-  local px0, py0, px1 = T.pepperRect(stage)
-  local bounce = math.floor(math.abs(math.sin((n.t or 0) * 5)) * 4 + 0.5)
-  local cx, cy = (px0 + px1) / 2, py0 - 2 - r - bounce
-  if cy - r < 20 then                                            -- no room above: beside her, the way she faces
-    local face = stage.pepper.face or 1
-    cx = face > 0 and px1 + 2 + r or px0 - 2 - r
-    cy = py0 + 14 - bounce
-  end
-  T.glyph(n.btn, cx, cy, "big")
+  local c = T.cur
+  if c and c.line.btn == n.btn and T.placed(stage) then return end
+  local w = T.NUDGE[n.btn] or T.NUDGE.a
+  local L = T.bubble({ btn = n.btn, text = w[1], pic = w[2] }, stage)
+  if L then T.drawBubble(L, nudgeBob(L)) end
 end
 
-function T.draw(stage) T.drawPanel(stage); T.drawNudge(stage) end
+function T.draw(stage)
+  if U.log then local x0, y0, x1, y1 = T.pepperRect(stage); U.logBox("pepper", x0, y0, x1 - 1, y1 - 1) end   -- (for the layout checks)
+  T.drawPanel(stage); T.drawNudge(stage)
+end
 return T

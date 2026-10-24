@@ -7,7 +7,7 @@ import numpy as np
 from PIL import Image
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 out = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else os.path.join(root, 'out_ui', 'step3', 'frames'))
-os.makedirs(out, exist_ok=True)
+shutil.rmtree(out, ignore_errors=True); os.makedirs(out, exist_ok=True)
 data = tempfile.mkdtemp()
 env = dict(os.environ, SDL_AUDIODRIVER='dummy', XDG_DATA_HOME=data)
 r = subprocess.run(['xvfb-run', '-a', 'love', 'riverwalk', '--screenshots'], cwd=root, env=env, capture_output=True, text=True, timeout=400)

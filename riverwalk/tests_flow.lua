@@ -106,7 +106,8 @@ return function(api)
           local who = h.btn and "pepper" or "girl"
           local L = T.layout({ who = who, btn = h.btn, text = h.text }, "bottom")
           local words = select(2, h.text:gsub("%a+", ""))                  -- "+" is not a word
-          if L.x0 < 0 or L.x1 > 320 or #L.rows > (h.btn and 2 or 3) or (h.btn and L.scale < 2) or (h.btn and (words > 3 or #L.rows > 1))
+          local shown = select(2, table.concat(L.rows, " "):gsub("%a+", ""))     -- (step 3: the words the bubble shows)
+          if L.x0 < 0 or L.x1 > 320 or #L.rows > (h.btn and 2 or 3) or (h.btn and (words > 3 or shown > 3))
             or (h.btn and not ({ a = 1, b = 1, x = 1, y = 1, down = 1, right = 1 })[h.btn]) or h.text:find("\226\128\148")
             or (h.btn and not T.picFor({ btn = h.btn, text = h.text })) then bad[#bad + 1] = l.name .. ": " .. h.text end
         end

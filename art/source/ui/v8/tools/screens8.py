@@ -180,10 +180,11 @@ def bubble():
 # the tails: drawn with their base row/column over the bubble's outline (the base pixels are the bubble's rim and fill,
 # so the outline opens where the tail joins)
 TAIL_D = [
-    "oDffffDo",
-    ".oDffDo.",
-    "..oDDo..",
-    "...oo...",
+    "oDffffffDo",
+    ".oDffffDo.",
+    "..oDffDo..",
+    "...oDDo...",
+    "....oo....",
 ]
 def tails():
     d = chars(TAIL_D)
@@ -224,6 +225,70 @@ def stamp():
     sub = img[2:2 + th, 3:3 + tw]; sub[tm] = t[tm]
     return img
 
+# ---- the hint pictures (24 x 18 inside a 1 px outline: 26 x 20, then the shadow). Pepper as a pictogram: cream with a
+# pink bandana pixel, facing right; what she uses in gold; the ball red; arrows and motion marks gold. Each element is
+# outlined on its own (cross), in the order listed, so overlapping shapes stay apart.
+DOG = {
+    'stand': ["..........###.", ".........#####", "#........####.", "#........###..", ".##########...", ".##########...", ".##########...",
+              ".##......##...", ".##......##..."],
+    'low':   [".............###.", "#...........#####", ".############....", ".############....", ".##.........##..."],
+    'jump':  ["..........###.", ".........#####", "#.......####..", ".#########....", ".#########....", "##.......##...", "#.........#..."],
+}
+FEAT = {'stand': ((9, 4), (11, 1)), 'low': ((12, 2), (14, 0)), 'jump': ((8, 3), (11, 1))}   # the bandana, the eye
+GIRL = [".###.", "#####", ".###.", "..#..", "#####", ".###.", ".###.", ".#.#.", ".#.#."]
+BIRD = ["#.....#", "##...##", ".##.##.", "..###..", "...#..."]
+_UP = ["...#...", "..###..", ".#####.", "#######", "..###..", "..###..", "..###.."]
+ARROWS = {'up': _UP, 'down': _UP[::-1], 'right': [''.join(r[y] for r in _UP[::-1]) for y in range(7)]}
+BANDANA = (236, 84, 140)
+def mask(rows): return np.array([[c == '#' for c in r.ljust(max(len(x) for x in rows), '.')] for r in rows])
+def picture(elems, W=28, H=20):
+    """elems: (kind, x, y, extra) on the 24 x 18 grid; drawn into 26 x 20 with each element's outline"""
+    img = np.zeros((H + 2, W + 2, 4), np.uint8)
+    for e in elems:
+        k, x, y = e[0], e[1] + 1, e[2] + 1
+        if k == 'box':
+            m = np.zeros((e[4], e[3]), bool); m[:] = True; col = GOLD['gold']
+        elif k in DOG: m = mask(DOG[k]); col = CREAM
+        elif k == 'girl': m = mask(GIRL); col = CREAM
+        elif k == 'bird': m = mask(BIRD); col = CREAM
+        elif k == 'ball': m = mask([".##.", "####", "####", ".##."]); col = BALL['mid']
+        elif k in ARROWS: m = mask(ARROWS[k]); col = GOLD['light']
+        elif k == 'dot': m = np.ones((2, 2), bool); col = GOLD['light']
+        elif k == 'wave': m = mask(e[3]); col = GOLD['light']
+        M = np.zeros(img.shape[:2], bool); h, w = m.shape; M[y:y + h, x:x + w] = m
+        put(img, outline_of(M, cross=True), INK); put(img, M, col)
+        if k == 'box':                                              # a lit top row and a dark foot on gold blocks
+            put(img, M & np.roll(~M, 1, axis=0), GOLD['light']); put(img, M & np.roll(~M, -1, axis=0) & (np.arange(img.shape[0])[:, None] > y), GOLD['dark'])
+        if k in DOG:                                                # the bandana at her neck, the eye in ink
+            (nx, ny), (ex, ey) = FEAT[k]
+            if M[y + ny, x + nx]: img[y + ny, x + nx] = (*BANDANA, 255)
+            if M[y + ey, x + ex]: img[y + ey, x + ex] = (*INK, 255)
+        if k == 'ball': img[y, x + 1] = (*BALL['light'], 255)
+        if k == 'girl':                                             # Mia's hair gold, her hoodie dark
+            for (yy, xx) in ((0, 1), (0, 2), (0, 3), (1, 0), (1, 4), (2, 1), (2, 3)): img[y + yy, x + xx] = (*GOLD['gold'], 255)
+            for yy in range(4, 7):
+                for xx in range(5):
+                    if M[y + yy, x + xx]: img[y + yy, x + xx] = (*DARK['line'], 255)
+    return img
+GROUND = ('box', 0, 18, 28, 2)
+WAVE_S = ["#.", ".#", ".#", "#."]; WAVE_L = ["#..", ".#.", "..#", "..#", ".#.", "#.."]
+ZED = [('box', 1, 1, 6, 1), ('box', 5, 2, 1, 1), ('box', 4, 3, 1, 1), ('box', 3, 4, 1, 1), ('box', 2, 5, 1, 1), ('box', 1, 6, 6, 1)]
+PICTURES = {
+    'run':    [GROUND, ('box', 0, 11, 4, 1), ('box', 1, 14, 4, 1), ('stand', 6, 9), ('right', 21, 10)],
+    'hop':    [GROUND, ('box', 17, 15, 8, 3), ('dot', 1, 15), ('dot', 4, 11), ('dot', 7, 7), ('jump', 11, 2)],
+    'jump':   [GROUND, ('box', 18, 8, 9, 10), ('dot', 0, 15), ('dot', 2, 10), ('dot', 5, 5), ('jump', 7, 0)],
+    'climb':  [GROUND, ('box', 18, 3, 10, 15), ('stand', 1, 9), ('up', 10, 1)],
+    'crawl':  [GROUND, ('box', 1, 8, 26, 2), ('box', 2, 10, 2, 8), ('box', 24, 10, 2, 8), ('low', 5, 13)],
+    'duck':   [GROUND, ('low', 1, 13), ('bird', 18, 1), ('dot', 16, 8), ('dot', 13, 10)],
+    'stay':   [('box', 0, 12, 28, 2), ('low', 3, 7), ('down', 21, 0), ('dot', 2, 17), ('dot', 9, 18), ('dot', 16, 17), ('dot', 23, 18)],
+    'drop':   [('box', 0, 9, 28, 2), GROUND, ('stand', 1, 0), ('down', 20, 11)],
+    'bounce': [('box', 2, 17, 20, 2), ('dot', 4, 15), ('dot', 18, 15), ('jump', 5, 5), ('up', 21, 2)],
+    'pickup': [GROUND, ('stand', 1, 9), ('ball', 21, 14), ('down', 20, 4)],
+    'give':   [GROUND, ('stand', 0, 9), ('ball', 15, 4), ('girl', 22, 9)],
+    'bark':   [GROUND, ('stand', 1, 9), ('wave', 17, 8, WAVE_S), ('wave', 21, 7, WAVE_L)],
+    'sneak':  [GROUND, ('stand', 13, 9), ('dot', 2, 16), ('dot', 7, 16)] + ZED,
+}
+
 def build(out):
     meta = {}
     def save(name, a, sh=True):
@@ -238,6 +303,9 @@ def build(out):
     d, u, l, r = tails()
     save('tail_d', d, sh=False); save('tail_u', u, sh=False); save('tail_l', l, sh=False); save('tail_r', r, sh=False)
     save('ball', ball())
+    for k, el in PICTURES.items(): save('pic_' + k, picture(el))
+    from menu8 import dpad
+    save('g_right', dpad(lit=['right']))
     save('stamp', stamp())
     return meta
 

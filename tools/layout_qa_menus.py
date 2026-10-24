@@ -148,6 +148,25 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
         check(all(b['x0'] - vis0 >= 10 and vis1 - b['x1'] >= 10 for b in L), f'{shot}: rows clear of the frame (10 px)')
         hud = many(bs, 'lives', 'head', 'health', 'bones', 'score', 'clock', 'time', 'bone')
         check(not overlaps([P, Fr] + hud) or not [h for h in hud if not (h['x1'] < min(P['x0'], Fr['x0']) or h['x0'] > max(P['x1'], Fr['x1']) or h['y1'] < min(P['y0'], Fr['y0']) or h['y0'] > max(P['y1'], Fr['y1']))], f'{shot}: clear of the HUD')
+    elif (shot.startswith('hint') or shot.startswith('nudge')) and 'rise' not in shot and 'none' not in shot:
+        Bs = many(bs, 'bubble'); Pp = many(bs, 'pepper')[-1]; tl = many(bs, 'tail')
+        check(len(Bs) == 1 and len(tl) == 1, f'{shot}: one bubble with its tail')
+        B = Bs[0]; t_ = tl[0]
+        g = many(bs, 'glyph'); pc = many(bs, 'pic'); h = sorted(many(bs, 'hint'), key=lambda b: b['y0'])
+        check(B['x0'] >= 4 and B['x1'] <= 315 and B['y0'] >= 4 and B['y1'] <= 235, f'{shot}: the bubble inside the margins')
+        check(not overlaps([B, Pp]) and not overlaps([t_, Pp]), f'{shot}: never over Pepper')
+        inside = [b for b in g + pc + h]
+        check(all(b['x0'] - B['x0'] >= 6 and B['x1'] - b['x1'] >= 5 and b['y0'] - B['y0'] >= 5 and B['y1'] - b['y1'] >= 5 for b in inside), f'{shot}: glyph, picture and words inside with room')
+        blk = (h[0]['y0'] + h[-1]['y1']) / 2
+        check(all(abs(cy(b) - cy(B)) <= 1 for b in g + pc) and abs(blk - cy(B)) <= 1, f'{shot}: glyph, picture and words on the bubble\'s centre line')
+        check(len(h) <= 2, f'{shot}: at most two rows')
+        gx = sorted(g + pc + h, key=lambda b: b['x0'])
+        check(not overlaps(g + pc + h[:1]) and not overlaps(g + pc + h[-1:]), f'{shot}: glyph, picture and words apart')
+        side = ('below' if t_['y0'] >= B['y1'] - 2 else 'above' if t_['y1'] <= B['y0'] + 2 else 'right' if t_['x0'] >= B['x1'] - 2 else 'left')
+        toward = {'below': Pp['y0'] > B['y1'], 'above': Pp['y1'] < B['y0'], 'right': Pp['x0'] > B['x1'], 'left': Pp['x1'] < B['x0']}[side]
+        check(toward, f'{shot}: the tail ({side}) points toward Pepper')
+        gap = {'below': Pp['y0'] - B['y1'], 'above': B['y0'] - Pp['y1'], 'right': Pp['x0'] - B['x1'], 'left': B['x0'] - Pp['x1']}[side]
+        check(3 <= gap <= 8, f'{shot}: near her ({gap} px, the nudge\'s bounce up to 3)')
 check(len(set(strips.values())) == 1, f'strip: the same place on every screen {sorted(set(strips.values()))}')
 # pieces
 INK = (64, 11, 6); SH = (36, 8, 5)

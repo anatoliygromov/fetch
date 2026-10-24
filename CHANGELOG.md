@@ -37,8 +37,26 @@ tools/layout_qa_menus.py out_ui/step3/frames`.
 - **Flow test change (tests_flow.lua "hints: all fit the panel"):** it checked the old blue panel's drawing (2 rows,
   scale 2 letters) for the girl's lines too; now a girl's line may take 3 rows of the 13 px font. Pepper's lines
   keep their checks.
+- **In-level hints and nudges (talk.lua T.bubble, T.drawBubble, T.drawNudge):** Pepper's control hints leave the
+  portrait panel (it is for story moments only) for a small bubble near her: the kit-style bubble (a 9-slice: ink
+  outline, a 1 px gold rim, the dark warm fill) with a tail toward her, the button as the device used last shows it
+  (the gamepad's coin or d-pad, or the keyboard's keycap), a picture of the action (pic_<kind>, 28 x 20 on the grid:
+  Pepper as a cream pictogram with her pink bandana, what she uses in gold: run, hop, big jump, climb, crawl, duck,
+  stay on, drop, bounce, pick up, give, bark, sneak) and at most 3 words in the 13 px font, one or two rows. Placed
+  above her head, else beside her (the tail on the side toward her), else above at the screen's top, else under
+  her; always on screen and never over her sprite. It rises 4 px in over 6 frames and goes when the hint stops
+  applying (same rules and timings). A nudge for the same button makes the bubble bounce (0 to 3 px, away from her);
+  a nudge for another button (a guess while pushing) gets its own bouncing bubble (Down: CRAWL, A: HOP), replacing
+  the big round button over her head.
+- **Hint words shown (the level files keep their texts; talk.lua T.hintRows):** "TAP: HOP" -> HOP (10 hints);
+  "HOLD: BIG JUMP" -> HOLD / BIG JUMP, "HOLD: CLIMB" -> HOLD / CLIMB, "HOLD: SNEAK" -> HOLD / SNEAK, "HOLD: STAY ON"
+  -> HOLD / STAY ON (two rows, no colon); "BARK: SHOO!" -> BARK / SHOO!; "STOP, THEN HOP" -> STOP / THEN HOP;
+  "BOUNCE ON IT" -> BOUNCE / ON IT; "BOUNCE ACROSS" -> BOUNCE / ACROSS; "RUN, HOLD: BIG JUMP" (the lab level, 4
+  words) -> HOLD / BIG JUMP. Unchanged: PICK UP, GIVE, CRAWL, DUCK!, BARK!, RUN.
+- **Flow test change (tests_flow.lua "hints: all fit the panel"):** Pepper's hints are checked on the bubble: at most
+  2 rows and at most 3 words shown (was: one row of scale 2 letters in the old panel).
 - **Pieces (art/source/ui/v8/tools/screens8.py, built by build8.py):** arrow_l / arrow_r, lock / lock_big, dot_on /
-  dot_off, frame_s, medal_<kind>_on / _off, bubble and its tails, ball, stamp.
+  dot_off, frame_s, medal_<kind>_on / _off, bubble and its tails, ball, stamp, pic_<kind>, g_right (the d-pad, right lit).
 
 ## Branch `ui/hud-v8` pilot 2: the title on its native grid, Pepper pants and blinks, the new main menu (24 Oct)
 Follows docs/ui_design.md (the owner's UI design, 24 Oct). Stops here for the owner's yes.
