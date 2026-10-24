@@ -42,7 +42,13 @@ function U.sayW(size, s) return UF.width(size, s) + 2 end                 -- an 
 function U.sayH(size) return UF.height(size) + 2 end
 -- the top of a box h tall centred on the line cy (cy may be .5)
 local function top(cy, h) return math.floor(cy - (h - 1) / 2 + 0.5) end
-local function hits(a, x0, y0, x1, y1) return a and a[1] < x1 and a[3] > x0 and a[2] < y1 and a[4] > y0 end
+local function hit1(a, x0, y0, x1, y1) return a[1] < x1 and a[3] > x0 and a[2] < y1 and a[4] > y0 end
+-- a: one rect { x0, y0, x1, y1 } or a list of rects (Pepper, and a speaker standing in a corner)
+local function hits(a, x0, y0, x1, y1)
+  if not a then return false end
+  if type(a[1]) == "table" then for _, r in ipairs(a) do if hit1(r, x0, y0, x1, y1) then return true end end; return false end
+  return hit1(a, x0, y0, x1, y1)
+end
 
 -- g: { lives, hearts, bones, total, time (seconds left), score, hard }. avoid: Pepper's sprite on screen
 -- ({ x0, y0, x1, y1 }, while playing): a group she is under steps aside (is not drawn), the others stay.

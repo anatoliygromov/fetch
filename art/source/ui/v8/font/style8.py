@@ -18,6 +18,7 @@ STYLES = {
   'cream': dict(hi=(255, 255, 255), top=(255, 250, 230), mid=(250, 238, 206), bot=(240, 222, 182), deep=(226, 204, 160)),
   'dim':   dict(hi=(210, 196, 172), top=(196, 182, 158), mid=(186, 172, 148), bot=(174, 160, 136), deep=(160, 146, 122)),
   'ink':   dict(top=(84, 34, 14), bot=(66, 24, 10), emboss=(255, 224, 120)),
+  'speak': dict(col=(58, 26, 14)),        # (owner 24 Oct) plain dark letters on the cream speech bubble
 }
 def band(st, y, H):
     t = y / max(1, H - 1)
@@ -28,6 +29,9 @@ def glyph(size, ch, style):
     m = mask(size, ch); H, W = m.shape; pad = 2
     M = np.zeros((H + pad * 2 + 1, W + pad * 2 + 1), bool); M[pad:pad + H, pad:pad + W] = m
     o = np.zeros(M.shape + (4,), np.uint8); st = STYLES[style]
+    if style == 'speak':
+        o[M] = (*st['col'], 255)
+        return o
     if style == 'ink':
         em = np.zeros_like(M); em[1:, :] = M[:-1, :]; em &= ~M
         o[em] = (*st['emboss'], 255)

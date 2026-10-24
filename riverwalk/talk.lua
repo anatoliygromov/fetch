@@ -10,6 +10,7 @@
 --   until a button is pressed. It reads Pepper from outside (position, speed, the buttons held) and is never drawn
 --   over her. No hints and no nudges in hard mode (St:hint() returns only messages then, and T.watch does nothing).
 local U = require("hud")
+local UF = require("uifont")
 local I = require("input")
 local T = {}
 local lg = love.graphics
@@ -58,8 +59,10 @@ end
 
 function T.port(who) loadPorts(); return PORT[who] or PORT.girl end   -- (the story card draws Mia's too)
 -- the bust, frame f, its box's top-left at x, y (the rim, then the drawing); logs the part above the panel (cut at y1)
-function T.drawBust(p, f, x, y, y1)
-  lg.setColor(1, 1, 1, 1); lg.draw(p.rim, p.bq[f], x, y); lg.draw(p.img, p.bq[f], x, y)
+function T.drawBust(p, f, x, y, y1, mirror)
+  lg.setColor(1, 1, 1, 1)
+  if mirror then lg.draw(p.rim, p.bq[f], x + p.bust.w, y, 0, -1, 1); lg.draw(p.img, p.bq[f], x + p.bust.w, y, 0, -1, 1)
+  else lg.draw(p.rim, p.bq[f], x, y); lg.draw(p.img, p.bq[f], x, y) end
   U.logBox("portrait", x, y, x + p.bust.w - 1, (y1 or (y + p.bust.h)) - 1)
 end
 
@@ -80,30 +83,69 @@ end
 -- (step 3) a story line (no button): the kit's gold panel sized to the words (13 px, at most SAY_W wide, split
 -- where its halves are most even), the speaker's portrait in the thin gold frame on its side (the girl right,
 -- Pepper left), standing up out of it. Bottom: the group's bottom at the margin; top: under the HUD.
-T.SAY_W, T.SAY_PAD_X, T.SAY_PAD_Y, T.SAY_PITCH, T.SAY_IN = 188, 14, 8, 16, 8
+T.SAY_W, T.SAY_PAD_X, T.SAY_PAD_Y, T.SAY_PITCH, T.SAY_IN = 150, 6, 5, 10, 8
 T.SAY_TOP = 46
-function T.sayLayout(line, where)
+function T.sayLayout(line, where, stage)
   loadPorts()
-  local Fl = require("flow")
-  local p = PORT[line.who] or PORT.girl
-  local rows = Fl.wrap(13, line.text, T.SAY_W)
-  local tw = 0
-  for _, r in ipairs(rows) do tw = math.max(tw, U.sayW(13, r)) end
-  local th = (#rows - 1) * T.SAY_PITCH + U.sayH(13)
-  local bw, bh = p.bust.w, p.bust.h
-  local pw, ph = math.max(tw + 2 * T.SAY_PAD_X, bw + 2 * T.SAY_IN + 8), math.max(32, th + 2 * T.SAY_PAD_Y)
-  local up = bh - T.TUCK                                         -- the bust above the panel's top
-  local by = where == "top" and (T.SAY_TOP + up) or (239 - U.M - ph + 1)
-  local px = line.who == "pepper" and U.M or (320 - U.M - pw)
-  local bx = line.who == "pepper" and (px + T.SAY_IN) or (px + pw - T.SAY_IN - bw)
-  return { x0 = px, y0 = by - up, x1 = px + pw, y1 = by + ph, by = by, w = pw, rows = rows, tw = tw, port = p, say = true,
-    px = px, pw = pw, ph = ph, bx = bx, bby = by - up,
-    rects = { { px, by, px + pw, by + ph }, { bx, by - up, bx + bw, by } } }      -- (the panel, the bust above it)
+  local L = T.cornerLayout(PORT[line.who] or PORT.girl, { line.text }, line.who == "pepper", where == "top")
+  if where == "above" then T.above(L) end
+  return L
 end
+-- the bubble over the speaker's head (when Pepper is beside her): right- or left-aligned to the screen's margin, its
+-- tail pointing down at her face
+function T.above(L)
+  L.above = true
+  L.px = L.left and U.M or (320 - U.M - L.pw)
+  L.by = L.bby - T.ABOVE_GAP - L.ph
+  local face = L.bx + math.floor(L.port.bust.w * (L.left ~= L.mirror and 0.45 or 0.55))
+  L.tx = math.max(L.px + 6, math.min(L.px + L.pw - 12, face - 3))
+  L.x0, L.y0 = math.min(L.px, L.bx), L.by
+  L.rects[1] = { L.px, L.by, L.px + L.pw, L.by + L.ph }
+  return L
+end
+T.ABOVE_GAP = 6                   -- between the bubble above her head and the top of her hood (the tail spans it)
+-- the bubble moved up so its bottom is at most at ybot (the speaker stays in her corner; the tail keeps to the bubble)
+function T.raise(L, ybot)
+  L.by = math.max(T.SAY_TOP, math.min(L.by, ybot - L.ph))
+  L.y0 = math.min(L.by, L.bby); L.rects[1] = { L.px, L.by, L.px + L.pw, L.by + L.ph }
+  return L
+end
+-- (owner 24 Oct: a speech bubble, not a framed painting; little white space, smaller letters) the comic way: the
+-- speaker stands in a bottom corner, her shoulders cut by the screen's edge (the portrait's cut row just below the
+-- screen), and the cream bubble sits snug round the words beside her face, its tail at her mouth. Her own corner first
+-- (Mia right, Pepper left); when Pepper is there, the other corner, the portrait mirrored so she still faces into the
+-- screen. The words wrap narrower rather than let the bubble reach the lives (bottom left). Also the story card.
+-- texts: a list of lines (each wrapped on its own)
+function T.cornerLayout(p, texts, left, other)
+  local Fl = require("flow")
+  local bw, bh = p.bust.w, p.bust.h
+  if other then left = not left end
+  local bby = 240 - bh + 1
+  local bx = left and 0 or (320 - bw)
+  local room = left and (320 - U.M - (bx + bw + T.TAIL_W)) or (bx - T.TAIL_W - T.LIVES_X1)
+  local maxw = math.min(T.SAY_W, room - 2 * T.SAY_PAD_X)
+  local rows = {}
+  for _, t in ipairs(texts) do for _, r in ipairs(Fl.wrap(T.SAY_SIZE, t, maxw)) do rows[#rows + 1] = r end end
+  local tw = 0
+  for _, r in ipairs(rows) do tw = math.max(tw, UF.width(T.SAY_SIZE, r)) end
+  local th = (#rows - 1) * T.SAY_PITCH + UF.height(T.SAY_SIZE)
+  local pw, ph = tw + 2 * T.SAY_PAD_X, th + 2 * T.SAY_PAD_Y
+  local mouth = bby + T.MOUTH
+  local px = left and (bx + bw + T.TAIL_W) or (bx - T.TAIL_W - pw)
+  local by = math.min(239 - U.M - ph + 1, math.floor(mouth - ph / 2 + 0.5))
+  by = math.max(T.SAY_TOP, by)
+  return { x0 = math.min(px, bx), y0 = math.min(by, bby), x1 = math.max(px + pw, bx + bw), y1 = 240, by = by, w = pw,
+    rows = rows, tw = tw, port = p, say = true, corner = true, left = left, mirror = other, mouth = mouth,
+    px = px, pw = pw, ph = ph, bx = bx, bby = bby,
+    rects = { { px, by, px + pw, by + ph }, { bx, bby, bx + bw, 240 } } }
+end
+T.LIVES_X1, T.LIVES_Y0 = 66, 210  -- the lives group (Pepper's head and x3, bottom left): a bubble keeps above it
+T.MOUTH, T.TAIL_W = 40, 7         -- the mouth's row in the bust (girl and Pepper alike), the tail's reach
+T.SAY_SIZE = 7                    -- the bubble's letters: the small font, plain dark (style speak)
 -- (step 3) a control hint (a line with a button): a small bubble near Pepper (T.bubble) with the button as the device
 -- used last shows it, the picture of the action and at most 3 words; stage: to place it by her (nil: at 0, 0)
 function T.layout(line, where, stage)
-  if not line.btn then return T.sayLayout(line, where) end
+  if not line.btn then return T.sayLayout(line, where, stage) end
   return T.bubble(line, stage)
 end
 
@@ -168,6 +210,7 @@ function T.bubble(line, stage)
   return nil
 end
 -- draws a bubble laid out by T.bubble, moved by dy (the nudge's bounce, the rise as it appears)
+
 function T.drawBubble(L, dy)
   lg.push(); lg.translate(0, dy or 0)
   local x, y, w, h = L.x0, L.y0, L.w, L.h
@@ -234,8 +277,8 @@ function T.placed(stage)
   if not c then return nil end
   local px0, py0, px1, py1 = T.pepperRect(stage)
   if c.line.btn then local L = T.layout(c.line, nil, stage); if L and not overlaps(L, px0, py0, px1, py1) then return L end; return nil end
-  for _, where in ipairs({ "bottom", "top" }) do
-    local L = T.layout(c.line, where)
+  for _, where in ipairs({ "bottom", "top", "above" }) do
+    local L = T.layout(c.line, where, stage)
     local hit = false
     for _, r in ipairs(L.rects) do if r[1] < px1 and r[3] > px0 and r[2] < py1 and r[4] > py0 then hit = true end end
     if not hit then return L end
@@ -244,19 +287,29 @@ end
 
 -- the speech panel: rises 6 px into place over 6 frames; the portrait talks while the line is being said
 function T.drawSay(L, c)
-  local p = L.port
   local u = math.min(1, c.t / 0.1)
-  local dy = math.floor(6 * (1 - u) * (1 - u) + 0.5) * (L.by < 120 and -1 or 1)
-  lg.push(); lg.translate(0, dy)
-  -- the bust first (it talks while the line is being said), the panel over its bottom, the words on the panel
+  local dy = math.floor(6 * (1 - u) * (1 - u) + 0.5)
   local talkFor = math.min(2.4, 0.6 + 0.06 * #c.line.text)
   local f = c.t < talkFor and 1 + math.floor(c.t * T.FPS) % T.FRAMES or 1
-  T.drawBust(p, f, L.bx, L.bby, L.by)
-  U.panel(L.px, L.by, L.pw, L.ph, "talkpanel")
-  local th = U.sayH(13)
-  local total = (#L.rows - 1) * T.SAY_PITCH + th
-  local y0 = math.floor(L.by + (L.ph - 1) / 2 - (total - 1) / 2 + 0.5)
-  for i, r in ipairs(L.rows) do U.say(13, "cream", r, math.floor(L.px + (L.pw - U.sayW(13, r)) / 2 + 0.5), y0 + (i - 1) * T.SAY_PITCH, "talk") end
+  T.drawCorner(L, f, dy, "talk")
+end
+-- the speaker in her corner (rising dy * 2 into place) and the bubble beside her (dy)
+function T.drawCorner(L, f, dy, logName)
+  dy = dy or 0
+  lg.push(); lg.translate(0, dy * 2); T.drawBust(L.port, f, L.bx, L.bby, nil, L.mirror); lg.pop()
+  lg.push(); lg.translate(0, dy)
+  U.nine("speech", L.px, L.by, L.pw, L.ph, 5, false, logName .. "panel")
+  if L.above then U.put("stail_d", L.tx, L.by + L.ph - 1, "tail")
+  else
+    local ty = math.max(L.by + 2, math.min(L.by + L.ph - 8, L.mouth - 2))   -- the tail's top row (it is 6 rows tall)
+    if L.left then U.put("stail_l", L.px - 7, ty, "tail") else U.put("stail_r", L.px + L.pw - 1, ty, "tail") end
+  end
+  local y0 = L.by + T.SAY_PAD_Y
+  for i, r in ipairs(L.rows) do
+    local w = UF.width(T.SAY_SIZE, r)
+    UF.print(T.SAY_SIZE, "speak", r, math.floor(L.px + (L.pw - w) / 2 + 0.5), y0 + (i - 1) * T.SAY_PITCH)
+    U.logBox(logName, math.floor(L.px + (L.pw - w) / 2 + 0.5), y0 + (i - 1) * T.SAY_PITCH, math.floor(L.px + (L.pw - w) / 2 + 0.5) + w - 1, y0 + (i - 1) * T.SAY_PITCH + UF.height(T.SAY_SIZE) - 1)
+  end
   lg.pop()
 end
 function T.drawPanel(stage)

@@ -390,6 +390,14 @@ local function drawTuning()                                       -- (dev, Tab) 
   U.say(7, "dim", "- + CHANGE", x + 4, y + h - 11)
 end
 
+-- while playing, the HUD groups under Pepper or under a speaker in her corner step aside
+function T_avoid()
+  local list = { { Talk.pepperRect(stage) } }
+  local L = Talk.placed(stage)
+  if L and L.corner then list[#list + 1] = L.rects[2] end
+  return list
+end
+
 function love.draw()
   love.graphics.setCanvas(canvas); love.graphics.clear(0, 0, 0)
   local screen = (state == "title" and function() Title.draw(t, titleLeaving) end)
@@ -413,7 +421,7 @@ function love.draw()
   -- (owner 24 Oct) no HUD under the story card between levels: Mia's bust rises above its panel, into the HUD's rows
   if state ~= "story" then
     U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard },
-      state == "play" and { Talk.pepperRect(stage) } or nil)
+      state == "play" and T_avoid() or nil)
   end
   if state == "intro" then
     Flow.drawIntro(def, t, { Talk.pepperRect(stage) })            -- (ui step 3) the gold card, the story, A GO

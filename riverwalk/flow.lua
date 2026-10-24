@@ -443,37 +443,37 @@ end
 -- halves are most even), her portrait (the talking loop while the lines are read) in the thin gold frame on the
 -- panel's right end; the group centred where it misses Pepper. After CARD_WAIT the strip shows (A) GO ON (only A).
 F.ST = { W_TEXT = 200, PAD_X = 16, PAD_Y = 12, PITCH = 16, IN = 12 }
-function F.storyLayout(lines)
-  local S3, Talk = F.ST, require("talk")
-  local rows = {}
-  for _, l in ipairs(lines or {}) do for _, r in ipairs(F.wrap(13, l, S3.W_TEXT)) do rows[#rows + 1] = r end end
-  local tw = 0
-  for _, r in ipairs(rows) do tw = math.max(tw, U.sayW(13, r)) end
-  local p = Talk.port("girl")
-  local bw, bh = p.bust.w, p.bust.h
-  local th = (#rows - 1) * S3.PITCH + U.sayH(13)
-  local pw, ph = math.max(tw + 2 * S3.PAD_X, bw + 2 * S3.IN + 8), th + 2 * S3.PAD_Y
-  local up = bh - Talk.TUCK
-  return { rows = rows, tw = tw, th = th, pw = pw, ph = ph, up = up, w = pw, h = up + ph, x = math.floor(159.5 - (pw - 1) / 2 + 0.5), port = p }
+function F.storyLayout(lines, other)
+  local Talk = require("talk")
+  -- the bubble keeps above the controls strip at the bottom
+  return Talk.raise(Talk.cornerLayout(Talk.port("girl"), lines or {}, false, other), F.STRIP_TOP - 3)
 end
--- (owner 24 Oct: Mia never cropped) her bust stands on the panel's right end, rising above its top edge, its bottom
--- tucked behind the panel; the group (bust and panel) goes where it misses Pepper
+-- (owner 24 Oct: a speech bubble, Mia never cropped, no frame) Mia in her corner telling it, the cream bubble beside
+-- her; the other corner (mirrored) when Pepper stands in hers
 function F.drawStory(lines, t, avoid)
+  local Talk = require("talk")
   local L = F.storyLayout(lines)
+  local a = avoid and (type(avoid[1]) == "table" and avoid[1] or avoid)   -- Pepper's rect { x0, y0, x1, y1 }
+  local function hit(L)
+    for _, r in ipairs(L.rects) do if r[1] < a[3] and r[3] > a[1] and r[2] < a[4] and r[4] > a[2] then return true end end
+  end
+  if a and hit(L) then
+    local L2 = F.storyLayout(lines, true)
+    if not hit(L2) then L = L2 else L = Talk.above(F.storyLayout(lines)) end      -- else over her head, in her corner
+  end
   U.dimWarm()
-  shifted(F.cardTop(L.x, L.w, L.h, avoid) + dropIn(t), function() F.storyCard(lines, t, L) end)
+  F.storyCard(lines, t, L)
   if t >= F.CARD_WAIT then U.strip({ { "ok", "GO ON" } }) end
 end
 function F.storyCard(lines, t, L)
+  local Talk = require("talk")
   L = L or F.storyLayout(lines)
-  local S3, p, Talk = F.ST, L.port, require("talk")
   local talkFor = math.min(3.0, 0.6 + 0.04 * #table.concat(lines or {}, " "))
   local f = t < talkFor and 1 + math.floor(t * Talk.FPS) % Talk.FRAMES or 1
-  Talk.drawBust(p, f, L.x + L.pw - S3.IN - p.bust.w, 0, L.up)
-  U.panel(L.x, L.up, L.pw, L.ph, "storypanel")
-  local y0 = L.up + math.floor((L.ph - 1) / 2 - (L.th - 1) / 2 + 0.5)
-  for i, r in ipairs(L.rows) do U.say(13, "cream", r, math.floor(L.x + (L.pw - U.sayW(13, r)) / 2 + 0.5), y0 + (i - 1) * S3.PITCH, "story") end
+  local u = math.min(1, t / 0.25)
+  Talk.drawCorner(L, f, math.floor(8 * (1 - u) * (1 - u) + 0.5), "story")
 end
+F.STRIP_TOP = U.STRIP_Y               -- the controls strip's top row (the story bubble keeps above it)
 F.CARD_WAIT = 2                   -- seconds before A leaves a story card
 
 -- the tally after a level. tl: { lines, shown, from, points, t, done, newBest, time, best, newBestTime, par, medals,
