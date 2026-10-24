@@ -46,6 +46,10 @@ Follows docs/ui_design.md (the owner's UI design, 24 Oct). Stops here for the ow
   "caps") and The City Dog Adventurer (new hand-drawn lowercase in the same family, "lower"). Both are layers over the
   painting, whose old logo and plate are painted out with the sky; the shine runs on the new letters. Gate:
   tools/logo_gate.py (before / after at 4x and 8x, the checks).
+- **The logo's fill, three versions (title.lua T.LOGO):** "gradient" (default: the painting's yellow-to-orange ramp in
+  six steps, each step's first two rows an ordered 2 x 2 checker with the step above, phase fixed to the screen, a
+  highlight row on top), "steps6" (the six steps hard) and "bands" (three bands and a lip). Same silhouettes, outline,
+  depth and paw; logo_<mode>.png and logo_hi_<mode>.png. The unused eye_closed.png and press_off.png are removed.
 - **Gates:** tools/title_frames.py (frames at 3x, colour and greyscale, the title loop GIF at 2x),
   tools/layout_qa_menus.py (226 checks, all pass), tools/pilot2_cards.py: out_ui/pilot2/card_title.png and
   card_menus.png.

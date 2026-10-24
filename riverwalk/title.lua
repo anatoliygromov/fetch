@@ -18,8 +18,9 @@ end
 
 function T.load()
   if I then return end
-  I = { base = img("base"), bird = img("bird"), logo = img("logo_hi"), logoFill = img("logo"), mouth = img("mouth"), eye = img("eye"),
+  I = { base = img("base"), bird = img("bird"), mouth = img("mouth"), eye = img("eye"), logos = {},
     tagline = { caps = img("tagline_caps"), lower = img("tagline_lower") } }
+  for _, m in ipairs({ "bands", "gradient", "steps6" }) do I.logos[m] = { fill = img("logo_" .. m), hi = img("logo_hi_" .. m) } end
   I.mouthQ, I.eyeQ = strip(I.mouth, D.mouth), strip(I.eye, D.eye)
   I.birdQ = {}
   for f = 0, 2 do I.birdQ[f] = lg.newQuad(f * D.bird.w, 0, D.bird.w, D.bird.h, I.bird:getDimensions()) end
@@ -66,7 +67,7 @@ function T.draw(t, leaving, plain)
   lg.draw(I.bird, I.birdQ[f], bx, by)
   -- the logo and the tagline plate, rebuilt on the grid (art/source/title/tools/logo.py): the plate, then the letters
   lg.draw(I.tagline[T.TAGLINE] or I.tagline.caps, D.plate.x, D.plate.y)
-  lg.draw(I.logoFill, D.logo.x, D.logo.y)
+  lg.draw(T.logo().fill, D.logo.x, D.logo.y)
   T.shine(t)
   if plain then return end
   -- PRESS START blinks (fast once pressed), on the menu's centre line where the menu will open
@@ -91,12 +92,15 @@ function T.shine(t)
       local x = math.floor(pos - y * 0.45)
       if x + 8 > 0 and x < L.w then
         lg.setScissor(L.x + math.max(0, x), L.y + y, 8 + math.min(0, x), 2)
-        lg.draw(I.logo, L.x, L.y)
+        lg.draw(T.logo().hi, L.x, L.y)
       end
     end
     lg.setScissor()
   end
 end
+T.LOGO = "gradient"               -- the logo's fill: "gradient" (six steps, ordered 2 x 2 dither between them), "steps6"
+                                  -- (the six steps, hard) or "bands" (three hard bands and a lip)
+function T.logo() return I.logos[T.LOGO] or I.logos.gradient end
 T.TAGLINE = "caps"                -- the tagline plate: "caps" (THE CITY DOG ADVENTURER) or "lower" (The City Dog Adventurer)
 T.CX = 220.5                      -- the centre line under the logo (the tagline plate's centre, x 144..297)
 T.PRESS_Y = 152                   -- PRESS START's top: the main menu's middle row

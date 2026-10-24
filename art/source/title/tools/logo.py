@@ -59,15 +59,32 @@ DISC5 = np.array([[0, 1, 1, 1, 0], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1
 def outline(m, r=2):
     return ndimage.binary_dilation(m, structure=DISC5 if r == 2 else np.ones((3, 3), bool))
 
-def bands(fill, lay):
-    """hard bands by the shape's own height; the top edge a highlight row, the bottom edge the lip"""
-    ys, xs = np.nonzero(fill); y0, y1 = ys.min(), ys.max(); H = max(1, y1 - y0)
-    for y, x in zip(ys, xs):
-        t = (y - y0) / H
-        lay[y, x] = (*(YEL if t < 0.42 else GLD if t < 0.64 else ORA), 255)
+# the painting's logo ramp in six steps (its five warm colours and the one between its gold and its orange) and a
+# lighter highlight for the gradient versions' top edge
+RAMP6 = [(254, 226, 101), (255, 187, 4), (253, 162, 10), (254, 133, 9), (254, 104, 7), (218, 59, 23)]
+HI6 = (255, 244, 184)
+def bands(fill, lay, mode='bands'):
+    """the fill, by the shape's own height (top to bottom):
+      bands     three hard bands (yellow, gold, orange), a highlight row on the top edge, a lip on the bottom edge
+      steps6    the six-step ramp as hard bands, the highlight row on top
+      gradient  the six steps with each step's first two rows an ordered 2 x 2 checker of it and the step above,
+                the checker's phase fixed to the screen ((x + y) even), so every letter's pattern lines up"""
+    ys, xs = np.nonzero(fill); y0, y1 = ys.min(), ys.max(); H = max(1, y1 - y0 + 1)
     up = np.zeros_like(fill); up[1:] = fill[:-1]; top = fill & ~up
-    dn = np.zeros_like(fill); dn[:-1] = fill[1:]; bot = fill & ~dn
-    lay[top] = (*HI, 255); lay[bot & ~top] = (*LIP, 255)
+    if mode == 'bands':
+        for y, x in zip(ys, xs):
+            t = (y - y0) / max(1, H - 1)
+            lay[y, x] = (*(YEL if t < 0.42 else GLD if t < 0.64 else ORA), 255)
+        dn = np.zeros_like(fill); dn[:-1] = fill[1:]; bot = fill & ~dn
+        lay[top] = (*HI, 255); lay[bot & ~top] = (*LIP, 255)
+        return
+    starts = [y0 + int(round(k * H / 6)) for k in range(6)]          # each step's first row
+    def step(y): return max(k for k in range(6) if starts[k] <= y)
+    for y, x in zip(ys, xs):
+        k = step(y)
+        if mode == 'gradient' and k > 0 and y - starts[k] < 2 and (x + y) % 2 == 0: k -= 1
+        lay[y, x] = (*RAMP6[k], 255)
+    lay[top] = (*HI6, 255)
 
 def oval(w, h):
     """a filled oval w x h, symmetric left-right and top-bottom (built from its top-left quarter)"""
@@ -96,7 +113,7 @@ def paw_mask(shape, parts):
         place(toe, xl, top + dy); place(toe, xr, top + dy)
     return m
 
-def build(img):
+def build(img, mode='bands'):
     """returns the logo layer (H x W x 4), the base with the old logo and plate painted out, and the logo's mask"""
     H, W, _ = img.shape
     letters, paw = glyph_masks(img)
@@ -114,7 +131,7 @@ def build(img):
     lay[allnavy] = (*NAVY, 255)
     for f in shapes:                              # back to front: F first, the paw last
         lay[depth_of(f)] = (*NAVY, 255)
-        bands(f, lay)
+        bands(f, lay, mode)
     # no lone pixels: a fill pixel with no neighbour of its colour (8 ways) takes the colour most of its fill
     # neighbours share (a band boundary crossing a thin stroke can leave one)
     for _ in range(3):
@@ -124,6 +141,7 @@ def build(img):
             nb = k[y - 1:y + 2, x - 1:x + 2].ravel(); c = k[y, x]
             if (nb == c).sum() > 1: continue
             cand = [v for v in nb if v != c and v >= 0 and (v >> 16) > 150]
+            if mode == 'gradient' and any(v == c for v in k[y - 1:y + 2:2, x - 1:x + 2:2].ravel()): continue   # (a checker pixel)
             if not cand: continue
             v = max(set(cand), key=cand.count); lay[y, x, :3] = (v >> 16, (v >> 8) & 255, v & 255); fixed += 1
         if not fixed: break
