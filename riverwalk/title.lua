@@ -20,7 +20,22 @@ function T.load()
   if I then return end
   I = { base = img("base"), bird = img("bird"), mouth = img("mouth"), eye = img("eye"), logos = {},
     tagline = { caps = img("tagline_caps"), lower = img("tagline_lower") } }
-  for _, m in ipairs({ "bands", "gradient", "steps6" }) do I.logos[m] = { fill = img("logo_" .. m), hi = img("logo_hi_" .. m) } end
+  for _, m in ipairs({ "clean", "bands", "gradient", "steps6" }) do I.logos[m] = { fill = img("logo_" .. m), hi = img("logo_hi_" .. m) } end
+  I.stars = img("stars"); I.starQ = {}
+  for sz = 0, 2 do I.starQ[sz] = {}; for f = 0, 5 do I.starQ[sz][f] = lg.newQuad(f * 11, sz * 11, 11, 11, I.stars:getDimensions()) end end
+  -- the sparkle schedule, the same every run (a seeded generator): one star at a time, the next one 0.6 to 1.4 s
+  -- after the last began, at a random point on the letters' upper edges or highlight streaks, small / medium /
+  -- large (the large ones rarer); and the shine's sweeps, 5 to 7 s apart. 10 minutes of it, then it repeats.
+  local rng = love.math.newRandomGenerator(1994)
+  T.starList, T.shineList = {}, {}
+  local u = 0.9
+  while u < 600 do
+    local r = rng:random()
+    T.starList[#T.starList + 1] = { t = u, p = rng:random(1, 100000), size = r < 0.45 and 0 or (r < 0.8 and 1 or 2) }
+    u = u + 0.6 + rng:random() * 0.8
+  end
+  u = 2.0
+  while u < 600 do T.shineList[#T.shineList + 1] = u; u = u + 5 + rng:random() * 2 end
   I.mouthQ, I.eyeQ = strip(I.mouth, D.mouth), strip(I.eye, D.eye)
   I.birdQ = {}
   for f = 0, 2 do I.birdQ[f] = lg.newQuad(f * D.bird.w, 0, D.bird.w, D.bird.h, I.bird:getDimensions()) end
@@ -69,6 +84,7 @@ function T.draw(t, leaving, plain)
   lg.draw(I.tagline[T.TAGLINE] or I.tagline.caps, D.plate.x, D.plate.y)
   lg.draw(T.logo().fill, D.logo.x, D.logo.y)
   T.shine(t)
+  T.sparkle(t)
   if plain then return end
   -- PRESS START blinks (fast once pressed), on the menu's centre line where the menu will open
   local on = leaving and (math.floor(leaving / 0.07) % 2 == 0) or (not leaving and (t % 1.1) < 0.75)
@@ -82,9 +98,32 @@ function T.draw(t, leaving, plain)
   lg.setColor(1, 1, 1, 1)
 end
 
--- a shine sweeps across the logo every 3.6 s: a slanted band, drawn as 2-row strips through a scissor
+-- the latest entry of a sorted schedule at or before t (t wraps round after 600 s)
+local function latest(list, t, key)
+  t = t % 600
+  local lo, hi = 1, #list
+  if #list == 0 or (key and list[1][key] or list[1]) > t then return nil end
+  while lo < hi do
+    local mid = math.floor((lo + hi + 1) / 2)
+    if (key and list[mid][key] or list[mid]) <= t then lo = mid else hi = mid - 1 end
+  end
+  return list[lo], t
+end
+-- the twinkle star: 6 frames at 12 fps (grow, grow, flash, shrink, shrink, a dot), centred on its point
+function T.sparkle(t)
+  local s, tt = latest(T.starList, t, "t")
+  if not s then return end
+  local f = math.floor((tt - s.t) * 12)
+  if f > 5 then return end
+  local pts = D.sparkle_points[T.LOGO] or D.sparkle_points.clean
+  local p = pts[(s.p - 1) % #pts + 1]
+  lg.setColor(1, 1, 1, 1); lg.draw(I.stars, I.starQ[s.size][f], p[1] - 5, p[2] - 5)
+end
+-- a shine sweeps across the letters every 5 to 7 s: a slanted band of the brightened letters (only the letters'
+-- fill has pixels in it, so the band is clipped to them), drawn as 2-row strips through a scissor
 function T.shine(t)
-  local st = t % 3.6
+  local s0, tt = latest(T.shineList, t)
+  local st = s0 and (tt - s0) or 99
   if st < 0.8 then
     local L = D.logo
     local pos = -30 + (L.w + 60) * (st / 0.8)
@@ -98,9 +137,10 @@ function T.shine(t)
     lg.setScissor()
   end
 end
-T.LOGO = "gradient"               -- the logo's fill: "gradient" (six steps, ordered 2 x 2 dither between them), "steps6"
-                                  -- (the six steps, hard) or "bands" (three hard bands and a lip)
-function T.logo() return I.logos[T.LOGO] or I.logos.gradient end
+T.LOGO = "clean"                  -- the logo: "clean" (the painting's own, its speckle replaced by an ordered dither), or
+                                  -- rebuilt: "gradient" (six steps, ordered 2 x 2 dither between them), "steps6" (the six
+                                  -- steps, hard), "bands" (three hard bands and a lip)
+function T.logo() return I.logos[T.LOGO] or I.logos.clean end
 T.TAGLINE = "caps"                -- the tagline plate: "caps" (THE CITY DOG ADVENTURER) or "lower" (The City Dog Adventurer)
 T.CX = 220.5                      -- the centre line under the logo (the tagline plate's centre, x 144..297)
 T.PRESS_Y = 152                   -- PRESS START's top: the main menu's middle row

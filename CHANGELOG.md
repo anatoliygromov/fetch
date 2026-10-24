@@ -50,6 +50,14 @@ Follows docs/ui_design.md (the owner's UI design, 24 Oct). Stops here for the ow
   six steps, each step's first two rows an ordered 2 x 2 checker with the step above, phase fixed to the screen, a
   highlight row on top), "steps6" (the six steps hard) and "bands" (three bands and a lip). Same silhouettes, outline,
   depth and paw; logo_<mode>.png and logo_hi_<mode>.png. The unused eye_closed.png and press_off.png are removed.
+- **"clean" logo (the new default, T.LOGO = "clean") and 90s sparkles:** the painting's own logo pixels (depth, bevel,
+  highlight streaks, outline, paw) with only the speckle replaced: per letter and row the dithered yellow / gold /
+  orange pixels average to a level (smoothed over 3 rows), set as a solid colour or an ordered 2 x 2 checker of its
+  two nearest ramp colours on a fixed screen phase; lone pixels a shade off their neighbours take their colour;
+  8 one-pixel outline wobbles straightened. Twinkle stars (stars.py: 3 sizes, 6 frames grow-flash-shrink, white and
+  pale yellow) pop one at a time every 0.6 to 1.4 s on the letters' upper edges and highlight streaks (a seeded
+  schedule, the same every run), and the shine sweeps every 5 to 7 s instead of 3.6. Both run on every logo version.
+  The title GIF is now 9 s at 12 fps.
 - **Gates:** tools/title_frames.py (frames at 3x, colour and greyscale, the title loop GIF at 2x),
   tools/layout_qa_menus.py (226 checks, all pass), tools/pilot2_cards.py: out_ui/pilot2/card_title.png and
   card_menus.png.
