@@ -171,7 +171,8 @@ def endpoints(line):
 
 def gaps(line):
     """Breaks in a 1 px line: two endpoints of DIFFERENT line pieces, 2 to 3 px apart
-    (Chebyshev), each pointing at the other (the line would continue across the gap).
+    (Chebyshev), each pointing at the other within about 36 degrees (the line would
+    continue across the gap).
     Parallel lines and the two ends of one short line are not gaps."""
     m = line.astype(bool)
     ep = np.argwhere(endpoints(m))
@@ -194,7 +195,7 @@ def gaps(line):
             v = (q - p).astype(float); v /= np.linalg.norm(v)
             if dp is None or dq is None:
                 continue
-            if (dp @ v) / np.linalg.norm(dp) >= 0.7 and (dq @ -v) / np.linalg.norm(dq) >= 0.7:
+            if (dp @ v) / np.linalg.norm(dp) >= 0.8 and (dq @ -v) / np.linalg.norm(dq) >= 0.8:
                 g += 1; where.append((tuple(p), tuple(q)))
     return g, where
 

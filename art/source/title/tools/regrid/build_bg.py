@@ -600,9 +600,21 @@ def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=
                 for dj, di in (((0, -1), (0, 1)) if axis == 1 else ((-1, 0), (1, 0))):
                     side.add((j + dj, i + di))
         kept = Vx[..., :n].sum(2) / np.maximum(Vx.sum(2), 1e-6)
+        scol = {}
+        for cells, col, mask, axis, ctr in st:
+            for c in cells:
+                scol[c] = col
         for (j, i) in side - scells:
             if 0 <= j < NY and 0 <= i < NX and kept[j, i] >= 0.3:
-                R[j, i] = Vx[j, i, :n].argmax(); V[j, i] = Vx[j, i, :n]; C[j, i] = Cx[j, i, :n]
+                v = Vx[j, i, :n].copy()
+                # a side cell never repeats the stroke colour (no spurs beside a mast)
+                for (dj, di) in ((0, -1), (0, 1), (-1, 0), (1, 0)):
+                    c = scol.get((j + dj, i + di))
+                    if c is not None:
+                        v[np.linalg.norm(PL - PL[c], axis=1) < 15] = 0
+                if v.sum() > 0:
+                    R[j, i] = v.argmax(); V[j, i] = v; C[j, i] = Cx[j, i, :n]
+                    locked[j, i] = True
         # join pieces of one stroke split by a short gap (aligned ends, up to 3 cells apart)
         pieces = []
         for cells, col, mask, axis, ctr in st:
@@ -622,6 +634,21 @@ def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=
                         fill.append(tuple(c))
                     longer = p if len(p[0]) >= len(q[0]) else q
                     p.append(('fill', fill, longer[1]))
+        # a weaker stroke running right beside a longer one (a highlight strip next to a
+        # mast) would double the line: drop it
+        pieces.sort(key=lambda p: -len(p[0]))
+        taken = set(); kept_p = []
+        for p in pieces:
+            nbr = sum(1 for (j, i) in p[0] if any((j + dj, i + di) in taken for dj, di in ((0, -1), (0, 1), (-1, 0), (1, 0), (0, 0))))
+            if nbr >= 0.5 * len(p[0]):
+                continue
+            kept_p.append(p); taken |= set(p[0])
+        pieces = kept_p
+        # drop stray single cells of a stroke (no 8-neighbour within the same stroke)
+        for p in pieces:
+            cs = set(p[0])
+            p[0] = [c for c in p[0] if any((c[0] + dj, c[1] + di) in cs
+                                           for dj in (-1, 0, 1) for di in (-1, 0, 1) if dj or di)]
         ncell = 0
         smk = np.zeros(R.shape, bool)
         for p in pieces:

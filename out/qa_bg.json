@@ -1,22 +1,22 @@
 {
  "off_palette": 0,
  "mixels": 0,
- "specks": 1460,
+ "specks": 1465,
  "form_all": [
-  2.0866613711642166,
-  6.444154525757762
+  2.098980770318856,
+  6.475213554662661
  ],
  "form_mine": [
-  1.998237694635947,
-  6.045137396791912
+  2.017147237602421,
+  6.1131556049974085
  ],
  "form_all_uniform_cells": [
-  3.3589696642080327,
-  10.74761883171237
+  3.366411510868846,
+  10.7985448810811
  ],
  "checker_phase": [
   1.0,
-  1580
+  1573
  ],
  "checker_phase_mine": [
   1.0,
@@ -24,14 +24,14 @@
  ],
  "shapes": {
   "sail_left": {
-   "iou": 0.734,
-   "boundary_dist_blocks": 0.235,
+   "iou": 0.725,
+   "boundary_dist_blocks": 0.246,
    "staircase": 1.0,
-   "segments": 2
+   "segments": 0
   },
   "sail_right": {
-   "iou": 0.762,
-   "boundary_dist_blocks": 0.261,
+   "iou": 0.761,
+   "boundary_dist_blocks": 0.255,
    "staircase": 1.0,
    "segments": 0
   },
@@ -54,10 +54,10 @@
    "segments": 0
   },
   "bridge_stone": {
-   "iou": 0.649,
-   "boundary_dist_blocks": 0.251,
+   "iou": 0.634,
+   "boundary_dist_blocks": 0.264,
    "staircase": 1.0,
-   "segments": 1
+   "segments": 0
   },
   "cloud_left": {
    "iou": 0.948,
@@ -66,8 +66,8 @@
    "segments": 1
   },
   "railing": {
-   "iou": 0.752,
-   "boundary_dist_blocks": 0.269,
+   "iou": 0.751,
+   "boundary_dist_blocks": 0.271,
    "staircase": 1.0,
    "segments": 0
   },
@@ -95,9 +95,9 @@
   },
   "strokes": {
    "lcorners": 0,
-   "gaps": 2,
+   "gaps": 0,
    "endpoints": 84,
-   "pixels": 311,
+   "pixels": 308,
    "staircase": 1.0,
    "staircase_windows": 0
   }
