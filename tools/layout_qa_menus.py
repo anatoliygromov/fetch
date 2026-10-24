@@ -124,6 +124,18 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
         check(abs((min(b['x0'] for b in dots) + max(b['x1'] for b in dots)) / 2 - 159.5) <= 0.5 and min(b['y0'] for b in dots) > P['y1'] and max(b['y1'] for b in dots) < s[0]['y0'] - 2, f'{shot}: dots centred between the card and the strip')
         items = [T, N] + row + many(bs, 'lock', 'hard') + s + dots
         check(not overlaps(items), f'{shot}: nothing overlaps {overlaps(items)}')
+    elif shot.startswith('intro'):
+        P = many(bs, 'panel'); 
+        if not P: continue                                                  # (the drop-in's first frame: before the strip)
+        P = P[0]; R = many(bs, 'ribbon')[0]; T = many(bs, 'title')[0]; N = many(bs, 'name')[0]; L = sorted(many(bs, 'story'), key=lambda b: b['y0'])
+        for n, b in [('panel', P), ('ribbon', R), ('title', T), ('name', N)] + [('story line', b) for b in L]: check(abs(cx(b) - 159.5) <= 0.5, f'{shot}: {n} centred ({cx(b)})')
+        e, d = pitch_even([b['y0'] for b in L]); check(e, f'{shot}: even story pitch {d}')
+        check(N['y0'] > R['y1'] + 2 and L[0]['y0'] > N['y1'] + 2, f'{shot}: ribbon, name and story apart')
+        check(all(b['x0'] - P['x0'] >= 12 and P['x1'] - b['x1'] >= 12 for b in L + [N]), f'{shot}: text clear of the frame (12 px)')
+        check(P['y1'] - L[-1]['y1'] >= 9, f'{shot}: room under the story ({P["y1"] - L[-1]["y1"]})')
+        if 'drop' not in shot:
+            s = strip(shot, bs)
+            check(P['y1'] < s[0]['y0'], f'{shot}: the card above the strip')
 check(len(set(strips.values())) == 1, f'strip: the same place on every screen {sorted(set(strips.values()))}')
 # pieces
 INK = (64, 11, 6); SH = (36, 8, 5)

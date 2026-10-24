@@ -20,6 +20,12 @@ tools/layout_qa_menus.py out_ui/step3/frames`.
   and the leaf pile, Downtown at the market, Rooftops on the chimney stack with the gull, Soder Hill under the lamp,
   Night Harbour in the lantern light. (Rooftops, Soder Hill and Night Harbour are still greybox, so their pictures
   are too.)
+- **Level intro card (flow.lua F.drawIntro, main.lua):** the smooth warm dim (the dotted checker is gone here), the
+  kit's gold panel with the LEVEL n ribbon over its top edge, the level's name in the 17 px font and its story (intro
+  lines 3 and 4) in the 13 px font, each line split where its halves are most even when it is wider than the card
+  (F.wrap); the card drops in (6 frames, ease out). The controls strip `(A) GO` replaces the blinking PRESS ANY
+  BUTTON (any button still starts the level). The card goes centred above the strip, else at the top, else just
+  above the strip, the first that misses Pepper (F.cardTop; if none does, the one that covers least of her).
 - **Pieces (art/source/ui/v8/tools/screens8.py, built by build8.py):** arrow_l / arrow_r, lock / lock_big, dot_on /
   dot_off, frame_s, medal_<kind>_on / _off, bubble and its tails, ball, stamp.
 

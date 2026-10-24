@@ -29,7 +29,10 @@ return function(api)
   end
   local function sel(i) local p = F.pick; p.sel, p.from, p.moved = i, i, -1 end
   local steps = {
-    { wait = 0.3 },
+    { wait = 0.8 }, { act = function() I.last = "pad" end, wait = 0.05 }, shot("intro_riverwalk"),
+    { act = function() api.startRun(F.index("soder")) end, wait = 0.04 }, shot("intro_drop"), { wait = 0.8 }, shot("intro_soder"),
+    { act = function() I.last = "key"; api.startRun(F.index("night")) end, wait = 0.8 }, shot("intro_night"),
+    { act = function() api.startRun(F.index("citypark_tall")) end, wait = 0.8 }, shot("intro_citypark"),
     { act = function() api.setState("select"); I.last = "pad"; sel(1) end, wait = 0.3 }, shot("select_1_pad"),
     { act = function() sel(2) end, wait = 0.1 }, shot("select_2_pad"),
     { act = function() sel(3) end, wait = 0.1 }, shot("select_3_pad"),

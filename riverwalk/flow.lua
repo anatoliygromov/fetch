@@ -378,6 +378,68 @@ end
 -- draws f moved down by dy
 local function shifted(dy, f) lg.push(); lg.translate(0, dy); f(); lg.pop() end
 
+-- (step 3) text in lines no wider than maxw at a font size: a line that fits stays whole, a longer one is split where
+-- its two halves are most even, else word by word
+function F.wrap(size, text, maxw)
+  local UF = require("uifont")
+  local function wd(x) return UF.width(size, x) + 2 end
+  if wd(text) <= maxw then return { text } end
+  local words = {}
+  for w in text:gmatch("%S+") do words[#words + 1] = w end
+  local best, bw
+  for k = 1, #words - 1 do
+    local a, b = table.concat(words, " ", 1, k), table.concat(words, " ", k + 1)
+    local m = math.max(wd(a), wd(b))
+    if m <= maxw and (not bw or m < bw) then best, bw = { a, b }, m end
+  end
+  if best then return best end
+  local out, cur = {}, nil
+  for _, w in ipairs(words) do
+    local try = cur and (cur .. " " .. w) or w
+    if cur and wd(try) > maxw then out[#out + 1] = cur; cur = w else cur = try end
+  end
+  out[#out + 1] = cur
+  return out
+end
+-- (step 3) where a card goes: centred in the room above the controls strip, else at the top, else just above the
+-- strip, the first that misses Pepper's sprite; if none does, the one that covers least of her (main.lua draws her
+-- over the card in any case)
+function F.cardTop(x, w, h, avoid)
+  local best, least
+  for _, yy in ipairs({ math.floor((U.STRIP_Y - 6 - h) / 2), 4, U.STRIP_Y - 6 - h }) do
+    local a = avoid
+    local ov = a and math.max(0, math.min(a[3], x + w) - math.max(a[1], x)) * math.max(0, math.min(a[4], yy + h) - math.max(a[2], yy)) or 0
+    if ov == 0 then return yy end
+    if not least or ov < least then best, least = yy, ov end
+  end
+  return best
+end
+-- a card dropping in: 6 frames, ease out, from 10 px up
+local function dropIn(t) local u = math.min(1, (t or 1) / 0.1); return -math.floor(10 * (1 - u) * (1 - u) + 0.5) end
+
+-- the level intro card (step 3): the warm dim, the kit's panel with the LEVEL n ribbon, the level's name in the 17 px
+-- font and the story (intro lines 3 and 4) in the 13 px font, the controls strip (A GO) once a button starts it
+F.I = { X = 26, W = 268, RIB = 0, PANEL = 10, NAME = 25, STORY = 50, PITCH = 16, PAD = 12, TEXT_W = 236 }
+function F.introLayout(def)
+  local lines = {}
+  for k = 3, #(def.intro or {}) do for _, l in ipairs(F.wrap(13, def.intro[k], F.I.TEXT_W)) do lines[#lines + 1] = l end end
+  local h = F.I.STORY + (#lines - 1) * F.I.PITCH + U.sayH(13) + F.I.PAD - 1
+  return lines, h
+end
+function F.drawIntro(def, t, avoid)
+  local I = F.I
+  local lines, h = F.introLayout(def)
+  U.dimWarm()
+  shifted(F.cardTop(I.X, I.W, h, avoid) + dropIn(t), function()
+    U.panel(I.X, I.PANEL, I.W, h - I.PANEL)
+    U.ribbon("ribbon_pause", 159.5, I.RIB)
+    U.sayC(13, "ink", def.intro[1] or "", 159.5, I.RIB + 2, "title")
+    U.sayC(17, "gold", def.intro[2] or "", 159.5, I.NAME, "name")
+    for i, l in ipairs(lines) do U.sayC(13, "cream", l, 159.5, I.STORY + (i - 1) * I.PITCH, "story") end
+  end)
+  if t > 0.5 then U.strip({ { "ok", "GO" } }) end
+end
+
 -- between two levels: what happened at the end of the level just cleared (its L.outro)
 function F.drawStory(lines, t, avoid)
   U.dim()

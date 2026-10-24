@@ -412,13 +412,7 @@ function love.draw()
   U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard },
     state == "play" and { Talk.pepperRect(stage) } or nil)
   if state == "intro" then
-    U.dim()
-    love.graphics.push(); love.graphics.translate(0, Flow.placeY(60, 200, 70, 76, { Talk.pepperRect(stage) }) - 70)
-    U.box(60, 70, 200, 76)
-    U.center(def.intro[1], 160, 78, 2, U.GOLD); U.center(def.intro[2], 160, 96, 2, U.GOLD)
-    U.center(def.intro[3], 160, 118, 1); U.center(def.intro[4], 160, 130, 1)
-    love.graphics.pop()
-    if t > 0.5 and (t % 1.1) < 0.75 then U.prompt("PRESS ANY BUTTON") end
+    Flow.drawIntro(def, t, { Talk.pepperRect(stage) })            -- (ui step 3) the gold card, the story, A GO
   elseif state == "play" then
     Talk.draw(stage)
     drawTuning()
