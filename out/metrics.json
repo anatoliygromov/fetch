@@ -133,12 +133,12 @@
  "colour": {
   "off_palette": 0,
   "mixels": 0,
-  "colours": 3,
+  "colours": 4,
   "body_colours": 2
  },
  "form": {
   "mean": 2.52,
-  "p95": 7.23,
+  "p95": 7.24,
   "max": 20.61
  },
  "glyphs": {

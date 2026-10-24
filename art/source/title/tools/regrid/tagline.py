@@ -66,7 +66,10 @@ def measure_palette(a):
     t = cream_cov(a, navy, np.array([255, 233, 196.]))
     core = ndi.binary_erosion(t[615:690, 1200:2120] > 0.9, np.ones((3, 3)))
     cream = np.median(a[615:690, 1200:2120][core], 0)
-    return dict(navy=np.round(navy).astype(int), rim=np.round(rim).astype(int), cream=np.round(cream).astype(int))
+    # the painting's sky just outside the plate ends (for the two side columns the plate owns)
+    sky = np.median(np.concatenate([a[622:687, 2188:2200].reshape(-1, 3), a[622:687, 1112:1124].reshape(-1, 3)]), 0)
+    return dict(navy=np.round(navy).astype(int), rim=np.round(rim).astype(int), cream=np.round(cream).astype(int),
+                sky=np.round(sky).astype(int))
 
 
 def cream_cov(a, navy, cream):
@@ -557,14 +560,32 @@ def build_plate(P, frac):
     N = frac[0]
     city = frac[3] + frac[4]          # dark city silhouette or sky: not plate
     own_band = band & (city < 0.5)
-    return dict(F=F, rim=rim, body=body, band=band, outline=own_band)
+    # side frames: the painted outline outside the vertical rim is 9 px (left) and 10 px (right), the
+    # same on both ends, i.e. one column each (col 150 and col 290). On the 7.5 px grid the painted
+    # right frame spills 60 % into col 291, so a layer that samples the painting draws col 291 navy
+    # and the right end then reads as a 2 column frame against a 1 column one on the left. The plate
+    # therefore also owns the column just outside each 1 column frame on the vertical rows and paints
+    # it with the painting's own sky there, so both ends show the same 1 column frame, as painted.
+    # (A 2 column frame on both sides was tried: it puts navy where the left end is painted sky and
+    # breaks the form gate, p95 8.7.)
+    sky = np.zeros_like(F)
+    rows = np.nonzero(F.any(1))[0]
+    Lr = {r: np.nonzero(F[r])[0].min() for r in rows}; Rr = {r: np.nonzero(F[r])[0].max() for r in rows}
+    for r in rows[1:-1]:
+        # only rows whose neighbours are vertical too, so the outer edge keeps 1 px steps at the corners
+        if all(Lr[q] == P['rim_left'] for q in (r - 1, r, r + 1)) and own_band[r, P['rim_left'] - 1]:
+            sky[r, P['rim_left'] - 2] = True
+        if all(Rr[q] == P['rim_right'] for q in (r - 1, r, r + 1)) and own_band[r, P['rim_right'] + 1]:
+            sky[r, P['rim_right'] + 2] = True
+    return dict(F=F, rim=rim, body=body, band=band, outline=own_band, sky=sky)
 
 
 # ----------------------------------------------------------------- render
 def render(plate, textmask, pal):
     img = np.zeros((NY, NX, 4), np.uint8)
-    own = plate['outline'] | plate['F']
+    own = plate['outline'] | plate['F'] | plate['sky']
     img[own, :3] = pal['navy']; img[own, 3] = 255
+    img[plate['sky'], :3] = pal['sky']
     img[plate['rim'], :3] = pal['rim']
     tm = textmask & plate['body']
     img[tm, :3] = pal['cream']
@@ -637,10 +658,11 @@ def save_outputs(S):
     Image.fromarray(S['blank']).save(os.path.join(OUT, 'tagline_plate_blank.png'))
     Image.fromarray(plate_with_text(S, 'Press Start')).save(os.path.join(OUT, 'tagline_plate_sample_press_start.png'))
     pal = S['pal']
-    hexs = ['#%02x%02x%02x' % tuple(pal[k]) for k in ('navy', 'rim', 'cream')]
+    hexs = ['#%02x%02x%02x' % tuple(pal[k]) for k in ('navy', 'rim', 'cream', 'sky')]
     json.dump(hexs, open(os.path.join(OUT, 'palette.json'), 'w'), indent=1)
     meta = dict(text=TEXT, cap_row=CAP_ROW, text_start_col=S['lay']['start'], plate=S['P'],
-                palette=dict(zip(('navy', 'rim', 'cream'), hexs)),
+                palette=dict(zip(('navy', 'rim', 'cream', 'sky_beside_plate_ends'), hexs)),
+                sky_cells=[[int(c), int(r)] for r, c in zip(*np.nonzero(S['plate']['sky']))],
                 text_box=dict(cols=[int(S['P']['rim_left']) + 1, int(S['P']['rim_right']) - 1],
                               rows=[int(S['P']['rim_top']) + 1, int(S['P']['rim_bot']) - 1]),
                 glyph_extraction=S['grep'], layout=S['lay'])

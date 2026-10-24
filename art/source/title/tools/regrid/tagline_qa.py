@@ -137,7 +137,7 @@ def lines(S):
 
 def colour(S):
     img = S['img']; own = S['own']
-    pal = [tuple(S['pal'][k]) for k in ('navy', 'rim', 'cream')]
+    pal = [tuple(S['pal'][k]) for k in ('navy', 'rim', 'cream', 'sky')]
     px = img[own][:, :3]
     off = int(sum(1 for p in map(tuple, px) if p not in pal))
     L = T.luma(img[:, :, :3].astype(float))

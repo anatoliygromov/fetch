@@ -14,6 +14,13 @@
   vertical sides; outer and inner edges are clean staircases (steps of 1, no L-corner joints). With
   the thicker band the fitted chamfers are 4 (top) and 3 (bottom).
 - Font: SPACE is now 4 (word gap 6 as painted) for `plate_with_text` and the glyph JSON.
+- Round 3 (review: frame line on the right end but not the left): the painted frame outside the
+  vertical rim is 9 / 10 px on the two ends, one column each (150 and 290). The right one spills 60 %
+  into col 291, which a painting-sampling layer draws navy, so the right end read as a 2 column frame.
+  The plate now also owns col 149 and col 291 on the vertical rows (83-90) and paints them with the
+  painting's own sky there (#59aade, 4th palette entry), so both ends show the same 1 column frame.
+  A 2 column frame on both ends was tried and rejected: it puts navy where the left end is painted
+  sky (form p95 8.7).
 The sections below describe round 1; where they differ, round 2 above holds.
 
 Track: TAGLINE ("The City Dog Adventurer" plate under the logo).

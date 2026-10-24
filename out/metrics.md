@@ -1,6 +1,8 @@
 # Tagline plate: QA gates
 
-## Round 2 (final)
+## Round 3 (final): symmetric side frames; every round 2 number unchanged except colours = 4 (sky beside the plate ends), form 2.52 / 7.24
+
+## Round 2
 
 | Gate | Result | Pass |
 |---|---|---|
