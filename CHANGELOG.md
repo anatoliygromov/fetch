@@ -2,6 +2,9 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `art/title-light`: a light-touch cleanup of the title picture, as a switch (24 Oct, 0 credits)
+- **New picture "light", default unchanged:** `T.PICTURE` in riverwalk/title.lua is "clean" (the material cleanup, as before) or "light": riverwalk/art/title/base_light.png, mouth_light.png, eye_light.png, bird_light.png, made by art/source/title/tools/light_clean.py from the painting on its native grid (art/source/title/painting_layers/, the eac9c04 build). Only 1 to 2 px specks change (4-connected, more than 12 luma from the median round them, recoloured to the ring's majority within their material); lines, ink strokes, eye, nose, city windows, boats and flowers are kept; no ramps, no blur. 3.5 % of pixels change; form check vs the painting (5x5 luma blur): Pepper 1.17 mean / 4.88 p95, all 0.73 / 3.97 (the clean picture: 2.94 / 8.73 and 3.26 / 16.18). The pant and blink frames are animated by diff on the light still. build_title.py runs light_clean.py at the end. check_flow passes with either picture.
+
 ## The sky without dotted rows (24 Oct, owner)
 The owner asked what the dotted bar across the sky was: the 2 x 2 checker rows joining two sky bands. Each band is now
 split into 4 flat steps towards the next band's colour (look.lua, Look.SKY_STEPS), every level and the tall skies; no
