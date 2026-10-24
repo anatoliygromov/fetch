@@ -164,3 +164,13 @@ smaller and more dotted than painted; top outline 2 cells vs painted 1.7.
 - Top outline stays 2 cells: painted 1.73 cells reads as 3.5 px at 2x; 2 cells = 4 px, 1 cell = 2 px (thin).
 - lone dithered rows 0; pattern violations 0; checker out of phase 0/425;
   L-corners 0, stripe gaps 0, off-palette 0; form 5.40/17.19, fair 5.28/17.30 (fail).
+
+
+# Round 5 (polish) : metrics_r5.json
+- All fade densities now thresholds of one 4x4 Bayer matrix on absolute cell position (k/8 = Bayer < 2k);
+  levels may change on any row since every density shares the lattice. Sparse densities put dots on
+  every other row (Bayer), so lone dotted rows: 57 (by design now).
+- Row-luma per row max: x286 7.52, x193 7.14, x252 7.35, x144 6.87, x218 7.93, x170 6.10, x282 5.69 (fails < 6: Bayer rows alternate);
+  per 2-row pair max: x286 4.44, x193 5.11, x252 6.66, x144 5.94, x218 5.29, x170 5.42, x282 4.53 (H 6.66 over).
+- "!" base: one-cell fill tips removed, the red-orange base stripe now runs the full base (2 rows as painted).
+- pattern violations 0, checker out of phase 0, L-corners 0, stripe gaps 0, off-palette 0, fair form 5.36/17.42.

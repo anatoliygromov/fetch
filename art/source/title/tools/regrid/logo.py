@@ -321,6 +321,9 @@ def geometry(L, M, s=12.0, tol=7.0):
     fillP = fill_polys(fpol, M['F'].shape)
     fill = cov(fillP) >= 0.5
     fill = carve_letters(fill)
+    for _ in range(2):                 # one-cell tips (a cell with at most one 4-neighbour)
+        n4 = sum(shift(fill, dy, dx).astype(int) for dy, dx in N4)
+        fill &= ~(fill & (n4 <= 1))
     pawc, pawinfo = paw_cells(M['F'])
     fill = (fill & ~cell_disk_dilate(pawc, 2.0)) | pawc   # the paw sits in front of the "!"
     # 2. the painting's own silhouette
@@ -470,21 +473,15 @@ def dither5(level):
 LH, LY, LO, LR = 224.0, 187.23, 133.70, 99.8   # luma of #ffe671, #febd03, #fe6202, #da3611
 
 
+BAYER4 = np.array([[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]])
+
+
 def pattern(k):
-    """Cells of the second tone for density k/8 (k = 0..8), on one fixed screen phase (absolute
-    cell position). Every row carries the same density, so no density ever shows as a dotted
-    row with empty rows around it: 1/8 and 1/4 are sparse single dots staggered from row to
-    row, 1/2 is the exact one-cell checker, 3/8 and 5/8 are that checker with one dot per 8
-    cells removed or added (spread, not in lines), 3/4 and 7/8 mirror 1/4 and 1/8."""
+    """Cells of the second tone for density k/8 (k = 0..8): one 4x4 Bayer matrix on absolute
+    cell position (threshold 2k of 16), so every density is a nested subset of the next and
+    every dot sits on the same lattice; k = 4 is the exact one-cell checker."""
     y, x = np.indices((NY, NX))
-    chk = (x + y) % 2 == 0
-    h1 = (x + 3 * y) % 8 == 0                     # one per 8 per row, inside the checker phase
-    h2 = (x + 3 * y + 1) % 8 == 0                 # one per 8 per row, in the other phase
-    q = (x + 2 * (y % 2)) % 4 == 0                # one per 4 per row, staggered
-    q2 = (x + 2 * (y % 2) + 1) % 4 == 0
-    pats = {0: np.zeros_like(chk), 1: h1, 2: q, 3: chk & ~h1, 4: chk, 5: chk | h2, 6: ~q2,
-            7: ~((x + 3 * y + 4) % 8 == 0), 8: np.ones_like(chk)}
-    return pats[int(k)]
+    return BAYER4[y % 4, x % 4] < 2 * int(k)
 
 
 def ramp_tones(level):
@@ -525,7 +522,7 @@ LEVELS = list(range(-8, 17))
 
 def min_run_of(k):
     d = ramp_tones(k)[2]
-    return 1 if d in (0, 3, 4, 5, 8) else 2    # sparse densities are never a lone dotted row
+    return 1        # all densities share one Bayer lattice, so a level may change on any row
 
 
 def ramp_rows(tl, table, w, jump=0.02, allow=None, gpen=None):
@@ -625,12 +622,12 @@ def row_ramp(fill, skip, stripes_mask, src_luma_cells, ofrac=None):
         for i in range(len(rows)):
             if m.sum() < 40 or ns[i] < 5:
                 continue
-            ok = err[i] <= 5.9
+            ok = err[i] <= 8.0
             if not (allow[i] & ok).any() and (ok & (LV >= 0)).any():
                 allow[i] |= ok & (LV >= 0)       # the painting's own fade starts here
                 for j in (i - 1, i + 1):         # and its neighbour, so a sparse density
                     if 0 <= j < len(rows):        # can be held for two rows
-                        allow[j] |= ok & (LV >= 0) & (err[j] <= 5.9)
+                        allow[j] |= ok & (LV >= 0) & (err[j] <= 8.0)
             pen[i] = np.where(ok, 0.0, 4e3)       # soft: the DP stays feasible
         lv = ramp_rows(np.array(tl), np.array(table), np.array(ws, float), allow=allow, gpen=pen)
         for r, k in zip(rows, lv):

@@ -308,12 +308,18 @@ def row_luma_gate(R):
         pm = (pl == np.bincount(v).argmax()) if len(v) else np.zeros_like(M['F'])
         res = {}
         body = m & ~stripes
-        d = []; small = []
+        d = []; small = []; o_l = []; s_l = []
         for r in np.flatnonzero(body.any(1)):
             core = body[r] & ~ring[r]
             sel = core if core.sum() >= 2 else body[r]
             v = ol[r][sel].mean() - src[r][sel].mean()
-            (d if sel.sum() >= 5 else small).append(v)     # a row of < 5 cells cannot hold a
+            (d if sel.sum() >= 5 else small).append(v)
+            if sel.sum() >= 5:
+                o_l.append(ol[r][sel].mean()); s_l.append(src[r][sel].mean())
+        # the 4x4 Bayer lattice puts sparse dots on every other row: also per 2-row pair
+        if len(o_l) >= 2:
+            o2 = (np.array(o_l[:-1]) + np.array(o_l[1:])) / 2; s2 = (np.array(s_l[:-1]) + np.array(s_l[1:])) / 2
+            res['pair_max'] = round(float(np.abs(o2 - s2).max()), 2)     # a row of < 5 cells cannot hold a
         d = np.array(d) if d else np.zeros(1)               # density finer than 1/4 (17 luma)
         res['dither'] = (round(float(np.abs(d).max()), 2), round(float(np.abs(d).mean()), 2), int(len(d)))
         res['short_rows_max'] = round(float(np.abs(small).max()), 1) if small else 0.0
