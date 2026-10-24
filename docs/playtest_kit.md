@@ -15,7 +15,7 @@ One 20-minute session. The goal is to see the game through a 7 year old's eyes b
 
 ## Controls, if she asks after trying
 
-Arrows move, A or Space jumps (Up also jumps), X picks up and gives the ball, B barks, Down crawls.
+Arrows or the d-pad move, A or Space jumps (Up also jumps, hold for a big jump), Down crawls, X picks up and gives the ball, Y or Z barks, B or Shift walks slowly.
 
 ## What to write down
 
