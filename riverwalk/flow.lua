@@ -232,46 +232,68 @@ end
 F.CARD_WAIT = 2                   -- seconds before A leaves a story card
 
 -- the tally after a level. tl: { lines, shown, from, points, t, done, newBest, time, best, newBestTime, par,
--- medals, secrets, hard }. avoid: Pepper's sprite on screen (x0, y0, x1, y1): the card goes where it misses her
+-- medals, secrets, hard }. avoid: Pepper's sprite on screen (x0, y0, x1, y1): the card is centred, or at the top
+-- when she would be under it (main.lua draws her over the card in any case).
+-- (ui/hud-v8) drawn to the owner's tally target: the smooth warm dim, the kit's gold panel, the arched ribbon with
+-- GOOD GIRL! in the big font, two columns in the small font (the level's points and the score on the left; the
+-- times and the three medals on the right), PRESS ANY BUTTON on the frame's bottom edge. Same data, same timing.
+-- Offsets from the card's top (the ribbon's top).
+F.T = { X = 45, W = 230, PANEL = 18, H = 113, L = 62, LR = 168, R = 180, RR = 258, ROW0 = 38, PITCH = 11, SCORE = 86,
+  MEDAL0 = 60, MPITCH = 19, NOTE = 98, BOX_H = 135 }
 function F.tallyBox(avoid)
-  local w, h = 292, 116
-  local y, clear = F.placeY(14, w, 18, h, avoid)
-  return 14, y, w, h, clear
+  local T = F.T
+  local y = math.floor((240 - T.BOX_H) / 2)
+  local function miss(yy) return not avoid or not (avoid[1] < T.X + T.W and avoid[3] > T.X and avoid[2] < yy + T.BOX_H and avoid[4] > yy) end
+  local clear = miss(y)
+  if not clear and miss(2) then y, clear = 2, true end
+  return T.X, y, T.W, T.BOX_H, clear
 end
 function F.drawTally(tl, avoid)
-  local x, y, w, h, clear = F.tallyBox(avoid)
-  if not clear then U.dim() end
-  U.box(x, y, w, h)
+  local _, y = F.tallyBox(avoid)
+  U.dimWarm(); shifted(y, function() F.tallyCard(tl) end)
+end
+function F.tallyCard(tl)
+  local T = F.T
+  U.panel(T.X, T.PANEL, T.W, T.H)
+  U.ribbon("ribbon_tally", 159.5, 0)
   local bounce = (tl.t < 0.6) and math.floor(math.sin(tl.t * 20) * 2) or 0
-  U.center("GOOD GIRL!", 160, y + 6 + bounce, 2, U.GOLD)
-  if tl.hard then U.hardTag(x + w - 36, y + 7) end
-  local L, R = x + 10, x + 136                                     -- the points on the left
-  for i, l in ipairs(tl.lines) do
-    if tl.t > 0.3 + i * 0.25 then U.text(l[1], L, y + 14 + i * 10); U.text(l[2], R - 6 * #l[2], y + 14 + i * 10) end
+  local tw = U.sayW(17, "GOOD GIRL!")
+  U.say(17, "ink", "GOOD GIRL!", math.floor(159.5 - (tw - 1) / 2 + 0.5), 4 + bounce, "title")
+  local function row(label, value, y, lx, rx, style)
+    U.say(7, style, label, lx, y, "tlabel")
+    U.say(7, style, value, rx - U.sayW(7, value) + 1, y, "tvalue")
   end
-  lg.setColor(U.RIM); lg.rectangle("fill", x + 146, y + 24, 1, 70); lg.setColor(1, 1, 1, 1)
-  if tl.t > 1.3 then
-    lg.setColor(U.RIM); lg.rectangle("fill", L, y + 66, R - L, 1); lg.setColor(1, 1, 1, 1)
-    local pts, sc = tostring(tl.shown), tostring(tl.from + tl.shown)
-    U.text("POINTS", L, y + 70); U.text(pts, R - 6 * #pts, y + 70)
-    U.text("SCORE", L, y + 82, U.GOLD); U.text(sc, R - 6 * #sc, y + 82, U.GOLD)
+  for i, l in ipairs(tl.lines) do                                  -- the level's points, one line each
+    if tl.t > 0.3 + i * 0.25 then row(l[1], l[2], T.ROW0 + (i - 1) * T.PITCH, T.L, T.LR, "cream") end
   end
-  local L2, R2 = x + 156, x + w - 10                              -- the times and the medals on the right
+  if tl.t > 1.3 then row("SCORE", tostring(tl.from + tl.shown), T.SCORE, T.L, T.LR, "gold") end   -- (counts up)
   if tl.t > 0.55 then
-    U.text("TIME", L2, y + 24); U.text(F.clock(tl.time), R2 - 6 * #F.clock(tl.time), y + 24)
-    U.text("BEST", L2, y + 34, U.GOLD); U.text(F.clock(tl.best), R2 - 6 * #F.clock(tl.best), y + 34, U.GOLD)
+    row("TIME", F.clock(tl.time), T.ROW0, T.R, T.RR, "cream")
+    row("BEST", F.clock(tl.best), T.ROW0 + T.PITCH, T.R, T.RR, "cream")
   end
-  local names = { nohit = "NO HIT", bones = "ALL BONES", par = "PAR TIME " .. F.clock(tl.par):gsub("%.0$", "") }
+  local names = { nohit = "NO HIT", bones = "ALL BONES", par = "PAR " .. F.clock(tl.par):gsub("%.0$", "") }
+  local mw, mh = U.body("medal_on")
+  local th = U.sayH(7)
   for k, kind in ipairs(F.MEDALS) do
     if tl.t > 1.3 + k * 0.2 then
-      local won, my = tl.medals[kind], y + 48 + (k - 1) * 14
-      U.medal(kind, L2, my, won); U.text(names[kind], L2 + 16, my + 2, won and U.WHITE or U.RIM)
+      local won, my = tl.medals[kind], T.MEDAL0 + (k - 1) * T.MPITCH
+      U.put(won and "medal_on" or "medal_off", T.R, my, "medal")
+      U.say(7, won and "gold" or "dim", names[kind], T.R + mw + U.ICON_GAP, math.floor(my + (mh - 1) / 2 - (th - 1) / 2 + 0.5), "mlabel")
     end
   end
+  local line = T.PANEL + T.H - 6                                  -- the frame's bottom gold line
+  if tl.hard then U.hardTag8(T.X + 34, line - 6) end
   if tl.done then
-    local note = (tl.newBest and "NEW BEST SCORE!" or "") .. (tl.newBest and tl.newBestTime and "  " or "") .. (tl.newBestTime and "NEW BEST TIME!" or "")
-    if note ~= "" and math.floor(tl.t * 3) % 2 == 0 then U.center(note, 160, y + 92, 1, U.GOLD) end
-    if blink(tl.t) then U.center("PRESS ANY BUTTON", 160, y + 104, 1) end
+    local blinkOn = math.floor(tl.t * 3) % 2 == 0
+    local ny = T.NOTE
+    if tl.newBest then if blinkOn then U.say(7, "gold", "NEW BEST SCORE!", T.L, ny, "note") end; ny = ny + T.PITCH end
+    if tl.newBestTime and blinkOn then U.say(7, "gold", "NEW BEST TIME!", T.L, ny, "note") end
+    if blink(tl.t) then
+      local pw = U.sayW(7, "PRESS ANY BUTTON")
+      local px = math.floor(159.5 - (pw - 1) / 2 + 0.5)
+      lg.setColor(64 / 255, 11 / 255, 6 / 255); lg.rectangle("fill", px, line, pw, 1); lg.setColor(1, 1, 1, 1)   -- (the gold line not between the words)
+      U.say(7, "cream", "PRESS ANY BUTTON", px, line - (th - 1) / 2, "press")
+    end
   end
 end
 
@@ -302,31 +324,64 @@ end
 -- SOUND: left / right turn the game's volume down or up (0 is off), A steps it up and wraps round to off
 F.pauseItems, F.confirmItems = { "GO ON", "SOUND", "QUIT" }, { "NO", "YES, QUIT" }
 F.PAUSE_SOUND, F.PAUSE_QUIT = 2, 3
+-- (ui/hud-v8) drawn to the owner's pause target: the smooth warm dim, the kit's gold panel, the PAUSED ribbon over
+-- its top edge, the level in the small font, three rows (the selected one gold with the paw coin over its left end),
+-- the A and B coins with their OK / BACK tabs across the bottom edge. Layout in game px; the card's top is P.Y.
+-- Offsets from the card's top (the ribbon's top). The card goes where it misses Pepper: centred, else at the top.
+F.P = { X = 75, W = 170, RIB = 0, PANEL = 10, SUB = 24, ROW0 = 35, ROW_H = 19, PITCH = 21, PAD = 15, H = 106,
+  BOX_H = 136, CUR_OUT = 6, LABEL_IN = 18, SEGS = 4 }
 function F.drawPause(pz, def, avoid)
-  U.dim(); shifted(F.placeY(82, 156, 60, 124, avoid) - 60, function() F.pauseCard(pz, def) end)
+  local P = F.P
+  local y = math.floor((240 - P.BOX_H) / 2)
+  local function miss(yy) local a = avoid; return not a or not (a[1] < P.X + P.W and a[3] > P.X and a[2] < yy + P.BOX_H and a[4] > yy) end
+  if not miss(y) and miss(2) then y = 2 end
+  U.dimWarm(); shifted(y, function() F.pauseCard(pz, def) end)
 end
 function F.pauseCard(pz, def)
   local Se = require("settings")
-  U.box(82, 60, 156, 124)
-  U.center("PAUSED", 160, 67, 2)
-  U.center(("LEVEL %d  %s"):format(def.number or 1, def.name or ""), 160, 85, 1, U.GOLD)
+  local P = F.P
+  local line = P.PANEL + P.H - 6                                  -- the frame's bottom gold line
+  local tabw = U.body("tab")
+  for _, cx in ipairs({ 131, 188 }) do U.put("tab", cx - (tabw - 1) / 2, line, "tab") end   -- (hanging behind the frame)
+  U.panel(P.X, P.PANEL, P.W, P.H)
+  U.ribbon("ribbon_pause", 159.5, P.RIB)
+  local tw = U.sayW(13, "PAUSED")
+  U.say(13, "ink", "PAUSED", math.floor(159.5 - (tw - 1) / 2 + 0.5), P.RIB + 2, "title")
   local items, sel = F.pauseItems, pz.sel
-  if pz.confirm then U.center("QUIT TO THE MENU?", 160, 104, 1); items, sel = F.confirmItems, pz.confirm end
+  local sub = ("LEVEL %d %s"):format(def.number or 1, (def.name or ""):upper())
+  if pz.confirm then sub, items, sel = "QUIT TO THE MENU?", F.confirmItems, pz.confirm end
+  local sw = U.sayW(7, sub)
+  U.say(7, "cream", sub, math.floor(159.5 - (sw - 1) / 2 + 0.5), P.SUB, "subtitle")
+  local rx = P.X + P.PAD
+  local rw = P.W - 2 * P.PAD
+  local th = U.sayH(13)
   for i, it in ipairs(items) do
-    local iy = (pz.confirm and 120 or 104) + (i - 1) * 19
+    local ry = P.ROW0 + (i - 1) * P.PITCH
     local on = sel == i
-    if on then lg.setColor(U.EDGE); lg.rectangle("fill", 88, iy - 3, 144, 17); lg.setColor(1, 1, 1, 1) end
-    if not pz.confirm and i == F.PAUSE_SOUND then
-      lg.setColor(U.SHADE); require("bigfont").print("SOUND", 97, iy + 1, 2)
-      lg.setColor(on and U.GOLD or U.WHITE); require("bigfont").print("SOUND", 96, iy, 2); lg.setColor(1, 1, 1, 1)
-      U.volumeBar(166, iy + 1, Se.volume, Se.MAX, 9)
-      if on then U.text("<", 160, iy + 2, U.GOLD); U.text(">", 219, iy + 2, U.GOLD) end
-    else
-      U.center(it, 160, iy, 2, on and U.GOLD or U.WHITE)
+    U.put(on and "row_on" or "row_off", rx, ry, "row")
+    local cy = ry + (P.ROW_H - 1) / 2
+    local ly = math.floor(cy - (th - 1) / 2 + 0.5)
+    if on then local _, ch = U.body("coin_paw"); U.put("coin_paw", rx - P.CUR_OUT, math.floor(cy - (ch - 1) / 2 + 0.5), "cursor") end
+    U.say(13, "cream", it, rx + P.LABEL_IN, ly, "label")
+    if not pz.confirm and i == F.PAUSE_SOUND then                -- the sound level: one segment a step, lit up to it
+      local segw, segh = U.body("seg_on")
+      local mw = (Se.MAX - 1) * P.SEGS + segw
+      local mx, my = rx + rw - 6 - mw, math.floor(cy - (segh - 1) / 2 + 0.5)
+      -- a dark trough under the meter (it reads on the gold row too): ink edge, the dark row's fill
+      lg.setColor(64 / 255, 11 / 255, 6 / 255); lg.rectangle("fill", mx - 2, my - 2, mw + 4, segh + 4)
+      lg.setColor(44 / 255, 22 / 255, 14 / 255); lg.rectangle("fill", mx - 1, my - 1, mw + 2, segh + 2); lg.setColor(1, 1, 1, 1)
+      for k = 1, Se.MAX do U.put(k <= Se.volume and "seg_on" or "seg_off", mx + (k - 1) * P.SEGS, my, "seg") end
+      U.logBox("meter", mx, my, mx + mw - 1, my + segh - 1)
     end
   end
-  Talk.glyph("a", 108, 172, "small"); U.text("OK", 118, 169)
-  Talk.glyph("b", 166, 172, "small"); U.text("BACK", 176, 169)
+  -- A and B: coins centred on the frame's bottom gold line, their tabs hanging under them with OK / BACK
+  local cw, ch = U.body("btn_a")
+  for k, b in ipairs({ { "btn_a", "OK" }, { "btn_b", "BACK" } }) do
+    local cx = k == 1 and 131 or 188
+    U.put(b[1], cx - (cw - 1) / 2, line - (ch - 1) / 2, "button")
+    local hw = U.sayW(7, b[2])
+    U.say(7, "cream", b[2], math.floor(cx - (hw - 1) / 2 + 0.5), line + (ch - 1) / 2 + 3, "hint")
+  end
 end
 
 -- after the last level: e = { score, best, newBest, lines (the last level's outro, optional) }

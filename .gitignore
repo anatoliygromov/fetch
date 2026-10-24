@@ -5,3 +5,5 @@ __pycache__/
 .DS_Store
 # made by tools/check_flow.sh
 flow_screens.png
+# UI working cards and frames (tools/ui_frames.py, ui_card.py, layout_qa8.py)
+out_ui/

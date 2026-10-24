@@ -1,0 +1,30 @@
+PASS top row centre lines [14.0, 14.0, 14.0, 14.0, 14.0]
+PASS left margin 4
+PASS right margin 4
+PASS top margin 4
+PASS tallest top item at the margin: clock y0 4
+PASS clock -> time gap 3
+PASS bone -> bones gap 3
+PASS head -> lives gap 3
+PASS coin -> score gap 3
+PASS equal gaps between the top groups: 57 / 56
+PASS bottom row centre lines [222.5, 223.0, 223.0, 223.0]
+PASS bottom margin 4
+PASS bottom row side margins
+PASS pause: rows share x and width
+PASS pause: even row pitch {28}
+PASS pause: labels share one left edge
+PASS pause: labels centred in their rows
+PASS pause: panel centred
+PASS pause: row side padding 14/14
+PASS pause: no overlapping text / icons []
+PASS select: rows share x and width
+PASS select: even row pitch {28}
+PASS select: labels share one left edge
+PASS select: labels centred in their rows
+PASS select: panel centred
+PASS select: row side padding 14/14
+PASS select: no overlapping text / icons []
+PASS pause: cursor to label gap 3
+PASS select: cursor to label gap 3
+ALL PASS
