@@ -107,11 +107,13 @@ def main():
     lua.append('  bird = { x = %d, y = %d, w = %d, h = %d },' % (bx0, by0, fw, fh))
     # ---- the logo layer and its shine (the fill brightened), the two tagline plates
     lx0, ly0, lx1, ly1 = LG.BOX
-    reg = logo_lay[ly0:ly1, lx0:lx1]
-    save(reg[..., :3], 'logo.png', reg[..., 3])
-    fill = (reg[..., 3] > 0) & (reg[..., 0] > 150)
-    hi = reg[..., :3].astype(float) + (np.array([255, 248, 214]) - reg[..., :3]) * 0.6
-    save(hi, 'logo_hi.png', fill * 255)
+    for mode in ('bands', 'gradient', 'steps6'):                     # three fills of the same letters (title.lua T.LOGO)
+        lay_m = logo_lay if mode == 'bands' else LG.build(still, mode)[0]
+        reg = lay_m[ly0:ly1, lx0:lx1]
+        save(reg[..., :3], 'logo_%s.png' % mode, reg[..., 3])
+        fill = (reg[..., 3] > 0) & (reg[..., 0] > 150)
+        hi = reg[..., :3].astype(float) + (np.array([255, 248, 214]) - reg[..., :3]) * 0.6
+        save(hi, 'logo_hi_%s.png' % mode, fill * 255)
     lua.append('  logo = { x = %d, y = %d, w = %d, h = %d },' % (lx0, ly0, lx1 - lx0, ly1 - ly0))
     for name, text in (('caps', 'THE CITY DOG ADVENTURER'), ('lower', 'The City Dog Adventurer')):
         p, info = LG.plate(text); save(p[..., :3], 'tagline_%s.png' % name, p[..., 3])

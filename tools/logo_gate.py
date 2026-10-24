@@ -21,6 +21,16 @@ def z(im, k): return im.resize((im.width * k, im.height * k), Image.NEAREST)
 blob = subprocess.run(['git', 'show', '6bf9c47:riverwalk/art/title/base.png'], cwd=ROOT, capture_output=True).stdout
 tmp = os.path.join(OUT, '_old.png'); open(tmp, 'wb').write(blob); old = Image.open(tmp).convert('RGB'); os.remove(tmp)
 caps = Image.open(f'{D}/title_idle.png').convert('RGB'); low = Image.open(f'{D}/title_lower_idle.png').convert('RGB')
+fills = [('original', old), ('bands', Image.open(f'{D}/title_logo_bands.png').convert('RGB')), ('gradient', caps),
+         ('steps6', Image.open(f'{D}/title_logo_steps6.png').convert('RGB'))]
+lb4 = (118, 8, 304, 86); w4, h4 = lb4[2] - lb4[0], lb4[3] - lb4[1]
+o = Image.new('RGB', ((w4 * 4 + 8) * 4, h4 * 4), (255, 0, 255))
+for i, (_, im) in enumerate(fills): o.paste(z(im.crop(lb4), 4), (i * (w4 * 4 + 8), 0))
+o.save(f'{OUT}/logos_4x.png')
+for n, b in (('a', (126, 18, 210, 82)), ('b', (204, 14, 300, 82))):
+    w8, h8 = b[2] - b[0], b[3] - b[1]; o = Image.new('RGB', ((w8 * 8 + 8) * 2, (h8 * 8 + 8) * 2), (255, 0, 255))
+    for i, (_, im) in enumerate(fills): o.paste(z(im.crop(b), 8), ((i % 2) * (w8 * 8 + 8), (i // 2) * (h8 * 8 + 8)))
+    o.save(f'{OUT}/logos_8x_{n}.png')
 box = (118, 8, 304, 100); w, h = box[2] - box[0], box[3] - box[1]
 o = Image.new('RGB', (w * 4, (h * 4 + 8) * 3), (255, 0, 255))
 for i, im in enumerate((old, caps, low)): o.paste(z(im.crop(box), 4), (0, i * (h * 4 + 8)))
@@ -33,21 +43,23 @@ o = Image.new('RGB', (W8 * 8, (H8 * 8 + 8) * 3), (255, 0, 255))
 for i, im in enumerate((old, caps, low)): o.paste(z(im.crop((146, 74, 146 + W8, 74 + H8)) if i == 0 else im.crop(pb), 8), (0, i * (H8 * 8 + 8)))
 o.save(f'{OUT}/tagline_8x.png')
 # checks on the layers
-lay = np.array(Image.open(f'{ROOT}/riverwalk/art/title/logo.png').convert('RGBA'))
-op = lay[..., 3] > 0
-cols = {tuple(c) for c in lay[op][:, :3]}
-check(cols <= {LG.NAVY, LG.HI, LG.YEL, LG.GLD, LG.ORA, LG.LIP}, f'logo: only the navy and the five warm colours ({len(cols)} colours)')
-k = lay[..., 0].astype(int) * 65536 + lay[..., 1].astype(int) * 256 + lay[..., 2]; k[~op] = -1
-p = np.pad(k, 1, constant_values=-2); c = p[1:-1, 1:-1]
-same = (p[:-2, 1:-1] == c) | (p[2:, 1:-1] == c) | (p[1:-1, :-2] == c) | (p[1:-1, 2:] == c)
-lone = op & ~same
-# a highlight or lip pixel is a 1-row line by design: lone only if it has no same-colour neighbour in 8 directions
-p8 = [p[1 + dy:p.shape[0] - 1 + dy, 1 + dx:p.shape[1] - 1 + dx] for dy in (-1, 0, 1) for dx in (-1, 0, 1) if dy or dx]
-same8 = np.zeros_like(same)
-for q in p8: same8 |= q == c
-check((op & ~same8).sum() == 0, f'logo: no lone pixels (no neighbour of its colour in 8 directions): {(op & ~same8).sum()}')
-pe = np.pad(op, 1); edge = op & ~(pe[:-2, 1:-1] & pe[2:, 1:-1] & pe[1:-1, :-2] & pe[1:-1, 2:])
-check({tuple(c) for c in lay[edge][:, :3]} <= {LG.NAVY}, 'logo: its edge is the navy outline all round')
+for mode in ('bands', 'gradient', 'steps6'):
+  lay = np.array(Image.open(f'{ROOT}/riverwalk/art/title/logo_{mode}.png').convert('RGBA'))
+  op = lay[..., 3] > 0
+  cols = {tuple(c) for c in lay[op][:, :3]}
+  allowed = {LG.NAVY, LG.HI, LG.YEL, LG.GLD, LG.ORA, LG.LIP} if mode == 'bands' else {LG.NAVY, LG.HI6, *LG.RAMP6}
+  check(cols <= allowed, f'logo {mode}: only the navy and its ramp ({len(cols)} colours)')
+  k = lay[..., 0].astype(int) * 65536 + lay[..., 1].astype(int) * 256 + lay[..., 2]; k[~op] = -1
+  p = np.pad(k, 1, constant_values=-2); c = p[1:-1, 1:-1]
+  same = (p[:-2, 1:-1] == c) | (p[2:, 1:-1] == c) | (p[1:-1, :-2] == c) | (p[1:-1, 2:] == c)
+  lone = op & ~same
+  # a highlight or lip pixel is a 1-row line by design: lone only if it has no same-colour neighbour in 8 directions
+  p8 = [p[1 + dy:p.shape[0] - 1 + dy, 1 + dx:p.shape[1] - 1 + dx] for dy in (-1, 0, 1) for dx in (-1, 0, 1) if dy or dx]
+  same8 = np.zeros_like(same)
+  for q in p8: same8 |= q == c
+  check((op & ~same8).sum() == 0, f'logo {mode}: no lone pixels (no neighbour of its colour in 8 directions): {(op & ~same8).sum()}')
+  pe = np.pad(op, 1); edge = op & ~(pe[:-2, 1:-1] & pe[2:, 1:-1] & pe[1:-1, :-2] & pe[1:-1, 2:])
+  check({tuple(c) for c in lay[edge][:, :3]} <= {LG.NAVY}, f'logo {mode}: its edge is the navy outline all round')
 # the paw: mirror-symmetric about its own centre (the fill colours)
 x0, y0 = LG.BOX[0], LG.BOX[1]
 fill = op & (lay[..., 0] > 150)

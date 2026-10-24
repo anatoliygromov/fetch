@@ -30,6 +30,10 @@ return function(api)
     shot("title_lower_idle", function() Title.draw(0.9, nil, false) end)
     shot("title_lower_press", function() Title.draw(1.3, nil, false) end)
     Title.TAGLINE = "caps"
+    for _, m in ipairs({ "bands", "steps6" }) do Title.LOGO = m; shot("title_logo_" .. m, function() Title.draw(0.9, nil, false) end) end
+    Title.LOGO = "gradient"; Title.TAGLINE = "lower"
+    shot("title_gradient_lower", function() Title.draw(1.3, nil, false) end)
+    Title.TAGLINE = "caps"
     for _, dev in ipairs({ "pad", "key" }) do
       I.last = dev
       for i = 1, #F.menu.items do F.menu.sel, F.menu.from = i, i; shot(("menu_%d_%s"):format(i, dev), function() F.drawMenu(3.0) end) end
