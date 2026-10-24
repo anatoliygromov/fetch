@@ -2,6 +2,11 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## The sky without dotted rows (24 Oct, owner)
+The owner asked what the dotted bar across the sky was: the 2 x 2 checker rows joining two sky bands. Each band is now
+split into 4 flat steps towards the next band's colour (look.lua, Look.SKY_STEPS), every level and the tall skies; no
+dither.
+
 ## Speech bubbles (24 Oct, owner)
 The owner: the talk panel looked like a painting frame; speech bubbles with little white space and smaller letters.
 Talk lines and the story card are now comic speech bubbles: Mia (or Pepper) stands in a bottom corner, her shoulders

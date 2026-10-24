@@ -104,9 +104,20 @@ end
 function Look.off() lg.setShader() end
 function Look.toggle() Look.on = not Look.on; print("[look] " .. (Look.on and "lion king" or "as before")); io.stdout:flush() end
 
--- 3 the sky: bands from the script's top colour to its horizon colour. Between two bands, 3 rows of 2 x 2 ordered
--- dither (25 %, 50 %, 75 %). Painted once per level, screen-fixed.
-local BAYER = { [0] = { [0] = 0, 2 }, { [0] = 3, 1 } }               -- 2 x 2 order: 0 .. 3
+-- 3 the sky: bands from the script's top colour to its horizon colour, each split into flat steps (no dither since
+-- 24 Oct). Painted once per level, screen-fixed.
+-- (owner 24 Oct: the dotted rows between sky bands read as stripes) each band is split into Look.SKY_STEPS flat
+-- sub-bands stepping evenly towards the next band's colour: a gradient in small flat steps, no dither
+Look.SKY_STEPS = 4
+local function skyRow(BANDS, cols, y)
+  local i = 1
+  while BANDS[i + 1] and y >= BANDS[i + 1][1] do i = i + 1 end
+  if not BANDS[i + 1] then return cols[i] end
+  local y0, y1 = BANDS[i][1], BANDS[i + 1][1]
+  local k = math.floor((y - y0) * Look.SKY_STEPS / (y1 - y0)) / Look.SKY_STEPS
+  local a, b = cols[i], cols[i + 1]
+  return { a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k, a[3] + (b[3] - a[3]) * k }
+end
 local skies = {}
 local function sky()
   if skies[Look.key] then return skies[Look.key] end
@@ -115,15 +126,8 @@ local function sky()
   local cols = {}
   for i, b in ipairs(BANDS) do cols[i] = hex(b[2]) end
   for y = 0, 239 do
-    local i = 1
-    while BANDS[i + 1] and y >= BANDS[i + 1][1] do i = i + 1 end
-    local nxt = BANDS[i + 1] and (BANDS[i + 1][1] - y) or 99       -- rows until the next band starts
-    local lvl = (nxt <= 3) and (4 - nxt) or 0                       -- 1, 2, 3 = 25, 50, 75 % of the next colour
-    for x = 0, 319 do
-      local c = cols[i]
-      if lvl > 0 and BAYER[y % 2][x % 2] < lvl then c = cols[i + 1] end
-      d:setPixel(x, y, c[1], c[2], c[3], 1)
-    end
+    local c = skyRow(BANDS, cols, y)
+    for x = 0, 319 do d:setPixel(x, y, c[1], c[2], c[3], 1) end
   end
   local im = lg.newImage(d); im:setFilter("nearest", "nearest")
   skies[Look.key] = im
@@ -158,15 +162,8 @@ function Look.skyTall()
     local cols = {}
     for i, b in ipairs(BANDS) do cols[i] = hex(b[2]) end
     for y = 0, H - 1 do
-      local i = 1
-      while BANDS[i + 1] and y >= BANDS[i + 1][1] do i = i + 1 end
-      local nxt = BANDS[i + 1] and (BANDS[i + 1][1] - y) or 99
-      local lvl = (nxt <= 3) and (4 - nxt) or 0
-      for x = 0, 319 do
-        local c = cols[i]
-        if lvl > 0 and BAYER[y % 2][x % 2] < lvl then c = cols[i + 1] end
-        d:setPixel(x, y, c[1], c[2], c[3], 1)
-      end
+      local c = skyRow(BANDS, cols, y)
+      for x = 0, 319 do d:setPixel(x, y, c[1], c[2], c[3], 1) end
     end
     local im = lg.newImage(d); im:setFilter("nearest", "nearest")
     tallSkies[key] = im
