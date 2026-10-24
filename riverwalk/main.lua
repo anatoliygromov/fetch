@@ -13,7 +13,7 @@
 --   Menus: up / down move, A / Space / Enter choose, B / Esc back. In the pause: Start / Enter go on; QUIT asks
 --   first (B / Esc only ever go back). On the title screen Esc quits the game.
 --
--- The flow (flow.lua): title -> menu (START GAME or LEVEL SELECT) -> each level: intro card, play, tally ->
+-- The flow (flow.lua): title -> menu (PLAY, LEVELS, OPTIONS) -> each level: intro card, play, tally ->
 -- story card -> the next level ... -> the ending -> title. GAME OVER -> TRY AGAIN (the same level) or the menu.
 -- Hints and story lines are said in the talk panel (talk.lua); the tally shows times and medals (flow.lua).
 -- A level cleared with a golden bone found opens FETCH FRENZY (bonus.lua) between the tally and the story card.
@@ -88,15 +88,16 @@ function love.load(args)
   local lv, test = argLevel(args), nil
   for _, a in ipairs(args or {}) do if a == "--bonus" then bonusArg = true end end
   for _, a in ipairs(args or {}) do
-    if a == "--test" or a == "--auto" or a == "--physics" or a == "--qa" or a == "--flowtest" or a == "--lookshots" or a == "--uishots" then test = a end
+    if a == "--test" or a == "--auto" or a == "--physics" or a == "--qa" or a == "--flowtest" or a == "--lookshots" or a == "--uishots" or a == "--titleshots" then test = a end
   end
   Se.save = not test
   for _, a in ipairs(args or {}) do if a == "--dev" then devMode = true end end
   devMode = devMode or test ~= nil
   Se.load(); musicOn = Se.music
+  I.startDevice()
   S.load(); S.music(musicOn)
   Title.load()
-  if test and test ~= "--flowtest" then                           -- the checks play one level alone, from its intro
+  if test and test ~= "--flowtest" and test ~= "--titleshots" then                           -- the checks play one level alone, from its intro
     Flow.save = false
     setLevel(lv or "riverwalk")
     if def.title then love.window.setTitle(def.title) end
@@ -117,7 +118,8 @@ function love.load(args)
     elseif a == "--test" or a == "--auto" or a == "--physics" then require(levelName == "riverwalk" and "tests" or ("tests_" .. levelName))(a, api) end
     if a == "--noextras" then Ex.enabled = false end
     if a == "--classic" then Look.on = false end                                        -- start with the look as before
-    if a == "--uishots" then require("tests_ui")(api) end                                        -- the UI's frames (ui/hud-v8)
+    if a == "--uishots" then require("tests_ui")(api) end
+    if a == "--titleshots" then require("tests_titleui")(api) end                               -- the title and menus' frames (pilot 2)                                        -- the UI's frames (ui/hud-v8)
     if a == "--lookshots" then require("tests_look")(api) end                                    -- start with the extras off
     if a == "--qa" then require("qa")({ stage = function() return stage end }) end
     if a == "--flowtest" then require("tests_flow")(api) end
@@ -209,13 +211,20 @@ local function anyKey()
   elseif state == "ending" and t > Flow.ENDING_WAIT then S.play("select"); toTitle() end
 end
 -- the main menu and the level select
+local MENUS = { menu = true, select = true, options = true, controls = true }
 local function menuAction(a)
   if not a then return end
   if state == "menu" then
     local r = Flow.menuInput(a)
-    if r == "start" then startRun(1)
+    if r == "play" then startRun(Flow.furthest())                  -- PLAY: on from the furthest open level
     elseif r == "select" then state = "select"; Flow.pick.sel = 1
-    elseif r == "back" then toTitle(); t = 0.5 end                 -- back to PRESS ANY KEY (no fade-in)
+    elseif r == "options" then state = "options"; Flow.opts.sel, Flow.opts.from = 1, 1
+    elseif r == "back" then toTitle(); t = 0.5 end                 -- back to PRESS START (no fade-in)
+  elseif state == "options" then
+    local r = Flow.optionsInput(a)
+    if r == "back" then state = "menu" elseif r == "controls" then state = "controls" end
+  elseif state == "controls" then
+    if Flow.controlsInput(a) == "back" then state = "options" end
   else
     local r, i = Flow.selectInput(a)
     if r == "play" then startRun(i) elseif r == "back" then state = "menu" end
@@ -233,6 +242,7 @@ local function logInput(kind, what) print(("[input] %s %s (%s)"):format(kind, to
 function love.keypressed(k, sc)
   logInput("key", k .. (sc and sc ~= k and (" sc=" .. sc) or ""))
   if volumeKey(k) then return end
+  I.setLast("key")
   if k == "f" then love.window.setFullscreen(not love.window.getFullscreen()); return end
   if k == "m" then musicOn = not musicOn; Se.setMusic(musicOn); S.music(musicOn and state ~= "pause"); return end
   if k == "g" then debugView = not debugView; return end
@@ -241,7 +251,7 @@ function love.keypressed(k, sc)
   if k == "l" then Look.toggle(); return end                     -- the Lion King look off / on (look.lua)
   if state == "title" and k == "escape" then love.event.quit(); return end
   if leaveTitle() then return end
-  if state == "menu" or state == "select" then menuAction(Flow.action(k)); return end
+  if MENUS[state] then menuAction(Flow.action(k)); return end
   if state == "bonus" then bonusKey(I.keyName(k)); return end
   if tuning and state == "play" then
     local n = tonumber(k) or tonumber((k:gsub("kp", "")))
@@ -261,11 +271,11 @@ function love.keypressed(k, sc)
 end
 function love.gamepadpressed(j, b)
   logInput("pad", b)
-  I.pad = j
+  I.pad = j; I.setLast("pad")
   if b == "leftshoulder" or b == "rightshoulder" then return end    -- L1 / R1: sniff (held; night.lua reads them)
   if leaveTitle() then return end
   if b == "back" then if devMode then debugView = not debugView end; return end
-  if state == "menu" or state == "select" then menuAction(Flow.action(nil, b)); return end
+  if MENUS[state] then menuAction(Flow.action(nil, b)); return end
   if state == "bonus" then bonusKey(I.padName(b)); return end
   if b == "start" and (state == "play" or state == "pause") then
     if state == "play" then state = "pause"; S.music(false) else resume() end
@@ -283,14 +293,18 @@ local stickX = 0
 function love.gamepadaxis(j, axis, v)
   if axis == "leftx" then                                       -- left / right: the pause's SOUND row
     local d = v > 0.6 and 1 or (v < -0.6 and -1 or (math.abs(v) < 0.3 and 0 or stickX))
-    if d ~= stickX then stickX = d; if d ~= 0 and state == "pause" then pauseAction(d < 0 and "left" or "right") end end
+    if d ~= stickX then stickX = d; if d ~= 0 then
+      I.setLast("pad")
+      if state == "pause" then pauseAction(d < 0 and "left" or "right") elseif state == "options" then menuAction(d < 0 and "left" or "right") end
+    end end
     return
   end
   if axis ~= "lefty" then return end
   local d = v > 0.6 and 1 or (v < -0.6 and -1 or (math.abs(v) < 0.3 and 0 or stickY))
   if d ~= stickY then stickY = d; if d ~= 0 then
     local a = d < 0 and "up" or "down"
-    if state == "menu" or state == "select" then menuAction(a) elseif state == "pause" then pauseAction(a) elseif state == "over" then overAction(a) end
+    I.setLast("pad")
+    if MENUS[state] then menuAction(a) elseif state == "pause" then pauseAction(a) elseif state == "over" then overAction(a) end
   end end
 end
 
@@ -377,6 +391,7 @@ function love.draw()
   love.graphics.setCanvas(canvas); love.graphics.clear(0, 0, 0)
   local screen = (state == "title" and function() Title.draw(t, titleLeaving) end)
     or (state == "menu" and function() Flow.drawMenu(t) end) or (state == "select" and function() Flow.drawSelect(t) end)
+    or (state == "options" and function() Flow.drawOptions(t) end) or (state == "controls" and function() Flow.drawControls(t) end)
     or (state == "ending" and function() Flow.drawEnding(ending, t) end)
     or (state == "bonus" and function() bonus:draw() end)
   if screen then                                                  -- the screens drawn without a level behind them

@@ -1,3 +1,5 @@
+# SUPERSEDED (24 Oct): the title is built by art/source/title/tools/build_title.py (native grid, the pant and blink
+# from the owner's videos, PRESS START drawn by the game). Kept for its history; running it would overwrite the new layers.
 # Builds the animated title screen from the title painting (source_title/title_original.png).
 #   1. Down to the game's 320x240: each game pixel takes the median colour of the middle half of its cell
 #      (the painting is pixel art at about 7.5 source px per game px, but not on an exact grid).

@@ -2,7 +2,8 @@
 --   The run:      the levels of levels.lua in order, from the first one (START GAME) or the one picked in the level
 --                 select, to the end. One score for the whole run, lives carry from level to level, hearts refill
 --                 and the timer starts again in every level. A level whose file is missing is skipped.
---   Main menu:    START GAME, LEVEL SELECT, over the title picture (dimmed, the logo stays bright).
+--   Main menu:    PLAY (on from the furthest open level), LEVELS (the level select), OPTIONS (SOUND, HARD MODE,
+--                 CONTROLS), outlined text over the title picture (docs/ui_design.md, 24 Oct).
 --   Level select: every level of levels.lua. Level 1 is always open; a level opens when the one before it is
 --                 cleared. Locked ones are dimmed with a padlock, a missing file says COMING SOON.
 --   Saved:        progress.txt (the open levels, one name per line), best_run.txt (the best run score), the
@@ -129,18 +130,48 @@ local KEYS = { up = "up", w = "up", down = "down", s = "down", left = "left", a 
 local PADS = { dpup = "up", dpdown = "down", dpleft = "left", dpright = "right", a = "ok", start = "ok", b = "back" }
 function F.action(key, pad) if key then return KEYS[key] end; return PADS[pad] end
 
--- the main menu and the level select: the cursor moves; returns what was chosen
-F.menu = { sel = 1, items = { "START GAME", "LEVEL SELECT", "HARD MODE" } }
+-- the main menu (docs/ui_design.md screen 2): PLAY, LEVELS, OPTIONS. PLAY goes on from the furthest level that is
+-- open (its file there); LEVELS is the level select; OPTIONS the options panel. The cursor moves; returns the choice.
+F.menu = { sel = 1, items = { "PLAY", "LEVELS", "OPTIONS" }, moved = -1, from = 1 }
 F.pick = { sel = 1 }
+local function move(m, a, n)
+  m.from, m.moved = m.sel, love.timer.getTime()
+  m.sel = (m.sel + (a == "up" and -2 or 0)) % n + 1; S.play("tick")
+end
 function F.menuInput(a)
   local m = F.menu
-  if a == "up" or a == "down" then m.sel = (m.sel + (a == "up" and -2 or 0)) % #m.items + 1; S.play("tick")
+  if a == "up" or a == "down" then move(m, a, #m.items)
   elseif a == "ok" then
     S.play("select")
-    if m.sel == 3 then F.setHard(not F.hard); return "hard" end
-    return m.sel == 1 and "start" or "select"
+    return ({ "play", "select", "options" })[m.sel]
   elseif a == "back" then return "back" end
 end
+-- the furthest level open with its file there (PLAY starts the run there)
+function F.furthest()
+  local best = 1
+  for i, l in ipairs(F.levels) do if l.exists and F.isOpen(i) then best = i end end
+  return best
+end
+-- OPTIONS (screen 3): SOUND (left / right turn it down or up; A steps it up and wraps round to off), HARD MODE
+-- (A, left or right switch it), CONTROLS (A opens the controls page). B goes back.
+F.opts = { sel = 1, items = { "SOUND", "HARD MODE", "CONTROLS" }, moved = -1, from = 1 }
+F.OPT_SOUND, F.OPT_HARD, F.OPT_CONTROLS = 1, 2, 3
+function F.optionsInput(a)
+  local o, Se = F.opts, require("settings")
+  if a == "up" or a == "down" then move(o, a, #o.items)
+  elseif a == "back" then S.play("tick"); return "back"
+  elseif o.sel == F.OPT_SOUND and (a == "left" or a == "right" or a == "ok") then
+    if a == "ok" then if Se.volume >= Se.MAX then Se.step(-Se.MAX) else Se.step(1) end
+    else Se.step(a == "right" and 1 or -1) end
+    S.play("tick")
+  elseif o.sel == F.OPT_HARD and (a == "left" or a == "right" or a == "ok") then
+    local on = (a == "ok" and not F.hard) or a == "right"
+    if on ~= F.hard then F.setHard(on); S.play("select") else S.play("push") end
+    return "hard"
+  elseif o.sel == F.OPT_CONTROLS and a == "ok" then S.play("select"); return "controls" end
+end
+-- the controls page: B (or A) goes back
+function F.controlsInput(a) if a == "back" or a == "ok" then S.play("tick"); return "back" end end
 function F.selectInput(a)
   local p = F.pick
   if a == "up" or a == "down" then p.sel = (p.sel + (a == "up" and -2 or 0)) % #F.levels + 1; S.play("tick")
@@ -154,22 +185,102 @@ end
 local function backdrop(t) Title.draw(t, nil, true); U.dim() end
 local function blink(t) return (t % 1.1) < 0.75 end
 
+-- the cursor's place: eased from the row it left to the new one (6 frames, ease out), with a 1 px bob
+local function cursorY(m, y_of)
+  local u = math.min(1, (love.timer.getTime() - (m.moved or -1)) / 0.1)
+  u = 1 - (1 - u) * (1 - u)
+  return math.floor(y_of(m.from) + (y_of(m.sel) - y_of(m.from)) * u + 0.5)
+end
+local function bob() return (math.floor(love.timer.getTime() * 3) % 2 == 0) and 0 or 1 end
+
+-- the main menu: the title picture as it is (no dim, no box), the three rows as outlined 13 px text centred under the
+-- logo on Title.CX, the selected one gold with the paw coin before it; the controls strip at the bottom
+F.M = { ROW0 = 132, PITCH = 20, CUR_GAP = 4 }
 function F.drawMenu(t)
-  backdrop(t)
-  Title.drawLogo(t)
-  local cx = 213                                                   -- under the logo and the PRESS ANY KEY box
-  U.box(cx - 80, 98, 160, 68)
+  Title.draw(t, nil, true)
+  local th = U.sayH(13)
+  local function rowY(i) return F.M.ROW0 + (i - 1) * F.M.PITCH end
   for i, it in ipairs(F.menu.items) do
-    local y = 105 + (i - 1) * 20
     local on = F.menu.sel == i
-    if on then lg.setColor(U.EDGE); lg.rectangle("fill", cx - 76, y - 3, 152, 19); lg.setColor(1, 1, 1, 1) end
-    if i == 3 then                                                 -- HARD MODE with its ON / OFF
-      U.center(it, cx - 18, y + 1, 2, on and U.GOLD or U.WHITE)
-      if F.hard then U.hardTag(cx + 44, y + 3) else U.center("OFF", cx + 58, y + 4, 1, U.RIM) end
-    else U.center(it, cx, y + 1, 2, on and U.GOLD or U.WHITE) end
+    local w = U.sayW(13, it)
+    local x = math.floor(Title.CX - (w - 1) / 2 + 0.5)
+    U.say(13, on and "gold" or "cream", it, x, rowY(i), "label")
+    if on then
+      local cw, ch = U.body("coin_paw")
+      local cy = cursorY(F.menu, rowY) + (th - 1) / 2
+      U.put("coin_paw", x - F.M.CUR_GAP - cw, math.floor(cy - (ch - 1) / 2 + 0.5) - bob(), "cursor")
+    end
   end
-  if F.bestRun > 0 then U.center(("BEST RUN %06d"):format(F.bestRun), cx, 174, 1) end
-  Title.drawBanner("A OK    B BACK")
+  U.strip({ { "ok", "OK" }, { "back", "BACK" } })
+end
+
+-- OPTIONS: the title picture under the smooth warm dim, the kit's gold panel with the OPTIONS ribbon, three rows
+-- (label left, its control right: the 9-segment sound meter, the HARD MODE switch), the strip at the bottom
+F.O = { X = 60, W = 200, PANEL = 66, H = 104, RIB = 56, ROW0 = 88, PITCH = 22, LABEL_IN = 36, CUR_IN = 10, RIGHT_IN = 16 }
+local function backdropWarm(t) Title.draw(t, nil, true); U.dimWarm() end
+function F.drawOptions(t)
+  local Se = require("settings")
+  local O = F.O
+  backdropWarm(t)
+  U.panel(O.X, O.PANEL, O.W, O.H)
+  U.ribbon("ribbon_menu", 159.5, O.RIB)
+  local tw = U.sayW(13, "OPTIONS")
+  U.say(13, "ink", "OPTIONS", math.floor(159.5 - (tw - 1) / 2 + 0.5), O.RIB + 2, "title")
+  local th = U.sayH(13)
+  local function rowY(i) return O.ROW0 + (i - 1) * O.PITCH end
+  local xr = O.X + O.W - 1 - O.RIGHT_IN                            -- the controls' right edge
+  for i, it in ipairs(F.opts.items) do
+    local on = F.opts.sel == i
+    local y = rowY(i); local cy = y + (th - 1) / 2
+    U.say(13, on and "gold" or "cream", it, O.X + O.LABEL_IN, y, "label")
+    if i == F.OPT_SOUND then                                       -- one segment a step, lit up to the level
+      local segw, segh = U.body("seg_on")
+      local mw = (Se.MAX - 1) * 4 + segw
+      local mx, my = xr - mw + 1, math.floor(cy - (segh - 1) / 2 + 0.5)
+      for k = 1, Se.MAX do U.put(k <= Se.volume and "seg_on" or "seg_off", mx + (k - 1) * 4, my, "seg") end
+      U.logBox("meter", mx, my, mx + mw - 1, my + segh - 1)
+    elseif i == F.OPT_HARD then
+      local n = F.hard and "tog_on" or "tog_off"
+      local w, h = U.body(n)
+      U.put(n, xr - w + 1, math.floor(cy - (h - 1) / 2 + 0.5), "toggle")
+    end
+  end
+  local cw, ch = U.body("coin_paw")
+  local cy = cursorY(F.opts, rowY) + (th - 1) / 2
+  U.put("coin_paw", O.X + O.CUR_IN, math.floor(cy - (ch - 1) / 2 + 0.5) - bob(), "cursor")
+  local items = { { "ok", "OK" }, { "back", "BACK" } }
+  if F.opts.sel == F.OPT_SOUND then items = { { "lr", "CHANGE" }, { "back", "BACK" } }
+  elseif F.opts.sel == F.OPT_HARD then items = { { "ok", F.hard and "OFF" or "ON" }, { "back", "BACK" } } end
+  U.strip(items)
+end
+
+-- the controls page (screen 4): the handheld drawn on the left, a row per control on the right (8 rows, 17 px apart): the button as it is
+-- on the handheld, its action (13 px, one or two words), the keyboard key(s)
+F.C = { X = 10, W = 300, PANEL = 36, H = 172, RIB = 26, HX = 30, ROW0 = 56, PITCH = 17, GX0 = 116, GX1 = 160, LX = 166, KR = 293 }
+F.CONTROLS = { { "dpad", "MOVE" }, { "a", "JUMP" }, { "down", "CRAWL" }, { "b", "SNEAK" }, { "x", "PICK UP" }, { "y", "BARK" }, { "lrsh", "SNIFF" }, { "start", "PAUSE" } }
+function F.drawControls(t)
+  local C = F.C
+  backdropWarm(t)
+  U.panel(C.X, C.PANEL, C.W, C.H)
+  U.ribbon("ribbon_menu", 159.5, C.RIB)
+  local tw = U.sayW(13, "CONTROLS")
+  U.say(13, "ink", "CONTROLS", math.floor(159.5 - (tw - 1) / 2 + 0.5), C.RIB + 2, "title")
+  local hw, hh = U.body("handheld")
+  local rows = #F.CONTROLS
+  local th = U.sayH(13)
+  local blockH = (rows - 1) * C.PITCH + 13
+  local midY = C.ROW0 + (blockH - 1) / 2
+  U.put("handheld", C.HX, math.floor(midY - (hh - 1) / 2 + 0.5), "handheld")
+  for i, r in ipairs(F.CONTROLS) do
+    local y = C.ROW0 + (i - 1) * C.PITCH                          -- the 13 px row's top
+    local cy = y + 6
+    local g = U.GLYPHS.pad[r[1]]                                   -- centred in the glyph column
+    U.glyph(g, math.floor((C.GX0 + C.GX1) / 2 - (U.glyphW(g) - 1) / 2 + 0.5), y, "glyph")
+    U.say(13, "cream", r[2], C.LX, math.floor(cy - (th - 1) / 2 + 0.5), "label")
+    local keys = U.GLYPHS.key[r[1]]
+    U.glyph(keys, C.KR - U.glyphW(keys) + 1, y, "key")
+  end
+  U.strip({ { "back", "BACK" } })
 end
 
 function F.drawSelect(t)

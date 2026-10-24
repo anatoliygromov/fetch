@@ -162,6 +162,37 @@ end
 U.DIM = { 40 / 255, 20 / 255, 12 / 255, 0.75 }
 function U.dimWarm() lg.setColor(U.DIM); lg.rectangle("fill", 0, 0, 320, 240); lg.setColor(1, 1, 1, 1) end
 
+-- ---- the controls strip (docs/ui_design.md, 24 Oct): one component, always in the same place at the bottom of every
+-- menu screen: `(A) OK   (B) BACK`, the labels per screen. The glyphs follow the device used last (input.lua I.last):
+-- a gamepad (the RG35XX) shows its round coins, a keyboard its keycaps. 13 px glyphs, 7 px cream labels on the
+-- glyph's centre line, 3 px from glyph to label, 10 px between items; the group centred on the screen, its bodies'
+-- bottom at the margin (y 235).
+U.GLYPHS = { pad = { ok = { "g_a" }, back = { "g_b" }, lr = { "g_lr" }, a = { "g_a" }, b = { "g_b" }, x = { "g_x" }, y = { "g_y" },
+    dpad = { "g_lr" }, down = { "g_down" }, lrsh = { "g_l", "g_r" }, start = { "g_start" } },
+  key = { ok = { "k_space" }, back = { "k_esc" }, lr = { "k_left", "k_right" }, a = { "k_space" }, b = { "k_shift" }, x = { "k_x" },
+    y = { "k_z" }, dpad = { "k_left", "k_right" }, down = { "k_down" }, lrsh = { "k_q" }, start = { "k_enter" } } }
+U.STRIP_GAP, U.STRIP_ITEM = 3, 10
+U.STRIP_Y = 239 - U.M - 12                                         -- the glyphs' top (13 px bodies)
+-- the width of a glyph (one or more pieces, 1 px apart) and draws it with its top-left body at x, y
+function U.glyphW(list) local w = 0; for i, n in ipairs(list) do w = w + U.body(n) + (i > 1 and 1 or 0) end; return w end
+function U.glyph(list, x, y, logName)
+  for _, n in ipairs(list) do U.put(n, x, y, logName or "glyph"); x = x + U.body(n) + 1 end
+end
+-- items: { { "ok", "OK" }, { "back", "BACK" } }; device: "pad" or "key" (default: the one used last)
+function U.strip(items, device)
+  local G = U.GLYPHS[device or require("input").last] or U.GLYPHS.key
+  local th = U.sayH(7)
+  local w = 0
+  for i, it in ipairs(items) do w = w + U.glyphW(G[it[1]]) + U.STRIP_GAP + U.sayW(7, it[2]) + (i > 1 and U.STRIP_ITEM or 0) end
+  local x = math.floor(159.5 - (w - 1) / 2 + 0.5)
+  local y = U.STRIP_Y
+  for _, it in ipairs(items) do
+    local g = G[it[1]]
+    U.glyph(g, x, y, "glyph"); x = x + U.glyphW(g) + U.STRIP_GAP
+    x = x + U.say(7, "cream", it[2], x, top(y + 6, th), "strip") + U.STRIP_ITEM
+  end
+end
+
 -- FETCH FRENZY (bonus.lua): g = { time (seconds left), catches, need (catches for the extra life), points }.
 -- Three signs: the catches against the goal (gold once reached), the countdown (blinks in the last 5 s), points.
 local ballIcon = bitmap({ ".###.", "#####", "#####", "#####", ".###." })
