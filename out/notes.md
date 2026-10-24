@@ -1,5 +1,21 @@
 # Tagline plate: method notes
 
+## Round 2 (producer feedback: letters narrow, word gaps wide, corners light)
+- Placement: every glyph sits at its painted position (left column = round(painted centre - width/2),
+  then a small DP lets a glyph move one cell so word gaps come out as painted). Glyph centres: mean
+  0.26, max 0.53 cell (D and g, the price of 6-cell word gaps). Word gaps 6 / 6 / 6 (painted 6.0 /
+  5.9 / 6.1). Letter gaps are 1 or 2 px: the painted letters are 5.44 cells apart and 4.4 wide, so a
+  4 px glyph at the painted centre leaves 1 or 2 px (the painted gaps also run 5 to 9 px).
+- Widths: t and v are 4 columns (painted 4.0 and 4.4 cells), sampled from the painting on 4 columns;
+  T stays 5 (34 px = 4.53 cells, centred stem). The v keeps its painted 2 px point (`.##.` on its last
+  two rows, straight from the data): the only 2x2 ink block, where the two arms meet.
+- Tails: y and g tails are 3 px `###.`, the painted tail length (3 blocks, starting half a block left).
+- Corners: the rim is 2 px per row on the 45 degree corners and on the first and last rows of the
+  vertical sides; outer and inner edges are clean staircases (steps of 1, no L-corner joints). With
+  the thicker band the fitted chamfers are 4 (top) and 3 (bottom).
+- Font: SPACE is now 4 (word gap 6 as painted) for `plate_with_text` and the glyph JSON.
+The sections below describe round 1; where they differ, round 2 above holds.
+
 Track: TAGLINE ("The City Dog Adventurer" plate under the logo).
 Code: `art/source/title/tools/regrid/tagline.py` (pipeline), `tagline_font.py` (font table, layout),
 `tagline_qa.py` (gates, comparison images, font sheet). Run `python3 tagline.py`; everything in `out/` is rebuilt.
@@ -97,15 +113,10 @@ touches the rim directly in the painting too.
 - Pixel-perfect line rules: no L-corner doubles; clean staircases with equal runs.
 
 ## Remaining defects (seen at 10x)
-1. Letters are about 9 % narrower than painted (4 cells against 4.4) and sit 1 px apart, so words are
-   shorter and word gaps wider (8 cells against the painted 6); glyph centres are off by up to 2 cells
-   (mean 0.87) at the ends of words, most in "Adventurer".
-2. t is 3 px wide (the painted t is about 4 px wide with a centred stem); T and v are 5 px wide (the
-   painted ones are as wide as the other letters).
-3. The y and g tails are 2 px (`.##.`); the painted tails start half a block left and look 2.5 px.
-4. The chamfer rim is a thin 1 px 45 degree line; the painting draws it with overlapping blocks and
-   mid-blue steps, about twice the light area, so the corners read lighter and chunkier in the
-   painting. This is the main cause of the form p95 failure at the plate ends.
+Round 2 status: items 1 to 4 of round 1 (narrow spacing, 3 px t and 5 px v, 2 px tails, thin corner
+rim) are fixed. Still visible: painted strokes are 8 to 9 px (1.1 to 1.2 cells) so the painted letters
+look bolder than 1 px strokes; letter gaps alternate 1 and 2 px; the t stem sits left of centre
+(painted centred); D and g are 0.53 cell from their painted centres.
 5. Top-left chamfer: the painting's rim centre is half to one cell further out on rows 79 to 81 than
    ours (the painted plate is not symmetric; ours is mirrored left/right).
 6. The top outline row is owned only where the painting shows navy there; elsewhere the city silhouette

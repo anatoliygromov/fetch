@@ -122,6 +122,14 @@ def has_block(bm):
     return bool((b[1:, 1:] & b[:-1, 1:] & b[1:, :-1] & b[:-1, :-1]).any())
 
 
+# round 2: glyph widths follow the painted widths (producer): the painted t is 29-30 px = 4 cells
+# and the painted v 33 px = 4.4 cells, so both are 4 columns (decisiveness alone chose 3 and 5).
+# T stays 5: 34 px = 4.53 cells, and 5 keeps its centred stem.
+NC_FORCE = {'t': 4, 'v': 4}
+# On 4 columns the painted v point (one block centred between columns 1 and 2) reads '.##.' on its
+# last two rows; that 2 px point is kept as painted (it is where the two 1 px arms meet; a 4 px wide
+# v with a 1 px point would read as u). It is the only 2x2 ink block in the font's painted letters.
+
 # overrides of the cleanest instance's 0.5 threshold, only where the 1 px stroke rule needs it.
 # key: (letter, row in the 9-row box, col) -> value; each one is listed in notes.md with its reason.
 RULES = {
@@ -131,6 +139,9 @@ RULES = {
     # n: the painted shoulder thickens the stem (0.70) under the arch; '##.#' would make a 2x2 block
     # with the arch row above (stroke must stay 1 px), so the shoulder cell is dropped, as in h
     ('n', 3, 1): False,
+    # y and g tails: the painted tail is 3 blocks long starting half a block left of the bowl
+    # (col 0 reads 0.45-0.50); taken as 3 px '###.' so the tail has the painted length
+    ('y', 8, 0): True, ('g', 8, 0): True,
 }
 
 
@@ -147,7 +158,11 @@ def extract_glyphs(t, grid=None):
     for ch in letters:
         gs = [g for g in inst if g['ch'] == ch]
         scores = {}
-        if grid is None:
+        if grid is None and ch in NC_FORCE:
+            for nc in (3, 4, 5):
+                scores[nc] = sum(ambiguity(coverage(t, g['x0'], g['x1'], nc, rows)) for g in gs) / len(gs)
+            cands = [NC_FORCE[ch]]
+        elif grid is None:
             for nc in (3, 4, 5):
                 scores[nc] = sum(ambiguity(coverage(t, g['x0'], g['x1'], nc, rows)) for g in gs) / len(gs)
             best = min(scores.values())
@@ -182,29 +197,56 @@ def extract_glyphs(t, grid=None):
 
 
 # ----------------------------------------------------------------- layout
-def fit_layout(inst, plate_centre=(1134 + 2176) / 2 / 7.5):
-    """letter gap is fixed at 1 px; the word space and the start column are fitted: least RMS
-    error of glyph centres against the painting (standard cells, x / 7.5), subject to the line
-    staying centred on the plate within 1 cell (the painting's line is centred within 0.5)."""
-    pc = np.array([(g['x0'] + g['x1']) / 2 / 7.5 for g in inst])
-    best, table = None, []
-    old = TF.SPACE
-    for sp in range(2, 10):
-        TF.SPACE = sp
-        lay = TF.layout(TEXT, 0)
-        W = TF.text_width(TEXT)
-        oc = np.array([x + TF.width(ch) / 2 for ch, x in lay])
-        for s1 in range(150, 175):
-            err = np.abs(oc + s1 - pc)
-            rms = float(np.sqrt((err ** 2).mean()))
-            centred = abs(s1 + W / 2 - plate_centre) <= 1.0
-            table.append((sp, s1, round(rms, 3), round(float(err.max()), 3), centred))
-            if centred and (best is None or rms < best[0]):
-                best = (rms, sp, s1, err.max(), W, err.mean())
-    TF.SPACE = old
-    return dict(space=best[1], start=best[2], width=best[4], rms_err=round(float(best[0]), 3), mean_err=round(float(best[5]), 3),
-                max_err=round(float(best[3]), 3), plate_centre=round(plate_centre, 2),
-                text_centre=best[2] + best[4] / 2)
+def place_glyphs(inst):
+    """round 2: every glyph is placed where the painting has it: left column = round(painted centre
+    in standard cells (x / 7.5) - width / 2), so each centre is within 0.5 cell of the painting.
+    Letter gaps come out 1 or 2 px and word gaps as painted, because the painted letters are 5.44
+    cells apart (8.2 px blocks) while a glyph is 4 px wide."""
+    # small search: each glyph may sit at the rounded position or one cell either side; cost =
+    # word-gap misses (against the painted gap rounded) first, then centre errors over 0.5, then the
+    # sum of squared centre errors; letter gaps must stay >= 1. Dynamic programming over glyphs.
+    words = TEXT.split(' ')
+    wstart = set(np.cumsum([0] + [len(w) for w in words])[1:-1].tolist())
+    cen = [(g['x0'] + g['x1']) / 2 / 7.5 for g in inst]
+    W = [TF.width(g['ch']) for g in inst]
+    pwg = {j: int(round((inst[j]['x0'] - inst[j - 1]['x1']) / 7.5)) for j in wstart}
+    cands = [[int(np.floor(c - w / 2 + 0.5)) + d for d in (-1, 0, 1)] for c, w in zip(cen, W)]
+    def ecost(j, x):
+        e = abs(x + W[j] / 2 - cen[j])
+        return (0, 1 if e > 0.5 + 1e-9 else 0, e * e)
+    best = {x: (ecost(0, x), [x]) for x in cands[0]}
+    for j in range(1, len(inst)):
+        nb = {}
+        for x in cands[j]:
+            for xp, (cst, path) in best.items():
+                gap = x - (xp + W[j - 1])
+                if gap < 1:
+                    continue
+                wg = abs(gap - pwg[j]) if j in wstart else 0
+                e = ecost(j, x)
+                c2 = (cst[0] + wg, cst[1] + e[1], cst[2] + e[2])
+                if x not in nb or c2 < nb[x][0]:
+                    nb[x] = (c2, path + [x])
+        best = nb
+    path = min(best.values())[1]
+    pos = [(g['ch'], x) for g, x in zip(inst, path)]
+    err = [x + w / 2 - c for x, w, c in zip(path, W, cen)]
+    gaps, wgaps = [], []
+    i = 0; ends = []
+    for w in words:
+        for k in range(i, i + len(w) - 1):
+            gaps.append(pos[k + 1][1] - (pos[k][1] + TF.width(pos[k][0])))
+        ends.append((pos[i][1], pos[i + len(w) - 1][1] + TF.width(pos[i + len(w) - 1][0])))
+        i += len(w)
+    wgaps = [ends[k + 1][0] - ends[k][1] for k in range(len(ends) - 1)]
+    pg = [int(round((inst[k + 1]['x0'] - inst[k]['x1']) / 7.5)) for k in range(len(inst) - 1)]
+    assert min(gaps) >= 1, gaps
+    err = np.array(err)
+    return dict(pos=pos, start=pos[0][1], end=ends[-1][1], centre_err_max=round(float(np.abs(err).max()), 3),
+                centre_err_mean=round(float(np.abs(err).mean()), 3), letter_gaps=gaps, word_gaps=wgaps,
+                painted_word_gaps_cells=[round((inst[j]['x0'] - inst[j - 1]['x1']) / 7.5, 2)
+                                         for j in np.cumsum([len(w) for w in words])[:-1]],
+                text_centre=(pos[0][1] + ends[-1][1]) / 2)
 
 
 # ----------------------------------------------------------------- refined grid
@@ -238,7 +280,7 @@ def snap(prof, b, tol, lo, hi, min_count):
     return float(min(xs, key=lambda x: abs(x - b)))
 
 
-def build_grid(inst, lay_start, a, t=None):
+def build_grid(inst, pos, a, t=None):
     """separable refined grid. Start: knots at the painting's plate bands / text rows and at the
     plate ends; in the text each glyph's columns split its painted width equally. Then every
     border is snapped (within 3 px for rows, 2.5 px for columns, never closer than 4 px to its
@@ -266,7 +308,7 @@ def build_grid(inst, lay_start, a, t=None):
     trows = [Y[CAP_ROW + i] for i in range(len(TROWS))]
     # ---- columns
     X = {150: 1125.0, 151: 1134.0, 152: 1144.0, 289: 2166.0, 290: 2176.0, 291: 2186.0}
-    lay = TF.layout(TEXT, lay_start)
+    lay = pos
     gcols = []
     for (ch, x), g in zip(lay, inst):
         nc = TF.width(ch)
@@ -406,6 +448,26 @@ def ring4(F):
     return out
 
 
+def plate_rim(F, rim_left, rim_right, thick=True):
+    """rim of the filled plate: its 1 px 4-boundary; with thick=True every corner row (and the first
+    and last row of the vertical sides) also gets the pixel just inside, so the 45 degree corner rim
+    is 2 px per row, about the painting's visual weight there. Both edges of that corner band are
+    clean staircases (runs of 1, no L-corner joints: every rim pixel there has 3+ rim neighbours)."""
+    rim = ring4(F)
+    if not thick:
+        return rim
+    rows = np.nonzero(F.any(1))[0]
+    r0, r1 = rows.min(), rows.max()
+    Lc = {r: np.nonzero(F[r])[0].min() for r in rows}
+    Rc = {r: np.nonzero(F[r])[0].max() for r in rows}
+    for r in range(r0 + 1, r1):
+        for edge, side, ref in ((Lc, 1, rim_left), (Rc, -1, rim_right)):
+            corner = edge[r] != ref or edge[r - 1] != ref or edge[r + 1] != ref
+            if corner:
+                rim[r, edge[r] + side] = True
+    return rim
+
+
 def dil4(F):
     out = F.copy()
     for dy, dx in ((0, 1), (1, 0), (0, -1), (-1, 0)):
@@ -474,7 +536,7 @@ def measure_plate(grid, frac, PM):
     for tr in corner_candidates():
         for br in corner_candidates():
             F = octagon(rim_top, rim_bot, rim_left, rim_right, tr, br)
-            s1 = iou(upscale(grid, F), PM['fill']); s2 = iou(upscale(grid, ring4(F)), PM['rim'])
+            s1 = iou(upscale(grid, F), PM['fill']); s2 = iou(upscale(grid, plate_rim(F, rim_left, rim_right)), PM['rim'])
             sc = round((s1 + s2) / 2, 5)
             key = (sc, -(sum(tr) + sum(br)) * 0, -(len(set(tr)) + len(set(br))))
             if best is None or key > best[0]:
@@ -486,7 +548,7 @@ def measure_plate(grid, frac, PM):
 
 def build_plate(P, frac):
     F = octagon(P['rim_top'], P['rim_bot'], P['rim_left'], P['rim_right'], P['corner_top'], P['corner_bot'])
-    rim = ring4(F)
+    rim = plate_rim(F, P['rim_left'], P['rim_right'])
     body = F & ~rim
     D = dil4(F)
     for _ in range(P['outline_bottom_rows'] - 1):
@@ -509,9 +571,18 @@ def render(plate, textmask, pal):
     return img, own
 
 
-def text_mask(lay_start, text=TEXT):
+def text_mask(where, text=TEXT):
+    """where: a start column (font layout: gap 1, word gap SPACE + 2) or a list of (ch, x)."""
     m = np.zeros((NY, NX), bool)
-    return TF.stamp(m, text, lay_start, CAP_ROW)
+    if isinstance(where, (int, np.integer)):
+        return TF.stamp(m, text, where, CAP_ROW)
+    for ch, x in where:
+        top, rows = TF.glyph(ch)
+        for r, line in enumerate(rows):
+            for c, v in enumerate(line):
+                if v == '#':
+                    m[CAP_ROW + top + r, x + c] = True
+    return m
 
 
 def plate_with_text(S, text):
@@ -533,10 +604,8 @@ def run(verbose=True):
     pal = measure_palette(a)
     t = cream_cov(a, pal['navy'].astype(float), pal['cream'].astype(float))
     inst0, table0, grep0 = extract_glyphs(t)
-    lay = fit_layout(inst0)
-    if lay['space'] != TF.SPACE:
-        print('WARNING: fitted space', lay['space'], 'differs from font SPACE', TF.SPACE)
-    grid = build_grid(inst0, lay['start'], a, t)
+    lay = place_glyphs(inst0)
+    grid = build_grid(inst0, lay['pos'], a, t)
     inst, table, grep = extract_glyphs(t, grid)
     mism = {ch: (table[ch], TF.RECOVERED.get(ch)) for ch in table if TF.RECOVERED.get(ch) != table[ch]}
     mism0 = {ch: (table0[ch], TF.RECOVERED.get(ch)) for ch in table0 if TF.RECOVERED.get(ch) != table0[ch]}
@@ -546,7 +615,7 @@ def run(verbose=True):
     frac, meanL, cnt = cell_stats(grid, a[RY0:RY1, RX0:RX1], PM['cls'], len(CLS))
     P = measure_plate(grid, frac, PM)
     plate = build_plate(P, frac)
-    tm = text_mask(lay['start'])
+    tm = text_mask(lay['pos'])
     img, own = render(plate, tm, pal)
     blank, _ = render(plate, np.zeros_like(tm), pal)
     S = dict(a=a, pal=pal, t=t, inst=inst, table=table, grep=grep, mism=mism, lay=lay, grid=grid, PM=PM,
@@ -574,7 +643,7 @@ def save_outputs(S):
                 palette=dict(zip(('navy', 'rim', 'cream'), hexs)),
                 text_box=dict(cols=[int(S['P']['rim_left']) + 1, int(S['P']['rim_right']) - 1],
                               rows=[int(S['P']['rim_top']) + 1, int(S['P']['rim_bot']) - 1]),
-                glyph_extraction=S['grep'], layout_fit=S['lay'])
+                glyph_extraction=S['grep'], layout=S['lay'])
     json.dump(meta, open(os.path.join(OUT, 'tagline_meta.json'), 'w'), indent=1, default=int)
 
 

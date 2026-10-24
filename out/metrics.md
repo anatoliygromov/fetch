@@ -1,5 +1,23 @@
 # Tagline plate: QA gates
 
+## Round 2 (final)
+
+| Gate | Result | Pass |
+|---|---|---|
+| Grid alignment | 0.902 (x 0.834, y 0.932) | pass |
+| Plate outer / filled rim / body IoU, bdist | 0.994/0.049, 0.996/0.026, 0.986/0.088 | pass |
+| Rim band IoU, bdist | 0.921 / 0.054 | pass (just) |
+| Text ink IoU, bdist | 0.878 / 0.061 | IoU fail, bdist pass |
+| Lines: L-corners / gaps / corner staircases regular | 0 / 0 / 4 of 4 (both edges, steps of 1, 2 px per row) | pass |
+| Colour: off-palette / mixels | 0 / 0, 3 colours | pass |
+| Form (5x5 blurred luma) mean / p95 | 2.52 / 7.23 | pass |
+| Glyph centres vs painting | mean 0.26, max 0.53 cell (D, g) | max just over 0.5 |
+| Word gaps | 6 / 6 / 6 (painted 6.0 / 5.9 / 6.1) | pass |
+| Repeated letters identical (e x3, t x2, r x2) | yes | pass |
+| Strokes 1 px | yes except the painted 2 px v point | pass |
+
+Round 1 tables follow.
+
 All numbers from `metrics.json` (final run). Region = the 2725 owned cells (`tagline_mask.png`).
 Block = 7.5 px.
 

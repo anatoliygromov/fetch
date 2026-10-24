@@ -3,8 +3,8 @@
 Metrics (rows, top to bottom): 9 rows per line. Rows 0-1 ascender / cap zone,
 rows 2-6 x-height (row 6 sits on the baseline), rows 7-8 descender.
 Cap height 7, x-height 5, descender 2, stroke 1 px, letter gap 1 px.
-Most glyphs are 4 px wide; i, l, t, f, j, 1 are 3 px; T, v, m, w, x, M, V, W, X, Y are 5 px
-(the painting draws T and v with a centred stem / point, which needs an odd width).
+Most glyphs are 4 px wide (t and v too, as painted); i, l, f, j, 1 are 3 px; T, m, w, x, M, V, W,
+X, Y are 5 px (the painted T is 34 px = 4.5 cells with a centred stem).
 
 RECOVERED holds the glyphs measured from the painting (tagline.py extracts them again on
 every run and checks that it gets exactly these bitmaps). DRAWN holds the letters the
@@ -21,14 +21,14 @@ RECOVERED = {
     'e': (2, [".##.", "#..#", "####", "#...", ".###"]),
     'C': (0, [".##.", "#..#", "#...", "#...", "#...", "#..#", ".##."]),
     'i': (0, [".#.", "...", "##.", ".#.", ".#.", ".#.", "###"]),
-    't': (0, [".#.", ".#.", "###", ".#.", ".#.", ".#.", ".##"]),
-    'y': (2, ["#..#", "#..#", "#..#", ".###", "...#", "...#", ".##."]),
+    't': (0, [".#..", ".#..", "####", ".#..", ".#..", ".#..", "..##"]),
+    'y': (2, ["#..#", "#..#", "#..#", ".###", "...#", "...#", "###."]),
     'D': (0, ["###.", "#..#", "#..#", "#..#", "#..#", "#..#", "###."]),
     'o': (2, [".##.", "#..#", "#..#", "#..#", ".##."]),
-    'g': (2, [".###", "#..#", "#..#", "####", "...#", "...#", ".##."]),
+    'g': (2, [".###", "#..#", "#..#", "####", "...#", "...#", "###."]),
     'A': (0, [".##.", "#..#", "#..#", "#..#", "####", "#..#", "#..#"]),
     'd': (0, ["...#", "...#", ".###", "#..#", "#..#", "#..#", ".###"]),
-    'v': (2, ["#...#", "#...#", "#...#", ".#.#.", "..#.."]),
+    'v': (2, ["#..#", "#..#", "#..#", ".##.", ".##."]),
     'n': (2, ["###.", "#..#", "#..#", "#..#", "#..#"]),
     'u': (2, ["#..#", "#..#", "#..#", "#..#", ".###"]),
     'r': (2, ["#.#.", "##.#", "#...", "#...", "#..."]),
@@ -95,7 +95,7 @@ DRAWN = {
 }
 
 ROWS = 9
-SPACE = 6          # space width; with the 1 px gaps on both sides a word gap is 8 px, as fitted to the plate
+SPACE = 4          # space width; with the 1 px gaps on both sides a word gap is 6 px, as painted
 GAP = 1
 
 

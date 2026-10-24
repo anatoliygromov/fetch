@@ -1,29 +1,29 @@
 {
  "grid": {
-  "x": 0.82,
+  "x": 0.834,
   "y": 0.932,
-  "all": 0.898,
+  "all": 0.902,
   "n": 11585
  },
  "geometry": {
   "plate_outer": {
-   "iou": 0.9913,
-   "bdist": 0.071
+   "iou": 0.9944,
+   "bdist": 0.049
   },
   "rim_filled": {
-   "iou": 0.9938,
-   "bdist": 0.046
+   "iou": 0.9964,
+   "bdist": 0.026
   },
   "body": {
-   "iou": 0.9853,
-   "bdist": 0.094
+   "iou": 0.9862,
+   "bdist": 0.088
   },
   "rim_ring": {
-   "iou": 0.9024,
-   "bdist": 0.064
+   "iou": 0.921,
+   "bdist": 0.054
   },
   "text": {
-   "iou": 0.8782,
+   "iou": 0.8778,
    "bdist": 0.061
   },
   "word_The": {
@@ -31,80 +31,102 @@
    "bdist": 0.024
   },
   "word_City": {
-   "iou": 0.8326,
-   "bdist": 0.083
+   "iou": 0.8347,
+   "bdist": 0.079
   },
   "word_Dog": {
-   "iou": 0.8708,
-   "bdist": 0.06
+   "iou": 0.8732,
+   "bdist": 0.059
   },
   "word_Adventurer": {
-   "iou": 0.8791,
-   "bdist": 0.055
+   "iou": 0.8761,
+   "bdist": 0.057
   }
  },
  "lines": {
   "lcorners": 0,
   "gaps": 0,
-  "branches": 0,
+  "corner_band_px": 40,
   "components": 1,
   "staircase_regularity": 1.0,
   "chamfer_runs": {
    "top_left": {
-    "vertical_runs": [
-     1,
-     1,
-     1,
-     1
+    "outer_edge_cols": [
+     154,
+     153,
+     152,
+     151
     ],
-    "horizontal_runs": [
-     1,
-     1,
-     1,
-     1
+    "inner_edge_cols": [
+     155,
+     154,
+     153,
+     152
     ],
-    "regular": true
+    "regular": true,
+    "rim_px_per_row": [
+     2,
+     2,
+     2,
+     2
+    ]
    },
    "top_right": {
-    "vertical_runs": [
-     1,
-     1,
-     1,
-     1
+    "outer_edge_cols": [
+     286,
+     287,
+     288,
+     289
     ],
-    "horizontal_runs": [
-     1,
-     1,
-     1,
-     1
+    "inner_edge_cols": [
+     285,
+     286,
+     287,
+     288
     ],
-    "regular": true
+    "regular": true,
+    "rim_px_per_row": [
+     2,
+     2,
+     2,
+     2
+    ]
    },
    "bot_left": {
-    "vertical_runs": [
-     1,
-     1,
-     1
+    "outer_edge_cols": [
+     151,
+     152,
+     153
     ],
-    "horizontal_runs": [
-     1,
-     1,
-     1
+    "inner_edge_cols": [
+     152,
+     153,
+     154
     ],
-    "regular": true
+    "regular": true,
+    "rim_px_per_row": [
+     2,
+     2,
+     2
+    ]
    },
    "bot_right": {
-    "vertical_runs": [
-     1,
-     1,
-     1
+    "outer_edge_cols": [
+     289,
+     288,
+     287
     ],
-    "horizontal_runs": [
-     1,
-     1,
-     1
+    "inner_edge_cols": [
+     288,
+     287,
+     286
     ],
-    "regular": true
+    "regular": true,
+    "rim_px_per_row": [
+     2,
+     2,
+     2
+    ]
    }
   }
  },
@@ -115,9 +137,9 @@
   "body_colours": 2
  },
  "form": {
-  "mean": 2.77,
-  "p95": 9.23,
-  "max": 24.33
+  "mean": 2.52,
+  "p95": 7.23,
+  "max": 20.61
  },
  "glyphs": {
   "repeated_identical": {
@@ -125,21 +147,141 @@
    "t": true,
    "r": true
   },
-  "any_2x2_block": false,
+  "any_2x2_block_outside_v_tip": [],
+  "v_tip_blocks": 1,
   "letter_gaps": [
    1,
-   8
+   2
+  ],
+  "centre_err_max": 0.533,
+  "centre_err_mean": 0.26,
+  "word_gaps": [
+   6,
+   6,
+   6
+  ],
+  "painted_word_gaps": [
+   6.0,
+   5.87,
+   6.13
   ]
  },
  "layout": {
-  "space": 6,
+  "pos": [
+   [
+    "T",
+    161
+   ],
+   [
+    "h",
+    167
+   ],
+   [
+    "e",
+    173
+   ],
+   [
+    "C",
+    183
+   ],
+   [
+    "i",
+    188
+   ],
+   [
+    "t",
+    192
+   ],
+   [
+    "y",
+    197
+   ],
+   [
+    "D",
+    207
+   ],
+   [
+    "o",
+    213
+   ],
+   [
+    "g",
+    219
+   ],
+   [
+    "A",
+    229
+   ],
+   [
+    "d",
+    234
+   ],
+   [
+    "v",
+    240
+   ],
+   [
+    "e",
+    245
+   ],
+   [
+    "n",
+    251
+   ],
+   [
+    "t",
+    256
+   ],
+   [
+    "u",
+    261
+   ],
+   [
+    "r",
+    266
+   ],
+   [
+    "e",
+    271
+   ],
+   [
+    "r",
+    277
+   ]
+  ],
   "start": 161,
-  "width": 119,
-  "rms_err": 1.027,
-  "mean_err": 0.868,
-  "max_err": 2.0,
-  "plate_centre": 220.67,
-  "text_centre": 220.5
+  "end": 281,
+  "centre_err_max": 0.533,
+  "centre_err_mean": 0.26,
+  "letter_gaps": [
+   1,
+   2,
+   1,
+   1,
+   1,
+   2,
+   2,
+   1,
+   2,
+   1,
+   2,
+   1,
+   1,
+   1,
+   1,
+   2
+  ],
+  "word_gaps": [
+   6,
+   6,
+   6
+  ],
+  "painted_word_gaps_cells": [
+   6.0,
+   5.87,
+   6.13
+  ],
+  "text_centre": 221.0
  },
  "plate": {
   "rim_top": 78,
@@ -150,15 +292,13 @@
   "corner_top": [
    1,
    1,
-   1,
    1
   ],
   "corner_bot": [
    1,
-   1,
    1
   ],
-  "corner_fill_iou": 0.9938,
-  "corner_ring_iou": 0.9024
+  "corner_fill_iou": 0.9964,
+  "corner_ring_iou": 0.921
  }
 }

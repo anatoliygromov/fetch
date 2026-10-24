@@ -53,7 +53,7 @@ def geometry(S):
         res[name] = dict(iou=round(T.iou(u, ref), 4), bdist=round(T.bdist(u, ref), 3))
     # per word
     words = T.TEXT.split(' ')
-    lay = TF.layout(T.TEXT, S['lay']['start'])
+    lay = S['lay']['pos']
     i = 0
     for w in words:
         gl = lay[i:i + len(w)]; inst = S['inst'][i:i + len(w)]
@@ -80,7 +80,7 @@ def lines(S):
                     lc += 1
     lab, ncomp = ndi.label(rim, np.ones((3, 3)))
     gaps = int((rim & (n8 < 2)).sum()) + (ncomp - 1)
-    branch = int((rim & (n8 > 2)).sum())
+    branch = int((rim & (n8 > 2)).sum())   # pixels of the 2 px corner bands
     # staircase regularity: trace each chamfer (pixels between the straight sides) and get its runs
     P = S['P']
     segs = []
@@ -108,13 +108,30 @@ def lines(S):
     vend = rb_ - len(T.corner_insets(P['corner_bot'])) if P['corner_bot'] is not None else rb_ - 1
     chams = {'top_left': diag(range(rt + 1, vstart), 'L'), 'top_right': diag(range(rt + 1, vstart), 'R'),
              'bot_left': diag(range(vend + 1, rb_), 'L'), 'bot_right': diag(range(vend + 1, rb_), 'R')}
+    # corner band edges: outer and inner edge column per row over the corner rows (and the vertical
+    # side's first row), consecutive steps must all be equal (a clean staircase)
+    F = S['plate']['F']
+    def edges(rows_, side):
+        out, inn = [], []
+        for r in rows_:
+            cs = np.nonzero(rim[r])[0]
+            cs = cs[cs < (rl + rr) / 2] if side == 'L' else cs[cs > (rl + rr) / 2]
+            if side == 'L':
+                out.append(int(cs.min())); inn.append(int(cs.max()))
+            else:
+                out.append(int(cs.max())); inn.append(int(cs.min()))
+        return out, inn
     reg = 0; info = {}
-    for name, pts in chams.items():
-        vr, hr = runs_of(pts)
-        ok = monotone(vr) and monotone(hr)
-        reg += ok; info[name] = dict(vertical_runs=vr, horizontal_runs=hr, regular=ok)
+    spans = {'top_left': (range(rt + 1, vstart + 1), 'L'), 'top_right': (range(rt + 1, vstart + 1), 'R'),
+             'bot_left': (range(vend, rb_), 'L'), 'bot_right': (range(vend, rb_), 'R')}
+    for name, (rows_, side) in spans.items():
+        o, i = edges(rows_, side)
+        so = [b - a for a, b in zip(o, o[1:])]; si = [b - a for a, b in zip(i, i[1:])]
+        ok = len(set(so)) <= 1 and len(set(si)) <= 1 and set(map(abs, so + si)) <= {1}
+        reg += ok; info[name] = dict(outer_edge_cols=o, inner_edge_cols=i, regular=ok,
+                                     rim_px_per_row=[int(abs(a - b)) + 1 for a, b in zip(o, i)])
     # outline: the owned navy band must be 4-connected to the plate (no stray specks)
-    return dict(lcorners=lc, gaps=gaps, branches=branch, components=int(ncomp),
+    return dict(lcorners=lc, gaps=gaps, corner_band_px=branch, components=int(ncomp),
                 staircase_regularity=round(reg / len(chams), 3), chamfer_runs=info)
 
 
@@ -154,16 +171,21 @@ def form(S):
 
 def glyph_checks(S):
     tm = S['tm']
-    lay = TF.layout(T.TEXT, S['lay']['start'])
+    lay = S['lay']['pos']
     crops = {}
     for ch, x in lay:
         w = TF.width(ch)
         crops.setdefault(ch, []).append(tm[T.CAP_ROW:T.CAP_ROW + 9, x:x + w].copy())
     ident = {ch: all(np.array_equal(v[0], c) for c in v) for ch, v in crops.items() if len(v) > 1}
-    blocks = bool((tm[1:, 1:] & tm[:-1, 1:] & tm[1:, :-1] & tm[:-1, :-1]).any())
+    bl = tm[1:, 1:] & tm[:-1, 1:] & tm[1:, :-1] & tm[:-1, :-1]
+    vtips = [(x + 1, T.CAP_ROW + 5) for ch, x in lay if ch == 'v']
+    blocks = [(int(c), int(r)) for r, c in zip(*np.nonzero(bl)) if (int(c), int(r)) not in vtips]
+    v_tip_blocks = int(bl.sum()) - len(blocks)
     # stroke width: every ink run along x and y inside a glyph is 1 px except deliberate bars
-    gaps = [lay[i + 1][1] - (lay[i][1] + TF.width(lay[i][0])) for i in range(len(lay) - 1)]
-    return dict(repeated_identical=ident, any_2x2_block=blocks, letter_gaps=sorted(set(gaps)))
+    gaps = S['lay']['letter_gaps']
+    return dict(repeated_identical=ident, any_2x2_block_outside_v_tip=blocks, v_tip_blocks=v_tip_blocks, letter_gaps=sorted(set(gaps)),
+                centre_err_max=S['lay']['centre_err_max'], centre_err_mean=S['lay']['centre_err_mean'],
+                word_gaps=S['lay']['word_gaps'], painted_word_gaps=S['lay']['painted_word_gaps_cells'])
 
 
 def text_width_px(tm):
@@ -232,7 +254,7 @@ def comparisons(S, out):
         im = stack([orig_crop(S, a0, a1, r0, r1), ctx_crop(S, a0, a1, r0, r1)], vertical=False)
         p = os.path.join(out, 'cmp_end_%s.png' % name); im.save(p); paths.append(p)
     # words
-    lay = TF.layout(T.TEXT, S['lay']['start'])
+    lay = S['lay']['pos']
     i = 0
     for w in T.TEXT.split(' '):
         gl = lay[i:i + len(w)]
