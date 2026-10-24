@@ -1,7 +1,7 @@
 -- The title screen, animated (v2, 24 Oct: docs/ui_design.md screen 1). The painting on its native grid with layers cut
 -- by art/source/title/tools/build_title.py; everything moves by time t: Pepper pants (her mouth, 3 frames from the
 -- owner's videos, about 8 fps) and blinks every 3 to 5 s (her open eye, 3 frames), the river sparkles twinkle, the
--- bird flaps, a shine sweeps across the logo, and PRESS START blinks (fast once pressed; then the main menu opens
+-- bird flaps, a shine sweeps across the logo (the logo and the tagline are their own layers, redrawn on the grid), and PRESS START blinks (fast once pressed; then the main menu opens
 -- over the same picture, flow.lua). Only the pixels that change are drawn over the picture, so nothing else moves.
 -- (The clouds and the sailboats stay still: they are painted into the sky and the water and cannot be lifted out
 -- cleanly.)
@@ -18,7 +18,8 @@ end
 
 function T.load()
   if I then return end
-  I = { base = img("base"), bird = img("bird"), logo = img("logo_hi"), mouth = img("mouth"), eye = img("eye") }
+  I = { base = img("base"), bird = img("bird"), logo = img("logo_hi"), logoFill = img("logo"), mouth = img("mouth"), eye = img("eye"),
+    tagline = { caps = img("tagline_caps"), lower = img("tagline_lower") } }
   I.mouthQ, I.eyeQ = strip(I.mouth, D.mouth), strip(I.eye, D.eye)
   I.birdQ = {}
   for f = 0, 2 do I.birdQ[f] = lg.newQuad(f * D.bird.w, 0, D.bird.w, D.bird.h, I.bird:getDimensions()) end
@@ -63,6 +64,9 @@ function T.draw(t, leaving, plain)
   local bx = D.bird.x + math.floor(math.sin(t * 0.35) * 4 + 0.5)
   local by = D.bird.y + math.floor(math.sin(t * 0.9) * 1.2 + 0.5)
   lg.draw(I.bird, I.birdQ[f], bx, by)
+  -- the logo and the tagline plate, rebuilt on the grid (art/source/title/tools/logo.py): the plate, then the letters
+  lg.draw(I.tagline[T.TAGLINE] or I.tagline.caps, D.plate.x, D.plate.y)
+  lg.draw(I.logoFill, D.logo.x, D.logo.y)
   T.shine(t)
   if plain then return end
   -- PRESS START blinks (fast once pressed), on the menu's centre line where the menu will open
@@ -93,7 +97,8 @@ function T.shine(t)
     lg.setScissor()
   end
 end
-T.CX = 220.5                      -- the centre line under the logo (the subtitle banner's centre, x 150..291)
+T.TAGLINE = "caps"                -- the tagline plate: "caps" (THE CITY DOG ADVENTURER) or "lower" (The City Dog Adventurer)
+T.CX = 220.5                      -- the centre line under the logo (the tagline plate's centre, x 144..297)
 T.PRESS_Y = 152                   -- PRESS START's top: the main menu's middle row
 T.LEAVE = 0.45                    -- seconds from the press to the menu
 return T
