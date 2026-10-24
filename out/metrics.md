@@ -153,3 +153,8 @@ pitch down to the curb, the posts continue, slot backgrounds continue the slot r
 Gates: off-palette 0, mixels 0, checker 1.0, stroke L-corners 0. Form outside the plate and the
 regularised structures 2.14 / 6.95 (whole picture outside the plate 2.81 / 9.30; the painting has
 the plate under the fill, so form cannot be measured there).
+
+Final fixes on result_bg_noplate_320.png: lower pickets (rows 187-198) on the same regular bar
+columns as the upper slots, 274 px; sail holes and halo, 6 px; left slots of the painted-out area
+follow the foliage rows beside them, 314 px. Gates: off-palette 0, mixels 0, checker 1.0, stroke
+L-corners 0, form outside plate and regularised structures 2.14 / 6.96.

@@ -184,5 +184,101 @@ def main(src=None, dst=None):
     return out, m
 
 
+
+
+def final_fixes(path=None):
+    """Producer's final fixes on the painted-out picture:
+    1. the lower pickets (rows 187 to the bottom rail) carry the same regular bar columns as
+       the upper slots, so the bars run continuously from the top rail to the kerb;
+    2. light-blue holes inside the right jib take the sail's cream; the pale halo beside the
+       left sail takes the water blue;
+    3. the left slots of the painted-out area follow the foliage beside them (one green per
+       row, the most common green of that row left of the plate), no tan or odd shapes."""
+    import build_bg as B
+    path = path or os.path.join(OUT, 'result_bg_noplate_320.png')
+    o = np.array(Image.open(path).convert('RGB'))
+    lab = srgb_to_lab(o.astype(np.float32))
+    rail = np.array([1, 17, 53], np.uint8)
+    isr = (o == rail).all(2)
+    vis = B.visible_mask() | (np.array(Image.open(os.path.join(OUT, 'qa_masks', 'plate_320.png'))) > 0)
+    x0, x1 = 135, 290
+    clean = [183, 184, 185]
+    bars = [i for i in range(x0, x1) if all(isr[j, i] for j in clean)
+            and not all(isr[j, i - 1] for j in clean) and not all(isr[j, i + 1] for j in clean)]
+    darkL = lab[..., 0] < 25
+    posts = [i for i in range(x0, x1) if all(darkL[j, i] for j in clean) and i not in bars]
+    bottom = 199
+    n1 = 0
+    for j in range(187, bottom):
+        for i in range(x0, x1):
+            if not vis[j, i] or i in posts:
+                continue
+            if i in bars:
+                if not isr[j, i]:
+                    o[j, i] = rail; n1 += 1
+            elif isr[j, i] or lab[j, i, 0] < 25:
+                nb = [tuple(o[j, x]) for x in range(i - 4, i + 5) if x not in bars and x not in posts
+                      and 0 <= x < NX and lab[j, x, 0] >= 25]
+                if not nb:
+                    nb = [tuple(o[j - 1, i])]
+                v, c = np.unique(np.array(nb), axis=0, return_counts=True)
+                o[j, i] = v[c.argmax()]; n1 += 1
+    # 2. sails
+    n2 = 0
+    for j in range(140, 159):
+        for i in range(258, 269):
+            c = lab[j, i]
+            if c[2] < -10 and c[0] > 55:
+                nb = [tuple(o[y, x]) for y in range(j - 2, j + 3) for x in range(i - 2, i + 3)
+                      if lab[y, x, 0] > 80 and lab[y, x, 2] > 0]
+                l = sum(1 for x in range(258, i) if lab[j, x, 0] > 80); r = sum(1 for x in range(i + 1, 269) if lab[j, x, 0] > 80)
+                if nb and l and r:
+                    v, cn = np.unique(np.array(nb), axis=0, return_counts=True)
+                    o[j, i] = v[cn.argmax()]; n2 += 1
+    for j in range(140, 149):
+        for i in range(215, 226):
+            c = lab[j, i]
+            if 60 < c[0] < 88 and c[2] < 5 and not (c[0] > 85):
+                nb = [tuple(o[y, x]) for y in range(j - 1, j + 2) for x in range(i - 2, i + 3)
+                      if 45 < lab[y, x, 0] < 70 and lab[y, x, 2] < -20]
+                if nb:
+                    v, cn = np.unique(np.array(nb), axis=0, return_counts=True)
+                    o[j, i] = v[cn.argmax()]; n2 += 1
+    # 3. left slots of the painted-out area follow the foliage beside them
+    n3 = 0
+    pl = 154
+    g = None
+    isr = (o == rail).all(2)
+    for j in range(187, bottom):
+        greens = [tuple(o[j, x]) for x in range(x0, pl) if x not in bars and x not in posts
+                  and int(o[j, x, 1]) > int(o[j, x, 2]) and int(o[j, x, 1]) > int(o[j, x, 0])]
+        if greens:
+            v, cn = np.unique(np.array(greens), axis=0, return_counts=True); g = v[cn.argmax()]
+        if g is None:
+            continue
+        for i in range(pl, 186):
+            if i in bars or i in posts or isr[j, i] or not vis[j, i]:
+                continue
+            cc = o[j, i]
+            green = int(cc[1]) > int(cc[2]) and int(cc[1]) > int(cc[0])
+            if not green or True:
+                if not (cc == g).all():
+                    o[j, i] = g; n3 += 1
+    # mixel repair in the touched rows
+    import qa
+    for _ in range(4):
+        n_m, mm = qa.mixels(o, np.ones(o.shape[:2], bool))
+        if not mm.any():
+            break
+        for j, i in np.argwhere(mm):
+            nb = [tuple(o[y, x]) for y, x in ((j, i - 1), (j, i + 1), (j - 1, i), (j + 1, i)) if 0 <= y < NY and 0 <= x < NX]
+            v, c = np.unique(np.array(nb), axis=0, return_counts=True)
+            o[j, i] = v[c.argmax()]
+    Image.fromarray(o).save(path)
+    Image.fromarray(np.dstack([o, np.full(o.shape[:2], 255, np.uint8)]), 'RGBA').save(path.replace('.png', '_rgba.png'))
+    print('final fixes: pickets %d, sails %d, left slots %d; bars %d posts %d' % (n1, n2, n3, len(bars), len(posts)))
+
+
 if __name__ == '__main__':
     main()
+    final_fixes()
