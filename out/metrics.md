@@ -1,6 +1,28 @@
 # Grid and palette track: metrics
 
-## Round 3 (review fixes), final numbers
+## Round 4 (repeated structures regularised, art direction), final numbers
+
+| Gate | Result | Pass |
+|---|---|---|
+| Off-palette / mixels | 0 / 0 | yes |
+| Checker phase | 1.0 (2227 px) | yes |
+| Pepper outline L-corners / gaps / staircase; strokes L-corners / gaps | 0 / 0 / 1.0; 0 / 0 | yes |
+| Form, visible background outside the regularised structures | 2.19 / 7.09 | yes |
+| Form, whole visible background | 2.97 / 9.91 | fail by design: the railing, bridge, water and facades are now built to the repeated-structure rule, not copied (form there 6 to 13 mean) |
+| IoU | Pepper 0.988, clouds 0.91 to 0.96, bandana 0.94; railing 0.69 and bridge 0.52 (regularised, no longer the painting's irregular shapes) | partly |
+| Rare colours visible / specks visible | 1 / 641 | |
+
+Pixels changed vs round 3: 3223 (3145 visible): railing 515, bridge 521, city 498, water box 1886
+(overlaps railing and sails), sails 509, foliage right 811, foliage left 544, bird 12, chest 4.
+
+Round 4 rules: railing posts kept where painted, rails one straight row each, identical 1 px bars at
+one pitch (6 px: painted bar count over the free width) centred per gap; bridge built from per-row
+colours plus one arch template stamped at an even spacing; facades flat two-tone with identical
+windows on one even grid (grey block, tower); water snapped to 4 blues (greedy best representatives)
+and 3 highlight tones, 1 px tall horizontal dashes; sails as smoothed shapes with the mast through the
+jib; foliage boxes as 3-tone clumps; bird box sky-clean around a 1 px line; blue specks in the coat
+snapped.
+
 
 | Gate | Result | Pass |
 |---|---|---|

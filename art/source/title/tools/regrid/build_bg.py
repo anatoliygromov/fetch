@@ -218,7 +218,7 @@ def mixel_mask(R, PL, min_edge=20.0):
     return out
 
 
-def fix_mixels(R, V, PL, iters=6):
+def fix_mixels(R, V, PL, iters=6, locked=None):
     """Replace each mixel by one of its two opposite neighbours: the one better supported
     in the cell's own painting pixels; if neither occurs in the cell, the nearer colour."""
     R = R.copy()
@@ -227,6 +227,8 @@ def fix_mixels(R, V, PL, iters=6):
         if not mm.any():
             break
         for j, i in zip(*np.nonzero(mm)):
+            if locked is not None and locked[j, i]:
+                continue
             cands = {int(R[y, x]) for y, x in ((j, i - 1), (j, i + 1), (j - 1, i), (j + 1, i))
                      if 0 <= y < NY and 0 <= x < NX}
             cands.discard(int(R[j, i]))
@@ -625,7 +627,7 @@ def unify_small_features(R, PL, C, Vfull, locked, de=12.0, reach=12):
 
 
 # ---------------------------------------------------------------- round 3 rules
-BRIDGE_BOX = (1080, 1096, 1760, 1146)   # source px: deck and arches
+BRIDGE_BOX = (1080, 1088, 1760, 1146)   # source px: deck and arches
 
 
 def rebuild_arches(R, Lp, lab, locked, PL):
@@ -979,8 +981,8 @@ def rebuild_bird(R, a, lab, Lp, dp, I, J, PL, n, locked):
         for i in range(ii0, ii1):
             if line[j, i]:
                 R[j, i] = col; locked[j, i] = True; nchg += 1
-            elif dark[R[j, i]] and not locked[j, i]:
-                if Vo[j, i, :n].sum() > 0:
+            elif (dark[R[j, i]] or PL[R[j, i], 0] < 68) and not locked[j, i]:
+                if Vo[j, i, :n].sum() > 0 and PL[Vo[j, i, :n].argmax(), 0] >= 68:
                     R[j, i] = int(Vo[j, i, :n].argmax())
                 else:                                   # cell lies wholly in the wing: sky around it
                     nbv = [R[y, x] for y in range(j - 1, j + 2) for x in range(i - 1, i + 2)
@@ -1053,6 +1055,491 @@ def small_features(R, a, lab, Lp, I, J, PL, mat, names, locked, material='city',
         if not locked[j, i] and reg[j, i] and R[j, i] != col:
             R[j, i] = col; locked[j, i] = True; n += 1
     return R, n
+
+
+def rebuild_bridge(R, Lp, lab, locked, PL):
+    """Repeated structure rule: the bridge is BUILT, not copied. Per output row across the
+    span one colour (the painting's dominant label of that row band: parapet, deck line,
+    spandrel stone); the painted arch openings give ONE template (median half width per
+    row, monotone) and ONE spacing (least squares over the arch centres, whole cells), and
+    identical arches are stamped at even spacing in the arch shadow colour. Cells already
+    holding a boat, sail or stroke (locked or light sail colours) are left alone."""
+    x0, y0, x1, y1 = BRIDGE_BOX
+    sub = lab[y0:y1, x0:x1]
+    stone = (sub[..., 0] > 55) & (np.hypot(sub[..., 1], sub[..., 2]) < 30)
+    band = np.zeros_like(stone); band[1110 - y0:1141 - y0] = True
+    lab_c, nc = ndi.label(~stone & band)
+    arches = []
+    for q in range(1, nc + 1):
+        comp = lab_c == q
+        ys, xs = np.nonzero(comp)
+        if xs.max() - xs.min() < 40 or xs.max() - xs.min() > 130 or ys.max() - ys.min() < 12:
+            continue
+        arches.append(comp)
+    if len(arches) < 2:
+        return R, 0
+    P = 2400 / NX; Q = 1792 / NY
+    i0, i1 = int(np.ceil((x0 + 8) / P)), int((x0 + 665) / P)
+    j0, j1 = int(np.ceil(y0 / Q)), int(1142 / Q)
+    Lsub = Lp[y0:y1, x0:x1]
+    # row colours: stone rows take the stone pixels' dominant label, line rows (mostly not
+    # stone outside the arches) the non-stone pixels' dominant label
+    rowcol = {}
+    for j in range(j0, j1 + 1):
+        ya, yb = max(0, int(j * Q) - y0), min(y1 - y0, int((j + 1) * Q) - y0)
+        if yb <= ya:
+            continue
+        rows = np.zeros_like(stone); rows[ya:yb, 8:665] = True
+        for comp in arches:
+            rows &= ~comp
+        st_ = rows & stone
+        rowcol[j] = int(np.bincount(Lsub[st_ if st_.sum() >= 0.3 * rows.sum() else rows & ~stone]).argmax())
+    # the deck line is thinner than a cell: the row holding its centre takes its colour
+    srow = stone[:, 8:665].mean(1)
+    lr = [r for r in range(0, 1110 - y0) if srow[r] < 0.1]
+    if lr:
+        jl = int((np.mean(lr) + y0) / Q)
+        m = np.zeros_like(stone); m[lr, 8:665] = True; m &= ~stone
+        rowcol[jl] = int(np.bincount(Lsub[m]).argmax())
+    # template from the full arches, spacing from the median gap of neighbouring arches
+    full = []
+    for comp in arches:
+        ys, xs = np.nonzero(comp)
+        if 60 <= xs.max() - xs.min() <= 110:
+            full.append(comp)
+    cxs = np.sort([(np.nonzero(c)[1].min() + np.nonzero(c)[1].max() + 1) / 2 + x0 for c in full])
+    gaps = np.diff(cxs)
+    s_px = np.median(gaps[gaps < 1.5 * np.median(gaps)])
+    s_cells = int(np.round(s_px / P))
+    kk = np.round((cxs - cxs[0]) / (s_cells * P))
+    c0 = int(np.round(np.mean(cxs / P - kk * s_cells)))
+    span0, span1 = (x0 + 8) / P, (x0 + 665) / P
+    centres = [c for c in range(c0 - 10 * s_cells, c0 + 10 * s_cells + 1, s_cells) if span0 + 3 <= c <= span1 - 3]
+    c_h = stone.shape[0]
+    width = {}
+    run = 0
+    for j in range(j0, j1 + 1):
+        ya, yb = max(0, int(j * Q) - y0), min(y1 - y0, int((j + 1) * Q) - y0)
+        yc = int((j + 0.5) * Q) - y0                       # centre sampling of the row band
+        ws = [c[yc].sum() / P for c in full] if 0 <= yc < c_h else [0]
+        w = np.median(ws)
+        wi = int(2 * np.round(w / 2))
+        run = max(run, wi) if wi > 0 else 0
+        width[j] = run if wi > 0 else 0
+    cxs = centres
+    inner = int(np.bincount(np.concatenate([Lsub[c] for c in arches])).argmax())
+    R = R.copy(); n = 0
+    def free(j, i):
+        return 0 <= i < NX and not locked[j, i] and not (PL[R[j, i], 0] > 85)
+    for j in range(j0, j1 + 1):
+        if j not in rowcol:
+            continue
+        for i in range(i0, i1 + 1):
+            if not free(j, i):
+                continue
+            new = rowcol[j]
+            for c in cxs:
+                if width[j] and c - width[j] // 2 <= i < c + width[j] // 2:
+                    new = inner
+            if new != R[j, i]:
+                R[j, i] = new; n += 1
+            locked[j, i] = True
+    return R, n
+
+
+RAIL_BOX = (135, 180, 292, 201)   # cells x0, y0, x1, y1
+
+
+def regular_railing(R, a, lab, Lp, dp, I, J, PL, n, Sm, locked, exclude320, pitch=None):
+    """Repeated structure rule for the waterfront railing: the big posts stay where painted;
+    every rail becomes ONE straight row (the row of its run with the most painted navy);
+    between posts, identical 1 px bars at one constant pitch (the painting's mean bar pitch),
+    centred in each gap, from the top rail down; old bar and rail cells take the colour the
+    painting has behind the railing (votes without navy)."""
+    x0, y0, x1, y1 = RAIL_BOX
+    navy = (lab[..., 0] < 20) & (lab[..., 2] < -12)
+    box = np.zeros(R.shape, bool); box[y0:y1, x0:x1] = True
+    box &= ~exclude320
+    thick = ndi.binary_opening(Sm, np.ones((3, 3))) & box if Sm is not None else np.zeros(R.shape, bool)
+    # posts: runs of 3+ columns that the painting fills with dark (L < 32) over the railing
+    # height (rows y0 to 190), or the structure layer's thick parts
+    darkf = lab[..., 0] < 32
+    ya_, yb_ = int(y0 * 1792 / NY), int(191 * 1792 / NY)
+    colfrac = np.array([darkf[ya_:yb_, int(i * 7.5):int((i + 1) * 7.5)].mean() for i in range(NX)])
+    srcpost = colfrac >= 0.8
+    postcols = [i for i in range(x0, x1) if thick[y0:y1, i].sum() >= 4 or
+                (srcpost[i] and (srcpost[max(0, i - 2):i + 3].sum() >= 3))]
+    posts = []
+    for i in postcols:
+        if posts and i == posts[-1][1] + 1:
+            posts[-1][1] = i
+        else:
+            posts.append([i, i])
+    posts = [p for p in posts if p[1] - p[0] >= 2]
+    ispost = np.zeros(NX, bool)
+    for p0, p1 in posts:
+        ispost[p0:p1 + 1] = True
+    railcol = int(np.bincount(R[Sm & box & ~thick]).argmax()) if (Sm & box & ~thick).any() else int(np.bincount(R[box]).argmax())
+    dark = PL[:, 0] < 22
+    # rails: rows where most non-post cells are dark
+    cols = [i for i in range(x0, x1) if not ispost[i]]
+    fr = np.array([dark[R[j, cols]].mean() for j in range(y0, y1)])
+    runs, j = [], 0
+    while j < len(fr):
+        if fr[j] >= 0.7:
+            k = j
+            while k + 1 < len(fr) and fr[k + 1] >= 0.7:
+                k += 1
+            runs.append((j + y0, k + y0)); j = k + 1
+        else:
+            j += 1
+    rail_rows = []
+    for ra, rb in runs:
+        best = max(range(ra, rb + 1), key=lambda jj: navy[int(jj * 1792 / NY):int((jj + 1) * 1792 / NY), x0 * 15 // 2:x1 * 15 // 2].mean())
+        rail_rows.append(best)
+    if not rail_rows:
+        return R, 0, 0, 0
+    # painted bar pitch (game px) in the slot rows below the top rail
+    if pitch is None:
+        ya, yb = int((rail_rows[0] + 1) * 1792 / NY), int((rail_rows[0] + 3) * 1792 / NY)
+        prof = navy[ya:yb, x0 * 15 // 2:x1 * 15 // 2].mean(0) > 0.5
+        d = np.diff(np.r_[0, prof.astype(int), 0]); st_ = np.flatnonzero(d == 1); en = np.flatnonzero(d == -1)
+        c = np.array([(s0 + e0) / 2 for s0, e0 in zip(st_, en) if 3 <= e0 - s0 <= 14]) / (2400 / NX)
+        # bars per game px over the gaps between posts (counts every painted bar, so the
+        # wide and narrow painted gaps average out)
+        gx = np.array([not ispost[int(v) + x0] for v in c if 0 <= int(v) + x0 < NX])
+        free_w = sum(1 for i in range(x0, x1) if not ispost[i] and not exclude320[top_row_dummy, i]) if False else sum(1 for i in range(x0, x1) if not ispost[i])
+        nbar = int(gx.sum())
+        pitch = int(np.round(free_w / max(nbar, 1))) if nbar else 5
+    Vo, Co = masked_votes(a, I, J, Lp, dp, n, ~navy)
+    bg = Vo[..., :n].argmax(2)
+    hasbg = Vo[..., :n].sum(2) > 0
+    # cells wholly covered by painted navy: the background of the nearest cell that has one
+    _, (iy, ix) = ndi.distance_transform_edt(~hasbg, return_indices=True)
+    bg = bg[iy, ix]; hasbg = np.ones_like(hasbg)
+    R = R.copy(); nchg = 0; nbars = 0
+    old = R.copy()
+    top = rail_rows[0]
+    for j in range(top, y1):
+        for i in range(x0, x1):
+            if not box[j, i] or ispost[i] or locked[j, i]:
+                continue
+            new = railcol if j in rail_rows else (bg[j, i] if (dark[R[j, i]] and hasbg[j, i]) else R[j, i])
+            R[j, i] = new
+    # the row right above the top rail (a doubled rail) clears too
+    for i in range(x0, x1):
+        j = top - 1
+        if j >= y0 and box[j, i] and not ispost[i] and not locked[j, i] and dark[R[j, i]]:
+            R[j, i] = bg[j, i]
+    for j in range(y0, top):
+        for i in range(x0, x1):
+            if box[j, i] and not ispost[i] and not locked[j, i] and dark[R[j, i]] and hasbg[j, i] and fr[j - y0] >= 0.7:
+                R[j, i] = bg[j, i]
+    # bars between posts (and from the last post to the box edge)
+    edges = [x0 - 1] + [v for p in posts for v in p] + [x1]
+    gaps = [(edges[k] + 1, edges[k + 1] - 1) for k in range(0, len(edges) - 1, 2)]
+    for g0, g1 in gaps:
+        w = g1 - g0 + 1
+        if w < pitch:
+            continue
+        nb_ = (w - 1) // pitch
+        if nb_ < 1:
+            continue
+        span = (nb_ - 1) * pitch
+        first = g0 + (w - 1 - span) // 2
+        for b in range(nb_):
+            i = first + b * pitch
+            for j in range(top, y1):
+                if box[j, i] and not locked[j, i]:
+                    R[j, i] = railcol
+            nbars += 1
+    # slots: between two bars, dark leftovers take the slot's most common light colour
+    barcol = np.zeros(NX, bool)
+    for g0, g1 in gaps:
+        w = g1 - g0 + 1
+        nb_ = (w - 1) // pitch if w >= pitch else 0
+        if nb_ >= 1:
+            first = g0 + (w - 1 - (nb_ - 1) * pitch) // 2
+            barcol[first:first + nb_ * pitch:pitch] = True
+    for j in range(top + 1, y1):
+        if j in rail_rows:
+            continue
+        i = x0
+        while i < x1:
+            if ispost[i] or barcol[i] or not box[j, i]:
+                i += 1; continue
+            k = i
+            while k + 1 < x1 and not (ispost[k + 1] or barcol[k + 1] or not box[j, k + 1]):
+                k += 1
+            seg = R[j, i:k + 1]
+            dk = PL[:, 0] < 38
+            light = seg[~dk[seg]]
+            if not len(light):                       # whole slot run dark: borrow from the slot rows around
+                nbr = np.concatenate([R[jj, i:k + 1] for jj in (j - 1, j + 1, j - 2) if top < jj < y1 and jj not in rail_rows])
+                light = nbr[~dk[nbr]] if len(nbr) else nbr
+            if len(light):
+                maj = np.bincount(light).argmax()
+                for ii in range(i, k + 1):
+                    if dk[R[j, ii]] and not locked[j, ii]:
+                        R[j, ii] = maj
+            i = k + 1
+    for j in range(y0, y1):
+        for i in range(x0, x1):
+            if box[j, i]:
+                locked[j, i] = True
+    nchg = int((R != old).sum())
+    return R, nchg, nbars, pitch
+
+
+WATER_BOX = (135, 145, 320, 196)
+
+
+def regular_water(R, PL, mat, names, locked, hard, vis, nblue=4):
+    """Water as flat bands of a few blues with clean 1 px ripple dashes: the water cells
+    keep the `nblue` most used blues (every other blue snaps to the nearest of them) and at
+    most two highlight colours; highlight runs are made 1 px tall (only the top cell of a
+    vertical run stays) and at least 2 px long; single cells of a blue between two cells
+    of another colour in a row take that colour (no specks, dashes run horizontally)."""
+    x0, y0, x1, y1 = WATER_BOX
+    m = np.zeros(R.shape, bool); m[y0:y1, x0:x1] = True
+    m &= (mat == names.index('water')) & ~locked & ~hard & vis
+    if m.sum() < 50:
+        return R, 0
+    R = R.copy(); old = R.copy()
+    cols, cnt = np.unique(R[m], return_counts=True)
+    light = PL[cols, 0] > 75
+    # blues: greedy choice of the `nblue` colours that best represent all water blues
+    # (each step adds the colour that most lowers the pixel-weighted Lab error)
+    bc, bn = cols[~light], cnt[~light].astype(float)
+    D = np.linalg.norm(PL[bc][:, None] - PL[bc][None], axis=2)
+    chosen = [int(np.argmax(bn))]
+    for _ in range(nblue - 1):
+        cur = D[:, chosen].min(1)
+        gain = [(bn * np.maximum(cur - D[:, c], 0)).sum() if c not in chosen else -1 for c in range(len(bc))]
+        chosen.append(int(np.argmax(gain)))
+    blues = bc[chosen]
+    hls = cols[light][np.argsort(-cnt[light])][:3]
+    for j, i in np.argwhere(m):
+        c = R[j, i]
+        pool = hls if (PL[c, 0] > 80 and len(hls)) else blues
+        R[j, i] = pool[np.linalg.norm(PL[pool] - PL[c], axis=1).argmin()]
+    ishl = np.isin(R, hls) & m
+    # 1 px tall highlights: cells under another highlight cell become the row's base blue
+    for j, i in np.argwhere(ishl):
+        if j - 1 >= 0 and ishl[j - 1, i]:
+            row = R[j, max(x0, i - 4):i + 5]
+            b = row[np.isin(row, blues)]
+            R[j, i] = np.bincount(b).argmax() if len(b) else blues[0]
+    for _ in range(2):
+        for j, i in np.argwhere(m):
+            if 0 < i < NX - 1 and R[j, i - 1] == R[j, i + 1] and R[j, i] != R[j, i - 1] and m[j, i - 1] and m[j, i + 1]:
+                R[j, i] = R[j, i - 1]
+    return R, int((R != old).sum())
+
+
+# facades rebuilt on a window grid: (name, cell box x0, y0, x1, y1, facade class)
+FACADES = [('grey_block', (281, 116, 302, 142), 'bluegrey'), ('tower', (216, 116, 231, 146), 'brick')]
+
+
+def _facade_class(lab, cls):
+    L, A, Bb = lab[..., 0], lab[..., 1], lab[..., 2]
+    if cls == 'brick':
+        return (A > 12) & (Bb > 18) & (L > 35)
+    return (L > 35) & (L < 78) & (Bb < 5) & (A < 12)
+
+
+def build_facade(R, Lp, lab, PL, box, cls, locked):
+    """Repeated structure rule for a facade: flat faces (one colour each, split where the
+    painted face colour changes) and identical windows on one even grid per face (pitch and
+    phase from the painting's window blobs), window colour the painting's most common."""
+    from scipy.ndimage import median_filter
+    x0, y0, x1, y1 = box
+    P, Q = 2400 / NX, 1792 / NY
+    sx0, sy0, sx1, sy1 = int(x0 * P), int(y0 * Q), int(x1 * P), int(y1 * Q)
+    sub = lab[sy0:sy1, sx0:sx1]; Ls = Lp[sy0:sy1, sx0:sx1]
+    fac = _facade_class(sub, cls)
+    bgc = np.stack([median_filter(sub[..., c], size=15) for c in range(3)], -1)
+    inside = ndi.binary_fill_holes(ndi.binary_closing(fac, iterations=3))
+    win = (np.linalg.norm(sub - bgc, axis=2) > 12) & (bgc[..., 0] - sub[..., 0] > 6) & inside   # darker blobs
+    bmask = ndi.binary_fill_holes(ndi.binary_closing(fac | win, iterations=2))
+    fac = fac & ~win
+    # cell level silhouette (uniform cells)
+    sil = np.zeros(R.shape, bool); wc = []
+    for j in range(y0, y1):
+        for i in range(x0, x1):
+            ya, yb = int(j * Q) - sy0, int((j + 1) * Q) - sy0; xa, xb = int(i * P) - sx0, int((i + 1) * P) - sx0
+            sil[j, i] = bmask[ya:yb, xa:xb].mean() >= 0.5
+    if sil.sum() < 20:
+        return R, 0
+    # faces: per column median facade colour, split at the largest jump
+    colmed = []
+    for i in range(x0, x1):
+        xa, xb = int(i * P) - sx0, int((i + 1) * P) - sx0
+        m = fac[:, xa:xb]
+        colmed.append(np.median(sub[:, xa:xb][m], 0) if m.sum() > 10 else np.full(3, np.nan))
+    colmed = np.array(colmed)
+    ok = ~np.isnan(colmed[:, 0])
+    jumps = [np.linalg.norm(colmed[k + 1] - colmed[k]) if ok[k] and ok[k + 1] else 0 for k in range(len(colmed) - 1)]
+    split = x0 + int(np.argmax(jumps)) + 1 if max(jumps) > 8 else x1
+    faces = [(x0, split), (split, x1)] if split < x1 else [(x0, x1)]
+    lc, k = ndi.label(win)
+    R = R.copy(); old = R.copy()
+    for fx0, fx1 in faces:
+        xa, xb = int(fx0 * P) - sx0, int(fx1 * P) - sx0
+        fm = fac[:, xa:xb]
+        if fm.sum() < 20:
+            continue
+        fcol = int(np.bincount(Ls[:, xa:xb][fm]).argmax())
+        wm = win[:, xa:xb]
+        wcol = int(np.bincount(Ls[:, xa:xb][wm]).argmax()) if wm.sum() else None
+        # window centres in cell coordinates
+        cents = []
+        for q in range(1, k + 1):
+            m = lc == q
+            ys, xs = np.nonzero(m)
+            if not (6 <= len(ys) <= 120) or not (xa <= xs.mean() < xb):
+                continue
+            cents.append(((ys.mean() + sy0) / Q, (xs.mean() + sx0) / P))
+        for j in range(y0, y1):
+            for i in range(fx0, fx1):
+                if sil[j, i] and not locked[j, i]:
+                    R[j, i] = fcol
+        if wcol is None or len(cents) < 2:
+            continue
+        cy = np.array([c[0] for c in cents]); cx = np.array([c[1] for c in cents])
+        def grid(v):
+            u = np.unique(np.floor(v).astype(int))
+            d = np.diff(u); d = d[d >= 2]
+            p = int(np.median(d)) if len(d) else 2
+            ph = np.bincount(np.floor(v).astype(int) % p).argmax()
+            return p, ph, int(np.floor(v.min())), int(np.floor(v.max()))
+        py, phy, ymin, ymax = grid(cy); px, phx, xmin, xmax = grid(cx)
+        for j in range(ymin, ymax + 1):
+            if j % py != phy:
+                continue
+            for i in range(max(xmin, fx0 + 1), min(xmax, fx1 - 2) + 1):
+                if i % px != phx:
+                    continue
+                if sil[j, i] and not locked[j, i] and all(sil[jj, ii] for jj, ii in ((j - 1, i), (j + 1, i), (j, i - 1), (j, i + 1))):
+                    R[j, i] = wcol
+    for j in range(y0, y1):
+        for i in range(x0, x1):
+            if sil[j, i]:
+                locked[j, i] = True
+    return R, int((R != old).sum())
+
+
+# sails rebuilt as clean shapes: (name, source box)
+SAILS = [('sail_mast_boat', (1745, 1020, 1900, 1215)), ('sail_jib_boat', (1870, 1000, 2010, 1165)),
+         ('sail_small', (1255, 1090, 1335, 1200))]
+
+
+def rebuild_sail(R, a, lab, Lp, dp, I, J, PL, n, box, locked):
+    """A sail as one smooth shape: the painting's sail pixels (light, low chroma) in the box
+    are smoothed and rasterised at coverage 0.5, the staircase regularised; cells inside keep
+    their light sail colour (so the two-tone shading stays) or take the sail's main colour,
+    cells outside that hold a light sail colour (halo, bites) re-vote without sail pixels."""
+    import shapes
+    x0, y0, x1, y1 = box
+    sail = (lab[..., 0] > 78) & (np.hypot(lab[..., 1], lab[..., 2]) < 32)
+    full = np.zeros(sail.shape, bool); full[y0:y1, x0:x1] = sail[y0:y1, x0:x1]
+    full = ndi.binary_opening(full, iterations=1)
+    if full.sum() < 60:
+        return R, 0
+    lc_, k_ = ndi.label(full)
+    sz = ndi.sum(full, lc_, range(1, k_ + 1))
+    full = np.isin(lc_, np.flatnonzero(sz >= 0.25 * sz.max()) + 1)
+    # the mast splits main sail and jib: close across it so both read as one sail plan
+    full = ndi.binary_closing(full, np.ones((1, 13))) & ndi.binary_dilation(full, np.ones((1, 13)))
+    main = int(np.bincount(Lp[full]).argmax())
+    Sm, Sf = shapes.raster_shape(full, I, J, s=3.0, pre=1.5, min_area=30)
+    Sm, _ = regularize(Sm, shapes.coverage(Sf, I, J), passes=4, band=(0.15, 0.85))
+    light = (PL[:, 0] > 78) & (np.hypot(PL[:, 1], PL[:, 2]) < 32)
+    if not light[main]:
+        main = int(np.bincount(Lp[full & sail]).argmax())
+    Vo, Co = masked_votes(a, I, J, Lp, dp, n, ~ndi.binary_dilation(full, iterations=2))
+    R = R.copy(); old = R.copy()
+    j0, j1 = int(y0 * NY / 1792), int(y1 * NY / 1792) + 1
+    i0, i1 = int(x0 * NX / 2400), int(x1 * NX / 2400) + 1
+    for j in range(j0, j1):
+        for i in range(i0, i1):
+            if locked[j, i]:
+                continue
+            if Sm[j, i]:
+                if not light[R[j, i]]:
+                    R[j, i] = main
+                locked[j, i] = True
+            elif light[R[j, i]] or (PL[R[j, i], 0] > 70 and PL[R[j, i], 2] < -5 and Vo[j, i, :n].sum() > 0):
+                v = Vo[j, i, :n]
+                if v.sum() > 0:
+                    R[j, i] = int(v.argmax())
+                else:
+                    nb = [R[y, x] for y in range(j - 1, j + 2) for x in range(i - 1, i + 2)
+                          if 0 <= y < NY and 0 <= x < NX and not Sm[y, x] and not light[R[y, x]]]
+                    if nb:
+                        R[j, i] = np.bincount(nb).argmax()
+    # a dark mast through the sail (thinner than a cell): the darkest thin column in the
+    # sail rows becomes a 1 px line in its painted colour where the painting has it
+    dark = lab[..., 0] < 45
+    best = None
+    for i in range(i0, i1):
+        xa, xb = int(i * 2400 / NX), int((i + 1) * 2400 / NX)
+        rows = [j for j in range(j0, j1) if Sm[j, i] or (i > 0 and Sm[j, i - 1] and i + 1 < NX and Sm[j, i + 1])]
+        if len(rows) < 4:
+            continue
+        f = np.mean([dark[int(j * 1792 / NY):int((j + 1) * 1792 / NY), xa:xb].any(1).mean() for j in rows])
+        if best is None or f > best[0]:
+            best = (f, i, rows)
+    if best is not None and best[0] >= 0.4:
+        f, i, rows = best
+        xa, xb = int(i * 2400 / NX), int((i + 1) * 2400 / NX)
+        for j in range(min(rows), max(rows) + 1):       # only across the sail itself
+            ya, yb = int(j * 1792 / NY), int((j + 1) * 1792 / NY)
+            seg = dark[ya:yb, xa:xb]
+            if PL[R[j, i], 0] < 45:
+                continue                                  # already a dark mast cell (stroke layer)
+            if seg.any(1).mean() >= 0.5:      # the mast wins over a pale stroke here
+                R[j, i] = int(np.bincount(Lp[ya:yb, xa:xb][seg]).argmax()); locked[j, i] = True
+    return R, int((R != old).sum())
+
+
+REGULARISED = [(135, 180, 292, 201), (145, 145, 235, 154), (135, 145, 320, 196), (281, 116, 302, 142), (216, 116, 231, 146)]
+FOLIAGE_BOXES = [(240, 125, 320, 170), (0, 85, 30, 165)]
+
+
+def foliage_clumps(R, PL, mat, names, locked, hard, vis, box, ntones=3, passes=3):
+    """Foliage as leaf clumps: the leaf cells in the box keep the `ntones` greens (greedy
+    best representatives, by pixel count) and every other leaf colour snaps to the nearest;
+    then cells with fewer than 2 same-coloured 8-neighbours take the majority of their
+    4-neighbours (clean cluster shapes, no lone specks)."""
+    x0, y0, x1, y1 = box
+    m = np.zeros(R.shape, bool); m[y0:y1, x0:x1] = True
+    m &= np.isin(mat, [names.index(x) for x in ('leaves', 'trunk', 'rest', 'other')]) & ~locked & ~hard & vis
+    green = (PL[:, 1] < -5) & (PL[:, 0] > 25)
+    m &= green[R]
+    if m.sum() < 30:
+        return R, 0
+    R = R.copy(); old = R.copy()
+    cols, cnt = np.unique(R[m], return_counts=True)
+    cnt = cnt.astype(float)
+    D = np.linalg.norm(PL[cols][:, None] - PL[cols][None], axis=2)
+    chosen = [int(np.argmax(cnt))]
+    for _ in range(min(ntones, len(cols)) - 1):
+        cur = D[:, chosen].min(1)
+        gain = [(cnt * np.maximum(cur - D[:, c], 0)).sum() if c not in chosen else -1 for c in range(len(cols))]
+        chosen.append(int(np.argmax(gain)))
+    tones = cols[chosen]
+    for j, i in np.argwhere(m):
+        R[j, i] = tones[np.linalg.norm(PL[tones] - PL[R[j, i]], axis=1).argmin()]
+    for _ in range(passes):
+        P = np.pad(R, 1, mode='edge')
+        same = sum((P[1 + dy:NY + 1 + dy, 1 + dx:NX + 1 + dx] == R).astype(int)
+                   for dy in (-1, 0, 1) for dx in (-1, 0, 1) if dy or dx)
+        for j, i in np.argwhere(m & (same < 2)):
+            nb = [R[y, x] for y, x in ((j - 1, i), (j + 1, i), (j, i - 1), (j, i + 1)) if 0 <= y < NY and 0 <= x < NX]
+            v, c = np.unique(nb, return_counts=True)
+            R[j, i] = v[c.argmax()]
+    return R, int((R != old).sum())
 
 
 def optimise(R, V, C, PL, pal, ref, locked, sweeps=4, kappa=120.0, sigma=30.0, mu=1e4, cmin=0.15, tie=0.5, potts=20.0, speck_ok=None):
@@ -1132,7 +1619,7 @@ def cell_ref(a, I, J):
     return (np.bincount(cell, weights=lumsrc.ravel(), minlength=NX * NY) / np.maximum(cnt, 1)).reshape(NY, NX)
 
 
-def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=('pepper', 'structures', 'strokes', 'checker', 'opt', 'regular', 'bridge', 'shapes3', 'clean', 'specks', 'unify', 'mixel')):
+def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=('pepper', 'structures', 'strokes', 'checker', 'opt', 'regular', 'bridge', 'shapes3', 'sails', 'clean', 'specks', 'foliage', 'water', 'unify', 'mixel')):
     if a is None:
         a = load_src()
     if XB is None:
@@ -1146,6 +1633,7 @@ def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=
     V, C = votes(a, I, J, Lp, dp, n)
     R = V.argmax(2).astype(np.int16)
     info = {'cells_thin': 0, 'cells_checker': 0}
+    hard = np.zeros((NY, NX), bool)     # rebuilt repeated structures: later repairs keep off
     locked = np.zeros(R.shape, bool)
     if 'pepper' in steps:
         Sm, ring, ocol, (Vin, Cin), (Vout, Cout), pfull = pepper_outline(a, lab, Lp, dp, I, J, PL, n)
@@ -1172,13 +1660,18 @@ def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=
             ex320[y0:y1, x0:x1] = True
         exf = info.get('_masks', {}).get('pepper_full', np.zeros(Lp.shape, bool))
         nst = 0
+        locked_pre = locked.copy()
         for sname, mname, sbox, maxL, maxb in STRUCTURES:
             R, V, ch, Sm_s = structure_layer(R, V, a, lab, Lp, dp, I, J, PL, n, mname, sbox, maxL, maxb, exf, ex320)
             locked |= ch; nst += int(ch.sum())
             info.setdefault('_masks', {})['struct_' + sname] = Sm_s
         info['cells_structures'] = nst
-        R, nbars = railing_bars(R, V, a, lab, Lp, dp, I, J, PL, n, info['_masks'].get('struct_railing'), locked, exclude320=ex320)
-        info['railing_bars'] = nbars
+        lk = locked_pre.copy()
+        R, nrl, nbars, rpitch = regular_railing(R, a, lab, Lp, dp, I, J, PL, n, info['_masks'].get('struct_railing'), lk, ex320)
+        locked |= lk
+        rb = np.zeros_like(hard); x0r, y0r, x1r, y1r = RAIL_BOX; rb[y0r:y1r, x0r:x1r] = True
+        hard |= rb & ~ex320 & (PL[R, 0] < 22)          # bars, rails, posts; slot backgrounds stay repairable
+        info['railing_bars'] = nbars; info['railing_pitch'] = rpitch
     if 'strokes' in steps:
         st = strokes(lab, Lp, XB, YB, I, J)
         smask = np.zeros(Lp.shape, bool)
@@ -1298,13 +1791,30 @@ def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=
         ref = cell_ref(a, I, J)
         R, nch = optimise(R, V, C, PL, pal, ref, locked)
     if 'bridge' in steps:
-        R, na = rebuild_arches(R, Lp, lab, locked, PL)
-        R, nr = deck_lines(R, Lp, lab, locked, PL)
-        info['arches'] = na; info['bridge_row_cells'] = nr
+        lb = locked.copy()
+        R, nr = rebuild_bridge(R, Lp, lab, locked, PL)
+        hard |= locked & ~lb
+        info['bridge_cells'] = nr
     if 'shapes3' in steps:
         R, nsp = rebuild_spire(R, V, a, lab, Lp, dp, I, J, PL, n, locked)
+        lb0 = locked.copy()
         R, nbd = rebuild_bird(R, a, lab, Lp, dp, I, J, PL, n, locked)
+        bx0, by0, bx1, by1 = BIRD['box']
+        birdbox = np.zeros(R.shape, bool)
+        birdbox[int(by0 * NY / 1792):int(by1 * NY / 1792) + 1, int(bx0 * NX / 2400):int(bx1 * NX / 2400) + 1] = True
+        bird_line = birdbox & (PL[R, 0] < 60)
+        hard |= birdbox
         info['spire_cells'] = nsp; info['bird_cells'] = nbd
+    if 'sails' in steps:
+        nsl = 0
+        mk = info.get('_masks', {})
+        slk = mk.get('strokes', np.zeros(R.shape, bool)) | mk.get('pepper_outline', np.zeros(R.shape, bool)) | hard
+        for sname, sbox in SAILS:
+            slk2 = slk.copy()
+            R, ns1 = rebuild_sail(R, a, lab, Lp, dp, I, J, PL, n, sbox, slk2)
+            locked |= slk2
+            nsl += ns1
+        info['sail_cells'] = nsl
     if 'clean' in steps:
         mat, names = LB.material_map()
         chk = checker_cells if 'checker' in steps else np.zeros(R.shape, bool)
@@ -1324,10 +1834,13 @@ def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=
             R, nc1 = column_uniform(R, PL, cbox, cmaxL, exclude=pex)
             nc += nc1
         info['column_cells'] = nc
+        nfac = 0
+        for fname, fbox, fcls in FACADES:
+            R, nf1 = build_facade(R, Lp, lab, PL, fbox, fcls, locked)
+            nfac += nf1
+        info['facade_cells'] = nfac
         R, nsf = small_features(R, a, lab, Lp, I, J, PL, mat, names, locked)
-        tower = np.zeros(R.shape, bool); tower[118:146, 218:229] = True      # the brick tower windows
-        R, nsf2 = small_features(R, a, lab, Lp, I, J, PL, mat, names, locked, reg=tower)
-        nsf += nsf2
+
         R, nsf3 = small_features(R, a, lab, Lp, I, J, PL, mat, names, locked, material='boats', de=20.0, area=(10, 60))
         nsf += nsf3
         info['window_cells'] = nsf
@@ -1335,7 +1848,7 @@ def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=
     if 'specks' in steps:
         mat, names = LB.material_map()
         tex = np.isin(mat, [names.index(t) for t in TEXTURE_MATERIALS])
-        strict_m = np.isin(mat, [names.index(t) for t in ('pavement', 'water', 'sky', 'clouds')])
+        strict_m = np.isin(mat, [names.index(t) for t in ('pavement', 'water', 'sky', 'clouds', 'bandana')])
         chk = checker_cells if 'checker' in steps else np.zeros(R.shape, bool)
         R, nrem, nkeep = speck_rule(R, PL, ramps, locked & ~chk, tex | chk, C, strict=strict_m)
         info['specks_removed'] = nrem; info['specks_kept_texture'] = nkeep
@@ -1365,25 +1878,55 @@ def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=
                     vals, c = np.unique(want, return_counts=True)
                     R[j, i] = vals[c.argmax()]; nfl += 1
         info['cells_regular'] = nfl
+    if 'foliage' in steps:
+        mat, names = LB.material_map()
+        nfo = 0
+        for fb in FOLIAGE_BOXES:
+            R, nf1 = foliage_clumps(R, PL, mat, names, locked, hard, visible_mask(), fb)
+            nfo += nf1
+        info['foliage_cells'] = nfo
+    if 'water' in steps:
+        mat, names = LB.material_map()
+        R, nwat = regular_water(R, PL, mat, names, locked, hard, visible_mask())
+        info['water_cells'] = nwat
     if 'unify' in steps:
         R, nu = unify_small_features(R, PL, C, V, locked)
         info['cells_unified'] = nu
     if 'mixel' in steps:
-        R = fix_mixels(R, V, PL)
+        R = fix_mixels(R, V, PL, locked=hard)
+        if 'shapes3' in steps:                        # bird box: sky around the 1 px line only
+            for j, i in np.argwhere(birdbox & ~bird_line & (PL[R, 0] < 68)):
+                nb = [R[y, x] for y in range(j - 1, j + 2) for x in range(i - 1, i + 2)
+                      if 0 <= y < NY and 0 <= x < NX and PL[R[y, x], 0] >= 68]
+                if nb:
+                    R[j, i] = np.bincount(nb).argmax()
+        cm = load_mask('coat') & ~(info.get('_masks', {}).get('pepper_outline', np.zeros(R.shape, bool)))
+        for j, i in np.argwhere(cm & (PL[R, 2] < -15)):
+            if qa.specks(R[max(0, j - 1):j + 2, max(0, i - 1):i + 2].astype(np.int64), np.ones((min(NY, j + 2) - max(0, j - 1), min(NX, i + 2) - max(0, i - 1)), bool))[0] or \
+               (R[max(0, j - 1):j + 2, max(0, i - 1):i + 2] == R[j, i]).sum() <= 2:
+                nb = [R[y, x] for y, x in ((j - 1, i), (j + 1, i), (j, i - 1), (j, i + 1)) if 0 <= y < NY and 0 <= x < NX and PL[R[y, x], 2] >= -15]
+                if nb:
+                    R[j, i] = np.bincount(nb).argmax()
         if 'clean' in steps:
             mat, names = LB.material_map()
             R, nrare = rare_colours(R, PL, ramps, mat, names, vis=visible_mask())
             info['rare_cells'] = nrare
-            R = fix_mixels(R, V, PL)
+            R = fix_mixels(R, V, PL, locked=hard)
         if 'specks' in steps:
             for _ in range(2):
                 R, nr2, nkeep = speck_rule(R, PL, ramps, locked & ~chk, tex | chk, C, strict=strict_m)
                 info['specks_kept'] = nkeep
-                R = fix_mixels(R, V, PL)
+                R = fix_mixels(R, V, PL, locked=hard)
                 info['specks_removed'] += nr2
     if 'speck' in steps:
         R = despeckle(R, V, PL)
-        R = fix_mixels(R, V, PL)
+        R = fix_mixels(R, V, PL, locked=hard)
+    if 'mixel' in steps:                     # last resort: no mixel survives, line layers kept
+        mk = info.get('_masks', {})
+        keep = mk.get('pepper_outline', np.zeros(R.shape, bool)) | mk.get('strokes', np.zeros(R.shape, bool))
+        if 'shapes3' in steps:
+            keep = keep | bird_line
+        R = fix_mixels(R, V, PL, locked=keep)
     return R, pal, info, (Lp, V, C)
 
 
@@ -1431,6 +1974,10 @@ def report(R, pal, info, Lp, a, write=True):
     gj = os.path.join(OUT, 'grid.json')
     rep['form_all'] = qa.form(img, ones, a, gj)[:2]
     rep['form_mine'] = qa.form(img, mine, a, gj)[:2]
+    reg_ex = mine.copy()
+    for (x0, y0, x1, y1) in REGULARISED:
+        reg_ex[y0:y1, x0:x1] = False
+    rep['form_mine_excl_regularised'] = qa.form(img, reg_ex, a, gj)[:2]
     rep['form_all_uniform_cells'] = qa.form(img, ones, a, None)[:2]
     rep['checker_phase'] = qa.checker_phase(img, ones)
     rep['checker_phase_mine'] = qa.checker_phase(img, mine)

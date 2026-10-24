@@ -1,40 +1,44 @@
 {
  "off_palette": 0,
  "mixels": 0,
- "specks": 788,
- "specks_visible": 652,
+ "specks": 758,
+ "specks_visible": 641,
  "colours_visible": 112,
  "rare_colours_visible": 1,
  "form_all": [
-  2.48641353915146,
-  7.827409092546087
+  2.9114662654407906,
+  9.609248694568691
  ],
  "form_mine": [
-  2.388074904173233,
-  7.477432260395426
+  2.9714247756622103,
+  9.913574600787534
+ ],
+ "form_mine_excl_regularised": [
+  2.1884176948997487,
+  7.094951222674872
  ],
  "form_all_uniform_cells": [
-  3.6819215775743546,
-  12.147278456084587
+  3.988120815870813,
+  13.074799958209596
  ],
  "checker_phase": [
   1.0,
-  2225
+  2227
  ],
  "checker_phase_mine": [
   1.0,
-  1083
+  1084
  ],
  "shapes": {
   "sail_left": {
-   "iou": 0.708,
-   "boundary_dist_blocks": 0.287,
+   "iou": 0.713,
+   "boundary_dist_blocks": 0.305,
    "staircase": 1.0,
    "segments": 0
   },
   "sail_right": {
-   "iou": 0.707,
-   "boundary_dist_blocks": 0.302,
+   "iou": 0.782,
+   "boundary_dist_blocks": 0.238,
    "staircase": 1.0,
    "segments": 0
   },
@@ -51,14 +55,14 @@
    "segments": 4
   },
   "bench": {
-   "iou": 0.825,
-   "boundary_dist_blocks": 0.259,
+   "iou": 0.823,
+   "boundary_dist_blocks": 0.26,
    "staircase": 1.0,
    "segments": 0
   },
   "bridge_stone": {
-   "iou": 0.632,
-   "boundary_dist_blocks": 0.321,
+   "iou": 0.52,
+   "boundary_dist_blocks": 0.466,
    "staircase": 1.0,
    "segments": 2
   },
@@ -81,16 +85,16 @@
    "segments": 0
   },
   "railing": {
-   "iou": 0.765,
-   "boundary_dist_blocks": 0.265,
+   "iou": 0.693,
+   "boundary_dist_blocks": 0.329,
    "staircase": 1.0,
    "segments": 0
   },
   "bandana": {
-   "iou": 0.943,
-   "boundary_dist_blocks": 0.249,
+   "iou": 0.942,
+   "boundary_dist_blocks": 0.255,
    "staircase": 1.0,
-   "segments": 3
+   "segments": 1
   },
   "pepper_silhouette": {
    "iou": 0.988,

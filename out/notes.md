@@ -97,23 +97,21 @@ geometry (IoU and mean symmetric boundary distance in blocks after uniform re-up
 blur of luma against per cell means of the painting, refined cells with `--grid`); checker phase (per
 colour pair with 8+ checker pixels, share on the majority parity). Every gate is also a function.
 
-## 5. Remaining defects I can see (10x comparisons, round 3)
+## 5. Remaining defects I can see (10x and 2x, round 4)
 
-Fixed and checked: the bridge arches are the same size and shape with one continuous deck
-line; the balusters stand at the painting's spacing, 1 px each, with no moire; the coat dither
-forms continuous bands; the spire tapers without a bump; the bird is a clean 1 px V; the pavement
-has fewer blue specks; the lamp post's highlight is one unbroken column; the rare colours are gone.
+Fixed: railing bars identical and evenly spaced, rails single and straight; bridge arches identical
+and evenly spaced with a clean deck line; grey block and tower windows on even grids, flat faces;
+water in 4 blues with horizontal dashes; right jib has its mast and an even edge, left sail halo gone;
+foliage reads as 3-tone clumps; bird blends gone; chest checker continuous.
 
 Still visible:
-* Yacht at x135-160, y150-165: still muddled (hull and windows blur into the shore greens).
-* The grey block building keeps only part of its window grid; its warm lit windows read as grey.
-* The tower windows are fewer and softer than painted.
-* sail_right IoU went from 0.76 to 0.71 (halo rule trims its pale edge); the right sail's mast
-  top is still pale mauve.
-* The bin (x275-290) and its base are darker and flatter than painted.
-* Foliage stays mottled in places; the mid-right trees are better clumped than in round 2, but
-  not as clean as the painting's leaf clumps.
-* Pepper's coat checker is regular 50 % where the painting is sparser.
+* Railing: slot backgrounds still vary in blue between slots (the painting's water behind).
+* Bridge: the parapet above the deck is one flat stone row; the trees directly above are dark, so the
+  value step exists but the parapet has no detail.
+* Tower windows: only the lower half of the tower got the grid; the top storey windows are missing.
+* Yacht at x135-160: still muddled; no rule was written for it.
+* Foliage left: dark navy shadow patches remain between clumps.
+* Bandana edge: a few lighter pinks along the lower edge remain (painted highlight).
 
 ## Research used
 
