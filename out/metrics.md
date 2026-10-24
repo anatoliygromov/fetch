@@ -142,3 +142,14 @@ average (95 % within 2.5 px, never more than 4 px) from k * 7.5.
 | 4 | Palette 128 with protected stroke colours; candidates must occur FLAT in the cell; ridge based stroke layer (masts as single colour 1 px lines) | 2.20 / 6.91 | 26 | 0.50 | masts clean |
 | 5 | Pepper silhouette shape layer with 1 px pixel-perfect outline; rule checker in coat and logo; boundary length term; bands of 3+ px are not mixels | 2.24 / 7.05 | 16 | 1.00 | hull notches gone |
 | 6 | Looser grid (+-4 px, finer levels), border mixels, staircase regulariser, stroke gap joins, no doubled strokes or spurs | 2.10 / 6.48 | 0 | 1.00 | alignment 0.953, outline staircase 1.0 |
+
+## Plate removed (result_bg_noplate_320.png)
+
+Plate found at cells x 154-272, y 191-206, plus its pale glow rows 207-208 (2289 cells; 1,985 px
+changed against result_bg_320.png). Filled by rule (noplate.py): 18 bars continue on the round 4
+pitch down to the curb, the posts continue, slot backgrounds continue the slot rows above
+(mirrored), one straight bottom rail (row 199), one dark green hedge band, one brown curb row
+(203), pavement shifted up from the rows below the plate.
+Gates: off-palette 0, mixels 0, checker 1.0, stroke L-corners 0. Form outside the plate and the
+regularised structures 2.14 / 6.95 (whole picture outside the plate 2.81 / 9.30; the painting has
+the plate under the fill, so form cannot be measured there).
