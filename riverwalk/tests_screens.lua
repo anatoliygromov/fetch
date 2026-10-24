@@ -27,12 +27,24 @@ return function(api)
       love.filesystem.write("s_" .. pending .. ".txt", table.concat(out, "\n") .. "\n"); U.log, pending = nil, nil
     end
   end
+  local function tp(x, y) local st = api.stage(); local p = st.pepper
+    p.x, p.y, p.vx, p.vy, p.onGround, p.ground, p.mode, p.crouch, p.invuln = x, y, 0, 0, true, nil, "normal", false, 0
+    st.cam = math.max(0, math.min(st.world.width - 320, x - 140)); st.bikes = {}; st.bikeT = 99
+  end
+  local function say(text, t) local st = api.stage(); st:say(text, t or 6) end
   local function sel(i) local p = F.pick; p.sel, p.from, p.moved = i, i, -1 end
   local steps = {
     { wait = 0.8 }, { act = function() I.last = "pad" end, wait = 0.05 }, shot("intro_riverwalk"),
     { act = function() api.startRun(F.index("soder")) end, wait = 0.04 }, shot("intro_drop"), { wait = 0.8 }, shot("intro_soder"),
     { act = function() I.last = "key"; api.startRun(F.index("night")) end, wait = 0.8 }, shot("intro_night"),
     { act = function() api.startRun(F.index("citypark_tall")) end, wait = 0.8 }, shot("intro_citypark"),
+    -- the talk panel: the girl's lines (one row, two rows), at the bottom and (Pepper low on the quay) at the top
+    { act = function() api.startRun(1) end, wait = 0.6 }, { act = function() api.setState("play"); tp(760, 184) end, wait = 0.3 },
+    { act = function() api.talk.reset(); say("GOOD GIRL, PEPPER!") end, wait = 0.03 }, shot("talk_rise"), { wait = 0.5 }, shot("talk_short"),
+    { act = function() api.talk.reset(); say("THE BALL IS BACK ON THE BOAT") end, wait = 0.5 }, shot("talk_long"),
+    { act = function() api.talk.reset(); tp(1340, 216); say("OOPS! GET THE BALL!") end, wait = 0.5 }, shot("talk_top"),
+    { act = function() api.talk.reset(); tp(2400, 184); say("IT LANDED ON A FERRY! RIDE THE PONTOON!") end, wait = 0.5 }, shot("talk_3rows"),
+    { act = function() local st = api.stage(); st.msg = nil; api.talk.reset() end, wait = 0.1 },
     { act = function() api.setState("select"); I.last = "pad"; sel(1) end, wait = 0.3 }, shot("select_1_pad"),
     { act = function() sel(2) end, wait = 0.1 }, shot("select_2_pad"),
     { act = function() sel(3) end, wait = 0.1 }, shot("select_3_pad"),

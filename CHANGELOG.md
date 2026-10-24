@@ -26,6 +26,17 @@ tools/layout_qa_menus.py out_ui/step3/frames`.
   (F.wrap); the card drops in (6 frames, ease out). The controls strip `(A) GO` replaces the blinking PRESS ANY
   BUTTON (any button still starts the level). The card goes centred above the strip, else at the top, else just
   above the strip, the first that misses Pepper (F.cardTop; if none does, the one that covers least of her).
+- **Talk panels (talk.lua T.sayLayout, T.drawSay):** the girl's (Mia's) lines in the kit's gold panel sized to the
+  words (13 px cream, at most 188 px a row, split where the halves are most even, up to 3 rows), her portrait (the
+  same talking loop, cut to head and face, 42 x 38, on a light warm window) in the thin gold frame on the panel's
+  side, 8 px over its end, standing up out of it (Pepper's portrait, for a line of hers without a button, on the
+  left). Bottom: the group's bottom at the margin, the right side (clear of the lives); top: under the HUD (y 46),
+  when Pepper is low; never over her (same rule and timings). The panel rises 6 px into place over 6 frames.
+  No continue glyph: these lines go by themselves (4.5 s, or when the zone is left) and no button moves them on
+  (A is jump), so a glyph would teach a wrong button; A only goes on on the story card, which shows it.
+- **Flow test change (tests_flow.lua "hints: all fit the panel"):** it checked the old blue panel's drawing (2 rows,
+  scale 2 letters) for the girl's lines too; now a girl's line may take 3 rows of the 13 px font. Pepper's lines
+  keep their checks.
 - **Pieces (art/source/ui/v8/tools/screens8.py, built by build8.py):** arrow_l / arrow_r, lock / lock_big, dot_on /
   dot_off, frame_s, medal_<kind>_on / _off, bubble and its tails, ball, stamp.
 

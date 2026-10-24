@@ -21,6 +21,9 @@ local PORT = {
   pepper = { file = "art/portraits/pepper_talk.png", fw = 74, sx = 5, sy = 8, w = 64, h = 48 },
   girl   = { file = "art/portraits/girl_talk.png",   fw = 70, sx = 6, sy = 6, w = 58, h = 48 },
 }
+-- (step 3) the speech panel's portrait windows: head and face, cut from the same loops (sx, sy, w, h in each frame)
+local WIN = { pepper = { sx = 14, sy = 10, w = 54, h = 38 }, girl = { sx = 13, sy = 8, w = 42, h = 38 } }
+T.WIN_FILL = { 236 / 255, 214 / 255, 170 / 255 }                 -- behind the portrait (the dark hood and coat read on it)
 T.FPS, T.FRAMES = 9, 8
 T.LINGER = 0.3            -- a line stays this long after it stops applying (no flicker at a zone edge)
 T.GIRL_SHOW = 4.5         -- seconds a girl's line from a level zone stays up
@@ -31,6 +34,8 @@ local function loadPorts()
     if not p.img then
       p.img = lg.newImage(p.file); p.img:setFilter("nearest", "nearest"); p.q = {}
       for f = 1, T.FRAMES do p.q[f] = lg.newQuad((f - 1) * p.fw + p.sx, p.sy, p.w, p.h, p.img:getDimensions()) end
+      local wn = WIN[p == PORT.pepper and "pepper" or "girl"]; p.win = wn; p.wq = {}
+      for f = 1, T.FRAMES do p.wq[f] = lg.newQuad((f - 1) * p.fw + wn.sx, wn.sy, wn.w, wn.h, p.img:getDimensions()) end
     end
   end
 end
@@ -116,7 +121,33 @@ end
 local BOX_H = 40
 local GAP = 4                                                    -- between the button picture and the words
 local TEXT_W = 238                                               -- room for the words (and a button) beside a portrait
+-- (step 3) a story line (no button): the kit's gold panel sized to the words (13 px, at most SAY_W wide, split
+-- where its halves are most even), the speaker's portrait in the thin gold frame on its side (the girl right,
+-- Pepper left), standing up out of it. Bottom: the group's bottom at the margin; top: under the HUD.
+T.SAY_W, T.SAY_PAD_X, T.SAY_PAD_Y, T.SAY_PITCH, T.SAY_IN = 188, 14, 8, 16, 8
+T.SAY_TOP = 46
+function T.sayLayout(line, where)
+  loadPorts()
+  local Fl = require("flow")
+  local p = PORT[line.who] or PORT.girl
+  local rows = Fl.wrap(13, line.text, T.SAY_W)
+  local tw = 0
+  for _, r in ipairs(rows) do tw = math.max(tw, U.sayW(13, r)) end
+  local th = (#rows - 1) * T.SAY_PITCH + U.sayH(13)
+  local pw, ph = tw + 2 * T.SAY_PAD_X, math.max(32, th + 2 * T.SAY_PAD_Y)
+  local fw, fh = p.win.w + 8, p.win.h + 8
+  local w = pw + fw - T.SAY_IN
+  local gy0 = where == "top" and T.SAY_TOP or (239 - U.M - math.max(ph, fh) + 1)
+  local h = math.max(ph, fh)
+  local x0 = line.who == "pepper" and U.M or (320 - U.M - w)
+  local by = gy0 + h - ph                                        -- the panel's top (its bottom on the group's)
+  local fx = line.who == "pepper" and x0 or (x0 + w - fw)
+  local px = line.who == "pepper" and (x0 + fw - T.SAY_IN) or x0
+  return { x0 = x0, y0 = gy0, x1 = x0 + w, y1 = gy0 + h, by = by, w = w, rows = rows, tw = tw, port = p, say = true,
+    px = px, pw = pw, ph = ph, fx = fx, fy = gy0 + h - fh, fw = fw, fh = fh }
+end
 function T.layout(line, where)
+  if not line.btn then return T.sayLayout(line, where) end
   loadPorts()
   local p = PORT[line.who] or PORT.girl
   local pic = T.picFor(line)
@@ -179,10 +210,32 @@ function T.placed(stage)
   end
 end
 
+-- the speech panel: rises 6 px into place over 6 frames; the portrait talks while the line is being said
+function T.drawSay(L, c)
+  local p = L.port
+  local u = math.min(1, c.t / 0.1)
+  local dy = math.floor(6 * (1 - u) * (1 - u) + 0.5) * (L.by < 120 and -1 or 1)
+  lg.push(); lg.translate(0, dy)
+  U.panel(L.px, L.by, L.pw, L.ph, "talkpanel")
+  local th = U.sayH(13)
+  local total = (#L.rows - 1) * T.SAY_PITCH + th
+  local y0 = math.floor(L.by + (L.ph - 1) / 2 - (total - 1) / 2 + 0.5)
+  local tx = L.px + T.SAY_PAD_X + (c.line.who == "pepper" and T.SAY_IN / 2 or -T.SAY_IN / 2)
+  for i, r in ipairs(L.rows) do U.say(13, "cream", r, math.floor(tx + (L.tw - U.sayW(13, r)) / 2 + 0.5), y0 + (i - 1) * T.SAY_PITCH, "talk") end
+  -- the portrait: its window filled light, the talking loop, the thin gold frame round it
+  local talkFor = math.min(2.4, 0.6 + 0.06 * #c.line.text)
+  local f = c.t < talkFor and 1 + math.floor(c.t * T.FPS) % T.FRAMES or 1
+  local wx, wy = L.fx + 4, L.fy + 4
+  lg.setColor(T.WIN_FILL); lg.rectangle("fill", wx, wy, p.win.w, p.win.h)
+  lg.setColor(1, 1, 1, 1); lg.draw(p.img, p.wq[f], wx, wy)
+  U.nine("frame_s", L.fx, L.fy, L.fw, L.fh, 4, true, "portrait")
+  lg.pop()
+end
 function T.drawPanel(stage)
   local L = T.placed(stage)
   if not L then return end
   local c = T.cur
+  if L.say then T.drawSay(L, c); return end
   U.box(L.x0, L.by, L.w, BOX_H)
   local p = L.port
   local talkFor = math.min(2.4, 0.6 + 0.06 * #c.line.text)        -- the loop plays while the line is being said
