@@ -94,10 +94,21 @@ def off_palette(img, pal, region):
     return int(bad.sum()), bad
 
 
+def run3(k, ax):
+    """Pixel lies in a run of >= 3 equal values along axis ax."""
+    def sh(d):
+        return shift(k, d if ax == 0 else 0, d if ax == 1 else 0, -1)
+    p1 = sh(1) == k; m1 = sh(-1) == k
+    p2 = sh(2) == k; m2 = sh(-2) == k
+    return (p1 & m1) | (p1 & p2) | (m1 & m2)
+
+
 def mixels(img, region, min_edge=20.0):
     """A pixel whose colour lies between its two opposite neighbours (left/right or
     up/down), which differ from each other by a strong edge (Lab distance >= min_edge),
-    while the pixel equals neither: a blend colour sitting on an edge."""
+    while the pixel equals neither: a blend colour sitting on an edge. A pixel that is
+    part of a run of 3 or more same-coloured pixels ALONG the edge is a band (a deck
+    stripe, a rim light), not a mixel."""
     lab = srgb_to_lab(img); k = keys(img)
     out = np.zeros(k.shape, bool)
     for ax in (0, 1):
@@ -108,7 +119,7 @@ def mixels(img, region, min_edge=20.0):
         t = ((lab - a) * ab).sum(-1) / np.maximum(L2, 1e-6)
         dseg = np.linalg.norm(lab - (a + t[..., None] * ab), axis=-1)
         m = (ka != kb) & (k != ka) & (k != kb) & (np.sqrt(L2) >= min_edge) & (t > 0.12) & (t < 0.88) \
-            & (dseg < 0.3 * np.sqrt(L2)) & ra & rb
+            & (dseg < 0.3 * np.sqrt(L2)) & ra & rb & ~run3(k, 1 - ax)
         if ax == 0:
             m[0] = m[-1] = False
         else:
@@ -133,20 +144,23 @@ def nb(m, dy, dx):
 
 
 def lcorners(line):
-    """Joint pixels of an L on a 1 px line (Aseprite pixel-perfect rule): one horizontal
-    and one vertical line neighbour that touch each other diagonally, the joint has no
-    other neighbour, so it can be removed without cutting the line. Real corners (both
-    legs at least 2 px long beyond the joint, the line turning 90 degrees) are kept."""
+    """Corner doubles on a 1 px line (the Aseprite pixel-perfect rule): a pixel with
+    exactly one horizontal and exactly one vertical line neighbour. Those two touch
+    diagonally, so the pixel can go without breaking the line. A deliberate square
+    corner (both legs run straight on for 2 more pixels) is not counted."""
     m = line.astype(bool)
-    n8 = sum(nb(m, dy, dx).astype(int) for dy, dx in N8)
+    L, Rt, U, D = nb(m, 0, -1), nb(m, 0, 1), nb(m, -1, 0), nb(m, 1, 0)
     out = np.zeros_like(m)
-    for (hy, hx) in [(0, 1), (0, -1)]:
-        for (vy, vx) in [(1, 0), (-1, 0)]:
-            c = m & nb(m, hy, hx) & nb(m, vy, vx) & (n8 == 2)
-            # the step continues diagonally (a staircase), it is not a square corner
-            c &= ~(nb(m, 2 * hy, 2 * hx) & nb(m, 2 * vy, 2 * vx))
+    for h, hx in ((L, -1), (Rt, 1)):
+        oh = Rt if hx == -1 else L
+        for v, vy in ((U, -1), (D, 1)):
+            ov = D if vy == -1 else U
+            c = m & h & v & ~oh & ~ov
+            c &= ~(nb(m, 0, 2 * hx) & nb(m, 2 * vy, 0) & ~nb(m, -vy, -hx))
             out |= c
-    return int(out.sum()), out
+    # the two pixels of one L both qualify: count each L once (4-connected pieces)
+    n = ndi.label(out)[1]
+    return int(n), out
 
 
 def endpoints(line):
@@ -156,106 +170,133 @@ def endpoints(line):
 
 
 def gaps(line):
-    """Breaks in a 1 px outline: pairs of endpoints closer than 3 px (Chebyshev) that
-    belong to the same line or to two pieces that should join."""
-    ep = np.argwhere(endpoints(line))
-    lab, _ = ndi.label(line, np.ones((3, 3)))
+    """Breaks in a 1 px line: two endpoints of DIFFERENT line pieces, 2 to 3 px apart
+    (Chebyshev), each pointing at the other (the line would continue across the gap).
+    Parallel lines and the two ends of one short line are not gaps."""
+    m = line.astype(bool)
+    ep = np.argwhere(endpoints(m))
+    lab, _ = ndi.label(m, np.ones((3, 3)))
+    def outward(p):
+        y, x = p
+        for dy, dx in N8:
+            yy, xx = y + dy, x + dx
+            if 0 <= yy < m.shape[0] and 0 <= xx < m.shape[1] and m[yy, xx]:
+                return np.array([-dy, -dx], float)
+        return None
     g = 0; where = []
     for k in range(len(ep)):
         for l in range(k + 1, len(ep)):
-            d = np.abs(ep[k] - ep[l]).max()
-            if 2 <= d <= 3:
-                g += 1; where.append((tuple(ep[k]), tuple(ep[l])))
+            p, q = ep[k], ep[l]
+            d = np.abs(p - q).max()
+            if not (2 <= d <= 3) or lab[tuple(p)] == lab[tuple(q)]:
+                continue
+            dp, dq = outward(p), outward(q)
+            v = (q - p).astype(float); v /= np.linalg.norm(v)
+            if dp is None or dq is None:
+                continue
+            if (dp @ v) / np.linalg.norm(dp) >= 0.7 and (dq @ -v) / np.linalg.norm(dq) >= 0.7:
+                g += 1; where.append((tuple(p), tuple(q)))
     return g, where
 
 
+DIRS = [(0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1)]   # (dy, dx), 45 deg steps
+
+
 def boundary_chains(mask):
-    """Outer boundary pixels of a filled mask (or a 1 px line itself) as 8-connected
-    chains of (y, x), traced with OpenCV-free Moore tracing via contour following."""
+    """Boundary pixel chains of a mask (8-connected, OpenCV contour following), as (y, x)."""
     import cv2
-    m = mask.astype(np.uint8)
-    cnts, _ = cv2.findContours(m, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+    cnts, _ = cv2.findContours(mask.astype(np.uint8), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
     return [c[:, 0, ::-1] for c in cnts if len(c) >= 6]
 
 
-def runs_of_chain(ch):
-    """Split a chain into straight runs; returns list of (dir, length) with dir 'h'/'v'."""
-    out = []
-    d = np.diff(ch, axis=0)
-    cur, ln = None, 1
-    for dy, dx in d:
-        if dy == 0 and dx != 0:
-            t = 'h'
-        elif dx == 0 and dy != 0:
-            t = 'v'
-        else:
-            t = 'd'
-        if t == cur:
-            ln += 1
-        else:
-            if cur is not None:
-                out.append((cur, ln))
-            cur, ln = t, 1
-    if cur is not None:
-        out.append((cur, ln))
-    return out
-
-
-def staircase_regularity(mask, min_seg=3):
-    """Staircase regularity of the boundary of `mask`. The boundary is cut into
-    segments of consistent slope (same major axis, steps one way); inside a segment
-    the run lengths of the major axis must be equal, monotone (a curve), or a digital
-    straight line (two values differing by 1, the rarer never repeated). Returns the
-    fraction of regular segments and the count."""
-    import cv2
-    m = mask.astype(np.uint8)
-    cnts, _ = cv2.findContours(m, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
-    reg = tot = 0
-    bad_pts = []
-    for c in cnts:
-        p = c[:, 0, :]
-        if len(p) < 8:
+def line_chains(line):
+    """Ordered pixel chains of a 1 px line (walks from each endpoint; loops from any pixel)."""
+    m = line.astype(bool).copy()
+    H, W = m.shape
+    seen = np.zeros_like(m)
+    def nbrs(p):
+        y, x = p
+        out = []
+        for dy, dx in N4 + N8[4:]:          # orthogonal neighbours first
+            yy, xx = y + dy, x + dx
+            if 0 <= yy < H and 0 <= xx < W and m[yy, xx] and not seen[yy, xx]:
+                out.append((yy, xx))
+        return out
+    chains = []
+    starts = [tuple(p) for p in np.argwhere(endpoints(m))] + [tuple(p) for p in np.argwhere(m)]
+    for s0 in starts:
+        if seen[s0]:
             continue
-        # runs along x (horizontal moves) separated by single vertical steps and vice versa
-        d = np.diff(np.vstack([p, p[:1]]), axis=0)
-        sx = np.sign(d[:, 0]); sy = np.sign(d[:, 1])
-        # build sequence of segments: run lengths of horizontal moves between y changes
-        for major in ('x', 'y'):
-            mv = sx if major == 'x' else sy
-            st = sy if major == 'x' else sx
-            runs = []; cur = 0; dirs = []
-            sign_major = 0; sign_step = 0
-            seg_runs = []; segs = []
-            for k in range(len(d)):
-                if mv[k] != 0 and st[k] == 0:
-                    if sign_major and mv[k] != sign_major:
-                        if seg_runs:
-                            segs.append(seg_runs)
-                        seg_runs = []; sign_step = 0
-                    sign_major = mv[k]; cur += 1
-                else:
-                    s = st[k]
-                    if cur:
-                        if sign_step and s != sign_step and s != 0:
-                            segs.append(seg_runs); seg_runs = []
-                        seg_runs.append(cur); cur = 0
-                    if s != 0:
-                        sign_step = s
-                    if mv[k] != 0 and st[k] != 0:   # diagonal move counts as run 1
-                        seg_runs.append(1)
-            if cur:
-                seg_runs.append(cur)
-            if seg_runs:
-                segs.append(seg_runs)
-            for s in segs:
-                inner = s[1:-1]                 # first and last runs can be partial
-                if len(inner) < min_seg:
-                    continue
-                # only real staircases: the major axis dominates (runs >= 1, slope <= 1)
+        ch = [s0]; seen[s0] = True
+        while True:
+            nb_ = nbrs(ch[-1])
+            if not nb_:
+                break
+            ch.append(nb_[0]); seen[nb_[0]] = True
+        if len(ch) >= 6:
+            chains.append(np.array(ch))
+    return chains
+
+
+def chain_segments(ch, closed=True):
+    """Cut a boundary chain into staircase segments. A segment uses only one axis
+    direction A and one diagonal D next to it (45 deg apart); its run lengths are the
+    numbers of pixels in each A run (between D steps). Returns lists of run lengths."""
+    pts = np.vstack([ch, ch[:1]]) if closed else ch
+    mv = []
+    for d in np.diff(pts, axis=0):
+        t = (int(np.sign(d[0])), int(np.sign(d[1])))
+        if t in DIRS:
+            mv.append(DIRS.index(t))
+    segs, cur, pair, run = [], [], None, 0
+    def close():
+        if cur:
+            segs.append(cur[:])
+    for m in mv:
+        if pair is None:
+            pair = {m}; run = 1 if m % 2 == 0 else 0
+            if m % 2 == 1:
+                cur.append(1)
+            continue
+        cand = pair | {m}
+        ok = len(cand) <= 2 and (len(cand) < 2 or (abs(list(cand)[0] - list(cand)[1]) in (1, 7)))
+        if not ok:
+            if run:
+                cur.append(run + 1)
+            close(); cur = []; pair = {m}; run = 1 if m % 2 == 0 else 0
+            continue
+        pair = cand
+        if m % 2 == 0:
+            run += 1
+        else:
+            cur.append(run + 1 if run else 1); run = 0
+    if run:
+        cur.append(run + 1)
+    close()
+    return segs
+
+
+def staircase_regularity(mask, win=3, line=False):
+    """Staircase regularity of the boundary of `mask`: the boundary is cut into staircase
+    segments (one axis direction plus the diagonal next to it); every window of `win`
+    consecutive run lengths inside a segment (first and last runs dropped, they can be
+    cut short) counts as one segment piece, regular when its runs are equal, monotone
+    (a curve) or within one of each other (a digital straight line such as 2,3,2).
+    A jaggy such as 1,3,1 or 3,1,2 is irregular.
+    Returns (fraction regular, number of windows, list of irregular windows)."""
+    reg = tot = 0; bad = []
+    chains = [(c, False) for c in line_chains(mask)] if line else [(c, True) for c in boundary_chains(mask)]
+    for ch, closed in chains:
+        for runs in chain_segments(ch, closed):
+            inner = runs[1:-1]
+            for k in range(len(inner) - win + 1):
+                w = inner[k:k + win]
                 tot += 1
-                if is_regular(inner):
+                if is_regular(w):
                     reg += 1
-    return (reg / tot if tot else 1.0), tot
+                else:
+                    bad.append(w)
+    return (reg / tot if tot else 1.0), tot, bad
 
 
 def is_regular(r):
@@ -266,11 +307,7 @@ def is_regular(r):
     if (dif >= 0).all() or (dif <= 0).all():
         return True
     if max(r) - min(r) == 1:
-        vals, cnt = np.unique(r, return_counts=True)
-        rare = vals[cnt.argmin()] if cnt[0] != cnt[1] else None
-        if rare is None:
-            return all(r[k] != r[k + 1] for k in range(len(r) - 1)) or True
-        return all(not (r[k] == rare and r[k + 1] == rare) for k in range(len(r) - 1))
+        return True
     return False
 
 
@@ -386,11 +423,11 @@ def run_all(result, palette, mask=None, src_mask=None, region=None, src=None, gr
         m = load_mask(mask, alpha.shape)
         thin = m & ~ndi.binary_erosion(m, np.ones((3, 3)))
         is_line = thin.sum() >= 0.9 * m.sum()
-        line = m if is_line else (m & ~ndi.binary_erosion(m))
-        R['lcorners'], _ = lcorners(line)
-        R['gaps'], _ = gaps(line) if is_line else (0, [])
-        R['endpoints'] = int(endpoints(line).sum()) if is_line else 0
-        R['staircase'], R['staircase_segments'] = staircase_regularity(m)
+        if is_line:                          # a 1 px outline or stroke
+            R['lcorners'], _ = lcorners(m)
+            R['gaps'], _ = gaps(m)
+            R['endpoints'] = int(endpoints(m).sum())
+        R['staircase'], R['staircase_segments'], _ = staircase_regularity(m, line=is_line)
         if src_mask:
             sm = np.array(Image.open(src_mask).convert('L')) > 127
             R['iou'], R['boundary_dist'] = geometry(m, sm)
@@ -403,6 +440,7 @@ def gate_pass(R):
          'form': R['form_mean'] < 3 and R['form_p95'] < 8, 'checker': R['checker_phase'] >= 1.0}
     if 'lcorners' in R:
         p['lcorners'] = R['lcorners'] == 0; p['gaps'] = R['gaps'] == 0
+    if 'staircase' in R:
         p['staircase'] = R['staircase'] >= 0.9
     if 'iou' in R:
         p['geometry'] = R['iou'] >= 0.92 and R['boundary_dist'] < 0.35

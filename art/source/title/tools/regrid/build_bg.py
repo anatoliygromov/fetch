@@ -22,6 +22,7 @@ from PIL import Image
 from scipy import ndimage as ndi
 from common import load_src, srgb_to_lab, NX, NY, OUT, CACHE, load_mask, hexs, unhex
 import grid as G
+import qa
 import labels as LB
 
 FLAT_T = 10
@@ -201,6 +202,7 @@ def mixel_mask(R, PL, min_edge=20.0):
         proj = a + t[..., None] * ab
         dseg = np.linalg.norm(c - proj, axis=-1)
         m = (ra != rb) & (R != ra) & (R != rb) & (np.sqrt(L2) >= min_edge) & (t > 0.12) & (t < 0.88) & (dseg < 0.3 * np.sqrt(L2))
+        m &= ~qa.run3(R, 1 - ax)
         if ax == 0:
             m[0] = m[-1] = False
         else:
@@ -218,9 +220,8 @@ def fix_mixels(R, V, PL, iters=6):
         if not mm.any():
             break
         for j, i in zip(*np.nonzero(mm)):
-            if not (0 < j < NY - 1 and 0 < i < NX - 1):
-                continue
-            cands = {int(R[j, i - 1]), int(R[j, i + 1]), int(R[j - 1, i]), int(R[j + 1, i])}
+            cands = {int(R[y, x]) for y, x in ((j, i - 1), (j, i + 1), (j - 1, i), (j + 1, i))
+                     if 0 <= y < NY and 0 <= x < NX}
             cands.discard(int(R[j, i]))
             best = max(cands, key=lambda l: (V[j, i, l], -np.linalg.norm(PL[l] - PL[R[j, i]])))
             R[j, i] = best
@@ -251,8 +252,14 @@ def is_mixel(R, PL, j, i, min_edge=20.0):
     if not (0 < j < NY - 1 and 0 < i < NX - 1):
         return False
     r = R[j, i]; c = PL[r]
-    for (a, b) in ((R[j, i - 1], R[j, i + 1]), (R[j - 1, i], R[j + 1, i])):
+    for (a, b), along in (((R[j, i - 1], R[j, i + 1]), 0), ((R[j - 1, i], R[j + 1, i]), 1)):
         if a == b or r == a or r == b:
+            continue
+        if along == 0:
+            run = [R[y, i] == r if 0 <= y < NY else False for y in (j - 2, j - 1, j + 1, j + 2)]
+        else:
+            run = [R[j, x] == r if 0 <= x < NX else False for x in (i - 2, i - 1, i + 1, i + 2)]
+        if (run[1] and run[2]) or (run[0] and run[1]) or (run[2] and run[3]):
             continue
         A = PL[a]; ab = PL[b] - A; L2 = float(ab @ ab)
         if L2 < min_edge * min_edge:
@@ -272,7 +279,8 @@ def is_speck(R, j, i):
 
 STROKE_T = 20.0      # Lab contrast of a stroke against both sides
 STROKE_MINLEN = 15   # px along the stroke
-STROKE_W = (1.5, 6.0)  # median width in px (thinner than a cell)
+STROKE_W = (1.5, 6.0)
+STROKE_MINCELLS = 4  # shorter strokes are left to the cell vote  # median width in px (thinner than a cell)
 
 
 def ridge(lab, axis, rs=(3, 4)):
@@ -329,7 +337,10 @@ def strokes(lab, Lp, XB, YB, I, J):
             else:
                 xs_f = rows + sl[1].start; ys_f = xs + sl[0].start   # along = x, across = y
             yi = np.clip(np.round(ys_f).astype(int), 0, H - 1); xi = np.clip(np.round(xs_f).astype(int), 0, W - 1)
-            col = np.bincount(Lp[yi, xi]).argmax()
+            # stroke colour: the palette colour carrying most ridge strength (the core of the
+            # stroke contrasts most with both sides; a highlight strip beside it does not)
+            mfull = np.zeros((H, W), bool); mfull[sl] = lab_c[sl] == k + 1
+            col = np.bincount(Lp[mfull], weights=rd[mfull]).argmax()
             # local cell coordinates of the centre points
             jj = J[yi, xi].astype(int); ii = I[yi, xi].astype(int)
             if axis == 1:
@@ -355,9 +366,9 @@ def strokes(lab, Lp, XB, YB, I, J):
                 uu = coef[0] * vv + coef[1] if straight else np.median(u[v.astype(int) == vv])
                 c = int(np.floor(uu))
                 cells.append((vv, c) if axis == 1 else (c, vv))
-            if len(cells) >= 2:
+            if len(cells) >= STROKE_MINCELLS:
                 mask = np.zeros((H, W), bool); mask[sl] = lab_c[sl] == k + 1
-                out.append((cells, int(col), mask, axis))
+                out.append((cells, int(col), mask, axis, (yi, xi)))
     return out
 
 
@@ -385,14 +396,9 @@ def masked_votes(a, I, J, Lp, dp, n, keep):
     return votes(a, I, J, np.where(keep, Lp, n), np.where(keep, dp, 99), n + 1)
 
 
-def pepper_outline(a, lab, Lp, dp, I, J, PL, n, smooth=8.0):
-    """Pepper's silhouette as a smooth shape on the grid and its 1 px black outline.
-    Returns (shape cells, outline cells, outline colour, V_in, V_out, full-res mask)."""
-    import shapes
-    full = pepper_mask(lab, I, J)
-    Sm, Sfull = shapes.raster_shape(full, I, J, s=smooth, pre=2.0)
-    Sm = ndi.binary_fill_holes(Sm)
-    # 8-connected inner boundary: shape cells with a 4-neighbour outside (image border excluded)
+def outline_ring(Sm):
+    """1 px outline of a shape: shape cells with a 4-neighbour outside (image border
+    excluded), then pixel-perfect (one pixel of every L-corner double dropped)."""
     out = ~Sm
     ring = np.zeros_like(Sm)
     for dy, dx in ((0, 1), (1, 0), (0, -1), (-1, 0)):
@@ -402,6 +408,69 @@ def pepper_outline(a, lab, Lp, dp, I, J, PL, n, smooth=8.0):
         if dx == 1: nb[:, 0] = False
         if dx == -1: nb[:, -1] = False
         ring |= Sm & nb
+    for _ in range(6):
+        n_l, lc = qa.lcorners(ring)
+        if n_l == 0:
+            break
+        lab_l, nl = ndi.label(lc)
+        for q in range(1, nl + 1):
+            ys, xs = np.nonzero(lab_l == q)
+            ring[ys[0], xs[0]] = False
+    return ring
+
+
+def regularize(Sm, cov, passes=4, band=(0.2, 0.8), measure=None):
+    """Greedy staircase clean-up of a rasterised shape: flip boundary cells whose
+    coverage is not decisive (band) when the flip lowers the number of irregular
+    staircase windows (jaggies such as 1,4,1 or 4,1,3) on the boundary."""
+    Sm = Sm.copy()
+    def irregular(m):
+        if measure is not None:
+            f, n, bad = qa.staircase_regularity(measure(m), line=True)
+        else:
+            f, n, bad = qa.staircase_regularity(m)
+        return len(bad), n
+    cur, _ = irregular(Sm)
+    flips = 0
+    for _ in range(passes):
+        changed = False
+        inner = Sm & ~ndi.binary_erosion(Sm)
+        outer = ndi.binary_dilation(Sm) & ~Sm
+        cand = np.argwhere((inner | outer) & (cov > band[0]) & (cov < band[1]))
+        # most ambiguous first
+        cand = sorted(cand.tolist(), key=lambda p: abs(cov[p[0], p[1]] - 0.5))
+        for j, i in cand:
+            Sm[j, i] = ~Sm[j, i]
+            nb, _ = irregular(Sm)
+            if nb < cur:
+                cur = nb; flips += 1; changed = True
+            else:
+                Sm[j, i] = ~Sm[j, i]
+        if not changed:
+            break
+    return Sm, flips
+
+
+def pepper_outline(a, lab, Lp, dp, I, J, PL, n, smooth=8.0):
+    """Pepper's silhouette as a smooth shape on the grid and its 1 px black outline.
+    Returns (shape cells, outline cells, outline colour, V_in, V_out, full-res mask)."""
+    import shapes
+    full = pepper_mask(lab, I, J)
+    Sm, Sfull = shapes.raster_shape(full, I, J, s=smooth, pre=2.0)
+    Sm = ndi.binary_fill_holes(Sm)
+    # remove slivers one or two cells wide (they would give doubled outlines); restore
+    # tiny corner bits the opening shaves off (ear tips)
+    op = ndi.binary_opening(Sm, np.ones((3, 3)))
+    diff, nd = ndi.label(Sm & ~op)
+    for q in range(1, nd + 1):
+        if (diff == q).sum() <= 2:
+            op |= diff == q
+    Sm = op
+    lab_s, ns = ndi.label(Sm)
+    if ns > 1:
+        sz = ndi.sum(Sm, lab_s, range(1, ns + 1)); Sm = lab_s == (np.argmax(sz) + 1)
+    Sm, _ = regularize(Sm, shapes.coverage(Sfull, I, J), passes=8, band=(0.05, 0.95), measure=outline_ring)
+    ring = outline_ring(Sm)
     # outline colour: the most common palette colour of the painting's outline band
     dist_in = ndi.distance_transform_edt(full)
     band = full & (dist_in <= 7) & (lab[..., 0] < 12)
@@ -412,11 +481,12 @@ def pepper_outline(a, lab, Lp, dp, I, J, PL, n, smooth=8.0):
     return Sm, ring, col, (Vin[..., :n], Cin[..., :n]), (Vout[..., :n], Cout[..., :n]), full
 
 
-def optimise(R, V, C, PL, pal, ref, locked, sweeps=4, kappa=120.0, sigma=30.0, mu=1e4, cmin=0.15):
+def optimise(R, V, C, PL, pal, ref, locked, sweeps=4, kappa=120.0, sigma=30.0, mu=1e4, cmin=0.15, tie=0.5, potts=20.0):
     """Coordinate descent over the cells. Each cell may take a colour that occurs in it
     (coverage >= cmin, or the vote winner) or, to resolve a mixel, a 4-neighbour colour.
     Objective: form error (5x5 box blurred luma vs the painting's cell means, squared)
-    + kappa * vote deficit + sigma per isolated speck + mu per mixel."""
+    + kappa * vote deficit + sigma per isolated speck + mu per mixel
+    + potts per differing 4-neighbour (a boundary length term: no new notches)."""
     from scipy.ndimage import uniform_filter
     R = R.copy()
     lum = pal.astype(np.float32) @ np.array([0.299, 0.587, 0.114], np.float32)
@@ -431,7 +501,10 @@ def optimise(R, V, C, PL, pal, ref, locked, sweeps=4, kappa=120.0, sigma=30.0, m
             for i in range(NX):
                 if locked[j, i]:
                     continue
-                cand = set(np.flatnonzero(C[j, i] >= cmin).tolist()) | {int(win0[j, i]), int(R[j, i])}
+                # only near ties may change: colours that occur flat in the cell and have at
+                # least `tie` of the winner's vote (a clearly decided cell keeps its colour)
+                vw = Vn[j, i, win0[j, i]]
+                cand = set(np.flatnonzero((C[j, i] >= cmin) & (Vn[j, i] >= tie * vw)).tolist()) | {int(win0[j, i]), int(R[j, i])}
                 near_mix = mm[max(0, j - 1):j + 2, max(0, i - 1):i + 2].any()
                 if near_mix:
                     for (dj, di) in ((0, 1), (1, 0), (0, -1), (-1, 0)):
@@ -452,7 +525,8 @@ def optimise(R, V, C, PL, pal, ref, locked, sweeps=4, kappa=120.0, sigma=30.0, m
                     R[j, i] = l
                     nm = sum(is_mixel(R, PL, y, x) for y, x in pos)
                     ns = sum(is_speck(R, y, x) for y, x in pos8)
-                    cost = f + kappa * (Vn[j, i, win0[j, i]] - Vn[j, i, l]) + sigma * ns + mu * nm
+                    nd = sum(1 for (y, x) in pos[1:] if 0 <= y < NY and 0 <= x < NX and R[y, x] != l)
+                    cost = f + kappa * (Vn[j, i, win0[j, i]] - Vn[j, i, l]) + sigma * ns + mu * nm + potts * nd
                     if Vn[j, i, l] == 0:
                         cost += kappa
                     if bestc is None or cost < bestc - 1e-9:
@@ -475,7 +549,7 @@ def cell_ref(a, I, J):
     return (np.bincount(cell, weights=lumsrc.ravel(), minlength=NX * NY) / np.maximum(cnt, 1)).reshape(NY, NX)
 
 
-def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=('pepper', 'strokes', 'checker', 'opt', 'mixel')):
+def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=('pepper', 'strokes', 'checker', 'opt', 'regular', 'mixel')):
     if a is None:
         a = load_src()
     if XB is None:
@@ -503,27 +577,76 @@ def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=
         R[inside] = Vin.argmax(2)[inside]; R[outside] = Vout.argmax(2)[outside]
         V = np.where(inside[..., None], Vin, np.where(outside[..., None], Vout, V))
         C = np.where(inside[..., None], Cin, np.where(outside[..., None], Cout, C))
+        # shape cells dropped from the outline by the pixel-perfect rule take the interior vote
+        dropped = Sm & ~ring & edge & (Vin.sum(2) > 0)
+        R[dropped] = Vin.argmax(2)[dropped]
         R[ring] = ocol; locked |= ring
         info['pepper_outline_cells'] = int(ring.sum())
-        pep_ring, pep_shape = ring, Sm
+        info['_masks'] = {'pepper_outline': ring.copy(), 'pepper_shape': Sm.copy(), 'pepper_full': pfull}
     if 'strokes' in steps:
         st = strokes(lab, Lp, XB, YB, I, J)
         smask = np.zeros(Lp.shape, bool)
-        for cells, col, mask, axis in st:
+        for cells, col, mask, axis, ctr in st:
             smask |= mask
-        # cells next to strokes re-vote without the stroke pixels (and their halo)
-        halo = ndi.binary_dilation(smask, iterations=2)
+        # the cells either side of a stroke cell re-vote without the stroke's own pixels
+        # (its anti-aliased halo would otherwise smear the stroke colour sideways)
+        halo = ndi.binary_dilation(smask, iterations=1)
         Vx, Cx = votes(a, I, J, np.where(halo, n, Lp), np.where(halo, 99, dp), n + 1)
-        touched = np.zeros(R.shape, bool)
-        touched[J[halo], I[halo]] = True
-        R[touched] = Vx[..., :n].argmax(2)[touched]
-        V = np.where(touched[..., None], Vx[..., :n], V); C = np.where(touched[..., None], Cx[..., :n], C)
-        ncell = 0
-        for cells, col, mask, axis in st:
+        scells = set()
+        side = set()
+        for cells, col, mask, axis, ctr in st:
             for (j, i) in cells:
+                scells.add((j, i))
+                for dj, di in (((0, -1), (0, 1)) if axis == 1 else ((-1, 0), (1, 0))):
+                    side.add((j + dj, i + di))
+        kept = Vx[..., :n].sum(2) / np.maximum(Vx.sum(2), 1e-6)
+        for (j, i) in side - scells:
+            if 0 <= j < NY and 0 <= i < NX and kept[j, i] >= 0.3:
+                R[j, i] = Vx[j, i, :n].argmax(); V[j, i] = Vx[j, i, :n]; C[j, i] = Cx[j, i, :n]
+        # join pieces of one stroke split by a short gap (aligned ends, up to 3 cells apart)
+        pieces = []
+        for cells, col, mask, axis, ctr in st:
+            cs = sorted(cells, key=lambda c: c[0] if axis == 1 else c[1])
+            pieces.append([cs, col, axis])
+        for p in pieces:
+            for q in pieces:
+                if p is q or p[2] != q[2]:
+                    continue
+                ax = p[2]; ka = 0 if ax == 1 else 1; kb = 1 - ka
+                e, s0 = p[0][-1], q[0][0]
+                gap = s0[ka] - e[ka]
+                if 2 <= gap <= 4 and abs(s0[kb] - e[kb]) <= 1:
+                    fill = []
+                    for t in range(1, gap):
+                        c = [0, 0]; c[ka] = e[ka] + t; c[kb] = e[kb] if t < gap / 2 else s0[kb]
+                        fill.append(tuple(c))
+                    longer = p if len(p[0]) >= len(q[0]) else q
+                    p.append(('fill', fill, longer[1]))
+        ncell = 0
+        smk = np.zeros(R.shape, bool)
+        for p in pieces:
+            for (j, i) in p[0]:
                 if 0 <= j < NY and 0 <= i < NX:
-                    R[j, i] = col; locked[j, i] = True; ncell += 1
+                    R[j, i] = p[1]; locked[j, i] = True; smk[j, i] = True; ncell += 1
+            for extra in p[3:]:
+                for (j, i) in extra[1]:
+                    if 0 <= j < NY and 0 <= i < NX and not smk[j, i]:
+                        R[j, i] = extra[2]; locked[j, i] = True; smk[j, i] = True; ncell += 1
+        # pixel-perfect: drop one pixel of every L-corner double on the strokes
+        for _ in range(6):
+            n_l, lc = qa.lcorners(smk)
+            if n_l == 0:
+                break
+            lab_l, nl = ndi.label(lc)
+            for q in range(1, nl + 1):
+                ys, xs = np.nonzero(lab_l == q)
+                j, i = ys[-1], xs[-1]
+                smk[j, i] = False; locked[j, i] = False
+                R[j, i] = Vx[j, i, :n].argmax() if Vx[j, i, :n].sum() > 0 else V[j, i].argmax()
+                ncell -= 1
         info['strokes'] = len(st); info['cells_stroke'] = ncell
+        info.setdefault('_masks', {})['strokes'] = smk.copy()
+        info['_strokes'] = st
     if 'thin' in steps:
         th = thin_features(Lp, PL, XB, YB, R, C)
         for (j, i), l in th.items():
@@ -545,12 +668,138 @@ def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=
         ref = cell_ref(a, I, J)
         R, nch = optimise(R, V, C, PL, pal, ref, locked)
         info['cells_opt'] = nch
+    if 'regular' in steps:
+        nfl = 0
+        H, W = Lp.shape
+        cellid = (J.astype(np.int64) * NX + I).ravel()
+        cnt = np.bincount(cellid, minlength=NX * NY)
+        for name, (x0, y0, x1, y1), cls in SHAPES:
+            cc = colour_class(PL, cls)
+            i0, i1 = x0 * NX // W, -(-x1 * NX // W); j0, j1 = y0 * NY // H, -(-y1 * NY // H)
+            box = np.zeros(R.shape, bool); box[j0:j1, i0:i1] = True
+            srcm = cc[Lp]
+            cov = (np.bincount(cellid, weights=srcm.ravel(), minlength=NX * NY) / np.maximum(cnt, 1)).reshape(NY, NX)
+            res = cc[R] & box
+            new, fl = regularize(res, np.where(box & ~locked, cov, 0.0))
+            for j, i in np.argwhere(new != res):
+                nbrs = [R[y, x] for y, x in ((j, i - 1), (j, i + 1), (j - 1, i), (j + 1, i)) if 0 <= y < NY and 0 <= x < NX]
+                want = [l for l in nbrs if cc[l] == new[j, i]]
+                if want:
+                    vals, c = np.unique(want, return_counts=True)
+                    R[j, i] = vals[c.argmax()]; nfl += 1
+        info['cells_regular'] = nfl
     if 'mixel' in steps:
         R = fix_mixels(R, V, PL)
     if 'speck' in steps:
         R = despeckle(R, V, PL)
         R = fix_mixels(R, V, PL)
     return R, pal, info, (Lp, V, C)
+
+
+
+# ---------------------------------------------------------------- QA report
+# named shapes: (name, source box x0, y0, x1, y1, palette colour class)
+SHAPES = [
+    ('sail_left', (1760, 1030, 1900, 1212), 'cream'),
+    ('sail_right', (1880, 1010, 1995, 1172), 'cream'),
+    ('lantern_glass', (190, 370, 330, 480), 'glow'),
+    ('lantern_frame', (160, 300, 340, 560), 'dark'),
+    ('bench', (2210, 1370, 2400, 1580), 'dark'),
+    ('bridge_stone', (1100, 1070, 1700, 1150), 'stone'),
+    ('cloud_left', (280, 520, 600, 700), 'cream'),
+    ('railing', (1000, 1300, 1700, 1480), 'dark'),
+    ('bandana', (0, 1100, 1100, 1792), 'pink'),
+]
+# regions the logo, tagline and head tracks will overwrite (cells x0, y0, x1, y1)
+OTHER_TRACKS = [(95, 12, 305, 98), (150, 188, 280, 210), (55, 62, 125, 150)]
+
+
+def colour_class(PL, cls):
+    L, a, b = PL[:, 0], PL[:, 1], PL[:, 2]
+    ch = np.hypot(a, b)
+    return {'cream': (L > 80) & (ch < 25), 'glow': (L > 55) & (b > 40), 'dark': L < 25,
+            'stone': (L > 55) & (L < 80) & (ch < 25), 'pink': (a > 35) & (L > 35)}[cls]
+
+
+def report(R, pal, info, Lp, a, write=True):
+    import json
+    PL = srgb_to_lab(pal.astype(np.float32))
+    img = pal[R]
+    H, W = Lp.shape
+    ones = np.ones(R.shape, bool)
+    mine = ones.copy()
+    for (x0, y0, x1, y1) in OTHER_TRACKS:
+        mine[y0:y1, x0:x1] = False
+    rep = {}
+    rep['off_palette'] = qa.off_palette(img, pal, ones)[0]
+    rep['mixels'] = qa.mixels(img, ones)[0]
+    rep['specks'] = qa.specks(img, ones)[0]
+    gj = os.path.join(OUT, 'grid.json')
+    rep['form_all'] = qa.form(img, ones, a, gj)[:2]
+    rep['form_mine'] = qa.form(img, mine, a, gj)[:2]
+    rep['form_all_uniform_cells'] = qa.form(img, ones, a, None)[:2]
+    rep['checker_phase'] = qa.checker_phase(img, ones)
+    rep['checker_phase_mine'] = qa.checker_phase(img, mine)
+    md = os.path.join(OUT, 'qa_masks'); os.makedirs(md, exist_ok=True)
+    shapes = {}
+    for name, (x0, y0, x1, y1), cls in SHAPES:
+        cc = colour_class(PL, cls)
+        box = np.zeros((H, W), bool); box[y0:y1, x0:x1] = True
+        src = cc[Lp] & box
+        src = ndi.binary_opening(src, iterations=1)
+        i0, i1 = x0 * NX // W, -(-x1 * NX // W); j0, j1 = y0 * NY // H, -(-y1 * NY // H)
+        res = np.zeros(R.shape, bool); res[j0:j1, i0:i1] = cc[R[j0:j1, i0:i1]]
+        up_box = qa.upscale_mask(res, (H, W)) & box
+        res_c = res.copy()
+        iou, bd = qa.geometry(res_c, src) if False else _geom_box(res, src, box)
+        st = qa.staircase_regularity(res)
+        shapes[name] = {'iou': round(iou, 3), 'boundary_dist_blocks': round(bd, 3),
+                        'staircase': round(st[0], 3), 'segments': st[1]}
+        if write:
+            Image.fromarray((res * 255).astype(np.uint8)).save(os.path.join(md, name + '_320.png'))
+            Image.fromarray((src * 255).astype(np.uint8)).save(os.path.join(md, name + '_src.png'))
+    # Pepper silhouette (shape layer) against the painting's silhouette
+    m = info.get('_masks', {})
+    if 'pepper_shape' in m:
+        iou, bd = qa.geometry(m['pepper_shape'], m['pepper_full'])
+        st = qa.staircase_regularity(m['pepper_shape'])
+        shapes['pepper_silhouette'] = {'iou': round(iou, 3), 'boundary_dist_blocks': round(bd, 3),
+                                       'staircase': round(st[0], 3), 'segments': st[1]}
+    rep['shapes'] = shapes
+    lines = {}
+    for name in ('pepper_outline', 'strokes'):
+        if name in m:
+            ln = m[name]
+            lines[name] = {'lcorners': qa.lcorners(ln)[0], 'gaps': qa.gaps(ln)[0],
+                           'endpoints': int(qa.endpoints(ln).sum()), 'pixels': int(ln.sum())}
+            if write:
+                Image.fromarray((ln * 255).astype(np.uint8)).save(os.path.join(md, name + '_320.png'))
+    for name in ('pepper_outline', 'strokes'):
+        if name in m:
+            f, nw, _ = qa.staircase_regularity(m[name], line=True)
+            lines[name]['staircase'] = round(f, 3); lines[name]['staircase_windows'] = nw
+    rep['lines'] = lines
+    if write:
+        json.dump(rep, open(os.path.join(OUT, 'qa_bg.json'), 'w'), indent=1, default=float)
+    return rep
+
+
+def _geom_box(res320, src, box):
+    """IoU and mean boundary distance (blocks) inside a box; the 320 mask is upscaled
+    uniformly (as the game shows it)."""
+    up = qa.upscale_mask(res320, src.shape) & box
+    inter = (up & src).sum(); uni = (up | src).sum()
+    iou = inter / max(uni, 1)
+    def bnd(mm):
+        return mm & ~ndi.binary_erosion(mm)
+    b1, b2 = bnd(up), bnd(src)
+    if b1.sum() == 0 or b2.sum() == 0:
+        return float(iou), float('inf')
+    sl = np.nonzero(box.any(1))[0], np.nonzero(box.any(0))[0]
+    ys = slice(sl[0][0], sl[0][-1] + 1); xs = slice(sl[1][0], sl[1][-1] + 1)
+    d2 = ndi.distance_transform_edt(~b2[ys, xs]); d1 = ndi.distance_transform_edt(~b1[ys, xs])
+    md = 0.5 * (d2[b1[ys, xs]].mean() + d1[b2[ys, xs]].mean()) / (src.shape[1] / NX)
+    return float(iou), float(md)
 
 
 if __name__ == '__main__':
@@ -560,4 +809,7 @@ if __name__ == '__main__':
     rgba = np.dstack([img, np.full(R.shape, 255, np.uint8)])
     Image.fromarray(rgba, 'RGBA').save(os.path.join(OUT, 'result_bg_320_rgba.png'))
     Image.fromarray(np.full(R.shape, 255, np.uint8)).save(os.path.join(OUT, 'mask_bg_320.png'))
-    print(info, 'colours used', len(np.unique(R)))
+    print({k: v for k, v in info.items() if not k.startswith('_')}, 'colours used', len(np.unique(R)))
+    rep = report(R, pal, info, _[0], load_src())
+    import json
+    print(json.dumps(rep, indent=1, default=float))

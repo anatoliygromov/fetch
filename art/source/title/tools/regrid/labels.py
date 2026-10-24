@@ -102,6 +102,12 @@ def cluster_material(rgb, k, merge, minsup, seed=0):
     return out
 
 
+def grid_arrays(I, J):
+    from grid import run as grid_run
+    XB, YB, I2, J2 = grid_run()
+    return XB, YB, I, J
+
+
 def build(a, I, J, seed=0):
     mat, names = material_map(erode=True)
     g = flatness(a)
@@ -121,6 +127,19 @@ def build(a, I, J, seed=0):
         kk, merge, minsup = PARAMS.get(name, DEFAULT)
         cl = cluster_material(rgb, kk, merge, minsup / scale, seed)
         per[name] = [(c, int(n * scale)) for c, n in cl]
+    # thin strokes (masts, rigging): their centre pixels form a protected 'strokes' material,
+    # so a 3 to 6 px mast keeps its own colour instead of the nearest large-area colour
+    import build_bg
+    lab = srgb_to_lab(a)
+    st = build_bg.strokes(lab, np.zeros(a.shape[:2], np.int16), *grid_arrays(I, J))
+    cm = np.zeros(a.shape[:2], bool)
+    for cells, col, mask, axis, (yi, xi) in st:
+        if len(cells) >= 4:                 # long strokes only
+            cm[yi, xi] = True
+    if cm.sum() >= 50:
+        rgb = a[cm]
+        cl = cluster_material(rgb, 10, 8.0, 25, seed)
+        per['strokes'] = [(c, int(n * 40)) for c, n in cl]
     # global merge to PAL_TARGET colours: repeatedly merge the closest pair (Lab distance,
     # nudged by support so small accents survive longer than ramp neighbours of equal
     # distance); the merged colour is the representative of the better supported one.

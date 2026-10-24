@@ -1,0 +1,105 @@
+{
+ "off_palette": 0,
+ "mixels": 0,
+ "specks": 1460,
+ "form_all": [
+  2.0866613711642166,
+  6.444154525757762
+ ],
+ "form_mine": [
+  1.998237694635947,
+  6.045137396791912
+ ],
+ "form_all_uniform_cells": [
+  3.3589696642080327,
+  10.74761883171237
+ ],
+ "checker_phase": [
+  1.0,
+  1580
+ ],
+ "checker_phase_mine": [
+  1.0,
+  935
+ ],
+ "shapes": {
+  "sail_left": {
+   "iou": 0.734,
+   "boundary_dist_blocks": 0.235,
+   "staircase": 1.0,
+   "segments": 2
+  },
+  "sail_right": {
+   "iou": 0.762,
+   "boundary_dist_blocks": 0.261,
+   "staircase": 1.0,
+   "segments": 0
+  },
+  "lantern_glass": {
+   "iou": 0.786,
+   "boundary_dist_blocks": 0.244,
+   "staircase": 1.0,
+   "segments": 0
+  },
+  "lantern_frame": {
+   "iou": 0.735,
+   "boundary_dist_blocks": 0.291,
+   "staircase": 1.0,
+   "segments": 1
+  },
+  "bench": {
+   "iou": 0.823,
+   "boundary_dist_blocks": 0.258,
+   "staircase": 1.0,
+   "segments": 0
+  },
+  "bridge_stone": {
+   "iou": 0.649,
+   "boundary_dist_blocks": 0.251,
+   "staircase": 1.0,
+   "segments": 1
+  },
+  "cloud_left": {
+   "iou": 0.948,
+   "boundary_dist_blocks": 0.216,
+   "staircase": 1.0,
+   "segments": 1
+  },
+  "railing": {
+   "iou": 0.752,
+   "boundary_dist_blocks": 0.269,
+   "staircase": 1.0,
+   "segments": 0
+  },
+  "bandana": {
+   "iou": 0.943,
+   "boundary_dist_blocks": 0.244,
+   "staircase": 1.0,
+   "segments": 2
+  },
+  "pepper_silhouette": {
+   "iou": 0.988,
+   "boundary_dist_blocks": 0.321,
+   "staircase": 0.961,
+   "segments": 51
+  }
+ },
+ "lines": {
+  "pepper_outline": {
+   "lcorners": 0,
+   "gaps": 0,
+   "endpoints": 2,
+   "pixels": 423,
+   "staircase": 1.0,
+   "staircase_windows": 67
+  },
+  "strokes": {
+   "lcorners": 0,
+   "gaps": 2,
+   "endpoints": 84,
+   "pixels": 311,
+   "staircase": 1.0,
+   "staircase_windows": 0
+  }
+ }
+}

@@ -27,12 +27,12 @@ import numpy as np, os, json
 from scipy.ndimage import maximum_filter1d
 from common import load_src, NX, NY, CACHE, OUT
 
-TMAX = 3          # hard limit: a line never moves more than this from k * pitch
+TMAX = 4          # hard limit: a line never moves more than this from k * pitch
 FREE = 1.5        # free movement before the uniform-anchor penalty starts
 ALPHA = 3.0
 CAP = 80.0        # clip edge strength so many edges count more than one huge edge
 MINW = 4          # minimum cell width in source px
-LEVELS = [(16, 3, 0.3), (8, 2, 0.8), (4, 1, 1.5), (2, 1, 2.5), (1, 1, 4.0)]  # (band cells, search t, mu)
+LEVELS = [(16, 3, 0.3), (8, 2, 0.5), (4, 2, 0.8), (2, 2, 1.0), (1, 1, 1.5)]  # (band cells, search t, mu)
 REG = 8           # verification region size in cells
 THR = 48.0        # a "strong colour change"
 
