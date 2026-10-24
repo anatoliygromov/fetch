@@ -34,6 +34,9 @@ Follows docs/ui_design.md (the owner's UI design, 24 Oct). Stops here for the ow
   "game over: TRY AGAIN restarts the level" now expects the last level (PLAY started the furthest open one); HARD MODE
   is reached through OPTIONS (down, down, A, then down, A); new checks: OPTIONS' SOUND left / right, CONTROLS opens
   and B goes back, B from OPTIONS goes back to the menu. 122 of 122 pass; PEPPER UNCHANGED.
+- **CONTROLS: a CRAWL row** (Down: crouch and crawl) after JUMP, the d-pad with its down arm lit / the down-arrow key;
+  MOVE shows the d-pad left / right and the left / right keys; 8 rows, pitch 20 -> 17 px (the font unchanged). The
+  title build's source video art/source/title/video/t2.mp4 is committed (t1, t3 are not).
 - **Gates:** tools/title_frames.py (frames at 3x, colour and greyscale, the title loop GIF at 2x),
   tools/layout_qa_menus.py (226 checks, all pass), tools/pilot2_cards.py: out_ui/pilot2/card_title.png and
   card_menus.png.

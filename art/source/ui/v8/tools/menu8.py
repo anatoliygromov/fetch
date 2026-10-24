@@ -3,7 +3,7 @@ strip (docs/ui_design.md, 24 Oct). Same method and palette as icons8.py: one dis
 outline (64,11,6), 1 px shadow (36,8,5).
   g_a, g_b, g_x, g_y   button coins for the strip and the controls page: 13 px gold coins, the small font's letter in ink
   g_l, g_r, g_start    the shoulder buttons and START as small gold pills with their name in ink
-  g_dpad, g_lr         the d-pad, 13 px (g_lr: left and right lit, for "change")
+  g_dpad, g_lr, g_down the d-pad, 13 px (g_lr: left and right lit, for "change" and MOVE; g_down: down lit, CRAWL)
   k_<name>             keyboard keycaps, 13 px tall: a cream key with its name in ink (SPACE, ESC, SHIFT, ENTER, X, Z, Q)
                        and the arrow keys (k_left, k_right, k_up, k_down)
   tog_on, tog_off      the HARD MODE switch: a 25 x 13 pill, knob right on gold / knob left on dark
@@ -83,8 +83,9 @@ def dpad(lit=None, S=13, arm=5):
     yy, xx = np.mgrid[0:S, 0:S]; c = (S - 1) / 2
     arms = {'left': body & (xx < a0), 'right': body & (xx >= a0 + arm), 'up': body & (yy < a0), 'down': body & (yy >= a0 + arm)}
     if lit:                                            # the unused arms dark, the used ones gold with a light edge
-        for k in ('up', 'down'): put(img, arms[k], DARK['line'])
-        for k in lit: put(img, arms[k] & ((yy == a0 + 1)), GOLD['light'])
+        for k in arms:
+            if k not in lit: put(img, arms[k], DARK['line'])
+        for k in lit: put(img, arms[k] & ((yy == a0 + 1) if k in ('left', 'right') else (xx == a0 + 1)), GOLD['light'])
     if not lit:
         for k, col in (('up', GOLD['light']), ('left', GOLD['light']), ('down', GOLD['dark']), ('right', GOLD['dark'])):
             ys, xs = np.nonzero(arms[k] & ((xx == a0 + 1) | (yy == a0 + 1) if k in ('up', 'left') else (xx == a0 + arm - 2) | (yy == a0 + arm - 2)))
@@ -178,7 +179,7 @@ def build(out):
         a = shadow(a) if sh else a; Image.fromarray(a).save(f'{out}/{name}.png'); meta[name] = (a.shape[1], a.shape[0])
     for ch in 'ABXY': save('g_' + ch.lower(), coin(ch))
     save('g_l', pill('L1')); save('g_r', pill('R1')); save('g_start', pill('START'))
-    save('g_dpad', dpad()); save('g_lr', dpad(lit=['left', 'right']))
+    save('g_dpad', dpad()); save('g_lr', dpad(lit=['left', 'right'])); save('g_down', dpad(lit=['down']))
     for n in ('SPACE', 'ESC', 'SHIFT', 'ENTER', 'X', 'Z', 'Q'): save('k_' + n.lower(), keycap(n))
     for a in ('left', 'right', 'up', 'down'): save('k_' + a, keycap(arrow=a))
     save('tog_on', toggle(True)); save('tog_off', toggle(False))

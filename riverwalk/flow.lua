@@ -254,10 +254,10 @@ function F.drawOptions(t)
   U.strip(items)
 end
 
--- the controls page (screen 4): the handheld drawn on the left, a row per control on the right: the button as it is
+-- the controls page (screen 4): the handheld drawn on the left, a row per control on the right (8 rows, 17 px apart): the button as it is
 -- on the handheld, its action (13 px, one or two words), the keyboard key(s)
-F.C = { X = 10, W = 300, PANEL = 36, H = 172, RIB = 26, HX = 30, ROW0 = 55, PITCH = 20, GX0 = 116, GX1 = 160, LX = 166, KR = 293 }
-F.CONTROLS = { { "dpad", "MOVE" }, { "a", "JUMP" }, { "b", "SNEAK" }, { "x", "PICK UP" }, { "y", "BARK" }, { "lrsh", "SNIFF" }, { "start", "PAUSE" } }
+F.C = { X = 10, W = 300, PANEL = 36, H = 172, RIB = 26, HX = 30, ROW0 = 56, PITCH = 17, GX0 = 116, GX1 = 160, LX = 166, KR = 293 }
+F.CONTROLS = { { "dpad", "MOVE" }, { "a", "JUMP" }, { "down", "CRAWL" }, { "b", "SNEAK" }, { "x", "PICK UP" }, { "y", "BARK" }, { "lrsh", "SNIFF" }, { "start", "PAUSE" } }
 function F.drawControls(t)
   local C = F.C
   backdropWarm(t)

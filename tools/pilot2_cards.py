@@ -94,7 +94,7 @@ card.row(pair('options_2_key') + pair('options_hard_on'), label='OPTIONS: HARD M
 card.row(pair('options_3_pad') + pair('controls_pad'), label='OPTIONS: CONTROLS selected; the CONTROLS page (the handheld, each button\'s action, the keyboard keys)')
 card.row(pair('controls_key'), label='The CONTROLS page with the keyboard glyphs in the strip')
 ui = os.path.join(ROOT, 'riverwalk', 'art', 'ui')
-pieces = ['g_a', 'g_b', 'g_x', 'g_y', 'g_l', 'g_r', 'g_start', 'g_dpad', 'g_lr', 'tog_off', 'tog_on']
+pieces = ['g_a', 'g_b', 'g_x', 'g_y', 'g_l', 'g_r', 'g_start', 'g_dpad', 'g_lr', 'g_down', 'tog_off', 'tog_on']
 card.row([z(rgba_on(f'{ui}/{n}.png'), 5) for n in pieces], gap=12, label='5x: the gamepad glyphs (A B X Y, L1 R1 START, d-pad, d-pad left / right) and the HARD MODE switch')
 keys = ['k_space', 'k_esc', 'k_shift', 'k_enter', 'k_x', 'k_z', 'k_q', 'k_left', 'k_right', 'k_up', 'k_down']
 card.row([z(rgba_on(f'{ui}/{n}.png'), 5) for n in keys], gap=12, label='5x: the keycaps')
