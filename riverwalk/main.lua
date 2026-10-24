@@ -410,8 +410,11 @@ function love.draw()
   stage:draw(debugView)
   local st = stage:stats()
   -- the HUD (hud.lua): while playing, a group Pepper is up under steps aside (ui/hud-v8: per group, not the whole HUD)
-  U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard },
-    state == "play" and { Talk.pepperRect(stage) } or nil)
+  -- (owner 24 Oct) no HUD under the story card between levels: Mia's bust rises above its panel, into the HUD's rows
+  if state ~= "story" then
+    U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard },
+      state == "play" and { Talk.pepperRect(stage) } or nil)
+  end
   if state == "intro" then
     Flow.drawIntro(def, t, { Talk.pepperRect(stage) })            -- (ui step 3) the gold card, the story, A GO
   elseif state == "play" then
