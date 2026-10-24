@@ -55,6 +55,17 @@ tools/layout_qa_menus.py out_ui/step3/frames`.
   words) -> HOLD / BIG JUMP. Unchanged: PICK UP, GIVE, CRAWL, DUCK!, BARK!, RUN.
 - **Flow test change (tests_flow.lua "hints: all fit the panel"):** Pepper's hints are checked on the bubble: at most
   2 rows and at most 3 words shown (was: one row of scale 2 letters in the old panel).
+- **Pause (flow.lua F.drawPause, F.pauseCard):** the warm dim, the kit's gold panel with the PAUSED ribbon, the
+  level's name (7 px) and the bones found (the bone and the count, 13 px gold); the rows GO ON, SOUND, CONTROLS,
+  QUIT as plain outlined 13 px text, only the selected row gold with the paw coin before it (eased between rows,
+  1 px bob), SOUND's 9-segment meter at the right; the row boxes and the A / B coins and tabs hanging off the frame
+  are gone; the controls strip `(A) OK (B) BACK` (`CHANGE (B) BACK` on SOUND). The quit question in the same card:
+  QUIT TO MENU? (13 px gold) over NO / YES, QUIT. The card goes where it misses Pepper (F.cardTop).
+- **CONTROLS in the pause (new row, main.lua pauseAction):** opens the controls page over the warm-dimmed level;
+  B or A goes back to the pause, Start still goes on playing. QUIT moved from the third row to the fourth.
+- **Flow test changes (tests_flow.lua):** "pause: QUIT asks first", "pause: YES, QUIT goes to the menu" and the
+  hard mode test's way out through the pause press Down once more (QUIT is the fourth row now); new checks "pause:
+  CONTROLS opens the controls page" and "pause: B goes back from the controls page". 124 of 124 pass.
 - **Pieces (art/source/ui/v8/tools/screens8.py, built by build8.py):** arrow_l / arrow_r, lock / lock_big, dot_on /
   dot_off, frame_s, medal_<kind>_on / _off, bubble and its tails, ball, stamp, pic_<kind>, g_right (the d-pad, right lit).
 

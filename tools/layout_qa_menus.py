@@ -167,6 +167,26 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
         check(toward, f'{shot}: the tail ({side}) points toward Pepper')
         gap = {'below': Pp['y0'] - B['y1'], 'above': B['y0'] - Pp['y1'], 'right': Pp['x0'] - B['x1'], 'left': B['x0'] - Pp['x1']}[side]
         check(3 <= gap <= 8, f'{shot}: near her ({gap} px, the nudge\'s bounce up to 3)')
+    elif shot.startswith('pause') and 'controls' not in shot:
+        P = many(bs, 'panel')[0]; R = many(bs, 'ribbon')[0]; T = many(bs, 'title')[0]; Sb = many(bs, 'subtitle')[0]
+        for n, b in (('panel', P), ('ribbon', R), ('title', T), ('subtitle', Sb)): check(abs(cx(b) - 159.5) <= 0.5, f'{shot}: {n} centred ({cx(b)})')
+        top = [b for b in (many(bs, 'question') or many(bs, 'bone', 'bones')) if b['x0'] > P['x0'] and b['x1'] < P['x1'] and b['y0'] > P['y0'] and b['y1'] < P['y1']]
+        check(abs((min(b['x0'] for b in top) + max(b['x1'] for b in top)) / 2 - 159.5) <= 0.5 and len({cy(b) for b in top}) == 1, f'{shot}: the bones (or the question) centred on one line')
+        labels = sorted(many(bs, 'label'), key=lambda b: b['y0'])
+        check(len({b['x0'] for b in labels}) == 1, f'{shot}: rows share one left edge')
+        e, d = pitch_even([b['y0'] for b in labels]); check(e, f'{shot}: even row pitch {d}')
+        cur = many(bs, 'cursor')[0]; sel = int(re.findall(r'_(\d)', shot)[0]) - 1 if re.findall(r'_(\d)', shot) else 0
+        check(abs(cy(cur) - cy(labels[sel])) <= 1, f'{shot}: the paw on the selected row\'s centre line')
+        check(labels[0]['x0'] - cur['x1'] - 1 == 4, f'{shot}: the paw 4 px before the rows ({labels[0]["x0"] - cur["x1"] - 1})')
+        mt = many(bs, 'meter')
+        if mt: check(abs(cy(mt[0]) - cy(labels[1])) <= 0.5 and P['x1'] - mt[0]['x1'] >= 14, f'{shot}: the meter on SOUND\'s centre line, clear of the frame')
+        check(all(b['x0'] > P['x0'] + 10 for b in labels + [cur]) and P['y1'] - max(b['y1'] for b in labels) >= 9 or 'confirm' in shot, f'{shot}: rows inside the panel with room')
+        check(not many(bs, 'button', 'tab', 'row'), f'{shot}: no coins or tabs off the frame, no row boxes')
+        s = strip(shot, bs)
+        items = labels + [cur, T, Sb] + top + mt + s
+        check(not overlaps(items), f'{shot}: nothing overlaps {overlaps(items)}')
+    elif shot == 'pause_controls':
+        check(many(bs, 'handheld') and many(bs, 'panel'), f'{shot}: the controls page over the level'); strip(shot, bs)
 check(len(set(strips.values())) == 1, f'strip: the same place on every screen {sorted(set(strips.values()))}')
 # pieces
 INK = (64, 11, 6); SH = (36, 8, 5)

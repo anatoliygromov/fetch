@@ -262,9 +262,9 @@ end
 -- on the handheld, its action (13 px, one or two words), the keyboard key(s)
 F.C = { X = 10, W = 300, PANEL = 36, H = 172, RIB = 26, HX = 30, ROW0 = 56, PITCH = 17, GX0 = 116, GX1 = 160, LX = 166, KR = 293 }
 F.CONTROLS = { { "dpad", "MOVE" }, { "a", "JUMP" }, { "down", "CRAWL" }, { "b", "SNEAK" }, { "x", "PICK UP" }, { "y", "BARK" }, { "lrsh", "SNIFF" }, { "start", "PAUSE" } }
-function F.drawControls(t)
+function F.drawControls(t, overLevel)
   local C = F.C
-  backdropWarm(t)
+  if overLevel then U.dimWarm() else backdropWarm(t) end
   U.panel(C.X, C.PANEL, C.W, C.H)
   U.ribbon("ribbon_menu", 159.5, C.RIB)
   local tw = U.sayW(13, "CONTROLS")
@@ -538,72 +538,70 @@ function F.overCard(o, t)
 end
 -- the cursor of a two-item card: "up" / "down" move it, returns the item on "ok"
 function F.cursor(o, a, n)
-  if a == "up" or a == "down" then o.sel = (o.sel + (a == "up" and -2 or 0)) % n + 1; S.play("tick")
+  if a == "up" or a == "down" then o.from, o.moved = o.sel, love.timer.getTime(); o.sel = (o.sel + (a == "up" and -2 or 0)) % n + 1; S.play("tick")
   elseif a == "ok" then S.play("select"); return o.sel end
 end
 
--- the pause: pz = { sel (1 GO ON, 2 SOUND, 3 QUIT), confirm (nil, or the QUIT? card's sel: 1 NO, 2 YES) }
+-- the pause: pz = { sel (1 GO ON, 2 SOUND, 3 CONTROLS, 4 QUIT), confirm (nil, or the QUIT? card's sel: 1 NO, 2 YES),
+-- controls (true: the controls page is open over the level) }
 -- SOUND: left / right turn the game's volume down or up (0 is off), A steps it up and wraps round to off
-F.pauseItems, F.confirmItems = { "GO ON", "SOUND", "QUIT" }, { "NO", "YES, QUIT" }
-F.PAUSE_SOUND, F.PAUSE_QUIT = 2, 3
--- (ui/hud-v8) drawn to the owner's pause target: the smooth warm dim, the kit's gold panel, the PAUSED ribbon over
--- its top edge, the level in the small font, three rows (the selected one gold with the paw coin over its left end),
--- the A and B coins with their OK / BACK tabs across the bottom edge. Layout in game px; the card's top is P.Y.
--- Offsets from the card's top (the ribbon's top). The card goes where it misses Pepper: centred, else at the top.
-F.P = { X = 75, W = 170, RIB = 0, PANEL = 10, SUB = 24, ROW0 = 35, ROW_H = 19, PITCH = 21, PAD = 15, H = 106,
-  BOX_H = 136, CUR_OUT = 6, LABEL_IN = 18, SEGS = 4 }
-function F.drawPause(pz, def, avoid)
+F.pauseItems, F.confirmItems = { "GO ON", "SOUND", "CONTROLS", "QUIT" }, { "NO", "YES, QUIT" }
+F.PAUSE_SOUND, F.PAUSE_CONTROLS, F.PAUSE_QUIT = 2, 3, 4
+-- (step 3) the owner's pause, for a child: the warm dim, the kit's gold panel with the PAUSED ribbon over its top edge,
+-- the level's name (7 px) and the bones found (the bone and the count, 13 px), then the rows as plain outlined text
+-- (only the selected one gold, the paw coin before it, eased between rows with a 1 px bob), SOUND's 9-segment meter at
+-- the right; no boxes round the rows, no buttons hanging off the frame: the controls strip at the bottom. QUIT asks
+-- first in the same card. Offsets from the card's top (the ribbon's top); the card goes where it misses Pepper.
+F.P = { X = 70, W = 180, RIB = 0, PANEL = 10, SUB = 24, BONES = 42, ROW0 = 57, PITCH = 17, H = 124, BOX_H = 134,
+  LABEL_IN = 38, CUR_IN = 13, RIGHT_IN = 16, SEGS = 4 }
+function F.drawPause(pz, def, avoid, st)
   local P = F.P
-  local y = math.floor((240 - P.BOX_H) / 2)
-  local function miss(yy) local a = avoid; return not a or not (a[1] < P.X + P.W and a[3] > P.X and a[2] < yy + P.BOX_H and a[4] > yy) end
-  if not miss(y) and miss(2) then y = 2 end
-  U.dimWarm(); shifted(y, function() F.pauseCard(pz, def) end)
+  if pz.controls then F.drawControls(0, true); return end
+  U.dimWarm(); shifted(F.cardTop(P.X, P.W, P.BOX_H, avoid), function() F.pauseCard(pz, def, st) end)
+  local items = { { "ok", "OK" }, { "back", "BACK" } }
+  if not pz.confirm and pz.sel == F.PAUSE_SOUND then items = { { "lr", "CHANGE" }, { "back", "BACK" } } end
+  U.strip(items)
 end
-function F.pauseCard(pz, def)
+function F.pauseCard(pz, def, st)
   local Se = require("settings")
   local P = F.P
-  local line = P.PANEL + P.H - 6                                  -- the frame's bottom gold line
-  local tabw = U.body("tab")
-  for _, cx in ipairs({ 131, 188 }) do U.put("tab", cx - (tabw - 1) / 2, line, "tab") end   -- (hanging behind the frame)
   U.panel(P.X, P.PANEL, P.W, P.H)
   U.ribbon("ribbon_pause", 159.5, P.RIB)
-  local tw = U.sayW(13, "PAUSED")
-  U.say(13, "ink", "PAUSED", math.floor(159.5 - (tw - 1) / 2 + 0.5), P.RIB + 2, "title")
-  local items, sel = F.pauseItems, pz.sel
-  local sub = ("LEVEL %d %s"):format(def.number or 1, (def.name or ""):upper())
-  if pz.confirm then sub, items, sel = "QUIT TO THE MENU?", F.confirmItems, pz.confirm end
-  local sw = U.sayW(7, sub)
-  U.say(7, "cream", sub, math.floor(159.5 - (sw - 1) / 2 + 0.5), P.SUB, "subtitle")
-  local rx = P.X + P.PAD
-  local rw = P.W - 2 * P.PAD
+  U.sayC(13, "ink", "PAUSED", 159.5, P.RIB + 2, "title")
+  U.sayC(7, "cream", ("LEVEL %d %s"):format(def.number or 1, (def.name or ""):upper()), 159.5, P.SUB, "subtitle")
   local th = U.sayH(13)
+  local items, sel, m = F.pauseItems, pz.sel, pz
+  if pz.confirm then
+    items, sel = F.confirmItems, pz.confirm
+    m = pz.cm or {}; pz.cm = m; m.sel = pz.confirm
+    U.sayC(13, "gold", "QUIT TO MENU?", 159.5, math.floor(P.BONES - (th - 1) / 2 + 0.5), "question")
+  else
+    pz.cm = nil
+    local bstr = st and ("%d/%d"):format(st.bones, st.total) or ""
+    local bw, bh = U.body("bone")
+    local nw = U.sayW(13, bstr)
+    local gx = math.floor(159.5 - (bw + U.ICON_GAP + nw - 1) / 2 + 0.5)
+    U.put("bone", gx, math.floor(P.BONES - (bh - 1) / 2 + 0.5), "bone")
+    U.say(13, "gold", bstr, gx + bw + U.ICON_GAP, math.floor(P.BONES - (th - 1) / 2 + 0.5), "bones")
+  end
+  local function rowY(i) return P.ROW0 + (i - 1) * P.PITCH end
+  local xr = P.X + P.W - 1 - P.RIGHT_IN
   for i, it in ipairs(items) do
-    local ry = P.ROW0 + (i - 1) * P.PITCH
     local on = sel == i
-    U.put(on and "row_on" or "row_off", rx, ry, "row")
-    local cy = ry + (P.ROW_H - 1) / 2
-    local ly = math.floor(cy - (th - 1) / 2 + 0.5)
-    if on then local _, ch = U.body("coin_paw"); U.put("coin_paw", rx - P.CUR_OUT, math.floor(cy - (ch - 1) / 2 + 0.5), "cursor") end
-    U.say(13, "cream", it, rx + P.LABEL_IN, ly, "label")
-    if not pz.confirm and i == F.PAUSE_SOUND then                -- the sound level: one segment a step, lit up to it
+    local y = rowY(i)
+    U.say(13, on and "gold" or "cream", it, P.X + P.LABEL_IN, y, "label")
+    if not pz.confirm and i == F.PAUSE_SOUND then                -- one segment a step, lit up to the level
       local segw, segh = U.body("seg_on")
       local mw = (Se.MAX - 1) * P.SEGS + segw
-      local mx, my = rx + rw - 6 - mw, math.floor(cy - (segh - 1) / 2 + 0.5)
-      -- a dark trough under the meter (it reads on the gold row too): ink edge, the dark row's fill
-      lg.setColor(64 / 255, 11 / 255, 6 / 255); lg.rectangle("fill", mx - 2, my - 2, mw + 4, segh + 4)
-      lg.setColor(44 / 255, 22 / 255, 14 / 255); lg.rectangle("fill", mx - 1, my - 1, mw + 2, segh + 2); lg.setColor(1, 1, 1, 1)
+      local mx, my = xr - mw + 1, math.floor(y + (th - 1) / 2 - (segh - 1) / 2 + 0.5)
       for k = 1, Se.MAX do U.put(k <= Se.volume and "seg_on" or "seg_off", mx + (k - 1) * P.SEGS, my, "seg") end
       U.logBox("meter", mx, my, mx + mw - 1, my + segh - 1)
     end
   end
-  -- A and B: coins centred on the frame's bottom gold line, their tabs hanging under them with OK / BACK
-  local cw, ch = U.body("btn_a")
-  for k, b in ipairs({ { "btn_a", "OK" }, { "btn_b", "BACK" } }) do
-    local cx = k == 1 and 131 or 188
-    U.put(b[1], cx - (cw - 1) / 2, line - (ch - 1) / 2, "button")
-    local hw = U.sayW(7, b[2])
-    U.say(7, "cream", b[2], math.floor(cx - (hw - 1) / 2 + 0.5), line + (ch - 1) / 2 + 3, "hint")
-  end
+  local cw, ch = U.body("coin_paw")
+  if (m.from or 0) > #items then m.from = sel end
+  local cy = cursorY({ sel = sel, from = m.from or sel, moved = m.moved }, rowY) + (th - 1) / 2
+  U.put("coin_paw", P.X + P.CUR_IN, math.floor(cy - (ch - 1) / 2 + 0.5) - bob(), "cursor")
 end
 
 -- after the last level: e = { score, best, newBest, lines (the last level's outro, optional) }

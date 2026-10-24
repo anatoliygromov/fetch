@@ -59,7 +59,7 @@ local clearAt, hit, hl                                          -- the level's c
 
 local function setLevel(name) levelName = name; def = require("level." .. name) end
 -- the current level from the start, alone (the test modes, api.newRun)
-local function fresh() Talk.reset(); clearAt, hit, hl = nil, false, nil; over.sel, pz.sel, pz.confirm = 1, 1, nil end
+local function fresh() Talk.reset(); clearAt, hit, hl = nil, false, nil; over.sel, pz.sel, pz.confirm, pz.controls = 1, 1, nil, nil end
 local function freeStage() if stage and stage.ground then stage.ground:release(); stage.ground = nil end end   -- its 3 MB ground canvas
 local function newRun() freeStage(); stage = St.new(def); state, t, tally = "intro", 0, nil; fresh() end
 -- the run's current level: its intro card; it starts with the run's score and lives
@@ -186,12 +186,16 @@ local function overAction(a)
 end
 -- the pause: GO ON or QUIT; QUIT asks first. Back (B / Esc) goes one step back: from the question to the pause,
 -- from the pause to the game. B is also sneak, so it never quits.
-local function resume() state = "play"; pz.sel, pz.confirm = 1, nil; S.music(musicOn) end
+local function resume() state = "play"; pz.sel, pz.confirm, pz.controls = 1, nil, nil; S.music(musicOn) end
 local function pauseAction(a)
+  if pz.controls then                                             -- the controls page: B (or A) goes back to the pause
+    if a == "back" or a == "ok" then pz.controls = nil; S.play("tick") end
+    return
+  end
   if pz.confirm then
     if a == "back" then pz.confirm = nil; S.play("tick"); return end
-    local c = { sel = pz.confirm }
-    local r = Flow.cursor(c, a, #Flow.confirmItems); pz.confirm = c.sel
+    local c = pz.cm or {}; c.sel = pz.confirm                      -- (pz.cm: the question's cursor, eased by the drawing)
+    local r = Flow.cursor(c, a, #Flow.confirmItems); pz.confirm = c.sel; pz.cm = c
     if r == 1 then pz.confirm = nil elseif r == 2 then S.play("tick"); toMenu() end
     return
   end
@@ -202,6 +206,7 @@ local function pauseAction(a)
   local r = Flow.cursor(pz, a, #Flow.pauseItems)
   if r == 1 then resume()
   elseif r == Flow.PAUSE_SOUND then if Se.volume >= Se.MAX then Se.step(-Se.MAX) else Se.step(1) end; S.play("tick")
+  elseif r == Flow.PAUSE_CONTROLS then pz.controls = true
   elseif r == Flow.PAUSE_QUIT then pz.confirm = 1 end
 end
 -- the story card: only A goes on, after Flow.CARD_WAIT seconds (time to read it aloud)
@@ -417,7 +422,7 @@ function love.draw()
     Talk.draw(stage)
     drawTuning()
   elseif state == "pause" then
-    Flow.drawPause(pz, def, { Talk.pepperRect(stage) })
+    Flow.drawPause(pz, def, { Talk.pepperRect(stage) }, st)
   elseif state == "over" then
     Flow.drawOver(over, t, { Talk.pepperRect(stage) })
   elseif state == "clear" then
@@ -425,7 +430,8 @@ function love.draw()
   elseif state == "story" then
     Flow.drawStory(story, t, { Talk.pepperRect(stage) })
   end
-  if state ~= "play" then                                         -- the cards dim the level, never Pepper
+  if state ~= "play" and not (state == "pause" and pz.controls) then   -- the cards dim the level, never Pepper (the
+    -- controls page from the pause covers the screen)
     love.graphics.push(); love.graphics.translate(0, -math.floor((stage.camY or 0) + 0.5))   -- (tall levels: camera y)
     love.graphics.setColor(1, 1, 1, 1); stage.pepper:draw(math.floor(stage.cam + 0.5))
     love.graphics.pop()

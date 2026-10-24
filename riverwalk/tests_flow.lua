@@ -306,11 +306,17 @@ return function(api)
     key("mute"), check("mute button: sound off", function() return Se.volume == 0, "volume " .. Se.volume end),
     key("mute"), check("mute button again: sound back", function() return Se.volume == 7, "volume " .. Se.volume end),
     wait(0.05), shot("u10_pause_sound"), key("escape"), state("play", 1))
+  -- CONTROLS (the third row, step 3): the controls page over the level; B goes back to the pause
   add(key("return"), state("pause", 1), key("down"), key("down"), key("space"),
+    check("pause: CONTROLS opens the controls page", function() return api.getState() == "pause" and api.pause().controls == true, tostring(api.pause().controls) end),
+    shot("u14_pause_controls"), key("escape"),
+    check("pause: B goes back from the controls page", function() return api.getState() == "pause" and not api.pause().controls, api.getState() end),
+    key("escape"), state("play", 1))
+  add(key("return"), state("pause", 1), key("down"), key("down"), key("down"), key("space"),
     check("pause: QUIT asks first", function() return api.getState() == "pause" and api.pause().confirm == 1, api.getState() end), shot("u7_pause"))
   add(key("space"), check("pause: NO keeps the game", function() return api.getState() == "pause" and not api.pause().confirm, api.getState() end))
   add(key("down"), key("space"), key("escape"), check("pause: back from the question", function() return api.getState() == "pause" and not api.pause().confirm, api.getState() end))
-  add(key("down"), key("down"), key("space"), key("down"), key("space"),
+  add(key("down"), key("down"), key("down"), key("space"), key("down"), key("space"),
     check("pause: YES, QUIT goes to the menu", function() return api.getState() == "menu" and api.run() == nil, api.getState() end))
 
   -- GAME OVER: TRY AGAIN (the same level, 3 lives, the score it started with), then MENU
@@ -345,7 +351,7 @@ return function(api)
     check("hard mode: the stage is hard, no hints, no nudge", function()
       local s = api.stage(); return s.hard == true and s:hint() == nil and T.cur == nil, tostring(s.hard) end))
   add(wait(3.2), check("hard mode: no idle nudge", function() return T.nudge.btn == nil, tostring(T.nudge.btn) end), shot("u9_hard"))
-  add(key("return"), state("pause", 1), key("down"), key("down"), key("space"), key("down"), key("space"), state("menu", 1),
+  add(key("return"), state("pause", 1), key("down"), key("down"), key("down"), key("space"), key("down"), key("space"), state("menu", 1),
     key("down"), key("down"), key("space"), state("options", 1), key("down"), key("space"),
     check("hard mode: off again", function() return not F.hard and readSave("hard.txt"):find("0") ~= nil, "" end))
 

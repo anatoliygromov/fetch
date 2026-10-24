@@ -78,6 +78,17 @@ return function(api)
     { act = function() extra = function() places({ { 270, 104, "PICK UP", "x" } }) end end, wait = 0.1 }, shot("hint_side_left"),
     { act = function() extra = function() places({ { 160, 52, "HOLD: SNEAK", "b" } }) end end, wait = 0.1 }, shot("hint_under"),
     { act = function() extra = nil; api.talk.reset() end, wait = 0.1 },
+    -- the pause: each row, the question, the controls page; the keyboard's glyphs too
+    { act = function() I.last = "pad"; tp(760, 184); api.stage().msg = nil; api.talk.reset(); local st = api.stage(); st.taken = 12
+      api.setState("pause"); local p = api.pause(); p.sel, p.from, p.moved, p.confirm, p.controls = 1, 1, -1, nil, nil end, wait = 0.15 }, shot("pause_1"),
+    { act = function() local p = api.pause(); p.sel, p.from = 2, 2 end, wait = 0.1 }, shot("pause_2_sound"),
+    { act = function() local p = api.pause(); p.sel, p.from = 3, 3 end, wait = 0.1 }, shot("pause_3"),
+    { act = function() local p = api.pause(); p.sel, p.from = 4, 4 end, wait = 0.1 }, shot("pause_4"),
+    { act = function() local p = api.pause(); p.confirm, p.cm = 1, { sel = 1, from = 1, moved = -1 } end, wait = 0.1 }, shot("pause_confirm_1"),
+    { act = function() local p = api.pause(); p.confirm, p.cm = 2, { sel = 2, from = 2, moved = -1 } end, wait = 0.1 }, shot("pause_confirm_2"),
+    { act = function() local p = api.pause(); p.confirm, p.cm, p.controls = nil, nil, true end, wait = 0.1 }, shot("pause_controls"),
+    { act = function() I.last = "key"; local p = api.pause(); p.controls, p.sel, p.from = nil, 2, 2 end, wait = 0.1 }, shot("pause_2_key"),
+    { act = function() local p = api.pause(); p.sel, p.from = 1, 1; api.setState("play") end, wait = 0.1 },
     { act = function() api.setState("select"); I.last = "pad"; sel(1) end, wait = 0.3 }, shot("select_1_pad"),
     { act = function() sel(2) end, wait = 0.1 }, shot("select_2_pad"),
     { act = function() sel(3) end, wait = 0.1 }, shot("select_3_pad"),
