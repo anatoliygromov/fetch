@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="440" height="60" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#20242c" nextlayerid="9" nextobjectid="277">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="440" height="60" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#20242c" nextlayerid="9" nextobjectid="284">
  <editorsettings>
   <export target="../riverwalk/level/tiled/downtown_tall.lua" format="lua"/>
  </editorsettings>
@@ -741,6 +741,8 @@
     <property name="kind" value="decor"/>
     <property name="layer" value="back"/>
     <property name="label" value="top"/>
+    <property name="fronts" value="2,1"/>
+    <property name="plaster" value="yellow"/>
    </properties>
   </object>
   <object id="85" type="props" x="1320" y="278" width="80" height="136">
@@ -748,6 +750,8 @@
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
     <property name="layer" value="back"/>
+    <property name="fronts" value="1"/>
+    <property name="plaster" value="red"/>
    </properties>
   </object>
   <object id="86" type="props" x="1404" y="286" width="144" height="128">
@@ -755,20 +759,44 @@
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
     <property name="layer" value="back"/>
+    <property name="fronts" value="3,2"/>
+    <property name="plaster" value="cream"/>
    </properties>
   </object>
-  <object id="87" name="GUILD HOUSE" type="props" x="1552" y="250" width="148" height="164">
+  <object id="87" name="GUILD HOUSE" type="props" x="1552" y="282" width="148" height="132">
    <properties>
     <property name="kind" value="decor"/>
     <property name="layer" value="back"/>
     <property name="label" value="top"/>
+    <property name="fronts" value="3,1"/>
+    <property name="plaster" value="ochre"/>
    </properties>
   </object>
-  <object id="88" type="props" x="1912" y="270" width="268" height="144">
+  <object id="277" type="props" x="1912" y="270" width="88" height="144">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
     <property name="layer" value="back"/>
+    <property name="fronts" value="2"/>
+    <property name="plaster" value="yellow"/>
+   </properties>
+  </object>
+  <object id="278" type="props" x="2000" y="256" width="88" height="158">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="1"/>
+    <property name="plaster" value="cream"/>
+   </properties>
+  </object>
+  <object id="279" type="props" x="2088" y="272" width="92" height="142">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="3"/>
+    <property name="plaster" value="red"/>
    </properties>
   </object>
   <object id="89" type="props" x="2296" y="238" width="88" height="176">
@@ -776,6 +804,44 @@
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
     <property name="layer" value="back"/>
+    <property name="fronts" value="1"/>
+    <property name="plaster" value="stone"/>
+   </properties>
+  </object>
+  <object id="280" type="props" x="1700" y="288" width="212" height="126">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="1,2,1"/>
+    <property name="plaster" value="red"/>
+   </properties>
+  </object>
+  <object id="281" type="props" x="2180" y="240" width="116" height="174">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="2"/>
+    <property name="plaster" value="ochre"/>
+   </properties>
+  </object>
+  <object id="282" type="props" x="2384" y="256" width="96" height="158">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="3"/>
+    <property name="plaster" value="yellow"/>
+   </properties>
+  </object>
+  <object id="283" type="props" x="2640" y="262" width="96" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="1"/>
+    <property name="plaster" value="red"/>
    </properties>
   </object>
   <object id="90" name="RIDDARHOLMEN" type="props" x="3380" y="24" width="32" height="390">

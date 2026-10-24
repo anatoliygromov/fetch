@@ -1001,7 +1001,7 @@ function Sc.buildArt(levelW, style)
 end
 
 -- layers 1 to 5 of an art level, and the water of its pond or fountain basin with the far bank behind it
-function Sc.drawFarArt(L, camx, t, w)
+function Sc.drawFarArt(L, camx, t, w, def)
   local T, A = Sc.townArt(L.style), Sc.art()
   skyAndClouds(L, camx, t)
   local on = vpush("far")
@@ -1023,6 +1023,8 @@ function Sc.drawFarArt(L, camx, t, w)
   else
     Look.use("shore")
     strip(T.roofs, camx, 0.25, 160)                               -- 4 far roofs and spires
+    if def then (package.loaded.arthooks or require("arthooks")).drawFarSpire(def, camx, w.width) end   -- (art/placement:
+    -- the tall Downtown's landmark, Riddarholmen's spire, behind the old town row on this layer)
     vpop(on); on = vpush("mid")
     Look.use("mid")
     strip(T.facades, camx, 0.5, 178)                              -- 5 old town facades (faded)
@@ -1351,6 +1353,15 @@ local function tier(def)
       for _, q in ipairs(TI.ledges) do
         if (TI.role[q] == "deck" or TI.role[q] == "slat") and q.x0 < p.x1 and q.x1 > p.x0 and q.y1 <= p.y0 + 2 then post = TI.role[q] end
       end
+      -- (art/placement) or a ledge it holds up part way down: the play tower's lower deck (on the low road's tier,
+      -- so not one of TI.ledges) on its outer post, which was drawn as a 4 px tree trunk up into the oak's canopy
+      -- (a post stops short of the path; a trunk goes down to it). It is drawn from that ledge down to the path,
+      -- and the ledge as a deck (drawPropArt); it was an invisible step left of the slide tower's cage
+      for _, q in ipairs(def.props) do
+        if p.y1 < foot and q.kind == "oneway" and q.x0 < p.x1 and q.x1 > p.x0 and q.y0 > p.y0 and q.y1 <= p.y1 then
+          post = "deck"; TI.postTop = TI.postTop or {}; TI.postTop[p] = q.y0
+        end
+      end
       if post then TI.role[p] = post == "deck" and "towerpost" or "skip" else TI.trunks[#TI.trunks + 1] = p end
     end
   end
@@ -1570,42 +1581,62 @@ local function drawDeck(p, ox)
   lg.setColor(DECK[2]); lg.rectangle("fill", x0, y, x1 - x0, 1)
   lg.setColor(DECK[3]); lg.rectangle("fill", x0, y + hgt - 1, x1 - x0, 1)
 end
-local function drawTowerPost(t, ox)
+-- (art/placement) a post goes down to the path (foot), behind the slide tower's art: it stopped in the air at the
+-- cage's top; top: where it starts (its deck), default its box's top
+local function drawTowerPost(t, ox, foot, top)
   local x, w = t.x0 - ox, t.x1 - t.x0
-  lg.setColor(INK); lg.rectangle("fill", x - 1, t.y0, w + 2, t.y1 - t.y0)
-  lg.setColor(POST[1]); lg.rectangle("fill", x, t.y0, w, t.y1 - t.y0)
-  lg.setColor(POST[2]); lg.rectangle("fill", x, t.y0, 1, t.y1 - t.y0)
-  if w > 3 then lg.setColor(POST[3]); lg.rectangle("fill", x + w - 1, t.y0, 1, t.y1 - t.y0) end
+  local y0, y1 = top or t.y0, math.max(t.y1, foot or t.y1)
+  lg.setColor(INK); lg.rectangle("fill", x - 1, y0, w + 2, y1 - y0)
+  lg.setColor(POST[1]); lg.rectangle("fill", x, y0, w, y1 - y0)
+  lg.setColor(POST[2]); lg.rectangle("fill", x, y0, 1, y1 - y0)
+  if w > 3 then lg.setColor(POST[3]); lg.rectangle("fill", x + w - 1, y0, 1, y1 - y0) end
 end
 
 -- the low bough (crisp): a thick bough over the walk, bending up into the canopy at its trunk's side
 local function drawLowBough(p, t, ox)
   local x0, x1, y0, y1 = p.x0 - ox, p.x1 - ox, p.y0, p.y1
   local side = t and ((t.x0 + t.x1) / 2 > (p.x0 + p.x1) / 2) and 1 or -1
-  local cols = {}
-  for x = x0, x1 - 1 do cols[#cols + 1] = { x, y0, y1 - y0 } end
+  -- (art/placement) front-on, as a bough is seen from the side: over its box it lies level (the top Pepper stands
+  -- on, the gap she crawls under), its free end rounded off; towards its trunk it bends up into the leaves, the
+  -- underside curving up faster than the top, so it thins from 16 px to about 7 (was a slab rising 1 px a column,
+  -- which read as a crate seen from above)
+  local cols = {}                                                   -- { x, top, bottom (inclusive) }
+  local n = x1 - x0
+  for i = 0, n - 1 do
+    local x = x0 + i
+    local e = side > 0 and i or (n - 1 - i)                        -- columns from the free end
+    local tip = ({ 6, 3, 1 })[e + 1] or 0
+    cols[#cols + 1] = { x, y0 + (e == 0 and 1 or 0), y1 - 1 - tip }
+  end
   local reach = 20
-  for i = 1, reach do                                               -- towards its trunk, rising into the leaves (no
-    local x = side > 0 and (x1 - 1 + i) or (x0 - i)                -- ledge: it rises 1 px a column, thinning)
-    local th = math.max(9, (y1 - y0) - math.floor(i / 3))
-    cols[#cols + 1] = { x, y0 - i, th }
+  for i = 1, reach do                                               -- towards its trunk, rising into the leaves
+    local x = side > 0 and (x1 - 1 + i) or (x0 - i)
+    local mid = (y0 + y1 - 1) / 2 - i * i / 13                     -- its middle line curves up (a parabola)
+    local th = (y1 - y0) - i * 0.45                                -- and it thins
+    cols[#cols + 1] = { x, math.floor(mid - th / 2 + 0.5), math.floor(mid + th / 2 + 0.5) }
   end
   lg.setColor(INK)
-  for _, c in ipairs(cols) do lg.rectangle("fill", c[1] - 1, c[2] - 1, 3, c[3] + 2) end
+  for _, c in ipairs(cols) do lg.rectangle("fill", c[1] - 1, c[2] - 1, 3, c[3] - c[2] + 3) end
   for _, c in ipairs(cols) do
-    lg.setColor(BARK[1]); lg.rectangle("fill", c[1], c[2], 1, c[3])
-    lg.setColor(BARK[2]); lg.rectangle("fill", c[1], c[2], 1, 2)
-    lg.setColor(BARK[3]); lg.rectangle("fill", c[1], c[2] + c[3] - 2, 1, 2)
+    local h = c[3] - c[2] + 1
+    lg.setColor(BARK[1]); lg.rectangle("fill", c[1], c[2], 1, h)
+    lg.setColor(BARK[2]); lg.rectangle("fill", c[1], c[2], 1, h > 9 and 2 or 1)
+    lg.setColor(BARK[3]); lg.rectangle("fill", c[1], c[3] - (h > 9 and 1 or 0), 1, h > 9 and 2 or 1)
+    if h >= 8 then                                                  -- two bark furrows along it, broken now and then
+      for _, k in ipairs({ 0.36, 0.66 }) do
+        if (c[1] * 7 + math.floor(k * 10)) % 9 < 6 then lg.rectangle("fill", c[1], c[2] + math.floor(h * k), 1, 1) end
+      end
+    end
   end
-  lg.setColor(BARK[3])
-  for x = x0 + 4, x1 - 5, 9 do lg.rectangle("fill", x, y0 + 5, 3, 1); lg.rectangle("fill", x + 4, y0 + 10, 2, 1) end
-  tipTwig(side > 0 and x0 - 1 or x1, y0 + 3, -side)
+  tipTwig(side > 0 and x0 - 1 or x1, y0 + 4, -side)
   local ex = side > 0 and (x1 + reach) or (x0 - reach)              -- where it goes into the leaves: a leafy clump
+  local last = cols[#cols]
+  local ey = math.floor((last[2] + last[3]) / 2)                    -- (round its end, which goes on up out of sight)
   for i, q in ipairs({ { -3, -6 }, { 1, -9 }, { 4, -4 }, { -6, -1 }, { 0, -2 }, { 3, 1 }, { -2, 3 }, { 5, -8 } }) do
-    lg.setColor(INK); lg.rectangle("fill", ex + side * q[1] - 2, y0 - reach + q[2] - 1, 5, 4)
+    lg.setColor(INK); lg.rectangle("fill", ex + side * q[1] - 2, ey + q[2] - 1, 5, 4)
   end
   for i, q in ipairs({ { -3, -6 }, { 1, -9 }, { 4, -4 }, { -6, -1 }, { 0, -2 }, { 3, 1 }, { -2, 3 }, { 5, -8 } }) do
-    lg.setColor(LEAF[1 + i % 3]); lg.rectangle("fill", ex + side * q[1] - 1, y0 - reach + q[2], 3, 2)
+    lg.setColor(LEAF[1 + i % 3]); lg.rectangle("fill", ex + side * q[1] - 1, ey + q[2], 3, 2)
   end
 end
 
@@ -1675,7 +1706,7 @@ function Sc.drawTreetops(def, camx, world)
     if p.x1 - ox > -20 and p.x0 - ox < 340 then
       if r == "walk" then drawWalkLegs(p, ox, foot, world)
       elseif r == "slat" then drawSlatPosts(p, ox, foot)
-      elseif r == "towerpost" then drawTowerPost(p, ox) end
+      elseif r == "towerpost" then drawTowerPost(p, ox, foot, TI.postTop and TI.postTop[p]) end
     end
   end
   lg.setColor(1, 1, 1, 1)
@@ -1725,6 +1756,7 @@ function Sc.drawPropArt(p, camx, def, kicked)
     if p.kind == "decor" or not o then return end                 -- posts, legs, crowns: drawn with their set piece
     n = o.name
     if style == "park" and (n == "OAK" or n == "BRANCH") then drawBranch(p, named(def, "OAK"), camx); return end
+    if style == "park" and (n == "SLIDE" or n == "PLAY TOWER") and p.kind == "oneway" then drawDeck(p, math.floor(camx)); return end   -- (art/placement: was invisible)
     if n ~= "CRATES" then return end                              -- the hat (statue), the frame's top bar (FRAME)
   end
   if style == "park" then

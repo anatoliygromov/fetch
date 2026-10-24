@@ -69,11 +69,14 @@ Rd.CAR_TOP, Rd.RIDER_TOP = 192, 190                                -- below Pepp
 function Rd.new(world)
   load()
   local r = setmetatable({ list = {}, t = 2.0, rng = love.math.newRandomGenerator(11), spans = {} }, Rd)
-  -- road spans: runs of columns whose terrain top is the promenade (y 184)
+  -- road spans: runs of columns whose terrain top is the promenade (y 184). (art/placement: the column's highest
+  -- terrain, so the bridge pier, solid from y 0 down through 184 to its passage, is not promenade: the road was
+  -- drawn over the quay under it)
   local s = nil
   for x = 0, world.width - 1, 4 do
-    local flat = false
-    for _, b in ipairs(world.rects) do if b.terrain and b.y0 == 184 and x >= b.x0 and x < b.x1 then flat = true; break end end
+    local top
+    for _, b in ipairs(world.rects) do if b.terrain and x >= b.x0 and x < b.x1 and (not top or b.y0 < top) then top = b.y0 end end
+    local flat = top == 184
     if flat and not s then s = x elseif not flat and s then r.spans[#r.spans + 1] = { s, x }; s = nil end
   end
   if s then r.spans[#r.spans + 1] = { s, world.width } end
