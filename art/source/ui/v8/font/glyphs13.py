@@ -1,5 +1,8 @@
 # FETCH! mid font (v7, unchanged glyphs) after kit A / the chosen HUD example: 13 rows, stems 3 px, bars 2 px, slab
 # serifs 1 px outward. v8 adds the comma (for YES, QUIT).
+# ABOVE: rows drawn above the cap line for an accented capital (the line box grows by the most rows any glyph needs;
+# the text box and the layout stay H rows tall)
+ABOVE = {}
 G = {
 'A': ["...#####...","..#######..",".###...###.",".###...###.",".###...###.",".###...###.",".#########.",".#########.",".###...###.",".###...###.",".###...###.","####...####","####...####"],
 'B': ["########...","#########..",".###...###.",".###...###.",".###...###.",".########..",".########..",".###...###.",".###...###.",".###...###.",".###...###.","#########..","########..."],
@@ -48,9 +51,10 @@ G = {
 "'": ["###","###",".##","...","...","...","...","...","...","...","...","...","..."],
 }
 G['9'] = [r[::-1] for r in G['6'][::-1]]
-# (review fix 3) Ö for SÖDER HILL, on the 13 rows: the two dots as the full stop's 3 x 2 blocks on rows 0-1, a row clear,
-# then O drawn 10 rows tall (its 2-1 chamfers and 3 px stems as they are, the straight sides 4 rows shorter)
-G['Ö'] = ['.###..###.', '.###..###.', '..........', '..######..', '.########.', '###....###', '###....###', '###....###', '###....###', '###....###', '###....###', '.########.', '..######..']
+# (umlaut fix) Ö for SÖDER HILL: the capital O itself, full height; the two dots as the full stop's 3 x 2 blocks and a
+# 1 px gap drawn above the cap line (ABOVE)
+G['Ö'] = list(G['O'])
+ABOVE['Ö'] = ['.###..###.', '.###..###.', '..........']
 # metrics: a column that is empty in every row is a side bearing, not part of the letter; trimmed, so every pair of
 # letters sits exactly GAP px apart (v7's B, D and 1 carried one)
 for _k, _g in G.items():
