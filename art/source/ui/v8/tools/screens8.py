@@ -449,7 +449,7 @@ def build(out):
     d, u, l, r = tails()
     save('tail_d', d, sh=False); save('tail_u', u, sh=False); save('tail_l', l, sh=False); save('tail_r', r, sh=False)
     save('ball', ball())
-    rw, mw = ribbon(160, 19, arch=0); save('ribbon_wide', rw); meta['ribbon_wide_body'] = mw     # FETCH FRENZY!
+    rw, mw = ribbon(176, 19, arch=0); save('ribbon_wide', rw); meta['ribbon_wide_body'] = mw     # FETCH FRENZY! (review fix 5: 176, the words well clear of its ends)
     for k, (w, h, el) in PICTURES.items(): save('pic_' + k, picture2(w, h, el))
     for ch in 'ABXY': save('h_' + ch.lower(), hint_coin(ch))
     from menu8 import dpad

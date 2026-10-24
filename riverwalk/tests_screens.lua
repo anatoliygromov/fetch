@@ -121,6 +121,8 @@ return function(api)
     { act = function() local b = api.bonus(); b.phase, b.t = "play", 0; b.catches, b.points, b.time = 7, 700, 12 end, wait = 0.05 }, shot("bonus_play"),
     { act = function() local b = api.bonus(); b.catches, b.points, b.time = 11, 1350, 3.5 end, wait = 0.03 }, shot("bonus_last"),
     { act = function() local b = api.bonus(); b.phase, b.t = "timeup", 0.2 end, wait = 0.02 }, shot("bonus_timeup"),
+    { act = function() local b = api.bonus(); b.k, b.catches = #b.list + 1, #b.list end, wait = 0.02 }, shot("bonus_allcaught"),
+    { act = function() local b = api.bonus(); b.k, b.catches = 1, 11 end, wait = 0.02 },
     { act = function() local b = api.bonus(); b.phase, b.t, b.air = "result", 1.8, 4 end, wait = 0.02 }, shot("bonus_result_life"),
     { act = function() local b = api.bonus(); b.catches, b.t = 6, 1.8 end, wait = 0.02 }, shot("bonus_result_try"),
     { act = function() api.setState("select"); I.last = "pad"; sel(1) end, wait = 0.3 }, shot("select_1_pad"),

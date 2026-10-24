@@ -244,13 +244,18 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
         check(not row, f'{shot}: no HUD row under the card {row[:4]}')
     top = [b for b in Ps + many(bs, 'ribbon')]
     check(top and min(b['y0'] for b in top) >= 4, f'{shot}: the card 4 px or more from the screen\'s top ({min(b["y0"] for b in top) if top else "-"})')
+# (review fix 5) every ribbon's words keep 4 px or more from the ribbon's band ends
+for f in sorted(glob.glob(f'{D}/*.txt')):
+    shot = os.path.basename(f)[:-4]; bs = load(shot); R = many(bs, 'ribbon'); T = many(bs, 'title')
+    if R and T: check(T[0]['x0'] - R[0]['x0'] >= 4 and R[0]['x1'] - T[0]['x1'] >= 4, f'{shot}: the ribbon\'s words 4 px or more from its ends ({T[0]["x0"] - R[0]["x0"]}, {R[0]["x1"] - T[0]["x1"]})')
 check(len(set(strips.values())) == 1, f'strip: the same place on every screen {sorted(set(strips.values()))}')
 # pieces
 INK = (64, 11, 6); SH = (36, 8, 5)
 for n in ['g_a', 'g_b', 'g_x', 'g_y', 'g_l', 'g_r', 'g_start', 'g_dpad', 'g_lr', 'g_down', 'k_space', 'k_esc', 'k_shift', 'k_enter', 'k_x', 'k_z', 'k_q',
           'k_left', 'k_right', 'k_up', 'k_down', 'tog_on', 'tog_off', 'handheld', 'ribbon_menu',
           'arrow_l', 'arrow_r', 'lock', 'lock_big', 'dot_on', 'dot_off', 'frame_s', 'bubble', 'ball', 'stamp',
-          'medal_nohit_on', 'medal_nohit_off', 'medal_bones_on', 'medal_bones_off', 'medal_par_on', 'medal_par_off']:
+          'medal_nohit_on', 'medal_nohit_off', 'medal_bones_on', 'medal_bones_off', 'medal_par_on', 'medal_par_off',
+          'h_a', 'h_b', 'h_x', 'h_y', 'ribbon_wide']:
     a = np.array(Image.open(f'{ROOT}/riverwalk/art/ui/{n}.png').convert('RGBA')); op = a[..., 3] > 0
     p = np.pad(op, 1); edge = op & ~(p[:-2, 1:-1] & p[2:, 1:-1] & p[1:-1, :-2] & p[1:-1, 2:])
     cols = {tuple(c) for c in a[edge][:, :3]}
