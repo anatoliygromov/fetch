@@ -87,3 +87,24 @@ then re-rasterize), pixel-perfect line rule (no L-corner doubles), clean stairca
 - 139 one-pixel ramp bands count as mixels under the strict definition (see metrics).
 - 3.7 % of cells use a colour that is not in their own painting cell (99.5 % in the
   cell or a neighbour): the price of moving the 10 px shapes onto 7.5 px cells.
+
+## Round 2 changes
+
+- `pepper_detail.py`: the three wink lashes and the brow arc are traced by hand
+  (painting coordinates from ASCII dumps of the near-black labels) and drawn as
+  pixel-perfect lines (brow 2 px, as painted); the near-black blob around them is
+  cleared from the fill. The knot tip: inside a small box the dog mask is limited to
+  the bandana plus one outline block, so the lamp post behind the tip no longer widens
+  it; one-cell spurs leave the silhouette (the two coat cells under the knot are gone).
+- Jaw: near-black fill cells just inside the outline, in runs of 5 or more, inside the
+  jaw box (cells 118-150, 124-166), take the coat's darkest tone `#222231`, so the
+  1 px outline reads against the painted dark edge.
+- Nose: in the left half of the highlight's bounding box, warm grey and tan gloss
+  cells become the nose's own cool tones of similar value (`#5a617d`, `#3a3f5d`);
+  turning them navy failed the form gate (-18 luma there).
+- Fur checker: dither detection opening 5 px (was 9), pair share 0.025 (was 0.035):
+  904 checker cells instead of 542, on the forehead band and the left ear's lower half.
+  Wider settings (up to 1005 cells) push form p95 over 8.
+- Remaining: the forehead checker is still patchier than painted at its left end; the
+  left ear's checker is denser on its lower half than its upper half; form p95 (7.96)
+  sits close to its limit.

@@ -65,3 +65,20 @@ sides of the region edge alike.
 More than 6 runs were made (27 numbered plus the final, all kept under `out/work/`):
 the brief's cap was exceeded because the form p95 and the tongue IoU only passed at
 it11 and it20.
+
+## Round 2 (producer's fixes)
+
+Final round 2 numbers (`out/metrics.json`): IoU head .963, left ear .959, right ear
+.931, eye .926, nose .950, tongue .931, bandana .959 (owned .983); worst boundary
+distance 0.279 block (tongue); L-corners 0, gaps 0, staircase 0.960; off-palette 0,
+anti-aliasing dots 0, strict ramp-band mixels 157; checker 904 of 904 in phase (was 542:
+wider coverage); form mean 2.41, p95 7.96; 26 colours.
+
+| Run | min IoU | max bd | staircase | dots | phase cells | form mean | p95 | change |
+|---|---|---|---|---|---|---|---|---|
+| r2a | 0.926 | 0.279 | 0.961 | 0 | 541 | 2.37 | 7.75 | hand-traced lashes and brow, knot tip trimmed |
+| r2c | 0.926 | 0.420 | 0.961 | 0 | 543 | 2.37 | 7.63 | jaw rule on the whole silhouette (broke left-ear bd) |
+| r2e | 0.926 | 0.292 | 0.961 | 0 | 1002 | 2.54 | 8.37 | jaw rule boxed to the jaw; wider checker (failed p95) |
+| r2h | 0.926 | 0.292 | 0.961 | 0 | 1002 | 2.44 | 8.06 | nose gloss: grey/tan to cool nose tones, not navy |
+| r2i | 0.926 | 0.292 | 0.960 | 0 | 985 | 2.42 | 8.02 | brow 2 px as painted |
+| final | 0.926 | 0.292 | 0.960 | 0 | 904 | 2.41 | 7.96 | checker coverage threshold 0.7 for form margin |

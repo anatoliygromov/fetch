@@ -23,12 +23,13 @@ from skimage.morphology import skeletonize
 import pepper_seg as S
 import lines as LN
 import shapes as SH
+import pepper_detail as DT
 
 NX, NY = 320, 240
 CW, CH = S.CW, S.CH
 P = dict(BLACK_W=24.0, THICK_AT=14.5, MIN_LINE=20, INSET=2.5, DARK_FRAC=0.0, SIGMA=3.0, SIGMA_PART=3.0,
          SHAPE_SIGMA=3.0, LINE_S=6.0, LIT_L=28.0, LIT_W=13.0, LIT_MIN=50, FOLD_W=13.0, FOLD_MIN=25, RIDGE_SIZE=17, RIDGE_D=18.0, RIDGE_D_T=10.0, CREASE_W=18.0, FOLD_MIN_B=60,
-         DITH_W=23, DITH_R=0.15, DITH_SC=0.035, MASK_SIGMA=4.0, UNDER_OUTLINE=4.0, OUT_S=12.0, REFINE=True, DUP_FRAC=0.5, SIL_NEAR=2.0, SIL_CLOSE=0, OUT_K=26, REFINE_PASSES=8, MIX_W=40.0, OUT_CORNER=75.0, OUT_STRAIGHT=2.5, SPUR=12, BLACK_SPUR=18, BLACK_EXTRA=[2], PURE_FRAC=0.4, NEARBLACK_W=0.0, DARK_SIDES=0.4,
+         DITH_W=23, DITH_OP=5, DITH_T=0.7, DITH_R=0.15, DITH_SC=0.025, MASK_SIGMA=4.0, UNDER_OUTLINE=4.0, OUT_S=12.0, REFINE=True, DETAILS=True, JAW_TONE=1, JAW_RUN=5, JAW_BOX=(118, 124, 150, 166), HL_ID=5, HL_COVER=0.3, HL_STRAY=[60, 27, 53, 10, 52, 48, 12, 7], NOSE_MAP=(([10, 53, 27, 60], 22), ([7, 12, 48, 52], 35)), DUP_FRAC=0.5, SIL_NEAR=2.0, SIL_CLOSE=0, OUT_K=26, REFINE_PASSES=8, MIX_W=40.0, OUT_CORNER=75.0, OUT_STRAIGHT=2.5, SPUR=12, BLACK_SPUR=18, BLACK_EXTRA=[2], PURE_FRAC=0.4, NEARBLACK_W=0.0, DARK_SIDES=0.4,
          PAIRS=[(0, 1), (0, 7), (7, 11), (0, 11), (7, 10), (1, 2), (10, 12), (8, 9), (9, 44)],
          MERGE={3: 2, 13: 2})
 
@@ -51,7 +52,7 @@ def cell_mean(img, I, J):
         return (s / n).reshape(NY, NX), n.reshape(NY, NX)
 
 
-def dither_pairs(L, O, pairs, W, rmin, scmin):
+def dither_pairs(L, O, pairs, W, rmin, scmin, op=9, tmin=0.7):
     """Virtual labels where two tones are mixed at block scale in both directions (a
     dither). The class records the pair and the mix level (1, 2 or 3 quarters of the
     second tone); it is rebuilt on the output grid by an ordered 2 x 2 (Bayer) rule,
@@ -70,7 +71,7 @@ def dither_pairs(L, O, pairs, W, rmin, scmin):
         rb = nb_ / np.maximum(tot, 1e-6)
         r = np.minimum(rb, 1 - rb)
         sc = np.minimum(dh, dv) / np.maximum(tot, 1e-6)
-        m = (tot > 0.7) & (r > rmin) & (sc > scmin) & A & O
+        m = (tot > tmin) & (r > rmin) & (sc > scmin) & A & O
         v = sc * (0.25 + r)
         upd = m & (v > best)
         out[upd] = k; best[upd] = v[upd]
@@ -80,7 +81,7 @@ def dither_pairs(L, O, pairs, W, rmin, scmin):
     for k in range(len(pairs)):
         for lv in (1, 2, 3):
             m = ndi.binary_closing((out == k) & (lvl_map == lv), np.ones((7, 7)))
-            m = ndi.binary_opening(m, np.ones((9, 9)))
+            m = ndi.binary_opening(m, np.ones((op, op)))
             res[m & (res < 0)] = k * 4 + lv
     return res
 
@@ -387,6 +388,10 @@ def render(params=None, verbose=True):
     pal, L = S.label_region()
     D, B, O = S.owned_mask(pal, L)
     parts = S.part_masks_from_labels(pal, L, D, B)
+    if p['DETAILS']:
+        Dt = DT.trim_knot(D, B, S.BOX)
+        O = O & Dt
+        D = Dt
     # near-identical navy-blacks (dE < 6 from each other) are one colour in the output
     for a_, b_ in p['MERGE'].items():
         L = np.where(L == a_, b_, L)
@@ -454,6 +459,28 @@ def render(params=None, verbose=True):
             lines.append((d['cells'], int(col), 2, d))
         replaced |= rep
 
+    # ---- 2b. hand-traced details (lashes, brow) ---------------------------------
+    if p['DETAILS']:
+        clr = DT.clear_mask(L.shape, S.BOX)
+        # automatic black lines that run mostly inside a clear box are replaced
+        keep_lines = []
+        for item in lines:
+            cells_, col_, lay_, d_ = item
+            if lay_ == 3 and _sample(clr, d_['path']).mean() > 0.5:
+                continue
+            keep_lines.append(item)
+        lines = keep_lines
+        for st in DT.STROKES:
+            q = np.array(st['pts'], float)
+            q = LN.smooth_polyline(q, 2.0) if len(q) > 3 else q
+            th = st.get('thick', 1)
+            cl = raster_line(q, False, th)
+            d_ = dict(cells=set(cl), poly=q - [x0, y0], width=8.0 * th, path=(q - [x0, y0]), thick=th, name=st['name'])
+            lines.append((set(cl), line_id, 3, d_))
+        nearblack = np.isin(L, [line_id] + p['BLACK_EXTRA'])
+        # the wink's thick arc stays (it is below the lash box); the blob around the lashes goes
+        replaced |= clr & nearblack
+
     # ---- 3. fill classes -------------------------------------------------------
     # the 1 px outline covers the painted outline's outer ~1 cell; darker coat further in
     # stays in the fill
@@ -473,7 +500,7 @@ def render(params=None, verbose=True):
     _, (vy, vx) = ndi.distance_transform_edt(~valid, return_indices=True)
     Lf = L[vy, vx].astype(np.int32)
     pairs = [pr for pr in p['PAIRS'] if max(pr) < len(pal)]
-    dv = dither_pairs(Lf, O & ~shapes_px, pairs, p['DITH_W'], p['DITH_R'], p['DITH_SC'])
+    dv = dither_pairs(Lf, O & ~shapes_px, pairs, p['DITH_W'], p['DITH_R'], p['DITH_SC'], p['DITH_OP'], p['DITH_T'])
     Lv = np.where(dv >= 0, 1000 + dv, Lf)
     # owned cells: along the dog's silhouette, the cells whose centre lies inside the
     # smoothed (corner-aware) silhouette polygon, so the edge is the digital form of a
@@ -559,6 +586,14 @@ def render(params=None, verbose=True):
         if not joints.any():
             break
         own &= ~joints
+    # one-cell spurs (a cell with at most one owned 4-neighbour) leave the shape
+    st4 = ndi.generate_binary_structure(2, 1)
+    for _ in range(3):
+        n4 = ndi.convolve(own.astype(int), st4.astype(int), mode='constant') - own
+        spur = own & (n4 <= 1)
+        if not spur.any():
+            break
+        own &= ~spur
     ring = ring_of(own)
     oc = ring & near_drawn & near_sil
     idx[~own] = -1; fixed_idx[~own] = -1
@@ -578,6 +613,16 @@ def render(params=None, verbose=True):
         protect |= set(int(c) for c in np.unique(cmap[shp['eye']]) if c >= 0)
         cmap, idx2, nchg = RF.refine(cmap, fixed_idx, alive, pal, pairs, BAYER, target, outside,
                                      protect=protect, passes=p['REFINE_PASSES'], mix_w=p['MIX_W'])
+        if p['DETAILS']:
+            before = idx2.copy()
+            idx2, cmap = detail_cells(idx2, cmap, fixed_idx, oc, shp, parts, L, I, J, line_id, p)
+            # the detail cells stay; a second refinement adapts the fill around them
+            chg = (idx2 != before) & alive
+            fixed2 = fixed_idx.copy(); fixed2[chg] = idx2[chg]
+            cmap[chg] = -1
+            cmap, idx2, n2 = RF.refine(cmap, fixed2, alive, pal, pairs, BAYER, target, outside,
+                                       protect=protect, passes=p['REFINE_PASSES'], mix_w=p['MIX_W'])
+            nchg += n2
         cmap, idx2, ndot = RF.clean_dots(cmap, idx2, fixed_idx == line_id, pal, pairs, BAYER)
         idx = np.where(alive, idx2, -1)
         if verbose:
@@ -602,6 +647,48 @@ def ids_dark(L, path, pal):
     v = L[path[:, 1].astype(int), path[:, 0].astype(int)]
     y = _lum(pal[v].astype(np.float32))
     return list(np.unique(v[y <= np.median(y)]))
+
+
+def detail_cells(idx, cmap, fixed_idx, oc, shp, parts, L, I, J, line_id, p):
+    """Round 2 cell rules.
+    Jaw and silhouette: a near-black fill cell just inside the 1 px outline takes the
+    coat's darkest tone, so the outline reads against the painted dark edge.
+    Nose: the highlight is every nose cell at least HL_COVER cream in the painting; the
+    grey and tan cells touching its left half become the nose's navy."""
+    idx = idx.copy(); cmap = cmap.copy()
+    st4 = ndi.generate_binary_structure(2, 1)
+    inner = ndi.binary_dilation(oc, st4) & ~oc & (idx >= 0) & (fixed_idx < 0)
+    dark = inner & np.isin(idx, [line_id] + p['BLACK_EXTRA'])
+    dark &= ~(shp['eye'] | shp['nose'] | shp['tongue'] | shp['bandana'])
+    jb = p['JAW_BOX']    # the jaw and cheek right of the mouth (cells)
+    box = np.zeros_like(dark); box[jb[1]:jb[3], jb[0]:jb[2]] = True
+    dark &= box
+    # only long runs along the outline (a painted dark edge band), not the 1 to 3
+    # cells where an inner crease meets the outline
+    lab, n = ndi.label(dark, np.ones((3, 3)))
+    if n:
+        sz = ndi.sum(dark, lab, range(1, n + 1))
+        dark = np.isin(lab, np.flatnonzero(sz >= p['JAW_RUN']) + 1)
+    idx[dark] = p['JAW_TONE']; cmap[dark] = p['JAW_TONE']
+    # nose highlight
+    cream = p['HL_ID']
+    m, _ = cell_mean(((L == cream) & parts['nose']).astype(np.float32), I, J)
+    hl = shp['nose'] & (np.nan_to_num(m) >= p['HL_COVER']) & (fixed_idx < 0)
+    idx[hl] = cream; cmap[hl] = cream
+    hl = shp['nose'] & (idx == cream)
+    if hl.any():
+        jj, ii = np.nonzero(hl)
+        cx = ii.mean()
+        # the highlight's left half, its bounding box grown by one cell: grey and tan
+        # gloss cells there become the nose's navy
+        J_, I_ = np.indices(idx.shape)
+        near = (J_ >= jj.min() - 1) & (J_ <= jj.max() + 1) & (I_ >= ii.min() - 1) & (I_ <= cx)
+        near &= ~hl & shp['nose'] & (fixed_idx < 0) & np.isin(idx, p['HL_STRAY'])
+        # warm greys and tan become the nose's own cool gloss tones of similar value
+        for src_ids, dst in p['NOSE_MAP']:
+            mm = near & np.isin(idx, src_ids)
+            idx[mm] = dst; cmap[mm] = dst
+    return idx, cmap
 
 
 def mode_label(L, path, ids):
