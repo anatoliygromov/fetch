@@ -7,7 +7,7 @@ outline (64,11,6), 1 px shadow (36,8,5), the kit's golds, one light direction (t
   frame_s              a thin gold frame, a 9-slice (corners 4 x 4, window transparent): the card's picture, the
                        talk panel's portrait
   medal_<kind>_on/off  the three medals with their picture: nohit (a heart), bones (a bone), par (a clock); not
-                       won: the bronze disc, its picture dark (the slot shows what there is to win)
+                       won (review fix 2): an empty dark socket with a thin gold rim where the disc would be
   bubble               the hint bubble: a 9-slice (corners 4 x 4), dark warm fill, a gold rim, ink outline
   tail_d, tail_u, tail_l, tail_r   the bubble's tail toward Pepper (drawn over the bubble's edge)
   ball                 a red ball coin (the bonus round's catches, the tally's FETCH line)
@@ -130,7 +130,25 @@ PICS = {
     'bones': (["##...##", ".#####.", ".#####.", "##...##"], CREAM, CREAM_HI),
     'par':   (["..###..", ".##h##.", "###h###", "###hh##", "#######", ".#####.", "..###.."], CREAM, CREAM_HI),
 }
+def socket(D=15):
+    """(review fix 2) a medal not won: an empty dark socket where the disc would be (no ribbon, no picture): the ink
+    edge, a thin 1 px gold rim (lit top left), the hollow in the kit's dark brown, its upper left in shade and its lower
+    right lip catching the light, so it reads as a hole waiting for a medal"""
+    disc, edge, rim, face, lit, ci = I7.disc_parts(D)
+    H = D + 4; img = np.zeros((H, D, 4), np.uint8); o = 4
+    in1 = disc & ~edge; hollow = ndimage.binary_erosion(in1, structure=CROSS, border_value=0); ring = in1 & ~hollow
+    lip = hollow & ~ndimage.binary_erosion(hollow, structure=CROSS, border_value=0)
+    sub = np.zeros((D, D, 4), np.uint8); sub[edge] = (*INK, 255)
+    for m, col in ((ring & (lit > 0.2), GOLD['gold']), (ring & (lit <= 0.2) & (lit > -0.6), GOLD['mid']), (ring & (lit <= -0.6), GOLD['dark'])):
+        put(sub, m, col)
+    put(sub, hollow, DARK['fill'])
+    put(sub, lip & (lit > 0.2), DARK['top'])                      # the shade under the upper left rim
+    put(sub, lip & (lit < -0.6), DARK['low'])                     # the lower right lip, lit
+    m = sub[..., 3] > 0; img[o:o + D][m] = sub[m]
+    return img
+
 def medal(kind, on, D=15):
+    if not on: return socket(D)
     disc, edge, rim, face, lit, ci = I7.disc_parts(D)
     H = D + 4; img = np.zeros((H, D, 4), np.uint8); o = 4
     rib = (214, 52, 60) if on else (120, 84, 70); ribd = (150, 30, 40) if on else (90, 60, 50)
