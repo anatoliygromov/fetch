@@ -1,0 +1,164 @@
+{
+ "grid": {
+  "x": 0.82,
+  "y": 0.932,
+  "all": 0.898,
+  "n": 11585
+ },
+ "geometry": {
+  "plate_outer": {
+   "iou": 0.9913,
+   "bdist": 0.071
+  },
+  "rim_filled": {
+   "iou": 0.9938,
+   "bdist": 0.046
+  },
+  "body": {
+   "iou": 0.9853,
+   "bdist": 0.094
+  },
+  "rim_ring": {
+   "iou": 0.9024,
+   "bdist": 0.064
+  },
+  "text": {
+   "iou": 0.8782,
+   "bdist": 0.061
+  },
+  "word_The": {
+   "iou": 0.948,
+   "bdist": 0.024
+  },
+  "word_City": {
+   "iou": 0.8326,
+   "bdist": 0.083
+  },
+  "word_Dog": {
+   "iou": 0.8708,
+   "bdist": 0.06
+  },
+  "word_Adventurer": {
+   "iou": 0.8791,
+   "bdist": 0.055
+  }
+ },
+ "lines": {
+  "lcorners": 0,
+  "gaps": 0,
+  "branches": 0,
+  "components": 1,
+  "staircase_regularity": 1.0,
+  "chamfer_runs": {
+   "top_left": {
+    "vertical_runs": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "horizontal_runs": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "regular": true
+   },
+   "top_right": {
+    "vertical_runs": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "horizontal_runs": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "regular": true
+   },
+   "bot_left": {
+    "vertical_runs": [
+     1,
+     1,
+     1
+    ],
+    "horizontal_runs": [
+     1,
+     1,
+     1
+    ],
+    "regular": true
+   },
+   "bot_right": {
+    "vertical_runs": [
+     1,
+     1,
+     1
+    ],
+    "horizontal_runs": [
+     1,
+     1,
+     1
+    ],
+    "regular": true
+   }
+  }
+ },
+ "colour": {
+  "off_palette": 0,
+  "mixels": 0,
+  "colours": 3,
+  "body_colours": 2
+ },
+ "form": {
+  "mean": 2.77,
+  "p95": 9.23,
+  "max": 24.33
+ },
+ "glyphs": {
+  "repeated_identical": {
+   "e": true,
+   "t": true,
+   "r": true
+  },
+  "any_2x2_block": false,
+  "letter_gaps": [
+   1,
+   8
+  ]
+ },
+ "layout": {
+  "space": 6,
+  "start": 161,
+  "width": 119,
+  "rms_err": 1.027,
+  "mean_err": 0.868,
+  "max_err": 2.0,
+  "plate_centre": 220.67,
+  "text_centre": 220.5
+ },
+ "plate": {
+  "rim_top": 78,
+  "rim_bot": 94,
+  "rim_left": 151,
+  "rim_right": 289,
+  "outline_bottom_rows": 2,
+  "corner_top": [
+   1,
+   1,
+   1,
+   1
+  ],
+  "corner_bot": [
+   1,
+   1,
+   1
+  ],
+  "corner_fill_iou": 0.9938,
+  "corner_ring_iou": 0.9024
+ }
+}
