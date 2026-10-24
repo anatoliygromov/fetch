@@ -208,7 +208,7 @@ def paw_cells(F):
                 for fa in np.arange(0.85, 1.41, 0.05):
                     for fb in np.arange(0.85, 1.41, 0.05):
                         e = raster_ellipse(scx, scy, a0 * fa, b0 * fb)
-                        if not (1.05 * area <= e.sum() <= 1.35 * area):   # painted blobs read larger than their hard mask
+                        if not (1.15 * area <= e.sum() <= 1.5 * area):   # painted blobs read larger than their hard mask
                             continue
                         rows = e.sum(1)[e.any(1)]; cols = e.sum(0)[e.any(0)]
                         if len(rows) < 3 or rows[0] < 2 or rows[-1] < 2 or cols[0] < 2 or cols[-1] < 2:
@@ -219,8 +219,9 @@ def paw_cells(F):
                             continue
                         ef = e[Jw, Iw]
                         iou = (ef & tgt).sum() / max((ef | tgt).sum(), 1)
-                        if best is None or iou > best[0]:
-                            best = (iou, e, scx, scy, a0 * fa, b0 * fb)
+                        sc = iou + 0.01 * e.sum()            # prefer the fuller blob
+                        if best is None or sc > best[6]:
+                            best = (iou, e, scx, scy, a0 * fa, b0 * fb, sc)
         out |= best[1]
         info.append(('toe', best[2], best[3], round(best[4], 2), round(best[5], 2), round(best[0], 3), int(best[1].sum()), round(area, 1)))
     return out, info
@@ -461,9 +462,148 @@ def merge_small_levels(level, fill, min_cells):
     return level
 
 
-def dither(level):
+def dither5(level):
     yy, xx = np.indices((NY, NX))
-    return BAYER[yy % 2, xx % 2] < level      # True = orange
+    return BAYER[yy % 2, xx % 2] < level      # True = orange (5-level zones, not drawn)
+
+
+LH, LY, LO, LR = 224.0, 187.23, 133.70, 99.8   # luma of #ffe671, #febd03, #fe6202, #da3611
+
+
+def pattern(k):
+    """Cells of the second tone for density k/8 (k = 0..8), on one fixed screen phase (absolute
+    cell position). Every row carries the same density, so no density ever shows as a dotted
+    row with empty rows around it: 1/8 and 1/4 are sparse single dots staggered from row to
+    row, 1/2 is the exact one-cell checker, 3/8 and 5/8 are that checker with one dot per 8
+    cells removed or added (spread, not in lines), 3/4 and 7/8 mirror 1/4 and 1/8."""
+    y, x = np.indices((NY, NX))
+    chk = (x + y) % 2 == 0
+    h1 = (x + 3 * y) % 8 == 0                     # one per 8 per row, inside the checker phase
+    h2 = (x + 3 * y + 1) % 8 == 0                 # one per 8 per row, in the other phase
+    q = (x + 2 * (y % 2)) % 4 == 0                # one per 4 per row, staggered
+    q2 = (x + 2 * (y % 2) + 1) % 4 == 0
+    pats = {0: np.zeros_like(chk), 1: h1, 2: q, 3: chk & ~h1, 4: chk, 5: chk | h2, 6: ~q2,
+            7: ~((x + 3 * y + 4) % 8 == 0), 8: np.ones_like(chk)}
+    return pats[int(k)]
+
+
+def ramp_tones(level):
+    """level -8..16 on one scale: -8..0 highlight to yellow, 0..8 yellow to orange, 8..16
+    orange to red-orange. Returns (base, second, k) palette names and density for a level."""
+    if level < 0:
+        return 'yellow', 'hilite', -level
+    if level <= 8:
+        return 'yellow', 'orange', level
+    return 'orange', 'red', level - 8
+
+
+def dither(level):
+    """True where the level's second tone goes (used for the yellow/orange part)."""
+    out = np.zeros((NY, NX), bool)
+    for k in range(9):
+        out |= (level == k) & pattern(k)
+    out |= level > 8
+    return out
+
+
+def luma_to_level(pl):
+    if pl > LY:
+        return -min(8.0, (pl - LY) / (LH - LY) * 8)
+    if pl >= LO:
+        return (LY - pl) / (LY - LO) * 8
+    return 8 + min(8.0, (LO - pl) / (LO - LR) * 8)
+
+
+def level_luma(k):
+    b, a, d = ramp_tones(k)
+    T = {'hilite': LH, 'yellow': LY, 'orange': LO, 'red': LR}
+    return T[b] + (T[a] - T[b]) * d / 8
+
+
+LEVELS = list(range(-8, 17))
+
+
+def min_run_of(k):
+    d = ramp_tones(k)[2]
+    return 1 if d in (0, 3, 4, 5, 8) else 2    # sparse densities are never a lone dotted row
+
+
+def ramp_rows(tl, table, w, jump=0.02):
+    """Levels per row minimising the weighted squared error between the painting's row luma
+    tl[i] and the luma the level really gives on that row's cells (table[i, level]); sparse
+    densities are held for at least two rows, and jumps of more than one level cost a little,
+    so the ramp fades through the densities instead of switching."""
+    n = len(tl); INF = 1e18; R = 2
+    nl = len(LEVELS)
+    mr = [min_run_of(k) for k in LEVELS]
+    # a dithered row costs as much as a 3-luma miss: a row within ~3 luma of a flat tone
+    # stays flat, so the solid yellow and orange areas get no stray dots
+    dz = np.array([0.0 if k in (-8, 0, 8, 16) else 3.0 ** 2 for k in LEVELS])
+    cost = np.full((n, nl, R + 1), INF); back = np.zeros((n, nl, R + 1, 2), int)
+    for k in range(nl):
+        cost[0, k, 1] = w[0] * ((tl[0] - table[0, k]) ** 2 + dz[k])
+    for i in range(1, n):
+        for k in range(nl):
+            c = w[i] * ((tl[i] - table[i, k]) ** 2 + dz[k])
+            for r in range(1, R + 1):
+                rr = min(r + 1, R)
+                v = cost[i - 1, k, r] + c
+                if v < cost[i, k, rr]:
+                    cost[i, k, rr] = v; back[i, k, rr] = (k, r)
+            for kp in range(nl):
+                if kp == k:
+                    continue
+                pen = jump * w[i] * 45.0 * max(0, abs(kp - k) - 1)
+                for r in range(mr[kp], R + 1):
+                    v = cost[i - 1, kp, r] + c + pen
+                    if v < cost[i, k, 1]:
+                        cost[i, k, 1] = v; back[i, k, 1] = (kp, r)
+    best = (INF, 0, R)
+    for k in range(nl):
+        for r in range(mr[k], R + 1):
+            if cost[-1, k, r] < best[0]:
+                best = (cost[-1, k, r], k, r)
+    out = np.zeros(n, int); k, r = best[1], best[2]
+    for i in range(n - 1, -1, -1):
+        out[i] = LEVELS[k]
+        if i:
+            k, r = back[i, k, r]
+    return out
+
+
+def row_ramp(fill, skip, stripes_mask, src_luma_cells):
+    """Per shape (letter, pad, toe), per cell row: the painting's mean luma over the shape's
+    dithered cells (not stripes, not edge cells when the row has inner cells) is the target;
+    each candidate level is scored by the luma it really gives on exactly those cells."""
+    D = ring_dirs(fill)
+    ring = D['up'] | D['down'] | D['left'] | D['right']
+    lab, n = ndi.label(fill & ~skip)
+    level = np.zeros((NY, NX), np.int16)
+    T = {'hilite': LH, 'yellow': LY, 'orange': LO, 'red': LR}
+    pats = [pattern(k) for k in range(9)]
+    info = {}
+    for c in range(1, n + 1):
+        m = lab == c
+        body = m & ~stripes_mask
+        core = body & ~ring
+        rows = np.flatnonzero(body.any(1))
+        if not len(rows):
+            continue
+        tl, ws, table = [], [], []
+        for r in rows:
+            sel = core[r] if core[r].sum() >= 2 else body[r]
+            tl.append(src_luma_cells[r][sel].mean()); ws.append(max(int(body[r].sum()), 1))
+            row = []
+            for k in LEVELS:
+                b, a2, d = ramp_tones(k)
+                frac = pats[d][r][sel].mean()
+                row.append(T[b] + (T[a2] - T[b]) * frac)
+            table.append(row)
+        lv = ramp_rows(np.array(tl), np.array(table), np.array(ws, float))
+        for r, k in zip(rows, lv):
+            level[r][m[r]] = k
+        info[int(c)] = (rows.tolist(), [round(float(v), 1) for v in tl], lv.tolist())
+    return level, info
 
 
 def ring_dirs(fill):
@@ -517,8 +657,8 @@ def build(verbose=True):
     M = masks(L)
     G = geometry(L, M)
     outer, fill, gap = G['outer'], G['fill'], G['gap']
-    level, ufit, uc, lab = gradient_levels(L, fill)
-    org = dither(level)
+    level, ufit, uc, lab = gradient_levels(L, fill)      # 5-level zones: which half is orange
+    org = dither5(level)
     hi, red, e_hi, e_red = stripes(L, fill, ufit)
     # the paw: pure rule (light top, red bottom) so every pad stays symmetric
     pw = G['pawc']; D = ring_dirs(fill)
@@ -527,23 +667,39 @@ def build(verbose=True):
     hi, red = clean_stripes(hi, red, fill)
     hi, red = complete_runs(hi, red, fill)
     hi, red, lite = complete_sides(hi, red, fill, level, L)
-    level, org, hi, red = paw_colours(G, level, org, hi, red)
+    zone = level
+    _, _, hi, red = paw_colours(G, np.zeros_like(level), org, hi, red)
     hi, red = clean_stripes(hi, red, fill)
     lite &= ~hi & ~red & ~G['pawc']
     red = deep_bottom(red, fill & ~G['pawc'], L, hi)
+    hi = deep_top(hi, fill & ~G['pawc'], L, red)
     hi, red = clean_stripes(hi, red, fill)
     lite &= ~hi & ~red
+    # the fill: an ordered-dither ramp per letter, row by row from the painting's luma
+    src_l = cell_mean(luma(load_src()[Y0:Y1, X0:X1]))
+    level, ramp = row_ramp(fill, np.zeros_like(fill), hi | red | lite, src_l)
     gk, gnames = gap_colours(L, gap)
     P = lambda n: pal[IDX[n]]
     idx = np.full((NY, NX), -1, np.int16)     # palette index map (into PROTO), -1 transparent
     idx[outer] = IDX['navy']
     for i, g in enumerate(gnames):
         idx[gap & (gk == i)] = IDX[g]
-    idx[fill] = IDX['yellow']
-    idx[fill & org] = IDX['orange']
+    for k in np.unique(level[fill]):
+        b, a2, d = ramp_tones(int(k))
+        m = fill & (level == k)
+        idx[m] = IDX[b]
+        idx[m & pattern(d)] = IDX[a2]
     idx[lite] = IDX['yellow']
     idx[hi] = IDX['hilite']; idx[red] = IDX['red']
-    return dict(L=L, pal=pal, M=M, G=G, level=level, ufit=ufit, uc=uc, hi=hi, red=red, lite=lite, idx=idx, gk=gk)
+    return dict(L=L, pal=pal, M=M, G=G, level=level, zone=zone, ufit=ufit, uc=uc, hi=hi, red=red, lite=lite, idx=idx,
+                gk=gk, ramp=ramp, src_l=src_l)
+
+
+def largest(m):
+    lab, n = ndi.label(m)
+    if not n:
+        return m
+    return lab == (np.bincount(lab.ravel())[1:].argmax() + 1)
 
 
 def clean_stripes(hi, red, fill):
@@ -640,6 +796,20 @@ def complete_sides(hi, red, fill, level, L):
     return hi, red, lite
 
 
+def deep_top(hi, fill, L, red):
+    """The painted highlight on top faces is 9 to 12 px (1.2 to 1.6 cells): a run of the top
+    stripe gets a second row below it where the painting is highlight there."""
+    e_hi = cell_mean((L == IDX['hilite']).astype(np.float32))
+    D = ring_dirs(fill)
+    top = hi & D['up']
+    cand = fill & shift(top, -1, 0) & ~top & ~red
+    add = np.zeros_like(fill)
+    for m in chains(cand, horizontal=True):
+        if e_hi[m].mean() >= 0.35:
+            add |= m
+    return hi | add
+
+
 def deep_bottom(red, fill, L, hi):
     """The painted red-orange under each letter is 10 to 15 px (1.5 to 2 cells): a run of
     the bottom stripe gets a second row above it where the painting is red-orange there."""
@@ -649,7 +819,7 @@ def deep_bottom(red, fill, L, hi):
     cand = fill & shift(bottom, 1, 0) & ~bottom & ~hi
     add = np.zeros_like(fill)
     for m in chains(cand, horizontal=True):
-        if e_red[m].mean() >= 0.3:
+        if e_red[m].mean() >= 0.25:
             add |= m
     return red | add
 
@@ -667,10 +837,10 @@ def paw_colours(G, level, org, hi, red):
         m = lab == c
         rows = np.flatnonzero(m.any(1)); top, bot = rows[0], rows[-1]
         t = (yy - top) / max(bot - top, 1)
-        if m.sum() < 60:      # toe
-            lv = np.where(t < 0.45, 0, np.where(t < 0.62, 2, 4))
+        if m.sum() < 60:      # toe: mostly yellow as painted, orange lower third
+            lv = np.where(t < 0.55, 0, np.where(t < 0.75, 4, 8))
         else:
-            lv = np.where(t < 0.3, 0, np.where(t < 0.62, 2, 4))
+            lv = np.where(t < 0.3, 0, np.where(t < 0.62, 4, 8))
         level[m] = lv[m]
     org = np.where(pw, dither(level), org)
     hi = (hi & ~pw) | (pw & D['up'])

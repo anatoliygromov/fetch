@@ -230,17 +230,21 @@ def colour_gate(R, rgba, palette_hex):
 
 # ------------------------------------------------------------------ pattern
 def pattern_gate(R):
+    """Every dithered fill cell carries exactly the colour its level's pattern gives on the fixed
+    screen phase; the 50 % rows are the exact checker."""
     G = R['G']; idx = R['idx']; lvl = R['level']
     fill = G['fill'] & ~R['hi'] & ~R['red'] & ~R.get('lite', np.zeros_like(G['fill']))
-    org = idx == LG.IDX['orange']
-    exp = LG.dither(lvl)
-    wrong = fill & (org != exp)
-    # checker phase inside the 50 % band: orange exactly where (x + y) is even
+    exp = np.full((NY, NX), -1)
+    for k in np.unique(lvl[fill]):
+        b, a, d = LG.ramp_tones(int(k))
+        m = fill & (lvl == k)
+        exp[m] = LG.IDX[b]; exp[m & LG.pattern(d)] = LG.IDX[a]
+    wrong = fill & (idx != exp)
     yy, xx = np.indices((NY, NX))
-    band = fill & (lvl == 2)
-    phase_bad = band & (org != ((yy + xx) % 2 == 0))
+    band = fill & (lvl == 4)
+    phase_bad = band & ((idx == LG.IDX['orange']) != ((yy + xx) % 2 == 0))
     return dict(cells=int(fill.sum()), wrong_rule=int(wrong.sum()), band50_cells=int(band.sum()),
-                band50_out_of_phase=int(phase_bad.sum()))
+                band50_out_of_phase=int(phase_bad.sum()), levels_used=sorted(int(v) for v in np.unique(lvl[fill])))
 
 
 # ------------------------------------------------------------------ form
@@ -277,3 +281,60 @@ def form_gate_fair(rgba, mask, sigma=1.5):
     res = np.where(rgba[..., 3] > 0, luma(rgba[..., :3]), orig)
     d = np.abs(ndi.gaussian_filter(orig, sigma) - ndi.gaussian_filter(res, sigma))[mask]
     return dict(mean=float(d.mean()), p95=float(np.percentile(d, 95)), max=float(d.max()))
+
+
+def row_luma_gate(R):
+    """Per shape (letters, pad, toes), per cell row: mean luma of the result's fill vs the
+    painting. 'dither' = the shape's dithered cells (the ramp; edge cells excluded where the row
+    has inner cells), painting luma averaged over exactly those cells. 'all' = every fill cell
+    of the row vs the painting's own fill paint (warm pixels of that letter) in the same rows,
+    so the painting's anti-aliased navy edges do not count as fill."""
+    G = R['G']; fill = G['fill']; idx = R['idx']; pal = R['pal']; src = R['src_l']
+    L, M = R['L'], R['M']
+    rgb = np.zeros((NY, NX, 3)); rgb[idx >= 0] = pal[idx[idx >= 0]]
+    ol = luma(rgb)
+    D = LG.ring_dirs(fill); ring = D['up'] | D['down'] | D['left'] | D['right']
+    stripes = R['hi'] | R['red'] | R['lite']
+    a = load_src()[LG.Y0:LG.Y1, LG.X0:LG.X1]; lu = luma(a)
+    I, J = cell_index(H_SRC, W_SRC); Jc, Ic = J[LG.Y0:LG.Y1, LG.X0:LG.X1], I[LG.Y0:LG.Y1, LG.X0:LG.X1]
+    pl, pn = ndi.label(M['F'])
+    lab, n = ndi.label(fill)
+    out = {}
+    for c in range(1, n + 1):
+        m = lab == c
+        name = 'x%d' % int(np.nonzero(m)[1].mean())
+        full = upscale(m)[LG.Y0:LG.Y1, LG.X0:LG.X1]
+        v = pl[full]; v = v[v > 0]
+        pm = (pl == np.bincount(v).argmax()) if len(v) else np.zeros_like(M['F'])
+        res = {}
+        body = m & ~stripes
+        d = []; small = []
+        for r in np.flatnonzero(body.any(1)):
+            core = body[r] & ~ring[r]
+            sel = core if core.sum() >= 2 else body[r]
+            v = ol[r][sel].mean() - src[r][sel].mean()
+            (d if sel.sum() >= 5 else small).append(v)     # a row of < 5 cells cannot hold a
+        d = np.array(d) if d else np.zeros(1)               # density finer than 1/4 (17 luma)
+        res['dither'] = (round(float(np.abs(d).max()), 2), round(float(np.abs(d).mean()), 2), int(len(d)))
+        res['short_rows_max'] = round(float(np.abs(small).max()), 1) if small else 0.0
+        d = []
+        for r in np.flatnonzero(m.any(1)):
+            pp = pm & (Jc == r)
+            if pp.sum() < 20:
+                continue
+            d.append(ol[r][m[r]].mean() - lu[pp].mean())
+        d = np.array(d)
+        res['all'] = (round(float(np.abs(d).max()), 2), round(float(np.abs(d).mean()), 2), int(len(d)))
+        out[name] = res
+    return out
+
+
+def lone_dither_rows(R):
+    """cells of a dithered density whose row is sandwiched between two flat (solid) rows in the
+    same column of the same shape: a lone dotted row."""
+    lv = R['level']; fill = R['G']['fill']
+    f = fill & ~(R['hi'] | R['red'] | R['lite'])
+    flat = np.isin(lv, [-8, 0, 8, 16])
+    up_f = shift(f, -1, 0) & shift(flat, -1, 0)
+    dn_f = shift(f, 1, 0) & shift(flat, 1, 0)
+    return int((f & ~flat & up_f & dn_f).sum())

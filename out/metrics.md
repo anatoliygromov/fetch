@@ -114,3 +114,42 @@ Still different at 5x / 10x: band edges are hard lines where the painting fades 
 squares; toes still read a little smaller than painted (one navy cell kept between pads); the outer
 navy is 2 cells where the painting's top outline is 1.7; form error sits at letter edges and band
 boundaries.
+
+
+# Round 3 (producer notes) : metrics_r3.json
+Fill rebuilt as an ordered-dither ramp: one fixed screen phase, densities 0, 1/8, 1/4, 3/8, 1/2
+(exact checker), 5/8, 3/4, 7/8, 1 between highlight and yellow, yellow and orange, orange and
+red-orange. Every row of a density has the same density (sparse densities are staggered dots, never
+a dotted row between empty rows). Per shape the level of each cell row is chosen by dynamic
+programming against the painting's row luma over exactly those cells (scored with the luma the
+pattern really gives there), sparse densities held at least 2 rows, small cost on jumps and on
+dither near a flat tone. Second highlight row and second red-orange row where painted. Toes fuller
+(+15 to +50 % over the hard painted mask, one navy cell between pads as painted).
+
+Row-luma gate (max |ours - painting| per cell row; target < 6). 'dither' = the ramp cells of rows
+with >= 5 such cells; short rows (< 5 cells, where 1/8 steps are impossible) reported separately;
+'all' = every fill cell incl. stripes vs the painting's warm paint of that letter:
+| shape (x centre) | dither max | dither mean | rows | short-row max | all max |
+|---|---|---|---|---|---|
+| x286 | 3.92 | 1.91 | 29 | 8.0 | 14.64 |
+| x193 | 5.29 | 1.34 | 43 | 5.9 | 15.80 |
+| x252 | 4.74 | 1.51 | 45 | 7.2 | 16.90 |
+| x144 | 5.69 | 1.76 | 49 | 48.3 | 22.28 |
+| x218 | 7.08 | 1.65 | 40 | 10.6 | 14.79 |
+| x170 | 5.11 | 1.85 | 35 | 0.5 | 16.91 |
+| x281 | 0.00 | 0.00 | 1 | 7.2 | 32.32 |
+| x287 | 0.00 | 0.00 | 1 | 7.5 | 35.67 |
+| x275 | 0.00 | 0.00 | 1 | 8.6 | 31.64 |
+| x291 | 0.00 | 0.00 | 1 | 13.0 | 29.53 |
+| x282 | 5.50 | 2.43 | 8 | 6.1 | 22.41 |
+Pass for F E T H ! pad (<= 5.7); C fails by one row (row 52: 7.1). Toes have only short rows (max 7 to 13).
+'all' fails (9 to 36): stripes and edges are single tones where the painting blends.
+
+Other gates: letters IoU 0.932+ / bd <= 0.30; pad 0.926; toes 0.67 to 0.77;
+L-corners 0, stripe gaps 0, outline < 2 cells 0; off-palette 0;
+pattern rule violations 0, checker out of phase 0/438; lone dithered rows 2;
+form 5x5 5.37/16.96, form fair 5.24/17.16 (both fail; painting's own cells 4.45/13.3).
+
+Still different (2x, 5x, 10x): the painting's sparse dots are 1.2-cell squares, ours single cells, so
+our fade reads finer-grained; a few sparse dots in the yellow top of C and H; toes still a little
+smaller and more dotted than painted; top outline 2 cells vs painted 1.7.

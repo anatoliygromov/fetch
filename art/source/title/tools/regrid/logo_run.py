@@ -59,8 +59,10 @@ def main(label='final'):
     pat = QA.pattern_gate(R)
     form = QA.form_gate(rgba, mask)
     form_fair = QA.form_gate_fair(rgba, mask)
+    rowl = QA.row_luma_gate(R)
+    lone = QA.lone_dither_rows(R)
     rep = dict(label=label, geometry=[(n, round(float(i), 4), round(float(b), 3)) for n, i, b in geo],
-               lines=lines, colour={k: v for k, v in col.items() if k != 'mixel_map'}, pattern=pat, form=form, form_fair=form_fair, depth=R['G'].get('depth'),
+               lines=lines, colour={k: v for k, v in col.items() if k != 'mixel_map'}, pattern=pat, form=form, form_fair=form_fair, row_luma=rowl, lone_dither_rows=lone, depth=R['G'].get('depth'),
                palette=palette, owned_cells=int(mask.sum()), pawinfo=[tuple(str(v) for v in t) for t in R['G']['pawinfo']])
     json.dump(rep, open(os.path.join(OUT, 'metrics_%s.json' % label), 'w'), indent=1, default=str)
     print(json.dumps(rep, indent=1, default=str))
