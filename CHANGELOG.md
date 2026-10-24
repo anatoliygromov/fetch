@@ -58,6 +58,15 @@ Follows docs/ui_design.md (the owner's UI design, 24 Oct). Stops here for the ow
   pale yellow) pop one at a time every 0.6 to 1.4 s on the letters' upper edges and highlight streaks (a seeded
   schedule, the same every run), and the shine sweeps every 5 to 7 s instead of 3.6. Both run on every logo version.
   The title GIF is now 9 s at 12 fps.
+- **Title picture cleanup (art/source/title/tools/cleanup.py, head.py; masks in art/source/title/masks):** 19
+  materials (coat, nose, eye, tongue, bandana, trunk, leaves, lamp, lantern, stone, sky, clouds, city, water, boats,
+  railing, pavement, bench, flowers); each gets a small ramp of the painting's own colours (coat 5, bandana 4, tongue
+  4, leaves 5, water 4, sky its 4 bands ...); textured shading turned into clean tone areas (a masked blur, the steps
+  dealt out by rank so each keeps its share); lone pixels and 2-pixel crumbs merged per material; near-twin colours
+  merged (Pepper's ramps protected). Pepper's eye and nose keep the painting's pixels, her dark lines are closed, the
+  wink is redrawn by hand as one clean lid stroke with three lashes. The far city keeps its texture (its windows).
+  Lone pixels 4.2 % -> 1.0 % (Pepper 3.8 % -> 0.4 %), 62 -> 48 colours. The pant and blink frames are rebuilt from
+  the cleaned head. Gate: tools/cleanup_gate.py.
 - **Gates:** tools/title_frames.py (frames at 3x, colour and greyscale, the title loop GIF at 2x),
   tools/layout_qa_menus.py (226 checks, all pass), tools/pilot2_cards.py: out_ui/pilot2/card_title.png and
   card_menus.png.

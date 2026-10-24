@@ -8,6 +8,8 @@
      neighbours' colour. No dithering.
   3. The painting's PRESS ANY KEY TO START box taken out, the railing behind it rebuilt from the painting's own
      rows (unbox.py); the game draws PRESS START itself.
+  3c. The pixel-art cleanup (cleanup.py, head.py): the picture in materials (masks in art/source/title/masks),
+     each with a small ramp of its own colours, crumbs merged, Pepper's head finished; at most about 48 colours.
   3b. The logo and the tagline plate rebuilt on the grid as their own layers (logo.py: logo.png, logo_hi.png for
      the shine, tagline_caps.png and tagline_lower.png); the painting's old ones painted out of base.png. The
      default logo is "clean": the painting's own logo with only its speckle tidied (logo.clean); stars.png holds
@@ -28,7 +30,7 @@ import cv2
 from PIL import Image
 from skimage.color import rgb2lab
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
-import title_native, title_palette as TP, unbox, head_frames as HF, logo as LG, stars as ST
+import title_native, title_palette as TP, unbox, head_frames as HF, logo as LG, stars as ST, cleanup as CL
 from register import register
 from vsample import sample as vsample
 ROOT = os.path.normpath(os.path.join(HERE, '..', '..', '..', '..'))
@@ -62,6 +64,17 @@ def main():
     pstrip = np.repeat(np.repeat(pal[None], 8, 0), 8, 1); Image.fromarray(pstrip.astype(np.uint8)).save(os.path.join(TDIR, 'palette.png'))
     still = img.copy()
     Image.fromarray(still.astype(np.uint8)).save(os.path.join(TDIR, 'still_painting.png'))   # the native-grid painting, logo as painted (reference)
+    # ---- 3c. the pixel-art cleanup (cleanup.py, head.py): materials, ramps, crumbs merged, Pepper's head finished;
+    # the logo and its plate are left out (they are layers)
+    keep, _, _ = LG.old_logo_mask(img); keep[76:98, 146:296] = True
+    img, mats, cst = CL.run(img, keep, os.path.join(TDIR, 'masks'))
+    print('cleanup: colours %d, lone pixels %.2f %% -> %.2f %% (Pepper %.2f %% -> %.2f %%)' % (cst['colours'], cst['before_all'] * 100,
+          cst['lone_all'] * 100, cst['before_pepper'] * 100, cst['lone_pepper'] * 100))
+    pal, inv = np.unique(img.reshape(-1, 3), axis=0, return_inverse=True)
+    idx = inv.reshape(H, W); img = pal[idx].astype(int)
+    L = rgb2lab(pal[idx] / 255.0)[..., 0]
+    cleaned = img.copy()
+    Image.fromarray(cleaned.astype(np.uint8)).save(os.path.join(TDIR, 'still_clean.png'))
     # the logo and the tagline plate as their own layers (logo.py); the painting's old ones painted out of the base
     logo_lay, patched, logo_pm = LG.build(img)
     img = patched.copy()
@@ -142,7 +155,7 @@ def main():
     for k in (0, 18, 21):
         r0 = register(still.astype(np.uint8), vf[k], near=reg0, scales=np.arange(3.38, 3.52, 0.01) if reg0 is None else np.arange(reg0[0] - 0.02, reg0[0] + 0.021, 0.01))
         reg0 = r0; vs[k] = vsample(vf[k], r0[0], r0[1], r0[2], (BX, BY, BX + BW, BY + BH)); print('t2 frame', k, 'registered: scale %.2f at %.1f, %.1f, ncc %.2f' % r0)
-    crop_idx = idx[BY:BY + BH, BX:BX + BW]; crop_rgb = still[BY:BY + BH, BX:BX + BW].astype(float)
+    crop_idx = idx[BY:BY + BH, BX:BX + BW]; crop_rgb = cleaned[BY:BY + BH, BX:BX + BW].astype(float)
     mouth = [idx.copy()]
     for k in (18, 21):
         o, m = HF.pant(crop_idx, crop_rgb, vs[k]); f = idx.copy(); f[BY:BY + BH, BX:BX + BW] = o; mouth.append(f)
