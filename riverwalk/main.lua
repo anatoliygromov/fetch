@@ -212,6 +212,7 @@ end
 -- the story card: only A goes on, after Flow.CARD_WAIT seconds (time to read it aloud)
 local function storyA() if state == "story" and t >= Flow.CARD_WAIT then S.play("select"); startLevel() end end
 local function anyKey()
+  if state == "clear" and tally and not tally.done then Flow.tallySkip(tally); return end   -- (ui step 3) skip the show
   if state == "clear" and tally and tally.done then
     S.play("select")
     if not tally.bonusDone and Flow.bonusOpen(stage) then startBonus() else nextLevel() end    -- a golden bone: the bonus
@@ -369,13 +370,7 @@ function love.update(dt)
     end
     if steps == 4 then acc = 0 end
   elseif state == "clear" then
-    tally.t = tally.t + dt
-    if tally.t > 1.4 and tally.shown < tally.points then              -- the points count up into the score
-      local before = tally.shown
-      tally.shown = math.min(tally.points, tally.shown + math.max(10, math.floor(tally.points * dt * 0.9)))
-      if math.floor(before / 500) ~= math.floor(tally.shown / 500) then S.play("tick") end
-    end
-    if tally.shown >= tally.points and tally.t > 1.8 then tally.done = true end
+    Flow.tallyStep(tally, dt)                                      -- (ui step 3) the tally's show: counts, ticks, medals, stamp
   end
   if state == "play" then Talk.update(dt, stage) end
   frameMs = (love.timer.getTime() - t0) * 1000

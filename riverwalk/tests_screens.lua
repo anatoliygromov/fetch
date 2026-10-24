@@ -89,6 +89,19 @@ return function(api)
     { act = function() local p = api.pause(); p.confirm, p.cm, p.controls = nil, nil, true end, wait = 0.1 }, shot("pause_controls"),
     { act = function() I.last = "key"; local p = api.pause(); p.controls, p.sel, p.from = nil, 2, 2 end, wait = 0.1 }, shot("pause_2_key"),
     { act = function() local p = api.pause(); p.sel, p.from = 1, 1; api.setState("play") end, wait = 0.1 },
+    -- the tally's show: River Walk cleared (a bone line, FETCH, SECRETS, TIME BONUS), shot along its timetable
+    { act = function() local st = api.stage(); st.taken = 12; st.hearts = 3; st.ball.state = "carried"; st.pepper.carrying = st.ball; st:giveBall() end,
+      cond = function() return api.getState() == "clear" end, wait = 0 },
+    { act = function() local tl = api.tally(); tl.t, tl.shown, tl.done = 0.05, 0, nil end, wait = 0.02 }, shot("tally_a_start"),
+    { act = function() local tl = api.tally(); tl.t = 0.7 end, wait = 0.02 }, shot("tally_b_bones"),
+    { act = function() local tl = api.tally(); tl.t = F.tallyPlan(tl).totalT0 + 0.5 end, wait = 0.02 }, shot("tally_c_total"),
+    { act = function() local tl = api.tally(); tl.t = F.tallyPlan(tl).medals[2] + 0.02 end, wait = 0.02 }, shot("tally_d_medals"),
+    { act = function() local tl = api.tally(); tl.newBest = true; tl.plan = nil; tl.t = F.tallyPlan(tl).stampT + 0.03 end, wait = 0.01 }, shot("tally_e_stamp"),
+    { act = function() local tl = api.tally(); F.tallySkip(tl) end, wait = 0.1 }, shot("tally_f_end"),
+    { act = function() I.last = "key"; local tl = api.tally(); tl.hard = true; tl.newBest, tl.newBestTime = false, true; tl.plan = nil; F.tallySkip(tl)
+      tl.medals = { nohit = true, bones = true, par = true } end, wait = 0.1 }, shot("tally_g_allmedals_key"),
+    { act = function() I.last = "pad"; local tl = api.tally(); tl.hard = nil; tl.newBestTime = false; tl.plan = nil; F.tallySkip(tl)
+      tl.medals = { nohit = false, bones = false, par = false } end, wait = 0.1 }, shot("tally_h_nomedals"),
     { act = function() api.setState("select"); I.last = "pad"; sel(1) end, wait = 0.3 }, shot("select_1_pad"),
     { act = function() sel(2) end, wait = 0.1 }, shot("select_2_pad"),
     { act = function() sel(3) end, wait = 0.1 }, shot("select_3_pad"),
@@ -103,6 +116,7 @@ return function(api)
   love.update = function(dt)
     old(dt); T = T + dt
     local st = steps[k]
+    if st and st.cond and not st.cond() then T = 0; return end
     if st and T < (st.wait or 0) then return end
     k = k + 1; T = 0
     st = steps[k]

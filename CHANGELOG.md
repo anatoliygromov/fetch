@@ -66,6 +66,18 @@ tools/layout_qa_menus.py out_ui/step3/frames`.
 - **Flow test changes (tests_flow.lua):** "pause: QUIT asks first", "pause: YES, QUIT goes to the menu" and the
   hard mode test's way out through the pause press Down once more (QUIT is the fourth row now); new checks "pause:
   CONTROLS opens the controls page" and "pause: B goes back from the controls page". 124 of 124 pass.
+- **Tally as a show (flow.lua F.tallyPlan, F.tallyStep, F.tallySkip, F.tallyCard):** the warm dim, the kit's panel
+  under the arched GOOD GIRL! ribbon. BONES counts up from 0 with a tick per bone (at most 1.5 s), then FETCH (the
+  level's bonus line), TIME BONUS and the TOTAL (the level's points, counting up with a tick each 500 as before),
+  4 lines, each sliding in with its picture (the bone, the ball, the clock), 7 px label, 13 px gold value. Then the
+  three medals pop in one by one (their pictures: heart, bone, clock; a sound for won, a thud for not) with their
+  names; the clear time, the best time (gold when it is new) and SECRETS found in the small font; NEW BEST! lands
+  as a red stamp across the frame's bottom right (a new best score or time) with a thud (new `stamp` sound); then
+  the controls strip `(A) OK`. Same numbers as before; the run's score still counts on the HUD.
+- **Any button skips the show (main.lua anyKey):** a press during the show jumps to its end (all numbers shown); the
+  next press goes on as before. The update moved from main.lua into F.tallyStep (the show's own timetable; the
+  tally is done when the show ends, about 4 to 6 s, was 1.8 s).
+- **Flow test change:** new check "tally: any button skips the show to its end" (the clean clear). 125 of 125 pass.
 - **Pieces (art/source/ui/v8/tools/screens8.py, built by build8.py):** arrow_l / arrow_r, lock / lock_big, dot_on /
   dot_off, frame_s, medal_<kind>_on / _off, bubble and its tails, ball, stamp, pic_<kind>, g_right (the d-pad, right lit).
 

@@ -187,6 +187,26 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
         check(not overlaps(items), f'{shot}: nothing overlaps {overlaps(items)}')
     elif shot == 'pause_controls':
         check(many(bs, 'handheld') and many(bs, 'panel'), f'{shot}: the controls page over the level'); strip(shot, bs)
+    elif shot.startswith('tally'):
+        P = many(bs, 'panel')[0]; R = many(bs, 'ribbon')[0]; T = many(bs, 'title')[0]
+        for n, b in (('panel', P), ('ribbon', R), ('title', T)): check(abs(cx(b) - 159.5) <= 0.5, f'{shot}: {n} centred ({cx(b)})')
+        ic, lb, vl = many(bs, 'ticon'), many(bs, 'tlabel'), many(bs, 'tvalue')
+        rows = {}
+        for b in ic + lb + vl: rows.setdefault(round(cy(b)), []).append(b)
+        check(all(max(cy(b) for b in r) - min(cy(b) for b in r) <= 0.5 for r in rows.values()), f'{shot}: each line\'s picture, label and value on one centre line')
+        if 'stamp' not in shot and 'start' not in shot and 'bones' not in shot:
+            check(len({b['x1'] for b in vl}) == 1, f'{shot}: values share one right edge {sorted({b["x1"] for b in vl})}')
+        md = sorted(many(bs, 'medal'), key=lambda b: b['y0']); ml = sorted(many(bs, 'mlabel'), key=lambda b: b['y0'])
+        if len(md) == 3 and 'medals' not in shot:
+            e, d = pitch_even([b['y0'] for b in md]); check(e, f'{shot}: medals evenly spaced {d}')
+            check(all(abs(cy(a) - cy(b)) <= 0.5 for a, b in zip(md, ml)), f'{shot}: each medal\'s name on its centre line')
+        inside = ic + lb + vl + md + ml + many(bs, 'note', 'secrets', 'rule')
+        check(all(b['x0'] - P['x0'] >= 10 and P['x1'] - b['x1'] >= 8 and b['y1'] <= P['y1'] - 7 for b in inside), f'{shot}: everything inside the panel with room')
+        items = ic + lb + vl + md + ml + many(bs, 'note', 'secrets', 'hard') + [T]
+        check(not overlaps(items), f'{shot}: nothing overlaps {overlaps(items)}')
+        st = many(bs, 'stamp')
+        if st: check(st[0]['x1'] <= 315 and not overlaps(st + many(bs, 'note', 'secrets', 'medal', 'tvalue')), f'{shot}: the stamp on screen, over nothing written')
+        if 'end' in shot or 'medals_' in shot or shot.endswith('medals') is False and ('_g_' in shot or '_h_' in shot): strip(shot, bs)
 check(len(set(strips.values())) == 1, f'strip: the same place on every screen {sorted(set(strips.values()))}')
 # pieces
 INK = (64, 11, 6); SH = (36, 8, 5)

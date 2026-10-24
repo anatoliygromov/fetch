@@ -453,69 +453,131 @@ function F.storyCard(lines, t)
 end
 F.CARD_WAIT = 2                   -- seconds before A leaves a story card
 
--- the tally after a level. tl: { lines, shown, from, points, t, done, newBest, time, best, newBestTime, par,
--- medals, secrets, hard }. avoid: Pepper's sprite on screen (x0, y0, x1, y1): the card is centred, or at the top
--- when she would be under it (main.lua draws her over the card in any case).
--- (ui/hud-v8) drawn to the owner's tally target: the smooth warm dim, the kit's gold panel, the arched ribbon with
--- GOOD GIRL! in the big font, two columns in the small font (the level's points and the score on the left; the
--- times and the three medals on the right), PRESS ANY BUTTON on the frame's bottom edge. Same data, same timing.
--- Offsets from the card's top (the ribbon's top).
-F.T = { X = 45, W = 230, PANEL = 18, H = 113, L = 62, LR = 168, R = 180, RR = 258, ROW0 = 38, PITCH = 11, SCORE = 86,
-  MEDAL0 = 60, MPITCH = 19, NOTE = 98, BOX_H = 135 }
+-- the tally after a level. tl: { lines, shown, from, points, t, done, newBest, time, best, newBestTime, par, medals,
+-- hard }. avoid: Pepper's sprite on screen (x0, y0, x1, y1).
+-- (step 3) a show, not a table: the warm dim, the kit's panel under the arched GOOD GIRL! ribbon; BONES counts up
+-- with a tick per bone, then the level's bonus (FETCH), TIME BONUS and the TOTAL (counting up, a tick each 500),
+-- each line sliding in with its picture (the bone, the ball, the clock); then the medals pop in one by one with
+-- their names; the clear time, the best time and the secrets found in the small font; NEW BEST! lands as a stamp
+-- (a new best score or time); then the controls strip. Any button skips to the end (main.lua). Same numbers as
+-- before; F.tallyStep runs the clock and the sounds. Offsets from the card's top (the ribbon's top).
+F.T = { X = 36, W = 248, PANEL = 18, H = 115, ICON = 48, LABEL = 71, VALUE = 188, ROW0 = 38, PITCH = 18, RULE = 92, TOTAL = 96,
+  MEDAL_X = 197, MEDAL0 = 38, MPITCH = 21, SECRETS = 104, NOTE = 116, BOX_H = 134, STAMP_Y = 125, STAMP_OUT = 6 }
+-- the show's timetable: when each line comes (rows: { label, value, kind, at }), the bones' count, the total's
+-- count, the medals and the stamp; tl.tEnd when it is over
+function F.tallyPlan(tl)
+  if tl.plan then return tl.plan end
+  local P = { rows = {}, medals = {} }
+  local t = 0.45
+  local bones = tl.lines[1]
+  local n = tonumber((bones[2] or ""):match("^(%d+)")) or 0
+  P.bonesN, P.bonesT0, P.bonesD = n, t, math.min(1.5, n * 0.05)
+  P.rows[1] = { "BONES", bones[2], "bone", t }
+  t = t + P.bonesD + 0.3
+  for i = 2, #tl.lines do
+    local l = tl.lines[i]
+    if l[1] == "SECRETS" then P.secrets = l[2]
+    else P.rows[#P.rows + 1] = { l[1], l[2], l[1] == "TIME BONUS" and "clock" or "ball", t }; t = t + 0.3 end
+  end
+  P.totalT0, P.totalD = t + 0.05, 0.9
+  t = P.totalT0 + P.totalD + 0.25
+  for k = 1, #F.MEDALS do P.medals[k] = t; t = t + 0.3 end
+  P.noteT = t - 0.15
+  if tl.newBest or tl.newBestTime then P.stampT = t + 0.1; t = t + 0.5 end
+  P.tEnd = t + 0.1
+  tl.plan = P
+  return P
+end
+-- every frame of the show: the clock, the counts and their sounds; done at the end
+function F.tallyStep(tl, dt)
+  local P = F.tallyPlan(tl)
+  local t0 = tl.t; tl.t = tl.t + dt; local t1 = tl.t
+  local function crossed(at) return t0 < at and t1 >= at end
+  if P.bonesN > 0 and t1 > P.bonesT0 then                          -- a tick per bone counted
+    local function cnt(t) return math.max(0, math.min(P.bonesN, math.floor((t - P.bonesT0) / math.max(0.01, P.bonesD) * P.bonesN))) end
+    if cnt(t1) > cnt(t0) then S.play("tick") end
+  end
+  for i = 2, #P.rows do if crossed(P.rows[i][4]) then S.play("tick") end end
+  if t1 > P.totalT0 then
+    local before = tl.shown
+    tl.shown = math.min(tl.points, math.floor(tl.points * math.min(1, (t1 - P.totalT0) / P.totalD)))
+    if math.floor(before / 500) ~= math.floor(tl.shown / 500) then S.play("tick") end
+  end
+  for k, at in ipairs(P.medals) do if crossed(at) then S.play(tl.medals[F.MEDALS[k]] and "key" or "push") end end
+  if P.stampT and crossed(P.stampT) then S.play("stamp") end
+  if t1 >= P.tEnd then tl.shown, tl.done = tl.points, true end
+end
+-- any button during the show: straight to its end (no sounds owed)
+function F.tallySkip(tl)
+  local P = F.tallyPlan(tl)
+  tl.t = math.max(tl.t, P.tEnd); tl.shown, tl.done = tl.points, true
+end
 function F.tallyBox(avoid)
   local T = F.T
-  local y = math.floor((240 - T.BOX_H) / 2)
-  local function miss(yy) return not avoid or not (avoid[1] < T.X + T.W and avoid[3] > T.X and avoid[2] < yy + T.BOX_H and avoid[4] > yy) end
-  local clear = miss(y)
-  if not clear and miss(2) then y, clear = 2, true end
-  return T.X, y, T.W, T.BOX_H, clear
+  return T.X, F.cardTop(T.X, T.W, T.BOX_H, avoid), T.W, T.BOX_H
 end
 function F.drawTally(tl, avoid)
   local _, y = F.tallyBox(avoid)
   U.dimWarm(); shifted(y, function() F.tallyCard(tl) end)
+  if tl.done then U.strip({ { "ok", "OK" } }) end
 end
+-- an item sliding in from 6 px left over 6 frames once its time comes (nil: not yet)
+local function slide(t, at) if t < at then return nil end; local u = math.min(1, (t - at) / 0.1); return -math.floor(6 * (1 - u) * (1 - u) + 0.5) end
 function F.tallyCard(tl)
-  local T = F.T
+  local T, P = F.T, F.tallyPlan(tl)
+  local t = tl.t
   U.panel(T.X, T.PANEL, T.W, T.H)
   U.ribbon("ribbon_tally", 159.5, 0)
-  local bounce = (tl.t < 0.6) and math.floor(math.sin(tl.t * 20) * 2) or 0
-  local tw = U.sayW(17, "GOOD GIRL!")
-  U.say(17, "ink", "GOOD GIRL!", math.floor(159.5 - (tw - 1) / 2 + 0.5), 4 + bounce, "title")
-  local function row(label, value, y, lx, rx, style)
-    U.say(7, style, label, lx, y, "tlabel")
-    U.say(7, style, value, rx - U.sayW(7, value) + 1, y, "tvalue")
+  local bounce = (t < 0.6) and math.floor(math.sin(t * 20) * 2) or 0
+  U.sayC(17, "ink", "GOOD GIRL!", 159.5, 4 + bounce, "title")
+  local th7, th13 = U.sayH(7), U.sayH(13)
+  for i, r in ipairs(P.rows) do                                    -- the lines, each on its centre line
+    local dx = slide(t, r[4])
+    if dx then
+      local cy = T.ROW0 + (i - 1) * T.PITCH + (th13 - 1) / 2
+      local value = r[2]
+      if i == 1 and P.bonesN > 0 then                              -- BONES counts up
+        local c = math.max(0, math.min(P.bonesN, math.floor((t - P.bonesT0) / math.max(0.01, P.bonesD) * P.bonesN)))
+        value = tostring(c) .. (r[2]:match("(/%d+)$") or "")
+      end
+      local iw, ih = U.body(r[3])
+      U.put(r[3], T.ICON + dx + math.floor((19 - iw) / 2), math.floor(cy - (ih - 1) / 2 + 0.5), "ticon")
+      U.say(7, "cream", r[1], T.LABEL + dx, math.floor(cy - (th7 - 1) / 2 + 0.5), "tlabel")
+      U.say(13, "gold", value, T.VALUE - U.sayW(13, value) + 1 + dx, math.floor(cy - (th13 - 1) / 2 + 0.5), "tvalue")
+    end
   end
-  for i, l in ipairs(tl.lines) do                                  -- the level's points, one line each
-    if tl.t > 0.3 + i * 0.25 then row(l[1], l[2], T.ROW0 + (i - 1) * T.PITCH, T.L, T.LR, "cream") end
-  end
-  if tl.t > 1.3 then row("SCORE", tostring(tl.from + tl.shown), T.SCORE, T.L, T.LR, "gold") end   -- (counts up)
-  if tl.t > 0.55 then
-    row("TIME", F.clock(tl.time), T.ROW0, T.R, T.RR, "cream")
-    row("BEST", F.clock(tl.best), T.ROW0 + T.PITCH, T.R, T.RR, "cream")
+  local dx = slide(t, P.totalT0)
+  if dx then                                                       -- the rule and the TOTAL, counting up
+    lg.setColor(64 / 255, 11 / 255, 6 / 255); lg.rectangle("fill", T.ICON, T.RULE, T.VALUE - T.ICON + 1, 1)
+    lg.setColor(196 / 255, 102 / 255, 24 / 255); lg.rectangle("fill", T.ICON, T.RULE + 1, T.VALUE - T.ICON + 1, 1); lg.setColor(1, 1, 1, 1)
+    U.logBox("rule", T.ICON, T.RULE, T.VALUE, T.RULE + 1)
+    U.say(13, "gold", "TOTAL", T.ICON + dx, T.TOTAL, "tlabel")
+    local v = tostring(tl.shown)
+    U.say(13, "gold", v, T.VALUE - U.sayW(13, v) + 1 + dx, T.TOTAL, "tvalue")
   end
   local names = { nohit = "NO HIT", bones = "ALL BONES", par = "PAR " .. F.clock(tl.par):gsub("%.0$", "") }
-  local mw, mh = U.body("medal_on")
-  local th = U.sayH(7)
-  for k, kind in ipairs(F.MEDALS) do
-    if tl.t > 1.3 + k * 0.2 then
-      local won, my = tl.medals[kind], T.MEDAL0 + (k - 1) * T.MPITCH
-      U.put(won and "medal_on" or "medal_off", T.R, my, "medal")
-      U.say(7, won and "gold" or "dim", names[kind], T.R + mw + U.ICON_GAP, math.floor(my + (mh - 1) / 2 - (th - 1) / 2 + 0.5), "mlabel")
+  local mw, mh = U.body("medal_nohit_on")
+  for k, kind in ipairs(F.MEDALS) do                               -- the medals pop in: up 3 px, then down
+    local at = P.medals[k]
+    if t >= at then
+      local won = tl.medals[kind]
+      local pop = (t - at < 0.05) and -2 or (t - at < 0.1) and -1 or 0
+      local my = T.MEDAL0 + (k - 1) * T.MPITCH
+      U.put(("medal_%s_%s"):format(kind, won and "on" or "off"), T.MEDAL_X, my + pop, "medal")
+      U.say(7, won and "gold" or "dim", names[kind], T.MEDAL_X + mw + U.ICON_GAP, math.floor(my + (mh - 1) / 2 - (th7 - 1) / 2 + 0.5), "mlabel")
     end
   end
-  local line = T.PANEL + T.H - 6                                  -- the frame's bottom gold line
-  if tl.hard then U.hardTag8(T.X + 34, line - 6) end
-  if tl.done then
-    local blinkOn = math.floor(tl.t * 3) % 2 == 0
-    local ny = T.NOTE
-    if tl.newBest then if blinkOn then U.say(7, "gold", "NEW BEST SCORE!", T.L, ny, "note") end; ny = ny + T.PITCH end
-    if tl.newBestTime and blinkOn then U.say(7, "gold", "NEW BEST TIME!", T.L, ny, "note") end
-    if blink(tl.t) then
-      local pw = U.sayW(7, "PRESS ANY BUTTON")
-      local px = math.floor(159.5 - (pw - 1) / 2 + 0.5)
-      lg.setColor(64 / 255, 11 / 255, 6 / 255); lg.rectangle("fill", px, line, pw, 1); lg.setColor(1, 1, 1, 1)   -- (the gold line not between the words)
-      U.say(7, "cream", "PRESS ANY BUTTON", px, line - (th - 1) / 2, "press")
-    end
+  if t >= P.noteT then                                             -- the times and the secrets, small
+    local ts = ("TIME %s  BEST %s"):format(F.clock(tl.time), F.clock(tl.best))
+    U.say(7, tl.newBestTime and "gold" or "cream", ts, T.ICON, T.NOTE, "note")
+    if P.secrets then U.say(7, "cream", "SECRETS " .. P.secrets, T.MEDAL_X, T.SECRETS, "secrets") end
+  end
+  if tl.hard then U.hardTag8(T.X + 34, T.PANEL + 4) end
+  if P.stampT and t >= P.stampT then                               -- NEW BEST! lands across the frame's bottom right
+    local sw = U.body("stamp")
+    local k = math.floor((t - P.stampT) / (1 / 30))                -- it lands with a thud: a 2 px jolt for 4 frames
+    local jx = (k < 4) and ((k % 2 == 0) and 2 or -1) or 0
+    U.put("stamp", T.X + T.W - 1 + T.STAMP_OUT - sw + 1 + jx, T.STAMP_Y + ((k < 2) and 1 or 0), "stamp")
   end
 end
 
