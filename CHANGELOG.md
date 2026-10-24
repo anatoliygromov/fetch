@@ -37,6 +37,15 @@ Follows docs/ui_design.md (the owner's UI design, 24 Oct). Stops here for the ow
 - **CONTROLS: a CRAWL row** (Down: crouch and crawl) after JUMP, the d-pad with its down arm lit / the down-arrow key;
   MOVE shows the d-pad left / right and the left / right keys; 8 rows, pitch 20 -> 17 px (the font unchanged). The
   title build's source video art/source/title/video/t2.mp4 is committed (t1, t3 are not).
+- **The logo and the tagline rebuilt on the grid (art/source/title/tools/logo.py, 0 credits):** each letter's silhouette
+  from the native grid fitted with straight segments (even staircase steps), the painting's 2 px navy outline and 2 px
+  depth, one navy block behind the letters as painted; fill: a highlight row on the top edge, three hard bands
+  (yellow, gold, orange) and a red-orange lip, the painting's own colours, no dither, no lone pixels. The paw redrawn
+  mirror-symmetric. The tagline plate redrawn (navy, light rim, even cut corners, 154 x 19, centred on x 220.5) with
+  the v8 7 px font in two versions for the owner to pick: THE CITY DOG ADVENTURER (default, title.lua T.TAGLINE =
+  "caps") and The City Dog Adventurer (new hand-drawn lowercase in the same family, "lower"). Both are layers over the
+  painting, whose old logo and plate are painted out with the sky; the shine runs on the new letters. Gate:
+  tools/logo_gate.py (before / after at 4x and 8x, the checks).
 - **Gates:** tools/title_frames.py (frames at 3x, colour and greyscale, the title loop GIF at 2x),
   tools/layout_qa_menus.py (226 checks, all pass), tools/pilot2_cards.py: out_ui/pilot2/card_title.png and
   card_menus.png.

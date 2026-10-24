@@ -26,6 +26,10 @@ return function(api)
     F.menu.moved, F.opts.moved = -1, -1
     shot("title_idle", function() Title.draw(0.9, nil, false) end)          -- PRESS START in its off phase
     shot("title_press", function() Title.draw(1.3, nil, false) end)         -- PRESS START on
+    Title.TAGLINE = "lower"                                                  -- the second tagline version
+    shot("title_lower_idle", function() Title.draw(0.9, nil, false) end)
+    shot("title_lower_press", function() Title.draw(1.3, nil, false) end)
+    Title.TAGLINE = "caps"
     for _, dev in ipairs({ "pad", "key" }) do
       I.last = dev
       for i = 1, #F.menu.items do F.menu.sel, F.menu.from = i, i; shot(("menu_%d_%s"):format(i, dev), function() F.drawMenu(3.0) end) end
