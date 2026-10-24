@@ -129,12 +129,24 @@ return function(api)
     { act = function() sel(2) end, wait = 0.1 }, shot("select_2_pad"),
     { act = function() sel(3) end, wait = 0.1 }, shot("select_3_pad"),
     { act = function() sel(4) end, wait = 0.1 }, shot("select_4_pad"),
+    { act = function() sel(5) end, wait = 0.1 }, shot("select_5_pad"),
     { act = function() sel(6) end, wait = 0.1 }, shot("select_6_pad"),
     { act = function() I.last = "key"; sel(1) end, wait = 0.1 }, shot("select_1_key"),
     { act = function() sel(4) end, wait = 0.1 }, shot("select_4_key"),
     { act = function() F.hard = true; sel(2) end, wait = 0.1 }, shot("select_hard"),
     { act = function() F.hard = false; sel(1); F.selectInput("right") end, wait = 0.05 }, shot("select_slide"),
     { act = function() sel(1); Se.shownAt = love.timer.getTime() end, wait = 0.1 }, shot("toast_menu"),
+    -- (umlaut fix) SÖDER HILL in the pause's subtitle (7 px), and the word in all three sizes and every style
+    { act = function() Se.shownAt = nil; api.startRun(F.index("soder")) end, wait = 0.8 },
+    { act = function() api.setState("pause"); local p = api.pause(); p.sel, p.from, p.moved, p.confirm, p.controls = 1, 1, -1, nil, nil end, wait = 0.15 }, shot("pause_soder"),
+    { act = function() extra = function()
+        love.graphics.setColor(64 / 255, 32 / 255, 22 / 255); love.graphics.rectangle("fill", 0, 0, 320, 240); love.graphics.setColor(1, 1, 1, 1)
+        local y = 10
+        for _, r in ipairs({ { 17, "gold" }, { 17, "ink" }, { 13, "gold" }, { 13, "cream" }, { 13, "dim" }, { 13, "ink" }, { 7, "cream" }, { 7, "gold" }, { 7, "dim" } }) do
+          if r[2] == "ink" then love.graphics.setColor(246 / 255, 190 / 255, 62 / 255); love.graphics.rectangle("fill", 6, y - 2, 308, r[1] + 7); love.graphics.setColor(1, 1, 1, 1) end
+          U.say(r[1], r[2], "SÖDER HILL  SODER", 10, y, "word"); y = y + r[1] + 10
+        end
+      end end, wait = 0.1 }, shot("font_umlaut"), { act = function() extra = nil end, wait = 0.05 },
   }
   local old = love.update
   love.update = function(dt)

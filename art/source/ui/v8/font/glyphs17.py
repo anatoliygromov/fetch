@@ -3,6 +3,9 @@
 # by whole pixels: stems 4 px, bars 3 px, slab serifs 2 rows tall and 1 px outward, round letters cut 3-2-1 at the
 # corners (the mid font's 2-1 at this size), counters 4 px (5 in round letters), spurs 3 px; the middle bar of
 # A B E F H K R 3 8 on rows 7-9 (the centre). 9 is 6 turned round; 0 is O.
+# ABOVE: rows drawn above the cap line for an accented capital (the line box grows by the most rows any glyph needs;
+# the text box and the layout stay H rows tall)
+ABOVE = {}
 G = {
 'A': ["....######....", "..##########..", ".############.", ".####....####.", ".####....####.", ".####....####.", ".####....####.",
       ".############.", ".############.", ".############.", ".####....####.", ".####....####.", ".####....####.", ".####....####.",
@@ -115,9 +118,11 @@ G = {
 }
 G['0'] = list(G['O'])
 G['9'] = [r[::-1] for r in G['6'][::-1]]
-# (review fix 3) Ö for SÖDER HILL, on the 17 rows: the two dots as the full stop's 4 x 3 blocks on rows 0-2, a row
-# clear, then O drawn 13 rows tall (its 3-2-1 chamfers and 4 px stems as they are, the straight sides 4 rows shorter)
-G['Ö'] = ['.####...####.', '.####...####.', '.####...####.', '.............', '...#######...', '..#########..', '.###########.', '####.....####', '####.....####', '####.....####', '####.....####', '####.....####', '####.....####', '####.....####', '.###########.', '..#########..', '...#######...']
+# (umlaut fix) Ö for SÖDER HILL: a capital O, 1 row shorter than O (one straight row out of its middle, the 3-2-1 cuts
+# as they are) so that the dots fit under the picture frame on the level card; its cap row is the 1 px gap; the two
+# dots as the full stop's 4 x 3 blocks drawn above the cap line (ABOVE)
+G['Ö'] = ['.' * 13] + G['O'][:8] + G['O'][9:]
+ABOVE['Ö'] = ['.####...####.'] * 3
 # metrics: a column that is empty in every row is a side bearing, not part of the letter; trimmed, so every pair of
 # letters sits exactly GAP px apart (v7's B, D and 1 carried one)
 for _k, _g in G.items():

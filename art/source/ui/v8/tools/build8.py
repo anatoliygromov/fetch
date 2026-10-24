@@ -1,7 +1,7 @@
 """Builds the v8 UI into the game: riverwalk/art/ui/*.png and riverwalk/uifont_data.lua.
   python3 art/source/ui/v8/tools/build8.py            (from the repo root)
 Font atlases: one strip per size and style, one cell per glyph (W + 5 px: the body at x + 2, the outline and the
-shadow round it), all cells H + 5 tall. uifont_data.lua lists each glyph's cell x and body width.
+shadow round it), all cells H + 5 + asc tall (asc: the rows an accent such as the dots of Ö needs above the cap line). uifont_data.lua lists each glyph's cell x and body width.
 Pieces: icons8.py and menu8.py (drawn on the grid), the v7 clock, bone and head as they are, and the kit's panel frame
 (kit/frames/panel_menu, a true 9-slice: slices 15 / 15 / 16 / 16)."""
 import os, sys, shutil
@@ -25,11 +25,13 @@ def atlases():
         strips = {st: [] for st in styles}
         for k in keys:
             w = len(G[k][0]); cells[k] = (x, w); x += w + 5
-            for st in styles: strips[st].append(S8.glyph(size, k, st))
+            for st in styles:                                      # (umlaut fix) every cell S8.ASC rows taller on top
+                g = S8.glyph(size, k, st); g = np.pad(g, ((H + 5 + S8.ASC[size] - g.shape[0], 0), (0, 0), (0, 0)))
+                strips[st].append(g)
         for st in styles:
             a = np.concatenate(strips[st], axis=1); Image.fromarray(a).save(f'{OUT}/font{size}_{st}.png')
         def q(k): return '["' + ('\\' + k if k in '"\\' else k) + '"]'
-        lua.append(f'  [{size}] = {{ h = {H}, gap = {S8.GAP[size]}, space = {S8.SPACE[size]}, styles = {{ ' + ', '.join(f'"{s}"' for s in styles) + ' }, cells = {')
+        lua.append(f'  [{size}] = {{ h = {H}, asc = {S8.ASC[size]}, gap = {S8.GAP[size]}, space = {S8.SPACE[size]}, styles = {{ ' + ', '.join(f'"{s}"' for s in styles) + ' }, cells = {')
         lua.append('    ' + ', '.join(f'{q(k)} = {{ {cx}, {w} }}' for k, (cx, w) in cells.items()))
         lua.append('  } },')
     lua.append('}')

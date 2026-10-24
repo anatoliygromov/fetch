@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import glyphs7, glyphs13, glyphs17
 SYM = set('AHIMOTUVWXY08-+:.!x')
 SIZES = {7: (glyphs7.G, "MW,'"), 13: (glyphs13.G, "M'Q,"), 17: (glyphs17.G, 'MWQ')}
+ACC = {7: glyphs7.ABOVE, 13: glyphs13.ABOVE, 17: glyphs17.ABOVE}   # (umlaut fix) accented capitals: a 17 px Ö's cap row is its accent gap
 
 def runs(row):
     out, n, x0 = [], 0, 0
@@ -25,7 +26,8 @@ def check(H, G, hair_ok):
         w = len(g[0]); m = np.array([[c == '#' for c in r] for r in g])
         if len(g) != H: fails.append((k, 'height', len(g))); continue
         if any(len(r) != w for r in g): fails.append((k, 'row widths differ'))
-        if k.isalnum() and k != 'x' and (not m[0].any() or not m[H - 1].any()): fails.append((k, 'cap or baseline row empty'))
+        if k.isalnum() and k != 'x' and (not (m[0].any() or k in ACC[H]) or not m[H - 1].any()): fails.append((k, 'cap or baseline row empty'))
+        if k in ACC[H] and any(len(r) != w for r in ACC[H][k]): fails.append((k, 'accent width differs'))
         if k in SYM and not (m == m[:, ::-1]).all(): fails.append((k, 'not symmetric'))
         if not m[:, 0].any() or not m[:, -1].any(): fails.append((k, 'an empty side column (spacing)'))
         b0, b1 = (1, H - 2) if H == 7 else (2, H - 3)

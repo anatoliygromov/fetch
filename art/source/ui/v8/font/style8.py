@@ -10,6 +10,8 @@ from scipy import ndimage
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import glyphs7, glyphs13, glyphs17
 FONTS = {7: glyphs7.G, 13: glyphs13.G, 17: glyphs17.G}
+ABOVE = {7: glyphs7.ABOVE, 13: glyphs13.ABOVE, 17: glyphs17.ABOVE}   # (umlaut fix) accent rows above the cap line
+ASC = {k: max([len(v) for v in a.values()] or [0]) for k, a in ABOVE.items()}   # the rows the line box grows upward
 GAP = {7: 1, 13: 2, 17: 2}
 SPACE = {7: 3, 13: 5, 17: 7}
 INK = (64, 11, 6); SHADOW = (36, 8, 5)
@@ -25,20 +27,25 @@ def band(st, y, H):
 def mask(size, ch):
     return np.array([[c == '#' for c in r] for r in FONTS[size][ch]])
 def glyph(size, ch, style):
-    m = mask(size, ch); H, W = m.shape; pad = 2
+    """(umlaut fix) a glyph with ABOVE rows is A rows taller: the accent on top, the cap-height body under it; its
+    accent takes the top band's colour, the body its rows' bands as every glyph"""
+    m = mask(size, ch); A = 0
+    if ch in ABOVE[size]:
+        acc = np.array([[c == '#' for c in r] for r in ABOVE[size][ch]]); A = acc.shape[0]; m = np.vstack([acc, m])
+    H, W = m.shape; pad = 2
     M = np.zeros((H + pad * 2 + 1, W + pad * 2 + 1), bool); M[pad:pad + H, pad:pad + W] = m
     o = np.zeros(M.shape + (4,), np.uint8); st = STYLES[style]
     if style == 'ink':
         em = np.zeros_like(M); em[1:, :] = M[:-1, :]; em &= ~M
         o[em] = (*st['emboss'], 255)
         for y in range(H):
-            col = st['top'] if y < H * 0.6 else st['bot']
+            col = st['top'] if y - A < (H - A) * 0.6 else st['bot']
             o[pad + y][M[pad + y]] = (*col, 255)
         return o
     ring = ndimage.binary_dilation(M, structure=np.ones((3, 3))) & ~M
     sh = np.zeros_like(M); sh[1:, 1:] = (M | ring)[:-1, :-1]; sh &= ~(M | ring)
     o[sh] = (*SHADOW, 255); o[ring] = (*INK, 255)
-    for y in range(H): o[pad + y][M[pad + y]] = (*band(st, y, H), 255)
+    for y in range(H): o[pad + y][M[pad + y]] = (*band(st, max(1, y - A) if y < A else y - A, H - A), 255)
     return o
 def width(size, s):
     """body width of a text (glyph bodies and the gaps between them, no outline)"""

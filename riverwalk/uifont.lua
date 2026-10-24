@@ -4,7 +4,8 @@
 --   17 big:   titles on the tally ribbon                (ink, gold)
 -- Atlases and metrics are made by art/source/ui/v8/tools/build8.py (art/ui/font<size>_<style>.png, uifont_data.lua).
 -- Never scaled: drawn at whole pixels only. x, y is the top-left of the glyph bodies; the 1 px outline sits round
--- them and the shadow 1 px further down-right (ink: no outline, a light line under each stroke).
+-- them and the shadow 1 px further down-right (ink: no outline, a light line under each stroke). An accent (the dots
+-- of Ö) is drawn above the cap line, outside the text's box (asc rows; the box and the layout stay h rows).
 local D = require("uifont_data")
 local lg = love.graphics
 local UF = {}
@@ -15,7 +16,7 @@ local function atlas(size, style)
   if not img[key] then
     local i = lg.newImage("art/ui/font" .. size .. "_" .. style .. ".png"); i:setFilter("nearest", "nearest")
     img[key] = i; quads[key] = {}
-    local h = D[size].h + 5
+    local h = D[size].h + 5 + (D[size].asc or 0)                   -- (umlaut fix) the cells grow upward for accents
     for ch, c in pairs(D[size].cells) do quads[key][ch] = lg.newQuad(c[1], 0, c[2] + 5, h, i:getDimensions()) end
   end
   return img[key], quads[key]
@@ -49,7 +50,7 @@ function UF.print(size, style, s, x, y)
     if ch == " " then x = x + f.space
     else
       local k, c = cell(size, ch)
-      if k then lg.draw(im, q[k], x - 2, y - 2); x = x + c[2] + f.gap end
+      if k then lg.draw(im, q[k], x - 2, y - 2 - (f.asc or 0)); x = x + c[2] + f.gap end
     end
   end
   return x - x0 - f.gap

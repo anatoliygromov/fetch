@@ -2,6 +2,9 @@
 # body text, subtitles and the tally. Rules: stems 2 px, bars 1 px, round letters cut by 1 px at the corners (the mid
 # font's chamfer at this size), slab serifs only where the mid font's are part of the shape (I, J, 1); most letters
 # 6 px wide, I and 1 4 px, M and W 7 px; 9 is 6 turned round; 0 is O, as in the mid font.
+# ABOVE: rows drawn above the cap line for an accented capital (the line box grows by the most rows any glyph needs;
+# the text box and the layout stay H rows tall)
+ABOVE = {}
 G = {
 'A': [".####.", "##..##", "##..##", "######", "##..##", "##..##", "##..##"],
 'B': ["#####.", "##..##", "##..##", "#####.", "##..##", "##..##", "#####."],
@@ -49,8 +52,10 @@ G = {
 "'": ["##", "##", "..", "..", "..", "..", ".."],
 }
 G['0'] = list(G['O'])
-# (review fix 3) Ö for SÖDER HILL (the pause's subtitle): 2 px dots on row 0 over the stems, a row clear, O 5 rows tall
-G['Ö'] = ['##..##', '......', '.####.', '##..##', '##..##', '##..##', '.####.']
+# (umlaut fix) Ö for SÖDER HILL (the pause's subtitle): the capital O itself, full height; 2 px dots over the stems and
+# a 1 px gap drawn above the cap line (ABOVE)
+G['Ö'] = list(G['O'])
+ABOVE['Ö'] = ['##..##', '......']
 G['9'] = [r[::-1] for r in G['6'][::-1]]
 # metrics: a column that is empty in every row is a side bearing, not part of the letter; trimmed, so every pair of
 # letters sits exactly GAP px apart (v7's B, D and 1 carried one)

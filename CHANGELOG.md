@@ -2,6 +2,9 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `ui/umlaut`: Ö as a capital (24 Oct)
+- **Ö (art/source/ui/v8/font, style8.py, build8.py, uifont.lua):** the Ö of SÖDER HILL read as a lowercase ö (a short O under its dots). Now it is the capital O itself in the 7 and 13 px fonts and an O shortened by 1 row in the 17 px font (so the dots clear the level card's picture frame), with the two dots drawn above the cap line, 1 px clear of the O, as 16-bit fonts do. Fonts can carry accent rows (ABOVE): the atlas cells grow upward by asc rows (7 px: 2, 13 px: 3, 17 px: 3) and the text's box and every layout stay as they were. New frames: select_5_pad, pause_soder, font_umlaut (the word in every size and style). Checked at 8x: out/umlaut_8x.png (not committed).
+
 ## Branch `ui/review-fixes`: fixes from the independent screen review (24 Oct)
 - **1 Locked level cards (flow.lua, tests_cards.lua, art/ui/cards rooftops, soder, night):** the pictures shot again by tools/card_shots.py with the greybox debug labels (CHIMNEY STACK, CRATES, BIKES) and the placeholder bones left out; unlocked cards unchanged. The padlock sits three quarters across the picture, clear of Pepper (F.SEL.PEPPER); a locked or missing level's strip shows BROWSE and BACK only. layout_qa_menus.py checks the padlock is on the picture's middle line, clear of Pepper, and the two-item strip.
 - **2 Medals not won (art/source/ui/v8 screens8.py, build8.py; art/ui/medal_*_off.png):** an empty dark socket where the disc would be: ink edge, a thin 1 px gold rim lit from the top left, the hollow in the kit's dark brown with shade under the upper rim; no ribbon, no picture, nothing bronze. Placed by its medal's box, so the level cards and the tally keep their layout. Won medals unchanged.
