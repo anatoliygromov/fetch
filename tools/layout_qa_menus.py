@@ -101,11 +101,36 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
         s = strip(shot, bs)
         items = labels + gl + ks + [Hh, T] + s
         check(not overlaps(items), f'{shot}: nothing overlaps {overlaps(items)}')
+    elif shot.startswith('select'):
+        s = strip(shot, bs)
+        if 'slide' in shot: continue                                       # (two cards mid-slide: the strip only)
+        P = many(bs, 'panel')[0]; R = many(bs, 'ribbon')[0]; T = many(bs, 'title')[0]; N = many(bs, 'name')[0]; Pic = many(bs, 'picture')[0]
+        for n, b in (('panel', P), ('ribbon', R), ('title', T), ('name', N), ('picture', Pic)): check(abs(cx(b) - 159.5) <= 0.5, f'{shot}: {n} centred ({cx(b)})')
+        check(Pic['x0'] - P['x0'] >= 8 and P['x1'] - Pic['x1'] >= 8 and Pic['y0'] > P['y0'] and P['y1'] > N['y1'], f'{shot}: picture and name inside the panel')
+        ar = sorted(many(bs, 'arrow'), key=lambda b: b['x0'])
+        check(len(ar) == 2 and abs((ar[0]['x0'] + ar[1]['x1']) / 2 - 159.5) <= 1 and cy(ar[0]) == cy(ar[1]), f'{shot}: arrows either side, symmetric (1 px nudge), one centre line')
+        check(all(abs(cy(a) - cy(Pic)) <= 1 for a in ar), f'{shot}: arrows on the picture\'s middle line ({[cy(a) for a in ar]} vs {cy(Pic)})')
+        check(ar[0]['x1'] < P['x0'] and ar[1]['x0'] > P['x1'] and ar[0]['x0'] >= 4 and ar[1]['x1'] <= 315, f'{shot}: arrows outside the card, on the screen')
+        md = sorted(many(bs, 'medal'), key=lambda b: b['x0'])
+        check(len(md) == 3 and md[0]['x0'] == Pic['x0'] + 4, f'{shot}: three medals from the picture\'s left edge ({md[0]["x0"]} vs {Pic["x0"] + 4})')
+        e, d = pitch_even([b['x0'] for b in md]); check(e, f'{shot}: medals evenly spaced {d}')
+        row = md + many(bs, 'clock', 'time', 'score')
+        check(max(cy(b) for b in row) - min(cy(b) for b in row) <= 0.5, f'{shot}: medals, clock, time and points on one centre line {sorted({cy(b) for b in row})}')
+        sc = many(bs, 'score')
+        if sc: check(sc[0]['x1'] == Pic['x1'] - 4, f'{shot}: points end at the picture\'s right edge ({sc[0]["x1"]} vs {Pic["x1"] - 4})')
+        lk = many(bs, 'lock')
+        if lk: check(abs(cx(lk[0]) - cx(Pic)) <= 0.5 and abs(cy(lk[0]) - cy(Pic)) <= 0.5, f'{shot}: padlock centred on the picture')
+        dots = many(bs, 'dot')
+        check(abs((min(b['x0'] for b in dots) + max(b['x1'] for b in dots)) / 2 - 159.5) <= 0.5 and min(b['y0'] for b in dots) > P['y1'] and max(b['y1'] for b in dots) < s[0]['y0'] - 2, f'{shot}: dots centred between the card and the strip')
+        items = [T, N] + row + many(bs, 'lock', 'hard') + s + dots
+        check(not overlaps(items), f'{shot}: nothing overlaps {overlaps(items)}')
 check(len(set(strips.values())) == 1, f'strip: the same place on every screen {sorted(set(strips.values()))}')
 # pieces
 INK = (64, 11, 6); SH = (36, 8, 5)
 for n in ['g_a', 'g_b', 'g_x', 'g_y', 'g_l', 'g_r', 'g_start', 'g_dpad', 'g_lr', 'g_down', 'k_space', 'k_esc', 'k_shift', 'k_enter', 'k_x', 'k_z', 'k_q',
-          'k_left', 'k_right', 'k_up', 'k_down', 'tog_on', 'tog_off', 'handheld', 'ribbon_menu']:
+          'k_left', 'k_right', 'k_up', 'k_down', 'tog_on', 'tog_off', 'handheld', 'ribbon_menu',
+          'arrow_l', 'arrow_r', 'lock', 'lock_big', 'dot_on', 'dot_off', 'frame_s', 'bubble', 'ball', 'stamp',
+          'medal_nohit_on', 'medal_nohit_off', 'medal_bones_on', 'medal_bones_off', 'medal_par_on', 'medal_par_off']:
     a = np.array(Image.open(f'{ROOT}/riverwalk/art/ui/{n}.png').convert('RGBA')); op = a[..., 3] > 0
     p = np.pad(op, 1); edge = op & ~(p[:-2, 1:-1] & p[2:, 1:-1] & p[1:-1, :-2] & p[1:-1, 2:])
     cols = {tuple(c) for c in a[edge][:, :3]}

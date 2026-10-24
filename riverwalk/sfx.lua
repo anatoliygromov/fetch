@@ -152,6 +152,8 @@ function S.load()
                              { 784, 0.12 }, { 1047, 0.4 } }, 0.22, 0.5))
     sounds.over = src(arp({ { 392, 0.2 }, { 370, 0.2 }, { 349, 0.2 }, { 330, 0.5 } }, 0.22, 0.5))
     sounds.select = src(arp({ { 880, 0.05 }, { 1320, 0.08 } }, 0.2))
+    sounds.slide = src(sweep(700, 320, 0.09, 0.12, "tri"))          -- (ui step 3) a level card slides in
+    sounds.stamp = src(sweep(170, 55, 0.14, 0.3, "sq", 0.5))        -- (ui step 3) NEW BEST! lands on the tally
     sounds.bell = src(render(0.5, function(t)
       return (square(t * 2093, 0.5) * 0.5 + square(t * 2637, 0.5) * 0.5) * 0.1 * math.exp(-t * 7) * (((t * 14) % 1) < 0.85 and 1 or 0.3)
     end))

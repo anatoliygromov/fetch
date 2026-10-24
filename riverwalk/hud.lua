@@ -148,6 +148,42 @@ function U.panel(x, y, w, h, logName)
   lg.draw(im, Q.tl, x, y); lg.draw(im, Q.tr, x + w - R, y); lg.draw(im, Q.bl, x, y + h - B); lg.draw(im, Q.br, x + w - R, y + h - B)
   log(logName or "panel", x, y, x + w - 1, y + h - 1)
 end
+-- (step 3) a small 9-slice piece (frame_s, bubble: corners c x c as drawn, each edge one repeated line, the centre
+-- one pixel stretched, or left out when hollow) with its outer box at x, y, w x h
+local nineQ = {}
+function U.nine(name, x, y, w, h, c, hollow, logName)
+  local im = U.art(name); local iw, ih = im:getDimensions()
+  if not nineQ[name] then
+    local q = {}
+    local function mk(n, qx, qy, qw, qh) q[n] = lg.newQuad(qx, qy, qw, qh, iw, ih) end
+    mk("tl", 0, 0, c, c); mk("tr", iw - c, 0, c, c); mk("bl", 0, ih - c, c, c); mk("br", iw - c, ih - c, c, c)
+    mk("t", c, 0, 1, c); mk("b", c, ih - c, 1, c); mk("l", 0, c, c, 1); mk("r", iw - c, c, c, 1); mk("c", c, c, 1, 1)
+    nineQ[name] = q
+  end
+  local Q = nineQ[name]; lg.setColor(1, 1, 1, 1)
+  if not hollow then lg.draw(im, Q.c, x + c, y + c, 0, w - 2 * c, h - 2 * c) end
+  lg.draw(im, Q.t, x + c, y, 0, w - 2 * c, 1); lg.draw(im, Q.b, x + c, y + h - c, 0, w - 2 * c, 1)
+  lg.draw(im, Q.l, x, y + c, 0, 1, h - 2 * c); lg.draw(im, Q.r, x + w - c, y + c, 0, 1, h - 2 * c)
+  lg.draw(im, Q.tl, x, y); lg.draw(im, Q.tr, x + w - c, y); lg.draw(im, Q.bl, x, y + h - c); lg.draw(im, Q.br, x + w - c, y + h - c)
+  log(logName or name, x, y, x + w - 1, y + h - 1)
+end
+-- (step 3) a picture in the thin gold frame: the picture's top-left at x, y; the frame 4 px round it
+function U.framed(img, x, y, tint, logName)
+  local w, h = img:getDimensions()
+  lg.setColor(tint or { 1, 1, 1, 1 }); lg.draw(img, x, y); lg.setColor(1, 1, 1, 1)
+  U.nine("frame_s", x - 4, y - 4, w + 8, h + 8, 4, true, logName or "frame")
+end
+-- text centred on cx (an odd leftover pixel right, as UF.center); returns its box's x
+function U.sayC(size, style, s, cx, y, logName)
+  local x = math.floor(cx - (U.sayW(size, s) - 1) / 2 + 0.5)
+  U.say(size, style, s, x, y, logName); return x
+end
+-- a piece with its body centred on cx, cy
+function U.putC(name, cx, cy, logName)
+  local w, h = U.body(name)
+  U.put(name, math.floor(cx - (w - 1) / 2 + 0.5), math.floor(cy - (h - 1) / 2 + 0.5), logName)
+end
+
 -- a title ribbon (ribbon_pause / ribbon_tally) with its main band's centre on cx and the band's top (in the middle,
 -- for the arched one) at y; logs the band (not the tails) as "ribbon". uiart_data <name>_band: x0, x1, top, height
 function U.ribbon(name, cx, y)

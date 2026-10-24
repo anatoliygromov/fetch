@@ -172,9 +172,13 @@ function F.optionsInput(a)
 end
 -- the controls page: B (or A) goes back
 function F.controlsInput(a) if a == "back" or a == "ok" then S.play("tick"); return "back" end end
+-- the level select: left / right (or up / down) browse the cards, wrapping round; A plays an open level
 function F.selectInput(a)
   local p = F.pick
-  if a == "up" or a == "down" then p.sel = (p.sel + (a == "up" and -2 or 0)) % #F.levels + 1; S.play("tick")
+  if a == "up" or a == "down" or a == "left" or a == "right" then
+    local d = (a == "up" or a == "left") and -1 or 1
+    p.from, p.moved, p.dir = p.sel, love.timer.getTime(), d
+    p.sel = (p.sel - 1 + d) % #F.levels + 1; S.play("slide")
   elseif a == "ok" then
     if F.levels[p.sel].exists and F.isOpen(p.sel) then S.play("select"); return "play", p.sel end
     S.play("push")                                               -- locked or coming soon: a dull thud
@@ -283,40 +287,85 @@ function F.drawControls(t)
   U.strip({ { "back", "BACK" } })
 end
 
-function F.drawSelect(t)
-  backdrop(t)
-  U.box(40, 10, 240, 208)
-  U.center("LEVEL SELECT", 160, 18, 2, U.GOLD)
-  if F.hard then U.hardTag(244, 20) end
-  -- (r5/bugs: rows of 30 px, so all five levels fit in the panel; at 46 px the fourth ran under the footer and the
-  -- fifth, NIGHT HARBOUR, hung off the panel and the screen)
-  -- (r6/levels: six levels: rows of 26 px from y 40, the note 17 px under the title, the highlight the whole row)
-  local step = math.min(46, math.floor(156 / #F.levels))
-  local y0, ny = step < 30 and 40 or 42, 17                        -- the first row's y; the note's y in a row
-  for i, l in ipairs(F.levels) do
-    local y = y0 + (i - 1) * step
-    local on, open = F.pick.sel == i, F.isOpen(i)
-    local ok = open and l.exists
-    if on then lg.setColor(U.EDGE); lg.rectangle("fill", 46, y - 3, 228, step < 30 and step or step - 1); lg.setColor(1, 1, 1, 1) end
-    local col = ok and (on and U.GOLD or U.WHITE) or U.RIM
-    U.center(tostring(l.number), 62, y + 4, 2, col)
-    U.center(l.title, 164, y, 2, col)
-    local note
-    if not l.exists then note = "COMING SOON"
-    elseif not open then note = "LOCKED"
-    else
-      local b, bt = F.levelBest(l.name), F.levelTimeBest(l.name)
-      note = b > 0 and ("BEST %06d"):format(b) or "NOT PLAYED YET"
-      if bt then note = note .. "  " .. F.clock(bt) end
-    end
-    if ok and (F.levelBest(l.name) > 0 or F.levelTimeBest(l.name)) then     -- played: its best and its medals
-      U.text(note, 76, y + ny, U.WHITE)
-      local m = F.medals(l.name)
-      for k, kind in ipairs(F.MEDALS) do U.medal(kind, 216 + (k - 1) * 14, y + ny - 2, m[kind]) end
-    else U.center(note, 164, y + ny, 1, ok and U.WHITE or U.RIM) end
-    if not ok then U.lock(253, y + 4, U.RIM, 2) end
+-- the level select (docs/ui_design.md screen 5, step 3): one big card per level on the title picture under the warm
+-- dim. The card: the kit's gold panel, a LEVEL n ribbon over its top edge, the level's picture (a 1x crop of the
+-- game, art/ui/cards, tools/card_shots.py) in the thin gold frame, its name (17 px), then the three medals won
+-- (left) and the best time and best points (right) from the save. Locked: the picture darkened with the padlock on
+-- it. Left / right slide the next card in (0.12 s, ease out) with a sound; arrows either side, a dot per level
+-- under the card, the controls strip at the bottom.
+F.SEL = { X = 40, W = 240, PANEL = 16, H = 192, RIB = 6, PIC_Y = 33, NAME = 158, STATS = 191, ARROW_OUT = 7, DOTS = 211,
+  DOT_PITCH = 11, SLIDE = 0.12, LOCKED = { 0.26, 0.23, 0.27, 1 } }
+local cards = {}
+function F.cardImage(name)
+  if cards[name] == nil then
+    local ok, im = pcall(lg.newImage, "art/ui/cards/" .. name .. ".png")
+    cards[name] = ok and im or false; if ok then im:setFilter("nearest", "nearest") end
   end
-  U.center("A PLAY    B BACK", 160, 200, 1, U.RIM)
+  return cards[name] or nil
+end
+function F.selectCard(i)
+  local S3, l = F.SEL, F.levels[i]
+  local open, ok = F.isOpen(i), F.isOpen(i) and l.exists
+  U.panel(S3.X, S3.PANEL, S3.W, S3.H)
+  local rib = "LEVEL " .. l.number
+  U.ribbon("ribbon_pause", 159.5, S3.RIB)
+  U.sayC(13, "ink", rib, 159.5, S3.RIB + 2, "title")
+  if F.hard then U.hardTag8(S3.X + S3.W - 30, S3.RIB + 4) end
+  local im = F.cardImage(l.name)
+  local pw, ph = 216, 118
+  if im then pw, ph = im:getDimensions() end
+  local px = math.floor(159.5 - (pw - 1) / 2 + 0.5)
+  if im then U.framed(im, px, S3.PIC_Y, not ok and S3.LOCKED or nil, "picture")
+  else lg.setColor(44 / 255, 22 / 255, 14 / 255); lg.rectangle("fill", px, S3.PIC_Y, pw, ph); lg.setColor(1, 1, 1, 1)
+    U.nine("frame_s", px - 4, S3.PIC_Y - 4, pw + 8, ph + 8, 4, true, "picture") end
+  local pcx, pcy = px + (pw - 1) / 2, S3.PIC_Y + (ph - 1) / 2
+  if not l.exists then U.sayC(13, "cream", "COMING SOON", pcx, math.floor(pcy - 7 + 0.5), "soon")
+  elseif not open then U.putC("lock_big", pcx, pcy, "lock") end
+  U.sayC(17, "gold", l.title, 159.5, S3.NAME, "name")
+  -- the stats row on one centre line: the medals from the picture's left edge, the time and points to its right edge
+  local cy = S3.STATS
+  local m = F.medals(l.name)
+  local mw, mh = U.body("medal_nohit_on")
+  for k, kind in ipairs(F.MEDALS) do
+    U.put(("medal_%s_%s"):format(kind, (ok and m[kind]) and "on" or "off"), px + (k - 1) * (mw + 4), math.floor(cy - (mh - 1) / 2 + 0.5), "medal")
+  end
+  local best, bt = F.levelBest(l.name), F.levelTimeBest(l.name)
+  if ok and (best > 0 or bt) then
+    local xr = px + pw - 1
+    local th = U.sayH(13)
+    local ty = math.floor(cy - (th - 1) / 2 + 0.5)
+    local sw = U.sayW(13, tostring(best))
+    U.say(13, "gold", tostring(best), xr - sw + 1, ty, "score")
+    if bt then
+      local ts = F.clock(bt)
+      local tw = U.sayW(13, ts)
+      local tx = xr - sw + 1 - 10 - tw
+      U.say(13, "cream", ts, tx, ty, "time")
+      local cw, ch = U.body("clock")
+      U.put("clock", tx - U.ICON_GAP - cw, math.floor(cy - (ch - 1) / 2 + 0.5), "clock")
+    end
+  end
+end
+function F.drawSelect(t)
+  local S3, p = F.SEL, F.pick
+  backdropWarm(t)
+  local u = math.min(1, (love.timer.getTime() - (p.moved or -1)) / S3.SLIDE)
+  local e = 1 - (1 - u) * (1 - u)
+  if u < 1 and p.from and p.from ~= p.sel then                       -- the card leaving, then the one coming in
+    lg.push(); lg.translate(math.floor(-(p.dir or 1) * 320 * e + 0.5), 0); F.selectCard(p.from); lg.pop()
+    lg.push(); lg.translate(math.floor((p.dir or 1) * 320 * (1 - e) + 0.5), 0); F.selectCard(p.sel); lg.pop()
+  else F.selectCard(p.sel) end
+  -- the arrows on the picture's middle line, nudging out and back; the dots under the card
+  local aw, ah = U.body("arrow_l")
+  local ay = math.floor(S3.PIC_Y + 59 - (ah - 1) / 2 + 0.5)
+  local nudge = (math.floor(love.timer.getTime() * 3) % 2 == 0) and 0 or 1
+  U.put("arrow_l", S3.X - S3.ARROW_OUT - aw - nudge, ay, "arrow")
+  U.put("arrow_r", S3.X + S3.W + S3.ARROW_OUT + nudge, ay, "arrow")
+  local n = #F.levels
+  local dw = U.body("dot_on")
+  local x0 = math.floor(159.5 - ((n - 1) * S3.DOT_PITCH + dw - 1) / 2 + 0.5)
+  for i = 1, n do U.put(i == p.sel and "dot_on" or "dot_off", x0 + (i - 1) * S3.DOT_PITCH, S3.DOTS, "dot") end
+  U.strip({ { "lr", "BROWSE" }, { "ok", "PLAY" }, { "back", "BACK" } })
 end
 
 -- a card's top on the level: y if the card misses Pepper's sprite (avoid = { x0, y0, x1, y1 } on screen), else

@@ -2,6 +2,27 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `ui/hud-v8` step 3: every remaining screen in the kit (24 Oct)
+Follows docs/ui_design.md. Drawing only: logic, inputs and saves as they were unless a line says otherwise. Frames:
+`python3 tools/screen_frames.py` (out_ui/step3/frames, colour and greyscale at 3x), checks: `python3
+tools/layout_qa_menus.py out_ui/step3/frames`.
+- **Level select as cards (flow.lua F.drawSelect, F.selectCard):** one big card per level on the title picture under the
+  warm dim: the kit's gold panel, a LEVEL n ribbon over its top edge, the level's picture in a thin gold frame
+  (frame_s), its name in the 17 px font, the three medals won from the save (each with its picture: heart NO HIT,
+  bone ALL BONES, clock PAR) on the left of one row and the clock, the best time and the best points on its right.
+  Locked: the picture darkened with a big gold padlock on it (a level without its file: COMING SOON). Left / right
+  (up / down too, so nothing learnt stops working) browse, wrapping as before; the next card slides in over 0.12 s
+  (ease out) with a new `slide` sound (sfx.lua). Gold arrows either side nudge out and back, a dot per level under
+  the card, the controls strip `BROWSE  (A) PLAY  (B) BACK`. Unlocking and saves unchanged.
+- **The pictures (riverwalk/art/ui/cards/<name>.png, 216 x 118):** native 1x crops of the game, no scaling, shot by
+  `python3 tools/card_shots.py` (riverwalk/tests_cards.lua, `love riverwalk --cardshots`: each level alone, Pepper
+  at its characteristic spot, the camera settled, no HUD): River Walk by the ice cream kiosk, City Park by the goose
+  and the leaf pile, Downtown at the market, Rooftops on the chimney stack with the gull, Soder Hill under the lamp,
+  Night Harbour in the lantern light. (Rooftops, Soder Hill and Night Harbour are still greybox, so their pictures
+  are too.)
+- **Pieces (art/source/ui/v8/tools/screens8.py, built by build8.py):** arrow_l / arrow_r, lock / lock_big, dot_on /
+  dot_off, frame_s, medal_<kind>_on / _off, bubble and its tails, ball, stamp.
+
 ## Branch `ui/hud-v8` pilot 2: the title on its native grid, Pepper pants and blinks, the new main menu (24 Oct)
 Follows docs/ui_design.md (the owner's UI design, 24 Oct). Stops here for the owner's yes.
 - **Title picture (art/source/title/tools/build_title.py):** the painting sampled one colour per cell on its 7.5 px
