@@ -29,7 +29,7 @@ NX, NY = 320, 240
 CW, CH = S.CW, S.CH
 P = dict(BLACK_W=24.0, THICK_AT=14.5, MIN_LINE=20, INSET=2.5, DARK_FRAC=0.0, SIGMA=3.0, SIGMA_PART=3.0,
          SHAPE_SIGMA=3.0, LINE_S=6.0, LIT_L=28.0, LIT_W=13.0, LIT_MIN=50, FOLD_W=13.0, FOLD_MIN=25, RIDGE_SIZE=17, RIDGE_D=18.0, RIDGE_D_T=10.0, CREASE_W=18.0, FOLD_MIN_B=60,
-         DITH_W=23, DITH_OP=5, DITH_T=0.7, DITH_R=0.15, DITH_SC=0.025, MASK_SIGMA=4.0, UNDER_OUTLINE=4.0, OUT_S=12.0, REFINE=True, DETAILS=True, JAW_TONE=1, TONGUE_S=8.0, DITH_REG=True, DITH_MIN=6, PINK_RAMP=[8, 9, 44, 23], RARE_MAX=3, JAW_RUN=5, JAW_BOX=(118, 124, 150, 166), HL_ID=5, HL_COVER=0.3, HL_STRAY=[60, 27, 53, 10, 52, 48, 12, 7], NOSE_MAP=(([10, 53, 27, 60], 22), ([7, 12, 48, 52], 35)), DUP_FRAC=0.5, SIL_NEAR=2.0, SIL_CLOSE=0, OUT_K=26, REFINE_PASSES=8, MIX_W=40.0, OUT_CORNER=75.0, OUT_STRAIGHT=2.5, SPUR=12, BLACK_SPUR=18, BLACK_EXTRA=[2], PURE_FRAC=0.4, NEARBLACK_W=0.0, DARK_SIDES=0.4,
+         DITH_W=23, DITH_OP=5, DITH_T=0.7, DITH_R=0.15, DITH_SC=0.025, MASK_SIGMA=4.0, UNDER_OUTLINE=4.0, OUT_S=12.0, REFINE=True, DETAILS=True, JAW_TONE=1, TONGUE_S=8.0, EAR_BANDS=True, EAR_SIGMA=0.7, EAR_ISLAND=6, EAR_NO_CHECK=[], EAR_QUARTERS=(1, 2, 3), EAR_MODE=2, CLEAR_TONE=1, DITH_REG=True, DITH_MIN=6, PINK_RAMP=[8, 9, 44, 23], RARE_MAX=3, JAW_RUN=5, JAW_BOX=(118, 124, 150, 166), HL_ID=5, HL_COVER=0.3, HL_STRAY=[60, 27, 53, 10, 52, 48, 12, 7], NOSE_MAP=(([10, 53, 27, 60], 22), ([7, 12, 48, 52], 35)), DUP_FRAC=0.5, SIL_NEAR=2.0, SIL_CLOSE=0, OUT_K=26, REFINE_PASSES=8, MIX_W=40.0, OUT_CORNER=75.0, OUT_STRAIGHT=2.5, SPUR=12, BLACK_SPUR=18, BLACK_EXTRA=[2], PURE_FRAC=0.4, NEARBLACK_W=0.0, DARK_SIDES=0.4,
          PAIRS=[(0, 1), (0, 7), (7, 11), (0, 11), (7, 10), (1, 2), (10, 12), (8, 9), (9, 44)],
          MERGE={3: 2, 13: 2})
 
@@ -424,6 +424,7 @@ def render(params=None, verbose=True):
     for d in bl:
         lines.append((d['cells'], line_id, 3, d))
     replaced |= rep
+    black_rep = rep.copy()
     # lit rim lines on the coat (brows, ear edges, lip, cheek)
     lit_ids = [i for i in g['coat'] if labL[i] >= p['LIT_L']]
     M = np.isin(L, lit_ids) & D & ~shapes_px & ~B & ~parts['tongue']
@@ -499,6 +500,12 @@ def render(params=None, verbose=True):
     valid = D & ~under & ~stray
     _, (vy, vx) = ndi.distance_transform_edt(~valid, return_indices=True)
     Lf = L[vy, vx].astype(np.int32)
+    if p['DETAILS']:
+        # near-black cleared around the traced strokes becomes the coat's darkest tone,
+        # so the strokes keep the painting's dark surround without merging into a blob
+        Lf[clr & nearblack & D] = p['CLEAR_TONE']
+    p['_Lf'] = Lf; p['_valid'] = D & ~black_rep & ~(darkm & (edge_dist <= p['INSET'] + p['UNDER_OUTLINE']))
+    p['_Lfull'] = np.where(np.isin(L, g['line']), Lf, L)
     pairs = [pr for pr in p['PAIRS'] if max(pr) < len(pal)]
     dv = dither_pairs(Lf, O & ~shapes_px, pairs, p['DITH_W'], p['DITH_R'], p['DITH_SC'], p['DITH_OP'], p['DITH_T'])
     Lv = np.where(dv >= 0, 1000 + dv, Lf)
@@ -714,6 +721,69 @@ def regularize_dither(cls, sel, min_cells, dclasses, pairs, iters=3, join=True):
     return cls
 
 
+def ear_bands(idx, cmap, fixed_idx, parts, L, I, J, p):
+    """Ordered dithering of the painting's smoothed tone over the left ear: the per-cell
+    luma (box mean, Gaussian 1 cell) is quantized to the ramp's tones and the 50 %
+    checkers between them; the level map is mode-filtered and islands under EAR_ISLAND
+    cells merged, so band borders follow the ear's form and each checker band is one
+    continuous area on the global (i + j) lattice."""
+    pal = p['_pal']
+    ramp = DT.EAR_RAMP
+    Yp = _lum(pal.astype(np.float32))
+    # tone of the fill under the lines (lines and outline are drawn separately)
+    vm = p['_valid'].astype(np.float32)
+    Ysum, _ = cell_mean(Yp[p['_Lfull']].astype(np.float32) * vm, I, J)
+    Vm, _ = cell_mean(vm, I, J)
+    with np.errstate(invalid='ignore', divide='ignore'):
+        Y = Ysum / Vm
+    Yall, _ = cell_mean(Yp[p['_Lf']].astype(np.float32), I, J)
+    Y = np.where(np.nan_to_num(Vm) > 0.2, Y, Yall)
+    Y = np.nan_to_num(Y)
+    Ys = ndi.gaussian_filter(Y, p['EAR_SIGMA']) if p['EAR_SIGMA'] > 0 else Y
+    lv_y = []; lv_c = []
+    P_ = [tuple(q) for q in p['PAIRS']]
+    for k, c in enumerate(ramp):
+        lv_y.append(Yp[c]); lv_c.append((c, c, 0))
+        if k + 1 < len(ramp) and (c, ramp[k + 1]) not in p['EAR_NO_CHECK']:
+            pa, pb = (c, ramp[k + 1]) if (c, ramp[k + 1]) in P_ else (ramp[k + 1], c)
+            for q in p['EAR_QUARTERS']:      # share of pb: Bayer levels on the 2 x 2 lattice
+                lv_y.append(Yp[pa] + q / 4.0 * (Yp[pb] - Yp[pa])); lv_c.append((pa, pb, q))
+    lv_y = np.array(lv_y)
+    ear, _ = cell_mean(parts['earL'].astype(np.float32), I, J)
+    sel = (np.nan_to_num(ear) >= 0.5) & (fixed_idx < 0) & (idx >= 0)
+    sel &= np.isin(idx, ramp)            # only the coat tones (lit rim and lines stay)
+    lev = np.abs(Ys[..., None] - lv_y[None, None, :]).argmin(-1)
+    lev = np.where(sel, lev, -1)
+    # mode filter and island merge on the level map
+    for _ in range(p['EAR_MODE']):
+        new = lev.copy()
+        for j, i in zip(*np.nonzero(sel)):
+            w = lev[max(0, j - 1):j + 2, max(0, i - 1):i + 2].ravel(); w = w[w >= 0]
+            u, n = np.unique(w, return_counts=True)
+            if n.max() >= 5:
+                new[j, i] = u[n.argmax()]
+        lev = np.where(sel, new, lev)
+    for v in np.unique(lev[sel]):
+        lab, n = ndi.label((lev == v) & sel)
+        for k in range(1, n + 1):
+            m = lab == k
+            if m.sum() >= p['EAR_ISLAND']:
+                continue
+            ring = ndi.binary_dilation(m, np.ones((3, 3))) & ~m & sel
+            if ring.any():
+                u, nn = np.unique(lev[ring], return_counts=True)
+                lev[m] = u[nn.argmax()]
+    jj, ii = np.indices(idx.shape)
+    for v in np.unique(lev[sel]):
+        a, b, q = lv_c[v]
+        m = sel & (lev == v)
+        useb = BAYER[jj % 2, ii % 2] < q
+        idx[m & useb] = b
+        idx[m & ~useb] = a
+        cmap[m] = idx[m]
+    return idx, cmap
+
+
 def detail_cells(idx, cmap, fixed_idx, oc, shp, parts, L, I, J, line_id, p):
     """Round 2 cell rules.
     Jaw and silhouette: a near-black fill cell just inside the 1 px outline takes the
@@ -767,6 +837,9 @@ def detail_cells(idx, cmap, fixed_idx, oc, shp, parts, L, I, J, line_id, p):
                     if len(v):
                         u, n = np.unique(v, return_counts=True)
                         idx[j_, i_] = u[n.argmax()]; cmap[j_, i_] = u[n.argmax()]
+    # left ear: tone bands on one continuous checker lattice
+    if p['EAR_BANDS']:
+        idx, cmap = ear_bands(idx, cmap, fixed_idx, parts, L, I, J, p)
     # eye: catchlight and sclera crescent as hand-placed cells (pepper_detail.py)
     want = np.zeros(idx.shape, bool)
     for j_, i_ in DT.EYE_CREAM:
@@ -816,6 +889,10 @@ def despeckle(idx, protect, linecells):
             nb_ = idx[j - 1:j + 2, i - 1:i + 2].ravel()
             nb_ = np.delete(nb_, 4)
             if (nb_ == c).any():
+                continue
+            # a dot of a regular 2 x 2 pattern (same colour two cells away) stays
+            if (j >= 2 and idx[j - 2, i] == c) or (j + 2 < H and idx[j + 2, i] == c) or \
+               (i >= 2 and idx[j, i - 2] == c) or (i + 2 < W and idx[j, i + 2] == c):
                 continue
             u, n = np.unique(nb_[nb_ >= 0], return_counts=True)
             if len(u) and n.max() >= 6:

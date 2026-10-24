@@ -124,3 +124,14 @@ then re-rasterize), pixel-perfect line rule (no L-corner doubles), clean stairca
   tone join it, islands under 6 cells removed); dark (1, 2) checker islands removed.
   Remaining: the left ear's upper half is still mostly plain where the painting has a
   three-tone checker; the cheek checker is lower in contrast than painted.
+
+## Round 4 changes
+
+- Left ear: `ear_bands` rebuilds the ear's coat tones by ordered dithering of the
+  painting's own fill tone (per-cell mean of the fill labels outside the black lines,
+  Gaussian 0.7 cell): levels are the ear ramp `#000113 #222231 #2a2836 #312d3a #41353e
+  #514245` and the 25 / 50 / 75 % Bayer mixes between neighbours on the global 2 x 2
+  lattice; the level map is mode-filtered and islands under 6 cells merged, so each
+  band is one continuous area whose borders follow the ear's form. Cost: form p95.
+- Wink: two 1 px lashes of 3 cells each, rising from the arc's right end; near-black
+  around the traced strokes becomes `#222231`, so no blob and no stray remains.

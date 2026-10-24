@@ -12,9 +12,9 @@ from scipy import ndimage as ndi
 
 STROKES = [
     # wink lashes, from tip to the wink's end (blocks at x 588-600 y 854-862 -> 620-640 y 884-890 etc.)
-    dict(name='lash_left', pts=[(600, 860), (614, 870), (626, 879), (634, 888)]),
-    dict(name='lash_mid', pts=[(650, 857), (644, 868), (639, 879)]),
-    dict(name='lash_right', pts=[(662, 877), (652, 887), (646, 896)]),
+    # two short 1 px lashes rising from the top of the arc's right end (2 to 3 cells each)
+    dict(name='lash_a', pts=[(619, 889), (614, 880), (610, 873)]),
+    dict(name='lash_b', pts=[(641, 892), (646, 881), (651, 870)]),
     # the wink's arc: one smooth curve of constant 2 px weight (centreline from the
     # column centroids of the painted arc, x 490-640)
     dict(name='wink', thick=3, pts=[(490, 954), (508, 943), (528, 928), (550, 914), (574, 906), (600, 903), (622, 904), (642, 909)]),
@@ -24,7 +24,7 @@ STROKES = [
     dict(name='brow', thick=2, pts=[(797, 750), (801, 736), (808, 725), (819, 716), (833, 712), (847, 713), (858, 717)]),
 ]
 CLEAR_BOXES = [
-    (580, 848, 672, 892),     # the lash area above the wink's thick arc
+    (575, 848, 680, 896),     # the lash area above the wink's thick arc
     (470, 890, 660, 966),     # the wink's arc
     (786, 702, 858, 754),     # the brow arc
 ]
@@ -67,3 +67,8 @@ def trim_knot(D, B, box0):
 EYE_CREAM = [(105, 113), (105, 114), (106, 112), (106, 113), (106, 114), (107, 112), (107, 113), (107, 114),
              (109, 117), (109, 118), (110, 117), (110, 118), (111, 117), (111, 118), (112, 117), (112, 118),
              (113, 117), (113, 118), (114, 116), (114, 117), (115, 115), (115, 116), (116, 114), (116, 115)]
+
+
+# the left ear's tone ramp, dark to light (palette ids): its shading is rebuilt as
+# ordered bands, plain tone, 50 % checker on one global 2 x 2 lattice, next tone
+EAR_RAMP = [2, 1, 0, 11, 7, 10]

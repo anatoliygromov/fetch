@@ -102,3 +102,20 @@ Not changed: the single-use pinks at (49,179), (59,177), (62,181), (71,194) are 
 this track's mask (transparent here, grid track pixels); (53,173) is `#751249`, the
 bandana ramp's darkest step (34 cells). Wider checker coverage (946 cells) dropped the
 right-ear IoU to 0.917, so coverage stays at 829 cells.
+
+## Round 4 (Fable re-review: ear checker, lashes)
+
+Final: IoU head .962, left ear .957, right ear .921, eye .926, nose .950, tongue .927,
+bandana .959; worst boundary distance 0.303; L-corners 0, gaps 0, staircase 0.960;
+off-palette 0, anti-aliasing dots 0; checker 1021 of 1021 in phase; **form mean 2.67,
+p95 9.10: FAIL** (trade-off accepted by the producer: the same build without the ear
+bands, `EAR_BANDS=False`, scores p95 7.96 and passes).
+
+Why the form gate drops: the painting's ear is lit by thin light fur streaks between
+its checker patches. Continuous bands on one 2x2 lattice (mode filter, islands under 6
+cells merged) cannot keep those sub-band streaks, so the ear reads 3 to 8 luma darker
+than painted in places (its box: mean signed -7.6 against -5.2 before). Variants tried:
+blur 0 / 0.5 / 0.7 / 1.0 cell, islands 1 / 3 / 4 / 6, mode filter 0 / 1 / 2 passes,
+50 % only or 25/50/75 % Bayer levels: p95 8.5 to 9.1; the ones under 8.6 leave islands.
+Also fixed: despeckling no longer erases 25 % / 75 % Bayer dots (they have a same-colour
+cell two away); this alone took p95 from 8.02 to 7.96 without the ear bands.
