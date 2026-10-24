@@ -142,16 +142,16 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
             check(P['y1'] < s[0]['y0'], f'{shot}: the card above the strip')
     elif shot.startswith('talk') and 'rise' not in shot:
         P = many(bs, 'talkpanel')[0]; Fr = many(bs, 'portrait')[0]; L = sorted(many(bs, 'talk'), key=lambda b: b['y0'])
-        check(P['x0'] >= 4 and Fr['x1'] <= 315 and P['y1'] <= 235 and Fr['y1'] <= 235, f'{shot}: panel and portrait inside the margins')
-        check(Fr['x0'] == P['x1'] - 7 or Fr['x1'] == P['x0'] + 7, f'{shot}: the portrait frame on the panel\'s side, 8 px over it')
-        check(Fr['y1'] == P['y1'] or Fr['y0'] == P['y0'] or Fr['y1'] >= P['y1'], f'{shot}: panel and portrait share the bottom line')
-        vis0, vis1 = (P['x0'], Fr['x0'] - 1) if Fr['x0'] > P['x0'] else (Fr['x1'] + 1, P['x1'])
-        check(all(abs(cx(b) - (vis0 + vis1) / 2) <= 1 for b in L), f'{shot}: each row centred in the panel\'s open part {[cx(b) for b in L]} vs {(vis0 + vis1) / 2}')
+        Pp = many(bs, 'pepper')[-1]
+        check(P['x0'] >= 4 and P['x1'] <= 315 and P['y1'] <= 235 and Fr['x0'] >= 4 and Fr['x1'] <= 315 and Fr['y0'] >= 4, f'{shot}: panel and portrait inside the margins')
+        check(Fr['y1'] == P['y0'] - 1 and Fr['x0'] >= P['x0'] + 8 and Fr['x1'] <= P['x1'] - 8, f'{shot}: the bust stands on the panel, its bottom tucked behind it')
+        check(not overlaps([P, Pp]) and not overlaps([Fr, Pp]), f'{shot}: never over Pepper')
+        check(all(abs(cx(b) - cx(P)) <= 1 for b in L), f'{shot}: each row centred on the panel')
         check(abs((L[0]['y0'] + L[-1]['y1']) / 2 - cy(P)) <= 1, f'{shot}: the rows centred top to bottom')
         e, d = pitch_even([b['y0'] for b in L]); check(e, f'{shot}: even row pitch {d}')
-        check(all(b['x0'] - vis0 >= 10 and vis1 - b['x1'] >= 10 for b in L), f'{shot}: rows clear of the frame (10 px)')
+        check(all(b['x0'] - P['x0'] >= 10 and P['x1'] - b['x1'] >= 10 for b in L), f'{shot}: rows clear of the frame (10 px)')
         hud = many(bs, 'lives', 'head', 'health', 'bones', 'score', 'clock', 'time', 'bone')
-        check(not overlaps([P, Fr] + hud) or not [h for h in hud if not (h['x1'] < min(P['x0'], Fr['x0']) or h['x0'] > max(P['x1'], Fr['x1']) or h['y1'] < min(P['y0'], Fr['y0']) or h['y0'] > max(P['y1'], Fr['y1']))], f'{shot}: clear of the HUD')
+        check(not overlaps([P] + hud) and not overlaps([Fr] + hud), f'{shot}: clear of the HUD')
     elif (shot.startswith('hint') or shot.startswith('nudge')) and 'rise' not in shot and 'none' not in shot:
         Bs = many(bs, 'bubble'); Pp = many(bs, 'pepper')[-1]; tl = many(bs, 'tail')
         check(len(Bs) == 1 and len(tl) == 1, f'{shot}: one bubble with its tail')
@@ -217,7 +217,7 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
         Ps = many(bs, 'panel', 'storypanel')
         cen = ['ribbon', 'title', 'name', 'big', 'end'] + (['score'] if kind == 'ending' else [])
         for b in many(bs, *cen): check(abs(cx(b) - 159.5) <= 0.5, f'{shot}: {b["name"]} centred ({cx(b)})')
-        names = {'story': ['story', 'portrait'], 'over': ['label', 'cursor'], 'ending': ['story', 'label', 'best', 'thanks'],
+        names = {'story': ['story'], 'over': ['label', 'cursor'], 'ending': ['story', 'label', 'best', 'thanks'],
                  'bonus': ['story', 'subtitle', 'goal', 'tlabel', 'tvalue', 'try', 'life', 'gicon'] + (['head'] if 'result' in shot else [])}[kind]
         txt = many(bs, *names)
         if Ps and shot.split('_')[0] != 'toast':

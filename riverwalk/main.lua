@@ -390,6 +390,14 @@ local function drawTuning()                                       -- (dev, Tab) 
   U.say(7, "dim", "- + CHANGE", x + 4, y + h - 11)
 end
 
+-- while playing, the HUD groups under Pepper or under a speaker in her corner step aside
+function T_avoid()
+  local list = { { Talk.pepperRect(stage) } }
+  local L = Talk.placed(stage)
+  if L and L.corner then list[#list + 1] = L.rects[2] end
+  return list
+end
+
 function love.draw()
   love.graphics.setCanvas(canvas); love.graphics.clear(0, 0, 0)
   local screen = (state == "title" and function() Title.draw(t, titleLeaving) end)
@@ -415,7 +423,7 @@ function love.draw()
   -- found and the tally the level's points in the card itself.
   if state == "play" then
     U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard },
-      { Talk.pepperRect(stage) })
+      T_avoid())
   end
   if state == "intro" then
     Flow.drawIntro(def, t, { Talk.pepperRect(stage) })            -- (ui step 3) the gold card, the story, A GO

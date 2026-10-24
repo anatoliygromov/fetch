@@ -451,41 +451,38 @@ end
 -- the portrait panel: the warm dim, Mia telling it in the kit's gold panel (13 px, each outro line split where its
 -- halves are most even), her portrait (the talking loop while the lines are read) in the thin gold frame on the
 -- panel's right end; the group centred where it misses Pepper. After CARD_WAIT the strip shows (A) GO ON (only A).
-F.ST = { W_TEXT = 200, PAD_X = 16, PAD_Y = 12, PITCH = 16, IN = 8 }
-function F.storyLayout(lines)
-  local S3, Talk = F.ST, require("talk")
-  local rows = {}
-  for _, l in ipairs(lines or {}) do for _, r in ipairs(F.wrap(13, l, S3.W_TEXT)) do rows[#rows + 1] = r end end
-  local tw = 0
-  for _, r in ipairs(rows) do tw = math.max(tw, U.sayW(13, r)) end
-  local p = Talk.port("girl")
-  local fw, fh = p.win.w + 8, p.win.h + 8
-  local th = (#rows - 1) * S3.PITCH + U.sayH(13)
-  local pw, ph = tw + 2 * S3.PAD_X, math.max(fh + 8, th + 2 * S3.PAD_Y)
-  local w = pw + fw - S3.IN
-  return { rows = rows, tw = tw, th = th, pw = pw, ph = ph, fw = fw, fh = fh, w = w, x = math.floor(159.5 - (w - 1) / 2 + 0.5), port = p }
+F.ST = { W_TEXT = 200, PAD_X = 16, PAD_Y = 12, PITCH = 16, IN = 12 }
+function F.storyLayout(lines, other)
+  local Talk = require("talk")
+  -- the bubble keeps above the controls strip at the bottom
+  return Talk.raise(Talk.cornerLayout(Talk.port("girl"), lines or {}, false, other), F.STRIP_TOP - 3)
 end
+-- (owner 24 Oct: a speech bubble, Mia never cropped, no frame) Mia in her corner telling it, the cream bubble beside
+-- her; the other corner (mirrored) when Pepper stands in hers
 function F.drawStory(lines, t, avoid)
+  local Talk = require("talk")
   local L = F.storyLayout(lines)
+  local a = avoid and (type(avoid[1]) == "table" and avoid[1] or avoid)   -- Pepper's rect { x0, y0, x1, y1 }
+  local function hit(L)
+    for _, r in ipairs(L.rects) do if r[1] < a[3] and r[3] > a[1] and r[2] < a[4] and r[4] > a[2] then return true end end
+  end
+  if a and hit(L) then
+    local L2 = F.storyLayout(lines, true)
+    if not hit(L2) then L = L2 else L = Talk.above(F.storyLayout(lines)) end      -- else over her head, in her corner
+  end
   U.dimWarm()
-  shifted(dropTop(F.cardTop(L.x, L.w, L.ph, avoid), t), function() F.storyCard(lines, t, L) end)
+  F.storyCard(lines, t, L)
   if t >= F.CARD_WAIT then U.strip({ { "ok", "GO ON" } }) end
 end
 function F.storyCard(lines, t, L)
-  L = L or F.storyLayout(lines)
-  local S3, p = F.ST, L.port
-  U.panel(L.x, 0, L.pw, L.ph, "storypanel")
-  local y0 = math.floor((L.ph - 1) / 2 - (L.th - 1) / 2 + 0.5)
-  local vis = L.pw - S3.IN
-  for i, r in ipairs(L.rows) do U.say(13, "cream", r, math.floor(L.x + (vis - U.sayW(13, r)) / 2 + 0.5), y0 + (i - 1) * S3.PITCH, "story") end
-  local fx, fy = L.x + L.w - L.fw, math.floor((L.ph - L.fh) / 2 + 0.5)
-  local talkFor = math.min(3.0, 0.6 + 0.04 * #table.concat(lines or {}, " "))
   local Talk = require("talk")
+  L = L or F.storyLayout(lines)
+  local talkFor = math.min(3.0, 0.6 + 0.04 * #table.concat(lines or {}, " "))
   local f = t < talkFor and 1 + math.floor(t * Talk.FPS) % Talk.FRAMES or 1
-  lg.setColor(Talk.WIN_FILL); lg.rectangle("fill", fx + 4, fy + 4, p.win.w, p.win.h)
-  lg.setColor(1, 1, 1, 1); lg.draw(p.img, p.wq[f], fx + 4, fy + 4)
-  U.nine("frame_s", fx, fy, L.fw, L.fh, 4, true, "portrait")
+  local u = math.min(1, t / 0.25)
+  Talk.drawCorner(L, f, math.floor(8 * (1 - u) * (1 - u) + 0.5), "story")
 end
+F.STRIP_TOP = U.STRIP_Y               -- the controls strip's top row (the story bubble keeps above it)
 F.CARD_WAIT = 2                   -- seconds before A leaves a story card
 
 -- the tally after a level. tl: { lines, shown, from, points, t, done, newBest, time, best, newBestTime, par, medals,
