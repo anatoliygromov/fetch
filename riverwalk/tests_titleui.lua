@@ -26,15 +26,21 @@ return function(api)
     F.menu.moved, F.opts.moved = -1, -1
     shot("title_idle", function() Title.draw(0.9, nil, false) end)          -- PRESS START in its off phase
     shot("title_press", function() Title.draw(1.3, nil, false) end)         -- PRESS START on
-    Title.TAGLINE = "lower"                                                  -- the second tagline version
+    -- the logo's shine mid-sweep (the first sweep starts at 2.0 s) and the first twinkle star's six frames (from
+    -- 0.9 s, 12 fps), the picture only
+    for _, u in ipairs({ 2.2, 2.4, 2.6 }) do shot(("title_shine_%d"):format(u * 10), function() Title.draw(u, nil, true) end) end
+    for f = 0, 5 do shot(("title_star_%d"):format(f), function() Title.draw(0.9 + (f + 0.5) / 12, nil, true) end) end
+    local logo0, tag0 = Title.LOGO, Title.TAGLINE                           -- the defaults ("regrid")
+    -- the older logos and plates, still selectable (drawn over the regrid picture)
+    Title.TAGLINE = "lower"
     shot("title_lower_idle", function() Title.draw(0.9, nil, false) end)
     shot("title_lower_press", function() Title.draw(1.3, nil, false) end)
     Title.TAGLINE = "caps"
-    for _, m in ipairs({ "bands", "steps6", "gradient" }) do Title.LOGO = m; shot("title_logo_" .. m, function() Title.draw(0.9, nil, false) end) end
+    for _, m in ipairs({ "clean", "bands", "steps6", "gradient" }) do Title.LOGO = m; shot("title_logo_" .. m, function() Title.draw(0.9, nil, false) end) end
     Title.LOGO = "gradient"; Title.TAGLINE = "lower"
     shot("title_gradient_lower", function() Title.draw(1.3, nil, false) end)
     Title.LOGO = "clean"; shot("title_clean_lower", function() Title.draw(1.3, nil, false) end)
-    Title.TAGLINE = "caps"
+    Title.LOGO, Title.TAGLINE = logo0, tag0
     for _, dev in ipairs({ "pad", "key" }) do
       I.last = dev
       for i = 1, #F.menu.items do F.menu.sel, F.menu.from = i, i; shot(("menu_%d_%s"):format(i, dev), function() F.drawMenu(3.0) end) end

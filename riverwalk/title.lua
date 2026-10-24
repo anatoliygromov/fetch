@@ -5,7 +5,15 @@
 -- over the same picture, flow.lua). Only the pixels that change are drawn over the picture, so nothing else moves.
 -- (The clouds and the sailboats stay still: they are painted into the sky and the water and cannot be lifted out
 -- cleanly.)
+-- Regrid (24 Oct): the picture is now the regridded composite (art/source/title/tools/build_title_regrid.py): base.png
+-- holds the background, Pepper, the logo and the tagline as approved, so the default logo and plate ("regrid") draw
+-- the very pixels under them and only the shine and the stars change anything there. Pepper is still for this build
+-- (T.PEPPER_ANIM: the old mouth and eye frames do not match the new Pepper), the painting's bird stays in the picture
+-- (T.BIRD_ANIM: the old overlay's pixels are out of style next to the new art), and the river sparkles are the new
+-- water's own light ripple streaks, each dimmed to the water round it in its off phase (T.SPARKLES).
 local D = require("title_data")
+local R = require("title_regrid")
+D.sparkle_points.regrid = R.sparkle_points
 local T = {}
 local lg = love.graphics
 local I
@@ -19,8 +27,8 @@ end
 function T.load()
   if I then return end
   I = { base = img("base"), bird = img("bird"), mouth = img("mouth"), eye = img("eye"), logos = {},
-    tagline = { caps = img("tagline_caps"), lower = img("tagline_lower") } }
-  for _, m in ipairs({ "clean", "bands", "gradient", "steps6" }) do I.logos[m] = { fill = img("logo_" .. m), hi = img("logo_hi_" .. m) } end
+    tagline = { caps = img("tagline_caps"), lower = img("tagline_lower"), regrid = img("tagline_regrid") } }
+  for _, m in ipairs({ "clean", "bands", "gradient", "steps6", "regrid" }) do I.logos[m] = { fill = img("logo_" .. m), hi = img("logo_hi_" .. m) } end
   I.stars = img("stars"); I.starQ = {}
   for sz = 0, 2 do I.starQ[sz] = {}; for f = 0, 5 do I.starQ[sz][f] = lg.newQuad(f * 11, sz * 11, 11, 11, I.stars:getDimensions()) end end
   -- the sparkle schedule, the same every run (a seeded generator): one star at a time, the next one 0.6 to 1.4 s
@@ -63,26 +71,37 @@ function T.draw(t, leaving, plain)
   T.load()
   lg.setColor(1, 1, 1, 1)
   lg.draw(I.base, 0, 0)
-  -- river sparkles: each streak twinkles on its own rhythm
-  for i, s in ipairs(D.sparkles) do
-    local ph = (s[1] * 0.37 + s[2] * 1.71 + i * 0.53) % 6.283
-    if math.sin(t * (1.4 + (i % 5) * 0.25) + ph) > -0.35 then
-      lg.setColor(s[4] / 255, s[5] / 255, s[6] / 255, 1); lg.rectangle("fill", s[1], s[2], s[3], 1)
+  -- river sparkles: each ripple streak twinkles on its own rhythm (base.png shows it lit; in its off phase it takes
+  -- the water colour round it)
+  if T.SPARKLES then
+    for i, s in ipairs(R.ripples) do
+      local ph = (s[1] * 0.37 + s[2] * 1.71 + i * 0.53) % 6.283
+      if math.sin(t * (1.4 + (i % 5) * 0.25) + ph) <= -0.35 then
+        lg.setColor(s[4] / 255, s[5] / 255, s[6] / 255, 1); lg.rectangle("fill", s[1], s[2], s[3], 1)
+      end
     end
+    lg.setColor(1, 1, 1, 1)
   end
-  lg.setColor(1, 1, 1, 1)
-  local m, e = T.pepperFrames(t)
-  if m > 0 then lg.draw(I.mouth, I.mouthQ[m], D.mouth.x, D.mouth.y) end
-  if e > 0 then lg.draw(I.eye, I.eyeQ[e], D.eye.x, D.eye.y) end
+  if T.PEPPER_ANIM then
+    local m, e = T.pepperFrames(t)
+    if m > 0 then lg.draw(I.mouth, I.mouthQ[m], D.mouth.x, D.mouth.y) end
+    if e > 0 then lg.draw(I.eye, I.eyeQ[e], D.eye.x, D.eye.y) end
+  end
   -- the bird: flaps (up, level, down, level), glides now and then, drifts a little
-  local f = 1
-  if t % 5 < 3.2 then f = ({ 0, 1, 2, 1 })[math.floor(t / 0.14) % 4 + 1] end
-  local bx = D.bird.x + math.floor(math.sin(t * 0.35) * 4 + 0.5)
-  local by = D.bird.y + math.floor(math.sin(t * 0.9) * 1.2 + 0.5)
-  lg.draw(I.bird, I.birdQ[f], bx, by)
-  -- the logo and the tagline plate, rebuilt on the grid (art/source/title/tools/logo.py): the plate, then the letters
-  lg.draw(I.tagline[T.TAGLINE] or I.tagline.caps, D.plate.x, D.plate.y)
-  lg.draw(T.logo().fill, D.logo.x, D.logo.y)
+  if T.BIRD_ANIM then
+    local f = 1
+    if t % 5 < 3.2 then f = ({ 0, 1, 2, 1 })[math.floor(t / 0.14) % 4 + 1] end
+    local bx = D.bird.x + math.floor(math.sin(t * 0.35) * 4 + 0.5)
+    local by = D.bird.y + math.floor(math.sin(t * 0.9) * 1.2 + 0.5)
+    lg.draw(I.bird, I.birdQ[f], bx, by)
+  end
+  -- the logo and the tagline plate as their own layers: the older plates go under the letters; the regrid plate goes
+  -- over the logo (its outline and shadow reach down behind the plate), the composite's order
+  local P, L = T.plateBox(), T.logoBox()
+  local plate = I.tagline[T.TAGLINE] or I.tagline.regrid
+  if plate ~= I.tagline.regrid then lg.draw(plate, P.x, P.y) end
+  lg.draw(T.logo().fill, L.x, L.y)
+  if plate == I.tagline.regrid then lg.draw(plate, P.x, P.y) end
   T.shine(t)
   T.sparkle(t)
   if plain then return end
@@ -115,7 +134,7 @@ function T.sparkle(t)
   if not s then return end
   local f = math.floor((tt - s.t) * 12)
   if f > 5 then return end
-  local pts = D.sparkle_points[T.LOGO] or D.sparkle_points.clean
+  local pts = D.sparkle_points[T.LOGO] or D.sparkle_points.regrid
   local p = pts[(s.p - 1) % #pts + 1]
   lg.setColor(1, 1, 1, 1); lg.draw(I.stars, I.starQ[s.size][f], p[1] - 5, p[2] - 5)
 end
@@ -125,7 +144,7 @@ function T.shine(t)
   local s0, tt = latest(T.shineList, t)
   local st = s0 and (tt - s0) or 99
   if st < 0.8 then
-    local L = D.logo
+    local L = T.logoBox()
     local pos = -30 + (L.w + 60) * (st / 0.8)
     for y = 0, L.h - 1, 2 do
       local x = math.floor(pos - y * 0.45)
@@ -137,12 +156,20 @@ function T.shine(t)
     lg.setScissor()
   end
 end
-T.LOGO = "clean"                  -- the logo: "clean" (the painting's own, its speckle replaced by an ordered dither), or
-                                  -- rebuilt: "gradient" (six steps, ordered 2 x 2 dither between them), "steps6" (the six
-                                  -- steps, hard), "bands" (three hard bands and a lip)
-function T.logo() return I.logos[T.LOGO] or I.logos.clean end
-T.TAGLINE = "caps"                -- the tagline plate: "caps" (THE CITY DOG ADVENTURER) or "lower" (The City Dog Adventurer)
-T.CX = 220.5                      -- the centre line under the logo (the tagline plate's centre, x 144..297)
+T.LOGO = "regrid"                 -- the logo: "regrid" (the regridded logo, as baked into base.png), or the older ones drawn
+                                  -- over it: "clean" (the painting's own, its speckle replaced by an ordered dither),
+                                  -- "gradient" (six steps, ordered 2 x 2 dither between them), "steps6" (the six steps,
+                                  -- hard), "bands" (three hard bands and a lip)
+function T.logo() return I.logos[T.LOGO] or I.logos.regrid end
+local OLD_LOGO = { clean = true, bands = true, gradient = true, steps6 = true }
+function T.logoBox() return OLD_LOGO[T.LOGO] and D.logo or R.logo end
+T.TAGLINE = "regrid"              -- the tagline plate: "regrid" (The City Dog Adventurer, regridded, as baked into
+                                  -- base.png), or the older "caps" (THE CITY DOG ADVENTURER) or "lower"
+function T.plateBox() return (T.TAGLINE == "caps" or T.TAGLINE == "lower") and D.plate or R.plate end
+T.PEPPER_ANIM = false             -- Pepper's pant and blink (mouth.png, eye.png): off, they were cut from the old Pepper
+T.BIRD_ANIM = false               -- the flapping bird overlay (bird.png): off, the painting's bird stays in base.png
+T.SPARKLES = true                 -- the river ripples twinkle (title_regrid.lua ripples)
+T.CX = 220                        -- the centre line under the logo (the regrid tagline plate's centre: its frame x 150..290)
 T.PRESS_Y = 152                   -- PRESS START's top: the main menu's middle row
 T.LEAVE = 0.45                    -- seconds from the press to the menu
 return T
