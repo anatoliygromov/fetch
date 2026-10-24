@@ -1,132 +1,231 @@
-"""Step 1: the output grid.
+"""Step 1: a local grid fit for the whole picture.
 
-The painting's pseudo-pixels are not on one lattice: their local pitch runs from
-about 7.4 px to 11 px (measured by autocorrelation of the edge map per 160 px
-tile). A 320 x 240 grid must keep an average pitch of 7.5 x 7.467 px to keep the
-painting's geometry, so the grid can only follow the painted block edges locally,
-within a small tolerance. This module builds both the uniform grid and a refined
-grid (each line moved by at most TOL px toward the painting's edges, per band of
-16 cells, by dynamic programming), and measures, per 16 x 16 cell region, the
-fraction of strong colour changes that land within 1 px of a cell border.
+The painting's pseudo-pixels are not on one lattice. Block edges drift 1 to 3 px
+against a uniform 7.5 px grid within a few cells, block widths vary (7 to 12 px),
+and Pepper's coat uses larger blocks (about 11 px). The output must stay 320 x 240
+with the painting's geometry, so every grid line may only move a few pixels away
+from its uniform position (k * 7.5); within that budget it follows the painting's
+real block edges.
+
+Method (coarse to fine, in the spirit of Perfect Pixel's "global grid, then per
+line refinement within a tolerance", with unfake.js style edge profiles):
+  * edge strength per border position: max channel difference of the two pixels
+    either side, plus half of the two neighbouring differences (an anti-aliased
+    edge spread over 2 px gives one peak);
+  * for a band of rows, the column profile is the mean of the clipped edge
+    strength; all 319 x lines of the band are placed jointly by dynamic
+    programming: score = profile at the line - mu * (distance to the coarser
+    level's line)^2 - alpha * (distance to the uniform line beyond FREE px)^2,
+    lines strictly ordered with a minimum cell width;
+  * bands of 16, 8, 4, 2 and 1 cell rows, each level searching only +-t px around
+    the coarser level; at the finest level every cell row has its own x lines
+    (and every cell column its own y lines).
+Verification: per region of REG x REG cells, the fraction of strong colour changes
+(non-maximum-suppressed edge peaks) lying within 1 px of a cell border.
 """
-import numpy as np, os
+import numpy as np, os, json
 from scipy.ndimage import maximum_filter1d
-from common import load_src, NX, NY, CACHE
+from common import load_src, NX, NY, CACHE, OUT
 
-BAND = 16
-TOL = 2
+TMAX = 3          # hard limit: a line never moves more than this from k * pitch
+FREE = 1.5        # free movement before the uniform-anchor penalty starts
+ALPHA = 3.0
+CAP = 80.0        # clip edge strength so many edges count more than one huge edge
+MINW = 4          # minimum cell width in source px
+LEVELS = [(16, 3, 0.3), (8, 2, 0.8), (4, 1, 1.5), (2, 1, 2.5), (1, 1, 4.0)]  # (band cells, search t, mu)
+REG = 8           # verification region size in cells
+THR = 48.0        # a "strong colour change"
 
 
-def grad(a):
+def edge_strength(a):
+    """ex[y, b]: edge at border b (between pixel b-1 and b), b = 0..W (0 and W unused)."""
     f = a.astype(np.float32)
-    gx = np.abs(np.diff(f, axis=1)).max(2)  # gx[y, x]: change between x and x+1
-    gy = np.abs(np.diff(f, axis=0)).max(2)
-    return gx, gy
+    dx = np.abs(np.diff(f, axis=1)).max(2)          # H x W-1, border b = index + 1
+    dy = np.abs(np.diff(f, axis=0)).max(2)          # H-1 x W
+    H, W = a.shape[:2]
+    ex = np.zeros((H, W + 1), np.float32); ex[:, 1:W] = dx
+    ey = np.zeros((H + 1, W), np.float32); ey[1:H] = dy
+    ex2 = ex.copy(); ex2[:, 1:-1] += 0.5 * (ex[:, :-2] + ex[:, 2:])
+    ey2 = ey.copy(); ey2[1:-1] += 0.5 * (ey[:-2] + ey[2:])
+    return ex2, ey2
 
 
-def dp_lines(prof, n, length, tol=TOL, lam=0.0):
-    """Choose n-1 interior border positions b_k (integer, border between b-1 and b) near k*length/n."""
-    P = length / n
-    base = np.round(np.arange(1, n) * P).astype(int)
-    offs = np.arange(-tol, tol + 1)
+def dp_lines(prof, prior, base, t, mu):
+    """prof: profile over border positions 0..L; prior, base: float arrays of n-1 lines."""
+    L = len(prof) - 1
+    n1 = len(prior)
+    offs = np.arange(-t, t + 1)
+    cand = np.round(prior).astype(int)[:, None] + offs[None, :]           # n1 x m
+    valid = (np.abs(cand - base[:, None]) <= TMAX) & (cand >= 1) & (cand <= L - 1)
+    dev = np.maximum(np.abs(cand - base[:, None]) - FREE, 0)
+    sc_local = prof[np.clip(cand, 0, L)] - mu * (cand - prior[:, None]) ** 2 - ALPHA * dev ** 2
+    sc_local = np.where(valid, sc_local, -1e9)
+    # the line nearest the prior must stay feasible
     m = len(offs)
-    sc = np.zeros((n - 1, m)); bp = np.zeros((n - 1, m), int)
-    def val(k, j):
-        b = base[k] + offs[j]
-        return prof[b - 1] if 1 <= b <= len(prof) else 0.0
-    for j in range(m):
-        sc[0, j] = val(0, j)
-    for k in range(1, n - 1):
-        for j in range(m):
-            best, arg = -1e18, 0
-            for i in range(m):
-                pitch = (base[k] + offs[j]) - (base[k - 1] + offs[i])
-                if pitch < 5:
-                    continue
-                s = sc[k - 1, i] - lam * (offs[j] - offs[i]) ** 2
-                if s > best:
-                    best, arg = s, i
-            sc[k, j] = best + val(k, j); bp[k, j] = arg
-    j = int(sc[-1].argmax()); out = np.zeros(n - 1, int)
-    for k in range(n - 2, -1, -1):
-        out[k] = base[k] + offs[j]; j = bp[k, j]
+    S = sc_local[0].copy(); BP = np.zeros((n1, m), int)
+    for k in range(1, n1):
+        w = cand[k][:, None] - cand[k - 1][None, :]                       # m(cur) x m(prev)
+        tot = S[None, :] + np.where(w >= MINW, 0.0, -1e9)
+        BP[k] = tot.argmax(1)
+        S = tot.max(1) + sc_local[k]
+    j = int(S.argmax()); out = np.zeros(n1)
+    for k in range(n1 - 1, -1, -1):
+        out[k] = cand[k, j]; j = BP[k, j]
     return out
 
 
-def build(a, refine=True, tol=TOL):
+def fit_axis(e, n_lines_cells, n_band_cells, length, across):
+    """e: edge strength with border axis last (rows x (length+1)). Returns per finest band lines."""
+    base = np.arange(1, n_lines_cells) * length / n_lines_cells
+    prior_rows = None
+    for band, t, mu in LEVELS:
+        nb = int(np.ceil(n_band_cells / band))
+        res = np.zeros((nb, n_lines_cells - 1))
+        for b in range(nb):
+            c0, c1 = b * band, min(n_band_cells, (b + 1) * band)
+            # profile rows: the band plus half a band either side (triangular weight)
+            r0 = (c0 - band / 2) * across / n_band_cells; r1 = (c1 + band / 2) * across / n_band_cells
+            rr = np.arange(max(0, int(r0)), min(across, int(np.ceil(r1))))
+            mid = (r0 + r1) / 2; half = (r1 - r0) / 2
+            wgt = np.clip(1.25 - np.abs(rr - mid) / half, 0, 1)[:, None]
+            prof = (np.minimum(e[rr], CAP) * wgt).sum(0) / wgt.sum()
+            if prior_rows is None:
+                prior = base
+            else:
+                # prior: coarser solution for the cell rows of this band (mean)
+                prior = prior_rows[c0:c1].mean(0)
+            res[b] = dp_lines(prof, prior, base, t, mu)
+        prior_rows = np.repeat(res, band, axis=0)[:n_band_cells]
+    return prior_rows  # n_band_cells x (n_lines_cells - 1)
+
+
+def build(a):
     H, W = a.shape[:2]
-    gx, gy = grad(a)
-    ncx = int(np.ceil(NX / BAND)); ncy = int(np.ceil(NY / BAND))
-    # x borders per y band, band centres in source y
-    XB, yc = [], []
-    for b in range(ncy):
-        r0, r1 = b * BAND, min(NY, (b + 1) * BAND)
-        y0, y1 = int(r0 * H / NY), int(r1 * H / NY)
-        prof = gx[y0:y1].sum(0)
-        prof = prof / (prof.mean() + 1e-6)
-        XB.append(dp_lines(prof, NX, W, tol, lam=0.3) if refine else np.round(np.arange(1, NX) * W / NX).astype(int))
-        yc.append((y0 + y1) / 2)
-    YB, xc = [], []
-    for b in range(ncx):
-        c0, c1 = b * BAND, min(NX, (b + 1) * BAND)
-        x0, x1 = int(c0 * W / NX), int(c1 * W / NX)
-        prof = gy[:, x0:x1].sum(1)
-        prof = prof / (prof.mean() + 1e-6)
-        YB.append(dp_lines(prof, NY, H, tol, lam=0.3) if refine else np.round(np.arange(1, NY) * H / NY).astype(int))
-        xc.append((x0 + x1) / 2)
-    XB = np.array(XB, float); YB = np.array(YB, float)
-    # interpolate borders per source row / column
-    yy = np.arange(H); xx = np.arange(W)
-    Xr = np.stack([np.interp(yy, yc, XB[:, k]) for k in range(NX - 1)], 1)  # H x 319
-    Yc = np.stack([np.interp(xx, xc, YB[:, k]) for k in range(NY - 1)], 1)  # W x 239
-    # index maps: pixel centre x+0.5 compared with border b (border between b-1 and b sits at b)
-    I = np.empty((H, W), np.int16); J = np.empty((H, W), np.int16)
-    for y in range(H):
-        I[y] = np.searchsorted(Xr[y], xx + 0.5)
+    ex, ey = edge_strength(a)
+    XBi = fit_axis(ex, NX, NY, W, H)            # NY x 319 (x lines per cell row)
+    YBi = fit_axis(ey.T, NY, NX, H, W)          # NX x 239 (y lines per cell column)
+    XB = np.c_[np.zeros(NY), XBi, np.full(NY, W)].astype(int)
+    YB = np.c_[np.zeros(NX), YBi, np.full(NX, H)].astype(int)
+    return XB, YB
+
+
+def uniform(H, W):
+    XB = np.tile(np.round(np.arange(NX + 1) * W / NX), (NY, 1)).astype(int)
+    YB = np.tile(np.round(np.arange(NY + 1) * H / NY), (NX, 1)).astype(int)
+    return XB, YB
+
+
+def index_maps(XB, YB, H, W):
+    """I[y,x], J[y,x]: output cell of every source pixel."""
+    xx = np.arange(W); yy = np.arange(H)
+    i0 = np.minimum((xx * NX) // W, NX - 1)
+    J = np.empty((H, W), np.int16)
     for x in range(W):
-        J[:, x] = np.searchsorted(Yc[x], yy + 0.5)
-    return I, J, Xr, Yc
-
-
-def alignment(a, I, J, thr=40, region=16):
-    """Fraction of strong colour changes within 1 px of a cell border, per region."""
-    gx, gy = grad(a)
-    H, W = a.shape[:2]
-    pkx = (gx == maximum_filter1d(gx, 5, axis=1)) & (gx > thr)
-    pky = (gy == maximum_filter1d(gy, 5, axis=0)) & (gy > thr)
-    # border positions: where I changes along x (between x-1 and x)
-    bx = np.zeros((H, W), bool); bx[:, 1:] = I[:, 1:] != I[:, :-1]
-    by = np.zeros((H, W), bool); by[1:] = J[1:] != J[:-1]
-    # an edge at gx[y,x] lies between x and x+1 -> border position x+1; within 1 px: border at x, x+1 or x+2
-    nbx = bx.copy(); nbx[:, :-1] |= bx[:, 1:]; nbx[:, 1:] |= bx[:, :-1]
-    nby = by.copy(); nby[:-1] |= by[1:]; nby[1:] |= by[:-1]
-    okx = pkx & nbx[:, 1:]; oky = pky & nby[1:]
-    ci = I[:, :-1] // region; cj = J[:, :-1] // region
-    nr = (int(np.ceil(NY / region)), int(np.ceil(NX / region)))
-    tot = np.zeros(nr); ok = np.zeros(nr)
-    np.add.at(tot, (cj[pkx], ci[pkx]), 1); np.add.at(ok, (cj[okx], ci[okx]), 1)
-    ci = I[:-1] // region; cj = J[:-1] // region
-    np.add.at(tot, (cj[pky], ci[pky]), 1); np.add.at(ok, (cj[oky], ci[oky]), 1)
-    frac = ok / np.maximum(tot, 1)
-    return frac, tot, ok.sum() / tot.sum()
-
-
-def run(refine=False, force=False):
-    p = os.path.join(CACHE, 'grid_%d.npz' % int(refine))
-    if os.path.exists(p) and not force:
-        z = np.load(p); return z['I'], z['J']
-    a = load_src()
-    I, J, Xr, Yc = build(a, refine)
-    np.savez_compressed(p, I=I, J=J)
+        J[:, x] = np.searchsorted(YB[i0[x]], yy, 'right') - 1
+    J = np.clip(J, 0, NY - 1)
+    I = np.empty((H, W), np.int16)
+    for j in range(NY):
+        m = J == j
+        ys, xs = np.nonzero(m)
+        I[ys, xs] = np.searchsorted(XB[j], xs, 'right') - 1
+    I = np.clip(I, 0, NX - 1)
+    # second pass for J with the refined column index
+    for i in range(NX):
+        m = I == i
+        ys, xs = np.nonzero(m)
+        J[ys, xs] = np.clip(np.searchsorted(YB[i], ys, 'right') - 1, 0, NY - 1)
     return I, J
 
 
+def cell_boxes(XB, YB):
+    jj, ii = np.mgrid[0:NY, 0:NX]
+    x0 = XB[jj, ii]; x1 = XB[jj, ii + 1]
+    y0 = YB[ii, jj]; y1 = YB[ii, jj + 1]
+    return x0, x1, y0, y1
+
+
+def verify(a, XB, YB, thr=THR, reg=REG, ex=None, ey=None):
+    """Per region fraction of strong edge peaks within 1 px of a cell border."""
+    H, W = a.shape[:2]
+    if ex is None:
+        ex, ey = edge_strength(a)
+    pkx = (ex == maximum_filter1d(ex, 5, axis=1)) & (ex >= thr)
+    pky = (ey == maximum_filter1d(ey, 5, axis=0)) & (ey >= thr)
+    nr = (int(np.ceil(NY / reg)), int(np.ceil(NX / reg)))
+    tot = np.zeros(nr); ok = np.zeros(nr)
+    # x peaks: row y, border b. cell row from YB of the uniform column
+    ys, bs = np.nonzero(pkx)
+    i0 = np.minimum((np.minimum(bs, W - 1) * NX) // W, NX - 1)
+    j = np.array([np.searchsorted(YB[i], y, 'right') - 1 for i, y in zip(i0, ys)]).clip(0, NY - 1)
+    lines = XB[j]                                     # n x 321
+    k = np.array([np.searchsorted(l, b) for l, b in zip(lines, bs)])
+    d = np.minimum(np.abs(lines[np.arange(len(k)), np.clip(k, 0, NX)] - bs),
+                   np.abs(lines[np.arange(len(k)), np.clip(k - 1, 0, NX)] - bs))
+    ci = np.clip(np.searchsorted(XB[0], bs, 'right') - 1, 0, NX - 1)
+    ci = np.clip(k - 1, 0, NX - 1)
+    np.add.at(tot, (j // reg, ci // reg), 1); np.add.at(ok, (j // reg, ci // reg), d <= 1)
+    xs, bs = np.nonzero(pky.T)
+    j0 = np.minimum((np.minimum(bs, H - 1) * NY) // H, NY - 1)
+    i = np.array([np.searchsorted(XB[jj], x, 'right') - 1 for jj, x in zip(j0, xs)]).clip(0, NX - 1)
+    lines = YB[i]
+    k = np.array([np.searchsorted(l, b) for l, b in zip(lines, bs)])
+    d = np.minimum(np.abs(lines[np.arange(len(k)), np.clip(k, 0, NY)] - bs),
+                   np.abs(lines[np.arange(len(k)), np.clip(k - 1, 0, NY)] - bs))
+    cj = np.clip(k - 1, 0, NY - 1)
+    np.add.at(tot, (cj // reg, i // reg), 1); np.add.at(ok, (cj // reg, i // reg), d <= 1)
+    return ok / np.maximum(tot, 1), tot, ok.sum() / max(tot.sum(), 1)
+
+
+def save_json(XB, YB, path, score=None, tot=None):
+    x0, x1, y0, y1 = cell_boxes(XB, YB)
+    d = {
+        'about': 'FETCH! title regrid: local grid fit of title_original.png (2400x1792) to 320x240 cells. '
+                 'x_borders[j] lists the 321 x positions (source px, border between pixel b-1 and b) of the cell '
+                 'borders in cell row j; y_borders[i] lists the 241 y positions in cell column i. Cell (i, j) '
+                 'covers x in [x_borders[j][i], x_borders[j][i+1]) and y in [y_borders[i][j], y_borders[i][j+1]). '
+                 'cells_x0/x1/y0/y1 give the same boxes as 240 x 320 arrays (row j, column i).',
+        'src_size': [2400, 1792], 'cells': [NX, NY],
+        'x_borders': XB.tolist(), 'y_borders': YB.tolist(),
+        'cells_x0': x0.tolist(), 'cells_x1': x1.tolist(), 'cells_y0': y0.tolist(), 'cells_y1': y1.tolist(),
+    }
+    if score is not None:
+        d['verify'] = {'region_cells': REG, 'threshold': THR,
+                       'score': np.round(score, 3).tolist(), 'edges': tot.astype(int).tolist()}
+    with open(path, 'w') as f:
+        json.dump(d, f, separators=(',', ':'))
+
+
+def load(path=None):
+    path = path or os.path.join(OUT, 'grid.json')
+    d = json.load(open(path))
+    return np.array(d['x_borders']), np.array(d['y_borders'])
+
+
+def run(force=False):
+    p = os.path.join(CACHE, 'grid_local.npz')
+    if os.path.exists(p) and not force:
+        z = np.load(p); return z['XB'], z['YB'], z['I'], z['J']
+    a = load_src(); H, W = a.shape[:2]
+    XB, YB = build(a)
+    I, J = index_maps(XB, YB, H, W)
+    np.savez_compressed(p, XB=XB, YB=YB, I=I, J=J)
+    return XB, YB, I, J
+
+
 if __name__ == '__main__':
-    a = load_src()
-    for refine in (False, True):
-        I, J = run(refine, force=True)
-        frac, tot, overall = alignment(a, I, J)
-        sig = tot > 50
-        print('refine', refine, 'overall %.3f' % overall, 'regions>=0.9: %d/%d' % ((frac[sig] >= 0.9).sum(), sig.sum()),
-              'median region %.3f' % np.median(frac[sig]))
-        sizes = np.diff(np.c_[np.zeros((I.shape[0], 1)), np.nonzero(np.diff(I, axis=1))[1].reshape(I.shape[0], -1)], axis=1) if False else None
+    import sys
+    a = load_src(); H, W = a.shape[:2]
+    ex, ey = edge_strength(a)
+    XU, YU = uniform(H, W)
+    fu, tu, ou = verify(a, XU, YU, ex=ex, ey=ey)
+    XB, YB, I, J = run(force=True)
+    fr, tr, orr = verify(a, XB, YB, ex=ex, ey=ey)
+    sig = tr >= 40
+    print('uniform overall %.3f  median region %.3f' % (ou, np.median(fu[sig])))
+    print('local   overall %.3f  median region %.3f  regions>=0.9: %d/%d  >=0.8: %d' % (
+        orr, np.median(fr[sig]), (fr[sig] >= 0.9).sum(), sig.sum(), (fr[sig] >= 0.8).sum()))
+    dx = XB[:, 1:-1] - np.arange(1, NX) * W / NX
+    dy = YB[:, 1:-1] - np.arange(1, NY) * H / NY
+    print('line deviation px: x mean %.2f max %.1f, y mean %.2f max %.1f' % (
+        np.abs(dx).mean(), np.abs(dx).max(), np.abs(dy).mean(), np.abs(dy).max()))
+    save_json(XB, YB, os.path.join(OUT, 'grid.json'), fr, tr)

@@ -3,10 +3,14 @@ import numpy as np
 from PIL import Image
 import os
 
+HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.environ.get('REGRID_SRC', '/home/claude/fetch/source_title/title_original.png')
 NX, NY = 320, 240
-CACHE = os.environ.get('REGRID_CACHE', '/tmp/claude-0/rg/cache')
+CACHE = os.environ.get('REGRID_CACHE', '/tmp/claude-0/rgg/cache')
+OUT = os.environ.get('REGRID_OUT', os.path.abspath(os.path.join(HERE, '../../../../../out')))
+MASKS = os.path.abspath(os.path.join(HERE, '../../masks'))
 os.makedirs(CACHE, exist_ok=True)
+os.makedirs(OUT, exist_ok=True)
 
 
 def load_src():
@@ -36,3 +40,17 @@ def save(arr, path, scale=1):
     if scale != 1:
         im = im.resize((im.width * scale, im.height * scale), Image.NEAREST)
     im.save(path)
+
+
+def hexs(rgb):
+    return '#%02x%02x%02x' % tuple(int(v) for v in rgb)
+
+
+def unhex(h):
+    h = h.lstrip('#')
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def load_mask(name):
+    """320x240 material mask from art/source/title/masks."""
+    return np.array(Image.open(os.path.join(MASKS, name + '.png')).convert('L')) > 127
