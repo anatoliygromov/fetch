@@ -1,6 +1,6 @@
 # FETCH! Status
 
-As of Sat 24 Oct 2026, 08:30. Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
+As of Sat 24 Oct 2026, 13:30. Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
 
 ## Main
 
@@ -8,6 +8,14 @@ As of Sat 24 Oct 2026, 08:30. Rules: `docs/BIBLE.md`. Decisions: the review boar
   - `art/freefix`, with the approved River Walk building, cafe and gable kept as they were;
   - `art/haze`, with Downtown facades faded at 0.25.
 - `r8/art` and `title/pixels` are closed. Kept as reference, not merged.
+
+## Kids' test build (Sat 24 Oct, 13:30)
+
+`preview/night` (53f2b59) = main v0.6 + ui/hud-v8 (every UI screen in the new style, the cleaned and animated title,
+the rebuilt logo, speech bubbles, the smooth sky) + ui/title-sheen + art/pilot-oldtown + art/placement + r9/night-ball.
+Packed as KIDS TEST 24 Oct/ on the Mac (FETCH_KIDS_TEST_24oct.love, the RG35XX zip, the playtest sheet). QA: PEPPER
+UNCHANGED, flow 125/125, Tiled passed, curve T1-T4 PASS, --qa 0 problems on all six levels, physics all pass, the packed
+file cleared River Walk on autopilot. Nothing merged into main yet: waiting for the owner after the kids' test.
 
 ## Night of 23 to 24 Oct (0 credits, about 1.4M tokens in the tracks, budget 5M)
 
