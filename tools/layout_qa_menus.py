@@ -244,6 +244,17 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
         check(not row, f'{shot}: no HUD row under the card {row[:4]}')
     top = [b for b in Ps + many(bs, 'ribbon')]
     check(top and min(b['y0'] for b in top) >= 4, f'{shot}: the card 4 px or more from the screen\'s top ({min(b["y0"] for b in top) if top else "-"})')
+# (review fix 6) pieces never off their panels: the HARD badge and the NEW BEST! stamp fully inside a panel (or the
+# badge fully on the ribbon); the sound toast over nothing written
+WORDS = {'title', 'name', 'label', 'story', 'tlabel', 'tvalue', 'mlabel', 'note', 'secrets', 'score', 'time', 'medal', 'soon', 'subtitle', 'goal', 'try', 'life', 'talk', 'hint'}
+for f in sorted(glob.glob(f'{D}/*.txt')):
+    shot = os.path.basename(f)[:-4]; bs = load(shot)
+    Ps = many(bs, 'panel', 'storypanel'); R = many(bs, 'ribbon')
+    def within(b, P, m=0): return b['x0'] >= P['x0'] + m and b['x1'] <= P['x1'] - m and b['y0'] >= P['y0'] + m and b['y1'] <= P['y1'] - m
+    for b in many(bs, 'hard'):
+        if Ps or R: check(any(within(b, P, 10) for P in Ps) or any(within(b, r) for r in R), f'{shot}: HARD fully inside the card or on the ribbon')
+    for b in many(bs, 'stamp'): check(any(within(b, P, 6) for P in Ps), f'{shot}: NEW BEST! fully inside the panel')
+    for b in many(bs, 'toast'): check(not [w for w in bs if w['name'] in WORDS and overlaps([b, w])], f'{shot}: the sound toast over nothing written')
 # (review fix 5) every ribbon's words keep 4 px or more from the ribbon's band ends
 for f in sorted(glob.glob(f'{D}/*.txt')):
     shot = os.path.basename(f)[:-4]; bs = load(shot); R = many(bs, 'ribbon'); T = many(bs, 'title')
