@@ -249,6 +249,33 @@ Aseprite was not built yet on this machine, so the build is a script.
   FAIL -> WARN (contrast 102, was 103), lone pixels 1.9 % -> 0.1 %, 31 storeys all identical, 12 colours.
 - check_flow is flaky under load on this machine (111-116 of 116, the same on the v0.6 file); 116 of 116 on a clean run.
 - **Checks:** check_pepper PEPPER UNCHANGED (4591 steps), check_flow 116 of 116.
+## Branch `art/placement`: placement audit of the three demo levels and its fixes (23 Oct)
+Built on main v0.6. No credits; Pepper untouched; approved art unchanged (its findings are listed for the owner).
+- **docs/placement_audit.md**: every screen of River Walk, City Park (tall) and Downtown (tall) checked for size against
+  Pepper (46 px a metre), cropping, grounding, front-on view, composition and quality; one table per level (asset, x,
+  problem, severity 1-3, fix, owner approval) with 3x evidence crops in docs/placement_audit/.
+- **tests_look.lua**: `LOOK_SWEEP=1 love riverwalk --level L --lookshots` saves every screen of a level (the camera
+  every 300 px, `LOOK_STEP`, at each height tier of a tall level), look on, no HUD.
+- **River Walk:** the road is no longer drawn under the bridge pier (x 1936-2072): road.lua took the pier's row at
+  y 184 for promenade and painted asphalt and lane dashes over the quay; the quay pavement now runs through the passage.
+- **City Park (tall):** the lamp posts on the high road (x 864, 1696, 2624; Downtown's 1830 and 2420 too) stand on
+  their walk, branch, deck or gallery; they floated 10 px over it (stage.lua put every lamp's foot at the pavement's
+  back edge). The play tower's outer post was drawn as a 4 px tree trunk from the oak's canopy to the path; it is a
+  grey post again, under the tower's lower deck, which is now drawn (it was an invisible step left of the slide's
+  cage). Both tower posts reach the path. The low bough over the alder walk is drawn front-on, level over its box and
+  curving up into the leaves as it thins (it read as a crate seen from above at an angle).
+- **Downtown (tall):** the code placeholders of the high road are replaced by art built from stamped parts at 0
+  credits (cards in out_place/, not committed): **tools/build_tall_fronts.py** (town_front_tall1-3: a door, a shop
+  front and a carriage gate, one ground-floor bay each at true scale, a door 2.0 m = 92 px), **tools/build_roof_kit.py**
+  (the stepped gable, chimney, two galleries, loggia, dormer, flower roof, the ledge 3-slice, the footbridge: crisp,
+  outlined, front-on), **tools/build_spire.py** (Riddarholmen's brick tower and openwork iron spire). Each `--check`
+  proves its files are what it builds. arthooks.lua: a back box is one building, split into bays (or its `fronts`),
+  in one plaster (`plaster`, swapped by exact colour), a stone coping on the cut; the spire is drawn on the far roofs
+  layer behind the old town row (it stood at scroll 1.0 in front of it). maps/downtown_tall.tmx: houses (decoration,
+  no collision) under every high road piece that floated in the sky (the galleries, two ledges, the window awning,
+  both ends of the footbridge); the guild house's box starts under its gable. docs/art_hooks_r8.md: the new slots.
+- **High road lamps:** a lamp's foot is drawn wholly on its ledge (Downtown's lamp at x 2420 stood half off the
+  ledge's left end); drawing only, the checkpoints keep their x. All five high lamps checked in a frame each.
 
 ## Regroup (23 Oct, evening): main v0.6, BIBLE and STATUS, the enforced gate, checks and releases on GitHub
 The owner's decisions of 23 Oct (merge list): round1 becomes main as v0.6; art/freefix merged with the approved River

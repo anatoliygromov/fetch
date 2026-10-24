@@ -44,7 +44,8 @@ function H.strip(im, fw)
   end
   return quads[k]
 end
-H.forget = function() cache, quads = {}, {} end                     -- (tests: look again for the files)
+local frontCache, spireFar = {}, {}                                 -- (the house fronts per plaster, the far spire)
+H.forget = function() cache, quads, frontCache = {}, {}, {}; spireFar = {} end                     -- (tests: look again for the files)
 
 -- ===================================================================================================================
 -- the cargo bike (Downtown, D1): a long box bike, a wooden cargo box of bread crates at the front, ridden by the
@@ -401,15 +402,124 @@ local function spireCode(cx, y0, y1)
   end
   rect(iron, cx - 1, y0, 2, 10); rect(iron, cx - 3, y0 + 3, 6, 1)
 end
+-- (art/placement) the fronts as bays of one building per box. The art (tools/build_tall_fronts.py) is one ground-floor
+-- bay each, at true scale, in the yellow plaster ramp; a box is one building: its bays are near-equal shares of its
+-- width (about 88 px each, or the box's `fronts` property, "2,1": the fronts in order), each front cropped
+-- symmetrically or widened with its own edge column (every feature is centred and at most 70 px wide), and all in
+-- the box's plaster (`plaster` property, else in turn), swapped by exact colour before the fade. The cut at the
+-- box's top (the roofline the high road runs on) gets a stone coping; the box's right edge a 2 px shade.
+local SRC = { { 214, 168, 104 }, { 176, 128, 80 } }                 -- the art's plaster: wall, shade (0-255)
+H.PLASTER = {
+  yellow = SRC,
+  red = { { 172, 92, 70 }, { 130, 66, 52 } },
+  cream = { { 222, 198, 152 }, { 184, 156, 114 } },
+  ochre = { { 190, 140, 92 }, { 150, 106, 70 } },
+  stone = { { 164, 150, 136 }, { 128, 114, 104 } },
+}
+H.PLASTER_ORDER = { "yellow", "red", "cream", "ochre", "stone" }
+local COPING = { { 222 / 255, 214 / 255, 198 / 255 }, { 176 / 255, 166 / 255, 152 / 255 }, { 116 / 255, 108 / 255, 102 / 255 } }
+local function frontImg(k, plaster)
+  local key = k .. plaster .. "#" .. Look.key
+  if frontCache[key] == nil then
+    frontCache[key] = false
+    local path = "art/scene/town_front_tall" .. k .. ".png"
+    if love.filesystem.getInfo(path) then
+      local d = love.image.newImageData(path)
+      local to = H.PLASTER[plaster] or SRC
+      d:mapPixel(function(x, y, r, g, b, a)
+        for j = 1, 2 do
+          local s = SRC[j]
+          if math.floor(r * 255 + 0.5) == s[1] and math.floor(g * 255 + 0.5) == s[2] and math.floor(b * 255 + 0.5) == s[3] then
+            return to[j][1] / 255, to[j][2] / 255, to[j][3] / 255, a
+          end
+        end
+        return r, g, b, a
+      end)
+      Sc.fadeData(d)
+      local im = lg.newImage(d); im:setFilter("nearest", "nearest")
+      frontCache[key] = { im = im, w = d:getWidth(), h = d:getHeight() }
+    end
+  end
+  return frontCache[key]
+end
+local function bays(p)                                               -- { { front, x, w }, ... } for a box
+  local W, list = p.x1 - p.x0, {}
+  if p.fronts then for k in tostring(p.fronts):gmatch("%d") do list[#list + 1] = tonumber(k) end end
+  local n = #list > 0 and #list or math.max(1, math.floor(W / 88 + 0.5))
+  local base, extra, x, out = math.floor(W / n), W - math.floor(W / n) * n, p.x0, {}
+  for b = 1, n do
+    local bw = base + (b <= extra and 1 or 0)
+    out[b] = { list[b], x, bw }; x = x + bw
+  end
+  return out
+end
+local function drawBay(f, x, w, y0, y1)
+  local ih = math.min(f.h, y1 - y0)
+  local sy = f.h - ih
+  lg.setColor(1, 1, 1, 1)
+  if w <= f.w then
+    lg.draw(f.im, lg.newQuad(math.floor((f.w - w) / 2), sy, w, ih, f.w, f.h), x, y1 - ih)
+  else
+    local l = math.floor((w - f.w) / 2)
+    lg.draw(f.im, lg.newQuad(0, sy, 1, ih, f.w, f.h), x, y1 - ih, 0, l, 1)                 -- its wall, repeated
+    lg.draw(f.im, lg.newQuad(0, sy, f.w, ih, f.w, f.h), x + l, y1 - ih)
+    lg.draw(f.im, lg.newQuad(f.w - 1, sy, 1, ih, f.w, f.h), x + l + f.w, y1 - ih, 0, w - l - f.w, 1)
+  end
+end
+
+-- (art/placement) the far landmark with its art: behind the old town row, on the far roofs' layer (scroll 0.3, the
+-- shore's haze and fade), placed so that at the level's end it stands where its box is; its tip 8 px under the top
+-- of the screen there (called by Sc.drawFarArt between the far roofs and the facades)
+function H.drawFarSpire(def, camx, worldW)
+  if not tallTown(def) then return end
+  if spireFar[Look.key] == nil then
+    spireFar[Look.key] = false
+    if love.filesystem.getInfo("art/scene/spire_riddarholmen.png") then
+      local d = Sc.fadeData(love.image.newImageData("art/scene/spire_riddarholmen.png"), nil, "shore")
+      local im = lg.newImage(d); im:setFilter("nearest", "nearest"); spireFar[Look.key] = im
+    end
+  end
+  local im = spireFar[Look.key]
+  if not im then return end
+  local camEnd = math.max(0, worldW - 320)
+  for _, p in ipairs(def.props) do
+    if p.name == "RIDDARHOLMEN" then
+      local x = math.floor((p.x0 + p.x1) / 2 - camx * 0.3 - camEnd * 0.7 - im:getWidth() / 2 + 0.5)
+      if x > -im:getWidth() and x < 320 then lg.setColor(1, 1, 1, 1); lg.draw(im, x, 8) end
+    end
+  end
+end
+
 function H.drawTownBack(s, cam)
   local def = s.def
   if not tallTown(def) then return end
-  for _, p in ipairs(def.props) do
-    if p.name == "RIDDARHOLMEN" and p.x1 - cam > -40 and p.x0 - cam < 360 then
-      local im = H.img("scene/spire_riddarholmen", 0.45)
-      if im then lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor((p.x0 + p.x1) / 2 - cam - im:getWidth() / 2), p.y1 - im:getHeight())
-      else spireCode(math.floor((p.x0 + p.x1) / 2 - cam), p.y0, p.y1) end
+  if not love.filesystem.getInfo("art/scene/spire_riddarholmen.png") then   -- (with its art: far, H.drawFarSpire)
+    for _, p in ipairs(def.props) do
+      if p.name == "RIDDARHOLMEN" and p.x1 - cam > -40 and p.x0 - cam < 360 then spireCode(math.floor((p.x0 + p.x1) / 2 - cam), p.y0, p.y1) end
     end
+  end
+  if frontImg(1, "yellow") then                                      -- the fronts' art (all three) is there
+    local nb = 0
+    for _, p in ipairs(def.props) do
+      if isFront(p) then
+        nb = nb + 1
+        local plaster = p.plaster or H.PLASTER_ORDER[(nb - 1) % #H.PLASTER_ORDER + 1]
+        if p.x1 - cam > -10 and p.x0 - cam < 330 then
+          for bi, b in ipairs(bays(p)) do
+            local f = frontImg(b[1] or ((nb + bi) % 3 + 1), plaster) or frontImg(1, plaster)
+            drawBay(f, math.floor(b[2] - cam), b[3], p.y0, p.y1)
+          end
+          local x0, x1 = math.floor(p.x0 - cam), math.floor(p.x1 - cam)
+          local sh = Sc.fadeC({ H.PLASTER[plaster][2][1] / 255 * 0.86, H.PLASTER[plaster][2][2] / 255 * 0.86, H.PLASTER[plaster][2][3] / 255 * 0.86 })
+          rect(sh, x1 - 2, p.y0, 2, p.y1 - p.y0)                       -- the building's right edge in shade
+          rect(faded(COPING[1]), x0 - 1, p.y0, x1 - x0 + 2, 1)         -- the coping on the cut
+          rect(faded(COPING[2]), x0 - 1, p.y0 + 1, x1 - x0 + 2, 2)
+          rect(faded(COPING[3]), x0 - 1, p.y0 + 3, x1 - x0 + 2, 1)
+        end
+      end
+    end
+    lg.setColor(1, 1, 1, 1)
+    return
   end
   local i = 0
   for _, p in ipairs(def.props) do

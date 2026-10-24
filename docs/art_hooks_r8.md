@@ -67,6 +67,27 @@ Not hooked (they already have art): the high road's BALCONY (`drawBalcony`), the
 art), the SIGN boards, Downtown's HOUSE fronts with their balconies (`town_house1-3.png`), the cafe and street
 pieces.
 
+## Landed on art/placement (23 Oct): built from stamped parts, 0 credits
+
+The high road's pieces and the fronts under them are drawn by `tools/build_roof_kit.py`, `tools/build_tall_fronts.py`
+and `tools/build_spire.py` (each `--check` proves the file is what it builds). Changes to the slots above, because the
+fronts are now true scale (46 px a metre: a door 2.0 m = 92 px) and a piece hanging lower than about 25 px under its
+roofline would cover the doors and shop fronts:
+
+| File | Size | What changed |
+| --- | --- | --- |
+| `town_front_tall1-3.png` | 80, 88, 96 x 240 | One ground-floor **bay** each (a door, a shop front, a carriage gate), every feature centred, at most 70 px wide and below row 131 (the lowest box, 114 px, shows rows 126 on). A box is one building: arthooks.lua splits it into bays of about 88 px (or the box's property `fronts`, "2,1"), crops each bay symmetrically or widens it with its own edge column, swaps the yellow plaster ramp for the box's `plaster` (yellow, red, cream, ochre, stone) by exact colour, then fades it; the cut at the box's top gets a stone coping, its right edge a 2 px shade |
+| `town_roof_gable.png` | 122 x **40** (was about 80) | Coped brick steps on the 8 x 4 px boxes, an oculus, a string course at its foot (y 282); the GUILD HOUSE box now starts there (y 282), so the gable stands on the house |
+| `town_roof_loggia.png` | 122 x **26** (was about 48) | A cornice over a blind arcade of five round arches |
+| `town_roof_ledge.png` | 16 x 9 | 3-slice as above (left 4, middle 8, right 4) |
+| `spire_riddarholmen.png` | **36 x 260** (was 32 x about 400) | Drawn far (arthooks.lua `H.drawFarSpire`, called by scene.lua between the far roofs and the facades): scroll 0.3, the shore's haze and fade, placed so that at the level's end it stands where its box is, its tip 8 px under the screen's top. It was at scroll 1.0 in front of the facade row |
+
+The other pieces keep their slots: chimney 18 x 46, gallery 90 x 32 and 74 x 32, dormer 58 x 36, flower roof 90 x 14,
+footbridge 162 x 52. New back boxes (maps/downtown_tall.tmx) put a house under every high road piece that floated:
+1700-1912 (top 288, the galleries), 1912-2000 / 2000-2088 / 2088-2180 (270 / 256 / 272, the dormer and the two
+ledges; the old 1912-2180 box), 2180-2296 (240, the window awning), 2384-2480 (256, the ledge and the footbridge's
+left end), 2640-2736 (262, its right end).
+
 ## How to switch a piece off
 
 Delete (or rename) its file: the placeholder or the old art comes back. The placeholders are in `arthooks.lua`
