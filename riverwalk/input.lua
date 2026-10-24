@@ -6,6 +6,11 @@
 --   Y / Z key          bark
 --   Start / Enter      pause;  Select / G   debug view
 local I = { pad = nil, force = {} }
+-- the device used last ("pad" or "key"): the menus draw its glyphs (round A / B coins, or SPACE / ESC keycaps).
+-- main.lua sets it on every press; it starts as "pad" when a gamepad is plugged in (the handheld), else "key".
+I.last = "key"
+function I.setLast(kind) I.last = kind end
+function I.startDevice() if love.joystick and love.joystick.getJoystickCount() > 0 then I.last = "pad" end end
 local keys = {
   left = { "left", "a" }, right = { "right", "d" }, down = { "down", "s" }, up = { "up", "w" },
   jump = { "space", "up", "w" }, walk = { "lshift", "rshift" }, act = { "x" }, bark = { "z" },

@@ -2,6 +2,42 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `ui/hud-v8` pilot 2: the title on its native grid, Pepper pants and blinks, the new main menu (24 Oct)
+Follows docs/ui_design.md (the owner's UI design, 24 Oct). Stops here for the owner's yes.
+- **Title picture (art/source/title/tools/build_title.py):** the painting sampled one colour per cell on its 7.5 px
+  grid (320 x 239, the last row repeated once), the sample window registered to the drawn pixel inside each cell (the
+  painting's grid drifts a pixel or two, so one fixed phase broke outlines such as the wink); 62 colours from a
+  two-group k-means (22 for Pepper's coat, bandana, tongue and eye, 40 for the rest), no dithering. Lone pixels
+  5.8 % -> 4.4 % (Pepper 4.5 -> 4.2, city 7.7 -> 5.6, logo 7.1 -> 4.9). The painting's PRESS ANY KEY box is taken out
+  and the railing behind it rebuilt from the painting's own rows.
+- **Pepper animated:** a calm pant (rest, rest, tongue half down, down, down, half; 8 fps) whose tongue outline comes
+  from the owner's video t2 (frames 18 and 21, registered to the still on her head by a scale and translation
+  search) with the still's own tongue pixels stretched to it; a blink every 3.4 to 4.6 s (half shut, shut, half; her
+  open eye, drawn on the still's colours). Only the changing pixels are drawn (mouth.png 28 x 20, eye.png 18 x 19);
+  every other pixel is the still. The sparkles, the bird and the logo shine stay; the lamp glow overlay is gone
+  (off-palette blend); clouds and sailboats stay still (not separable). tools/make_title.py is superseded.
+- **Title flow:** the logo and a blinking PRESS START (13 px gold, no box, no dim) on the menu's centre line (x 220.5,
+  the subtitle banner's centre). Then the main menu: PLAY, LEVELS, OPTIONS as outlined 13 px text on the picture,
+  only the selected row gold, the paw coin before it (eased 0.1 s between rows, 1 px bob). PLAY starts the run at
+  the furthest open level (was: always level 1); LEVELS is the level select as it was; BEST RUN is off the title
+  (still on the ending).
+- **OPTIONS:** the warm dim, the gold panel and a wider ribbon; SOUND (9 segments: the volume is now 0 to 9, so the
+  pause's meter shows 9 too), HARD MODE (a switch: A, left or right), CONTROLS (a page: the RG35XX drawn on the grid,
+  a row per control with its button, its action and its keyboard key(s)).
+- **The controls strip (hud.lua U.strip):** one component at the same place on every menu screen (centred, bottom at
+  the margin), `(A) OK  (B) BACK` style with 7 px labels; glyphs follow the last device (input.lua I.last: 13 px gold
+  A / B coins on a gamepad, SPACE / ESC keycaps on a keyboard). Used on the main menu, OPTIONS and CONTROLS; the
+  pause and the tally switch to it in the next step.
+- **Pieces (art/source/ui/v8/tools/menu8.py, built by build8.py):** button coins A B X Y, L1 R1 START pills, d-pad and
+  d-pad left / right, 11 keycaps, the HARD MODE switch, the handheld, ribbon_menu.
+- **Flow test changes (riverwalk/tests_flow.lua):** "menu: START GAME is selected" -> "menu: PLAY is selected";
+  "game over: TRY AGAIN restarts the level" now expects the last level (PLAY started the furthest open one); HARD MODE
+  is reached through OPTIONS (down, down, A, then down, A); new checks: OPTIONS' SOUND left / right, CONTROLS opens
+  and B goes back, B from OPTIONS goes back to the menu. 122 of 122 pass; PEPPER UNCHANGED.
+- **Gates:** tools/title_frames.py (frames at 3x, colour and greyscale, the title loop GIF at 2x),
+  tools/layout_qa_menus.py (226 checks, all pass), tools/pilot2_cards.py: out_ui/pilot2/card_title.png and
+  card_menus.png.
+
 ## Branch `ui/hud-v8` step 3: the level tally "GOOD GIRL!" to the owner's target (23 Oct, night)
 - **Card (flow.lua, drawing only; same data and timing):** the smooth warm dim, the kit's gold panel 230 x 113, an
   arched ribbon (a parabola: runs shorten evenly to the ends; tails folded behind) with GOOD GIRL! in the 17 px big

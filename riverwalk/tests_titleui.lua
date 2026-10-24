@@ -1,0 +1,42 @@
+-- love riverwalk --titleshots: the title and menu screens drawn straight to a 320 x 240 canvas for their QA cards
+-- (ui/hud-v8 pilot 2): the title idle and with PRESS START, the main menu with each row selected, OPTIONS with each
+-- row selected, the controls page, each with the gamepad and the keyboard glyphs; and the title loop at 8 fps for the
+-- GIF (gif_000.png ...). Saves t_<name>.png and t_<name>.txt (the bodies hud.lua placed, for tools/layout_qa8.py)
+-- in the save folder, prints "TITLESHOTS <folder>" and quits. tools/title_frames.py collects them.
+local U = require("hud")
+local I = require("input")
+local Title = require("title")
+return function(api)
+  local F = api.flow
+  local lg = love.graphics
+  local canvas = lg.newCanvas(320, 240)
+  local function shot(name, f)
+    U.log = {}
+    lg.setCanvas(canvas); lg.clear(0, 0, 0, 1); lg.origin(); f(); lg.setCanvas()
+    canvas:newImageData():encode("png", "t_" .. name .. ".png")
+    local out = {}
+    for _, b in ipairs(U.log) do out[#out + 1] = table.concat(b, " ") end
+    love.filesystem.write("t_" .. name .. ".txt", table.concat(out, "\n") .. "\n"); U.log = nil
+  end
+  local done = false
+  local old = love.update
+  love.update = function(dt)
+    if done then return end
+    done = true
+    F.menu.moved, F.opts.moved = -1, -1
+    shot("title_idle", function() Title.draw(0.9, nil, false) end)          -- PRESS START in its off phase
+    shot("title_press", function() Title.draw(1.3, nil, false) end)         -- PRESS START on
+    for _, dev in ipairs({ "pad", "key" }) do
+      I.last = dev
+      for i = 1, #F.menu.items do F.menu.sel, F.menu.from = i, i; shot(("menu_%d_%s"):format(i, dev), function() F.drawMenu(3.0) end) end
+      for i = 1, #F.opts.items do F.opts.sel, F.opts.from = i, i; shot(("options_%d_%s"):format(i, dev), function() F.drawOptions(3.0) end) end
+      shot("controls_" .. dev, function() F.drawControls(3.0) end)
+    end
+    F.hard = true; F.opts.sel = 2; I.last = "pad"; shot("options_hard_on", function() F.drawOptions(3.0) end); F.hard = false
+    -- the title loop: 8 fps from 2.0 s for 4.5 s (a blink falls in it), the picture only plus PRESS START
+    local k = 0
+    for i = 0, 35 do shot(("gif_%03d"):format(k), function() Title.draw(2.0 + i / 8, nil, false) end); k = k + 1 end
+    print("TITLESHOTS " .. love.filesystem.getSaveDirectory()); io.stdout:flush()
+    love.event.quit()
+  end
+end

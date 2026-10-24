@@ -1,8 +1,8 @@
 -- love riverwalk --flowtest   drives the real menus with key presses through a whole run and checks the flow:
---   title -> menu -> level select (locks, COMING SOON) -> START GAME -> each level: intro, play (the level is
+--   title -> menu -> level select (locks, COMING SOON) -> PLAY -> each level: intro, play (the level is
 --   finished through the stage: Pepper is put at the exit or gives the ball), tally, story card -> the ending ->
 --   title; then a level from the level select (with its medals), the pause's QUIT and its question, GAME OVER
---   with TRY AGAIN and MENU, and HARD MODE.
+--   with TRY AGAIN and MENU, and OPTIONS (SOUND, CONTROLS, HARD MODE).
 -- Checks: lives and score carry over, hearts refill, unlocks are saved, missing level files are skipped, the
 -- talk panel (who says what, the hints that used to be hidden, teaching hints first), the stuck nudge, the story
 -- card's wait, best times and medals saved, and that every hint fits the panel.
@@ -153,7 +153,7 @@ return function(api)
   add(wait(0.8), shot("0_title"), check("starts on the title screen", function() return api.getState() == "title", api.getState() end))
   add(key("volumeup"), wait(0.6), check("title: a volume button is not 'any key'", function() return api.getState() == "title", api.getState() end), shot("u11_title_volume"))
   add(key("space"), state("menu", 2), wait(0.7), shot("1_menu"))
-  add(check("menu: START GAME is selected", function() return F.menu.sel == 1, F.menu.items[F.menu.sel] end))
+  add(check("menu: PLAY is selected", function() return F.menu.sel == 1 and F.menu.items[1] == "PLAY", F.menu.items[F.menu.sel] end))
   -- level select: fresh progress, only level 1 open
   add(key("down"), key("space"), state("select", 1), wait(0.3), shot("2_select"))
   add(check("level select: level 1 open, the others locked", function()
@@ -170,7 +170,7 @@ return function(api)
   end
   add(key("escape"), check("level select: Esc goes back to the menu", function() return api.getState() == "menu", api.getState() end))
 
-  -- START GAME: the whole run
+  -- PLAY: the whole run (a fresh save: the furthest open level is the first)
   local prev                                                       -- the tally of the level before
   add(key("up"), key("space"), state("intro", 1), wait(0.6), shot("3_intro"))
   for k, name in ipairs(names) do
@@ -317,8 +317,8 @@ return function(api)
   add({ act = function() local s = api.stage(); s.score = s.score + 500; s.lives, s.hearts = 1, 1; s:loseHeart() end }, state("over", 1))
   add(key("space"), check("game over: no key for the first 1.2 s", function() return api.getState() == "over", api.getState() end))
   add(wait(1.4), shot("8_gameover"), shot("u5_over"), key("space"), state("intro", 1), check("game over: TRY AGAIN restarts the level", function()
-    local st, r = stats(), api.run()
-    return r and r.names[r.k] == names[1] and st.lives == 3 and st.score == 0 and st.hearts == 3, ("%s, lives %d, score %d"):format(r and r.names[r.k] or "-", st.lives, st.score)
+    local st, r = stats(), api.run()                               -- (PLAY started the furthest open level: the last)
+    return r and r.names[r.k] == names[#names] and st.lives == 3 and st.score == 0 and st.hearts == 3, ("%s, lives %d, score %d"):format(r and r.names[r.k] or "-", st.lives, st.score)
   end))
   add(wait(0.6), key("space"), state("play", 1))
   add({ act = function() local s = api.stage(); s.lives, s.hearts = 1, 1; s:loseHeart() end }, state("over", 1), wait(1.4), key("down"), key("space"),
@@ -328,15 +328,25 @@ return function(api)
     return ok, api.getState()
   end))
 
-  -- HARD MODE: the menu's third item, saved; the stage gets it, says no hints, shows the tag
-  add(key("down"), key("down"), key("space"), check("hard mode: on and saved", function()
+  -- OPTIONS (the menu's third item): SOUND, HARD MODE, CONTROLS; B goes back one screen at a time
+  add(key("down"), key("down"), key("space"), state("options", 1), wait(0.2), shot("u12_options"),
+    check("options: SOUND is selected", function() return F.opts.sel == 1, F.opts.items[F.opts.sel] end))
+  add({ act = function() Se.volume = 5 end }, key("left"), check("options: SOUND left turns the volume down", function() return Se.volume == 4, "volume " .. Se.volume end),
+    key("right"), key("right"), check("options: SOUND right turns it up", function() return Se.volume == 6, "volume " .. Se.volume end))
+  add(key("down"), key("down"), key("space"), state("controls", 1), wait(0.2), shot("u13_controls"),
+    check("options: CONTROLS opens the controls page", function() return api.getState() == "controls", api.getState() end))
+  add(key("escape"), check("controls: B goes back to the options", function() return api.getState() == "options" and F.opts.sel == 3, api.getState() end))
+  -- HARD MODE: the options' second row, saved; the stage gets it, says no hints, shows the tag
+  add(key("up"), key("space"), check("hard mode: on and saved", function()
     return F.hard and readSave("hard.txt"):find("1") ~= nil, readSave("hard.txt"):gsub("\n", "") end), wait(0.2), shot("u8_menu"))
+  add(key("escape"), check("options: B goes back to the menu", function() return api.getState() == "menu", api.getState() end))
   add(key("up"), key("up"), key("space"), state("intro", 1), wait(0.6), key("space"), state("play", 1), wait(0.5),
     check("hard mode: the stage is hard, no hints, no nudge", function()
       local s = api.stage(); return s.hard == true and s:hint() == nil and T.cur == nil, tostring(s.hard) end))
   add(wait(3.2), check("hard mode: no idle nudge", function() return T.nudge.btn == nil, tostring(T.nudge.btn) end), shot("u9_hard"))
   add(key("return"), state("pause", 1), key("down"), key("down"), key("space"), key("down"), key("space"), state("menu", 1),
-    key("down"), key("down"), key("space"), check("hard mode: off again", function() return not F.hard and readSave("hard.txt"):find("0") ~= nil, "" end))
+    key("down"), key("down"), key("space"), state("options", 1), key("down"), key("space"),
+    check("hard mode: off again", function() return not F.hard and readSave("hard.txt"):find("0") ~= nil, "" end))
 
   -- the summary and the contact sheet (4 x 2, the screens at 2x)
   add(wait(0.2), { act = function()

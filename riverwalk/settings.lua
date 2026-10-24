@@ -1,10 +1,10 @@
--- Player settings that outlive a run: the sound volume (0 = off .. 10) and the music on or off. Saved in
+-- Player settings that outlive a run: the sound volume (0 = off .. 9: the options' 9 segments) and the music on or off. Saved in
 -- settings.txt next to the progress files. The volume is LÖVE's master volume, so it scales every sound.
 -- On the handheld the volume buttons reach the game as the keys volumeup / volumedown (main.lua), and the pause
 -- has a SOUND row too, so the player can always turn the game down or off whatever the firmware does.
 local Se = { volume = 8, music = true, save = true, shownAt = nil }
 local FILE = "settings.txt"
-Se.MAX = 10
+Se.MAX = 9
 
 local function apply() if love.audio then pcall(love.audio.setVolume, Se.volume / Se.MAX) end end
 function Se.load()
