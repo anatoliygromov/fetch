@@ -1,0 +1,59 @@
+{
+ "geometry": {
+  "head": {
+   "iou": 0.9534,
+   "bd_cells": 0.316
+  },
+  "earL": {
+   "iou": 0.9293,
+   "bd_cells": 0.479
+  },
+  "earR": {
+   "iou": 0.9199,
+   "bd_cells": 0.32
+  },
+  "eye": {
+   "iou": 0.9034,
+   "bd_cells": 0.281
+  },
+  "nose": {
+   "iou": 0.9494,
+   "bd_cells": 0.234
+  },
+  "tongue": {
+   "iou": 0.9081,
+   "bd_cells": 0.418
+  },
+  "bandana": {
+   "iou": 0.9519,
+   "bd_cells": 0.273
+  },
+  "owned": {
+   "iou": 0.9833,
+   "bd_cells": 0.292
+  }
+ },
+ "lines": {
+  "lcorners": 1,
+  "gaps": 0,
+  "staircase": 0.9161,
+  "stair_windows": 155
+ },
+ "colour": {
+  "off_palette": 0,
+  "colours": 32,
+  "in_cell": 0.9753,
+  "in_cell_or_nb": 0.9965,
+  "mixels": 289
+ },
+ "pattern": {
+  "checker_windows": 770,
+  "in_phase": 0.9935
+ },
+ "form": {
+  "mean": 2.888,
+  "p95": 9.069
+ },
+ "cells": 11601,
+ "seconds": 37.3
+}
