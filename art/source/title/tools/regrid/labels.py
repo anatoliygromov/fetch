@@ -17,7 +17,7 @@ colour) and every material keeps the list of global colours that form its ramp.
 import numpy as np, os, json
 from scipy import ndimage as ndi
 from sklearn.cluster import KMeans
-from common import load_src, srgb_to_lab, CACHE, OUT, NX, NY, load_mask, hexs, MASKS
+from common import load_src, srgb_to_lab, CACHE, OUT, NX, NY, load_mask, hexs, unhex, MASKS
 
 FLAT_T = 10
 MATERIALS = ['sky', 'clouds', 'city', 'water', 'boats', 'leaves', 'trunk', 'stone', 'lamp', 'lantern',
@@ -30,6 +30,11 @@ DEFAULT = (14, 6.0, 150)
 GLOBAL_MERGE = 3.8   # always merge closer pairs than this
 PAL_TARGET = 128
 COAT_MIN = 8         # Pepper's coat keeps at least this many dark values (6+ values plus sheen)
+# (name, source box x0, y0, x1, y1, approximate colour, material)
+PINS = [('sail_shade', (1930, 1085, 1980, 1150), '#d2c9c2', 'boats'),
+        ('bridge_band', (1130, 1086, 1300, 1096), '#a09393', 'city'),
+        ('wall_mortar', (0, 1330, 130, 1346), '#193059', 'stone'),
+        ('cloud_warm', (285, 635, 430, 690), '#f1dfc9', 'clouds')]
 LOGO_BOX = (95, 12, 305, 98)   # cells x0, y0, x1, y1 (logo and tagline)
 TAG2_BOX = (150, 188, 280, 210)  # "PRESS ANY KEY" box
 
@@ -143,7 +148,16 @@ def build(a, I, J, seed=0):
     # global merge to PAL_TARGET colours: repeatedly merge the closest pair (Lab distance,
     # nudged by support so small accents survive longer than ramp neighbours of equal
     # distance); the merged colour is the representative of the better supported one.
-    items = [dict(c=c, n=n, mats={name}) for name, cl in per.items() for c, n in cl]
+    items = [dict(c=c, n=n, mats={name}, pin=False) for name, cl in per.items() for c, n in cl]
+    # pinned colours: flat colours of small painted areas the shared ramps would otherwise
+    # approximate badly (two-tone sail, mortar lines, the band under the bridge windows)
+    g_all = flatness(a)
+    for pname, (x0, y0, x1, y1), want, mat_name in PINS:
+        sub = a[y0:y1, x0:x1][g_all[y0:y1, x0:x1] < FLAT_T]
+        cl = cluster_material(sub, 4, 6.0, 15, seed)
+        wl = srgb_to_lab(np.array([unhex(want)], np.float32))[0]
+        c = min(cl, key=lambda t: np.linalg.norm(srgb_to_lab(t[0][None].astype(np.float32))[0] - wl))[0]
+        items.append(dict(c=c, n=5000, mats={mat_name}, pin=True))
     def coat_count():
         return sum(1 for it in items if it['mats'] == {'coat'} or ('coat' in it['mats'] and srgb_to_lab(it['c'][None].astype(np.float32))[0, 0] < 45))
     while True:
@@ -154,13 +168,15 @@ def build(a, I, J, seed=0):
         coat = np.array(['coat' in it['mats'] and labs[k, 0] < 45 for k, it in enumerate(items)])
         if coat.sum() <= COAT_MIN:
             cost[np.ix_(coat, coat)] = 1e9
+        pins = np.array([it['pin'] for it in items])
+        cost[np.ix_(pins, pins)] = 1e9
         np.fill_diagonal(cost, 1e9)
         i, j = np.unravel_index(cost.argmin(), cost.shape)
         if len(items) <= PAL_TARGET and d[i, j] >= GLOBAL_MERGE:
             break
         if cost[i, j] >= 1e9:
             break
-        if n[j] > n[i]:
+        if (n[j] > n[i] and not items[i]['pin']) or items[j]['pin']:
             i, j = j, i
         items[i]['n'] += items[j]['n']; items[i]['mats'] |= items[j]['mats']
         items.pop(j)

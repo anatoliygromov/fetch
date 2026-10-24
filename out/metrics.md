@@ -1,5 +1,29 @@
 # Grid and palette track: metrics
 
+## Round 2 (producer fixes), final numbers
+
+| Gate | Result | Pass |
+|---|---|---|
+| Off-palette / mixels | 0 / 0 | yes |
+| Form whole picture / my region | 2.42 / 7.75 and 2.35 / 7.09 | yes |
+| Checker phase | 1.0 (1569 px) | yes |
+| Pepper outline L-corners / gaps / staircase | 0 / 0 / 1.0 | yes |
+| Strokes L-corners / gaps | 0 / 0 | yes |
+| Boundary distance, named shapes | 0.20 to 0.32 block | yes |
+| IoU | Pepper 0.988, cloud 0.954, bandana 0.943, others 0.65 to 0.82 (bounded, see below) | partly |
+| Single-pixel specks | 1465 -> 820: 204 foliage or flowers, 580 painted single blocks (windows, sparkles, coat squares: the cell's own top flat colour), 36 checker or line layers; 167 of them sit in the logo, tagline and head boxes | see notes |
+
+Round 2 changes: pinned palette colours (sail shade #d2c9c2, bridge band #a09393, wall mortar
+#193059, cloud warm #f1dfc9); stroke ends need two thirds cell coverage (mast starts one cell lower);
+dark structure layer for railing, bench and lantern (thin parts one colour, thick parts per-cell);
+optimiser never uses neighbour colours except to fix its own mixel and never picks a colour lying
+between the cell's two main colours (no grey windows); speck rule (snap to the most common
+same-material neighbour colour) followed by a speck-free optimiser pass; rows of small features unify
+to their majority colour; mixel repair avoids creating new mixels.
+
+## Round 1 table (kept for the record)
+
+
 All numbers come from `build_bg.py` (writes `qa_bg.json`) and `grid.py`, measured with `qa.py`.
 Result: `result_bg_320.png` (320x240, 128 colours used, every cell owned).
 

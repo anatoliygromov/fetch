@@ -130,8 +130,9 @@ def mixels(img, region, min_edge=20.0):
 
 
 def specks(img, region):
-    """Isolated pixels: a colour that none of the 8 neighbours shares (informative noise count)."""
-    k = keys(img)
+    """Isolated pixels: a colour that none of the 8 neighbours shares (informative noise count).
+    `img` may be RGB or a 2-D array of colour indices."""
+    k = keys(img) if img.ndim == 3 else img.astype(np.int64)
     same = sum((shift(k, dy, dx, -1) == k).astype(int) for dy, dx in N8)
     m = region & (same == 0)
     m[0] = m[-1] = False; m[:, 0] = m[:, -1] = False

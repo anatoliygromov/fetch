@@ -1,81 +1,81 @@
 {
  "off_palette": 0,
  "mixels": 0,
- "specks": 1465,
+ "specks": 820,
  "form_all": [
-  2.098980770318856,
-  6.475213554662661
+  2.4177764097381993,
+  7.752731063289214
  ],
  "form_mine": [
-  2.017147237602421,
-  6.1131556049974085
+  2.346920495945168,
+  7.0906111363219475
  ],
  "form_all_uniform_cells": [
-  3.366411510868846,
-  10.7985448810811
+  3.6576525513620255,
+  12.04060438506459
  ],
  "checker_phase": [
   1.0,
-  1573
+  1569
  ],
  "checker_phase_mine": [
   1.0,
-  935
+  944
  ],
  "shapes": {
   "sail_left": {
-   "iou": 0.725,
-   "boundary_dist_blocks": 0.246,
+   "iou": 0.72,
+   "boundary_dist_blocks": 0.298,
    "staircase": 1.0,
    "segments": 0
   },
   "sail_right": {
-   "iou": 0.761,
-   "boundary_dist_blocks": 0.255,
+   "iou": 0.78,
+   "boundary_dist_blocks": 0.243,
    "staircase": 1.0,
    "segments": 0
   },
   "lantern_glass": {
-   "iou": 0.786,
-   "boundary_dist_blocks": 0.244,
+   "iou": 0.812,
+   "boundary_dist_blocks": 0.222,
    "staircase": 1.0,
    "segments": 0
   },
   "lantern_frame": {
-   "iou": 0.735,
-   "boundary_dist_blocks": 0.291,
+   "iou": 0.734,
+   "boundary_dist_blocks": 0.298,
    "staircase": 1.0,
-   "segments": 1
+   "segments": 4
   },
   "bench": {
-   "iou": 0.823,
-   "boundary_dist_blocks": 0.258,
-   "staircase": 1.0,
-   "segments": 0
-  },
-  "bridge_stone": {
-   "iou": 0.634,
+   "iou": 0.822,
    "boundary_dist_blocks": 0.264,
    "staircase": 1.0,
    "segments": 0
   },
+  "bridge_stone": {
+   "iou": 0.653,
+   "boundary_dist_blocks": 0.242,
+   "staircase": 1.0,
+   "segments": 1
+  },
   "cloud_left": {
-   "iou": 0.948,
-   "boundary_dist_blocks": 0.216,
+   "iou": 0.954,
+   "boundary_dist_blocks": 0.198,
    "staircase": 1.0,
    "segments": 1
   },
   "railing": {
-   "iou": 0.751,
-   "boundary_dist_blocks": 0.271,
+   "iou": 0.764,
+   "boundary_dist_blocks": 0.264,
    "staircase": 1.0,
    "segments": 0
   },
   "bandana": {
    "iou": 0.943,
-   "boundary_dist_blocks": 0.244,
+   "boundary_dist_blocks": 0.249,
    "staircase": 1.0,
-   "segments": 2
+   "segments": 1
   },
   "pepper_silhouette": {
    "iou": 0.988,
@@ -96,8 +96,8 @@
   "strokes": {
    "lcorners": 0,
    "gaps": 0,
-   "endpoints": 84,
-   "pixels": 308,
+   "endpoints": 78,
+   "pixels": 283,
    "staircase": 1.0,
    "staircase_windows": 0
   }

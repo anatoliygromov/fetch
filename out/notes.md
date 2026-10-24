@@ -47,6 +47,12 @@ k * 7.5 (x) or k * 7.467 (y), and inside that budget it follows the painting's r
 
 ## 3. Background build (`build_bg.py`)
 
+Round 2 adds: pinned palette colours (labels.PINS), a dark structure layer (STRUCTURES: railing,
+bench, lantern), a speck rule (TEXTURE_MATERIALS kept, other specks snap to the most common
+same-material neighbour colour unless the painting paints that block itself), a second optimiser
+pass that may not create specks, and unification of rows of small features.
+
+
 1. Every source pixel snaps to its nearest palette colour (Lab).
 2. Cell vote (Proper Pixel Art / Perfect Pixel "most common colour per cell"): flat pixels weigh 1,
    anti-aliased pixels 0.25, the cell ring 0.35, pixels far from the palette 0.3. No mean, no median.
@@ -91,27 +97,26 @@ geometry (IoU and mean symmetric boundary distance in blocks after uniform re-up
 blur of luma against per cell means of the painting, refined cells with `--grid`); checker phase (per
 colour pair with 8+ checker pixels, share on the majority parity). Every gate is also a function.
 
-## 5. Remaining defects I can see (10x comparisons)
+## 5. Remaining defects I can see (10x comparisons, round 2)
 
-* Sailboat (`cmp_sailboat.png`): the mast is a clean single brown 1 px line, but it starts about 2 cells
-  higher than the painted mast; the left sail's light blue shading is kept, the right sail's shading
-  turns into tan and grey blocks that look harsher than the painting.
-* Bridge (`cmp_bridge.png`): arches and deck line are clean; the windows of the building above the bridge
-  render in two different blues and some turn grey-mauve; the beige-grey band under them alternates
-  between two palette colours.
-* Lamp (`cmp_lamp.png`): lantern and post keep their shape; one orange-red pixel and one black pixel in
-  the glass, one teal pixel on the roof; the post's light edge is thinner than painted.
-* Leaves (`cmp_leaves.png`): faithful; some teal accents are darker than in the painting.
-* Clouds (`cmp_clouds.png`): outline staircases are clean; the warm beige shading of the lower cloud is
-  lost into cream (no palette colour for it).
-* Water (`cmp_water.png`): sparkle dashes kept as 1 cell rows, a few are one cell shorter or merged.
-* Railing (`cmp_railing.png`): bars are 1 px at the painting's (uneven) spacing; lower bars partly dissolve
-  into the dark foliage behind; the top rail is two dark rows.
-* Bench (`cmp_bench.png`): slats fine; the front leg is shorter and thicker than painted.
-* Pepper's body (not a requested detail): the outline is 1 px while the painting's is 1 to 1.5 blocks;
-  the coat checker is a regular 50 % checker in bands, the painting is sparser in places; the stone wall
-  left of Pepper loses most of its mortar lines.
-* Whole picture: 1465 isolated single pixels remain (many are real: flowers, windows, sparkles).
+Fixed in round 2 (checked at 10x): the mast starts within a cell of the painted top; the right sail is
+two-tone cream and light grey; the bridge windows are blue in a row (no grey); the lantern glass has no
+red, black or teal strays; the cloud's warm beige shading is kept; the railing has single rails and
+continuous 1 px bars in front of the foliage; the bench legs are thin; the stone wall's mortar lines are
+continuous bands.
+
+Still visible:
+* Sailboats: the right boat's upper mast is pale mauve (the painting's pale strip), not the slate edge
+  beside it; a few tan cells remain at the lower left of the right sail.
+* Bridge: the first window is a lighter blue than the others (the painting's is lighter too,
+  #256598 against #0b588c); the stone band under the windows still mixes two colours in places.
+* Lamp: the post's light edge is thinner than painted.
+* Railing: the top rail is two rows thick (the painting's is about 1.5 blocks); posts read darker
+  navy than the painting's grey-brown.
+* Water: a few sparkle dashes are one cell shorter.
+* Pepper's body: 1 px outline (painting 1 to 1.5 blocks); coat checker is a regular 50 % checker.
+* Specks: 820 remain; 580 are single painted blocks I kept because the speck rule would otherwise
+  erase the bridge windows, water sparkles and coat squares (see metrics.md).
 
 ## Research used
 

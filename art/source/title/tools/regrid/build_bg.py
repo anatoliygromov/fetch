@@ -223,8 +223,13 @@ def fix_mixels(R, V, PL, iters=6):
             cands = {int(R[y, x]) for y, x in ((j, i - 1), (j, i + 1), (j - 1, i), (j + 1, i))
                      if 0 <= y < NY and 0 <= x < NX}
             cands.discard(int(R[j, i]))
-            best = max(cands, key=lambda l: (V[j, i, l], -np.linalg.norm(PL[l] - PL[R[j, i]])))
-            R[j, i] = best
+            def score(l):
+                old = R[j, i]; R[j, i] = l
+                nm = sum(is_mixel(R, PL, y, x) for y in range(j - 1, j + 2) for x in range(i - 1, i + 2)
+                         if 0 <= y < NY and 0 <= x < NX)
+                R[j, i] = old
+                return (-nm, V[j, i, l], -np.linalg.norm(PL[l] - PL[R[j, i]]))
+            R[j, i] = max(cands, key=score)
     return R
 
 
@@ -361,7 +366,15 @@ def strokes(lab, Lp, XB, YB, I, J):
                 straight = True; coef = np.array([0.0, np.median(u)])
             # a stroke row must be covered by at least 40% of the cell's extent
             for vv in vals:
-                if (v.astype(int) == vv).sum() < 3:
+                # a cell row (column) belongs to the stroke only when the painted stroke
+                # covers about two thirds of it: the line starts and ends where the painting does
+                if axis == 1:
+                    cc = int(np.clip(np.median(ii[v.astype(int) == vv]), 0, NX - 1))
+                    ext = YB[cc, vv + 1] - YB[cc, vv]
+                else:
+                    cc = int(np.clip(np.median(jj[v.astype(int) == vv]), 0, NY - 1))
+                    ext = XB[cc, vv + 1] - XB[cc, vv]
+                if (v.astype(int) == vv).sum() < max(3, 0.65 * ext):
                     continue
                 uu = coef[0] * vv + coef[1] if straight else np.median(u[v.astype(int) == vv])
                 c = int(np.floor(uu))
@@ -481,7 +494,129 @@ def pepper_outline(a, lab, Lp, dp, I, J, PL, n, smooth=8.0):
     return Sm, ring, col, (Vin[..., :n], Cin[..., :n]), (Vout[..., :n], Cout[..., :n]), full
 
 
-def optimise(R, V, C, PL, pal, ref, locked, sweeps=4, kappa=120.0, sigma=30.0, mu=1e4, cmin=0.15, tie=0.5, potts=20.0):
+# dark structures rebuilt as shapes (railing, bench): (name, 320 mask, max Lab L of the class)
+# (name, 320 mask, extra region box in cells or None, max Lab L, max Lab b)
+STRUCTURES = [('railing', 'railing', (110, 168, 320, 205), 20.0, -12.0), ('bench', 'bench', None, 20.0, 99.0),
+              ('lamp', 'lamp', None, 16.0, 99.0)]
+
+
+def structure_layer(R, V, a, lab, Lp, dp, I, J, PL, n, mask_name, box, maxL, maxb, exclude_full, exclude320, smooth=3.0):
+    """A dark painted structure (railing bars and rails, bench frame) as one shape: its dark
+    pixels inside the material mask are smoothed and rasterised at coverage 0.5 (straight
+    bars stay 1 cell wide and continuous), every connected piece takes ONE dark colour (the
+    best supported one in its cells), and region cells outside the shape re-vote without
+    the dark pixels. Returns (R, V, cells changed, shape mask)."""
+    import shapes
+    reg = ndi.binary_dilation(load_mask(mask_name), iterations=1)
+    if box is not None:
+        x0, y0, x1, y1 = box
+        reg[y0:y1, x0:x1] = True
+    reg &= ~exclude320
+    cls_full = (lab[..., 0] < maxL) & (lab[..., 2] < maxb)
+    full = reg[J, I] & cls_full & ~exclude_full
+    if full.sum() < 50:
+        return R, V, np.zeros(R.shape, bool), np.zeros(R.shape, bool)
+    Sm, _ = shapes.raster_shape(full, I, J, s=smooth, pre=1.0, min_area=30)
+    Sm &= reg
+    dark = (PL[:, 0] < maxL) & (PL[:, 2] < maxb)
+    R = R.copy(); V = V.copy()
+    changed = np.zeros(R.shape, bool)
+    # thin parts (bars, rails: not inside a 3x3 opening) take ONE colour per piece so a
+    # rail never alternates between two dark values; thick parts (a bin, a post) keep a
+    # per-cell vote among the dark colours, so their painted shading survives
+    thick = ndi.binary_opening(Sm, np.ones((3, 3)))
+    lab_c, nc = ndi.label(Sm, np.ones((3, 3)))
+    for q in range(1, nc + 1):
+        cm = lab_c == q
+        tot = (V[cm & ~thick] * dark[None]).sum(0)
+        if tot.sum() > 0:
+            thin_c = cm & ~thick
+            R[thin_c] = int(tot.argmax()); changed |= thin_c
+    vd = V * dark[None, None]
+    tk = thick & (vd.sum(2) > 0)
+    R[tk] = vd.argmax(2)[tk]; changed |= tk
+    Vo, Co = masked_votes(a, I, J, Lp, dp, n, ~(reg[J, I] & cls_full))
+    outside = reg & ~Sm & dark[R] & (Vo[..., :n].sum(2) > 0)
+    R[outside] = Vo[..., :n].argmax(2)[outside]
+    V[outside] = Vo[..., :n][outside]
+    changed |= outside
+    return R, V, changed, Sm
+
+
+TEXTURE_MATERIALS = ('leaves', 'flowers')
+
+
+def speck_rule(R, PL, ramps, locked, texture_cells, C=None, passes=3, block=0.5):
+    """Single-pixel specks (no 8-neighbour shares the colour): kept only where the painting
+    has them as texture (foliage, flowers, checker dither, and the locked line layers);
+    every other speck snaps to the most common 8-neighbour colour of the cell's own
+    material (its ramp), else to the most common neighbour colour. A speck the painting
+    paints as a block of its own (that colour covers >= `block` of the cell in flat pixels,
+    or is the cell's most common flat colour with >= 25 %: a window, a sparkle) is the
+    painting's, not noise, and stays."""
+    mat, names = LB.material_map()
+    R = R.copy()
+    removed = kept = 0
+    for _ in range(passes):
+        n_sp, sp = qa.specks(R.astype(np.int64), np.ones(R.shape, bool))
+        keep = locked | texture_cells
+        if C is not None:
+            jj, ii = np.nonzero(sp)
+            painted = np.zeros(R.shape, bool)
+            painted[jj, ii] = (C[jj, ii, R[jj, ii]] >= block) | (
+                (C[jj, ii].argmax(1) == R[jj, ii]) & (C[jj, ii, R[jj, ii]] >= 0.25))
+            keep = keep | painted
+        todo = sp & ~keep
+        kept = int((sp & keep).sum())
+        if not todo.any():
+            break
+        for j, i in np.argwhere(todo):
+            nb = [int(R[y, x]) for y in range(j - 1, j + 2) for x in range(i - 1, i + 2)
+                  if (y, x) != (j, i) and 0 <= y < NY and 0 <= x < NX]
+            ramp = set(ramps.get(names[mat[j, i]], []))
+            same = [l for l in nb if l in ramp]
+            pool = same if same else nb
+            vals, cnt = np.unique(pool, return_counts=True)
+            R[j, i] = vals[cnt.argmax()]; removed += 1
+    return R, removed, kept
+
+
+def unify_small_features(R, PL, C, Vfull, locked, de=12.0, reach=12):
+    """Small painted features of one kind (a row of windows: blobs of 1 to 2 cells on the
+    same surrounding colour, within `reach` cells along a row) that landed on two nearby
+    palette colours take the colour most of them have, when that colour is close (dE < de)
+    and also occurs in the cell's own painting pixels."""
+    lab_c, nc = ndi.label(np.ones(R.shape, bool) & False)
+    feats = []
+    for col in np.unique(R):
+        m = R == col
+        lc, k = ndi.label(m)
+        if k == 0:
+            continue
+        sizes = ndi.sum(m, lc, range(1, k + 1))
+        for q in np.flatnonzero(sizes <= 2) + 1:
+            cells = np.argwhere(lc == q)
+            ring = ndi.binary_dilation(lc == q) & ~(lc == q)
+            sv, sc = np.unique(R[ring], return_counts=True)
+            feats.append((cells, int(col), int(sv[sc.argmax()])))
+    changed = 0
+    for idx, (cells, col, bg) in enumerate(feats):
+        j, i = cells[0]
+        group = [f for f in feats if f[2] == bg and abs(f[0][0][0] - j) <= 1 and abs(f[0][0][1] - i) <= reach
+                 and np.linalg.norm(PL[f[1]] - PL[col]) < de]
+        if len(group) < 3:
+            continue
+        cols, cnt = np.unique([f[1] for f in group], return_counts=True)
+        tgt = int(cols[cnt.argmax()])
+        if tgt == col or cnt.max() <= len(group) / 2:
+            continue
+        if all((C[y, x, tgt] > 0.02 or Vfull[y, x, tgt] > 0) and not locked[y, x] for y, x in cells):
+            for y, x in cells:
+                R[y, x] = tgt; changed += 1
+    return R, changed
+
+
+def optimise(R, V, C, PL, pal, ref, locked, sweeps=4, kappa=120.0, sigma=30.0, mu=1e4, cmin=0.15, tie=0.5, potts=20.0, speck_ok=None):
     """Coordinate descent over the cells. Each cell may take a colour that occurs in it
     (coverage >= cmin, or the vote winner) or, to resolve a mixel, a 4-neighbour colour.
     Objective: form error (5x5 box blurred luma vs the painting's cell means, squared)
@@ -505,7 +640,14 @@ def optimise(R, V, C, PL, pal, ref, locked, sweeps=4, kappa=120.0, sigma=30.0, m
                 # least `tie` of the winner's vote (a clearly decided cell keeps its colour)
                 vw = Vn[j, i, win0[j, i]]
                 cand = set(np.flatnonzero((C[j, i] >= cmin) & (Vn[j, i] >= tie * vw)).tolist()) | {int(win0[j, i]), int(R[j, i])}
-                near_mix = mm[max(0, j - 1):j + 2, max(0, i - 1):i + 2].any()
+                # never trade the cell's two main painted colours for a colour lying between
+                # them (that would be a blend in effect, e.g. grey windows on a beige wall)
+                top2 = np.argsort(C[j, i])[-2:]
+                if C[j, i, top2[0]] >= cmin:
+                    ca, cb = PL[top2[0]], PL[top2[1]]
+                    cand = {l for l in cand if l in (int(top2[0]), int(top2[1]), int(R[j, i]))
+                            or not between(PL[l], ca, cb, tol=0.3)}
+                near_mix = mm[j, i]   # neighbour colours only to resolve a mixel AT this cell
                 if near_mix:
                     for (dj, di) in ((0, 1), (1, 0), (0, -1), (-1, 0)):
                         jj, ii = j + dj, i + di
@@ -524,7 +666,9 @@ def optimise(R, V, C, PL, pal, ref, locked, sweeps=4, kappa=120.0, sigma=30.0, m
                     f = 2 * d * sE + nW * d * d
                     R[j, i] = l
                     nm = sum(is_mixel(R, PL, y, x) for y, x in pos)
-                    ns = sum(is_speck(R, y, x) for y, x in pos8)
+                    ns = sum((sigma if speck_ok is None or speck_ok[y, x] or C[y, x, R[y, x]] >= 0.5
+                              or (C[y, x].argmax() == R[y, x] and C[y, x, R[y, x]] >= 0.25) else 1e4)
+                             * is_speck(R, y, x) for y, x in pos8 if 0 <= y < NY and 0 <= x < NX) / sigma
                     nd = sum(1 for (y, x) in pos[1:] if 0 <= y < NY and 0 <= x < NX and R[y, x] != l)
                     cost = f + kappa * (Vn[j, i, win0[j, i]] - Vn[j, i, l]) + sigma * ns + mu * nm + potts * nd
                     if Vn[j, i, l] == 0:
@@ -549,7 +693,7 @@ def cell_ref(a, I, J):
     return (np.bincount(cell, weights=lumsrc.ravel(), minlength=NX * NY) / np.maximum(cnt, 1)).reshape(NY, NX)
 
 
-def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=('pepper', 'strokes', 'checker', 'opt', 'regular', 'mixel')):
+def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=('pepper', 'structures', 'strokes', 'checker', 'opt', 'regular', 'specks', 'unify', 'mixel')):
     if a is None:
         a = load_src()
     if XB is None:
@@ -583,6 +727,17 @@ def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=
         R[ring] = ocol; locked |= ring
         info['pepper_outline_cells'] = int(ring.sum())
         info['_masks'] = {'pepper_outline': ring.copy(), 'pepper_shape': Sm.copy(), 'pepper_full': pfull}
+    if 'structures' in steps:
+        ex320 = np.zeros(R.shape, bool)
+        for (x0, y0, x1, y1) in OTHER_TRACKS[1:2]:
+            ex320[y0:y1, x0:x1] = True
+        exf = info.get('_masks', {}).get('pepper_full', np.zeros(Lp.shape, bool))
+        nst = 0
+        for sname, mname, sbox, maxL, maxb in STRUCTURES:
+            R, V, ch, Sm_s = structure_layer(R, V, a, lab, Lp, dp, I, J, PL, n, mname, sbox, maxL, maxb, exf, ex320)
+            locked |= ch; nst += int(ch.sum())
+            info.setdefault('_masks', {})['struct_' + sname] = Sm_s
+        info['cells_structures'] = nst
     if 'strokes' in steps:
         st = strokes(lab, Lp, XB, YB, I, J)
         smask = np.zeros(Lp.shape, bool)
@@ -690,10 +845,22 @@ def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=
         lr = [l for l in ramps.get('logo', []) if PL[l, 0] > 50 and chroma[l] > 50]
         R, ch2 = coat_checker(R, V, lr, logo, PL, dmax=50.0)
         locked |= ch | ch2
+        checker_cells = ch | ch2
         info['cells_checker'] = int(ch.sum()); info['cells_checker_logo'] = int(ch2.sum())
     if 'opt' in steps:
         ref = cell_ref(a, I, J)
         R, nch = optimise(R, V, C, PL, pal, ref, locked)
+    if 'specks' in steps:
+        mat, names = LB.material_map()
+        tex = np.isin(mat, [names.index(t) for t in TEXTURE_MATERIALS])
+        chk = checker_cells if 'checker' in steps else np.zeros(R.shape, bool)
+        R, nrem, nkeep = speck_rule(R, PL, ramps, locked & ~chk, tex | chk, C)
+        info['specks_removed'] = nrem; info['specks_kept_texture'] = nkeep
+        if 'opt' in steps:
+            # recover the form without creating specks outside texture
+            R, nch2 = optimise(R, V, C, PL, pal, ref, locked, speck_ok=tex | chk | locked)
+            nch += nch2
+    if 'opt' in steps:
         info['cells_opt'] = nch
     if 'regular' in steps:
         nfl = 0
@@ -715,8 +882,17 @@ def build(a=None, XB=None, YB=None, I=None, J=None, pal=None, ramps=None, steps=
                     vals, c = np.unique(want, return_counts=True)
                     R[j, i] = vals[c.argmax()]; nfl += 1
         info['cells_regular'] = nfl
+    if 'unify' in steps:
+        R, nu = unify_small_features(R, PL, C, V, locked)
+        info['cells_unified'] = nu
     if 'mixel' in steps:
         R = fix_mixels(R, V, PL)
+        if 'specks' in steps:
+            for _ in range(2):
+                R, nr2, nkeep = speck_rule(R, PL, ramps, locked & ~chk, tex | chk, C)
+                info['specks_kept'] = nkeep
+                R = fix_mixels(R, V, PL)
+                info['specks_removed'] += nr2
     if 'speck' in steps:
         R = despeckle(R, V, PL)
         R = fix_mixels(R, V, PL)
