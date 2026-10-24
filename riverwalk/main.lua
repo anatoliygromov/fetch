@@ -409,9 +409,14 @@ function love.draw()
   end
   stage:draw(debugView)
   local st = stage:stats()
-  -- the HUD (hud.lua): while playing, a group Pepper is up under steps aside (ui/hud-v8: per group, not the whole HUD)
-  U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard },
-    state == "play" and { Talk.pepperRect(stage) } or nil)
+  -- the HUD (hud.lua): while playing, a group Pepper is up under steps aside (ui/hud-v8: per group, not the whole HUD).
+  -- Only while playing (ui/panel-hud, 24 Oct): under a centred card (intro, pause, GAME OVER, tally, story) the HUD
+  -- row is not drawn at all, so the card's ribbon and frame never cut through its numbers; the pause shows the bones
+  -- found and the tally the level's points in the card itself.
+  if state == "play" then
+    U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard },
+      { Talk.pepperRect(stage) })
+  end
   if state == "intro" then
     Flow.drawIntro(def, t, { Talk.pepperRect(stage) })            -- (ui step 3) the gold card, the story, A GO
   elseif state == "play" then

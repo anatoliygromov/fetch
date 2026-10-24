@@ -2,6 +2,9 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `ui/panel-hud`: no HUD row under the cards (24 Oct)
+- **Drawing only (main.lua, bonus.lua, flow.lua):** while a centred card is up over the game (level intro, story, pause and QUIT?, controls from the pause, GAME OVER, GOOD GIRL! tally, FETCH FRENZY intro and result) the HUD row is not drawn at all; the warm dim and the controls strip stay. The pause already shows the bones found, the tally the level's points. The ending card moved 4 px down and a card dropping in never rises above the 4 px top margin, so no ribbon or frame is cut by the screen's top. Talk panel and hint bubbles unchanged. Checks: layout_qa_menus.py checks no HUD piece outside a card's panel and the 4 px top margin; layout_qa8.py checks no HUD row under a card (instead of filtering it out). Sheet: out/panel_hud_before_after.png (not committed).
+
 ## Branch `ui/hud-v8` step 3: every remaining screen in the kit (24 Oct)
 Follows docs/ui_design.md. Drawing only: logic, inputs and saves as they were unless a line says otherwise. Frames:
 `python3 tools/screen_frames.py` (out_ui/step3/frames, colour and greyscale at 3x), checks: `python3

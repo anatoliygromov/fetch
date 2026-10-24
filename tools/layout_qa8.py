@@ -21,13 +21,16 @@ M = 4; INK = (64, 11, 6); SH = (36, 8, 5)
 ok = True
 def check(cond, msg):
     global ok; print(('PASS ' if cond else 'FAIL ') + msg); ok &= bool(cond)
-HUDN = {'health', 'clock', 'time', 'bone', 'bones', 'score', 'head', 'lives', 'hard'}
+HUDROW = {'health', 'clock', 'time', 'score', 'head', 'lives'}          # the HUD's own pieces (bone, bones, hard: the cards' too)
 def load(shot):
     boxes = []
     for line in open(f'{D}/{shot}.txt'):
         p = line.split()
         if len(p) == 5: boxes.append(dict(name=p[0], x0=int(p[1]), y0=int(p[2]), x1=int(p[3]), y1=int(p[4])))
-    if not shot.startswith('hud'): boxes = [b for b in boxes if b['name'] not in HUDN]     # (the HUD under the dim)
+    if not shot.startswith('hud'):                                  # (ui/panel-hud: no HUD row under a card any more;
+        row = [b['name'] for b in boxes if b['name'] in HUDROW]       # the card's own bone, count and HARD tag stay)
+        check(not row, f'{shot}: no HUD row drawn under the card {row[:4]}')
+        boxes = [b for b in boxes if b['name'] not in HUDROW]
     return np.array(Image.open(f'{D}/{shot}.png').convert('RGB')), boxes
 def c(b): return ((b['x0'] + b['x1']) / 2, (b['y0'] + b['y1']) / 2)
 def one(bs, n): r = [b for b in bs if b['name'] == n]; return r[0] if r else None

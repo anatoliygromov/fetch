@@ -225,6 +225,21 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
         if st: strip(shot, bs)
         items = [b for b in txt if b['name'] != 'portrait'] + many(bs, *[c for c in cen if c != 'ribbon']) + st
         check(not overlaps(items), f'{shot}: nothing overlaps {overlaps(items)}')
+# (ui/panel-hud) the cards over a level (intro, pause and its controls page, GAME OVER, tally, story, the bonus round's
+# intro and result) draw no HUD row under them: no HUD piece outside the card's panel; and every card's panel and ribbon
+# (the ending's too) keep the 4 px margin to the screen's top
+HUDP = {'health', 'clock', 'time', 'bone', 'bones', 'score', 'head', 'lives', 'hard', 'ball', 'catches', 'points', 'hudlife'}
+for f in sorted(glob.glob(f'{D}/*.txt')):
+    shot = os.path.basename(f)[:-4]; bs = load(shot)
+    over_level = shot.split('_')[0] in ('intro', 'pause', 'over', 'tally', 'story') or shot in ('bonus_intro', 'bonus_result_life', 'bonus_result_try')
+    if not (over_level or shot.startswith('ending')): continue
+    Ps = many(bs, 'panel', 'storypanel')
+    if over_level:
+        def inside(b): return any(b['x0'] >= P['x0'] and b['x1'] <= P['x1'] and b['y0'] >= P['y0'] and b['y1'] <= P['y1'] for P in Ps)
+        row = [b['name'] for b in bs if b['name'] in HUDP and not inside(b)]
+        check(not row, f'{shot}: no HUD row under the card {row[:4]}')
+    top = [b for b in Ps + many(bs, 'ribbon')]
+    check(top and min(b['y0'] for b in top) >= 4, f'{shot}: the card 4 px or more from the screen\'s top ({min(b["y0"] for b in top) if top else "-"})')
 check(len(set(strips.values())) == 1, f'strip: the same place on every screen {sorted(set(strips.values()))}')
 # pieces
 INK = (64, 11, 6); SH = (36, 8, 5)
