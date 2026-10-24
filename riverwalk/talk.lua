@@ -1,16 +1,14 @@
--- The talk panel and the stuck nudge (drawing and watching only: nothing here changes Pepper).
---   The panel: what St:hint() says now, as a short dialogue line. Pepper says the control hints: a button
---   picture and 1 to 3 words ([B] HOLD: SNEAK). The girl says the goal and story lines (BRING ME THE BALL!).
---   Pepper's portrait sits bottom left, the girl's bottom right; the portrait plays its talking loop
---   (art/portraits, 8 frames, 9 fps) while the line is being said, then rests on frame 1. A control hint also shows
---   a picture sign (T.picFor, hud.lua's U.pict) between the button and the words, for children who cannot read.
---   The panel sits low on the pavement; if Pepper's sprite would touch it, it moves to the top of the screen, and
---   if she would touch that too it is not drawn. A girl's line goes away after a few seconds; a control hint stays while it applies.
+-- The talk panel, the hint bubbles and the stuck nudge (drawing and watching only: nothing here changes Pepper).
+--   What St:hint() says now. The girl's (Mia's) goal and story lines: the speech panel (the kit's gold panel sized to
+--   the words, 13 px, her portrait in a thin gold frame on its side, playing its talking loop, art/portraits, 8
+--   frames, 9 fps, while the line is said), low at the right, or under the HUD when Pepper is low, never over her;
+--   it goes after a few seconds. Pepper's control hints: a small bubble near her (step 3, docs/ui_design.md screen
+--   9): the button as the device used last shows it, a picture of the action (T.picFor), at most 3 words; it stays
+--   while the hint applies.
 --   The nudge: when Pepper has pushed against something for 2 s without getting anywhere, or has stood still for
---   3 s where a control hint applies, the button she needs bounces above her head until a button is pressed.
---   It reads Pepper from outside (position, speed, the buttons held) and is never drawn over her.
---   No hints and no nudges in hard mode (St:hint() returns only messages then, and T.watch does nothing).
-local F = require("bigfont")
+--   3 s where a control hint applies, the hint's bubble bounces (or a bubble of its own with the button she needs)
+--   until a button is pressed. It reads Pepper from outside (position, speed, the buttons held) and is never drawn
+--   over her. No hints and no nudges in hard mode (St:hint() returns only messages then, and T.watch does nothing).
 local U = require("hud")
 local I = require("input")
 local T = {}
@@ -21,6 +19,9 @@ local PORT = {
   pepper = { file = "art/portraits/pepper_talk.png", fw = 74, sx = 5, sy = 8, w = 64, h = 48 },
   girl   = { file = "art/portraits/girl_talk.png",   fw = 70, sx = 6, sy = 6, w = 58, h = 48 },
 }
+-- (step 3) the speech panel's portrait windows: head and face, cut from the same loops (sx, sy, w, h in each frame)
+local WIN = { pepper = { sx = 14, sy = 10, w = 54, h = 38 }, girl = { sx = 13, sy = 8, w = 42, h = 38 } }
+T.WIN_FILL = { 236 / 255, 214 / 255, 170 / 255 }                 -- behind the portrait (the dark hood and coat read on it)
 T.FPS, T.FRAMES = 9, 8
 T.LINGER = 0.3            -- a line stays this long after it stops applying (no flicker at a zone edge)
 T.GIRL_SHOW = 4.5         -- seconds a girl's line from a level zone stays up
@@ -31,74 +32,15 @@ local function loadPorts()
     if not p.img then
       p.img = lg.newImage(p.file); p.img:setFilter("nearest", "nearest"); p.q = {}
       for f = 1, T.FRAMES do p.q[f] = lg.newQuad((f - 1) * p.fw + p.sx, p.sy, p.w, p.h, p.img:getDimensions()) end
+      local wn = WIN[p == PORT.pepper and "pepper" or "girl"]; p.win = wn; p.wq = {}
+      for f = 1, T.FRAMES do p.wq[f] = lg.newQuad((f - 1) * p.fw + wn.sx, wn.sy, wn.w, wn.h, p.img:getDimensions()) end
     end
   end
 end
 
--- pixel circles (no smoothing): a filled disc of radius r
-local discs = {}
-local function disc(r)
-  if not discs[r] then
-    local n = r * 2
-    local d = love.image.newImageData(n, n)
-    for y = 0, n - 1 do for x = 0, n - 1 do
-      if (x + 0.5 - r) ^ 2 + (y + 0.5 - r) ^ 2 <= r * r then d:setPixel(x, y, 1, 1, 1, 1) end
-    end end
-    discs[r] = lg.newImage(d); discs[r]:setFilter("nearest", "nearest")
-  end
-  return discs[r]
-end
+function T.port(who) loadPorts(); return PORT[who] or PORT.girl end   -- (the story card draws Mia's too)
 
--- the RG35XX face buttons (A right, B bottom, X top, Y left) and the d-pad
-local LETTER = { a = "A", b = "B", x = "X", y = "Y" }
-local KNOB = { 0.93, 0.93, 0.96 }
-local INK = { 22/255, 26/255, 40/255 }
-T.SIZE = { big = 10, small = 7 }                                 -- the glyph's radius
--- a button picture centred on cx, cy: a round button with its letter, or the d-pad with one arm lit
-function T.glyph(btn, cx, cy, size)
-  local r = T.SIZE[size or "big"]
-  cx, cy = math.floor(cx + 0.5), math.floor(cy + 0.5)
-  if LETTER[btn] then
-    lg.setColor(U.SHADE); lg.draw(disc(r), cx - r + 1, cy - r + 1)
-    lg.setColor(INK); lg.draw(disc(r), cx - r, cy - r)
-    lg.setColor(KNOB); lg.draw(disc(r - 1), cx - r + 1, cy - r + 1)
-    lg.setColor(INK)
-    if r >= 10 then F.print(LETTER[btn], cx - 4, cy - 7, 2) else F.print(LETTER[btn], cx - 2, cy - 3, 1) end
-  else                                                           -- the d-pad: a cross, the arm to press lit
-    local a = r >= 10 and 6 or 4                                 -- arm width
-    local function cross(col, dx, dy)
-      lg.setColor(col)
-      lg.rectangle("fill", cx - a / 2 + dx, cy - r + dy, a, 2 * r); lg.rectangle("fill", cx - r + dx, cy - a / 2 + dy, 2 * r, a)
-    end
-    cross(U.SHADE, 1, 1); cross(INK, 0, 0)
-    local arm = { down = { 0, 1 }, up = { 0, -1 }, left = { -1, 0 }, right = { 1, 0 } }
-    local d = arm[btn] or arm.down
-    lg.setColor(KNOB)
-    local lx, ly = cx - a / 2 + 1, cy - a / 2 + 1                -- the lit arm, inside the cross's outline
-    if d[1] == 0 then lg.rectangle("fill", lx, d[2] > 0 and cy or cy - r + 1, a - 2, r - 1)
-    else lg.rectangle("fill", d[1] > 0 and cx or cx - r + 1, ly, r - 1, a - 2) end
-    lg.setColor(INK)                                              -- an arrow on the lit arm
-    local tx, ty = cx + d[1] * (r - 4), cy + d[2] * (r - 4)
-    for i = 0, 1 do
-      if d[1] == 0 then lg.rectangle("fill", tx - (1 - i), ty + d[2] * (i - 1), 3 - 2 * i, 1)
-      else lg.rectangle("fill", tx + d[1] * (i - 1), ty - (1 - i), 1, 3 - 2 * i) end
-    end
-  end
-  lg.setColor(1, 1, 1, 1)
-end
-
--- word wrap to at most two lines of width w at scale s (nil if it does not fit)
-local function wrap(text, w, s)
-  if F.width(text, s) <= w then return { text } end
-  local words = {}
-  for wd in text:gmatch("%S+") do words[#words + 1] = wd end
-  for k = #words - 1, 1, -1 do
-    local a, b = table.concat(words, " ", 1, k), table.concat(words, " ", k + 1)
-    if F.width(a, s) <= w and F.width(b, s) <= w then return { a, b } end
-  end
-end
-
--- the picture sign of a control hint (hud.lua's U.pict, r6/levels): what the hint asks, drawn, so a child who
+-- the picture of a control hint (art/ui/pic_<kind>.png, step 3): what the hint asks, drawn, so a child who
 -- cannot read knows it from the button and the picture. A hint can name one (pic = "climb"); otherwise its words
 -- choose it, first match wins.
 T.PICS = {
@@ -112,25 +54,122 @@ function T.picFor(line)
   for _, m in ipairs(T.PICS) do if line.text:find(m[1], 1, true) then return m[2] end end
 end
 
--- the panel's layout for a line: its rect (x0, y0, x1, y1, the portrait included) at the bottom or the top
-local BOX_H = 40
-local GAP = 4                                                    -- between the button picture and the words
-local TEXT_W = 238                                               -- room for the words (and a button) beside a portrait
-function T.layout(line, where)
+-- (step 3) a story line (no button): the kit's gold panel sized to the words (13 px, at most SAY_W wide, split
+-- where its halves are most even), the speaker's portrait in the thin gold frame on its side (the girl right,
+-- Pepper left), standing up out of it. Bottom: the group's bottom at the margin; top: under the HUD.
+T.SAY_W, T.SAY_PAD_X, T.SAY_PAD_Y, T.SAY_PITCH, T.SAY_IN = 188, 14, 8, 16, 8
+T.SAY_TOP = 46
+function T.sayLayout(line, where)
   loadPorts()
+  local Fl = require("flow")
   local p = PORT[line.who] or PORT.girl
-  local pic = T.picFor(line)
-  local gw = (line.btn and 2 * T.SIZE.big + GAP or 0) + (pic and U.PICT_W + GAP or 0)   -- the button, the picture
-  local scale, rows = 2, wrap(line.text, TEXT_W - gw, 2)
-  if line.btn and rows and #rows > 1 then rows = nil end         -- a control hint stays on one row (smaller words)
-  if not rows then scale, rows = 1, wrap(line.text, TEXT_W - gw, 1) or { line.text } end
+  local rows = Fl.wrap(13, line.text, T.SAY_W)
   local tw = 0
-  for _, r in ipairs(rows) do tw = math.max(tw, F.width(r, scale)) end
-  local w = 3 + p.w + 5 + gw + tw + 6                            -- portrait, words, margins
-  local by = where == "top" and 30 or 198                        -- the box; the portrait stands up out of it
-  local x0 = line.who == "pepper" and 2 or 318 - w
-  return { x0 = x0, y0 = by + BOX_H - 1 - p.h, x1 = x0 + w, y1 = by + BOX_H, by = by, w = w, rows = rows, scale = scale,
-    gw = gw, tw = tw, port = p, pic = pic }
+  for _, r in ipairs(rows) do tw = math.max(tw, U.sayW(13, r)) end
+  local th = (#rows - 1) * T.SAY_PITCH + U.sayH(13)
+  local pw, ph = tw + 2 * T.SAY_PAD_X, math.max(32, th + 2 * T.SAY_PAD_Y)
+  local fw, fh = p.win.w + 8, p.win.h + 8
+  local w = pw + fw - T.SAY_IN
+  local gy0 = where == "top" and T.SAY_TOP or (239 - U.M - math.max(ph, fh) + 1)
+  local h = math.max(ph, fh)
+  local x0 = line.who == "pepper" and U.M or (320 - U.M - w)
+  local by = gy0 + h - ph                                        -- the panel's top (its bottom on the group's)
+  local fx = line.who == "pepper" and x0 or (x0 + w - fw)
+  local px = line.who == "pepper" and (x0 + fw - T.SAY_IN) or x0
+  return { x0 = x0, y0 = gy0, x1 = x0 + w, y1 = gy0 + h, by = by, w = w, rows = rows, tw = tw, port = p, say = true,
+    px = px, pw = pw, ph = ph, fx = fx, fy = gy0 + h - fh, fw = fw, fh = fh }
+end
+-- (step 3) a control hint (a line with a button): a small bubble near Pepper (T.bubble) with the button as the device
+-- used last shows it, the picture of the action and at most 3 words; stage: to place it by her (nil: at 0, 0)
+function T.layout(line, where, stage)
+  if not line.btn then return T.sayLayout(line, where) end
+  return T.bubble(line, stage)
+end
+
+-- the hint bubble's words: at most 3 words in one or two rows of the 13 px font (docs/ui_design.md: pictures first).
+-- The level files keep their texts (the tests and the zones read them); only what is shown is shortened:
+-- "TAP: " goes (a tap is the plain press), "HOLD: X" and "A, B" become two rows without the colon or comma, a row wider
+-- than T.ROW_W is split at a space, and SHORT lists the one hint that was longer than 3 words.
+T.SHORT = { ["RUN, HOLD: BIG JUMP"] = { "HOLD", "BIG JUMP" } }
+T.ROW_W = 92
+function T.hintRows(text)
+  if T.SHORT[text] then return T.SHORT[text] end
+  local t = text:gsub("^TAP: ", "")
+  local a, b = t:match("^(.-)[:,] (.+)$")
+  if a then return { a, b } end
+  return require("flow").wrap(13, t, T.ROW_W)
+end
+-- the buttons as the device used last shows them (hud.lua pieces, 13 px)
+T.GLYPHS = { pad = { a = "g_a", b = "g_b", x = "g_x", y = "g_y", down = "g_down", right = "g_right", up = "g_dpad" },
+  key = { a = "k_space", b = "k_shift", x = "k_x", y = "k_z", down = "k_down", right = "k_right", up = "k_up" } }
+function T.glyphFor(btn) local G = T.GLYPHS[I.last] or T.GLYPHS.key; return G[btn] or G.a end
+T.B_PAD, T.B_GAP, T.B_PITCH, T.B_AWAY = 6, 4, 15, 4
+-- the bubble for a line { btn, text, pic } near Pepper: above her head (tail down), else beside her (tail toward
+-- her), else above at the screen's top, else under her; the first that is on screen and clear of her sprite
+-- (T.pepperRect) and, above, clear of the HUD's top row. Returns { x0, y0, x1, y1, side, tx, ty, rows, ... }.
+function T.bubble(line, stage)
+  local rows = T.hintRows(line.text)
+  local pic = T.picFor(line)
+  local gl = T.glyphFor(line.btn)
+  local gw, gh = U.body(gl)
+  local pw, ph = 0, 0
+  if pic then pw, ph = U.body("pic_" .. pic) end
+  local tw = 0
+  for _, r in ipairs(rows) do tw = math.max(tw, U.sayW(13, r)) end
+  local th = (#rows - 1) * T.B_PITCH + U.sayH(13)
+  local w = T.B_PAD + gw + T.B_GAP + (pic and pw + T.B_GAP + 1 or 0) + tw + T.B_PAD
+  local h = math.max(th, ph, gh) + 2 * T.B_PAD
+  local L = { rows = rows, pic = pic, glyph = gl, gw = gw, gh = gh, pw = pw, ph = ph, tw = tw, th = th, w = w, h = h }
+  if not stage then L.x0, L.y0, L.x1, L.y1, L.by = 0, 0, w, h, 0; return L end
+  local px0, py0, px1, py1 = T.pepperRect(stage)
+  local pcx = (px0 + px1) / 2
+  local A = T.B_AWAY
+  local function clampX(x) return math.max(U.M, math.min(320 - U.M - w, x)) end
+  local function clampY(y) return math.max(U.M, math.min(240 - U.M - h, y)) end
+  local hy = py0 + 14                                             -- her head's height on the sprite
+  local cands = {
+    { "down", clampX(math.floor(pcx - w / 2 + 0.5)), py0 - A - h, 30 },
+    { "left", px1 + A, clampY(math.floor(hy - h / 2 + 0.5)) },          -- (right of her, the tail on its left)
+    { "right", px0 - A - w, clampY(math.floor(hy - h / 2 + 0.5)) },
+    { "down", clampX(math.floor(pcx - w / 2 + 0.5)), py0 - A - h, U.M },
+    { "up", clampX(math.floor(pcx - w / 2 + 0.5)), py1 + A },
+  }
+  for _, c in ipairs(cands) do
+    local x, y = c[2], c[3]
+    if x >= U.M and x + w <= 320 - U.M and y >= (c[4] or U.M) and y + h <= 240 - U.M
+      and not (x < px1 and x + w > px0 and y < py1 and y + h > py0) then
+      L.x0, L.y0, L.x1, L.y1, L.by, L.side = x, y, x + w, y + h, y, c[1]
+      if c[1] == "down" or c[1] == "up" then L.tx = math.max(x + 8, math.min(x + w - 9, math.floor(pcx + 0.5)))
+      else L.ty = math.max(y + 6, math.min(y + h - 7, math.floor(hy + 0.5))) end
+      return L
+    end
+  end
+  return nil
+end
+-- draws a bubble laid out by T.bubble, moved by dy (the nudge's bounce, the rise as it appears)
+function T.drawBubble(L, dy)
+  lg.push(); lg.translate(0, dy or 0)
+  local x, y, w, h = L.x0, L.y0, L.w, L.h
+  U.nine("bubble", x, y, w, h, 4, false, "bubble")
+  if L.side == "down" then U.put("tail_d", L.tx - 4, y + h - 2, "tail")
+  elseif L.side == "up" then U.put("tail_u", L.tx - 4, y - 3, "tail")
+  elseif L.side == "left" then U.put("tail_l", x - 3, L.ty - 4, "tail")
+  elseif L.side == "right" then U.put("tail_r", x + w - 2, L.ty - 4, "tail") end
+  local cy = y + (h - 1) / 2
+  local cx = x + T.B_PAD
+  U.put(L.glyph, cx, math.floor(cy - (L.gh - 1) / 2 + 0.5), "glyph")
+  cx = cx + L.gw + T.B_GAP
+  if L.pic then U.put("pic_" .. L.pic, cx, math.floor(cy - (L.ph - 1) / 2 + 0.5), "pic"); cx = cx + L.pw + T.B_GAP + 1 end
+  local ty = math.floor(cy - (L.th - 1) / 2 + 0.5)
+  for i, r in ipairs(L.rows) do U.say(13, "cream", r, math.floor(cx + (L.tw - U.sayW(13, r)) / 2 + 0.5), ty + (i - 1) * T.B_PITCH, "hint") end
+  lg.pop()
+end
+-- the bounce while a nudge asks for this button (up and down 0 to 3 px, never toward her)
+local function nudgeBob(L)
+  local n = T.nudge
+  local b = math.floor(math.abs(math.sin((n.t or 0) * 5)) * 3 + 0.5)
+  if L.side == "up" then return b end
+  return -b
 end
 
 -- Pepper's sprite on screen (her art reaches 30 px either side of her x and 41 px above her feet; a carried ball
@@ -173,37 +212,45 @@ function T.placed(stage)
   local c = T.cur
   if not c then return nil end
   local px0, py0, px1, py1 = T.pepperRect(stage)
+  if c.line.btn then local L = T.layout(c.line, nil, stage); if L and not overlaps(L, px0, py0, px1, py1) then return L end; return nil end
   for _, where in ipairs({ "bottom", "top" }) do
     local L = T.layout(c.line, where)
     if not overlaps(L, px0, py0, px1, py1) then return L end
   end
 end
 
+-- the speech panel: rises 6 px into place over 6 frames; the portrait talks while the line is being said
+function T.drawSay(L, c)
+  local p = L.port
+  local u = math.min(1, c.t / 0.1)
+  local dy = math.floor(6 * (1 - u) * (1 - u) + 0.5) * (L.by < 120 and -1 or 1)
+  lg.push(); lg.translate(0, dy)
+  U.panel(L.px, L.by, L.pw, L.ph, "talkpanel")
+  local th = U.sayH(13)
+  local total = (#L.rows - 1) * T.SAY_PITCH + th
+  local y0 = math.floor(L.by + (L.ph - 1) / 2 - (total - 1) / 2 + 0.5)
+  local tx = L.px + T.SAY_PAD_X + (c.line.who == "pepper" and T.SAY_IN / 2 or -T.SAY_IN / 2)
+  for i, r in ipairs(L.rows) do U.say(13, "cream", r, math.floor(tx + (L.tw - U.sayW(13, r)) / 2 + 0.5), y0 + (i - 1) * T.SAY_PITCH, "talk") end
+  -- the portrait: its window filled light, the talking loop, the thin gold frame round it
+  local talkFor = math.min(2.4, 0.6 + 0.06 * #c.line.text)
+  local f = c.t < talkFor and 1 + math.floor(c.t * T.FPS) % T.FRAMES or 1
+  local wx, wy = L.fx + 4, L.fy + 4
+  lg.setColor(T.WIN_FILL); lg.rectangle("fill", wx, wy, p.win.w, p.win.h)
+  lg.setColor(1, 1, 1, 1); lg.draw(p.img, p.wq[f], wx, wy)
+  U.nine("frame_s", L.fx, L.fy, L.fw, L.fh, 4, true, "portrait")
+  lg.pop()
+end
 function T.drawPanel(stage)
   local L = T.placed(stage)
   if not L then return end
   local c = T.cur
-  U.box(L.x0, L.by, L.w, BOX_H)
-  local p = L.port
-  local talkFor = math.min(2.4, 0.6 + 0.06 * #c.line.text)        -- the loop plays while the line is being said
-  local f = c.t < talkFor and 1 + math.floor(c.t * T.FPS) % T.FRAMES or 1
-  local px = c.line.who == "pepper" and L.x0 + 3 or L.x1 - 3 - p.w
-  lg.setColor(1, 1, 1, 1); lg.draw(p.img, p.q[f], px, L.y1 - 1 - p.h)
-  local x = c.line.who == "pepper" and px + p.w + 5 or L.x0 + 6
-  local cy = L.by + BOX_H / 2
-  if c.line.btn then
-    T.glyph(c.line.btn, x + T.SIZE.big, cy, "big")
-    if L.pic then U.pict(L.pic, x + 2 * T.SIZE.big + GAP, math.floor(cy - U.PICT_H / 2)) end
-    x = x + L.gw
+  if L.say then T.drawSay(L, c); return end
+  if L.side then
+    local u = math.min(1, c.t / 0.1)
+    local rise = math.floor(4 * (1 - u) * (1 - u) + 0.5) * (L.side == "up" and -1 or 1)
+    local n = T.nudge
+    T.drawBubble(L, rise + ((n.btn and n.btn == c.line.btn) and nudgeBob(L) or 0)); return
   end
-  local lh = L.scale * 7
-  local total = #L.rows * lh + (#L.rows - 1) * 3
-  for i, r in ipairs(L.rows) do
-    local y = math.floor(cy - total / 2 + (i - 1) * (lh + 3) + 0.5)
-    lg.setColor(U.SHADE); F.print(r, x + 1, y + 1, L.scale)
-    lg.setColor(c.line.who == "pepper" and U.WHITE or U.GOLD); F.print(r, x, y, L.scale)
-  end
-  lg.setColor(1, 1, 1, 1)
 end
 
 -- the nudge: watches Pepper and the buttons every game step (presses: the buttons pressed this step)
@@ -246,21 +293,23 @@ function T.guess(stage, dir)
   if w:solidIn(x0, x1, p.y - Pp.H_STAND, p.y - 1) and not w:solidIn(x0, x1, p.y - Pp.H_CROUCH, p.y - 1) then return "down" end
   return "a"
 end
--- the button above her head, bouncing; beside her if there is no room above (never over her sprite)
+-- the nudge (step 3): when the hint on screen asks for the same button, its bubble bounces (T.drawPanel); otherwise a
+-- bubble of its own near her, bouncing: the button, its picture and its word (a guess while pushing: Down to
+-- crawl, else A to hop)
+T.NUDGE = { a = { "HOP", "hop" }, down = { "CRAWL", "crawl" }, b = { "SNEAK", "sneak" }, x = { "PICK UP", "pickup" },
+  y = { "BARK!", "bark" }, right = { "RUN", "run" } }
 function T.drawNudge(stage)
   local n = T.nudge
   if not n.btn then return end
-  local r = T.SIZE.big
-  local px0, py0, px1 = T.pepperRect(stage)
-  local bounce = math.floor(math.abs(math.sin((n.t or 0) * 5)) * 4 + 0.5)
-  local cx, cy = (px0 + px1) / 2, py0 - 2 - r - bounce
-  if cy - r < 20 then                                            -- no room above: beside her, the way she faces
-    local face = stage.pepper.face or 1
-    cx = face > 0 and px1 + 2 + r or px0 - 2 - r
-    cy = py0 + 14 - bounce
-  end
-  T.glyph(n.btn, cx, cy, "big")
+  local c = T.cur
+  if c and c.line.btn == n.btn and T.placed(stage) then return end
+  local w = T.NUDGE[n.btn] or T.NUDGE.a
+  local L = T.bubble({ btn = n.btn, text = w[1], pic = w[2] }, stage)
+  if L then T.drawBubble(L, nudgeBob(L)) end
 end
 
-function T.draw(stage) T.drawPanel(stage); T.drawNudge(stage) end
+function T.draw(stage)
+  if U.log then local x0, y0, x1, y1 = T.pepperRect(stage); U.logBox("pepper", x0, y0, x1 - 1, y1 - 1) end   -- (for the layout checks)
+  T.drawPanel(stage); T.drawNudge(stage)
+end
 return T

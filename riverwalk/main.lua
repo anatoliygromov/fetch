@@ -59,7 +59,7 @@ local clearAt, hit, hl                                          -- the level's c
 
 local function setLevel(name) levelName = name; def = require("level." .. name) end
 -- the current level from the start, alone (the test modes, api.newRun)
-local function fresh() Talk.reset(); clearAt, hit, hl = nil, false, nil; over.sel, pz.sel, pz.confirm = 1, 1, nil end
+local function fresh() Talk.reset(); clearAt, hit, hl = nil, false, nil; over.sel, pz.sel, pz.confirm, pz.controls = 1, 1, nil, nil end
 local function freeStage() if stage and stage.ground then stage.ground:release(); stage.ground = nil end end   -- its 3 MB ground canvas
 local function newRun() freeStage(); stage = St.new(def); state, t, tally = "intro", 0, nil; fresh() end
 -- the run's current level: its intro card; it starts with the run's score and lives
@@ -88,7 +88,7 @@ function love.load(args)
   local lv, test = argLevel(args), nil
   for _, a in ipairs(args or {}) do if a == "--bonus" then bonusArg = true end end
   for _, a in ipairs(args or {}) do
-    if a == "--test" or a == "--auto" or a == "--physics" or a == "--qa" or a == "--flowtest" or a == "--lookshots" or a == "--uishots" or a == "--titleshots" then test = a end
+    if a == "--test" or a == "--auto" or a == "--physics" or a == "--qa" or a == "--flowtest" or a == "--lookshots" or a == "--uishots" or a == "--titleshots" or a == "--cardshots" or a == "--screenshots" then test = a end
   end
   Se.save = not test
   for _, a in ipairs(args or {}) do if a == "--dev" then devMode = true end end
@@ -112,7 +112,8 @@ function love.load(args)
   local api = { stage = function() return stage end, setState = function(s) state = s end, getState = function() return state end, newRun = newRun,
     run = function() return run end, tally = function() return tally end, flow = Flow, talk = Talk,
     bonus = function() return bonus end, startBonus = function() startBonus(true) end, startRun = startRun, levelName = function() return levelName end,
-    over = function() return over end, pause = function() return pz end }
+    over = function() return over end, pause = function() return pz end,
+    setStory = function(l) story = l end, setEnding = function(e) ending = e end, setT = function(v) t = v end }   -- (the screens' frames)
   for _, a in ipairs(args or {}) do
     if (a == "--auto" or a == "--physics") and bonusArg then require("tests_bonus")(a, api)          -- the bonus round's checks
     elseif a == "--test" or a == "--auto" or a == "--physics" then require(levelName == "riverwalk" and "tests" or ("tests_" .. levelName))(a, api) end
@@ -120,6 +121,8 @@ function love.load(args)
     if a == "--classic" then Look.on = false end                                        -- start with the look as before
     if a == "--uishots" then require("tests_ui")(api) end
     if a == "--titleshots" then require("tests_titleui")(api) end                               -- the title and menus' frames (pilot 2)                                        -- the UI's frames (ui/hud-v8)
+    if a == "--cardshots" then require("tests_cards")(api) end                                  -- the level select's pictures (step 3)
+    if a == "--screenshots" then require("tests_screens")(api) end                              -- every UI screen's frames (step 3)
     if a == "--lookshots" then require("tests_look")(api) end                                    -- start with the extras off
     if a == "--qa" then require("qa")({ stage = function() return stage end }) end
     if a == "--flowtest" then require("tests_flow")(api) end
@@ -184,12 +187,16 @@ local function overAction(a)
 end
 -- the pause: GO ON or QUIT; QUIT asks first. Back (B / Esc) goes one step back: from the question to the pause,
 -- from the pause to the game. B is also sneak, so it never quits.
-local function resume() state = "play"; pz.sel, pz.confirm = 1, nil; S.music(musicOn) end
+local function resume() state = "play"; pz.sel, pz.confirm, pz.controls = 1, nil, nil; S.music(musicOn) end
 local function pauseAction(a)
+  if pz.controls then                                             -- the controls page: B (or A) goes back to the pause
+    if a == "back" or a == "ok" then pz.controls = nil; S.play("tick") end
+    return
+  end
   if pz.confirm then
     if a == "back" then pz.confirm = nil; S.play("tick"); return end
-    local c = { sel = pz.confirm }
-    local r = Flow.cursor(c, a, #Flow.confirmItems); pz.confirm = c.sel
+    local c = pz.cm or {}; c.sel = pz.confirm                      -- (pz.cm: the question's cursor, eased by the drawing)
+    local r = Flow.cursor(c, a, #Flow.confirmItems); pz.confirm = c.sel; pz.cm = c
     if r == 1 then pz.confirm = nil elseif r == 2 then S.play("tick"); toMenu() end
     return
   end
@@ -200,11 +207,13 @@ local function pauseAction(a)
   local r = Flow.cursor(pz, a, #Flow.pauseItems)
   if r == 1 then resume()
   elseif r == Flow.PAUSE_SOUND then if Se.volume >= Se.MAX then Se.step(-Se.MAX) else Se.step(1) end; S.play("tick")
+  elseif r == Flow.PAUSE_CONTROLS then pz.controls = true
   elseif r == Flow.PAUSE_QUIT then pz.confirm = 1 end
 end
 -- the story card: only A goes on, after Flow.CARD_WAIT seconds (time to read it aloud)
 local function storyA() if state == "story" and t >= Flow.CARD_WAIT then S.play("select"); startLevel() end end
 local function anyKey()
+  if state == "clear" and tally and not tally.done then Flow.tallySkip(tally); return end   -- (ui step 3) skip the show
   if state == "clear" and tally and tally.done then
     S.play("select")
     if not tally.bonusDone and Flow.bonusOpen(stage) then startBonus() else nextLevel() end    -- a golden bone: the bonus
@@ -362,29 +371,23 @@ function love.update(dt)
     end
     if steps == 4 then acc = 0 end
   elseif state == "clear" then
-    tally.t = tally.t + dt
-    if tally.t > 1.4 and tally.shown < tally.points then              -- the points count up into the score
-      local before = tally.shown
-      tally.shown = math.min(tally.points, tally.shown + math.max(10, math.floor(tally.points * dt * 0.9)))
-      if math.floor(before / 500) ~= math.floor(tally.shown / 500) then S.play("tick") end
-    end
-    if tally.shown >= tally.points and tally.t > 1.8 then tally.done = true end
+    Flow.tallyStep(tally, dt)                                      -- (ui step 3) the tally's show: counts, ticks, medals, stamp
   end
   if state == "play" then Talk.update(dt, stage) end
   frameMs = (love.timer.getTime() - t0) * 1000
 end
 
-local function drawTuning()
+local function drawTuning()                                       -- (dev, Tab) in the v8 small font (ui step 3)
   if not tuning then return end
-  local x, y, w, h = 168, 22, 148, 14 + #TUNE * 10
-  love.graphics.setColor(0.08, 0.12, 0.22, 0.9); love.graphics.rectangle("fill", x, y, w, h)
+  local x, y, w, h = 160, 30, 156, 16 + #TUNE * 10
+  love.graphics.setColor(40 / 255, 20 / 255, 12 / 255, 0.92); love.graphics.rectangle("fill", x, y, w, h); love.graphics.setColor(1, 1, 1, 1)
   for i, r in ipairs(TUNE) do
-    local col = (i == tuneRow) and { 252/255, 214/255, 60/255 } or U.WHITE
-    U.text(i .. " " .. r[2]:upper(), x + 4, y + 3 + (i - 1) * 10, col)
+    local style = (i == tuneRow) and "gold" or "cream"
+    U.say(7, style, i .. " " .. r[2]:upper(), x + 4, y + 3 + (i - 1) * 10)
     local v = tostring(Pp.P[r[1]]) .. r[4]
-    U.text(v, x + w - 4 - 6 * #v, y + 3 + (i - 1) * 10, col)
+    U.say(7, style, v, x + w - 4 - U.sayW(7, v), y + 3 + (i - 1) * 10)
   end
-  U.text("- + CHANGE", x + 4, y + h - 10, U.RIM)
+  U.say(7, "dim", "- + CHANGE", x + 4, y + h - 11)
 end
 
 function love.draw()
@@ -396,7 +399,7 @@ function love.draw()
     or (state == "bonus" and function() bonus:draw() end)
   if screen then                                                  -- the screens drawn without a level behind them
     screen()
-    if Se.showing() then U.volumeToast(Se.volume, Se.MAX, 218) end
+    if Se.showing() then U.volumeToast(Se.volume, Se.MAX, U.TOAST_MENU) end
     love.graphics.setCanvas()
     local ww, wh = love.graphics.getDimensions()
     local s = math.max(1, math.floor(math.min(ww / W, wh / H)))
@@ -410,18 +413,12 @@ function love.draw()
   U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard },
     state == "play" and { Talk.pepperRect(stage) } or nil)
   if state == "intro" then
-    U.dim()
-    love.graphics.push(); love.graphics.translate(0, Flow.placeY(60, 200, 70, 76, { Talk.pepperRect(stage) }) - 70)
-    U.box(60, 70, 200, 76)
-    U.center(def.intro[1], 160, 78, 2, U.GOLD); U.center(def.intro[2], 160, 96, 2, U.GOLD)
-    U.center(def.intro[3], 160, 118, 1); U.center(def.intro[4], 160, 130, 1)
-    love.graphics.pop()
-    if t > 0.5 and (t % 1.1) < 0.75 then U.prompt("PRESS ANY BUTTON") end
+    Flow.drawIntro(def, t, { Talk.pepperRect(stage) })            -- (ui step 3) the gold card, the story, A GO
   elseif state == "play" then
     Talk.draw(stage)
     drawTuning()
   elseif state == "pause" then
-    Flow.drawPause(pz, def, { Talk.pepperRect(stage) })
+    Flow.drawPause(pz, def, { Talk.pepperRect(stage) }, st)
   elseif state == "over" then
     Flow.drawOver(over, t, { Talk.pepperRect(stage) })
   elseif state == "clear" then
@@ -429,16 +426,17 @@ function love.draw()
   elseif state == "story" then
     Flow.drawStory(story, t, { Talk.pepperRect(stage) })
   end
-  if state ~= "play" then                                         -- the cards dim the level, never Pepper
+  if state ~= "play" and not (state == "pause" and pz.controls) then   -- the cards dim the level, never Pepper (the
+    -- controls page from the pause covers the screen)
     love.graphics.push(); love.graphics.translate(0, -math.floor((stage.camY or 0) + 0.5))   -- (tall levels: camera y)
     love.graphics.setColor(1, 1, 1, 1); stage.pepper:draw(math.floor(stage.cam + 0.5))
     love.graphics.pop()
   end
-  if Se.showing() then U.volumeToast(Se.volume, Se.MAX, state == "play" and 20 or 218) end
+  if Se.showing() then U.volumeToast(Se.volume, Se.MAX, state == "play" and U.TOAST_PLAY or U.TOAST_MENU) end
   if debugView then
-    U.text(("%d FPS  %.1f MS"):format(fps, frameMs), 4, 228, { 1, 1, 0.4 })
+    U.say(7, "gold", ("%d FPS  %.1f MS"):format(fps, frameMs), 4, 228)
     local p = stage.pepper
-    U.text(("X %d Y %d %s"):format(p.x, p.y, p.onGround and "GROUND" or "AIR"), 160, 228, { 1, 1, 0.4 })
+    U.say(7, "gold", ("X %d Y %d %s"):format(p.x, p.y, p.onGround and "GROUND" or "AIR"), 160, 228)
   end
   love.graphics.setCanvas()
   local ww, wh = love.graphics.getDimensions()

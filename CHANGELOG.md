@@ -2,6 +2,115 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `ui/hud-v8` step 3: every remaining screen in the kit (24 Oct)
+Follows docs/ui_design.md. Drawing only: logic, inputs and saves as they were unless a line says otherwise. Frames:
+`python3 tools/screen_frames.py` (out_ui/step3/frames, colour and greyscale at 3x), checks: `python3
+tools/layout_qa_menus.py out_ui/step3/frames`.
+- **Level select as cards (flow.lua F.drawSelect, F.selectCard):** one big card per level on the title picture under the
+  warm dim: the kit's gold panel, a LEVEL n ribbon over its top edge, the level's picture in a thin gold frame
+  (frame_s), its name in the 17 px font, the three medals won from the save (each with its picture: heart NO HIT,
+  bone ALL BONES, clock PAR) on the left of one row and the clock, the best time and the best points on its right.
+  Locked: the picture darkened with a big gold padlock on it (a level without its file: COMING SOON). Left / right
+  (up / down too, so nothing learnt stops working) browse, wrapping as before; the next card slides in over 0.12 s
+  (ease out) with a new `slide` sound (sfx.lua). Gold arrows either side nudge out and back, a dot per level under
+  the card, the controls strip `BROWSE  (A) PLAY  (B) BACK`. Unlocking and saves unchanged.
+- **The pictures (riverwalk/art/ui/cards/<name>.png, 216 x 118):** native 1x crops of the game, no scaling, shot by
+  `python3 tools/card_shots.py` (riverwalk/tests_cards.lua, `love riverwalk --cardshots`: each level alone, Pepper
+  at its characteristic spot, the camera settled, no HUD): River Walk by the ice cream kiosk, City Park by the goose
+  and the leaf pile, Downtown at the market, Rooftops on the chimney stack with the gull, Soder Hill under the lamp,
+  Night Harbour in the lantern light. (Rooftops, Soder Hill and Night Harbour are still greybox, so their pictures
+  are too.)
+- **Level intro card (flow.lua F.drawIntro, main.lua):** the smooth warm dim (the dotted checker is gone here), the
+  kit's gold panel with the LEVEL n ribbon over its top edge, the level's name in the 17 px font and its story (intro
+  lines 3 and 4) in the 13 px font, each line split where its halves are most even when it is wider than the card
+  (F.wrap); the card drops in (6 frames, ease out). The controls strip `(A) GO` replaces the blinking PRESS ANY
+  BUTTON (any button still starts the level). The card goes centred above the strip, else at the top, else just
+  above the strip, the first that misses Pepper (F.cardTop; if none does, the one that covers least of her).
+- **Talk panels (talk.lua T.sayLayout, T.drawSay):** the girl's (Mia's) lines in the kit's gold panel sized to the
+  words (13 px cream, at most 188 px a row, split where the halves are most even, up to 3 rows), her portrait (the
+  same talking loop, cut to head and face, 42 x 38, on a light warm window) in the thin gold frame on the panel's
+  side, 8 px over its end, standing up out of it (Pepper's portrait, for a line of hers without a button, on the
+  left). Bottom: the group's bottom at the margin, the right side (clear of the lives); top: under the HUD (y 46),
+  when Pepper is low; never over her (same rule and timings). The panel rises 6 px into place over 6 frames.
+  No continue glyph: these lines go by themselves (4.5 s, or when the zone is left) and no button moves them on
+  (A is jump), so a glyph would teach a wrong button; A only goes on on the story card, which shows it.
+- **Flow test change (tests_flow.lua "hints: all fit the panel"):** it checked the old blue panel's drawing (2 rows,
+  scale 2 letters) for the girl's lines too; now a girl's line may take 3 rows of the 13 px font. Pepper's lines
+  keep their checks.
+- **In-level hints and nudges (talk.lua T.bubble, T.drawBubble, T.drawNudge):** Pepper's control hints leave the
+  portrait panel (it is for story moments only) for a small bubble near her: the kit-style bubble (a 9-slice: ink
+  outline, a 1 px gold rim, the dark warm fill) with a tail toward her, the button as the device used last shows it
+  (the gamepad's coin or d-pad, or the keyboard's keycap), a picture of the action (pic_<kind>, 28 x 20 on the grid:
+  Pepper as a cream pictogram with her pink bandana, what she uses in gold: run, hop, big jump, climb, crawl, duck,
+  stay on, drop, bounce, pick up, give, bark, sneak) and at most 3 words in the 13 px font, one or two rows. Placed
+  above her head, else beside her (the tail on the side toward her), else above at the screen's top, else under
+  her; always on screen and never over her sprite. It rises 4 px in over 6 frames and goes when the hint stops
+  applying (same rules and timings). A nudge for the same button makes the bubble bounce (0 to 3 px, away from her);
+  a nudge for another button (a guess while pushing) gets its own bouncing bubble (Down: CRAWL, A: HOP), replacing
+  the big round button over her head.
+- **Hint words shown (the level files keep their texts; talk.lua T.hintRows):** "TAP: HOP" -> HOP (10 hints);
+  "HOLD: BIG JUMP" -> HOLD / BIG JUMP, "HOLD: CLIMB" -> HOLD / CLIMB, "HOLD: SNEAK" -> HOLD / SNEAK, "HOLD: STAY ON"
+  -> HOLD / STAY ON (two rows, no colon); "BARK: SHOO!" -> BARK / SHOO!; "STOP, THEN HOP" -> STOP / THEN HOP;
+  "BOUNCE ON IT" -> BOUNCE / ON IT; "BOUNCE ACROSS" -> BOUNCE / ACROSS; "RUN, HOLD: BIG JUMP" (the lab level, 4
+  words) -> HOLD / BIG JUMP. Unchanged: PICK UP, GIVE, CRAWL, DUCK!, BARK!, RUN.
+- **Flow test change (tests_flow.lua "hints: all fit the panel"):** Pepper's hints are checked on the bubble: at most
+  2 rows and at most 3 words shown (was: one row of scale 2 letters in the old panel).
+- **Pause (flow.lua F.drawPause, F.pauseCard):** the warm dim, the kit's gold panel with the PAUSED ribbon, the
+  level's name (7 px) and the bones found (the bone and the count, 13 px gold); the rows GO ON, SOUND, CONTROLS,
+  QUIT as plain outlined 13 px text, only the selected row gold with the paw coin before it (eased between rows,
+  1 px bob), SOUND's 9-segment meter at the right; the row boxes and the A / B coins and tabs hanging off the frame
+  are gone; the controls strip `(A) OK (B) BACK` (`CHANGE (B) BACK` on SOUND). The quit question in the same card:
+  QUIT TO MENU? (13 px gold) over NO / YES, QUIT. The card goes where it misses Pepper (F.cardTop).
+- **CONTROLS in the pause (new row, main.lua pauseAction):** opens the controls page over the warm-dimmed level;
+  B or A goes back to the pause, Start still goes on playing. QUIT moved from the third row to the fourth.
+- **Flow test changes (tests_flow.lua):** "pause: QUIT asks first", "pause: YES, QUIT goes to the menu" and the
+  hard mode test's way out through the pause press Down once more (QUIT is the fourth row now); new checks "pause:
+  CONTROLS opens the controls page" and "pause: B goes back from the controls page". 124 of 124 pass.
+- **Tally as a show (flow.lua F.tallyPlan, F.tallyStep, F.tallySkip, F.tallyCard):** the warm dim, the kit's panel
+  under the arched GOOD GIRL! ribbon. BONES counts up from 0 with a tick per bone (at most 1.5 s), then FETCH (the
+  level's bonus line), TIME BONUS and the TOTAL (the level's points, counting up with a tick each 500 as before),
+  4 lines, each sliding in with its picture (the bone, the ball, the clock), 7 px label, 13 px gold value. Then the
+  three medals pop in one by one (their pictures: heart, bone, clock; a sound for won, a thud for not) with their
+  names; the clear time, the best time (gold when it is new) and SECRETS found in the small font; NEW BEST! lands
+  as a red stamp across the frame's bottom right (a new best score or time) with a thud (new `stamp` sound); then
+  the controls strip `(A) OK`. Same numbers as before; the run's score still counts on the HUD.
+- **Any button skips the show (main.lua anyKey):** a press during the show jumps to its end (all numbers shown); the
+  next press goes on as before. The update moved from main.lua into F.tallyStep (the show's own timetable; the
+  tally is done when the show ends, about 4 to 6 s, was 1.8 s).
+- **Flow test change:** new check "tally: any button skips the show to its end" (the clean clear). 125 of 125 pass.
+- **Story card between levels (flow.lua F.drawStory, F.storyCard):** a story moment, so the portrait panel: the warm
+  dim, Mia telling the outro in the kit's gold panel (13 px, each line split where its halves are most even), her
+  portrait (talking while it is read) in the thin gold frame on the panel's right end; the card drops in; after
+  2 s the strip `(A) GO ON` (only A, as before) replaces the small blinking A button.
+- **GAME OVER (F.drawOver, F.overCard):** the warm dim, the gold panel with the GAME OVER ribbon, TRY AGAIN / MENU as
+  plain outlined text (only the selected one gold, the paw coin before it, eased), the strip `(A) OK`.
+- **The ending (F.drawEnding):** the title picture under the warm dim, the gold panel under the arched GOOD GIRL!
+  ribbon: the outro (13 px), FINAL SCORE (7 px) and the score (17 px gold), NEW BEST RUN! (13 px gold, blinking) or
+  BEST RUN (7 px), THE END (17 px gold), THANKS FOR PLAYING (7 px), the strip `(A) OK` after 2 s.
+- **FETCH FRENZY (bonus.lua, hud.lua U.bonusStatus):** the HUD row in the v8 style (the ball and CATCHES against the
+  goal, gold and +1 once reached; the watch and the seconds, the last 5 blinking; the points); the intro card (the
+  gold panel, a new wide ribbon FETCH FRENZY!, A GOLDEN BONE BONUS, the round's name in 17 px gold, CATCH WHAT MIA
+  THROWS! in 13 px, the goal as the ball, 11 CATCHES, +1 and Pepper's head; was "11 CATCHES: EXTRA LIFE"; the
+  strip `(A) GO`); READY..., GO!, the last seconds and TIME UP! in the 17 px gold font; the result card like the
+  tally (CATCHES, IN THE AIR, POINTS; EXTRA LIFE! with Pepper's head, or GOOD TRY, PEPPER! and the goal in 7 px;
+  the strip `(A) OK`); the +100 pops in the 7 px font.
+- **The sound toast (hud.lua U.volumeToast):** a small gold panel with SOUND (7 px) and the 9 segments, under the HUD
+  while playing, above the controls strip over menus and cards.
+- **Dev panels (main.lua):** the tuning panel (Tab) and the debug line (G) in the 7 px font on the warm dark.
+- **Old code removed:** hud.lua's blue signs, boxes, prompt banner, 5x7 text, the dotted checker dim, the old lock, dog,
+  medal, volume bar and HARD tag, the code-drawn picture signs; talk.lua's round button glyphs and the old panel;
+  flow.lua's checker backdrop. Nothing in the UI uses bigfont.lua any more.
+- **All screens:** out_ui/step3/all_screens.png (every UI screen at 2x, 24 frames: title, menu, options, controls,
+  level select, intro, talk, hints, nudge, pause, quit, controls from the pause, tally, story, game over, ending,
+  bonus intro / play / result, sound toast), looked at: nothing old left.
+- **Left as they are (not UI screens):** the in-world tells drawn with bigfont.lua ("!" over a hissing goose, the cat,
+  a bike; "?" when an animal hears a bark; chase.lua, critters.lua, scene.lua, roofs.lua, night.lua) and the greybox
+  prop labels (CAT, HOLLOW LOG, CRATES, TERRACE...; scene.lua, setpieces.lua), which go when those levels get art;
+  the dithered dust puffs (extras.lua), pavement fades (scene.lua) and lantern light (night.lua) are level art;
+  the title's logo dither is the title track's.
+- **Pieces (art/source/ui/v8/tools/screens8.py, built by build8.py):** arrow_l / arrow_r, lock / lock_big, dot_on /
+  dot_off, frame_s, medal_<kind>_on / _off, bubble and its tails, ball, stamp, pic_<kind>, g_right (the d-pad, right lit), ribbon_wide.
+
 ## Branch `ui/hud-v8` pilot 2: the title on its native grid, Pepper pants and blinks, the new main menu (24 Oct)
 Follows docs/ui_design.md (the owner's UI design, 24 Oct). Stops here for the owner's yes.
 - **Title picture (art/source/title/tools/build_title.py):** the painting sampled one colour per cell on its 7.5 px
@@ -50,6 +159,23 @@ Follows docs/ui_design.md (the owner's UI design, 24 Oct). Stops here for the ow
   six steps, each step's first two rows an ordered 2 x 2 checker with the step above, phase fixed to the screen, a
   highlight row on top), "steps6" (the six steps hard) and "bands" (three bands and a lip). Same silhouettes, outline,
   depth and paw; logo_<mode>.png and logo_hi_<mode>.png. The unused eye_closed.png and press_off.png are removed.
+- **"clean" logo (the new default, T.LOGO = "clean") and 90s sparkles:** the painting's own logo pixels (depth, bevel,
+  highlight streaks, outline, paw) with only the speckle replaced: per letter and row the dithered yellow / gold /
+  orange pixels average to a level (smoothed over 3 rows), set as a solid colour or an ordered 2 x 2 checker of its
+  two nearest ramp colours on a fixed screen phase; lone pixels a shade off their neighbours take their colour;
+  8 one-pixel outline wobbles straightened. Twinkle stars (stars.py: 3 sizes, 6 frames grow-flash-shrink, white and
+  pale yellow) pop one at a time every 0.6 to 1.4 s on the letters' upper edges and highlight streaks (a seeded
+  schedule, the same every run), and the shine sweeps every 5 to 7 s instead of 3.6. Both run on every logo version.
+  The title GIF is now 9 s at 12 fps.
+- **Title picture cleanup (art/source/title/tools/cleanup.py, head.py; masks in art/source/title/masks):** 19
+  materials (coat, nose, eye, tongue, bandana, trunk, leaves, lamp, lantern, stone, sky, clouds, city, water, boats,
+  railing, pavement, bench, flowers); each gets a small ramp of the painting's own colours (coat 5, bandana 4, tongue
+  4, leaves 5, water 4, sky its 4 bands ...); textured shading turned into clean tone areas (a masked blur, the steps
+  dealt out by rank so each keeps its share); lone pixels and 2-pixel crumbs merged per material; near-twin colours
+  merged (Pepper's ramps protected). Pepper's eye and nose keep the painting's pixels, her dark lines are closed, the
+  wink is redrawn by hand as one clean lid stroke with three lashes. The far city keeps its texture (its windows).
+  Lone pixels 4.2 % -> 1.0 % (Pepper 3.8 % -> 0.4 %), 62 -> 48 colours. The pant and blink frames are rebuilt from
+  the cleaned head. Gate: tools/cleanup_gate.py.
 - **Gates:** tools/title_frames.py (frames at 3x, colour and greyscale, the title loop GIF at 2x),
   tools/layout_qa_menus.py (226 checks, all pass), tools/pilot2_cards.py: out_ui/pilot2/card_title.png and
   card_menus.png.

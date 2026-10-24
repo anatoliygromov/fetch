@@ -216,3 +216,83 @@ def plate(text):
         col = S8.band(st, y, body_h) if y < body_h else st['deep']
         p[ty + y, tx + x] = (*col, 255)
     return p, (tx, ty, tw, th)
+
+# ---- "clean": the painting's own logo, only its noise tidied ------------------------------------------------------
+RAMP3 = [(255, 187, 4), (253, 162, 10), (254, 104, 7)]   # the dithered gradient's colours, light to dark
+def old_logo_mask(img):
+    """the painting's logo as it is: its letters, outline, depth and paw (warm or navy pixels next to the letters),
+    without the old tagline plate"""
+    letters, paw = glyph_masks(img)
+    old = np.zeros(img.shape[:2], bool)
+    for m in letters + paw: old |= m
+    near = ndimage.binary_dilation(old, iterations=6)
+    m = (warm(img) | navy(img)) & near
+    m[77:98, 146:296] = False
+    return m, letters, paw
+
+def _straighten(lay, fillm):
+    """1 px bumps and notches on an edge that is straight 2 px either side, on the silhouette and on the fill's edge
+    against the outline: a bump goes, a notch is filled (with its neighbour's colour); checked in all 4 directions"""
+    n = 0
+    for target in ('sil', 'fill'):
+        for rot in range(4):
+            L = np.rot90(lay, rot).copy()
+            M = np.rot90(L[..., 3] > 0 if target == 'sil' else fillm, rot).copy() if target == 'fill' else (L[..., 3] > 0)
+            if target == 'fill': M = np.rot90(fillm, rot).copy()
+            H, W = M.shape
+            for y in range(1, H - 1):
+                for x in range(2, W - 2):
+                    # a bump: M at (x, y) alone on its row, the row below straight and full, the row above empty
+                    if M[y, x] and not M[y, x - 1] and not M[y, x + 1] and M[y + 1, x - 2:x + 3].all() and not M[y - 1, x - 1:x + 2].any():
+                        L[y, x] = L[y, x - 1] if target == 'fill' else 0; M[y, x] = False; n += 1
+                    # a notch: a hole of 1 in a row that is full 2 px either side, the row above empty there
+                    elif not M[y, x] and M[y, x - 2:x].all() and M[y, x + 1:x + 3].all() and M[y + 1, x] and not M[y - 1, x - 2:x + 3].any():
+                        L[y, x] = L[y, x - 1]; M[y, x] = True; n += 1
+            lay[...] = np.rot90(L, -rot)
+            if target == 'fill': fillm[...] = np.rot90(M, -rot)
+    return n
+
+def clean(img):
+    """the painting's logo layer with the speckle replaced: per letter and row, the dithered gradient pixels
+    (its yellow, gold and orange) average to a level; the level, smoothed over 3 rows, is set as a solid colour or an
+    ordered 2 x 2 checker of its two nearest ramp colours ((x + y) even takes the lighter), aligned to the screen.
+    Highlight streaks, the bevel, the outline and the depth (every other colour) stay exactly as painted."""
+    H, W, _ = img.shape
+    m, letters, paw = old_logo_mask(img)
+    lay = np.zeros((H, W, 4), np.uint8); lay[m, :3] = img[m]; lay[m, 3] = 255
+    key = {c: i for i, c in enumerate(RAMP3)}
+    def lvl(p): return key.get(tuple(int(v) for v in p), -1)
+    for g in letters + [np.logical_or.reduce(paw)]:
+        ys, xs = np.nonzero(g); y0, y1 = ys.min(), ys.max()
+        rows = {}
+        for y in range(y0, y1 + 1):
+            xx = [x for x in np.nonzero(g[y])[0] if lvl(img[y, x]) >= 0]
+            if xx: rows[y] = (xx, np.mean([lvl(img[y, x]) for x in xx]))
+        if not rows: continue
+        yl = sorted(rows)
+        for y in yl:
+            near_ = [rows[yy][1] for yy in (y - 1, y, y + 1) if yy in rows]
+            lv = np.mean(near_)
+            k = int(round(lv * 2))                    # half steps: even = a solid colour, odd = a checker
+            for x in rows[y][0]:
+                c = k // 2 if k % 2 == 0 else (k // 2 if (x + y) % 2 == 0 else k // 2 + 1)
+                lay[y, x, :3] = RAMP3[min(2, c)]
+    # lone pixels a shade off: no neighbour of its colour in 8 directions, close (dE < 18) to the colour most of its
+    # neighbours share -> that colour (the checker keeps its diagonal neighbours, so it is never touched)
+    from skimage.color import rgb2lab
+    for _ in range(2):
+        k = lay[..., 0].astype(int) * 65536 + lay[..., 1].astype(int) * 256 + lay[..., 2]; k[lay[..., 3] == 0] = -1
+        lab = rgb2lab(lay[..., :3] / 255.0)
+        o = lay.copy()
+        for y, x in zip(*np.nonzero(lay[..., 3] > 0)):
+            nb = k[max(0, y - 1):y + 2, max(0, x - 1):x + 2]; c = k[y, x]
+            if (nb == c).sum() > 1: continue
+            vals = [v for v in nb.ravel() if v != c and v >= 0]
+            if len(vals) < 5: continue
+            v = max(set(vals), key=vals.count)
+            ys_, xs_ = np.nonzero(nb == v); yy, xx = ys_[0] + max(0, y - 1), xs_[0] + max(0, x - 1)
+            if np.linalg.norm(lab[y, x] - lab[yy, xx]) < 18: o[y, x, :3] = lay[yy, xx, :3]
+        lay = o
+    fillm = (lay[..., 3] > 0) & (lay[..., 0] > 120) & (lay[..., 0].astype(int) > lay[..., 2].astype(int) + 60)
+    nst = _straighten(lay, fillm)
+    return lay, nst

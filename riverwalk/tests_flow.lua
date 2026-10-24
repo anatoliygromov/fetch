@@ -106,7 +106,8 @@ return function(api)
           local who = h.btn and "pepper" or "girl"
           local L = T.layout({ who = who, btn = h.btn, text = h.text }, "bottom")
           local words = select(2, h.text:gsub("%a+", ""))                  -- "+" is not a word
-          if L.x0 < 0 or L.x1 > 320 or #L.rows > 2 or L.scale < 2 or (h.btn and (words > 3 or #L.rows > 1))
+          local shown = select(2, table.concat(L.rows, " "):gsub("%a+", ""))     -- (step 3: the words the bubble shows)
+          if L.x0 < 0 or L.x1 > 320 or #L.rows > (h.btn and 2 or 3) or (h.btn and (words > 3 or shown > 3))
             or (h.btn and not ({ a = 1, b = 1, x = 1, y = 1, down = 1, right = 1 })[h.btn]) or h.text:find("\226\128\148")
             or (h.btn and not T.picFor({ btn = h.btn, text = h.text })) then bad[#bad + 1] = l.name .. ": " .. h.text end
         end
@@ -277,7 +278,9 @@ return function(api)
   local last = names[#names]
   add(wait(0.6), key("space"), state("play", 1), wait(0.3))
   add({ act = function() local s = api.stage(); for _, bn in ipairs(s.bones) do bn.taken = true end; s.taken = s.total; finish() end })
-  add(state("clear", 6), { cond = function() local tl = api.tally(); return tl and tl.done end, act = function() end, limit = 8, what = "the tally" })
+  add(state("clear", 6), wait(0.3), key("lshift"), check("tally: any button skips the show to its end", function()   -- (ui step 3)
+    local tl = api.tally(); return tl and tl.done and tl.shown == tl.points and api.getState() == "clear", tl and ("t %.2f, shown %d of %d"):format(tl.t, tl.shown, tl.points) or "no tally" end))
+  add({ cond = function() local tl = api.tally(); return tl and tl.done end, act = function() end, limit = 8, what = "the tally" })
   add(check("medals: NO HIT, ALL BONES, PAR TIME won and saved", function()
     local tl, m = api.tally(), F.medals(last)
     return tl.medals.nohit and tl.medals.bones and tl.medals.par and m.nohit and m.bones and m.par, readSave("medals_" .. last .. ".txt"):gsub("\n", "")
@@ -305,11 +308,17 @@ return function(api)
     key("mute"), check("mute button: sound off", function() return Se.volume == 0, "volume " .. Se.volume end),
     key("mute"), check("mute button again: sound back", function() return Se.volume == 7, "volume " .. Se.volume end),
     wait(0.05), shot("u10_pause_sound"), key("escape"), state("play", 1))
+  -- CONTROLS (the third row, step 3): the controls page over the level; B goes back to the pause
   add(key("return"), state("pause", 1), key("down"), key("down"), key("space"),
+    check("pause: CONTROLS opens the controls page", function() return api.getState() == "pause" and api.pause().controls == true, tostring(api.pause().controls) end),
+    shot("u14_pause_controls"), key("escape"),
+    check("pause: B goes back from the controls page", function() return api.getState() == "pause" and not api.pause().controls, api.getState() end),
+    key("escape"), state("play", 1))
+  add(key("return"), state("pause", 1), key("down"), key("down"), key("down"), key("space"),
     check("pause: QUIT asks first", function() return api.getState() == "pause" and api.pause().confirm == 1, api.getState() end), shot("u7_pause"))
   add(key("space"), check("pause: NO keeps the game", function() return api.getState() == "pause" and not api.pause().confirm, api.getState() end))
   add(key("down"), key("space"), key("escape"), check("pause: back from the question", function() return api.getState() == "pause" and not api.pause().confirm, api.getState() end))
-  add(key("down"), key("down"), key("space"), key("down"), key("space"),
+  add(key("down"), key("down"), key("down"), key("space"), key("down"), key("space"),
     check("pause: YES, QUIT goes to the menu", function() return api.getState() == "menu" and api.run() == nil, api.getState() end))
 
   -- GAME OVER: TRY AGAIN (the same level, 3 lives, the score it started with), then MENU
@@ -344,7 +353,7 @@ return function(api)
     check("hard mode: the stage is hard, no hints, no nudge", function()
       local s = api.stage(); return s.hard == true and s:hint() == nil and T.cur == nil, tostring(s.hard) end))
   add(wait(3.2), check("hard mode: no idle nudge", function() return T.nudge.btn == nil, tostring(T.nudge.btn) end), shot("u9_hard"))
-  add(key("return"), state("pause", 1), key("down"), key("down"), key("space"), key("down"), key("space"), state("menu", 1),
+  add(key("return"), state("pause", 1), key("down"), key("down"), key("down"), key("space"), key("down"), key("space"), state("menu", 1),
     key("down"), key("down"), key("space"), state("options", 1), key("down"), key("space"),
     check("hard mode: off again", function() return not F.hard and readSave("hard.txt"):find("0") ~= nil, "" end))
 

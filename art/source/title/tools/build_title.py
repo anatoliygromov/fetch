@@ -8,8 +8,12 @@
      neighbours' colour. No dithering.
   3. The painting's PRESS ANY KEY TO START box taken out, the railing behind it rebuilt from the painting's own
      rows (unbox.py); the game draws PRESS START itself.
+  3c. The pixel-art cleanup (cleanup.py, head.py): the picture in materials (masks in art/source/title/masks),
+     each with a small ramp of its own colours, crumbs merged, Pepper's head finished; at most about 48 colours.
   3b. The logo and the tagline plate rebuilt on the grid as their own layers (logo.py: logo.png, logo_hi.png for
-     the shine, tagline_caps.png and tagline_lower.png); the painting's old ones painted out of base.png.
+     the shine, tagline_caps.png and tagline_lower.png); the painting's old ones painted out of base.png. The
+     default logo is "clean": the painting's own logo with only its speckle tidied (logo.clean); stars.png holds
+     the twinkle stars (stars.py) and title_data.lua the points on the letters where they pop.
   4. Layers for the animation (riverwalk/art/title/, positions in riverwalk/title_data.lua):
        base.png     the screen without the river sparkles and the bird (drawn live)
        bird.png     the bird: as painted, wings level, wings down
@@ -26,7 +30,7 @@ import cv2
 from PIL import Image
 from skimage.color import rgb2lab
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
-import title_native, title_palette as TP, unbox, head_frames as HF, logo as LG
+import title_native, title_palette as TP, unbox, head_frames as HF, logo as LG, stars as ST, cleanup as CL
 from register import register
 from vsample import sample as vsample
 ROOT = os.path.normpath(os.path.join(HERE, '..', '..', '..', '..'))
@@ -59,6 +63,18 @@ def main():
     L = rgb2lab(pal[idx] / 255.0)[..., 0]
     pstrip = np.repeat(np.repeat(pal[None], 8, 0), 8, 1); Image.fromarray(pstrip.astype(np.uint8)).save(os.path.join(TDIR, 'palette.png'))
     still = img.copy()
+    Image.fromarray(still.astype(np.uint8)).save(os.path.join(TDIR, 'still_painting.png'))   # the native-grid painting, logo as painted (reference)
+    # ---- 3c. the pixel-art cleanup (cleanup.py, head.py): materials, ramps, crumbs merged, Pepper's head finished;
+    # the logo and its plate are left out (they are layers)
+    keep, _, _ = LG.old_logo_mask(img); keep[76:98, 146:296] = True
+    img, mats, cst = CL.run(img, keep, os.path.join(TDIR, 'masks'))
+    print('cleanup: colours %d, lone pixels %.2f %% -> %.2f %% (Pepper %.2f %% -> %.2f %%)' % (cst['colours'], cst['before_all'] * 100,
+          cst['lone_all'] * 100, cst['before_pepper'] * 100, cst['lone_pepper'] * 100))
+    pal, inv = np.unique(img.reshape(-1, 3), axis=0, return_inverse=True)
+    idx = inv.reshape(H, W); img = pal[idx].astype(int)
+    L = rgb2lab(pal[idx] / 255.0)[..., 0]
+    cleaned = img.copy()
+    Image.fromarray(cleaned.astype(np.uint8)).save(os.path.join(TDIR, 'still_clean.png'))
     # the logo and the tagline plate as their own layers (logo.py); the painting's old ones painted out of the base
     logo_lay, patched, logo_pm = LG.build(img)
     img = patched.copy()
@@ -107,13 +123,24 @@ def main():
     lua.append('  bird = { x = %d, y = %d, w = %d, h = %d },' % (bx0, by0, fw, fh))
     # ---- the logo layer and its shine (the fill brightened), the two tagline plates
     lx0, ly0, lx1, ly1 = LG.BOX
-    for mode in ('bands', 'gradient', 'steps6'):                     # three fills of the same letters (title.lua T.LOGO)
-        lay_m = logo_lay if mode == 'bands' else LG.build(still, mode)[0]
+    lua.append('  sparkle_points = {')
+    for mode in ('clean', 'bands', 'gradient', 'steps6'):            # the logo's versions (title.lua T.LOGO)
+        if mode == 'clean': lay_m, nst = LG.clean(still); print('clean logo: outline runs straightened', nst)
+        else: lay_m = logo_lay if mode == 'bands' else LG.build(still, mode)[0]
         reg = lay_m[ly0:ly1, lx0:lx1]
         save(reg[..., :3], 'logo_%s.png' % mode, reg[..., 3])
-        fill = (reg[..., 3] > 0) & (reg[..., 0] > 150)
+        fill = (reg[..., 3] > 0) & (reg[..., 0] > 150) & (reg[..., 0].astype(int) > reg[..., 2].astype(int) + 60)
+        # where the stars may pop: the letters' upper edges (a fill pixel with no fill above it) and the
+        # highlight streaks (the lightest yellow), every 3rd one, above y 72 (clear of Pepper and the plate)
+        lightest = (reg[..., 0] > 250) & (reg[..., 1] > 215)
+        up = np.zeros_like(fill); up[1:] = fill[:-1]
+        cand = np.nonzero((fill & ~up) | (fill & lightest))
+        pts = sorted({(int(x) + lx0, int(y) + ly0) for y, x in zip(*cand) if y + ly0 < 72})[::3]
+        lua.append('    %s = { %s },' % (mode, ', '.join('{ %d, %d }' % p for p in pts)))
         hi = reg[..., :3].astype(float) + (np.array([255, 248, 214]) - reg[..., :3]) * 0.6
         save(hi, 'logo_hi_%s.png' % mode, fill * 255)
+    lua.append('  },')
+    Image.fromarray(ST.sheet()).save(os.path.join(OUT, 'stars.png'))
     lua.append('  logo = { x = %d, y = %d, w = %d, h = %d },' % (lx0, ly0, lx1 - lx0, ly1 - ly0))
     for name, text in (('caps', 'THE CITY DOG ADVENTURER'), ('lower', 'The City Dog Adventurer')):
         p, info = LG.plate(text); save(p[..., :3], 'tagline_%s.png' % name, p[..., 3])
@@ -128,7 +155,7 @@ def main():
     for k in (0, 18, 21):
         r0 = register(still.astype(np.uint8), vf[k], near=reg0, scales=np.arange(3.38, 3.52, 0.01) if reg0 is None else np.arange(reg0[0] - 0.02, reg0[0] + 0.021, 0.01))
         reg0 = r0; vs[k] = vsample(vf[k], r0[0], r0[1], r0[2], (BX, BY, BX + BW, BY + BH)); print('t2 frame', k, 'registered: scale %.2f at %.1f, %.1f, ncc %.2f' % r0)
-    crop_idx = idx[BY:BY + BH, BX:BX + BW]; crop_rgb = still[BY:BY + BH, BX:BX + BW].astype(float)
+    crop_idx = idx[BY:BY + BH, BX:BX + BW]; crop_rgb = cleaned[BY:BY + BH, BX:BX + BW].astype(float)
     mouth = [idx.copy()]
     for k in (18, 21):
         o, m = HF.pant(crop_idx, crop_rgb, vs[k]); f = idx.copy(); f[BY:BY + BH, BX:BX + BW] = o; mouth.append(f)

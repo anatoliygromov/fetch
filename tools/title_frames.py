@@ -1,7 +1,7 @@
 """tools/title_frames.py OUT_DIR: runs `love riverwalk --titleshots` headless and writes the title and menu frames
 (320 x 240, drawn straight to a canvas by riverwalk/tests_titleui.lua) to OUT_DIR, each also at 3x in colour and in
 greyscale (<name>_3x.png, <name>_3x_grey.png), with its placed bodies (<name>.txt, for tools/layout_qa8.py), and the
-title loop as an animated GIF at 2x (title_loop_2x.gif, 8 fps)."""
+title loop as an animated GIF at 2x (title_loop_2x.gif, 12 fps)."""
 import os, sys, subprocess, tempfile, glob, shutil
 from PIL import Image
 
@@ -25,6 +25,6 @@ for f in sorted(glob.glob(f'{data}/love/*/t_*.png')):
     print('frame', n)
 if gif:
     big = [g.resize((640, 480), Image.NEAREST) for g in gif]
-    big[0].save(f'{out}/title_loop_2x.gif', save_all=True, append_images=big[1:], duration=125, loop=0, optimize=False, disposal=1)
+    big[0].save(f'{out}/title_loop_2x.gif', save_all=True, append_images=big[1:], duration=83, loop=0, optimize=False, disposal=1)
     print('gif', len(big), 'frames')
 shutil.rmtree(data, ignore_errors=True)

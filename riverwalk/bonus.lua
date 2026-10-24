@@ -314,7 +314,7 @@ function B:drawScene()
     local y = math.floor(pp.y - 22 - k * 16)
     local x0, y0, x1, y1 = self:pepperRect()
     if pp.x > x0 - 20 and pp.x < x1 + 20 and y + 7 > y0 then y = math.floor(y0 - 9 - k * 10) end       -- above her
-    U.center(s, pp.x, y, 1, pp.air and U.GOLD or U.WHITE)
+    U.sayC(7, pp.air and "gold" or "cream", s, pp.x, y, "pop")        -- (ui step 3: the v8 small font)
   end
   lg.setColor(1, 1, 1, 1)
 end
@@ -324,22 +324,36 @@ function B:draw()
   local F = require("flow")
   U.bonusStatus({ time = self.time, catches = self.catches, need = B.LIFE_AT, points = self.points })
   local avoid = { self:pepperRect() }
+  -- (ui step 3) the cards in the kit: the warm dim, the gold panel, the wide ribbon, the 13 px font, the strip;
+  -- READY / GO / the last seconds / TIME UP in the 17 px gold font over the scene
+  local function big(s3, y) U.sayC(17, "gold", s3, 159.5, y, "big") end
   if self.phase == "intro" then
-    U.dim()
-    local y = F.placeY(50, 220, 50, 92, avoid)
-    U.box(50, y, 220, 92)
-    U.center("FETCH FRENZY!", 160, y + 8, 2, U.GOLD)
-    U.center("A GOLDEN BONE BONUS", 160, y + 28, 1)
-    U.center("CATCH WHAT MIA THROWS!", 160, y + 44, 1)
-    U.center(("%d CATCHES: EXTRA LIFE"):format(B.LIFE_AT), 160, y + 58, 1, U.GOLD)
-    U.center(B.NAMES[self.variant], 160, y + 74, 1, U.RIM)
-    if self.t > 0.5 and (self.t % 1.1) < 0.75 then U.prompt("PRESS ANY BUTTON") end
-  elseif self.phase == "ready" then
-    U.center(self.t < 0.8 and "READY..." or "GO!", 160, 60, 3, U.GOLD)
-  elseif self.phase == "play" and self.time <= 5 then
-    U.center(tostring(math.ceil(self.time)), 160, 40, 3, U.GOLD)       -- the last seconds, big
-  elseif self.phase == "timeup" then
-    U.center("TIME UP!", 160, 60, 3, U.GOLD)
+    U.dimWarm()
+    local w, h = 240, 126
+    local y = F.cardTop(40, w, h, avoid)
+    U.panel(40, y + 10, w, h - 10)
+    U.ribbon("ribbon_wide", 159.5, y)
+    U.sayC(13, "ink", "FETCH FRENZY!", 159.5, y + 2, "title")
+    U.sayC(7, "cream", "A GOLDEN BONE BONUS", 159.5, y + 25, "subtitle")
+    U.sayC(17, "gold", B.NAMES[self.variant], 159.5, y + 36, "name")
+    local rows = F.wrap(13, "CATCH WHAT MIA THROWS!", 210)
+    for i, r in ipairs(rows) do U.sayC(13, "cream", r, 159.5, y + 58 + (i - 1) * 16, "story") end
+    local gy = y + 58 + #rows * 16 + 1                             -- the goal: the ball, the catches, Pepper's head +1
+    local bw, bh = U.body("ball")
+    local gs = ("%d CATCHES"):format(B.LIFE_AT)
+    local gw = U.sayW(7, gs)
+    local hw, hh = U.body("head")
+    local tot = bw + 3 + gw + 8 + U.sayW(7, "+1") + 3 + hw
+    local x = math.floor(159.5 - (tot - 1) / 2 + 0.5)
+    local cy = gy + 12
+    U.put("ball", x, math.floor(cy - (bh - 1) / 2 + 0.5), "gicon"); x = x + bw + 3
+    x = x + U.say(7, "gold", gs, x, math.floor(cy - 4 + 0.5), "goal") + 8
+    x = x + U.say(7, "gold", "+1", x, math.floor(cy - 4 + 0.5), "goal") + 3
+    U.put("head", x, math.floor(cy - (hh - 1) / 2 + 0.5), "gicon")
+    if self.t > 0.5 then U.strip({ { "ok", "GO" } }) end
+  elseif self.phase == "ready" then big(self.t < 0.8 and "READY..." or "GO!", 60)
+  elseif self.phase == "play" and self.time <= 5 then big(tostring(math.ceil(self.time)), 44)       -- the last seconds, big
+  elseif self.phase == "timeup" then big("TIME UP!", 60)
   elseif self.phase == "result" or self.phase == "done" then
     self:drawResult(avoid)
   end
@@ -348,29 +362,39 @@ function B:draw()
   end
 end
 
+-- the result: a show like the tally's (the lines slide in), EXTRA LIFE! with Pepper's head, or the goal and GOOD TRY
 function B:drawResult(avoid)
   local F = require("flow")
   local life = self.catches >= B.LIFE_AT
-  local w, h = 220, 104
-  local y, clear = F.placeY(50, w, 24, h, avoid)
-  if not clear then U.dim() end
-  U.box(50, y, w, h)
+  local X, w, h = 46, 228, 124
+  local y = F.cardTop(X, w, h, avoid)
+  U.dimWarm()
+  U.panel(X, y + 10, w, h - 10)
+  U.ribbon("ribbon_wide", 159.5, y)
   local bounce = (self.t < 0.6) and math.floor(math.sin(self.t * 20) * 2) or 0
-  U.center("FETCH FRENZY!", 160, y + 6 + bounce, 2, U.GOLD)
-  local L, R = 70, 250
+  U.sayC(13, "ink", "FETCH FRENZY!", 159.5, y + 2 + bounce, "title")
   local rows = { { "CATCHES", ("%d"):format(self.catches) }, { "IN THE AIR", tostring(self.air) }, { "POINTS", tostring(self.points) } }
+  local th7, th13 = U.sayH(7), U.sayH(13)
   for i, rr in ipairs(rows) do
-    if self.t > 0.2 + i * 0.25 then U.text(rr[1], L, y + 20 + i * 11, i == 3 and U.GOLD or U.WHITE); U.text(rr[2], R - 6 * #rr[2], y + 20 + i * 11, i == 3 and U.GOLD or U.WHITE) end
-  end
-  if self.t > 1.2 then
-    if life then
-      if math.floor(self.t * 3) % 2 == 0 then U.center("EXTRA LIFE!", 160, y + 66, 2, U.GOLD) end
-      U.dog(232, y + 70, U.GOLD, 1); U.text("+1", 245, y + 69, U.GOLD)
-    else
-      U.center(("%d CATCHES FOR AN EXTRA LIFE"):format(B.LIFE_AT), 160, y + 66, 1, U.RIM)
-      U.center("GOOD TRY, PEPPER!", 160, y + 77, 1)
+    if self.t > 0.2 + i * 0.25 then
+      local cy = y + 30 + (i - 1) * 17 + (th13 - 1) / 2
+      U.say(7, "cream", rr[1], X + 30, math.floor(cy - (th7 - 1) / 2 + 0.5), "tlabel")
+      U.say(13, i == 3 and "gold" or "cream", rr[2], X + w - 30 - U.sayW(13, rr[2]) + 1, math.floor(cy - (th13 - 1) / 2 + 0.5), "tvalue")
     end
   end
-  if self.t > 1.5 and (self.t % 1.1) < 0.75 then U.center("PRESS ANY BUTTON", 160, y + 90, 1) end
+  if self.t > 1.2 then
+    local cy = y + 96
+    if life then
+      local hw, hh = U.body("head")
+      local tw = U.sayW(13, "EXTRA LIFE!")
+      local x = math.floor(159.5 - (hw + 4 + tw - 1) / 2 + 0.5)
+      U.put("head", x, math.floor(cy - (hh - 1) / 2 + 0.5), "head")
+      if math.floor(self.t * 3) % 2 == 0 then U.say(13, "gold", "EXTRA LIFE!", x + hw + 4, math.floor(cy - (th13 - 1) / 2 + 0.5), "life") end
+    else
+      U.sayC(13, "cream", "GOOD TRY, PEPPER!", 159.5, math.floor(cy - (th13 - 1) / 2 + 0.5) - 4, "try")
+      U.sayC(7, "dim", ("%d CATCHES FOR AN EXTRA LIFE"):format(B.LIFE_AT), 159.5, math.floor(cy + 8), "goal")
+    end
+  end
+  if self.t > 1.5 then U.strip({ { "ok", "OK" } }) end
 end
 return B

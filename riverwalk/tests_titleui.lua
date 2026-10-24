@@ -30,9 +30,10 @@ return function(api)
     shot("title_lower_idle", function() Title.draw(0.9, nil, false) end)
     shot("title_lower_press", function() Title.draw(1.3, nil, false) end)
     Title.TAGLINE = "caps"
-    for _, m in ipairs({ "bands", "steps6" }) do Title.LOGO = m; shot("title_logo_" .. m, function() Title.draw(0.9, nil, false) end) end
+    for _, m in ipairs({ "bands", "steps6", "gradient" }) do Title.LOGO = m; shot("title_logo_" .. m, function() Title.draw(0.9, nil, false) end) end
     Title.LOGO = "gradient"; Title.TAGLINE = "lower"
     shot("title_gradient_lower", function() Title.draw(1.3, nil, false) end)
+    Title.LOGO = "clean"; shot("title_clean_lower", function() Title.draw(1.3, nil, false) end)
     Title.TAGLINE = "caps"
     for _, dev in ipairs({ "pad", "key" }) do
       I.last = dev
@@ -41,9 +42,8 @@ return function(api)
       shot("controls_" .. dev, function() F.drawControls(3.0) end)
     end
     F.hard = true; F.opts.sel = 2; I.last = "pad"; shot("options_hard_on", function() F.drawOptions(3.0) end); F.hard = false
-    -- the title loop: 8 fps from 2.0 s for 4.5 s (a blink falls in it), the picture only plus PRESS START
-    local k = 0
-    for i = 0, 35 do shot(("gif_%03d"):format(k), function() Title.draw(2.0 + i / 8, nil, false) end); k = k + 1 end
+    -- the title loop: 12 fps from 2.0 s for 9 s (blinks, about ten sparkles and two shine sweeps fall in it)
+    for i = 0, 107 do shot(("gif_%03d"):format(i), function() Title.draw(2.0 + i / 12, nil, false) end) end
     print("TITLESHOTS " .. love.filesystem.getSaveDirectory()); io.stdout:flush()
     love.event.quit()
   end
