@@ -1,54 +1,35 @@
 # FETCH! Status
 
-As of Sat 24 Oct 2026, 08:30. Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
+As of Sat 24 Oct 2026, 14:15. Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
 
 ## Main
 
-- `main` becomes **v0.6** tonight. It is `round1` (9d29233) plus:
-  - `art/freefix`, with the approved River Walk building, cafe and gable kept as they were;
-  - `art/haze`, with Downtown facades faded at 0.25.
-- `r8/art` and `title/pixels` are closed. Kept as reference, not merged.
+- `main` is **v0.6** (1b5a30f, Fri 20:15). Nothing merged since.
 
-## Night of 23 to 24 Oct (0 credits, about 1.4M tokens in the tracks, budget 5M)
+## Integration branch: `prod/integrate` (27be9b4)
 
-Pushed, not merged, each waiting for the owner:
-- `ui/hud-v8` (961aba3): HUD, pause and tally rebuilt to the owner's three targets; fonts 7, 13 and 17 px on the grid; smooth warm pause dim. Layout QA all pass. Cards: out_ui/card_hud, card_pause, card_tally. Open: title menu, level select and story panels still in the old blue style.
-- `art/pilot-oldtown` (d942274): Downtown's Old Town row, all seven houses rebuilt from shared stamped parts (tools/build_oldtown.py). Crisp; flatter than the old row (a shade band and lintels are a cheap second pass).
-- `art/placement` (60d0388): placement audit of levels 1 to 3 (docs/placement_audit.md). Fixed: River Walk road under the pier; City Park lamps, play tower post and deck, low bough; Downtown fronts, roof kit and spire built from stamped parts, houses under the floating high road, lamps on their ledges. 17 findings on approved art or design are listed for the owner.
-- Aseprite runs in the cloud workspace (headless, scripting), at /home/claude/ase/aseprite/build/bin/aseprite.
-- Two unverified drafts found uncommitted in the worktrees were set aside, not merged.
+Everything waiting, in one playable build (`FETCH_PREVIEW_24oct_g.love` on the owner's Mac). All checks pass: PEPPER UNCHANGED, flow 125/125, Tiled, QA 0 problems on all six levels.
+- `ui/hud-v8`: every screen in the new UI (title, menu, options, controls, level select cards, intro, talk panel, hint bubbles, pause, tally show, story, game over, ending, Fetch Frenzy, sound toast). No old style left.
+- `ui/panel-hud`: no HUD row under centred cards.
+- `ui/review-fixes`: from an independent review of all 65 screens. Locked cards show the real picture, empty sockets for medals not won, story and Mia lines at most 6 words a child knows (list: CHANGELOG), sniff taught by a hint bubble, Pepper in her colours on hint pictures, FETCH FRENZY! the only bonus name, ALL CAUGHT!, pieces inside panels, smaller HUD score. `ui/umlaut`: SÖDER with a capital Ö.
+- `art/pilot-oldtown`, `art/placement`, `r9/levels` (Rooftops 23 screens, Night Harbour ball fix), `ops/regroup` (playtest kit).
+- Title picture: the material cleanup (a1e0e15). Not taken: the hand shading pass on `ui/title-sheen` (owner: bad shading). Tried and not better: `art/title-light` (keeps the shading but stays mottled).
 
-## Tracks running
+## Waiting for the owner (max 3)
 
-- **Levels** (a separate session, its own branch off `round1`): the Night Harbour ball bug (ball knocked out at the slipway returns to x 240) and Rooftops length (58 s against 60 to 90 s). It must rebase on the new main before its pull request.
+1. Play `_g`. Then merge `prod/integrate` into main as v0.7? (recommended: yes, after his play).
+2. Logo and tagline: which logo (clean, gradient, bands, steps6) and which tagline (capitals or lowercase).
+3. Child playtest with the kit (`docs/playtest_kit.md`).
 
-## Waiting for the owner
+## Known, next
 
-1. Approve the Aseprite MCP connection.
-2. Child playtest, Sat 24 Oct, 20 minutes, on the current build.
-3. The gold level art pilots: the red cyclist re-cut and the Old Town house from stamped parts.
-
-## Next 7 days
-
-| Day | Work | Owner's part |
-| --- | --- | --- |
-| Sat 24 Oct | BIBLE and STATUS in the repo; release Action on main; card script enforces the gates; child test | Yes or no on merges; save the asset-gates skill; play with his daughter |
-| Sun 25 to Wed 28 Oct | Two-piece proof through the gates; haze per layer; free fixes; Night Harbour bug and Rooftops length | The board, 30 min a day |
-| Thu 29 to Fri 30 Oct | Child test fixes, UI wired in, juice checklist; Aseprite pilot on one Old Town house | Approve or reject the pilot |
-| Fri 31 Oct | Merge to main builds a Release; retro with measured rates | Play the build; 15-min retro |
+- River Walk scale calls from the placement audit (houses, lamps, railing a third to half of true size).
+- Greybox labels still show in Söder Hill and Night Harbour levels (they go with their art).
+- `layout_qa8.py` crashes on pause frames (expects the old row boxes): update it.
+- Two producer sessions worked the same branches on 24 Oct. From now on the producer is the session using the `fetch-game-manager` skill. The nightly run (22:39) uses `night/*` branches only.
 
 ## Credits
 
-- SpriteCook: about 1,078 (before today's spend; none logged today). Ledger: `docs/art_ledger.md`.
-- Artlist: about 42,450.
-
-## Open decisions
-
-- UI kit v6: approve, then wire into hud.lua, flow.lua and talk.lua.
-- Save the `fetch-asset-gates` skill.
-- Title screen route (native grid in Aseprite first).
-- Release: commercial-use terms for SpriteCook and Artlist art; Gromov Design AB or personal; a findable name.
-- Metro: open wagon or carriage (after the demo).
-- Music route (tracker files), later.
+- SpriteCook: about 1,078. Artlist: about 42,450. 0 spent on 24 Oct.
 
 How to update this file: rewritten by the producer session at the end of each working session.
