@@ -396,6 +396,15 @@ houses now) is done here.
 - **Checks:** check_pepper PEPPER UNCHANGED (4591 steps), check_flow 116 of 116, check_tiled PASSED (0 FAIL),
   `--qa` downtown_tall and citypark_tall 0 problems, the curve (`check_curve.py --order riverwalk,citypark_tall,
   downtown_tall,rooftops,soder,night --seeds 10`, fresh out) T1-T4 PASS with the same DI numbers as r8/levels.
+## Branch `r9/night-ball`: a knocked ball that rolls off a boat comes back where Pepper was hit (23 Oct)
+Built on `round1`. Fixes the Night Harbour `--qa` problem left open in docs/playtest/curve_r7.md.
+- **The bug:** hit at the quay's edge before the slipway (x 3812) while carrying, the ball landed on the moving
+  slipway boat. Landing cleared its knock spot (b.knock), so when the boat rowed out from under it, it fell in the
+  water and went back to the ball's home: x 240 with no lamp lit (the level's start), else the jetty at x 3020.
+- **The fix** (stage.lua only): a knocked ball that lands on a mover (a boat or a lift) keeps its knock spot, so
+  it comes back on the quay by where she was hit (x 3788). The knock spot is cleared when Pepper picks the ball up.
+- Checks: `--qa` 0 problems on night (was 1), riverwalk, citypark_tall, downtown_tall, soder; `--physics` night
+  40 of 40, riverwalk 54 of 54; check_flow 116 of 116; check_tiled passes; PEPPER UNCHANGED.
 
 ## Branch `r8/levels`: the tall City Park and Downtown in the game, the cargo bike, hooks for the first art batch (23 Oct)
 Built on `round1`. The owner's decisions of 23 Oct: D2 (the tall City Park and Downtown replace the flat ones) and D1
