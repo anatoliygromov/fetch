@@ -28,7 +28,7 @@
 --   15 Crate stack    hop up and over
 --   16 The end        the ball stops against the railing; Mia comes down the stairs. Give it to her: GOOD GIRL!
 local L = {}
-L.name = "SODER HILL"
+L.name = "SÖDER HILL"
 L.number = 5
 L.title = "Pepper: Soder Hill"
 L.scenery = "greybox"
@@ -124,9 +124,9 @@ L.barrels = {
 -- the ball starts where Mia dropped it at the top of the hill (it rolls at once); she waits at the bottom
 L.ball = { x = 140, y = 112 }
 L.girl = { x = 5000, y = 208 }
-L.ballBack = "THE BALL IS BACK BY THE RAILING"
+L.ballBack = "THE BALL IS BY THE FENCE!"
 L.pickupSay = "BRING ME THE BALL!"
-L.outro = { "IT GOT DARK ON THE WAY", "HOME. A FOX TOOK THE BALL!" }
+L.outro = { "NIGHT! A FOX TOOK THE BALL!" }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
@@ -177,5 +177,5 @@ L.hints = {
   { x0 = 4700, x1 = 5120, text = "BRING ME THE BALL!", need = "ball" },
 }
 
-L.intro = { "LEVEL 5", "SODER HILL", "THE BALL ROLLED DOWN THE HILL!", "CATCH IT, PEPPER! KEEP UP!" }
+L.intro = { "LEVEL 5", "SÖDER HILL", "CATCH THE ROLLING BALL!" }
 return L

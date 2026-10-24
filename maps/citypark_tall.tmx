@@ -9,12 +9,12 @@
   <property name="magpie.flee" type="int" value="110"/>
   <property name="magpie.fleeWalk" type="int" value="40"/>
   <property name="art" value="park"/>
-  <property name="ballBack" value="THE BALL IS BACK BY THE LAMP"/>
+  <property name="ballBack" value="THE BALL IS BY THE LAMP!"/>
   <property name="foot" type="int" value="328"/>
-  <property name="intro" value="{ &quot;LEVEL 2&quot;, &quot;CITY PARK&quot;, &quot;A MAGPIE STOLE MIA'S BALL!&quot;, &quot;UP IN THE TREES OR DOWN ON THE PATH&quot; }"/>
+  <property name="intro" value="{ &quot;LEVEL 2&quot;, &quot;CITY PARK&quot;, &quot;A BIRD TOOK THE BALL!&quot; }"/>
   <property name="name" value="CITY PARK"/>
   <property name="number" type="int" value="2"/>
-  <property name="outro" value="{ &quot;NOON IN TOWN. THE BALL&quot;, &quot;ROLLED AWAY ACROSS THE PLAZA...&quot; }"/>
+  <property name="outro" value="{ &quot;THE BALL ROLLED INTO TOWN!&quot; }"/>
   <property name="scenery" value="greybox"/>
   <property name="time" type="int" value="300"/>
   <property name="title" value="Pepper: City Park, tall"/>
@@ -1240,7 +1240,7 @@
   <object id="222" type="hints" x="2560" y="-210" width="320" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
-    <property name="text" value="IT FLEW UP TO ITS NEST IN THE BIG OAK!"/>
+    <property name="text" value="IT FLEW UP THE BIG TREE!"/>
     <property name="need" value="magpie"/>
    </properties>
   </object>
@@ -1388,7 +1388,7 @@
   <object id="240" type="hints" x="300" y="-30" width="2580" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
-    <property name="text" value="THE MAGPIE STILL HAS MY BALL!"/>
+    <property name="text" value="THE BIRD STILL HAS MY BALL!"/>
     <property name="need" value="magpie"/>
    </properties>
   </object>

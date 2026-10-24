@@ -64,6 +64,7 @@ return {
   pic_pickup = { 0, 4, 29, 21 },
   pic_run = { 0, 9, 29, 21 },
   pic_sneak = { 0, 1, 29, 21 },
+  pic_sniff = { 0, 12, 29, 21 },
   pic_stay = { 0, 0, 29, 21 },
   ribbon_menu = { 0, 1, 145, 23 },
   ribbon_pause = { 0, 1, 113, 23 },

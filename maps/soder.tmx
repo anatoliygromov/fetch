@@ -6,12 +6,12 @@
  <properties>
   <property name="bikes" value="{}"/>
   <property name="movers" value="{}"/>
-  <property name="ballBack" value="THE BALL IS BACK BY THE RAILING"/>
+  <property name="ballBack" value="THE BALL IS BY THE FENCE!"/>
   <property name="greyStyle" value="town"/>
-  <property name="intro" value='{ "LEVEL 5", "SODER HILL", "THE BALL ROLLED DOWN THE HILL!", "CATCH IT, PEPPER! KEEP UP!" }'/>
-  <property name="name" value="SODER HILL"/>
+  <property name="intro" value="{ &quot;LEVEL 5&quot;, &quot;SÖDER HILL&quot;, &quot;CATCH THE ROLLING BALL!&quot; }"/>
+  <property name="name" value="SÖDER HILL"/>
   <property name="number" type="int" value="5"/>
-  <property name="outro" value='{ "IT GOT DARK ON THE WAY", "HOME. A FOX TOOK THE BALL!" }'/>
+  <property name="outro" value="{ &quot;NIGHT! A FOX TOOK THE BALL!&quot; }"/>
   <property name="pickupSay" value="BRING ME THE BALL!"/>
   <property name="scenery" value="greybox"/>
   <property name="scroll.ballStop" type="int" value="5088"/>

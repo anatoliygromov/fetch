@@ -358,7 +358,7 @@ function St:update(dt, presses)
       b.x, b.y, b.state, b.on, b.knock = b.knock.x, b.knock.y, "rest", nil, nil; S.play("land")
       if self:ballLost() then local h = self:homeNear(self.check.x, self.check.y); b.x, b.y = h.x, h.y end
     elseif self.ballBackT <= 0 then
-      b.x, b.y, b.state = b.home.x, b.home.y, "rest"; self:say(b.homeSay or self.def.ballBack or "THE BALL IS BACK ON THE BOAT", 2.2)
+      b.x, b.y, b.state = b.home.x, b.home.y, "rest"; self:say(b.homeSay or self.def.ballBack or "THE BALL IS ON THE BOAT!", 2.2)
       if self:ballLost() then b.home = self:homeNear(self.check.x, self.check.y); b.x, b.y = b.home.x, b.home.y end   -- never a home it can't rest at
     end
   end
@@ -384,7 +384,7 @@ function St:update(dt, presses)
         self.hearts = self.hearts + 1; self.pops[#self.pops + 1] = { x = l.x, y = l.y + lift, t = 0 }; S.play("heart")
       else S.play("checkpoint") end
       if p.carrying and self.def.ballHomeAtLamps then                -- L.ballHomeAtLamps: a lost ball comes back here
-        self.ball.home = self:homeNear(l.x, l.y); self.ball.homeSay = "THE BALL IS BACK BY THE LAMP"
+        self.ball.home = self:homeNear(l.x, l.y); self.ball.homeSay = "THE BALL IS BY THE LAMP!"
       end
     end
   end
@@ -493,7 +493,7 @@ function St:updateCat(dt)
     c.vy = c.vy + 560 * dt; c.x = c.x + c.vx * dt
     local ny = c.y + c.vy * dt
     local g = w:groundAt(c.x, w.height > 240 and c.y - 34 or nil)   -- (a tall world: the ground below it)
-    if c.vy > 0 and g and ny >= g then c.y = g; c.state = "run"; self:say("THE CAT RAN OFF! GET THE BALL", 2.4)
+    if c.vy > 0 and g and ny >= g then c.y = g; c.state = "run"; self:say("THE CAT RAN! GET THE BALL!", 2.4)
     else c.y = ny end
   elseif c.state == "run" then
     c.x = c.x + c.dir * 170 * dt

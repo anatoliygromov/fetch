@@ -305,6 +305,7 @@ PICTURES = {
     'give':   [GROUND, ('stand', 0, 9), ('ball', 15, 4), ('girl', 22, 9)],
     'bark':   [GROUND, ('stand', 1, 9), ('wave', 17, 8, WAVE_S), ('wave', 21, 7, WAVE_L)],
     'sneak':  [GROUND, ('stand', 13, 9), ('dot', 2, 16), ('dot', 7, 16)] + ZED,
+    'sniff':  [GROUND, ('low', 1, 13), ('dot', 20, 15), ('dot', 23, 12), ('dot', 25, 15)],   # (review fix 3) nose down, scent dots
 }
 
 def build(out):

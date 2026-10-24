@@ -124,10 +124,10 @@ L.fox = { x = 240, y = 184, flee = 120, bark = 96,
     { x = 2096, y = 184, name = "CRATES" },
     { x = 3020, y = 184, name = "JETTY" },
   } }
-L.ballBack = "THE BALL IS BACK UNDER THE JETTY"
+L.ballBack = "THE BALL IS UNDER THE DOCK!"
 L.pickupSay = "BRING ME THE BALL, PEPPER!"
 L.girl = { x = 4400, y = 184 }
-L.outro = { "HOME AT LAST.", "MIA HUGGED PEPPER GOOD NIGHT." }
+L.outro = { "HOME AT LAST!", "GOOD NIGHT, PEPPER!" }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points. In the dark they show only in a light or
 -- while Pepper sniffs.
@@ -175,12 +175,12 @@ L.hints = {
   { x0 = 0,    x1 = 4480, btn = "y",     text = "BARK!",           need = "foxnear" },
   { x0 = 0,    x1 = 4480, btn = "x",     text = "PICK UP",         need = "nearball" },
   { x0 = 4320, x1 = 4480, btn = "x",     text = "GIVE",            need = "ball" },
-  { x0 = 0,    x1 = 4480, text = "SNIFF! HOLD L1 OR Q",          need = "sniffhere" },
-  { x0 = 300,  x1 = 760,  text = "SNIFF! HOLD L1 OR Q",          need = "foxhidden" },
+  { x0 = 0,    x1 = 4480, btn = "sniff", text = "HOLD: SNIFF",  need = "sniffhere" },
+  { x0 = 300,  x1 = 760,  btn = "sniff", text = "HOLD: SNIFF",  need = "foxhidden" },
   { x0 = 340,  x1 = 400,  btn = "a",     text = "TAP: HOP" },
-  { x0 = 1270, x1 = 1320, text = "JUMP ON THE ROWBOAT!" },
-  { x0 = 960,  x1 = 1160, text = "OLD PLANKS! KEEP MOVING!" },
-  { x0 = 2240, x1 = 2520, text = "OLD PLANKS! KEEP MOVING!" },
+  { x0 = 1270, x1 = 1320, text = "JUMP ON THE LITTLE BOAT!" },
+  { x0 = 960,  x1 = 1160, text = "WOBBLY WOOD! KEEP GOING!" },
+  { x0 = 2240, x1 = 2520, text = "WOBBLY WOOD! KEEP GOING!" },
   { x0 = 3700, x1 = 3800, text = "WAIT FOR THE BOAT!",         need = "ball" },
   { x0 = 0,    x1 = 400,  text = "A FOX TOOK MY BALL!",        need = "fox" },
   { x0 = 400,  x1 = 4480, text = "SNIFF OUT THE FOX!",         need = "foxhidden" },
@@ -188,5 +188,5 @@ L.hints = {
   { x0 = 3100, x1 = 4480, text = "GO BACK FOR THE BALL!",      need = "dropped" },
 }
 
-L.intro = { "LEVEL 6", "NIGHT HARBOUR", "A FOX SNATCHED THE BALL!", "SNIFF IT OUT: HOLD L1 OR Q" }
+L.intro = { "LEVEL 6", "NIGHT HARBOUR", "A FOX TOOK THE BALL!" }
 return L

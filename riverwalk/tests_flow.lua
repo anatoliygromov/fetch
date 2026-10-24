@@ -108,7 +108,7 @@ return function(api)
           local words = select(2, h.text:gsub("%a+", ""))                  -- "+" is not a word
           local shown = select(2, table.concat(L.rows, " "):gsub("%a+", ""))     -- (step 3: the words the bubble shows)
           if L.x0 < 0 or L.x1 > 320 or #L.rows > (h.btn and 2 or 3) or (h.btn and (words > 3 or shown > 3))
-            or (h.btn and not ({ a = 1, b = 1, x = 1, y = 1, down = 1, right = 1 })[h.btn]) or h.text:find("\226\128\148")
+            or (h.btn and not ({ a = 1, b = 1, x = 1, y = 1, down = 1, right = 1, sniff = 1 })[h.btn]) or h.text:find("\226\128\148")
             or (h.btn and not T.picFor({ btn = h.btn, text = h.text })) then bad[#bad + 1] = l.name .. ": " .. h.text end
         end
       end
@@ -134,7 +134,7 @@ return function(api)
   end))
   add(check("hints: the magpie line shows (City Park)", function()
     local s = St.new(require("level.citypark")); s:resetMagpie(6); s.pepper.x = 1900
-    local h = s:hint(); return h and h.who == "girl" and h.text:find("MAGPIE") ~= nil, h and h.text or "-"
+    local h = s:hint(); return h and h.who == "girl" and h.text:find("BIRD STILL") ~= nil, h and h.text or "-"
   end))
   add(check("hints: GO BACK: BARK AT THE CAT shows (Downtown)", function()
     local s = St.new(require("level.downtown")); s.pepper.x = 1900
@@ -207,7 +207,7 @@ return function(api)
         { act = function() I.force = {} end })
       -- the girl's line: the magpie still has the ball, far off
       add({ act = function() tp(1900, 184 + dy) end }, wait(0.5), check("talk: the girl says the magpie line", function()
-        local l = said(); return l and l.who == "girl" and l.text:find("MAGPIE") ~= nil, l and l.text or "nothing" end), shot("u2_girl"))
+        local l = said(); return l and l.who == "girl" and l.text:find("BIRD STILL") ~= nil, l and l.text or "nothing" end), shot("u2_girl"))
       add({ act = function() tp(1600, 216 + dy) end }, wait(0.1))
     end
     if name == "riverwalk" then

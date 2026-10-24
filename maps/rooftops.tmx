@@ -7,16 +7,16 @@
   <property name="bikes" value="{}"/>
   <property name="movers" value="{}"/>
   <property name="magpie.bark" type="int" value="95"/>
-  <property name="magpie.dropSay" value="THE GULL LET GO OF THE BALL!"/>
+  <property name="magpie.dropSay" value="THE SEAGULL DROPPED THE BALL!"/>
   <property name="magpie.flee" type="int" value="0"/>
   <property name="magpie.fleeWalk" type="int" value="0"/>
   <property name="magpie.look" value="gull"/>
-  <property name="ballBack" value="THE BALL IS BACK BY THE LAMP"/>
+  <property name="ballBack" value="THE BALL IS BY THE LAMP!"/>
   <property name="ballHomeAtLamps" type="bool" value="true"/>
-  <property name="intro" value='{ "LEVEL 4", "ROOFTOPS", "A GULL TOOK THE BALL TO ITS NEST!", "MIA: MEET ME AT THE ROOF CAFE!" }'/>
+  <property name="intro" value="{ &quot;LEVEL 4&quot;, &quot;ROOFTOPS&quot;, &quot;THE SEAGULL HAS THE BALL!&quot; }"/>
   <property name="name" value="ROOFTOPS"/>
   <property name="number" type="int" value="4"/>
-  <property name="outro" value='{ "AFTERNOON ON SODER THE BALL", "SLIPPED AND ROLLED DOWN THE HILL..." }'/>
+  <property name="outro" value="{ &quot;THE BALL ROLLED DOWN THE HILL!&quot; }"/>
   <property name="scenery" value="greybox"/>
   <property name="time" type="int" value="420"/>
   <property name="title" value="Pepper: Rooftops (greybox)"/>
@@ -1458,7 +1458,7 @@
   <object id="267" type="hints" x="1200" y="900" width="80" height="56">
    <properties>
     <property name="box" value="x0,x1,minY,maxY"/>
-    <property name="text" value="STAND ON THE FAN: STEAM LIFTS YOU!"/>
+    <property name="text" value="STAND ON THE FAN!"/>
    </properties>
   </object>
   <object id="268" type="hints" x="1520" y="820" width="52" height="40">
@@ -1470,7 +1470,7 @@
   <object id="269" type="hints" x="2300" y="720" width="90" height="44">
    <properties>
     <property name="box" value="x0,x1,minY,maxY"/>
-    <property name="text" value="RIDE THE STEAM OVER THE CHIMNEYS"/>
+    <property name="text" value="FLOAT ON THE STEAM!"/>
    </properties>
   </object>
   <object id="270" type="hints" x="3340" y="400" width="520" height="172">

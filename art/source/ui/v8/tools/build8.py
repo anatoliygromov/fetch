@@ -33,7 +33,7 @@ def atlases():
         lua.append('    ' + ', '.join(f'{q(k)} = {{ {cx}, {w} }}' for k, (cx, w) in cells.items()))
         lua.append('  } },')
     lua.append('}')
-    open(os.path.join(ROOT, 'riverwalk', 'uifont_data.lua'), 'w').write('\n'.join(lua) + '\n')
+    open(os.path.join(ROOT, 'riverwalk', 'uifont_data.lua'), 'w', encoding='utf-8').write('\n'.join(lua) + '\n')
 
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)

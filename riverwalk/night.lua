@@ -148,7 +148,7 @@ local function updateFox(s, dt)
     f.dir = p.x < f.x and -1 or 1
     if math.abs(p.x - f.x) < d.flee then
       local h = d.hideouts[1]; f.i = 1; runTo(f, h.x, h.y, "hide")
-      s:say("THE FOX RAN OFF WITH MY BALL!", 2.6)
+      s:say("THE FOX RAN WITH MY BALL!", 2.6)
     end
   elseif f.state == "run" then
     local k = math.min(1, f.t / f.dur)
@@ -173,7 +173,7 @@ function Nt.bark(s)
   if f.i < #d.hideouts then
     local h = d.hideouts[f.i + 1]; f.i = f.i + 1
     runTo(f, h.x, h.y, "hide")
-    s:say(f.i == #d.hideouts and "IT'S RUNNING TO THE JETTY!" or "THERE IT GOES! SNIFF AGAIN!", 2.4)
+    s:say(f.i == #d.hideouts and "IT'S RUNNING TO THE DOCK!" or "THERE IT GOES! SNIFF AGAIN!", 2.4)
   else
     b.state, b.x, b.y, b.vx, b.vy, b.airT = "air", f.x, f.y - 6, 0, -40, 0  -- it drops the ball and is gone
     b.home = { x = f.x, y = f.y }

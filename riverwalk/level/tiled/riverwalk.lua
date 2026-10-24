@@ -13,10 +13,10 @@ return {
   nextobjectid = 143,
   properties = {
     ["ballHomeAtLamps"] = true,
-    ["intro"] = "{ \"LEVEL 1\", \"RIVER WALK\", \"MORNING! MIA THREW THE BALL...\", \"IT LANDED ON A FERRY. FETCH!\" }",
+    ["intro"] = "{ \"LEVEL 1\", \"RIVER WALK\", \"THE BALL IS ON A BOAT!\" }",
     ["name"] = "RIVER WALK",
     ["number"] = 1,
-    ["outro"] = "{ \"LATE MORNING IN THE PARK.\", \"A MAGPIE SNATCHED THE BALL!\" }",
+    ["outro"] = "{ \"A BIRD TOOK THE BALL!\" }",
     ["time"] = 420,
   },
   tilesets = {
@@ -2276,7 +2276,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1",
-            ["text"] = "RIDE THE PONTOON!",
+            ["text"] = "RIDE THE RAFT!",
           },
         },
         {
@@ -2292,7 +2292,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1",
-            ["text"] = "CLIMB UP TO THE WHEELHOUSE!",
+            ["text"] = "CLIMB UP ON THE BOAT!",
             ["need"] = "noball",
           },
         },
@@ -2309,7 +2309,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1",
-            ["text"] = "HOP ON THE ROWING BOAT!",
+            ["text"] = "HOP ON THE LITTLE BOAT!",
           },
         },
         {

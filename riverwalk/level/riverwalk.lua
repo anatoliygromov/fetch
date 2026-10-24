@@ -162,7 +162,7 @@ L.critters = {
 
 L.ball = { x = FX + 108, y = 154 }
 L.girl = { x = 3780, y = 184 }
-L.outro = { "LATE MORNING IN THE PARK.", "A MAGPIE SNATCHED THE BALL!" }
+L.outro = { "A BIRD TOOK THE BALL!" }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
 L.bones = {
@@ -225,9 +225,9 @@ L.hints = {
   { x0 = 1868, x1 = 1936, btn = "down", text = "CRAWL" },
   { x0 = 0,    x1 = 3840, btn = "down", text = "DUCK!",              need = "gull" },
   { x0 = 790,  x1 = 1228, text = "BIKES! GET UP HIGH!", bike = true },
-  { x0 = 1290, x1 = 1400, text = "RIDE THE PONTOON!" },
-  { x0 = 1550, x1 = 1800, text = "CLIMB UP TO THE WHEELHOUSE!", need = "noball" },
-  { x0 = 2100, x1 = 2196, text = "HOP ON THE ROWING BOAT!" },
+  { x0 = 1290, x1 = 1400, text = "RIDE THE RAFT!" },
+  { x0 = 1550, x1 = 1800, text = "CLIMB UP ON THE BOAT!", need = "noball" },
+  { x0 = 2100, x1 = 2196, text = "HOP ON THE LITTLE BOAT!" },
   { x0 = 2400, x1 = 2448, text = "WAIT FOR THE NEXT BOAT!", maxY = 197 },
   { x0 = 3040, x1 = 3470, text = "BIKES! GET UP HIGH!", bike = true },
   { x0 = 3620, x1 = 3840, text = "BRING ME THE BALL!", need = "ball" },
@@ -235,5 +235,5 @@ L.hints = {
   { x0 = 3620, x1 = 3840, text = "GO BACK FOR THE BALL!", need = "noball" },
 }
 
-L.intro = { "LEVEL 1", "RIVER WALK", "MORNING! MIA THREW THE BALL...", "IT LANDED ON A FERRY. FETCH!" }
+L.intro = { "LEVEL 1", "RIVER WALK", "THE BALL IS ON A BOAT!" }
 return L

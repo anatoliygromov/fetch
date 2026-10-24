@@ -48,6 +48,9 @@ G = {
 "'": ["###","###",".##","...","...","...","...","...","...","...","...","...","..."],
 }
 G['9'] = [r[::-1] for r in G['6'][::-1]]
+# (review fix 3) Ö for SÖDER HILL, on the 13 rows: the two dots as the full stop's 3 x 2 blocks on rows 0-1, a row clear,
+# then O drawn 10 rows tall (its 2-1 chamfers and 3 px stems as they are, the straight sides 4 rows shorter)
+G['Ö'] = ['.###..###.', '.###..###.', '..........', '..######..', '.########.', '###....###', '###....###', '###....###', '###....###', '###....###', '###....###', '.########.', '..######..']
 # metrics: a column that is empty in every row is a side bearing, not part of the letter; trimmed, so every pair of
 # letters sits exactly GAP px apart (v7's B, D and 1 carried one)
 for _k, _g in G.items():

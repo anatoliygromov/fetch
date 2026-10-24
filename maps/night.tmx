@@ -5,13 +5,13 @@
  </editorsettings>
  <properties>
   <property name="bikes" value="{}"/>
-  <property name="ballBack" value="THE BALL IS BACK UNDER THE JETTY"/>
+  <property name="ballBack" value="THE BALL IS UNDER THE DOCK!"/>
   <property name="dark" type="bool" value="true"/>
   <property name="greyStyle" value="town"/>
-  <property name="intro" value='{ "LEVEL 6", "NIGHT HARBOUR", "A FOX SNATCHED THE BALL!", "SNIFF IT OUT: HOLD L1 OR Q" }'/>
+  <property name="intro" value="{ &quot;LEVEL 6&quot;, &quot;NIGHT HARBOUR&quot;, &quot;A FOX TOOK THE BALL!&quot; }"/>
   <property name="name" value="NIGHT HARBOUR"/>
   <property name="number" type="int" value="6"/>
-  <property name="outro" value='{ "HOME AT LAST.", "MIA HUGGED PEPPER GOOD NIGHT." }'/>
+  <property name="outro" value="{ &quot;HOME AT LAST!&quot;, &quot;GOOD NIGHT, PEPPER!&quot; }"/>
   <property name="pickupSay" value="BRING ME THE BALL, PEPPER!"/>
   <property name="scenery" value="greybox"/>
   <property name="time" type="int" value="420"/>
@@ -713,14 +713,16 @@
   <object id="122" type="hints" x="0" y="-110" width="4480" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
-    <property name="text" value="SNIFF! HOLD L1 OR Q"/>
+    <property name="text" value="HOLD: SNIFF"/>
+    <property name="btn" value="sniff"/>
     <property name="need" value="sniffhere"/>
    </properties>
   </object>
   <object id="123" type="hints" x="300" y="-100" width="460" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
-    <property name="text" value="SNIFF! HOLD L1 OR Q"/>
+    <property name="text" value="HOLD: SNIFF"/>
+    <property name="btn" value="sniff"/>
     <property name="need" value="foxhidden"/>
    </properties>
   </object>
@@ -734,19 +736,19 @@
   <object id="125" type="hints" x="1270" y="-80" width="50" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
-    <property name="text" value="JUMP ON THE ROWBOAT!"/>
+    <property name="text" value="JUMP ON THE LITTLE BOAT!"/>
    </properties>
   </object>
   <object id="126" type="hints" x="960" y="-70" width="200" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
-    <property name="text" value="OLD PLANKS! KEEP MOVING!"/>
+    <property name="text" value="WOBBLY WOOD! KEEP GOING!"/>
    </properties>
   </object>
   <object id="127" type="hints" x="2240" y="-60" width="280" height="8">
    <properties>
     <property name="box" value="x0,x1"/>
-    <property name="text" value="OLD PLANKS! KEEP MOVING!"/>
+    <property name="text" value="WOBBLY WOOD! KEEP GOING!"/>
    </properties>
   </object>
   <object id="128" type="hints" x="3700" y="-50" width="100" height="8">

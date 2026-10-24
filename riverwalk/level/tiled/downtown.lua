@@ -14,13 +14,13 @@ return {
   properties = {
     ["movers"] = "{}",
     ["art"] = "town",
-    ["ballBack"] = "THE BALL IS BACK BY THE STATUE",
+    ["ballBack"] = "THE BALL IS BY THE STATUE!",
     ["ballHomeAtLamps"] = true,
     ["greyStyle"] = "town",
-    ["intro"] = "{ \"LEVEL 3\", \"DOWNTOWN\", \"A CAT IS SITTING ON THE BALL!\", \"BARK IT AWAY. BRING THE BALL!\" }",
+    ["intro"] = "{ \"LEVEL 3\", \"DOWNTOWN\", \"A CAT SITS ON THE BALL!\" }",
     ["name"] = "DOWNTOWN",
     ["number"] = 3,
-    ["outro"] = "{ \"AT THE STREET CAFE A GULL TOOK\", \"THE BALL UP TO ITS NEST!\" }",
+    ["outro"] = "{ \"A SEAGULL TOOK THE BALL!\" }",
     ["pickupSay"] = "BRING ME THE BALL!",
     ["scenery"] = "greybox",
     ["time"] = 300,
@@ -3270,7 +3270,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1",
-            ["text"] = "CARGO BIKE! GET UP HIGH!",
+            ["text"] = "BIG BIKE! GET UP HIGH!",
             ["bike"] = true,
           },
         },
@@ -3321,7 +3321,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1",
-            ["text"] = "BOUNCE OVER THE CANAL!",
+            ["text"] = "BOUNCE OVER THE WATER!",
           },
         },
         {

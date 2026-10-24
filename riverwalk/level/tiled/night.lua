@@ -13,13 +13,13 @@ return {
   nextobjectid = 133,
   properties = {
     ["bikes"] = "{}",
-    ["ballBack"] = "THE BALL IS BACK UNDER THE JETTY",
+    ["ballBack"] = "THE BALL IS UNDER THE DOCK!",
     ["dark"] = true,
     ["greyStyle"] = "town",
-    ["intro"] = "{ \"LEVEL 6\", \"NIGHT HARBOUR\", \"A FOX SNATCHED THE BALL!\", \"SNIFF IT OUT: HOLD L1 OR Q\" }",
+    ["intro"] = "{ \"LEVEL 6\", \"NIGHT HARBOUR\", \"A FOX TOOK THE BALL!\" }",
     ["name"] = "NIGHT HARBOUR",
     ["number"] = 6,
-    ["outro"] = "{ \"HOME AT LAST.\", \"MIA HUGGED PEPPER GOOD NIGHT.\" }",
+    ["outro"] = "{ \"HOME AT LAST!\", \"GOOD NIGHT, PEPPER!\" }",
     ["pickupSay"] = "BRING ME THE BALL, PEPPER!",
     ["scenery"] = "greybox",
     ["time"] = 420,
@@ -2043,7 +2043,8 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1",
-            ["text"] = "SNIFF! HOLD L1 OR Q",
+            ["text"] = "HOLD: SNIFF",
+            ["btn"] = "sniff",
             ["need"] = "sniffhere",
           },
         },
@@ -2060,7 +2061,8 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1",
-            ["text"] = "SNIFF! HOLD L1 OR Q",
+            ["text"] = "HOLD: SNIFF",
+            ["btn"] = "sniff",
             ["need"] = "foxhidden",
           },
         },
@@ -2094,7 +2096,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1",
-            ["text"] = "JUMP ON THE ROWBOAT!",
+            ["text"] = "JUMP ON THE LITTLE BOAT!",
           },
         },
         {
@@ -2110,7 +2112,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1",
-            ["text"] = "OLD PLANKS! KEEP MOVING!",
+            ["text"] = "WOBBLY WOOD! KEEP GOING!",
           },
         },
         {
@@ -2126,7 +2128,7 @@ return {
           visible = true,
           properties = {
             ["box"] = "x0,x1",
-            ["text"] = "OLD PLANKS! KEEP MOVING!",
+            ["text"] = "WOBBLY WOOD! KEEP GOING!",
           },
         },
         {
