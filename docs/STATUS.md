@@ -1,6 +1,6 @@
 # FETCH! Status
 
-As of Fri 23 Oct 2026, 20:15. Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
+As of Sat 24 Oct 2026, 08:30. Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
 
 ## Main
 
@@ -8,6 +8,15 @@ As of Fri 23 Oct 2026, 20:15. Rules: `docs/BIBLE.md`. Decisions: the review boar
   - `art/freefix`, with the approved River Walk building, cafe and gable kept as they were;
   - `art/haze`, with Downtown facades faded at 0.25.
 - `r8/art` and `title/pixels` are closed. Kept as reference, not merged.
+
+## Night of 23 to 24 Oct (0 credits, about 1.4M tokens in the tracks, budget 5M)
+
+Pushed, not merged, each waiting for the owner:
+- `ui/hud-v8` (961aba3): HUD, pause and tally rebuilt to the owner's three targets; fonts 7, 13 and 17 px on the grid; smooth warm pause dim. Layout QA all pass. Cards: out_ui/card_hud, card_pause, card_tally. Open: title menu, level select and story panels still in the old blue style.
+- `art/pilot-oldtown` (d942274): Downtown's Old Town row, all seven houses rebuilt from shared stamped parts (tools/build_oldtown.py). Crisp; flatter than the old row (a shade band and lintels are a cheap second pass).
+- `art/placement` (60d0388): placement audit of levels 1 to 3 (docs/placement_audit.md). Fixed: River Walk road under the pier; City Park lamps, play tower post and deck, low bough; Downtown fronts, roof kit and spire built from stamped parts, houses under the floating high road, lamps on their ledges. 17 findings on approved art or design are listed for the owner.
+- Aseprite runs in the cloud workspace (headless, scripting), at /home/claude/ase/aseprite/build/bin/aseprite.
+- Two unverified drafts found uncommitted in the worktrees were set aside, not merged.
 
 ## Tracks running
 
