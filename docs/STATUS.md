@@ -2,6 +2,17 @@
 
 As of Sun 25 Oct 2026, evening. Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
 
+## Night of 25 Oct (audit run, 21:00 to 21:30 Stockholm)
+
+No new work tonight: the earlier runs already took the approved items (railing, layout_qa8, check_backdrop, size sheets; branches `night/25oct-fixes`, `night/25oct-tools`, `night/25oct-prep`, unmerged). This run audited `ops/night-25oct` (20dd523), 0 credits, no art touched.
+- PEPPER UNCHANGED (4591 steps). Flow 125/125. Tiled PASSED. BACKDROP OK.
+- Curve (approved order, 20 seeds x 8 personas): T1, T2, T3 pass. T4 fails: City Park (tall) lost runs 9.4%. Same 9.4% on `main`, so not a regression. On `main` T1 also fails (City Park parents spike 26); on this base it passes.
+- Environment note: in a fresh session `apt-get install love` errors in its man-page step but LOVE 11.5 works. Remove apt `python3-pil` and use `/usr/bin/python3` with pip pillow, numpy, scipy, or check_tiled fails on a broken PIL import.
+- Problem: `ops/night-25oct` already existed (earlier run, not mine), so this STATUS lives on `ops/night-25oct-c`.
+- Waiting for the owner: as above (board cards, play `_g` then v0.7, logo and tagline). New: City Park lost runs 9.4% (limit tripped, pre-existing). Fix in the level, or accept? A level change needs his yes.
+
+---
+
 ## Today (25 Oct, afternoon and evening)
 
 Three branches, each off `prod/integrate` c1c37a4, all checks green; together on `preview/25oct-pm` (build on the Mac: `2d game test/PREVIEW 25 Oct pm/FETCH_PREVIEW_25oct_pm.love`).
