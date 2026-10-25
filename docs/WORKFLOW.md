@@ -46,7 +46,7 @@ approves the sample screen once; every later asset is judged by "does it sit in 
 | 6 | In-game frame beside bench, bin, lamp, 1x and 3x, colour and grey | `LOOK_SPOTS=… --lookshots` | frame newer than the cut |
 | 7 | Polish in Aseprite within a fixed budget; over budget is a reject | Aseprite MCP | .aseprite newer than the cut |
 | 8 | Independent review, 9 items (rules.json), one reviewer call per family | Agent, cheaper model | `art/gen/reviews/NAME.md` all PASS |
-| 9 | Board card per family | `qa_card.py` | the owner's approve |
+| 9 | Board card per family (format: `tools/board/README.md`) | `qa_card.py` | the owner's approve |
 | 10 | Wire in on a branch; reject gets one line of cause plus a new rule or check in the same session | `pipeline.py done NAME shipped` | slot file in the game, ledger in_game |
 
 **Caps** (rules.json): 3 paid jobs per asset, 2 retries per family, 500 Artlist and 150 SpriteCook credits a day.

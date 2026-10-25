@@ -1,0 +1,1140 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>FETCH! Art Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a review queue. Summary strip, section tabs, then one row per asset: the before|after image, what was fixed, what is left, your call. */
+:root {
+  --bg: #eef0f3; --panel: #ffffff; --ink: #1b1e24; --muted: #5d6573; --line: #d7dbe2;
+  --accent: #c2255c; --accent-ink: #ffffff;
+  --ok: #2b8a3e; --ok-bg: #e3f4e6; --warn: #b45f06; --warn-bg: #fdf0dc; --bad: #c92a2a; --bad-bg: #fde4e4;
+  --sheet: #3a3f4a;
+  --f-display: "Pixelify Sans", "Courier New", monospace;
+  --f-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-data: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15171c; --panel: #1f232a; --ink: #e8eaee; --muted: #9aa3b2; --line: #333945;
+  --accent: #f06595; --accent-ink: #1b1e24;
+  --ok: #69db7c; --ok-bg: #1d3323; --warn: #ffc078; --warn-bg: #3a2c17; --bad: #ff8787; --bad-bg: #3d1f22;
+  --sheet: #2a2e36; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #15171c; --panel: #1f232a; --ink: #e8eaee; --muted: #9aa3b2; --line: #333945;
+  --accent: #f06595; --accent-ink: #1b1e24;
+  --ok: #69db7c; --ok-bg: #1d3323; --warn: #ffc078; --warn-bg: #3a2c17; --bad: #ff8787; --bad-bg: #3d1f22;
+  --sheet: #2a2e36; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 16px/1.5 var(--f-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 48px }
+.wrap { max-width: 1100px; margin: 0 auto; display: grid; gap: 20px }
+header { display: grid; gap: 8px }
+h1 { font: 700 2rem/1.1 var(--f-display); margin: 0; letter-spacing: .01em; text-wrap: balance }
+h1 span { color: var(--accent) }
+.sub { color: var(--muted); margin: 0; max-width: 65ch }
+.summary { display: flex; flex-wrap: wrap; gap: 8px }
+.chip { font: 600 .8rem/1 var(--f-data); padding: 7px 10px; border-radius: 4px; border: 1px solid var(--line); background: var(--panel); color: var(--muted) }
+.chip b { color: var(--ink) }
+.chip.ok b { color: var(--ok) } .chip.warn b { color: var(--warn) } .chip.bad b { color: var(--bad) }
+nav { display: flex; flex-wrap: wrap; gap: 6px; position: sticky; top: env(safe-area-inset-top, 0px); background: var(--bg); padding-block: 8px; z-index: 5 }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg) }
+nav button { font: 600 .9rem var(--f-body); border: 1px solid var(--line); background: var(--panel); color: var(--ink); padding: 7px 12px; border-radius: 4px; cursor: pointer }
+nav button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent) }
+nav button .n { font-family: var(--f-data); opacity: .75; margin-left: 4px }
+.banner { border: 1px solid var(--line); background: var(--panel); padding: 10px 14px; border-radius: 4px; color: var(--muted); font-size: .9rem }
+.list { display: grid; gap: 14px }
+.item { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); overflow: hidden }
+.item[data-status="approve"] { border-left: 4px solid var(--ok) }
+.item[data-status="fix"] { border-left: 4px solid var(--warn) }
+.item[data-status="redraw"] { border-left: 4px solid var(--bad) }
+@media (max-width: 760px) { .item { grid-template-columns: minmax(0, 1fr) } }
+.pics { background: var(--sheet); padding: 10px; display: grid; gap: 8px; align-content: start; min-width: 0 }
+.pics button { border: 0; padding: 0; background: none; cursor: zoom-in; display: block; width: 100% }
+.pics img { display: block; max-width: 100%; height: auto; image-rendering: pixelated; margin: 0 auto }
+.pics .cap { font: .75rem var(--f-data); color: #c9ced8; text-align: center }
+.body { padding: 14px 16px; display: grid; gap: 10px; align-content: start; min-width: 0 }
+.head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px }
+.head h2 { font: 600 1.05rem var(--f-data); margin: 0; word-break: break-word }
+.tag { font: 600 .7rem/1 var(--f-data); text-transform: uppercase; letter-spacing: .06em; padding: 4px 6px; border-radius: 3px; background: var(--bg); color: var(--muted) }
+.verdict { font: 600 .8rem var(--f-data) }
+.v-PASS { color: var(--ok) } .v-WARN { color: var(--warn) } .v-FAIL { color: var(--bad) }
+.kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 10px; font-size: .9rem; margin: 0 }
+.kv dt { color: var(--muted) } .kv dd { margin: 0 }
+.note { margin: 0; font-size: .92rem; max-width: 65ch }
+.question { margin: 0; padding: 10px 12px; border-radius: 4px; background: var(--warn-bg); font-size: .92rem }
+.findings { margin: 0; padding-left: 18px; font: .78rem/1.45 var(--f-data); color: var(--muted) }
+.actions { display: flex; flex-wrap: wrap; gap: 6px }
+.actions button { font: 700 .88rem var(--f-body); padding: 8px 12px; border-radius: 4px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer }
+.actions button[data-v="approve"][aria-pressed="true"] { background: var(--ok-bg); border-color: var(--ok); color: var(--ok) }
+.actions button[data-v="fix"][aria-pressed="true"] { background: var(--warn-bg); border-color: var(--warn); color: var(--warn) }
+.actions button[data-v="redraw"][aria-pressed="true"] { background: var(--bad-bg); border-color: var(--bad); color: var(--bad) }
+.actions button:disabled { opacity: .5; cursor: default }
+textarea { width: 100%; min-height: 54px; resize: vertical; font: .9rem var(--f-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px }
+.saved { font: .75rem var(--f-data); color: var(--muted); min-height: 1em }
+.links a { color: var(--accent); font-size: .85rem }
+button:focus-visible, textarea:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+.zoom { position: fixed; inset: 0; background: rgba(10, 12, 16, .92); z-index: 20; overflow: auto;
+  padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)) }
+.zoom img { image-rendering: pixelated; display: block; margin: 0 auto; max-width: none }
+.zoom .bar { position: sticky; top: 0; display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 8px }
+.zoom .bar button { font: 700 .9rem var(--f-body); padding: 8px 12px; border-radius: 4px; border: 0; background: #fff; color: #111; cursor: pointer }
+.empty { color: var(--muted); padding: 20px; text-align: center }
+.member { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; border-top: 1px solid var(--line); padding-top: 10px }
+.member[data-status="approve"] { box-shadow: inset 3px 0 var(--ok) } .member[data-status="fix"] { box-shadow: inset 3px 0 var(--warn) } .member[data-status="redraw"] { box-shadow: inset 3px 0 var(--bad) }
+.member.nopic { grid-template-columns: minmax(0, 1fr) }
+.mpic { border: 0; padding: 4px; background: var(--sheet); cursor: zoom-in; border-radius: 4px; align-self: start }
+.mpic img { display: block; width: 100%; height: auto; image-rendering: pixelated }
+.mbody { display: grid; gap: 8px; min-width: 0 }
+@media (max-width: 480px) { .member { grid-template-columns: minmax(0, 1fr) } }
+@media (prefers-reduced-motion: no-preference) { .item { transition: border-color .2s } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>FETCH! <span>Art Review</span></h1>
+    <p class="sub">Every asset that changed, shown before | after at 4-5x, with what the checks still find. Pick Approve, Fix or Redraw and add a note: your calls are saved here and Claude reads them back.</p>
+    <div class="summary" id="summary"></div>
+  </header>
+  <nav id="tabs" aria-label="Sections"></nav>
+  <div class="banner" id="banner" hidden></div>
+  <div class="list" id="list"></div>
+</div>
+<div class="zoom" id="zoom" hidden role="dialog" aria-label="Full size image">
+  <div class="bar"><button id="zIn">Larger</button><button id="zOut">Smaller</button><button id="zClose">Close</button></div>
+  <img id="zImg" alt="">
+</div>
+
+<script>
+const ITEMS = [
+ {
+  "id": "haze",
+  "title": "One haze per layer (decision 3)",
+  "section": "decision",
+  "images": [
+   {
+    "src": "img/haze/citypark.png",
+    "label": "City Park"
+   },
+   {
+    "src": "img/haze/downtown.png",
+    "label": "Downtown"
+   },
+   {
+    "src": "img/haze/riverwalk.png",
+    "label": "River Walk"
+   }
+  ],
+  "before": "",
+  "after": "",
+  "note": "Faded art now tints towards each level's own air instead of grey. City Park: the round trees now sit lighter than the willows in front, as the rule says. Downtown: the far roofs are now lighter than the facades. River Walk: decoration slightly warmer, nothing else moves.",
+  "question": "Downtown's facade row now comes forward (fade 0.40 down to 0.10) and its sloppy windows show more. Keep it, or fade the row back (about 0.25) until it is redrawn?"
+ },
+ {
+  "id": "town_house1",
+  "title": "town_house1",
+  "section": "free",
+  "group": "Downtown",
+  "layer": "back",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "blotchy fill",
+   "uneven windows"
+  ],
+  "left": [],
+  "px": 918,
+  "note": "windows stamped (one window per wall, the attic bar 2 px for equal panes)",
+  "img": "img/ba/town_house1.png",
+  "card": "img/card/town_house1.png",
+  "findings": [
+   "contrast 137, the back layer allows 120",
+   "decoration outlined like an obstacle: 100 % of its edge is dark"
+  ]
+ },
+ {
+  "id": "town_house2",
+  "title": "town_house2",
+  "section": "free",
+  "group": "Downtown",
+  "layer": "back",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "blotchy fill",
+   "uneven windows"
+  ],
+  "left": [],
+  "px": 504,
+  "note": "windows stamped (one window per wall)",
+  "img": "img/ba/town_house2.png",
+  "card": "img/card/town_house2.png",
+  "findings": [
+   "decoration outlined like an obstacle: 42 % of its edge is dark"
+  ]
+ },
+ {
+  "id": "town_house3",
+  "title": "town_house3",
+  "section": "free",
+  "group": "Downtown",
+  "layer": "back",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "broken outline",
+   "uneven windows"
+  ],
+  "left": [],
+  "px": 245,
+  "note": "windows stamped per storey; decoration outline completed",
+  "img": "img/ba/town_house3.png",
+  "card": "img/card/town_house3.png",
+  "findings": [
+   "decoration outlined like an obstacle: 100 % of its edge is dark"
+  ]
+ },
+ {
+  "id": "town_facades",
+  "title": "town_facades",
+  "section": "redraw",
+  "group": "Downtown",
+  "layer": "mid",
+  "before": "FAIL",
+  "after": "FAIL",
+  "fixed": [
+   "uneven windows"
+  ],
+  "left": [
+   "uneven windows"
+  ],
+  "px": 0,
+  "note": "not changed: the painted strip's windows need a redraw (the stamp made them worse)",
+  "img": null,
+  "card": "img/card/town_facades.png",
+  "findings": [
+   "19 of 23 storeys have uneven windows. storey 1: window at x 131: 1 speck(s) in the glass | storey 2: windows not on one line (tops at y 21, 22); window at x 154: 5 px differ | storey 3: window at x 169: 4 speck(s) in the glass | storey 5: window sizes differ: 7x7, 4x7; window at x 130: 15 px differ ...",
+   "2 of 3 same-size windows on one wall differ between storeys; 1 of 2 same-size windows on one wall differ between storeys; 1 of 2 same-size windows on one wall differ between storeys"
+  ]
+ },
+ {
+  "id": "building",
+  "title": "building",
+  "section": "approved",
+  "group": "River Walk",
+  "layer": "back",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "blotchy fill",
+   "dirt pixels",
+   "stray pixels"
+  ],
+  "left": [],
+  "px": 566,
+  "note": "",
+  "img": "img/ba/building.png",
+  "card": "img/card/building.png",
+  "findings": [
+   "1 blotch(es) of 2-24 px in a near colour"
+  ]
+ },
+ {
+  "id": "cafe",
+  "title": "cafe",
+  "section": "approved",
+  "group": "River Walk",
+  "layer": "back",
+  "before": "FAIL",
+  "after": "FAIL",
+  "fixed": [
+   "stray pixels",
+   "uneven windows"
+  ],
+  "left": [
+   "uneven windows"
+  ],
+  "px": 365,
+  "note": "windows not stamped (painted glass)",
+  "img": "img/ba/cafe.png",
+  "card": "img/card/cafe.png",
+  "findings": [
+   "4 of 4 storeys have uneven windows. storey 1: window at x 67: 31 px differ; window at x 27: 8 speck(s) in the glass | storey 2: window sizes differ: 20x26, 21x26, 10x12; window at x 27: its panes differ in size or height; window at x 27: 2 speck(s) in the glass | storey 3: window at x 14: 3 speck(s) in the glass | storey 4: window at x 131: 2 speck(s) in the glass"
+  ]
+ },
+ {
+  "id": "gable",
+  "title": "gable",
+  "section": "approved",
+  "group": "River Walk",
+  "layer": "back",
+  "before": "FAIL",
+  "after": "FAIL",
+  "fixed": [
+   "uneven windows"
+  ],
+  "left": [
+   "uneven windows"
+  ],
+  "px": 29,
+  "note": "windows not stamped (painted glass)",
+  "img": "img/ba/gable.png",
+  "card": "img/card/gable.png",
+  "findings": [
+   "7 of 7 storeys have uneven windows. storey 1: window at x 28: its panes differ in size or height; window at x 28: 2 speck(s) in the glass | storey 2: window at x 9: its panes differ in size or height; window at x 9: 1 speck(s) in the glass | storey 3: window sizes differ: 13x12, 12x12; window at x 28: its panes differ in size or height; window at x 28: 8 speck(s) in the glass | storey 4: window sizes differ: 13x20, 6x4; window at x 9: its panes differ in size or height; window at x 9: 10 speck(s) in the glass ...",
+   "1 of 2 same-size windows on one wall differ between storeys"
+  ]
+ },
+ {
+  "id": "park_gate",
+  "title": "park_gate",
+  "section": "free",
+  "group": "City Park",
+  "layer": "back",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "blotchy fill",
+   "broken outline"
+  ],
+  "left": [],
+  "px": 185,
+  "note": "decoration drawn with an outline: completed",
+  "img": "img/ba/park_gate.png",
+  "card": "img/card/park_gate.png",
+  "findings": [
+   "decoration outlined like an obstacle: 100 % of its edge is dark"
+  ]
+ },
+ {
+  "id": "park_hedge",
+  "title": "park_hedge",
+  "section": "free",
+  "group": "City Park",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "broken outline"
+  ],
+  "left": [],
+  "px": 16,
+  "note": "organic: light clean pass; play piece outline completed",
+  "img": "img/ba/park_hedge.png",
+  "card": "img/card/park_hedge.png",
+  "findings": [
+   "4.4 % lone pixels (aim under 3 %)",
+   "1 blotch(es) of 2-24 px in a near colour"
+  ]
+ },
+ {
+  "id": "park_keeper_cart",
+  "title": "park_keeper_cart",
+  "section": "free",
+  "group": "City Park",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "broken outline",
+   "pinholes"
+  ],
+  "left": [],
+  "px": 105,
+  "note": "outline completed per frame",
+  "img": "img/ba/park_keeper_cart.png",
+  "card": "img/card/park_keeper_cart.png",
+  "findings": [
+   "52 dirt pixels (0.4 %): single pixels a shade off the fill around them"
+  ]
+ },
+ {
+  "id": "park_keeper_winch",
+  "title": "park_keeper_winch",
+  "section": "free",
+  "group": "City Park",
+  "layer": "back",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "blotchy fill",
+   "broken outline",
+   "pinholes"
+  ],
+  "left": [],
+  "px": 383,
+  "note": "decoration drawn with an outline: completed",
+  "img": "img/ba/park_keeper_winch.png",
+  "card": "img/card/park_keeper_winch.png",
+  "findings": [
+   "a colour missing in one frame (a lost eye or hand; fine if it is a blink): row 1 col 3: 1 colour(s) the other frames have"
+  ]
+ },
+ {
+  "id": "park_leaves_flat",
+  "title": "park_leaves_flat",
+  "section": "redraw",
+  "group": "Extra",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "FAIL",
+  "fixed": [
+   "stray pixels"
+  ],
+  "left": [
+   "stray pixels"
+  ],
+  "px": 0,
+  "note": "organic: clean pass",
+  "img": null,
+  "card": "img/card/park_leaves_flat.png",
+  "findings": [
+   "8.0 % lone pixels (limit 5 %)"
+  ]
+ },
+ {
+  "id": "town_awning64",
+  "title": "town_awning64",
+  "section": "free",
+  "group": "Downtown",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "PASS",
+  "fixed": [
+   "broken outline"
+  ],
+  "left": [],
+  "px": 11,
+  "note": "",
+  "img": "img/ba/town_awning64.png",
+  "card": "img/card/town_awning64.png",
+  "findings": []
+ },
+ {
+  "id": "town_awning80",
+  "title": "town_awning80",
+  "section": "free",
+  "group": "Downtown",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "PASS",
+  "fixed": [
+   "broken outline"
+  ],
+  "left": [],
+  "px": 4,
+  "note": "",
+  "img": "img/ba/town_awning80.png",
+  "card": "img/card/town_awning80.png",
+  "findings": []
+ },
+ {
+  "id": "town_bollard",
+  "title": "town_bollard",
+  "section": "redraw",
+  "group": "Downtown",
+  "layer": "front",
+  "before": "FAIL",
+  "after": "FAIL",
+  "fixed": [
+   "too dark for its layer"
+  ],
+  "left": [
+   "too dark for its layer"
+  ],
+  "px": 0,
+  "note": "not changed: median 41 on screen, the front layer allows 40 (a code value, not a pixel fix)",
+  "img": null,
+  "card": "img/card/town_bollard.png",
+  "findings": [
+   "median 41, the front layer must be 40 or darker"
+  ]
+ },
+ {
+  "id": "town_door",
+  "title": "town_door",
+  "section": "free",
+  "group": "Downtown",
+  "layer": "back",
+  "before": "FAIL",
+  "after": "PASS",
+  "fixed": [
+   "blotchy fill"
+  ],
+  "left": [],
+  "px": 27,
+  "note": "the sill on the ground line cleaned too",
+  "img": "img/ba/town_door.png",
+  "card": "img/card/town_door.png",
+  "findings": []
+ },
+ {
+  "id": "town_kiosk",
+  "title": "town_kiosk",
+  "section": "free",
+  "group": "Downtown",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "broken outline"
+  ],
+  "left": [],
+  "px": 19,
+  "note": "",
+  "img": "img/ba/town_kiosk.png",
+  "card": "img/card/town_kiosk.png",
+  "findings": [
+   "3.4 % lone pixels (aim under 3 %)"
+  ]
+ },
+ {
+  "id": "town_parasol",
+  "title": "town_parasol",
+  "section": "free",
+  "group": "Downtown",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "PASS",
+  "fixed": [
+   "broken outline"
+  ],
+  "left": [],
+  "px": 13,
+  "note": "",
+  "img": "img/ba/town_parasol.png",
+  "card": "img/card/town_parasol.png",
+  "findings": []
+ },
+ {
+  "id": "town_pedestal",
+  "title": "town_pedestal",
+  "section": "free",
+  "group": "Downtown",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "PASS",
+  "fixed": [
+   "blotchy fill"
+  ],
+  "left": [],
+  "px": 10,
+  "note": "",
+  "img": "img/ba/town_pedestal.png",
+  "card": "img/card/town_pedestal.png",
+  "findings": []
+ },
+ {
+  "id": "town_roofs",
+  "title": "town_roofs",
+  "section": "free",
+  "group": "Downtown",
+  "layer": "shore",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "blotchy fill"
+  ],
+  "left": [],
+  "px": 493,
+  "note": "",
+  "img": "img/ba/town_roofs.png",
+  "card": "img/card/town_roofs.png",
+  "findings": [
+   "2 blotch(es) of 2-24 px in a near colour"
+  ]
+ },
+ {
+  "id": "town_shelter",
+  "title": "town_shelter",
+  "section": "free",
+  "group": "Downtown",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "PASS",
+  "fixed": [
+   "blotchy fill"
+  ],
+  "left": [],
+  "px": 47,
+  "note": "",
+  "img": "img/ba/town_shelter.png",
+  "card": "img/card/town_shelter.png",
+  "findings": []
+ },
+ {
+  "id": "town_stall",
+  "title": "town_stall",
+  "section": "free",
+  "group": "Downtown",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "blotchy fill"
+  ],
+  "left": [],
+  "px": 23,
+  "note": "",
+  "img": "img/ba/town_stall.png",
+  "card": "img/card/town_stall.png",
+  "findings": [
+   "4.4 % lone pixels (aim under 3 %)"
+  ]
+ },
+ {
+  "id": "town_statue",
+  "title": "town_statue",
+  "section": "free",
+  "group": "Downtown",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "blotchy fill"
+  ],
+  "left": [],
+  "px": 7,
+  "note": "",
+  "img": "img/ba/town_statue.png",
+  "card": "img/card/town_statue.png",
+  "findings": [
+   "4.1 % lone pixels (aim under 3 %)"
+  ]
+ },
+ {
+  "id": "town_table_front",
+  "title": "town_table_front",
+  "section": "free",
+  "group": "Downtown",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "PASS",
+  "fixed": [
+   "broken outline"
+  ],
+  "left": [],
+  "px": 4,
+  "note": "",
+  "img": "img/ba/town_table_front.png",
+  "card": "img/card/town_table_front.png",
+  "findings": []
+ },
+ {
+  "id": "town_tramshed70",
+  "title": "town_tramshed70",
+  "section": "free",
+  "group": "Downtown",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "blotchy fill"
+  ],
+  "left": [],
+  "px": 92,
+  "note": "",
+  "img": "img/ba/town_tramshed70.png",
+  "card": "img/card/town_tramshed70.png",
+  "findings": [
+   "1 blotch(es) of 2-24 px in a near colour"
+  ]
+ },
+ {
+  "id": "town_tramshed96",
+  "title": "town_tramshed96",
+  "section": "free",
+  "group": "Downtown",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "blotchy fill"
+  ],
+  "left": [],
+  "px": 167,
+  "note": "",
+  "img": "img/ba/town_tramshed96.png",
+  "card": "img/card/town_tramshed96.png",
+  "findings": [
+   "1 blotch(es) of 2-24 px in a near colour"
+  ]
+ },
+ {
+  "id": "cloud8",
+  "title": "cloud8",
+  "section": "free",
+  "group": "River Walk",
+  "layer": "clouds",
+  "before": "FAIL",
+  "after": "PASS",
+  "fixed": [
+   "too dark for its layer"
+  ],
+  "left": [],
+  "px": 65,
+  "note": "the darkest shade merged into the next one (ladder)",
+  "img": "img/ba/cloud8.png",
+  "card": "img/card/cloud8.png",
+  "findings": []
+ },
+ {
+  "id": "ferry",
+  "title": "ferry",
+  "section": "redraw",
+  "group": "River Walk",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "FAIL",
+  "fixed": [
+   "blotchy fill",
+   "too many colours",
+   "broken outline",
+   "pinholes"
+  ],
+  "left": [
+   "broken outline",
+   "pinholes"
+  ],
+  "px": 2056,
+  "note": "4 near-duplicate colours merged (distance 1-6); outline not completed: inking the 1 px railings, mast and flag clutters the upper deck (tried, reverted); the pinholes are railing gaps",
+  "img": "img/ba/ferry.png",
+  "card": "img/card/ferry.png",
+  "findings": [
+   "5 pinhole(s) inside the shape",
+   "outline 69 % dark: 298 edge px break it"
+  ]
+ },
+ {
+  "id": "park_log",
+  "title": "park_log",
+  "section": "free",
+  "group": "River Walk",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "blotchy fill"
+  ],
+  "left": [],
+  "px": 4,
+  "note": "",
+  "img": "img/ba/park_log.png",
+  "card": "img/card/park_log.png",
+  "findings": [
+   "4.0 % lone pixels (aim under 3 %)"
+  ]
+ },
+ {
+  "id": "pier",
+  "title": "pier",
+  "section": "free",
+  "group": "River Walk",
+  "layer": "back",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "broken outline"
+  ],
+  "left": [],
+  "px": 65,
+  "note": "decoration drawn with an outline: completed",
+  "img": "img/ba/pier.png",
+  "card": "img/card/pier.png",
+  "findings": [
+   "decoration outlined like an obstacle: 100 % of its edge is dark"
+  ]
+ },
+ {
+  "id": "pile",
+  "title": "pile",
+  "section": "free",
+  "group": "River Walk",
+  "layer": "front",
+  "before": "FAIL",
+  "after": "PASS",
+  "fixed": [
+   "blotchy fill"
+  ],
+  "left": [],
+  "px": 37,
+  "note": "",
+  "img": "img/ba/pile.png",
+  "card": "img/card/pile.png",
+  "findings": []
+ },
+ {
+  "id": "rail_bg_unit",
+  "title": "rail_bg_unit",
+  "section": "free",
+  "group": "River Walk",
+  "layer": "back",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "blotchy fill"
+  ],
+  "left": [],
+  "px": 5,
+  "note": "",
+  "img": "img/ba/rail_bg_unit.png",
+  "card": "img/card/rail_bg_unit.png",
+  "findings": [
+   "decoration outlined like an obstacle: 76 % of its edge is dark"
+  ]
+ },
+ {
+  "id": "road_car1",
+  "title": "road_car1",
+  "section": "free",
+  "group": "River Walk",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "PASS",
+  "fixed": [
+   "blotchy fill"
+  ],
+  "left": [],
+  "px": 248,
+  "note": "",
+  "img": "img/ba/road_car1.png",
+  "card": "img/card/road_car1.png",
+  "findings": []
+ },
+ {
+  "id": "road_car4",
+  "title": "road_car4",
+  "section": "free",
+  "group": "River Walk",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "PASS",
+  "fixed": [
+   "blotchy fill"
+  ],
+  "left": [],
+  "px": 285,
+  "note": "",
+  "img": "img/ba/road_car4.png",
+  "card": "img/card/road_car4.png",
+  "findings": []
+ },
+ {
+  "id": "road_cyclist1",
+  "title": "road_cyclist1",
+  "section": "free",
+  "group": "River Walk",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "PASS",
+  "fixed": [
+   "blotchy fill",
+   "dirt pixels"
+  ],
+  "left": [],
+  "px": 61,
+  "note": "",
+  "img": "img/ba/road_cyclist1.png",
+  "card": "img/card/road_cyclist1.png",
+  "findings": []
+ },
+ {
+  "id": "road_cyclist1_roll",
+  "title": "road_cyclist1_roll",
+  "section": "redraw",
+  "group": "River Walk",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "FAIL",
+  "fixed": [
+   "blotchy fill",
+   "dirt pixels",
+   "pinholes"
+  ],
+  "left": [
+   "pinholes"
+  ],
+  "px": 197,
+  "note": "the pinhole is a gap between spokes: left",
+  "img": "img/ba/road_cyclist1_roll.png",
+  "card": "img/card/road_cyclist1_roll.png",
+  "findings": [
+   "1 pinhole(s) inside the shape in 1 frame(s), first r1c3"
+  ]
+ },
+ {
+  "id": "road_cyclist2",
+  "title": "road_cyclist2",
+  "section": "free",
+  "group": "River Walk",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "PASS",
+  "fixed": [
+   "dirt pixels",
+   "floating specks",
+   "stray pixels"
+  ],
+  "left": [],
+  "px": 75,
+  "note": "",
+  "img": "img/ba/road_cyclist2.png",
+  "card": "img/card/road_cyclist2.png",
+  "findings": []
+ },
+ {
+  "id": "road_cyclist2_roll",
+  "title": "road_cyclist2_roll",
+  "section": "free",
+  "group": "River Walk",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "dirt pixels",
+   "floating specks",
+   "stray pixels"
+  ],
+  "left": [],
+  "px": 246,
+  "note": "",
+  "img": "img/ba/road_cyclist2_roll.png",
+  "card": "img/card/road_cyclist2_roll.png",
+  "findings": [
+   "3.2 % lone pixels (aim under 3 %)"
+  ]
+ },
+ {
+  "id": "rowboat",
+  "title": "rowboat",
+  "section": "free",
+  "group": "River Walk",
+  "layer": "play",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "blotchy fill",
+   "frame problems"
+  ],
+  "left": [],
+  "px": 159,
+  "note": "",
+  "img": "img/ba/rowboat.png",
+  "card": "img/card/rowboat.png",
+  "findings": [
+   "a colour missing in one frame (a lost eye or hand; fine if it is a blink): row 1 col 1: 1 colour(s) the other frames have; row 1 col 7: 1 colour(s) the other frames have; row 1 col 8: 1 colour(s) the other frames have",
+   "feet not anchored (fine in a jump or flight): row 1: lowest pixel moves 6 px"
+  ]
+ },
+ {
+  "id": "skyline",
+  "title": "skyline",
+  "section": "free",
+  "group": "River Walk",
+  "layer": "city",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "floating specks"
+  ],
+  "left": [],
+  "px": 112,
+  "note": "organic: light clean pass",
+  "img": "img/ba/skyline.png",
+  "card": "img/card/skyline.png",
+  "findings": [
+   "18 blotch(es) of 2-24 px in a near colour (0.6 % of the art): dirty fill",
+   "2 pinhole(s) inside the shape"
+  ]
+ },
+ {
+  "id": "gull",
+  "title": "gull",
+  "section": "free",
+  "group": "Characters (never shaded)",
+  "layer": "char",
+  "before": "FAIL",
+  "after": "WARN",
+  "fixed": [
+   "frame problems"
+  ],
+  "left": [],
+  "px": 1,
+  "note": "character: defects only",
+  "img": "img/ba/gull.png",
+  "card": "img/card/gull.png",
+  "findings": [
+   "4.7 % lone pixels (aim under 3 %)",
+   "feet not anchored (fine in a jump or flight): row 1: lowest pixel moves 5 px",
+   "size jumps between frames: row 1: col 1 -> 2 size 179 -> 126 px; row 1: col 5 -> 6 size 142 -> 215 px"
+  ]
+ }
+];
+const SECTIONS = [
+  ["family", "Families"], ["decision", "Your decision"], ["approved", "Approved art changed"], ["free", "Free fixes"], ["redraw", "Needs a redraw"], ["all", "All"]
+];
+const SECTION_NOTE = {
+  family: "One card per family: the in-game frame first, then each piece. Approve, fix or reject each piece. Approve all when every piece is right.",
+  decision: "A change across whole levels: look at the colour and greyscale frames together.",
+  approved: "These were approved before. The clean pass changed them, so they need your yes again.",
+  free: "Fixed by script at 0 credits: windows stamped, blotches and dirt cleaned, outlines completed. Approve to merge into round1.",
+  redraw: "Not fixable by script. Redraw means a brief for you to approve before any credits are spent."
+};
+let decisions = {}, tab = "decision", canWrite = true, db = null;
+try { const t = localStorage.getItem("fetch-review-tab"); if (t && SECTIONS.some(s => s[0] === t)) tab = t; } catch (e) {}
+
+const $ = s => document.querySelector(s);
+function el(tag, attrs = {}, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") e.className = v; else if (k === "text") e.textContent = v;
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v);
+  }
+  for (const k of kids) if (k != null) e.append(k);
+  return e;
+}
+function units() { const u = []; for (const i of ITEMS) { if (i.members) u.push(...i.members); else u.push(i); } return u; }
+function count(sec) { const s = sec === "all" ? ITEMS : ITEMS.filter(i => i.section === sec); return s.reduce((n, i) => n + (i.members ? i.members.length : 1), 0); }
+function renderSummary() {
+  const n = { approve: 0, fix: 0, redraw: 0 };
+  const U = units();
+  for (const i of U) { const d = decisions[i.id]; if (d && n[d.status] != null) n[d.status]++; }
+  const open = U.length - n.approve - n.fix - n.redraw;
+  const s = $("#summary"); s.replaceChildren(
+    el("span", { class: "chip" }, el("b", { text: String(open) }), " waiting for you"),
+    el("span", { class: "chip ok" }, el("b", { text: String(n.approve) }), " approved"),
+    el("span", { class: "chip warn" }, el("b", { text: String(n.fix) }), " fix"),
+    el("span", { class: "chip bad" }, el("b", { text: String(n.redraw) }), " reject or redraw"));
+}
+function renderTabs() {
+  $("#tabs").replaceChildren(...SECTIONS.map(([k, label]) => el("button", {
+    "aria-pressed": String(tab === k), onclick: () => { tab = k; try { localStorage.setItem("fetch-review-tab", k); } catch (e) {} ; render(); }
+  }, label, el("span", { class: "n", text: count(k) }))));
+}
+function picture(src, cap) {
+  const b = el("button", { "aria-label": "Open " + cap + " full size", onclick: () => openZoom(src) }, el("img", { src, alt: cap, loading: "lazy" }));
+  return el("div", {}, b, el("div", { class: "cap", text: cap }));
+}
+function decisionBlock(id, title, labels) {
+  const d = decisions[id] || {};
+  const saved = el("div", { class: "saved", id: "s-" + id, text: d.updatedAt ? "Saved " + new Date(d.updatedAt).toLocaleString() : "" });
+  const ta = el("textarea", { id: "c-" + id, placeholder: "Note for Claude (optional)", "aria-label": "Note for " + title });
+  ta.value = d.comment || "";
+  ta.addEventListener("change", () => save(id, { comment: ta.value }));
+  const acts = el("div", { class: "actions" }, ...labels.map(([v, l]) =>
+    el("button", { "data-v": v, "aria-pressed": String(d.status === v), onclick: () => save(id, { status: d.status === v ? "" : v, comment: ta.value }) }, l)));
+  if (!canWrite) { acts.querySelectorAll("button").forEach(b => b.disabled = true); ta.disabled = true; }
+  return [acts, ta, saved];
+}
+function familyRow(it) {
+  const pics = el("div", { class: "pics" });
+  for (const im of (it.images || [])) pics.append(picture(im.src, im.label));
+  const body = el("div", { class: "body" });
+  const head = el("div", { class: "head" }, el("h2", { text: it.title }));
+  if (it.layer) head.append(el("span", { class: "tag", text: it.layer + " layer" }));
+  if (it.group) head.append(el("span", { class: "tag", text: it.group }));
+  if (it.tier) head.append(el("span", { class: "tag", text: "tier " + it.tier }));
+  body.append(head);
+  if (it.note) body.append(el("p", { class: "note", text: it.note }));
+  if (it.question) body.append(el("p", { class: "question", text: it.question }));
+  const all = el("button", { onclick: () => { for (const m of it.members) save(m.id, { status: "approve", comment: (decisions[m.id] || {}).comment || "" }); } }, "Approve all");
+  if (!canWrite) all.disabled = true;
+  body.append(el("div", { class: "actions" }, all));
+  for (const m of it.members) {
+    const d = decisions[m.id] || {};
+    const row = el("div", { class: m.img ? "member" : "member nopic", "data-status": d.status || "" });
+    if (m.img) row.append(el("button", { class: "mpic", "aria-label": "Open " + m.title + " full size", onclick: () => openZoom(m.img) }, el("img", { src: m.img, alt: m.title, loading: "lazy" })));
+    const mb = el("div", { class: "mbody" }, el("div", { class: "head" }, el("h2", { text: m.title }), m.slot ? el("span", { class: "tag", text: m.slot }) : null));
+    if (m.note) mb.append(el("p", { class: "note", text: m.note }));
+    if (m.findings && m.findings.length) mb.append(el("ul", { class: "findings" }, ...m.findings.map(f => el("li", { text: f }))));
+    mb.append(...decisionBlock(m.id, m.title, [["approve", "Approve"], ["fix", "Fix"], ["redraw", "Reject"]]));
+    row.append(mb); body.append(row);
+  }
+  return el("article", { class: "item", id: "i-" + it.id }, pics, body);
+}
+function itemRow(it) {
+  if (it.members) return familyRow(it);
+  const d = decisions[it.id] || {};
+  const pics = el("div", { class: "pics" });
+  if (it.images) for (const im of it.images) pics.append(picture(im.src, im.label + ": before | after, colour then greyscale"));
+  if (it.img) pics.append(picture(it.img, "before | after"));
+  if (!it.img && !it.images && it.card) pics.append(picture(it.card, "QA card"));
+  const body = el("div", { class: "body" });
+  const head = el("div", { class: "head" }, el("h2", { text: it.title }));
+  if (it.layer) head.append(el("span", { class: "tag", text: it.layer + " layer" }));
+  if (it.group) head.append(el("span", { class: "tag", text: it.group }));
+  if (it.before) head.append(el("span", { class: "verdict" }, el("span", { class: "v-" + it.before, text: it.before }), " → ", el("span", { class: "v-" + it.after, text: it.after })));
+  body.append(head);
+  if (it.fixed || it.left) {
+    const kv = el("dl", { class: "kv" });
+    if (it.fixed && it.fixed.length) kv.append(el("dt", { text: "Fixed" }), el("dd", { text: it.fixed.join(", ") + (it.px ? `  (${it.px} px changed)` : "") }));
+    kv.append(el("dt", { text: "Left" }), el("dd", { text: (it.left && it.left.length) ? it.left.join(", ") : "nothing failing" }));
+    body.append(kv);
+  }
+  if (it.note) body.append(el("p", { class: "note", text: it.note }));
+  if (it.question) body.append(el("p", { class: "question", text: it.question }));
+  if (it.findings && it.findings.length) body.append(el("ul", { class: "findings" }, ...it.findings.map(f => el("li", { text: f }))));
+  if (it.card && it.img) body.append(el("div", { class: "links" }, el("a", { href: "#", onclick: e => { e.preventDefault(); openZoom(it.card); } , text: "Open the QA card" })));
+  const saved = el("div", { class: "saved", id: "s-" + it.id, text: d.updatedAt ? "Saved " + new Date(d.updatedAt).toLocaleString() : "" });
+  const ta = el("textarea", { id: "c-" + it.id, placeholder: "Note for Claude (optional)", "aria-label": "Note for " + it.title });
+  ta.value = d.comment || "";
+  ta.addEventListener("change", () => save(it.id, { comment: ta.value }));
+  const acts = el("div", { class: "actions" }, ...[["approve", "Approve"], ["fix", "Fix"], ["redraw", "Redraw"]].map(([v, l]) =>
+    el("button", { "data-v": v, "aria-pressed": String(d.status === v), onclick: () => save(it.id, { status: d.status === v ? "" : v, comment: ta.value }) }, l)));
+  if (!canWrite) { acts.querySelectorAll("button").forEach(b => b.disabled = true); ta.disabled = true; }
+  body.append(acts, ta, saved);
+  return el("article", { class: "item", "data-status": d.status || "", id: "i-" + it.id }, pics, body);
+}
+function render() {
+  renderTabs(); renderSummary();
+  const ban = $("#banner");
+  const note = SECTION_NOTE[tab];
+  if (!db) { ban.hidden = false; ban.textContent = "Saving is not available in this view. You can look at everything; open the page in Claude to record your calls."; }
+  else if (!canWrite) { ban.hidden = false; ban.textContent = "You can view this board but not record decisions."; }
+  else if (note) { ban.hidden = false; ban.textContent = note; } else ban.hidden = true;
+  const shown = ITEMS.filter(i => tab === "all" || i.section === tab);
+  if (tab === "family" && !shown.length) { $("#list").replaceChildren(el("div", { class: "empty", text: "No family waiting. The next one is the River Walk sample screen." })); return; }
+  $("#list").replaceChildren(...(shown.length ? shown.map(itemRow) : [el("div", { class: "empty", text: "Nothing here yet." })]));
+}
+async function save(id, patch) {
+  if (!db || !canWrite) return;
+  const cur = decisions[id] || {};
+  const next = { status: patch.status ?? cur.status ?? "", comment: patch.comment ?? cur.comment ?? "", updatedAt: Date.now() };
+  if (next.status === (cur.status ?? "") && next.comment === (cur.comment ?? "")) return;
+  decisions[id] = next; render();
+  try { await db.collection("decisions").doc(id).set(next); }
+  catch (e) {
+    if (e && e.code === "invalid_argument") { canWrite = false; render(); }
+    else { const s = document.getElementById("s-" + id); if (s) s.textContent = "Not saved: " + (e && e.message || "try again"); }
+  }
+}
+let zoomScale = 1;
+function openZoom(src) {
+  const z = $("#zoom"), img = $("#zImg"); img.src = src; zoomScale = 1;
+  img.onload = () => { const fit = Math.max(1, Math.floor((window.innerWidth - 32) / img.naturalWidth)); zoomScale = Math.min(fit, 2); size(); };
+  z.hidden = false; $("#zClose").focus();
+}
+function size() { const img = $("#zImg"); img.style.width = Math.round(img.naturalWidth * zoomScale) + "px"; }
+$("#zIn").onclick = () => { zoomScale = Math.min(6, zoomScale + 0.5); size(); };
+$("#zOut").onclick = () => { zoomScale = Math.max(0.25, zoomScale - 0.5); size(); };
+$("#zClose").onclick = () => { $("#zoom").hidden = true; };
+document.addEventListener("keydown", e => { if (e.key === "Escape") $("#zoom").hidden = true; });
+
+render();
+(async () => {
+  db = window.claude ? await window.claude.use("db") : null;
+  const user = window.claude ? await window.claude.use("user") : null;
+  if (user) { try { const c = await user.can("data.write"); if (c === false) canWrite = false; } catch (e) {} }
+  if (!db) { render(); return; }
+  db.collection("decisions").onSnapshot(snap => {
+    const next = {};
+    for (const d of snap.docs) if (d.exists) next[d.id] = d.data();
+    decisions = next;
+    const a = document.activeElement;
+    if (a && a.tagName === "TEXTAREA") { renderSummary(); return; }   // don't wipe a note being typed
+    render();
+  }, () => { render(); });
+  render();
+})();
+</script>
+
+</body></html>
