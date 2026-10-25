@@ -34,3 +34,14 @@ uneven factor with averaging (the batch 1 defect). The steps below make each of 
 `rw_cyclist_adult_v0`: the owner's pick from the first run (Nano Banana Pro 1K, made on the older 168 x 126 blockout,
 cut on its own detected grid with `--pitch auto`, 90 % clean cells), clean pass and outline: asset_qa PASS 84 x 85,
 20 colours, card in `art/gen/out/cards/`. New jobs use the 150 x 112 frame (`rw_cyclist_adult` passes preflight).
+
+## SpriteCook pixel mode (25 Oct, the River Walk lime)
+- With `pixel: true` SpriteCook returns the render on its own detected grid, 1 px = 1 art px. Nano Banana 2.1 at 1K
+  draws art pixels of about 4 image px whatever the reference shows, so the output is about 256 px across. A blockout
+  frame of 384 came back at 0.67x (trunk 17 px, not 23); a 256 x 256 frame came back 1:1 (trunk 22-24 px).
+  Rule: for SpriteCook pixel mode at 1K, make the blockout frame 256 px and keep the subject inside it; cut with
+  `grid_cut.py RENDER NAME --pitch 1`.
+- `bg_mode: include` keeps the magenta, so the cut keys it and drops Pepper itself. Smart crop off, so the frame
+  stays the blockout's frame.
+- Subjects bigger than the frame (a tree cut by the screen top): draw only the visible part in the blockout, the crown
+  running out of the top edge. A side cut by the frame must be carved round afterwards (clean_lime.py step 1).

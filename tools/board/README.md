@@ -1,6 +1,6 @@
 # The Art Review board
 
-`board.html` is the page published at https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk (version 2, 25 Oct), with
+`board.html` is the page published at https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk (version 3, 25 Oct: the River Walk sample screen family card), with
 the `db` and `user` capabilities. Its images live in the artifact's files (`img/...`), not here.
 
 To add a family card: read the artifact (Artifact tool, action read, then path index.html), add one entry to

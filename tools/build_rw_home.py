@@ -2,7 +2,7 @@
 """River Walk HOME house, screen 1, at true scale (46 px a metre), taller than the viewport. 25 Oct 2026.
 
 Back layer, decoration: no outline, every edge is a darker shade of its own material. Built from parts drawn once and
-stamped on an integer grid (BIBLE 3, the crispness bar); no resampling, binary alpha, 19 colours.
+stamped on an integer grid (BIBLE 3, the crispness bar); no resampling, binary alpha, 18 colours.
 The flat gable pilot (art/rw-gable-true) was "ok, but not really artistic, super flat" (owner, 25 Oct), so this one
 gets its volume from the light: sun from the upper left, every part that stands out of the wall (stone surround,
 keystone, cornice, sills, quoins, drainpipe, lamp) drops a 2 px shadow on the wall below and to its right, and the
@@ -284,7 +284,7 @@ def build():
     leaf2 = part_door_leaf(23, g(172) - g(74)); c.stamp(leaf2, DX + 23, g(74))
     c.vline(DX + 22, g(74), g(172) - g(74), 'ink')               # the meeting gap
     for kx in (DX + 19, DX + 26):                                # brass knobs
-        c.rect(kx, g(120), 2, 2, 'brass'); c.put(kx + 1, g(121), 'pl_dk')
+        c.rect(kx, g(120), 2, 2, 'brass'); c.put(kx + 1, g(121), 'dr_dk')
     # recess: the lintel and the left reveal throw shade into the opening (light from the upper left)
     for yy in range(top_open, g(172)):
         for xx in range(DX, DX + 3):

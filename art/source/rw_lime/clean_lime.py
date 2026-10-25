@@ -74,6 +74,10 @@ lm, ls = LR[3], LR[2]                                    # lit rim: the leaf mid
 bm, bs = BR[-1], BR[-2]
 rgb[lit & leaf] = lm; rgb[shade & leaf] = ls
 rgb[lit & ~leaf] = bm; rgb[shade & ~leaf] = bs
+# bark-coloured edge pixels away from the trunk (x 100-165) are leaf edges: they take the leaf shade (round 2 review)
+crown_edge = edge & ~leaf
+crown_edge[:, 100:166] = False
+rgb[crown_edge] = ls; leaf |= crown_edge
 # 5. lone pixels and blotches
 out_rgb, changed = cleanpass.clean(rgb.astype(np.uint8), al, 70, False)
 def blotch_merge(rgb, al):

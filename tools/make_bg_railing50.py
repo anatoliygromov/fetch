@@ -15,7 +15,7 @@ C = {'hi': (88, 109, 134), 'li': (69, 88, 112), 'mid': (53, 69, 95), 'sh': (49, 
 TUBES = [(0, ['hi', 'li', 'li', 'mid', 'sh']), (23, ['hi', 'li', 'sh']), (38, ['hi', 'li', 'sh'])]   # (top row, rows)
 
 
-def piece(w, posts):
+def piece(w, posts, rail_end=None):
     a = np.zeros((H, w, 4), np.uint8)
     def put(x, y, c):
         if 0 <= x < w and 0 <= y < H: a[y, x] = (*C[c], 255)
@@ -27,7 +27,7 @@ def piece(w, posts):
         for dx in range(-1, 4): put(x0 + dx, H - 1, 'sh')
     for top, rows in TUBES:                             # tubes run over the posts
         for i, c in enumerate(rows):
-            for x in range(w): put(x, top + i, c)
+            for x in range(rail_end or w): put(x, top + i, c)
     for x0 in posts:                                    # collars where the lower rails meet a post: 5 px wide rings
         for top, rows in TUBES[1:]:
             for dy in range(-1, len(rows) + 1):
@@ -39,5 +39,5 @@ def piece(w, posts):
 D = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'riverwalk', 'art', 'scene')
 Image.fromarray(piece(5, [1])).save(os.path.join(D, 'rail_bg_left.png'))
 Image.fromarray(piece(84, [80])).save(os.path.join(D, 'rail_bg_unit.png'))
-Image.fromarray(piece(86, [82])).save(os.path.join(D, 'rail_bg_end.png'))
+Image.fromarray(piece(86, [80], rail_end=84)).save(os.path.join(D, 'rail_bg_end.png'))   # last span 80 like the rest
 print('quay railing', H, 'px tall: left 5, unit 84, end 86')

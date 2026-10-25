@@ -1,0 +1,26 @@
+[
+ {
+  "name": "rw_home",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/rw_home.png",
+  "level": "rw",
+  "layer": "back",
+  "fade": 0.28,
+  "w": 184,
+  "h": 180,
+  "building": true,
+  "frames": null,
+  "info": {
+   "colours": 18,
+   "lone": 0.0,
+   "p10": 140,
+   "median": 208,
+   "p90": 224,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 0,
+   "windows": "no window panes found"
+  },
+  "checks": []
+ }
+]
