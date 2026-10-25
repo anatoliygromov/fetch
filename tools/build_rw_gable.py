@@ -186,6 +186,9 @@ def part_flowerbox(w=50):
         for yy, row in enumerate(head):
             for xx, ch in enumerate(row):
                 if ch != '.': p.put(hx + xx, hy + yy, 'fl' if ch == 'f' else 'fl_dk')
+    for y in range(2, 6):                                           # no 1 px glass notch between a leaf and a head
+        for x in range(1, w - 1):                                   # (review round 2: x 36, row 2 in both boxes)
+            if p.a[y, x] < 0 and p.a[y, x - 1] >= 0 and p.a[y, x + 1] >= 0: p.put(x, y, 'lf')
     return p
 
 
