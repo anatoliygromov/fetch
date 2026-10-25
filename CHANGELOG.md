@@ -8,8 +8,8 @@ Each pixel chosen by eye at 8-20x, the edit recorded in `art/source/rw_fixes/edi
 - **park_log:** two near-identical oranges merged (166,100,62 into 162,110,74); 6 brown pixels in its outline made ink, so the obstacle outline is closed. Lone pixels 4.0 % to under 3 %, PASS.
 - **pier:** decoration, so no ink outline: the dark silhouette edge (670 px) is now stone, light on the sun side, a darker stone on the shade side; 6 orphan ink dots near the edge (review) take the stone round them; 4 dotted vertical joints redrawn as the solid joints the rest of the wall has. The foot row stays dark (it meets the dark passage). PASS.
 - **skyline:** 16 small blotches (near-colour patches inside a silhouette) take their surrounding colour; 2 pinholes filled. PASS.
-- **gull:** 25 stray pixels on the wings and outline (eye and beak kept); the flap's bob made even: frames moved up or down by whole pixels (eye rows 20,18,16,15,15,15 to 18,17,16,15,16,17), so the head no longer drops 5 px between the last frame and the first; one outline gap closed (review). Still WARN: frames 2 and 6 differ in size from their neighbours (126 and 215 px against about 140-180): a redraw of those two frames, not a pixel fix.
-- Independent review (art/gen/reviews/rw_fixes_25oct.md): park_log and skyline ship; cloud8, pier and gull fix lists applied after it.
+- **gull:** not fixed here: the owner wants it redrawn ("it has holes and doesnt really look like a bird", 25 Oct 16:00). The file stays as on main until the redraw.
+- Independent review (art/gen/reviews/rw_fixes_25oct.md): park_log and skyline ship; cloud8 and pier fix lists applied after it.
 - Checks: PEPPER UNCHANGED, flow 125/125, QA 0 problems (River Walk, Downtown). Frames: docs/review/25oct/fixes/.
 
 ## Branch `ops/board-25oct`: the owner's board review turned into the art backlog (25 Oct)
