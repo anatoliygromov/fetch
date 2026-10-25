@@ -5,7 +5,8 @@
 # jumping for the new kiosk awning; see docs/riverwalk_notes.md), and again on levels/v2 for the harbour (the first
 # difference, step 1658, is the autopilot stopping at the quay to wait for a rowing boat; on assets/v2 the boats'
 # decks went down 7 px, first difference step 2295; on r6/levels for the tutorial's fallen branch, first
-# difference step 218, the autopilot hopping onto it). Level changes
+# difference step 218, the autopilot hopping onto it; on art/animals-r2 for the real-size rowing boats and the
+# harbour 256 px wider, first difference step 2264, the autopilot waiting longer on the quay for the first boat). Level changes
 # legitimately change this trace:
 # Pepper herself is proven unchanged by tools/check_pepper_lab.sh (a test room, no level) and
 # tools/check_pepper_files.sh (her files against aa38be5). Run from the repo root; needs LÖVE (headless: xvfb-run).

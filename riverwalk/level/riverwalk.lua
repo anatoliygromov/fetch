@@ -1,6 +1,7 @@
 -- Level 1: River Walk (greybox). Terrain is in riverwalk.map; this file places everything else.
 -- x, y in level pixels; y grows downwards; "feet" = the y Pepper stands on.
--- Upper promenade feet y = 184, lower quay y = 216, river surface y = 224. The level is 3840 px (12 screens).
+-- Upper promenade feet y = 184, lower quay y = 216, river surface y = 224. The level is 4096 px (12.8 screens; the harbour widened 256 px for the real-size
+-- rowing boats, 25 Oct).
 -- Manner: water and traffic (docs/progression.md). New here: the harbour's rowing boats and the gulls.
 --
 -- Screens (320 px each):
@@ -88,25 +89,25 @@ L.props = {
   { name = "BOAT",     kind = "solid",  layer = "play", x0 = FX + 2,   x1 = FX + 237, y0 = 206, y1 = 236, art = "ferry", ax = FX, ay = 233, noshadow = true },
   { name = "SALOON",   kind = "solid",  layer = "play", x0 = FX + 60,  x1 = FX + 180, y0 = 184, y1 = 206, hidden = true },
   { name = "WHEELHOUSE", kind = "solid", layer = "play", x0 = FX + 97, x1 = FX + 145, y0 = 154, y1 = 184, hidden = true },
-  -- the harbour (screens 8-9, 2112-2752), on the quay's level: open water x 2192-2640 (surface y 224). Two rowing
-  -- boats (movers; a rower in each) row to and fro; between them a jetty on piles (top y 196, 16 px above a boat's
-  -- deck: a hop, 23 px). Gulls circle over the water and swoop at a standing Pepper (crawl to duck, or bark).
-  { name = "JETTY",    kind = "solid",  layer = "play", x0 = 2400, x1 = 2448, y0 = 196, y1 = 240, hidden = true },   -- drawn in code
+  -- the harbour (screens 8-10, 2112-3008), on the quay's level: open water x 2192-2896 (surface y 224). Two rowing
+  -- boats (movers; a rower in each, real size: hulls 182 px) row to and fro; between them a jetty on piles (top y
+  -- 196, 16 px above a boat's deck: a hop). Gulls circle over the water and swoop at a standing Pepper (crawl to duck, or bark).
+  { name = "JETTY",    kind = "solid",  layer = "play", x0 = 2528, x1 = 2576, y0 = 196, y1 = 240, hidden = true },   -- drawn in code
   -- promenade B
-  { name = "",         kind = "decor",  layer = "back", x0 = 2880, x1 = 3626, y0 = 124, y1 = 174, railing = true },   -- decorative railing by the water
-  { name = "",         kind = "decor",  layer = "back", x0 = 2978, x1 = 3079, y0 = 74,  y1 = 174, art = "tree_far" },
-  { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 2930, x1 = 2974, y0 = 154, y1 = 184, art = "planter_sq" },
+  { name = "",         kind = "decor",  layer = "back", x0 = 3136, x1 = 3882, y0 = 124, y1 = 174, railing = true },   -- decorative railing by the water
+  { name = "",         kind = "decor",  layer = "back", x0 = 3234, x1 = 3335, y0 = 74,  y1 = 174, art = "tree_far" },
+  { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 3186, x1 = 3230, y0 = 154, y1 = 184, art = "planter_sq" },
   -- bike zone 2
-  { name = "POT",      kind = "decor",  layer = "play", x0 = 3188, x1 = 3205, y0 = 147, y1 = 174, art = "pot" },
-  { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 3081, x1 = 3183, y0 = 152, y1 = 184, art = "flowerbox_front", ax = 3080, ay = 184 },
-  { name = "SAND",     kind = "solid",  layer = "play", x0 = 3240, x1 = 3326, y0 = 152, y1 = 184, art = "gritbox_front", ax = 3239, ay = 184 },
+  { name = "POT",      kind = "decor",  layer = "play", x0 = 3444, x1 = 3461, y0 = 147, y1 = 174, art = "pot" },
+  { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 3337, x1 = 3439, y0 = 152, y1 = 184, art = "flowerbox_front", ax = 3336, ay = 184 },
+  { name = "SAND",     kind = "solid",  layer = "play", x0 = 3496, x1 = 3582, y0 = 152, y1 = 184, art = "gritbox_front", ax = 3495, ay = 184 },
   -- a planter right before the bin: a step (30 px: a tap hop and a scramble), then 26 px more up to the bin top
-  { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 3372, x1 = 3416, y0 = 154, y1 = 184, art = "planter_sq" },
-  { name = "BIN",      kind = "solid",  layer = "play", x0 = 3416, x1 = 3451, y0 = 128, y1 = 184, art = "bin", ax = 3415, ay = 184 },
+  { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 3628, x1 = 3672, y0 = 154, y1 = 184, art = "planter_sq" },
+  { name = "BIN",      kind = "solid",  layer = "play", x0 = 3672, x1 = 3707, y0 = 128, y1 = 184, art = "bin", ax = 3671, ay = 184 },
   -- screen 10: the girl
-  { name = "GABLE",    kind = "decor",  layer = "back", x0 = 3626, x1 = 3696, y0 = -1,  y1 = 174, art = "gable" },
-  { name = "CAFE",     kind = "decor",  layer = "back", x0 = 3690, x1 = 3840, y0 = -31, y1 = 174, art = "cafe" },
-  { name = "BENCH",    kind = "solid",  layer = "play", x0 = 3548, x1 = 3644, y0 = 156, y1 = 165, art = "bench", ax = 3545, ay = 184, depth = 5 },
+  { name = "GABLE",    kind = "decor",  layer = "back", x0 = 3882, x1 = 3952, y0 = -1,  y1 = 174, art = "gable" },
+  { name = "CAFE",     kind = "decor",  layer = "back", x0 = 3946, x1 = 4096, y0 = -31, y1 = 174, art = "cafe" },
+  { name = "BENCH",    kind = "solid",  layer = "play", x0 = 3804, x1 = 3900, y0 = 156, y1 = 165, art = "bench", ax = 3801, ay = 184, depth = 5 },
   -- the bridge over the far quay (screen 7): granite abutment art (138 x 162) over the pier's collision
   -- (riverwalk.map, x 1936-2072, y 0-192); Pepper crawls through the low passage under its lintel (y 192-216).
   -- Drawing only: kind decor adds no collision. covers = true: the ground painter leaves the pier's greybox out.
@@ -130,8 +131,8 @@ L.lamps = {
   { x = 590,  y = 184, checkpoint = true },
   { x = 1350, y = 216, checkpoint = true },
   { x = 2120, y = 216, checkpoint = true },    -- before the harbour
-  { x = 2660, y = 216, checkpoint = true },    -- after it
-  { x = 3215, y = 184, checkpoint = true },
+  { x = 2916, y = 216, checkpoint = true },    -- after it
+  { x = 3471, y = 184, checkpoint = true },
 }
 -- a lamp Pepper reaches while carrying the ball becomes its home (a ball lost in the harbour comes back there)
 L.ballHomeAtLamps = true
@@ -141,7 +142,7 @@ L.pieces = {
   { kind = "kennel", x0 = 0, x1 = 34, y0 = 148, door = 165 },
   { kind = "kiosk",  x0 = 736, x1 = 824, y0 = 112, bx0 = 748, bx1 = 812 },
   { kind = "kiosk",  x0 = 888, x1 = 968, y0 = 112, bx0 = 900, bx1 = 956 },
-  { kind = "jetty",  x0 = 2400, x1 = 2448, y0 = 196 },
+  { kind = "jetty",  x0 = 2528, x1 = 2576, y0 = 196 },
 }
 
 -- the pontoon: a rope ferry over the river (water 1392-1808). It waits by the ferry; the ferry's crew winch it
@@ -150,16 +151,16 @@ L.pieces = {
 L.movers = {
   { name = "PONTOON", x0 = 1400, x1 = 1448, y0 = 214, y1 = 220, from = 1400, to = 1504, speed = 30,
     call = { 1150, 1398 }, callSpeed = 60, rope = { 1392, 1562 } },
-  -- the rowing boats in the harbour: rowed to and fro between from and to (deck y 219, low in the water, 56 wide), resting 1.5 s at
-  -- each end. The first one turns at the quay (2192) and by the jetty (2400); the second by the jetty and at the
-  -- far quay (2640).
-  { name = "ROWBOAT", x0 = 2196, x1 = 2252, y0 = 219, y1 = 225, from = 2196, to = 2340, speed = 30, pause = 1.5 },
-  { name = "ROWBOAT", x0 = 2456, x1 = 2512, y0 = 219, y1 = 225, from = 2456, to = 2580, speed = 34, pause = 1.5 },
+  -- the rowing boats in the harbour: rowed to and fro between from and to (deck y 212, 12 px above the surface and
+  -- 4 px above the quay: a step; 178 wide, the hull less its tips), resting 1.5 s at each end. The first one turns
+  -- at the quay (2192) and by the jetty (2528); the second by the jetty (2576) and at the far quay (2896).
+  { name = "ROWBOAT", x0 = 2196, x1 = 2374, y0 = 212, y1 = 218, from = 2196, to = 2346, speed = 30, pause = 1.5 },
+  { name = "ROWBOAT", x0 = 2584, x1 = 2762, y0 = 212, y1 = 218, from = 2584, to = 2714, speed = 34, pause = 1.5 },
 }
 -- gulls (critters.lua): one over the harbour, one over promenade B up to bike zone 2
 L.critters = {
-  { kind = "gull", x0 = 2192, x1 = 2640, every = 4.5 },
-  { kind = "gull", x0 = 2880, x1 = 3060, every = 4.5 },     -- (over promenade B before the bikes, not over them)
+  { kind = "gull", x0 = 2192, x1 = 2896, every = 4.5 },
+  { kind = "gull", x0 = 3136, x1 = 3316, every = 4.5 },     -- (over promenade B before the bikes, not over them)
   -- (r6/levels, teach before testing) the first gull only circles over the ferry and the far quay, seen while
   -- Pepper fetches the ball: x1 < x0 leaves it no stretch to hunt in (critters.lua swoops only while Pepper is
   -- between x0 and x1), so it never swoops. The harbour's gull is the first that does.
@@ -167,7 +168,7 @@ L.critters = {
 }
 
 L.ball = { x = FX + 108, y = 154 }
-L.girl = { x = 3780, y = 184 }
+L.girl = { x = 4036, y = 184 }
 L.outro = { "A BIRD TOOK THE BALL!" }
 
 -- bones: x, feet y (drawn floating 9 px above); super = 1,000 points
@@ -187,15 +188,15 @@ L.bones = {
   -- far quay, under the bridge
   { x = 1872, y = 216 }, { x = 1962, y = 216 }, { x = 2004, y = 216 }, { x = 2046, y = 216 },
   -- the harbour: over the boats, the jetty (gold high above it), the far quay
-  { x = 2150, y = 216 }, { x = 2236, y = 196 }, { x = 2300, y = 196 }, { x = 2364, y = 196 }, { x = 2414, y = 196 },
-  { x = 2434, y = 196 }, { x = 2424, y = 150, super = true }, { x = 2490, y = 196 }, { x = 2550, y = 196 },
-  { x = 2610, y = 196 }, { x = 2690, y = 216 }, { x = 2762, y = 216 },
+  { x = 2150, y = 216 }, { x = 2236, y = 196 }, { x = 2300, y = 196 }, { x = 2364, y = 196 }, { x = 2542, y = 196 },
+  { x = 2562, y = 196 }, { x = 2552, y = 150, super = true }, { x = 2618, y = 196 }, { x = 2678, y = 196 },
+  { x = 2738, y = 196 }, { x = 2946, y = 216 }, { x = 3018, y = 216 },
   -- promenade B
-  { x = 2852, y = 184 }, { x = 2952, y = 154 }, { x = 3030, y = 184 },
-  { x = 3106, y = 152 }, { x = 3132, y = 152 }, { x = 3158, y = 152 },
-  { x = 3262, y = 152 }, { x = 3284, y = 152 }, { x = 3306, y = 152 }, { x = 3394, y = 154 }, { x = 3433, y = 128 },
+  { x = 3108, y = 184 }, { x = 3208, y = 154 }, { x = 3286, y = 184 },
+  { x = 3362, y = 152 }, { x = 3388, y = 152 }, { x = 3414, y = 152 },
+  { x = 3518, y = 152 }, { x = 3540, y = 152 }, { x = 3562, y = 152 }, { x = 3650, y = 154 }, { x = 3689, y = 128 },
   -- the end
-  { x = 3572, y = 156 }, { x = 3596, y = 156 }, { x = 3620, y = 156 },
+  { x = 3828, y = 156 }, { x = 3852, y = 156 }, { x = 3876, y = 156 },
 }
 
 -- bike zones: a cyclist rides right to left along the promenade while Pepper is in a zone; it rides on until
@@ -203,7 +204,7 @@ L.bones = {
 -- wheels 29 px; was 48 x 26 for the small cyclist art); 28 px tall keeps the perches (tops y 152-154) safe
 L.bikes = {
   { zoneX0 = 790,  zoneX1 = 1228, minY = 150, every = 6.5, speed = 115, endX = 600, w = 70, h = 28 },     -- (r6/levels: the tutorial's pace again; levels/v2 had 5.5 s, 125 px/s)
-  { zoneX0 = 3040, zoneX1 = 3470, minY = 150, every = 5.0, speed = 135, endX = 2890, w = 70, h = 28 },    -- (was 6.0 s, 115 px/s)
+  { zoneX0 = 3296, zoneX1 = 3726, minY = 150, every = 5.0, speed = 135, endX = 3146, w = 70, h = 28 },    -- (was 6.0 s, 115 px/s)
   -- (r6/levels, teach before testing) the first bike: Pepper's middle is between 624 and 693 only while she is
   -- up on the bin, so this zone sends one bike (start = enter) right under her as she climbs it: she sees it pass
   -- in safety, doing nothing. Then bike zone 1 asks her to use the perches.
@@ -214,14 +215,14 @@ L.bikes = {
 L.secrets = {
   { name = "KENNEL",      x0 = 0,   x1 = 30,  y0 = 176, y1 = 184 },    -- inside the kennel
   { name = "KIOSK ROOFS", x0 = 876, x1 = 980, y0 = 100, y1 = 112 },    -- the second kiosk's awning
-  { name = "JETTY JUMP",  x0 = 2400, x1 = 2448, y0 = 140, y1 = 152 },  -- a held jump from the jetty (gold)
+  { name = "JETTY JUMP",  x0 = 2528, x1 = 2576, y0 = 140, y1 = 152 },  -- a held jump from the jetty (gold)
 }
 
 -- hints (St:hint, drawn by talk.lua): first match wins. With btn ("a", "b", "x", "y", "down") it is Pepper's
 -- control hint: a button picture and 1 to 3 words. Without, it is the girl's line. need: see St:zoneHint.
 L.hints = {
   { x0 = 1550, x1 = 1800, btn = "x",    text = "PICK UP",            need = "nearball" },
-  { x0 = 3690, x1 = 3840, btn = "x",    text = "GIVE",               need = "ball" },
+  { x0 = 3946, x1 = 4096, btn = "x",    text = "GIVE",               need = "ball" },
   { x0 = 0,    x1 = 66,   btn = "right", text = "RUN" },                     -- (r6/levels: the tutorial, in order)
   { x0 = 66,   x1 = 200,  btn = "down", text = "CRAWL",              minY = 183 },   -- under the bench (on the pavement)
   { x0 = 200,  x1 = 271,  btn = "a",    text = "TAP: HOP" },                 -- over the fallen branch
@@ -229,16 +230,16 @@ L.hints = {
   { x0 = 560,  x1 = 641,  btn = "a",    text = "HOLD: CLIMB" },
   { x0 = 624,  x1 = 693,  text = "A BIKE! STAY UP HERE!", maxY = 130 },     -- the first bike, from the bin
   { x0 = 1868, x1 = 1936, btn = "down", text = "CRAWL" },
-  { x0 = 0,    x1 = 3840, btn = "down", text = "DUCK!",              need = "gull" },
+  { x0 = 0,    x1 = 4096, btn = "down", text = "DUCK!",              need = "gull" },
   { x0 = 790,  x1 = 1228, text = "BIKES! GET UP HIGH!", bike = true },
   { x0 = 1290, x1 = 1400, text = "RIDE THE RAFT!" },
   { x0 = 1550, x1 = 1800, text = "CLIMB UP ON THE BOAT!", need = "noball" },
-  { x0 = 2100, x1 = 2196, text = "HOP ON THE LITTLE BOAT!" },
-  { x0 = 2400, x1 = 2448, text = "WAIT FOR THE NEXT BOAT!", maxY = 197 },
-  { x0 = 3040, x1 = 3470, text = "BIKES! GET UP HIGH!", bike = true },
-  { x0 = 3620, x1 = 3840, text = "BRING ME THE BALL!", need = "ball" },
-  { x0 = 3620, x1 = 3840, text = "FIND THE BALL ON THE BOAT!", need = "untouched" },
-  { x0 = 3620, x1 = 3840, text = "GO BACK FOR THE BALL!", need = "noball" },
+  { x0 = 2100, x1 = 2196, text = "HOP ON THE BOAT!" },
+  { x0 = 2528, x1 = 2576, text = "WAIT FOR THE NEXT BOAT!", maxY = 197 },
+  { x0 = 3296, x1 = 3726, text = "BIKES! GET UP HIGH!", bike = true },
+  { x0 = 3876, x1 = 4096, text = "BRING ME THE BALL!", need = "ball" },
+  { x0 = 3876, x1 = 4096, text = "FIND THE BALL ON THE BOAT!", need = "untouched" },
+  { x0 = 3876, x1 = 4096, text = "GO BACK FOR THE BALL!", need = "noball" },
 }
 
 L.intro = { "LEVEL 1", "RIVER WALK", "THE BALL IS ON A BOAT!" }

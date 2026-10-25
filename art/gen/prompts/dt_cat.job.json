@@ -10,7 +10,7 @@
  "prompt_file": "art/gen/prompts/dt_cat.txt",
  "k": null,
  "frame": [
-  72,
+  96,
   56
  ],
  "credits": 12,
@@ -24,8 +24,8 @@
  "spritecook": {
   "model": "pixel-engine-image-v1",
   "pixel": true,
-  "width": 14,
-  "height": 15
+  "width": 26,
+  "height": 30
  },
- "ledger_job": "dt_cat@1025-171212"
+ "ledger_job": "dt_cat@1025-202222"
 }

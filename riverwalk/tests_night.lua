@@ -102,7 +102,7 @@ return function(mode, api)
           report("ball: it rests under the low jetty", s.ball.state == "rest" and near(s.ball.x, h.x, 2) and near(s.ball.y, 184), ("%s x %.0f y %.0f"):format(s.ball.state, s.ball.x, s.ball.y))
           local tx = Nt.target(s); report("sniff: the trail now points at the ball", tx == s.ball.x, tostring(tx)) end },
       -- crawl under the low jetty to the ball and pick it up
-      { act = function() local j = prop("LOW JETTY"); report("low jetty: 19 px to crawl under", 184 - j.y1 == 19, ("%d px"):format(184 - j.y1)); tp(2930, 184); hold("right", "down") end },
+      { act = function() local j = prop("LOW JETTY"); report("low jetty: 19 px to crawl under", 184 - j.y1 == 19, ("%d px"):format(184 - j.y1)); tp(3058, 184); hold("right", "down") end },
       at(function(p, s) return p.x + 18 >= s.ball.x - 4 end, function() release() end, 4),
       { wait = 0.2 }, { act = function() hold("down"); love.keypressed("x") end }, { wait = 0.3 },
       { act = function(p, s) report("ball: picked up crawling under the jetty", p.carrying ~= nil, tostring(p.carrying ~= nil)); release() end },
@@ -119,37 +119,37 @@ return function(mode, api)
       { act = function(p, s) local k = plank(1); report("plank: it is back 3 s later", k.st == "idle", k.st) end },
       -- a running hop chain over the four rotten planks (tap hops), from the quay
       { act = function(p, s) for _, k in ipairs(s.night.planks) do if k.st == "gone" then s.world.rects[#s.world.rects + 1] = k.p end; k.st, k.t = "idle", 0 end
-          hearts = s.hearts; tp(2240, 184); hold("right") end },
-      at(function(p) return p.x >= 2266 end, function() jump("right", "jump") end),          -- (r7: narrower planks)
+          hearts = s.hearts; tp(2368, 184); hold("right") end },
+      at(function(p) return p.x >= 2394 end, function() jump("right", "jump") end),          -- (r7: narrower planks)
       { wait = 1 / 60 }, { act = function() hold("right") end },
-      at(function(p) return p.onGround and p.x > 2300 end, function() jump("right", "jump") end, 2),
+      at(function(p) return p.onGround and p.x > 2428 end, function() jump("right", "jump") end, 2),
       { wait = 1 / 60 }, { act = function() hold("right") end },
-      at(function(p) return p.onGround and p.x > 2356 end, function() jump("right", "jump") end, 2),
+      at(function(p) return p.onGround and p.x > 2484 end, function() jump("right", "jump") end, 2),
       { wait = 1 / 60 }, { act = function() hold("right") end },
-      at(function(p) return p.onGround and p.x > 2412 end, function() jump("right", "jump") end, 2),
+      at(function(p) return p.onGround and p.x > 2540 end, function() jump("right", "jump") end, 2),
       { wait = 1 / 60 }, { act = function() hold("right") end },
-      at(function(p) return p.onGround and p.x > 2520 end, function() release() end, 3),
-      { act = function(p, s) report("rotten planks: four tap hops get across", p.x > 2520 and p.y == 184 and s.hearts == hearts, ("x %.0f hearts %d"):format(p.x, s.hearts)) end },
+      at(function(p) return p.onGround and p.x > 2648 end, function() release() end, 3),
+      { act = function(p, s) report("rotten planks: four tap hops get across", p.x > 2648 and p.y == 184 and s.hearts == hearts, ("x %.0f hearts %d"):format(p.x, s.hearts)) end },
       -- the rowboat: it comes to the quay, she rides it, it reaches the far side
       { act = function(p, s) local m = s.movers[1]
-          report("rowboat 1: deck 12 px below the quay, rows 176 px", m.y0 == 196 and m.to - m.from == 176, ("deck %d"):format(m.y0)) end },
+          report("rowboat 1: deck 12 px below the quay, rows 182 px", m.y0 == 196 and m.to - m.from == 182, ("deck %d"):format(m.y0)) end },
       at(function(p, s) return s.movers[1].x0 <= s.movers[1].from + 1 end, function() tp(1316, 184); hold("right") end, 20),
-      at(function(p, s) return p.ground == s.movers[1] end, function() release() end, 3),
+      at(function(p, s) return p.ground == s.movers[1] and p.x >= s.movers[1].x0 + 150 end, function() release() end, 8),   -- to its front end
       at(function(p, s) return s.movers[1].x0 >= s.movers[1].to - 1 end, function() jump("right", "jump") end, 12),
-      at(function(p) return p.onGround and p.x > 1560 end, function() release() end, 3),
-      { act = function(p) report("rowboat 1: ride across, hop up the far quay", p.x > 1560 and p.y == 184, ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      at(function(p) return p.onGround and p.x > 1688 end, function() release() end, 3),
+      { act = function(p) report("rowboat 1: ride across, hop up the far quay", p.x > 1688 and p.y == 184, ("x %.0f y %.0f"):format(p.x, p.y)) end },
       -- the climbs: the stack and the shed roof (secret), the crate tower (secret)
-      { act = function() tp(1880, 184); hold("right") end },
-      at(function(p) return p.x >= 1888 end, function() jump("right", "jump") end),
+      { act = function() tp(2008, 184); hold("right") end },
+      at(function(p) return p.x >= 2016 end, function() jump("right", "jump") end),
       at(function(p) return p.onGround and p.y <= 153 end, function() hold("right") end, 3),
-      at(function(p) return p.x >= 1934 end, function() jump("right", "jump") end, 3),
+      at(function(p) return p.x >= 2062 end, function() jump("right", "jump") end, 3),
       at(function(p) return p.onGround and p.y <= 113 end, function() release() end, 3),
       { wait = 0.2 },
       { act = function(p, s) report("shed roof: stack then held jump (secret)", p.y == 112 and s.secretsFound >= 1, ("y %.0f secrets %d"):format(p.y, s.secretsFound)) end },
-      { act = function() tp(3540, 184); hold("right") end },
-      at(function(p) return p.x >= 3570 end, function() jump("right", "jump") end),
+      { act = function() tp(3796, 184); hold("right") end },
+      at(function(p) return p.x >= 3826 end, function() jump("right", "jump") end),
       at(function(p) return p.onGround and p.y <= 169 end, function() hold("right") end, 3),
-      at(function(p) return p.onGround and (p.y <= 121 or p.x >= 3642) end, function(p) if p.y > 121 then jump("right", "jump") end end, 3),
+      at(function(p) return p.onGround and (p.y <= 121 or p.x >= 3898) end, function(p) if p.y > 121 then jump("right", "jump") end end, 3),
       at(function(p) return p.onGround and p.y <= 121 end, function() release() end, 3),
       { wait = 0.2 },
       { act = function(p, s) report("crate tower: three steps up (secret)", p.y == 120 and s.secretsFound >= 2, ("y %.0f secrets %d"):format(p.y, s.secretsFound)) end },
@@ -200,36 +200,36 @@ return function(mode, api)
       -- 5 the rowboat: wait for it at the quay, ride, hop off
       at(function(p) return p.x >= 1290 end, function() release() end),
       at(function(p, s) return s.movers[1].x0 <= s.movers[1].from + 2 end, function() hold("right") end, 20),
-      at(function(p, s) return p.ground == s.movers[1] and p.x >= s.movers[1].x0 + 28 end, function() release() end, 3),
+      at(function(p, s) return p.ground == s.movers[1] and p.x >= s.movers[1].x0 + 150 end, function() release() end, 8),   -- to its front end
       at(function(p, s) return s.movers[1].x0 >= s.movers[1].to - 1 end, function() jump("right", "jump") end, 12),
-      at(function(p) return p.onGround and p.x > 1560 end, function() hold("right") end, 3),
+      at(function(p) return p.onGround and p.x > 1688 end, function() hold("right") end, 3),
       -- 6 fish boxes, over the net shed's roof
-      at(function(p) return p.x >= 1650 end, function() jump("right", "jump") end),
+      at(function(p) return p.x >= 1778 end, function() jump("right", "jump") end),
       { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p) return p.onGround and p.y <= 169 end, function() jump("right", "jump") end),
       { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p) return p.onGround and p.y <= 153 end, function() hold("right") end),
-      at(function(p) return p.x >= 1736 end, function() jump("right", "jump") end),
+      at(function(p) return p.x >= 1864 end, function() jump("right", "jump") end),
       { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p) return p.onGround and p.y <= 159 end, function() hold("right") end, 3),
       -- 7 the stack, the shed roof (gold bone, secret), down, bark the fox out of the crates
-      at(function(p) return p.onGround and p.y <= 153 and p.x > 1900 end, function() hold("right") end, 4),
-      at(function(p) return p.x >= 1930 end, function() jump("right", "jump") end, 3),
+      at(function(p) return p.onGround and p.y <= 153 and p.x > 2028 end, function() hold("right") end, 4),
+      at(function(p) return p.x >= 2058 end, function() jump("right", "jump") end, 3),
       at(function(p) return p.onGround and p.y <= 113 end, function() hold("right") end, 3),
-      at(function(p) return p.onGround and p.y >= 183 and p.x > 2040 end, function() release() end, 4),
+      at(function(p) return p.onGround and p.y >= 183 and p.x > 2168 end, function() release() end, 4),
       { wait = 0.2 }, { act = function() hold("sniff") end }, at(function(p, s) return s.night.fox.found end, function() release() end, 4),
       { wait = 0.1 }, { act = function() love.keypressed("z") end }, { wait = 0.6 },
       at(function(p, s) return s.night.fox.i == 3 end, function() hold("right") end),
       -- 8 rotten planks: four tap hops (each lands on the next plank)
-      at(function(p) return p.x >= 2266 end, function() jump("right", "jump") end),          -- (r7: narrower planks)
+      at(function(p) return p.x >= 2394 end, function() jump("right", "jump") end),          -- (r7: narrower planks)
       { wait = 1 / 60 }, { act = function() hold("right") end },
-      at(function(p) return p.onGround and p.x > 2300 end, function() jump("right", "jump") end, 2),
+      at(function(p) return p.onGround and p.x > 2428 end, function() jump("right", "jump") end, 2),
       { wait = 1 / 60 }, { act = function() hold("right") end },
-      at(function(p) return p.onGround and p.x > 2356 end, function() jump("right", "jump") end, 2),
+      at(function(p) return p.onGround and p.x > 2484 end, function() jump("right", "jump") end, 2),
       { wait = 1 / 60 }, { act = function() hold("right") end },
-      at(function(p) return p.onGround and p.x > 2412 end, function() jump("right", "jump") end, 2),
+      at(function(p) return p.onGround and p.x > 2540 end, function() jump("right", "jump") end, 2),
       { wait = 1 / 60 }, { act = function() hold("right") end },
-      at(function(p) return p.onGround and p.x > 2520 end, function() release() end, 3),
+      at(function(p) return p.onGround and p.x > 2648 end, function() release() end, 3),
       -- 9 two boats and the post
       at(function(p, s) return s.movers[2].x0 <= s.movers[2].from + 2 end, function() hold("right") end, 20),
       at(function(p, s) return p.ground == s.movers[2] and p.x >= s.movers[2].x0 + 20 end, function() release() end, 3),
@@ -240,36 +240,36 @@ return function(mode, api)
       { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p, s) return p.ground == s.movers[3] end, function() release() end, 3),
       at(function(p, s) return s.movers[3].x0 >= s.movers[3].to - 1 end, function() jump("right", "jump") end, 12),
-      at(function(p) return p.onGround and p.x > 2840 end, function() hold("right") end, 3),
+      at(function(p) return p.onGround and p.x > 2968 end, function() hold("right") end, 3),
       -- 10 the low jetty: bark at the fox, crawl under, pick up the ball
-      at(function(p) return p.x >= 2930 end, function() release() end, 4),
+      at(function(p) return p.x >= 3058 end, function() release() end, 4),
       { wait = 0.2 }, { act = function() hold("sniff") end }, at(function(p, s) return s.night.fox.found end, function() release() end, 4),
       { wait = 0.1 }, { act = function() love.keypressed("z") end }, { wait = 1.2 },
       at(function(p, s) return s.ball.state == "rest" end, function() hold("right", "down") end, 4),
       at(function(p, s) return p.x + 18 >= s.ball.x - 4 end, function() release() end, 6),
       { wait = 0.2 }, { act = function() hold("down"); love.keypressed("x") end }, { wait = 0.4 },
       at(function(p) return p.carrying ~= nil end, function() hold("right", "down") end, 2),
-      at(function(p) return p.x >= 3096 end, function() hold("right") end, 6),
+      at(function(p) return p.x >= 3224 end, function() hold("right") end, 6),
       -- 11 back over: the third rowboat, one crumbling plank
-      at(function(p) return p.x >= 3210 end, function() release() end),
+      at(function(p) return p.x >= 3338 end, function() release() end),
       at(function(p, s) return s.movers[4].x0 <= s.movers[4].from + 2 end, function() hold("right") end, 20),
-      at(function(p, s) return p.ground == s.movers[4] and p.x >= s.movers[4].x0 + 28 end, function() release() end, 3),
+      at(function(p, s) return p.ground == s.movers[4] and p.x >= s.movers[4].x0 + 150 end, function() release() end, 8),   -- to its front end
       at(function(p, s) return s.movers[4].x0 >= s.movers[4].to - 1 end, function() jump("right", "jump") end, 12),
-      at(function(p) return p.onGround and p.x > 3400 end, function() hold("right") end, 3),
-      at(function(p) return p.x >= 3412 end, function() jump("right", "jump") end),
+      at(function(p) return p.onGround and p.x > 3656 end, function() hold("right") end, 3),
+      at(function(p) return p.x >= 3668 end, function() jump("right", "jump") end),
       { wait = 1 / 60 }, { act = function() hold("right") end },
-      at(function(p) return p.onGround and p.x > 3430 end, function() jump("right", "jump") end, 2),     -- (r7) two narrow planks
+      at(function(p) return p.onGround and p.x > 3686 end, function() jump("right", "jump") end, 2),     -- (r7) two narrow planks
       { wait = 1 / 60 }, { act = function() hold("right") end },
-      at(function(p) return p.onGround and p.x > 3470 end, function() jump("right", "jump") end, 2),
+      at(function(p) return p.onGround and p.x > 3726 end, function() jump("right", "jump") end, 2),
       { wait = 1 / 60 }, { act = function() hold("right") end },
-      at(function(p) return p.onGround and p.x > 3510 end, function() hold("right") end, 3),
+      at(function(p) return p.onGround and p.x > 3766 end, function() hold("right") end, 3),
       -- 12 the crate tower (gold bone, secret)
-      at(function(p) return p.x >= 3570 end, function() jump("right", "jump") end),
+      at(function(p) return p.x >= 3826 end, function() jump("right", "jump") end),
       at(function(p) return p.onGround and p.y <= 169 end, function() hold("right") end, 3),
-      at(function(p) return p.onGround and (p.y <= 121 or p.x >= 3642) end, function(p) if p.y > 121 then jump("right", "jump") end end, 3),
+      at(function(p) return p.onGround and (p.y <= 121 or p.x >= 3898) end, function(p) if p.y > 121 then jump("right", "jump") end end, 3),
       at(function(p) return p.onGround and p.y <= 121 end, function() hold("right") end, 3),
       -- 13 the slipway: boat, plank, boat, the quay
-      at(function(p) return p.x >= 3770 end, function() release() end),
+      at(function(p) return p.x >= 4026 end, function() release() end),
       at(function(p, s) return s.movers[5].x0 <= s.movers[5].from + 2 end, function() hold("right") end, 20),
       at(function(p, s) return p.ground == s.movers[5] and p.x >= s.movers[5].x0 + 22 end, function() release() end, 3),
       at(function(p, s) return s.movers[5].x0 >= s.movers[5].to - 1 end, function() jump("right", "jump") end, 12),
@@ -278,7 +278,7 @@ return function(mode, api)
       { wait = 1 / 60 }, { act = function() hold("right") end },
       at(function(p, s) return p.onGround and p.ground == s.movers[6] end, function() release() end, 3),
       at(function(p, s) return s.movers[6].x0 >= s.movers[6].to - 1 end, function() jump("right", "jump") end, 12),
-      at(function(p) return p.onGround and p.x > 4080 end, function() hold("right") end, 3),
+      at(function(p) return p.onGround and p.x > 4336 end, function() hold("right") end, 3),
       -- 14 home: Mia
       at(function(p, s) return p.onGround and p.y >= 183 and p.x >= s.girl.x - 40 end, function() release() end, 15),
       { wait = 0.3 }, { act = function() love.keypressed("x") end },
@@ -291,12 +291,12 @@ return function(mode, api)
     local function shot(name, cam) return { act = function() if cam then api.stage().cam = cam end; love.graphics.captureScreenshot(name .. ".png") end } end
     steps = { { act = function() api.setState("intro") end }, { wait = 0.6 }, shot("nt_00_intro"),
       { act = function() love.keypressed("space") end }, { wait = 0.3 } }
-    local spots = { { 60, 184 }, { 470, 184 }, { 700, 184 }, { 1200, 184 }, { 1300, 184 }, { 1620, 184 }, { 2150, 184 },
-      { 2250, 184 }, { 2570, 184 }, { 2920, 184 }, { 3200, 184 }, { 3560, 184 }, { 3780, 184 }, { 4180, 184 } }
+    local spots = { { 60, 184 }, { 470, 184 }, { 700, 184 }, { 1200, 184 }, { 1300, 184 }, { 1748, 184 }, { 2100, 184 },
+      { 2378, 184 }, { 2698, 184 }, { 3048, 184 }, { 3328, 184 }, { 3816, 184 }, { 4036, 184 }, { 4436, 184 }, { 4600, 184 } }
     for i, sp in ipairs(spots) do
       steps[#steps + 1] = { act = function() tp(sp[1], sp[2]); local s = api.stage(); s.pepper.face = 1 end }
       steps[#steps + 1] = { wait = 0.4 }
-      steps[#steps + 1] = shot(("nt_%02d_screen%d"):format(i, i), (i - 1) * 320)
+      steps[#steps + 1] = shot(("nt_%02d_screen%d"):format(i, i), math.min((i - 1) * 320, 4416))   -- (4736 wide)
     end
     local function add(t) for _, st in ipairs(t) do steps[#steps + 1] = st end end
     add({
@@ -311,9 +311,9 @@ return function(mode, api)
       { act = function() local k = plank(1); tp((k.p.x0 + k.p.x1) / 2, 184) end }, { wait = 0.3 }, shot("nt_23_plank_shakes"),
       { wait = 0.5 }, shot("nt_24_plank_falls"), { wait = 2.6 },
       -- the low jetty: the ball dropped under it
-      { act = function() foxTo(3); tp(2950, 184); api.stage().pepper.face = 1; love.keypressed("z") end }, { wait = 1.0 }, shot("nt_25_ball_dropped"),
-      { act = function() local s = api.stage(); tp(2980, 184); hold("sniff") end }, { wait = 0.5 }, shot("nt_26_sniff_ball"), { act = function() release() end },
-      { act = function() love.keypressed("g") end }, { wait = 0.1 }, shot("nt_27_debug", 2880), { act = function() love.keypressed("g") end },
+      { act = function() foxTo(3); tp(3078, 184); api.stage().pepper.face = 1; love.keypressed("z") end }, { wait = 1.0 }, shot("nt_25_ball_dropped"),
+      { act = function() local s = api.stage(); tp(3108, 184); hold("sniff") end }, { wait = 0.5 }, shot("nt_26_sniff_ball"), { act = function() release() end },
+      { act = function() love.keypressed("g") end }, { wait = 0.1 }, shot("nt_27_debug", 3008), { act = function() love.keypressed("g") end },
       -- giving Mia the ball: the tally
       { act = function() local s = api.stage(); s.ball.state = "carried"; s.pepper.carrying = s.ball; tp(s.girl.x - 30, 184); s.pepper.face = 1 end },
       { wait = 0.2 }, { act = function() love.keypressed("x") end },

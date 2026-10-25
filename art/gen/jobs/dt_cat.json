@@ -3,18 +3,18 @@
  "level": "riverwalk",
  "layer": "char",
  "kind": "animal",
- "real_height_m": 0.33,
+ "real_height_m": 0.65,
  "target_px": [
-  14,
-  15
+  26,
+  30
  ],
  "checks_px": {
-  "height_to_ears": 15,
-  "width": 12
+  "height_to_ears": 30,
+  "width": 22
  },
  "subject": "a small Abyssinian cat sitting upright facing right, seen from the side: warm ruddy orange ticked coat, cream chest and chin, big upright ears, a green eye, the tail curled round its front paws",
  "part_map": "the orange shapes are the body, chest and head, the two small wedges the ears, the short line at the left the tail tip.",
- "size_sentence": "it is a little more than half as tall as the dog's back. A grown cat, small next to a Labrador.",
+ "size_sentence": "it sits a little lower than the dog's head: a grown cat, slightly smaller than the dog.",
  "model": "sc_pe",
  "variants": 2,
  "tier": "A",
@@ -23,5 +23,11 @@
   "file": "riverwalk/art/cat.png",
   "where": "Downtown: the cat that sits on the ball on the statue's arm, scared, leaps and runs (scene.lua Sc.cat)"
  },
- "extra": "Output exactly at the requested size, transparent background."
+ "extra": "Output exactly at the requested size, transparent background.",
+ "note": "owner 25 Oct 20:16-20:18: 'the cat needs to be bigger, slightly smaller than the dog'; go on about 30 px sitting (was 16)",
+ "retry": {
+  "n": 2,
+  "changed": "size 16 -> 30 px sitting",
+  "why": "owner: bigger"
+ }
 }

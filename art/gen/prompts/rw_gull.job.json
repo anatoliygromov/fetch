@@ -24,8 +24,8 @@
  "spritecook": {
   "model": "pixel-engine-image-v1",
   "pixel": true,
-  "width": 40,
-  "height": 17
+  "width": 32,
+  "height": 13
  },
- "ledger_job": "rw_gull@1025-194030"
+ "ledger_job": "rw_gull@1025-202223"
 }
