@@ -9,7 +9,7 @@ As of Sun 25 Oct 2026, 15:30. Rules: `docs/BIBLE.md`. Decisions: the review boar
 - Independent review: round 1 found 8 fails (lime rim, frame-cut crown, house quoin gap); fixed; round 2 9/9 PASS on all three (`art/gen/reviews/`).
 - On the board: family card "River Walk sample screen" (3 pieces). `tools/pipeline.py status`: rw_home, rw_lime, rw_rail_bg wait for the board.
 - Palette `art/palettes/riverwalk.gpl` is v2 on this branch (86 colours: v1 + the three pieces' ramps); it stands only with the board approve.
-- Frames: `docs/review/25oct/`. Build on the Mac: `2d game test/FETCH_SAMPLE_25oct.love`.
+- Frames: `docs/review/25oct/`. Build on the Mac: `2d game test/SAMPLE SCREEN 25 Oct/FETCH_SAMPLE_25oct.love` (branch head 54b2f07).
 
 ## Waiting for the owner (max 3)
 
