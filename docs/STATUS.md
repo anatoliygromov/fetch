@@ -1,8 +1,8 @@
 # FETCH! Status
 
-As of Sun 25 Oct 2026, night (23:14). Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
+As of Sun 25 Oct 2026, night (23:43). Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
 
-## Night of 25 Oct (unattended run, 20:28 to 23:14 Stockholm)
+## Night of 25 Oct (unattended run, 20:28 to 23:43 Stockholm)
 
 0 credits, no image service call, nothing merged, nothing posted to the board or to the Layer Plans doc. Base read at 20:30: `preview/25oct-pm` f54a219 (this branch is cut from it); the evening session's newer STATUS (`preview/25oct-late` 6c82a8b, 21:31) is kept below this section. Board at 20:16-20:18: approve cloud8_v2, park_log_v2, pier_v2, skyline_v2, rw_home, rw_lime, rw_rail_bg; redraw gull_v3 and cat_v2 (done since as `art/animals-r2`). No board decision after 20:18.
 
@@ -11,20 +11,21 @@ As of Sun 25 Oct 2026, night (23:14). Rules: `docs/BIBLE.md`. Decisions: the rev
    `night/25oct-rw-street-late` (7f1adc8): the same pieces on the 4096 px River Walk of `art/animals-r2`. Merge this one if `art/animals-r2` goes in, the first if not.
 2. `night/25oct-fixes` (f3bf4c0), off 80ec97f. S2 from "Known, next": the quay railings stopped 7 and 69 px short (water showed before the gable), now they reach their props, posts at least 48 px apart (physics test 20). `layout_qa8.py` no longer crashes on the v8 pause (ALL PASS, 169 checks). `check_backdrop.py` measures every column as drawn and lists rw_home and rw_lime (it now fails the old gable alone, correctly). Reviewed, 4 findings fixed.
 3. `night/25oct-prep` (654151a), off c1c37a4. Lamp post and rowing boat scale sheet (a lamp of 4 m or more hides its checkpoint light above the screen; 3 m keeps it); `preflight.py` takes the owner's picked size for animals (`owner_size`; `art/animals-r2` had to set the cat's real height to 0.65 m to pass). Reviewed.
-4. `night/25oct-cp-plan` (497bd84), off c1c37a4. The City Park (tall) layer plan in the River Walk tab's form, the Layer Plans doc's "Next": `docs/layer_plans/citypark_tall.md` with a wireframe and colour and grey sweeps of every screen. Findings: the same 87 px crowns used at two depths, treetop trunks 8 px (true 18-37), keepers 57-64 px (adults need 81), the duck boat 54 px (needs 120), three street lamps in the treetops, both roads in one frame put screens 3-9 at 4-10 usable pieces, far layers out of order (169, 166, 164). 10 decisions in its last section. Not copied into the doc.
-5. `night/25oct-lab` (d9fe696), off c1c37a4. S2: curve T4 failed at 20 seeds (City Park tall, 9.4 % lost runs, the same on main). Cause: the playtest bot's 32 px run-up walked Pepper off the ash branch's end, then off the ledge below, every retry. The run-up now stops at the floor's edge (lab only; game untouched). 20 seeds: T1-T4 PASS, City Park lost 0.6 %, parents DI 26.4 -> 18.9, River Walk identical; later levels move slightly through the carried lives and score. Test `tools/check_lab_runup.py`. Reviewed.
+4. `night/25oct-cp-plan` (fa7fd12), off c1c37a4. The City Park (tall) layer plan in the River Walk tab's form, the Layer Plans doc's "Next": `docs/layer_plans/citypark_tall.md` with a wireframe and colour and grey sweeps of every screen. Findings: the same 87 px crowns used at two depths, treetop trunks 8 px (true 18-37), keepers 57-64 px (adults need 81), the duck boat 54 px (needs 120), three street lamps in the treetops, both roads in one frame put screens 3-9 at 4-10 usable pieces, far layers out of order (169, 166, 164). 10 decisions at its top. An independent fact-check confirmed the key numbers; its five corrections are in. Not copied into the Layer Plans doc.
+   `night/25oct-dt-plan` (f4117ff), stacked on the City Park plan (its tools): the Downtown (tall) plan, `docs/layer_plans/downtown_tall.md`, the doc's other "Next". Findings: the high road is 3.1 to 4.2 m up, a first floor, while the houses behind stop at 2.7 to 4.0 m with roofs on top, so 11 of 12 house tops show; three house scales on one street (doors 93, 58 and 25 px); far layers darkest at the back (163, 171, 180); on the circled plaza screen the statue, crates and awning sit only 4 to 35 luma off the fronts behind them; the shelter is 1.04 m as drawn (real 2.5 m). 6 decisions at its top.
+5. `night/25oct-lab` (d9fe696), off c1c37a4. S2: curve T4 failed at 20 seeds (City Park tall, 9.4 % lost runs, the same on main). Cause: the playtest bot's 32 px run-up walked Pepper off the ash branch's end, then off the ledge below, every retry. The run-up now stops at the floor's edge (lab only; game untouched). 20 seeds: T1-T4 PASS, City Park lost 0.6 %, parents DI 26.4 -> 18.9, River Walk identical; later levels move slightly through the carried lives and score. Test `tools/check_lab_runup.py`. Reviewed. 10 seeds: T1-T4 PASS, City Park lost 3.8 % -> 1.2 %.
 
 **Trials (local only, not pushed).** `prod/integrate` + `art/rw-sample-screen` + `art/rw-fixes` + `night/25oct-fixes` + `night/25oct-rw-street`: only CHANGELOG conflicts (keep both sections); every check green, curve T1-T4 PASS (10 seeds) with DI as on the base. `preview/25oct-late` + `night/25oct-fixes` + `night/25oct-rw-street-late`: merges clean, every check green, curve as on its base.
 
 **Look at**
 - `docs/review/25oct-night/rw_street/screen12_river_view_options_3x.png`, `rw_screen12_before_after_3x.png`, `cards/` (`night/25oct-rw-street`).
-- `docs/layer_plans/citypark_tall.md` and `docs/layer_plans/citypark_tall/wireframe.png` (`night/25oct-cp-plan`).
+- `docs/layer_plans/citypark_tall.md` and `citypark_tall/wireframe.png` (`night/25oct-cp-plan`); `docs/layer_plans/downtown_tall.md` and `downtown_tall/contact.png` (`night/25oct-dt-plan`).
 - `docs/review/25oct-night/fixes/railing_promenadeB_end_before_after_3x.png` (`night/25oct-fixes`); `docs/review/25oct-night/prep/rw_scale_calls_2x.png` (`night/25oct-prep`).
 
 **Waiting for the owner (new tonight)**
 1. Merge into a new `prod/integrate-b`: `art/rw-sample-screen`, `art/rw-fixes`, `night/25oct-fixes`, `night/25oct-prep`, `night/25oct-lab`? (yes or no). The railing fix changes how the approved railing is put together at its ends, not its pixels; the lab fix changes the curve's numbers (above).
 2. Board: rw_gable and rw_cafe, and screen 12's river view: A as built (48 px), B the gable's door bay only (116 px), C the cafe alone (196 px). Pick.
-3. City Park layer plan: this form and its 10 points? Yes, or strike any.
+3. The City Park and Downtown layer plans: their decisions (10 and 6, at the top of each)? Yes, or strike any.
 Still open from before: "Animals round 2" on the board; play `_g`, then v0.7; logo and tagline; lamp post height (sheet ready).
 
 **Problems**
@@ -33,7 +34,7 @@ Still open from before: "Animals round 2" on the board; play `_g`, then v0.7; lo
 - The FETCH! project docs are not reachable from a cloud session: tonight's facts are here, in `docs/art_learnings.md`, the prep README and the CHANGELOG sections.
 - `apt-get install love` fails in its man-page step; LÖVE 11.5 works. No matplotlib: the curve chart is skipped, numbers unaffected.
 
-**Next run, if he says nothing:** no merges. Prep only: the Downtown layer plan (the other half of the Layer Plans doc's "Next"), else an audit.
+**Next run, if he says nothing:** no merges, no new plans (both "Next" plans are done): an audit of every check on `prod/integrate`, and the gable and cafe river view built as he picks.
 
 ---
 
