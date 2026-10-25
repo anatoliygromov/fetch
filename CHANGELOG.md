@@ -21,6 +21,8 @@ Prep for the owner's decision; no game file, map or art changed, 0 credits.
   64 px and the winch man 57 to 64 px beside Mia's 59; 3 street lamps in the treetops; the far city, tree line and
   mid trees within 5 luma (169, 166, 164) because the haze colours get lighter nearer in; no front on the high
   road; 4 to 10 usable pieces in one low-road frame (budget 3).
+- tools/layer_wireframe_tall.py says its scope: City Park's park art; Downtown's town art needs its own placement
+  rules before its tab.
 
 ## Branch `ops/board-25oct`: the owner's board review turned into the art backlog (25 Oct)
 - 42 board items: 1 approve, 12 fix, 28 redraw, 1 open. **docs/art_backlog.md** groups them into families per level

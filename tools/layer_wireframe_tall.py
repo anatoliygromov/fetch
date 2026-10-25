@@ -21,6 +21,9 @@ floor 60 to 236 px down the screen.
 
   python3 -I tools/layer_wireframe_tall.py citypark_tall OUT.png [--cols 3] [--scale 2] [--report OUT.json]
 
+Written for City Park's art (L.art = "park"). Downtown's town art places its pieces by other rules (scene.lua's town
+branch, arthooks.lua) and needs its own placement here before its tab.
+
 --report writes the measured numbers per screen (usable pieces per road, back pieces, front pieces, empty path,
 bones, lamps, perches, sizes in px) that the layer plan quotes. Nothing in the game is read but the level export
 and the art files' sizes; nothing is written but OUT.png and the report.
