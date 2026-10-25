@@ -1,0 +1,20 @@
+{
+ "name": "rw_cyclist_adult",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/upload/rw_cyclist_adult_blockout.png",
+  "art/gen/style_card_riverwalk.png"
+ ],
+ "prompt_file": "art/gen/prompts/rw_cyclist_adult.txt",
+ "k": 8,
+ "frame": [
+  150,
+  112
+ ],
+ "credits": 160
+}

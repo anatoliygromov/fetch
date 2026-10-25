@@ -1,0 +1,20 @@
+{
+ "name": "rw_cyclist_adult_v0",
+ "size": [
+  84,
+  85
+ ],
+ "target": [
+  83,
+  85
+ ],
+ "grid_clean": 0.896,
+ "on_blockout": 0.833,
+ "covered": 0.99,
+ "stray": 0.0131,
+ "colours_in": 1285,
+ "colours_cap": 24,
+ "fails": [
+  "only 83% of the drawing lands on the blockout"
+ ]
+}
