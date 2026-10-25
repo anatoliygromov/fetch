@@ -1,6 +1,6 @@
 # FETCH! Status
 
-As of Sun 25 Oct 2026, evening. Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
+As of Sun 25 Oct 2026, late evening. Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
 
 ## Today (25 Oct, afternoon and evening)
 
@@ -11,9 +11,16 @@ Three branches, each off `prod/integrate` c1c37a4, all checks green; together on
 - Checks on the preview: PEPPER UNCHANGED, flow 125/125, Tiled PASSED, BACKDROP OK, QA 0 problems (River Walk, Downtown tall). Independent reviews in art/gen/reviews/ (all fix lists applied).
 - Board decision recorded: gull = redraw (owner in chat, 16:00).
 
+Late evening: `art/animals-r2` (cb117c1, off `art/animals`), on the owner's board calls (cat bigger, gull smaller) and "go" on real-size boats with wider harbours (spend: "Yes, up to 260").
+- Cat 32 px sitting (48 x 48 cells), gull 34 px span (36 x 44 cells, 7-frame flap), rowing boat 182 px hull (182 x 96 cells; a man rowing; cut at the water surface). SpriteCook 178.
+- River Walk harbour +256 px (level 4096), Night Harbour rowboat gaps +128 px each (level 4736, lamps moved to stay 1000 px apart). Golden trace re-recorded (level change; Pepper lab unchanged).
+- Checks: physics River Walk 54/54, Night 40/40, Downtown tall 102/102, Rooftops 139/139; QA 0 problems; flow 125/125; Tiled PASS. Curve: T1-T3 PASS, T4 FAIL as on base. DI kids/parents River Walk 12.7/13.9 -> 5.5/9.3, Night 19.6/24.2 -> 19.8/32.2.
+- Two independent review passes (art/gen/reviews/animals_r2_25oct.md), all fixes in. Board: family "Animals round 2" (replaces "Animals").
+- Preview: `preview/25oct-late` = `preview/25oct-pm` + `art/animals-r2` (build on the Mac: `2d game test/PREVIEW 25 Oct late/FETCH_PREVIEW_25oct_late.love`).
+
 ## Waiting for the owner (max 3)
 
-1. Board: the three family cards (sample screen, fixes, animals). Approve, fix or reject per piece.
+1. Board: "Animals round 2" (and the boat length, 182 px against the planned 160). Approve, fix or redraw per piece.
 2. Play `_g`, then merge `prod/integrate` into main as v0.7? (recommended: yes, after his play).
 3. Logo and tagline: which logo and which tagline.
 
@@ -27,7 +34,7 @@ Three branches, each off `prod/integrate` c1c37a4, all checks green; together on
 
 ## Credits
 
-- 25 Oct: SpriteCook 266 (lime 48, animals 218), over the 150 daily cap with the owner's words (16:03 and 17:27). SpriteCook 812 left.
+- 25 Oct: SpriteCook 444 (lime 48, animals 218, animals round 2 178), over the 150 daily cap with the owner's words (16:03, 17:27, 20:20). SpriteCook 634 left.
 
 ---
 
