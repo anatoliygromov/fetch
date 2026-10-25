@@ -14,6 +14,15 @@ tools are reused), branched from it at 497bd84.
 - **docs/layer_plans/downtown_tall/:** wireframe.png (11 screens at camera y 120 and 240), contact.png and
   contact_grey.png (the game's own sweep, 11 screens x camera y 0, 120, 240, 1x), layers.json (luma and screen share
   per layer, per frame and per camera height).
+- **docs/layer_plans/downtown_tall.md:** the Downtown (tall) layer plan in the River Walk tab's form, the decisions
+  first: the draw order with a scroll y column, the seven kinds, every piece against Pepper (46 px a metre, drawn
+  size apart from real size), the 11 screens at both cameras (pieces apart from boxes), what makes it messy (measured
+  in the game's frames) and 6 decisions. Main findings: the high road (3.1 to 4.2 m over the street) walks on the cut
+  tops of true-scale ground floors, so the old town reads as one-storey shops; three house scales on one street
+  (doors 93, 25 and 58 px); the far city, far roofs and old town row inverted (luma 163, 171, 180), with re-tuned
+  haze colours measured at 187, 176, 169 in a copy of the game; the plaza's statue, crates and awning 4 to 35 luma
+  off the fronts behind them; the shelter 1.04 m and the courtyard gates 0.78 m as drawn; the cargo bike, the tram
+  and their people drawn in code.
 
 ## Branch `night/25oct-cp-plan`: the City Park layer plan (prep, night of 25 Oct)
 Prep for the owner's decision; no game file, map or art changed, 0 credits.
