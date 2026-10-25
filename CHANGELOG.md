@@ -2,6 +2,9 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `night/25oct-tools`: layout_qa8.py runs on the v8 pause frames (STATUS "Known, next")
+- `tools/layout_qa8.py` crashed on every pause frame (IndexError: the v8 pause logs labels, not row boxes). The row checks now run only when row boxes exist; otherwise an even label pitch is checked, and the cursor centring uses labels. No game code touched.
+- It now runs to the end on `tools/ui_frames.py` frames: 22 frames, remaining FAILs are listed in STATUS (cursor to label gap 4 vs 3, tally label edges, 8 picture edges with colour (214,190,150)); not tuned away, the owner decides which side is right.
 ## Branch `art/animals`: the gull and the cat redrawn (owner, 25 Oct: "it has holes and doesnt really look like a bird", "same for cat")
 - **Method:** one still per animal from SpriteCook Pixel Engine Image at its exact game size, animated at 1x with pixel-engine-v1.5; frames only cropped, padded and aligned by whole pixels. `tools/build_animals.py`: palette snapped to each animal's own still (no flicker), specks out, small holes in the fur filled (outlined gaps left open), the 1 px dark outline closed, the cat's lone coat pixels merged into the coat.
 - **Gull (riverwalk/art/gull.png, 8 frames 48 x 44):** wingspan about 44 px, a little smaller than life on the owner's call (the 58 px first version was "massive"). A looping wingbeat; frame 3 (wings swept back) is the swoop. critters.lua: 8 frames, body centre (28, 18), the nest gull's feet on row 28.

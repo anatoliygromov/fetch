@@ -79,23 +79,27 @@ def hud(shot):
 def pause(shot):
     f, bs = load(shot)
     rows = many(bs, 'row'); labels = many(bs, 'label'); pan = one(bs, 'panel'); rib = one(bs, 'ribbon')
-    check(len({r['x0'] for r in rows}) == 1 and len({r['x1'] - r['x0'] for r in rows}) == 1, f'{shot}: rows share x and width')
-    check(len({b['y0'] - a['y0'] for a, b in zip(rows, rows[1:])}) <= 1, f'{shot}: even row pitch {[b["y0"] - a["y0"] for a, b in zip(rows, rows[1:])]}')
+    if rows:                                                        # the old row boxes; the v8 pause logs labels only
+        check(len({r['x0'] for r in rows}) == 1 and len({r['x1'] - r['x0'] for r in rows}) == 1, f'{shot}: rows share x and width')
+        check(len({b['y0'] - a['y0'] for a, b in zip(rows, rows[1:])}) <= 1, f'{shot}: even row pitch {[b["y0"] - a["y0"] for a, b in zip(rows, rows[1:])]}')
+        lc = [abs(c(l)[1] - c(r)[1]) for l, r in zip(labels, rows)]; check(lc and max(lc) <= 0.5, f'{shot}: labels centred in their rows {lc}')
+        lm = rows[0]['x0'] - pan['x0']; rm = pan['x1'] - rows[0]['x1']; check(lm == rm, f'{shot}: row side padding {lm}/{rm}')
+    else:
+        pitch = [b['y0'] - a['y0'] for a, b in zip(labels, labels[1:])]
+        check(len(set(pitch)) <= 1, f'{shot}: even label pitch {pitch}')
     check(len({l['x0'] for l in labels}) == 1, f'{shot}: labels share one left edge {sorted({l["x0"] for l in labels})}')
-    lc = [abs(c(l)[1] - c(r)[1]) for l, r in zip(labels, rows)]; check(lc and max(lc) <= 0.5, f'{shot}: labels centred in their rows {lc}')
     for n in ('panel', 'ribbon', 'title', 'subtitle'):
         b = one(bs, n)
         if b: check(abs(c(b)[0] - 159.5) <= 0.5, f'{shot}: {n} centred ({c(b)[0]})')
-    lm = rows[0]['x0'] - pan['x0']; rm = pan['x1'] - rows[0]['x1']; check(lm == rm, f'{shot}: row side padding {lm}/{rm}')
     t = one(bs, 'title'); check(t and abs(c(t)[1] - c(rib)[1]) <= 1.5, f'{shot}: the title on the ribbon\'s centre line')
     cur = one(bs, 'cursor')
     if cur:
         lab = min(labels, key=lambda l: abs(c(l)[1] - c(cur)[1])); check(lab['x0'] - cur['x1'] - 1 == 3, f"{shot}: cursor to label gap {lab['x0'] - cur['x1'] - 1}")
-        r = min(rows, key=lambda r: abs(c(r)[1] - c(cur)[1])); check(abs(c(cur)[1] - c(r)[1]) <= 0.5, f'{shot}: cursor centred on its row')
+        r = min(rows or labels, key=lambda r: abs(c(r)[1] - c(cur)[1])); check(abs(c(cur)[1] - c(r)[1]) <= 0.5, f'{shot}: cursor centred on its row')
     btn = many(bs, 'button')
     if btn: gc = (btn[0]['x0'] + btn[-1]['x1']) / 2; check(abs(gc - 159.5) <= 0.5, f'{shot}: A / B group centred ({gc})')
     ov = overlaps(bs, skip=('panel', 'row', 'ribbon', 'tab', 'button', 'cursor', 'meter', 'seg')); check(not ov, f'{shot}: no text overlapping {ov[:4]}')
-    drawn(f, bs, shot); guides(f, bs, shot, [c(r)[1] for r in rows])
+    drawn(f, bs, shot); guides(f, bs, shot, [c(r)[1] for r in (rows or labels)])
 
 def tally(shot):
     f, bs = load(shot)
