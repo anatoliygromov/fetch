@@ -2,6 +2,12 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `night/25oct-lab`: the playtest lab's run-up stays on its floor (night of 25 Oct, S2: curve T4)
+- **What failed:** `check_curve.py` with 20 seeds (the fetch-level-quality skill's count; BIBLE's 10 pass) failed T4 on City Park (tall): 15 of 160 runs lost (9.4 %), 14 of them at route step 73, Pepper on the low road at x 1987. Cause, traced with `PT_DEBUG`: after a short jump at x 1817 the lab puts her back on the ash branch (x 1901, y 200, a one-way from x 1888) and its recovery walks a 32 px run-up back to x 1867, past the branch's end. She stepped off onto the ledge below (y 224), the step ran her off that, and she landed on the low road at x 1987 again, every retry, until the run counted as lost. The level is fine: the low road is the main path to Mia; the bot was lost, not the player.
+- **Fix (riverwalk/pt_bot.lua, `planned`, lab only):** the run-up is shortened in 4 px steps to the last point that still has a floor at the step's height (`Wd:floor`), so it never walks past an edge. The game, Pepper and the autopilots are untouched (PEPPER UNCHANGED, flow 125/125).
+- **Test:** `tools/check_lab_runup.py` replays that run (liam8, level seed 302, River Walk's carry): FAIL (lost) on the base, OK (clear in 60.4 s) with the fix.
+- **Curve, 20 seeds, base -> fix:** T1-T4 FAIL (T4) -> all PASS. City Park (tall): lost 9.4 % -> 0.6 %, clears 134 -> 153 of 160, DI kids/parents 14.0/26.4 -> 14.4/18.9 (the parents spike is gone). River Walk 12.7/13.9 -> 8.5/17.5: 147 of its 160 runs are identical; the 13 that change lose the run-up's falls into the harbour (water respawns 50 -> 17, game overs 6 -> 0) and wait at the rowing boats instead. Downtown 12.9/16.1 -> 13.8/16.1, Rooftops 21.2/22.1 -> 21.0/22.1, Soder 17.4/14.3 -> 17.6/14.3, Night 19.6/24.2 -> 19.4/22.0.
+
 ## Branch `ops/board-25oct`: the owner's board review turned into the art backlog (25 Oct)
 - 42 board items: 1 approve, 12 fix, 28 redraw, 1 open. **docs/art_backlog.md** groups them into families per level
   (tier, method, order), River Walk first. BIBLE: no automated clean pass on existing art (owner, 25 Oct); a row in

@@ -326,7 +326,18 @@ function Bot.new(api, persona, opts)
     entries[k] = entries[k] or { x = en.x, y = en.y, force = f, carrying = en.c, play = true, ground = en.g }
     entries[k].force = f                                           -- resume with the clean run's buttons there
     log.resumes = (log.resumes or 0) + 1
-    local tx = en.x - (runup and 32 * ((en.vx or 0) >= 0 and 1 or -1) or 0)
+    -- (night/25oct-lab) the run-up (up to 32 px back) stays on the floor the step starts from: never past its edge.
+    -- City Park tall's ash branch ends 11 px behind step 71, so the full run-up walked Pepper off it onto the ledge
+    -- below, the step ran her off that and down to the low road, every retry: 14 of 160 runs were lost there.
+    local dir, back, w = (en.vx or 0) >= 0 and 1 or -1, 0, S().world
+    if runup then
+      for d = 4, 32, 4 do
+        local x = en.x - dir * d
+        if not w:floor(x - 1, x + 1, x, en.y - 2, en.y + 2, en.y - 2) then break end
+        back = d
+      end
+    end
+    local tx = en.x - dir * back
     if math.abs(tx - p.x) > 6 and (tries or 0) < 2 then
       mode, modeT, modeData = "walkback", 0, { k = k, x = tx, blockT = 0, v2 = true, y = p.y, tries = tries or 0 }
     else resumeAt(k) end
