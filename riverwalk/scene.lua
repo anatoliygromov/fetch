@@ -90,20 +90,24 @@ function Sc.railing(w, kind, h)
     local lw, uw, ew, rh = l:getWidth(), u:getWidth(), en:getWidth(), l:getHeight()
     -- (night/25oct-fixes) the railing reaches both ends of its prop (whole bays alone stopped up to 83 px short of
     -- the house it meets). eo: the end piece as drawn (its empty right columns hang past the prop's end). What whole
-    -- bays leave over (r) becomes a short last bay with its own post (the unit's right r columns, r >= 12), or, when
-    -- too short for a post, the last bay drawn r px longer (the unit's left columns: tube only). Whole-pixel crops of
-    -- the pieces; nothing is scaled or redrawn.
+    -- bays leave over (r): under 12 px, the last bay is drawn r px longer (the unit's left columns: tube only); from
+    -- 12 px, the last whole bay and r share two even shorter bays, each with its own post (the unit's right columns,
+    -- at least 48 px, so no two posts ever stand close). Whole-pixel crops of the pieces; nothing scaled or redrawn.
     local eo = ew
     local function empty(x) for y = 0, rh - 1 do if select(4, en:getPixel(x, y)) > 0 then return false end end return true end
     while eo > 1 and empty(eo - 1) do eo = eo - 1 end
     local n = math.max(0, math.floor((w - lw - eo) / uw))
     local r = math.max(0, w - lw - n * uw - eo)
     d = love.image.newImageData(lw + n * uw + r + ew, rh)
+    local tail = {}                                                -- the bays after the whole ones: { width, from the right }
+    if r >= 12 and n >= 1 then n = n - 1; local a = math.floor((uw + r) / 2); tail = { { a, true }, { uw + r - a, true } }
+    elseif r >= 48 then tail = { { r, true } }                    -- (no whole bay to share with: a short one alone)
+    elseif r > 0 then tail = { { r, false } } end
     d:paste(l, 0, 0, 0, 0, lw, rh)
     for i = 0, n - 1 do d:paste(u, lw + i * uw, 0, 0, 0, uw, rh) end
-    if r >= 12 then d:paste(u, lw + n * uw, 0, uw - r, 0, r, rh)
-    elseif r > 0 then d:paste(u, lw + n * uw, 0, 0, 0, r, rh) end
-    d:paste(en, lw + n * uw + r, 0, 0, 0, ew, rh)
+    local x = lw + n * uw
+    for _, b in ipairs(tail) do d:paste(u, x, 0, b[2] and uw - b[1] or 0, 0, b[1], rh); x = x + b[1] end
+    d:paste(en, x, 0, 0, 0, ew, rh)
   end
   local rh = d:getHeight()
   if kind == "fence" then

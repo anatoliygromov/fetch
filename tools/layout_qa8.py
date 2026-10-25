@@ -20,7 +20,7 @@ from PIL import Image, ImageDraw
 D = sys.argv[1]; OUT = sys.argv[2] if len(sys.argv) > 2 else D
 os.makedirs(OUT, exist_ok=True)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-M = 4; INK = (64, 11, 6); SH = (36, 8, 5)
+M = 4; INK = (64, 11, 6); SH = (36, 8, 5); RIM = (214, 190, 150)
 ok = True
 def check(cond, msg):
     global ok; print(('PASS ' if cond else 'FAIL ') + msg); ok &= bool(cond)
@@ -118,6 +118,12 @@ def pause_v8(shot, f, bs, labels, pan, rib):
     cur = one(bs, 'cursor')
     if cur and labels:
         lab = min(labels, key=lambda l: abs(c(l)[1] - c(cur)[1]))
+        def warm(l):                                                 # the selected row is gold, the others cream
+            px = f[l['y0']:l['y1'] + 1, l['x0']:l['x1'] + 1].reshape(-1, 3).astype(int)
+            px = px[~(np.all(px == INK, axis=1) | np.all(px == SH, axis=1))]
+            return (px[:, 0] - px[:, 2]).mean() if len(px) else 0
+        sel = max(labels, key=warm)
+        check(lab is sel, f'{shot}: the cursor on the selected (gold) row (cursor at y {c(cur)[1]}, gold row at y {c(sel)[1]})')
         check(lab['x0'] - cur['x1'] - 1 == 4, f"{shot}: cursor 4 px before its label ({lab['x0'] - cur['x1'] - 1})")
         check(abs(c(cur)[1] - c(lab)[1]) <= 1, f'{shot}: cursor on its label\'s centre line (bob 1 px) ({c(cur)[1]} vs {c(lab)[1]})')
     for m in many(bs, 'meter'):
@@ -136,16 +142,23 @@ def tally(shot):
     # (night/25oct-fixes) v8 tally (flow.lua F.T): one column of rows, an icon then a 7 px label at T.LABEL; TOTAL (13 px,
     # under the rule) starts at the icon column; the medals' labels (mlabel) are the right column. So the labels that
     # follow an icon on their line share a left edge, and a side with no labels is not checked.
-    icons = many(bs, 'ticon')
-    for side, test in (('left', lambda b: b['x0'] < 160), ('right', lambda b: b['x0'] >= 160)):
-        ls = [b for b in L if test(b)]; vs = [b for b in V if test(b)]
+    # The columns split at the medals (values are right-aligned at T.VALUE, so a short value such as a TIME BONUS of
+    # "0" starts right of the screen's centre: sort values by their right edge, labels by their left edge).
+    icons = many(bs, 'ticon'); meds = many(bs, 'medal'); mx = min(m['x0'] for m in meds) if meds else 160
+    for side, lt, vt in (('left', lambda b: b['x0'] < mx, lambda b: b['x1'] < mx), ('right', lambda b: b['x0'] >= mx, lambda b: b['x1'] >= mx)):
+        ls = [b for b in L if lt(b)]; vs = [b for b in V if vt(b)]
         if not ls: continue
         if icons: ls = [b for b in ls if any(abs(c(i)[1] - c(b)[1]) <= 3 and i['x1'] < b['x0'] for i in icons)] or ls
         check(len({b['x0'] for b in ls}) == 1, f'{shot}: {side} labels share a left edge {sorted({b["x0"] for b in ls})}')
         check(len({b['x1'] for b in vs}) <= 1, f'{shot}: {side} values share a right edge {sorted({b["x1"] for b in vs})}')
         for l in ls:
             v = [x for x in vs if abs(c(x)[1] - c(l)[1]) <= 0.5]; check(len(v) == 1, f'{shot}: {side} label at y {l["y0"]} has its value on its line')
-    ll = sorted([b for b in L if b['x0'] < 160], key=lambda b: b['y0'])
+    rule = one(bs, 'rule')
+    if rule:                                                         # TOTAL: from the rule's left end, its value to its right end
+        tot = [b for b in L if b['y0'] > rule['y1']]; tv = [b for b in V if b['y0'] > rule['y1']]
+        check(len(tot) == 1 and tot[0]['x0'] == rule['x0'] and len(tv) == 1 and tv[0]['x1'] == rule['x1'],
+              f'{shot}: TOTAL starts at the rule\'s left end ({rule["x0"]}), its value ends at its right end ({rule["x1"]})')
+    ll = sorted([b for b in L if b['x0'] < mx], key=lambda b: b['y0'])
     p = [b['y0'] - a['y0'] for a, b in zip(ll, ll[1:])]; check(len(set(p[:-1])) <= 1, f'{shot}: even left row pitch {p} (the last one, SCORE, after a gap)')
     for m in many(bs, 'medal'):
         ml = [b for b in many(bs, 'mlabel') if abs(c(b)[1] - c(m)[1]) <= 0.5]; check(len(ml) == 1 and ml[0]['x0'] - m['x1'] - 1 == 3, f'{shot}: medal at y {m["y0"]}: label on its line, 3 px gap')
@@ -156,8 +169,8 @@ def pieces():
     bad = []
     for p in sorted(glob.glob(f'{ROOT}/riverwalk/art/ui/*.png')):
         n = os.path.basename(p)[:-4]
-        if n.startswith('font17_ink') or n.startswith('font13_ink') or n in ('panel', 'head', 'row_off', 'seg_off', 'tab'): continue
-        if n.startswith('pic_'): continue   # (ui/review-fixes 4) the hint pictures: Pepper in a 1 px light rim, so the black dog reads   # ink (no outline); the kit frame; the v7 head (cream rim); inset rows; the tab's top hides under its coin
+        if n.startswith('font17_ink') or n.startswith('font13_ink') or n in ('panel', 'head', 'row_off', 'seg_off', 'tab'): continue   # ink (no outline); the kit frame; the v7 head (cream rim); inset rows; the tab's top hides under its coin
+        ok_cols = {INK, SH} | ({RIM} if n.startswith('pic_') else set())   # (ui/review-fixes 4) the hint pictures: Pepper in a 1 px light rim, so the black dog reads
         a = np.array(Image.open(p).convert('RGBA')); op = a[..., 3] > 0
         pad = np.pad(op, 1); edge = op & ~(pad[:-2, 1:-1] & pad[2:, 1:-1] & pad[1:-1, :-2] & pad[1:-1, 2:])
         # (night/25oct-fixes) a bubble tail's side that joins the bubble is drawn over the bubble's border (talk.lua):
@@ -166,7 +179,7 @@ def pieces():
         if join and join[0] is not None: edge[join[0], :] = False
         if join and join[1] is not None: edge[:, join[1]] = False
         cols = {tuple(v) for v in a[edge][:, :3]}
-        if not cols <= {INK, SH}: bad.append((n, sorted(cols - {INK, SH})[:3]))
+        if not cols <= ok_cols: bad.append((n, sorted(cols - ok_cols)[:3]))
     check(not bad, f'pieces: every edge pixel is the outline (64,11,6) or the shadow (36,8,5) {bad[:4]}')
 
 if __name__ == "__main__":

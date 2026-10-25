@@ -187,23 +187,40 @@ return function(mode, api)
       { act = function(p) local st = api.stage(); local k = st.critters[3]
           report("first gull: circles, never swoops", st.hearts == 3 and k.state == "circle", ("hearts %d, %s"):format(st.hearts, k.state)) end },
       -- 20 (night/25oct-fixes) every quay railing is drawn from its prop's left end to its right end (whole bays
-      --    alone stopped up to 83 px short), as the game draws it: the image put on a canvas, its opaque columns
+      --    alone stopped up to 83 px short), as the game draws it: the image put on a canvas, its opaque columns; and
+      --    no two posts closer than 40 px (their foot plates on the bottom row), for the level's railings and for
+      --    every width from 89 to 430 px (every remainder with 0 to 3 whole bays)
       { act = function()
-          local Sc, bad, n = require("scene"), {}, 0
+          local Sc = require("scene")
+          local function measure(w)
+            local im = Sc.railing(w, "decor")
+            local cv = love.graphics.newCanvas(im:getWidth(), im:getHeight())
+            love.graphics.push("all"); love.graphics.setCanvas(cv); love.graphics.clear(0, 0, 0, 0); love.graphics.origin()
+            love.graphics.setColor(1, 1, 1, 1); love.graphics.draw(im, 0, 0); love.graphics.pop()
+            local d = cv:newImageData(); local first, last, feet, run = nil, nil, {}, nil
+            for x = 0, d:getWidth() - 1 do
+              for y = 0, d:getHeight() - 1 do if select(4, d:getPixel(x, y)) > 0 then first = first or x; last = x; break end end
+              local foot = select(4, d:getPixel(x, d:getHeight() - 1)) > 0
+              if foot and not run then run = x elseif not foot and run then feet[#feet + 1] = (run + x - 1) / 2; run = nil end
+            end
+            if run then feet[#feet + 1] = (run + d:getWidth() - 1) / 2 end
+            local gap = 999; for i = 2, #feet do gap = math.min(gap, feet[i] - feet[i - 1]) end
+            cv:release()
+            return first, last, gap
+          end
+          local bad, n = {}, 0
           for _, pr in ipairs(api.stage().def.props) do
             if pr.railing then
-              local w = pr.x1 - pr.x0; local im = Sc.railing(w, "decor"); n = n + 1
-              local cv = love.graphics.newCanvas(im:getWidth(), im:getHeight())
-              love.graphics.push("all"); love.graphics.setCanvas(cv); love.graphics.clear(0, 0, 0, 0); love.graphics.origin()
-              love.graphics.setColor(1, 1, 1, 1); love.graphics.draw(im, 0, 0); love.graphics.pop()
-              local d = cv:newImageData(); local first, last
-              for x = 0, d:getWidth() - 1 do
-                for y = 0, d:getHeight() - 1 do if select(4, d:getPixel(x, y)) > 0 then first = first or x; last = x; break end end
-              end
-              if first ~= 0 or last ~= w - 1 then bad[#bad + 1] = ("x %d-%d drawn %s-%s"):format(pr.x0, pr.x1, tostring(first and pr.x0 + first), tostring(last and pr.x0 + last + 1)) end
+              local w = pr.x1 - pr.x0; n = n + 1
+              local first, last, gap = measure(w)
+              if first ~= 0 or last ~= w - 1 or gap < 40 then bad[#bad + 1] = ("x %d-%d drawn %s-%s, posts %s apart"):format(pr.x0, pr.x1, tostring(first and pr.x0 + first), tostring(last and pr.x0 + last + 1), gap) end
             end
           end
-          report("quay railings reach both ends of their props", n > 0 and #bad == 0, #bad == 0 and (n .. " railings") or table.concat(bad, "; ")) end },
+          for w = 89, 430 do
+            local first, last, gap = measure(w)
+            if first ~= 0 or last ~= w - 1 or gap < 40 then bad[#bad + 1] = ("w %d: %s-%s, posts %s apart"):format(w, tostring(first), tostring(last), gap); if #bad > 4 then break end end
+          end
+          report("quay railings reach both ends, posts 40 px apart", n > 0 and #bad == 0, #bad == 0 and (n .. " railings, widths 89-430") or table.concat(bad, "; ")) end },
       { act = function()
           local ok = 0; for _, r in ipairs(results) do if r then ok = ok + 1 end end
           print(("%d of %d passed"):format(ok, #results)); love.event.quit() end },

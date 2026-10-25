@@ -22,7 +22,7 @@ bad = 0
 
 
 def num(k, line):
-    m = re.search(k + r'\s*=\s*(-?\d+)', line)
+    m = re.search(r'\b' + k + r'\s*=\s*(-?\d+)', line)            # (whole keys: ay, not delay)
     return int(m.group(1)) if m else None
 
 
