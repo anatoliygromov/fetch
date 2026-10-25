@@ -2,6 +2,9 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `night/25oct-rw-street-late`: the screen 12 gable and cafe ported onto `preview/25oct-late` (night of 25 Oct)
+The same pieces as `night/25oct-rw-street` (1b1d8ee, off `art/rw-sample-screen`; its CHANGELOG section has the full record: builders, review rounds 1 and 2, palette v3 with 109 colours), placed on the 4096 px River Walk of `art/animals-r2` (the harbour widened 256 px): GABLE `rw_gable` x 3824-3972, CAFE `rw_cafe` x 3972-4096, the promenade B railing ends at the gable (x 3824). Files taken whole from that branch: both builders and PNGs, art/source/rw_gable and rw_cafe, the jobs (slots updated to the new x), status, reviews, qa json, art/palettes and tools/make_palette.py (identical bases). Edited by hand at the shifted x: riverwalk.lua, maps/riverwalk.tmx and its export (the same 10 and 22 lines as the original), scene.lua's fade list. Merge this one if `art/animals-r2` goes in, `night/25oct-rw-street` if it does not.
+
 ## Branch `art/animals-r2`: cat bigger, gull smaller, rowing boats at real size, wider harbours (owner, 25 Oct)
 - **Owner's asks (board, 25 Oct):** "the cat needs to be bigger, slightly smaller than the dog, the gull needs to be smaller too", then "do you see the size of the boats?" and "go" on a cat about 30 px, a gull about 32 px and real-size boats with wider harbours.
 - **Cat (riverwalk/art/cat.png, 8 x 3 cells of 48 x 48):** 32 px sitting (Pepper 38). New still (Pixel Engine Image, 32 px) and three 1x animations (idle, leap, run). scene.lua: feet at (24, 47); idle plays 2 3 7 8 8 7 3 2 (the flat-eared frames skipped, no tail jump); the leap lands on frame 8; the run loops 5-8; shadows 26 and 34 px.

@@ -230,7 +230,7 @@
     <property name="hidden" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="21" type="props" x="3136" y="124" width="746" height="50">
+  <object id="21" type="props" x="3136" y="124" width="688" height="50">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
@@ -294,18 +294,18 @@
     <property name="rely.ay" type="int" value="56"/>
    </properties>
   </object>
-  <object id="29" name="GABLE" type="props" x="3882" y="-1" width="70" height="175">
+  <object id="29" name="GABLE" type="props" x="3824" y="-6" width="148" height="180">
    <properties>
     <property name="kind" value="decor"/>
     <property name="layer" value="back"/>
-    <property name="art" value="gable"/>
+    <property name="art" value="rw_gable"/>
    </properties>
   </object>
-  <object id="30" name="CAFE" type="props" x="3946" y="-31" width="150" height="205">
+  <object id="30" name="CAFE" type="props" x="3972" y="-6" width="124" height="180">
    <properties>
     <property name="kind" value="decor"/>
     <property name="layer" value="back"/>
-    <property name="art" value="cafe"/>
+    <property name="art" value="rw_cafe"/>
    </properties>
   </object>
   <object id="31" name="BENCH" type="props" x="3804" y="156" width="96" height="9">

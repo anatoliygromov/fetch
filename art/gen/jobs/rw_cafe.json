@@ -1,0 +1,25 @@
+{
+ "name": "rw_cafe",
+ "level": "riverwalk",
+ "layer": "back",
+ "kind": "building",
+ "real_height_m": 3.9,
+ "target_px": [
+  124,
+  180
+ ],
+ "checks_px": {
+  "door_opening": "46 x 98",
+  "transom": 14,
+  "shop_window_lights": "27 x 74",
+  "cornice": 150,
+  "plinth": 16
+ },
+ "tier": "C",
+ "family": "rw_street_backdrop",
+ "method": "built from stamped parts, tools/build_rw_cafe.py",
+ "slot": {
+  "file": "riverwalk/art/scene/rw_cafe.png",
+  "where": "River Walk screen 12, CAFE, x 3972..4096 (the level's right edge), y -6..174 (replaces cafe); Mia at x 4036 in front of it"
+ }
+}

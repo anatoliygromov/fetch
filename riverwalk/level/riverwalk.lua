@@ -94,7 +94,7 @@ L.props = {
   -- 196, 16 px above a boat's deck: a hop). Gulls circle over the water and swoop at a standing Pepper (crawl to duck, or bark).
   { name = "JETTY",    kind = "solid",  layer = "play", x0 = 2528, x1 = 2576, y0 = 196, y1 = 240, hidden = true },   -- drawn in code
   -- promenade B
-  { name = "",         kind = "decor",  layer = "back", x0 = 3136, x1 = 3882, y0 = 124, y1 = 174, railing = true },   -- decorative railing by the water
+  { name = "",         kind = "decor",  layer = "back", x0 = 3136, x1 = 3824, y0 = 124, y1 = 174, railing = true },   -- decorative railing by the water
   { name = "",         kind = "decor",  layer = "back", x0 = 3234, x1 = 3335, y0 = 74,  y1 = 174, art = "tree_far" },
   { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 3186, x1 = 3230, y0 = 154, y1 = 184, art = "planter_sq" },
   -- bike zone 2
@@ -104,9 +104,13 @@ L.props = {
   -- a planter right before the bin: a step (30 px: a tap hop and a scramble), then 26 px more up to the bin top
   { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 3628, x1 = 3672, y0 = 154, y1 = 184, art = "planter_sq" },
   { name = "BIN",      kind = "solid",  layer = "play", x0 = 3672, x1 = 3707, y0 = 128, y1 = 184, art = "bin", ax = 3671, ay = 184 },
-  -- screen 10: the girl
-  { name = "GABLE",    kind = "decor",  layer = "back", x0 = 3882, x1 = 3952, y0 = -1,  y1 = 174, art = "gable" },
-  { name = "CAFE",     kind = "decor",  layer = "back", x0 = 3946, x1 = 4096, y0 = -31, y1 = 174, art = "cafe" },
+  -- screen 12: the girl
+  -- (night/25oct-rw-street, ported to the 4096 px level of art/animals-r2: +256) the gable house and the cafe at true
+  -- scale (door 98 px, storey ~150 px, their tops above the screen), built like HOME: the railing ends where the gable
+  -- starts; the bench stands in front of the gable's window, its portal starts right of the bench (3904); the cafe
+  -- runs to the level's right edge, Mia in front of its shop window's calm stall riser
+  { name = "GABLE",    kind = "decor",  layer = "back", x0 = 3824, x1 = 3972, y0 = -6,  y1 = 174, art = "rw_gable" },
+  { name = "CAFE",     kind = "decor",  layer = "back", x0 = 3972, x1 = 4096, y0 = -6,  y1 = 174, art = "rw_cafe" },
   { name = "BENCH",    kind = "solid",  layer = "play", x0 = 3804, x1 = 3900, y0 = 156, y1 = 165, art = "bench", ax = 3801, ay = 184, depth = 5 },
   -- the bridge over the far quay (screen 7): granite abutment art (138 x 162) over the pier's collision
   -- (riverwalk.map, x 1936-2072, y 0-192); Pepper crawls through the low passage under its lintel (y 192-216).
