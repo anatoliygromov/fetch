@@ -1,6 +1,6 @@
 # FETCH! Status
 
-As of Sat 24 Oct 2026, 14:15. Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
+As of Sun 25 Oct 2026, 13:30. Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
 
 ## Main
 
@@ -30,6 +30,13 @@ Everything waiting, in one playable build (`FETCH_PREVIEW_24oct_g.love` on the o
 
 ## Credits
 
-- SpriteCook: about 1,078. Artlist: about 42,450. 0 spent on 24 Oct.
+- SpriteCook 1,078 left. Artlist 34,795 left (plan 80,000 renews 26 Oct). 25 Oct: 6,380 Artlist spent (golden screens, pilot, cyclist probe).
+- Ledger: `art/gen/ledger.csv`, `python3 tools/ledger.py report`. 3-25 Oct backfilled: Artlist 31,740 spent, 2 % in the game; SpriteCook ~4,068, ~57 % in the game.
+
+## Workflow (owner, 25 Oct)
+
+- `docs/WORKFLOW.md` is the order of work; `tools/pipeline.py status` shows every asset's step. Start sessions with the fetch-game-manager skill.
+- Next art: the River Walk sample screen (approved pieces + the missing 3-4), cap 300 credits, then families. Palette: `art/palettes/riverwalk.gpl` (v1, 56 colours from approved art).
+- Branch `ops/workflow` (this setup) is merged into `prod/integrate`.
 
 How to update this file: rewritten by the producer session at the end of each working session.

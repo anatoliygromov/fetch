@@ -84,7 +84,19 @@ if leak > 0.03: fails.append(f'{leak:.1%} stray scenery')
 rgba = np.dstack([out, np.where(sub, 255, 0).astype(np.uint8)])
 im = Image.fromarray(rgba, 'RGBA').crop((xs.min(), ys.min(), xs.max() + 1, ys.max() + 1))
 cols = len(np.unique(np.array(im)[np.array(im)[..., 3] > 0][:, :3], axis=0))
-if cols > lay['colours']:
+palf = R.get('palettes', {}).get(J['level'])
+if palf and os.path.exists(palf):
+    # snap every pixel to the level's locked palette (nearest in Lab); no new colour, no averaging
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from make_palette import lab
+    pal = np.array([[int(v) for v in l.split()[:3]] for l in open(palf) if l[:1].strip().isdigit()], float)
+    arr = np.array(im); al = arr[..., 3]; px = arr[..., :3].reshape(-1, 3).astype(float)
+    idx = np.argmin(((lab(px)[:, None] - lab(pal)[None]) ** 2).sum(2), 1)
+    arr[..., :3] = pal[idx].reshape(arr.shape[0], arr.shape[1], 3).astype(np.uint8)
+    im = Image.fromarray(arr, 'RGBA')
+    used = len(np.unique(arr[al > 0][:, :3], axis=0))
+    if used > lay['colours']: fails.append(f"{used} palette colours used, cap {lay['colours']}: simplify in Aseprite")
+elif cols > lay['colours']:
     al = np.array(im)[..., 3]
     q = im.convert('RGB').quantize(lay['colours'], method=Image.Quantize.MAXCOVERAGE, dither=Image.Dither.NONE).convert('RGB')
     im = Image.fromarray(np.dstack([np.array(q), al]), 'RGBA')

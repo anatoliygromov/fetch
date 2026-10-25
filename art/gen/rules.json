@@ -1,27 +1,263 @@
 {
-  "_doc": "Single source for tools/preflight.py and tools/grid_cut.py. Values from docs/layer_ladder.md, docs/asset_qa.md, riverwalk/look.lua and claude/art-learnings.md. Change rules here, not in the scripts.",
-  "pepper": {"file": "riverwalk/art/pepper.png", "cell": [0, 0, 60, 52], "withers_px": 26, "head_top_px": 38, "nose_tail_px": 52, "px_per_m": 46},
-  "layers": {
-    "char":  {"px_per_m": 46, "colours": 24, "outline": "a 1 px dark outline around the whole silhouette, one ink colour"},
-    "play":  {"px_per_m": 46, "colours": 20, "outline": "a 1 px dark outline around the whole silhouette, one ink colour"},
-    "back":  {"px_per_m": 46, "colours": 20, "outline": "no outline; its edges are a darker shade of its own colour"},
-    "mid":   {"px_per_m": 23, "colours": 14, "outline": "no outline; its edges are a darker shade of its own colour"},
-    "front": {"px_per_m": 60, "colours": 8,  "outline": "a dark silhouette with a thin rim of light on the top edge"}
+ "_doc": "Single source for tools/preflight.py, tools/grid_cut.py, tools/pipeline.py and tools/ledger.py. Workflow: docs/WORKFLOW.md. Change rules here, not in the scripts.",
+ "pepper": {
+  "file": "riverwalk/art/pepper.png",
+  "cell": [
+   0,
+   0,
+   60,
+   52
+  ],
+  "withers_px": 26,
+  "head_top_px": 38,
+  "nose_tail_px": 52,
+  "px_per_m": 46
+ },
+ "layers": {
+  "char": {
+   "px_per_m": 46,
+   "colours": 24,
+   "outline": "a 1 px dark outline around the whole silhouette, one ink colour"
   },
-  "levels": {
-    "riverwalk": {"light": "River Walk, a summer morning by a city river: warm low sun from the upper left, golden highlights, cool blue shadows", "style_card": "art/gen/style_card_riverwalk.png"},
-    "citypark":  {"light": "City Park, a golden autumn afternoon: warm amber sun from the upper left, warm highlights, violet-blue shadows", "style_card": "art/gen/style_card_riverwalk.png"},
-    "downtown":  {"light": "Downtown, a bright midday: high white sun from the upper left, crisp short shadows, clean saturated colours", "style_card": "art/gen/style_card_riverwalk.png"}
+  "play": {
+   "px_per_m": 46,
+   "colours": 20,
+   "outline": "a 1 px dark outline around the whole silhouette, one ink colour"
   },
-  "models": {
-    "nbpro_1k": {"name": "Nano Banana Pro I2I 1K", "out": [1200, 896], "credits": 160, "artlist": {"modelId": 2004, "settings": {"aspect_ratio": "4:3", "quality": "1K"}}},
-    "nbpro_2k": {"name": "Nano Banana Pro I2I 2K", "out": [2400, 1792], "credits": 160, "artlist": {"modelId": 2004, "settings": {"aspect_ratio": "4:3", "quality": "2K"}}},
-    "nb2":      {"name": "Nano Banana 2 I2I", "out": [2400, 1792], "credits": 60, "artlist": {"modelId": 2249, "settings": {"aspect_ratio": "4:3"}}}
+  "back": {
+   "px_per_m": 46,
+   "colours": 20,
+   "outline": "no outline; its edges are a darker shade of its own colour"
   },
-  "default_model": "nbpro_1k",
-  "forbidden_words": ["haze", "hazy", "pale", "mist", "misty", "faded", "fade", "washed", "low contrast", "fog", "foggy", "atmospheric", "blur", "blurry", "soft focus", "gradient"],
-  "kinds_generated": ["character", "animal", "prop", "obstacle", "vehicle", "plant", "decoration"],
-  "kinds_built": ["building", "facade", "window", "door", "roof", "font", "ui"],
-  "size_tolerance": 0.06,
-  "art_direction": "Art direction: the 1994 Lion King console game (SNES / Mega Drive): hand-placed pixels, very crisp, cute and friendly for a 7 year old. Image 2 shows approved sprites from this game: match their pixel size, outline, shading and palette, but do not copy them or add them. Front-on side view. Flat fills shaded in ramps of 3 to 4 shades per material, the darkest shade a neutral dark. No anti-aliasing, no gradients, no dithering, no texture noise, no lone specks."
+  "mid": {
+   "px_per_m": 23,
+   "colours": 14,
+   "outline": "no outline; its edges are a darker shade of its own colour"
+  },
+  "front": {
+   "px_per_m": 60,
+   "colours": 8,
+   "outline": "a dark silhouette with a thin rim of light on the top edge"
+  }
+ },
+ "levels": {
+  "riverwalk": {
+   "light": "River Walk, a summer morning by a city river: warm low sun from the upper left, golden highlights, cool blue shadows",
+   "style_card": "art/gen/style_card_riverwalk.png"
+  },
+  "citypark": {
+   "light": "City Park, a golden autumn afternoon: warm amber sun from the upper left, warm highlights, violet-blue shadows",
+   "style_card": "art/gen/style_card_riverwalk.png"
+  },
+  "downtown": {
+   "light": "Downtown, a bright midday: high white sun from the upper left, crisp short shadows, clean saturated colours",
+   "style_card": "art/gen/style_card_riverwalk.png"
+  }
+ },
+ "models": {
+  "nbpro_1k": {
+   "name": "Nano Banana Pro I2I 1K",
+   "out": [
+    1200,
+    896
+   ],
+   "credits": 160,
+   "artlist": {
+    "modelId": 2004,
+    "settings": {
+     "aspect_ratio": "4:3",
+     "quality": "1K"
+    }
+   },
+   "tool": "artlist"
+  },
+  "nbpro_2k": {
+   "name": "Nano Banana Pro I2I 2K",
+   "out": [
+    2400,
+    1792
+   ],
+   "credits": 160,
+   "artlist": {
+    "modelId": 2004,
+    "settings": {
+     "aspect_ratio": "4:3",
+     "quality": "2K"
+    }
+   },
+   "tool": "artlist"
+  },
+  "nb2": {
+   "name": "Nano Banana 2 I2I",
+   "out": [
+    2400,
+    1792
+   ],
+   "credits": 60,
+   "artlist": {
+    "modelId": 2249,
+    "settings": {
+     "aspect_ratio": "4:3"
+    }
+   },
+   "tool": "artlist"
+  },
+  "sc_nb21": {
+   "name": "SpriteCook Nano Banana 2.1 1K, pixel on",
+   "tool": "spritecook",
+   "credits": 12,
+   "out": null,
+   "spritecook": {
+    "model": "gemini-nano-banana-2.1",
+    "pixel": true,
+    "resolution": "1K"
+   }
+  },
+  "sc_gpt25": {
+   "name": "SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid)",
+   "tool": "spritecook",
+   "credits": 8,
+   "out": null,
+   "spritecook": {
+    "model": "gpt-image-2.5-sunburst",
+    "pixel": true,
+    "resolution": "1K",
+    "quality": "medium"
+   },
+   "credits_per_reference": 8
+  },
+  "sc_anim": {
+   "name": "SpriteCook pixel-engine-v1.5 animation from a 1x still",
+   "tool": "spritecook",
+   "credits": 26,
+   "out": null,
+   "spritecook": {
+    "model": "pixel-engine-v1.5",
+    "output_frames": 8
+   }
+  },
+  "sc_pe": {
+   "name": "SpriteCook Pixel Engine Image (exact 16-128 px, no references)",
+   "tool": "spritecook",
+   "credits": 6,
+   "out": null,
+   "max_px": 128,
+   "spritecook": {
+    "model": "pixel-engine-image-v1",
+    "pixel": true
+   }
+  }
+ },
+ "default_model": "sc_nb21",
+ "forbidden_words": [
+  "haze",
+  "hazy",
+  "pale",
+  "mist",
+  "misty",
+  "faded",
+  "fade",
+  "washed",
+  "low contrast",
+  "fog",
+  "foggy",
+  "atmospheric",
+  "blur",
+  "blurry",
+  "soft focus",
+  "gradient"
+ ],
+ "kinds_generated": [
+  "character",
+  "animal",
+  "prop",
+  "obstacle",
+  "vehicle",
+  "plant",
+  "decoration"
+ ],
+ "kinds_built": [
+  "building",
+  "facade",
+  "window",
+  "door",
+  "roof",
+  "font",
+  "ui"
+ ],
+ "size_tolerance": 0.06,
+ "art_direction": "Art direction: the 1994 Lion King console game (SNES / Mega Drive): hand-placed pixels, very crisp, cute and friendly for a 7 year old. Image 2 shows approved sprites from this game: match their pixel size, outline, shading and palette, but do not copy them or add them. Front-on side view. Flat fills shaded in ramps of 3 to 4 shades per material, the darkest shade a neutral dark. No anti-aliasing, no gradients, no dithering, no texture noise, no lone specks.",
+ "tools": {
+  "spritecook": {
+   "use": "game pixels at exact size, and animation from a finished 1x still",
+   "pixels": true
+  },
+  "artlist": {
+   "use": "mood, concepts and lighting references only; never game pixels (owner, 25 Oct)",
+   "pixels": false
+  }
+ },
+ "caps": {
+  "paid_jobs_per_asset": 3,
+  "retries_per_family": 2,
+  "daily_credits": {
+   "artlist": 500,
+   "spritecook": 150
+  },
+  "_note": "Over a cap needs the owner's yes, written into the ledger row (--owner-ok 'what he said')."
+ },
+ "tiers": {
+  "A": "stars: Pepper, Mia, hazards and obstacles on her line, the title. Full pipeline, polish and review always.",
+  "B": "scenery behind Pepper and the mid layer. Family sheet, shared review, polish only flagged items.",
+  "C": "far layers, sky, ground, pavement, anything repeated or geometric. Built in code or from stamped parts, never generated."
+ },
+ "palettes": {
+  "riverwalk": "art/palettes/riverwalk.gpl"
+ },
+ "_models_note": "credits = per image; a job costs credits x variations (+ credits_per_reference x references). Prices from list_generation_models, 25 Oct.",
+ "review_checklist": [
+  "Scale: right size next to Pepper and in its slot (check measures within 2 px)",
+  "Layer: its values sit on its layer-ladder row (darkest, contrast), lighter than the layer in front",
+  "Outline: obstacles and characters one unbroken 1 px ink; decoration none, edges a darker shade of its own colour",
+  "Shapes: round things round, straight lines straight, even steps, no lumps or jaggies",
+  "Shading: flat fills in ramps of 3-4 shades per material, light from the upper left, no mottling, no lone specks",
+  "Palette: only colours from the level palette; whites white, darks neutral",
+  "View: front-on at Pepper's height, a front and a thin cap, no tops, sides or insides",
+  "Fit: in the sample screen beside the bench, bin and lamp at 1x and 3x it looks as crisp and as dense",
+  "Read: cute and clear for a 7 year old, reads at 1x, no text or logos"
+ ],
+ "steps": {
+  "A": [
+   "spec",
+   "blockout",
+   "preflight",
+   "probe",
+   "cut",
+   "ingame",
+   "polish",
+   "review",
+   "board",
+   "shipped"
+  ],
+  "B": [
+   "spec",
+   "blockout",
+   "preflight",
+   "probe",
+   "cut",
+   "ingame",
+   "polish",
+   "review",
+   "board",
+   "shipped"
+  ],
+  "C": [
+   "spec",
+   "built",
+   "ingame",
+   "review",
+   "board",
+   "shipped"
+  ]
+ }
 }
