@@ -1,0 +1,31 @@
+{
+ "name": "dt_cat",
+ "model": "SpriteCook Pixel Engine Image (exact 16-128 px, no references)",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/dt_cat_blockout.png",
+  "art/gen/style_card_riverwalk.png"
+ ],
+ "prompt_file": "art/gen/prompts/dt_cat.txt",
+ "k": null,
+ "frame": [
+  72,
+  56
+ ],
+ "credits": 12,
+ "tool": "spritecook",
+ "family": "animals",
+ "tier": "A",
+ "slot": {
+  "file": "riverwalk/art/cat.png",
+  "where": "Downtown: the cat that sits on the ball on the statue's arm, scared, leaps and runs (scene.lua Sc.cat)"
+ },
+ "spritecook": {
+  "model": "pixel-engine-image-v1",
+  "pixel": true,
+  "width": 14,
+  "height": 15
+ },
+ "ledger_job": "dt_cat@1025-171212"
+}
