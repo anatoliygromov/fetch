@@ -175,13 +175,13 @@ def part_flowerbox(w=50):
     p.rect(0, 6, w, 6, 'dr'); p.hline(0, 6, w, 'dr_hi'); p.hline(0, 11, w, 'dr_dk'); p.vline(w - 1, 6, 6, 'dr_dk')
     p.vline(0, 6, 6, 'dr_hi')
     for x in range(1, w - 1):                                       # leaves: a band with a scalloped top
-        top = 3 if (x // 3) % 2 else 4
+        top = 2 if (x // 3) % 2 else 3
         for y in range(top, 6): p.put(x, y, 'lf')
     head = [".f.f.",                                                # one geranium head (a cluster), stamped
             "fffff",
             "ffffd",
             ".fdd."]
-    for k, hx in enumerate(range(3, w - 6, 8)):
+    for k, hx in enumerate(range(5, w - 6, 8)):                    # margins 5 and 6: centred in the box
         hy = 0 if k % 2 == 0 else 1
         for yy, row in enumerate(head):
             for xx, ch in enumerate(row):
@@ -280,7 +280,7 @@ def part_transom(w=46, h=14):
         p.rect(x, 0, lw, h - 2, 'gl'); p.hline(x, 0, lw, 'ir'); p.vline(x, 0, h - 2, 'ir')
         for u in range(1, lw):                                   # one 2 px reflection streak per light
             for v in range(1, h - 2):
-                if 6 <= u + v <= 7: p.put(x + u, v, 'gl_hi')
+                if 8 <= u + v <= 9: p.put(x + u, v, 'gl_hi')
     p.hline(0, h - 2, w, 'dr_hi'); p.hline(0, h - 1, w, 'dr_dk')
     return p
 
@@ -299,7 +299,6 @@ def part_pediment(w, rise=10, t=4):
         if top + 1 < rise + t: p.put(x, top + 1, 'st_hi' if x < cx else 'st')
         if top + t - 1 < rise + t: p.put(x, top + t - 1, 'st_sh')                     # the cap's shaded underside
     p.hline(0, rise + t - 1, w, 'st_sh')
-    p.put(0, rise + t - 1, 'st_dk'); p.put(w - 1, rise + t - 1, 'st_dk')
     return p
 
 
@@ -330,7 +329,7 @@ def build():
     # upper floor: the window bottoms over the window and over the door, eared surrounds, sills, flower boxes
     UB = g(20)                                                 # the upper windows' bottom (game y 20)
     for wx in (WX, DX):
-        sur = part_eared_surround(46 + 8, 44, ear=EAR)
+        sur = part_eared_surround(46 + 8, 43, ear=EAR)              # its bottom band hides under the 3 px sill
         c.stamp(sur, wx - 4 - EAR, UB - 40); c.shadow(sur, wx - 4 - EAR, UB - 40)
         up = part_window(46, 40, rows=2, sky_rows=2)
         c.stamp(up, wx, UB - 40)
@@ -339,11 +338,12 @@ def build():
         box = part_flowerbox(48)
         c.stamp(box, wx - 1, UB - 11); c.shadow(box, wx - 1, UB - 11)
     # the iron wall anchors at the floor line: by the corner and between the bays
-    for ax in (10, 71):
+    for ax in (10, 67):                                         # centres 12 and 69: symmetric about the window axis
         an = part_anchor(); c.stamp(an, ax, g(26)); c.shadow(an, ax, g(26))
     # the smooth stone socle, 16 px
     c.rect(0, g(158), W, 16, 'st')
     c.hline(0, g(158), W, 'st_hi'); c.hline(0, g(160), W, 'st_sh'); c.hline(0, g(173), W, 'st_sh')
+    c.hline(0, g(166), W, 'st_sh'); c.hline(0, g(167), W, 'st_hi')                       # one course joint (HOME's grain)
     # the corner lesene, on the socle, up out of the top
     les = part_lesene(8, g(158))
     c.stamp(les, 0, 0); c.shadow(les, 0, 0, dx=2, dy=0)
@@ -355,8 +355,9 @@ def build():
     c.stamp(hood, WX - 4 - EAR - 2, WY - 9); c.shadow(hood, WX - 4 - EAR - 2, WY - 9)
     win = part_window(46, WH, rows=4)
     c.stamp(win, WX, WY)
-    c.remap(WX, WY, 2, WH, {'wh': 'st_hi', 'st_hi': 'st'})                 # the reveal's shade on the left
-    c.remap(WX, WY, 46, 2, {'wh': 'st_hi', 'st_hi': 'st'})                 # and under the lintel
+    c.remap(WX, WY, 2, WH, {'wh': 'st_hi'})                                # the reveal's shade on the left
+    c.remap(WX, WY, 46, 2, {'wh': 'st_hi'})                                # and under the lintel (the frame's own
+                                                                           # shade line stays one tone)
     sill = part_sill(46 + 14, 5); c.stamp(sill, WX - 7, WY + WH + 4); c.shadow(sill, WX - 7, WY + WH + 4)
     # the portal: pilasters on bases with capitals, entablature, segmental pediment
     PL, PR = DX - 7, DX + 46                                   # pilaster x (7 px each)
@@ -379,8 +380,8 @@ def build():
     for k in (0, 1):
         leaf = part_door_leaf(23, 98); c.stamp(leaf, DX + 23 * k, g(73))
     c.vline(DX + 22, g(73), 98, 'ink')                         # the meeting gap
-    for kx in (DX + 19, DX + 25):                              # brass knobs
-        c.rect(kx, g(118), 2, 3, 'brass'); c.put(kx + 1, g(120), 'dr_dk')
+    for kx in (DX + 19, DX + 25):                              # brass knobs, each with its 2 px shade under it
+        c.rect(kx, g(118), 2, 2, 'brass'); c.hline(kx, g(120), 2, 'dr_dk')
     c.remap(DX, top, 3, g(171) - top, {'dr_hi': 'dr', 'dr': 'dr_dk', 'gl': 'ir', 'gl_hi': 'gl'})
     c.remap(DX, top, 46, 2, {'dr_hi': 'dr', 'dr': 'dr_dk', 'gl': 'ir', 'gl_hi': 'gl'})
     step = Canvas(46 + 18, 3)

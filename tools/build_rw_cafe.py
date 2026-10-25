@@ -59,7 +59,7 @@ SHADE = {'cr': 'cr_sh', 'cr_hi': 'cr', 'wh': 'cr_sh', 'gl': 'ir', 'gl_hi': 'gl',
 def C(w, h): return Canvas(w, h, PAL)
 
 
-def shade_cast(c, part, x, y, dx=2, dy=2, m=None):
+def shade_cast(c, part, x, y, dx=2, dy=2, m=None, x_min=0):
     """The part's cast shadow, every material by its own shade (the awning falls on glass, paint and plaster)."""
     m = m or SHADE
     h, w = part.a.shape
@@ -68,6 +68,7 @@ def shade_cast(c, part, x, y, dx=2, dy=2, m=None):
             if part.a[yy, xx] < 0: continue
             sx, sy = xx + dx, yy + dy
             if 0 <= sx < w and 0 <= sy < h and part.a[sy, sx] >= 0: continue
+            if x + sx < x_min: continue
             v = c.at(x + sx, y + sy)
             if v in m: c.put(x + sx, y + sy, m[v])
 
@@ -89,7 +90,6 @@ def part_sill(w, h=4):
     p.rect(0, 0, w, h, 'cr'); p.hline(0, 0, w, 'cr_hi'); p.hline(0, h - 1, w, 'cr_dk'); p.vline(w - 1, 0, h, 'cr_sh')
     for x in (4, w - 8):
         p.rect(x, h, 4, 2, 'cr'); p.hline(x, h + 2, 4, 'cr_sh'); p.put(x + 3, h, 'cr_sh'); p.put(x + 3, h + 1, 'cr_sh')
-        p.hline(x + 1, h + 2, 2, 'cr_dk')
     return p
 
 
@@ -261,10 +261,10 @@ def build():
     DX = 78                                                    # the door opening, x 78..123 (game 3794..3839)
     # upper floor: two window bottoms in stucco surrounds, on sills with corbels
     UB = g(16)
-    for wx in (15, 74):
-        fr = part_frame(54, 44); c.stamp(fr, wx - 4, UB - 40); c.shadow(fr, wx - 4, UB - 40, on=WALL, c='cr_sh')
-        up = part_window(46, 40, rows=2, sky_rows=2, pal=PAL, shade='cr_sh'); c.stamp(up, wx, UB - 40)
-        c.remap(wx, UB - 40, 2, 39, {'wh': 'cr_sh', 'cr_sh': 'cr_dk'})          # the reveal's shade on the left
+    for wx in (15, 74):                                        # (44 tall: the image's top row cuts the meeting rail)
+        fr = part_frame(54, 48); c.stamp(fr, wx - 4, UB - 44); c.shadow(fr, wx - 4, UB - 44, on=WALL, c='cr_sh')
+        up = part_window(46, 44, rows=2, sky_rows=2, pal=PAL, shade='cr_sh'); c.stamp(up, wx, UB - 44)
+        c.remap(wx, UB - 44, 2, 44, {'wh': 'cr_sh'})                             # the reveal's shade on the left
         sill = part_sill(58, 4); c.stamp(sill, wx - 6, UB); c.shadow(sill, wx - 6, UB, on=WALL, c='cr_sh')
     # the cornice between the floors (150 px above the pavement)
     band = part_band(W, 8); c.stamp(band, 0, g(24)); c.shadow(band, 0, g(24), dx=0, dy=3, on=WALL, c='cr_sh')
@@ -290,13 +290,13 @@ def build():
     tr = part_transom(46, 14); c.stamp(tr, DX, g(57))
     c.rect(DX, g(71), 46, 2, 'sg'); c.hline(DX, g(71), 46, 'sg_hi'); c.hline(DX, g(72), 46, 'sg_sh')
     leaf = part_door_leaf(46, 98); c.stamp(leaf, DX, g(73))
-    REV = {'sg_hi': 'sg_sh', 'sg': 'sg_sh', 'sg_sh': 'sg_dk', 'gl': 'ir', 'gl_hi': 'gl'}
+    REV = {'sg_hi': 'sg_sh', 'sg': 'sg_sh', 'gl': 'ir', 'gl_hi': 'gl'}       # (the frame's own shade stays one tone)
     c.remap(DX, g(57), 3, g(171) - g(57), REV)                 # the reveal's shade: left side and under the lintels
     c.remap(DX + 3, g(57), 43, 2, REV); c.remap(DX + 3, g(73), 43, 2, REV)
     step = part_granite(46 + 6, 3); c.stamp(step, DX - 3, g(171))           # the door's granite step
     # the awning over the shop window, last: its deep shadow on the glass, the frame and the piers
     aw = part_awning(); ax = SX + 63 // 2 - aw.w // 2
-    c.stamp(aw, ax, g(48)); shade_cast(c, aw, ax, g(48), 2, 3)
+    c.stamp(aw, ax, g(48)); shade_cast(c, aw, ax, g(48), 2, 3, x_min=SX)      # (not on the left pier: a ragged sliver)
     return c
 
 
