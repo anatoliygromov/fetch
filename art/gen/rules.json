@@ -1,0 +1,27 @@
+{
+  "_doc": "Single source for tools/preflight.py and tools/grid_cut.py. Values from docs/layer_ladder.md, docs/asset_qa.md, riverwalk/look.lua and claude/art-learnings.md. Change rules here, not in the scripts.",
+  "pepper": {"file": "riverwalk/art/pepper.png", "cell": [0, 0, 60, 52], "withers_px": 26, "head_top_px": 38, "nose_tail_px": 52, "px_per_m": 46},
+  "layers": {
+    "char":  {"px_per_m": 46, "colours": 24, "outline": "a 1 px dark outline around the whole silhouette, one ink colour"},
+    "play":  {"px_per_m": 46, "colours": 20, "outline": "a 1 px dark outline around the whole silhouette, one ink colour"},
+    "back":  {"px_per_m": 46, "colours": 20, "outline": "no outline; its edges are a darker shade of its own colour"},
+    "mid":   {"px_per_m": 23, "colours": 14, "outline": "no outline; its edges are a darker shade of its own colour"},
+    "front": {"px_per_m": 60, "colours": 8,  "outline": "a dark silhouette with a thin rim of light on the top edge"}
+  },
+  "levels": {
+    "riverwalk": {"light": "River Walk, a summer morning by a city river: warm low sun from the upper left, golden highlights, cool blue shadows", "style_card": "art/gen/style_card_riverwalk.png"},
+    "citypark":  {"light": "City Park, a golden autumn afternoon: warm amber sun from the upper left, warm highlights, violet-blue shadows", "style_card": "art/gen/style_card_riverwalk.png"},
+    "downtown":  {"light": "Downtown, a bright midday: high white sun from the upper left, crisp short shadows, clean saturated colours", "style_card": "art/gen/style_card_riverwalk.png"}
+  },
+  "models": {
+    "nbpro_1k": {"name": "Nano Banana Pro I2I 1K", "out": [1200, 896], "credits": 160, "artlist": {"modelId": 2004, "settings": {"aspect_ratio": "4:3", "quality": "1K"}}},
+    "nbpro_2k": {"name": "Nano Banana Pro I2I 2K", "out": [2400, 1792], "credits": 160, "artlist": {"modelId": 2004, "settings": {"aspect_ratio": "4:3", "quality": "2K"}}},
+    "nb2":      {"name": "Nano Banana 2 I2I", "out": [2400, 1792], "credits": 60, "artlist": {"modelId": 2249, "settings": {"aspect_ratio": "4:3"}}}
+  },
+  "default_model": "nbpro_1k",
+  "forbidden_words": ["haze", "hazy", "pale", "mist", "misty", "faded", "fade", "washed", "low contrast", "fog", "foggy", "atmospheric", "blur", "blurry", "soft focus", "gradient"],
+  "kinds_generated": ["character", "animal", "prop", "obstacle", "vehicle", "plant", "decoration"],
+  "kinds_built": ["building", "facade", "window", "door", "roof", "font", "ui"],
+  "size_tolerance": 0.06,
+  "art_direction": "Art direction: the 1994 Lion King console game (SNES / Mega Drive): hand-placed pixels, very crisp, cute and friendly for a 7 year old. Image 2 shows approved sprites from this game: match their pixel size, outline, shading and palette, but do not copy them or add them. Front-on side view. Flat fills shaded in ramps of 3 to 4 shades per material, the darkest shade a neutral dark. No anti-aliasing, no gradients, no dithering, no texture noise, no lone specks."
+}
