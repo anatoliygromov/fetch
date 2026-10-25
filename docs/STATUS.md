@@ -1,38 +1,39 @@
 # FETCH! Status
 
-As of Sun 25 Oct 2026, night (21:57). Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
+As of Sun 25 Oct 2026, night (23:14). Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
 
-## Night of 25 Oct (unattended run, 20:28 to 21:57 Stockholm)
+## Night of 25 Oct (unattended run, 20:28 to 23:14 Stockholm)
 
-0 credits, no image service call, nothing merged, nothing posted to the board. Base read at 20:30: `preview/25oct-pm` f54a219 (this branch is cut from it); the evening session's newer STATUS (`preview/25oct-late` 6c82a8b, 21:31) is kept below this section. Board at 20:16-20:18: approve cloud8_v2, park_log_v2, pier_v2, skyline_v2, rw_home, rw_lime, rw_rail_bg; redraw gull_v3 and cat_v2 (done since as `art/animals-r2`).
+0 credits, no image service call, nothing merged, nothing posted to the board or to the Layer Plans doc. Base read at 20:30: `preview/25oct-pm` f54a219 (this branch is cut from it); the evening session's newer STATUS (`preview/25oct-late` 6c82a8b, 21:31) is kept below this section. Board at 20:16-20:18: approve cloud8_v2, park_log_v2, pier_v2, skyline_v2, rw_home, rw_lime, rw_rail_bg; redraw gull_v3 and cat_v2 (done since as `art/animals-r2`). No board decision after 20:18.
 
-**Tracks** (night branches off `art/rw-sample-screen` 80ec97f, approved tonight, or `prod/integrate` c1c37a4)
-1. `night/25oct-rw-street` (1b1d8ee), off 80ec97f. "Known, next": the gable and the cafe at true scale on screen 12, built from stamped parts like HOME (tier C, 0 credits). `rw_gable` 148 x 180, `rw_cafe` 124 x 180, 20 colours each, 0 lone pixels, tops at y -6; the railing ends at the gable; palette riverwalk.gpl v3 (109 colours). Independent review: round 1 FAIL on small located defects, fixed; round 2 PASS 9/9 on both. Pipeline: both at review, next the board. Checks green (PEPPER UNCHANGED, flow 125/125, Tiled, BACKDROP OK, physics and QA 0 problems on all six levels, curve T1-T4 PASS).
-   `night/25oct-rw-street-late` (7f1adc8), the same pieces ported onto `preview/25oct-late` (River Walk is 4096 px there: +256 px). Checks green. Merge this one if `art/animals-r2` goes in, the first if not.
-2. `night/25oct-fixes` (f3bf4c0), off 80ec97f. S2 from "Known, next": the quay railings stopped 7 and 69 px short (water showed before the gable); the remainder now goes into the last bays, posts at least 48 px apart (new physics test 20, widths 89-430). `layout_qa8.py` crashed on the v8 pause; it now checks the v8 pause and tally as drawn (ALL PASS, 169 checks). `check_backdrop.py` read the declared y0, so the old gable passed with its stepped top in view; it now measures every column and lists rw_home and rw_lime. Independent review: 4 findings, all fixed. Checks green; BACKDROP fails the old gable on this branch alone (true), OK with track 1.
-3. `night/25oct-prep` (654151a), off c1c37a4. Grey-blockout sheets: lamp post and rowing boat scale on the sample-screen frames (a lamp of 4 m or more hides its checkpoint light above the screen; 3 m keeps it), gull and cat sizes (decided since by the evening session). `preflight.py` takes the owner's picked size for animals (`owner_size`), reviewed: `art/animals-r2` had to set the cat's real height to 0.65 m to get past the check.
+**Branches** (off `art/rw-sample-screen` 80ec97f, approved tonight, or `prod/integrate` c1c37a4; all checks green)
+1. `night/25oct-rw-street` (a8f1461), off 80ec97f. "Known, next": the gable and the cafe at true scale on screen 12, built from stamped parts like HOME (tier C, 0 credits). `rw_gable` 148 x 180, `rw_cafe` 124 x 180, 20 colours each, 0 lone pixels, tops at y -6; palette riverwalk.gpl v3 (109 colours). Independent review: round 1 FAIL on small located defects, fixed; round 2 PASS 9/9 on both. Pipeline: both at review, next the board. As built, screen 12 keeps 48 px of river view; the layer plan asked for the left half (160 px): options sheet on the branch.
+   `night/25oct-rw-street-late` (7f1adc8): the same pieces on the 4096 px River Walk of `art/animals-r2`. Merge this one if `art/animals-r2` goes in, the first if not.
+2. `night/25oct-fixes` (f3bf4c0), off 80ec97f. S2 from "Known, next": the quay railings stopped 7 and 69 px short (water showed before the gable), now they reach their props, posts at least 48 px apart (physics test 20). `layout_qa8.py` no longer crashes on the v8 pause (ALL PASS, 169 checks). `check_backdrop.py` measures every column as drawn and lists rw_home and rw_lime (it now fails the old gable alone, correctly). Reviewed, 4 findings fixed.
+3. `night/25oct-prep` (654151a), off c1c37a4. Lamp post and rowing boat scale sheet (a lamp of 4 m or more hides its checkpoint light above the screen; 3 m keeps it); `preflight.py` takes the owner's picked size for animals (`owner_size`; `art/animals-r2` had to set the cat's real height to 0.65 m to pass). Reviewed.
+4. `night/25oct-cp-plan` (497bd84), off c1c37a4. The City Park (tall) layer plan in the River Walk tab's form, the Layer Plans doc's "Next": `docs/layer_plans/citypark_tall.md` with a wireframe and colour and grey sweeps of every screen. Findings: the same 87 px crowns used at two depths, treetop trunks 8 px (true 18-37), keepers 57-64 px (adults need 81), the duck boat 54 px (needs 120), three street lamps in the treetops, both roads in one frame put screens 3-9 at 4-10 usable pieces, far layers out of order (169, 166, 164). 10 decisions in its last section. Not copied into the doc.
+5. `night/25oct-lab` (d9fe696), off c1c37a4. S2: curve T4 failed at 20 seeds (City Park tall, 9.4 % lost runs, the same on main). Cause: the playtest bot's 32 px run-up walked Pepper off the ash branch's end, then off the ledge below, every retry. The run-up now stops at the floor's edge (lab only; game untouched). 20 seeds: T1-T4 PASS, City Park lost 0.6 %, parents DI 26.4 -> 18.9, River Walk identical; later levels move slightly through the carried lives and score. Test `tools/check_lab_runup.py`. Reviewed.
 
-**Trials (local only, not pushed).** `prod/integrate` + `art/rw-sample-screen` + `art/rw-fixes` + `night/25oct-fixes` + `night/25oct-rw-street`: only CHANGELOG conflicts (keep both sections); every check green, layout_qa8 ALL PASS, curve T1-T4 PASS with DI as on the base. `preview/25oct-late` + `night/25oct-fixes` + `night/25oct-rw-street-late`: merges clean; every check green (PEPPER UNCHANGED against its re-recorded trace, flow 125/125, Tiled, BACKDROP OK, physics and QA 0 problems), curve T1-T4 PASS with DI identical to `preview/25oct-late`.
+**Trials (local only, not pushed).** `prod/integrate` + `art/rw-sample-screen` + `art/rw-fixes` + `night/25oct-fixes` + `night/25oct-rw-street`: only CHANGELOG conflicts (keep both sections); every check green, curve T1-T4 PASS (10 seeds) with DI as on the base. `preview/25oct-late` + `night/25oct-fixes` + `night/25oct-rw-street-late`: merges clean, every check green, curve as on its base.
 
 **Look at**
-- `docs/review/25oct-night/rw_street/rw_screen12_before_after_3x.png`, `rw_street_5x_with_bench_bin_lamp.png`, `cards/PASS_rw_gable.png`, `cards/PASS_rw_cafe.png` (`night/25oct-rw-street`).
-- `docs/review/25oct-night/fixes/railing_promenadeB_end_before_after_3x.png` (`night/25oct-fixes`).
-- `docs/review/25oct-night/prep/rw_scale_calls_2x.png` and `README.md` (`night/25oct-prep`).
+- `docs/review/25oct-night/rw_street/screen12_river_view_options_3x.png`, `rw_screen12_before_after_3x.png`, `cards/` (`night/25oct-rw-street`).
+- `docs/layer_plans/citypark_tall.md` and `docs/layer_plans/citypark_tall/wireframe.png` (`night/25oct-cp-plan`).
+- `docs/review/25oct-night/fixes/railing_promenadeB_end_before_after_3x.png` (`night/25oct-fixes`); `docs/review/25oct-night/prep/rw_scale_calls_2x.png` (`night/25oct-prep`).
 
 **Waiting for the owner (new tonight)**
-1. Merge into a new `prod/integrate-b`: `art/rw-sample-screen`, `art/rw-fixes`, `night/25oct-fixes`, `night/25oct-prep`? (yes or no). The railing fix changes how the approved railing is put together at its ends, not its pixels.
-2. Board: "River Walk street backdrop": rw_gable, rw_cafe (approve, fix or redraw). The card is on the branch; not posted.
-3. Two night routines are enabled (20:00 "FETCH! night manager" and 21:01 "Fetch Night Manager"); four night runs started tonight. Keep which one?
+1. Merge into a new `prod/integrate-b`: `art/rw-sample-screen`, `art/rw-fixes`, `night/25oct-fixes`, `night/25oct-prep`, `night/25oct-lab`? (yes or no). The railing fix changes how the approved railing is put together at its ends, not its pixels; the lab fix changes the curve's numbers (above).
+2. Board: rw_gable and rw_cafe, and screen 12's river view: A as built (48 px), B the gable's door bay only (116 px), C the cafe alone (196 px). Pick.
+3. City Park layer plan: this form and its 10 points? Yes, or strike any.
 Still open from before: "Animals round 2" on the board; play `_g`, then v0.7; logo and tagline; lamp post height (sheet ready).
 
 **Problems**
-- The 20:29 run-now and the 21:01 run of the second routine made `ops/night-25oct-b`, `night/25oct-tools` (a second layout_qa8 crash fix, its stale FAILs left open) and `ops/night-25oct-c` (an audit). `night/25oct-tools` duplicates `night/25oct-fixes`: drop it.
-- With 20 seeds those runs saw curve T4 FAIL on City Park (tall), 9.4 % lost runs, the same on main (pre-existing). With BIBLE's 10 seeds it passes.
+- Four night runs started tonight from two enabled routines (20:00 "FETCH! night manager", older prompt; 21:01 "Fetch Night Manager", tonight's prompt, also run by hand at 20:29). The extra runs left `ops/night-25oct-b`, `ops/night-25oct-c` and `night/25oct-tools` (a duplicate layout_qa8 fix): drop them. Suggest turning the 20:00 routine off.
 - At 20:41 I stopped every running game process by mistake; the art agent re-ran its checks.
-- The FETCH! project docs are not reachable from a cloud session: tonight's facts are here, in `docs/art_learnings.md` and in the prep README.
+- The FETCH! project docs are not reachable from a cloud session: tonight's facts are here, in `docs/art_learnings.md`, the prep README and the CHANGELOG sections.
 - `apt-get install love` fails in its man-page step; LÖVE 11.5 works. No matplotlib: the curve chart is skipped, numbers unaffected.
 
-**Next run, if he says nothing:** no merges. River Walk road traffic and water need credits, so prep only: the City Park layer plan (the 0-credit step before its families) if he agrees, else an audit.
+**Next run, if he says nothing:** no merges. Prep only: the Downtown layer plan (the other half of the Layer Plans doc's "Next"), else an audit.
 
 ---
 
