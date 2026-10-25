@@ -1,0 +1,31 @@
+{
+ "name": "rw_gull",
+ "model": "SpriteCook Pixel Engine Image (exact 16-128 px, no references)",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/rw_gull_blockout.png",
+  "art/gen/style_card_riverwalk.png"
+ ],
+ "prompt_file": "art/gen/prompts/rw_gull.txt",
+ "k": null,
+ "frame": [
+  96,
+  72
+ ],
+ "credits": 12,
+ "tool": "spritecook",
+ "family": "animals",
+ "tier": "A",
+ "slot": {
+  "file": "riverwalk/art/gull.png",
+  "where": "River Walk screens 6-10 and Rooftops: the gull that circles and swoops (critters.lua), and the gull's nest (stage.lua magpie look gull)"
+ },
+ "spritecook": {
+  "model": "pixel-engine-image-v1",
+  "pixel": true,
+  "width": 40,
+  "height": 17
+ },
+ "ledger_job": "rw_gull@1025-194030"
+}

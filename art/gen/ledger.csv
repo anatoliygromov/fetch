@@ -44,3 +44,23 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-10-06 12:00,plan,sc_superseded,sc_superseded,history-spritecook,spritecook,history,1080,planned,backfill from claude/credit-audit-25oct.md
 2026-10-06 12:00,spent,sc_superseded,,,,,1080,spent,"estimate: replaced v1/v2 props, fences, unused clips, parallel waterfront session"
 2026-10-06 12:00,verdict,,sc_superseded,,,,,rejected,"estimate: replaced v1/v2 props, fences, unused clips, parallel waterfront session"
+2026-10-25 17:12,plan,rw_gull@1025-171212,rw_gull,animals,spritecook,"SpriteCook Pixel Engine Image (exact 16-128 px, no references)",12,planned,"Yes, go over today's cap (owner, 25 Oct 16:03; family animals 128 credits, max 180)"
+2026-10-25 17:12,plan,dt_cat@1025-171212,dt_cat,animals,spritecook,"SpriteCook Pixel Engine Image (exact 16-128 px, no references)",12,planned,"Yes, go over today's cap (owner, 25 Oct 16:03; family animals 128 credits, max 180)"
+2026-10-25 17:13,spent,rw_gull@1025-171212,,,,,12,spent,still: 2 variants
+2026-10-25 17:13,spent,dt_cat@1025-171212,,,,,12,spent,still: 2 variants
+2026-10-25 17:15,plan,rw_gull_flap@1025-1715,rw_gull,animals,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"Yes, go over today's cap (owner, 25 Oct 16:03; family animals 128 credits, max 180)"
+2026-10-25 17:15,spent,rw_gull_flap@1025-1715,,,,,26,spent,animation flap 8 frames
+2026-10-25 17:15,plan,dt_cat_idle@1025-1715,dt_cat,animals,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"Yes, go over today's cap (owner, 25 Oct 16:03; family animals 128 credits, max 180)"
+2026-10-25 17:15,spent,dt_cat_idle@1025-1715,,,,,26,spent,animation idle 8
+2026-10-25 17:15,plan,dt_cat_leap@1025-1715,dt_cat,animals,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"Yes, go over today's cap (owner, 25 Oct 16:03; family animals 128 credits, max 180)"
+2026-10-25 17:15,spent,dt_cat_leap@1025-1715,,,,,26,spent,animation scared+leap 8
+2026-10-25 17:15,plan,dt_cat_run@1025-1715,dt_cat,animals,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"Yes, go over today's cap (owner, 25 Oct 16:03; family animals 128 credits, max 180)"
+2026-10-25 17:15,spent,dt_cat_run@1025-1715,,,,,26,spent,animation run 8
+2026-10-25 17:18,plan,dt_cat_leap_r1@1025-1720,dt_cat,animals,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"owner's max 180 with retries (25 Oct 16:03); retry 1 of the family, changed input: edge_margin 0 -> 25 (more room)"
+2026-10-25 17:18,spent,dt_cat_leap_r1@1025-1720,,,,,26,spent,"retry: leap, edge_margin 25"
+2026-10-25 17:18,plan,dt_cat_run_r1@1025-1720,dt_cat,animals,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"owner's max 180 with retries (25 Oct 16:03); retry 1 of the family, changed input: edge_margin 0 -> 25 (more room)"
+2026-10-25 17:18,spent,dt_cat_run_r1@1025-1720,,,,,26,spent,"retry: run, edge_margin 25"
+2026-10-25 19:40,plan,rw_gull@1025-194030,rw_gull,animals,spritecook,"SpriteCook Pixel Engine Image (exact 16-128 px, no references)",12,planned,"owner 25 Oct 17:27: about 40 px gull, new still and flap, about 38 credits"
+2026-10-25 19:41,spent,rw_gull@1025-194030,,,,,12,spent,"smaller still (owner: massive), 2 variants"
+2026-10-25 19:43,plan,rw_gull_flap_s@1025-1942,rw_gull,animals,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"owner 25 Oct 17:27: about 40 px gull, new still and flap, about 38 credits"
+2026-10-25 19:43,spent,rw_gull_flap_s@1025-1942,,,,,26,spent,flap of the smaller still

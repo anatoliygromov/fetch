@@ -51,7 +51,7 @@ LADDER = {
 }
 # animated sheets: frame width x height (from the code that cuts them)
 FRAMES = {
-    "pepper": (60, 52), "girl": (66, 66), "cat": (48, 48), "goose": (34, 34), "gull": (26, 26),
+    "pepper": (60, 52), "girl": (66, 66), "cat": (24, 24), "goose": (34, 34), "gull": (48, 44),
     "park_keeper_cart": (82, 82), "park_keeper_winch": (80, 80), "rowboat": (70, 70), "mia_throw": (66, 66),
 }
 ROLL = ("road_cyclist1_roll", "road_cyclist2_roll")              # 4 frames side by side (drawn: Rd.art().riders)

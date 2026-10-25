@@ -2,6 +2,13 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `art/animals`: the gull and the cat redrawn (owner, 25 Oct: "it has holes and doesnt really look like a bird", "same for cat")
+- **Method:** one still per animal from SpriteCook Pixel Engine Image at its exact game size, animated at 1x with pixel-engine-v1.5; frames only cropped, padded and aligned by whole pixels. `tools/build_animals.py`: palette snapped to each animal's own still (no flicker), specks out, small holes in the fur filled (outlined gaps left open), the 1 px dark outline closed, the cat's lone coat pixels merged into the coat.
+- **Gull (riverwalk/art/gull.png, 8 frames 48 x 44):** wingspan about 44 px, a little smaller than life on the owner's call (the 58 px first version was "massive"). A looping wingbeat; frame 3 (wings swept back) is the swoop. critters.lua: 8 frames, body centre (28, 18), the nest gull's feet on row 28.
+- **Cat (riverwalk/art/cat.png, 8 x 3 cells of 24 x 24):** the owner's Abyssinian at true scale, 16 px sitting (owner's pick; was 30 px). Rows idle (tail curl, ear twitch, blink), leap (crouch, arched back, spring, up, top, down, land), run (stand, gallop). scene.lua: 24 px cells, feet at (12, 23).
+- asset_qa: both WARN only (wingbeat size changes, a leap and a flight leave the ground). Credits: SpriteCook 232 for the family (stills 36, animations 156, 2 of them retries with more room), owner's yes to 180 plus the smaller gull (about 38).
+- Checks: PEPPER UNCHANGED, flow 125/125, QA 0 problems (River Walk, Downtown tall). Frames: docs/review/25oct/animals/.
+
 ## Branch `ops/board-25oct`: the owner's board review turned into the art backlog (25 Oct)
 - 42 board items: 1 approve, 12 fix, 28 redraw, 1 open. **docs/art_backlog.md** groups them into families per level
   (tier, method, order), River Walk first. BIBLE: no automated clean pass on existing art (owner, 25 Oct); a row in

@@ -199,8 +199,9 @@ local function sprite(rows, cols, x, y, flip)
   end
 end
 -- the art (tools/build_critters_art.py; SpriteCook): art/goose.png rows walk 8 / hiss 6 / fly 8 in 34 x 34 cells,
--- the feet on the cell's last row, the body's middle at x 16, facing right; art/gull.png 6 flap frames, 26 x 26,
--- facing right. Without the files the pixel rows above are drawn.
+-- the feet on the cell's last row, the body's middle at x 16, facing right; art/gull.png 8 flap frames, 48 x 44,
+-- facing right, its body's middle at (28, 18), its tucked feet on row 28 (tools/build_animals.py, 25 Oct: the redrawn
+-- gull, wingspan about 44 px, a little smaller than life on the owner's call). Without the files the pixel rows above are drawn.
 local art
 local function loadArt()
   if art ~= nil then return art end
@@ -214,7 +215,7 @@ local function loadArt()
       for i = 1, (row == "hiss" and 6 or 8) do art.gq[row][i] = lg.newQuad((i - 1) * 34, (r - 1) * 34, 34, 34, gw, gh) end
     end
     local uw, uh = art.gull:getDimensions()
-    for i = 1, 6 do art.uq[i] = lg.newQuad((i - 1) * 26, 0, 26, 26, uw, uh) end
+    for i = 1, 8 do art.uq[i] = lg.newQuad((i - 1) * 48, 0, 48, 44, uw, uh) end
   end
   return art
 end
@@ -254,10 +255,10 @@ function Cr.draw(s, cam, t)
         end
         local flip = (k.state == "swoop" and k.tx < k.sx) or (k.state ~= "swoop" and s.pepper.x < k.x)
         if A then
-          local i = k.state == "swoop" and 2 or 1 + math.floor(t * 10) % 6    -- wings folded in the dive
+          local i = k.state == "swoop" and 3 or 1 + math.floor(t * 10) % 8    -- wings swept back in the dive
           lg.setColor(1, 1, 1, 1)
-          if flip then lg.draw(A.gull, A.uq[i], math.floor(x) + 13, math.floor(k.y) - 16, 0, -1, 1)
-          else lg.draw(A.gull, A.uq[i], math.floor(x) - 13, math.floor(k.y) - 16) end
+          if flip then lg.draw(A.gull, A.uq[i], math.floor(x) + 28, math.floor(k.y) - 18, 0, -1, 1)
+          else lg.draw(A.gull, A.uq[i], math.floor(x) - 28, math.floor(k.y) - 18) end
         else
           local frame = GULL[(math.floor(t * (k.state == "swoop" and 4 or 8)) % 2) + 1]
           sprite(frame, GCOL, x - 7, k.y + 3, flip)
@@ -275,10 +276,10 @@ function Cr.drawBird(m, cam, t)
   local x = m.x - cam
   local flip = (m.dir or -1) < 0
   if A then
-    local i = m.state == "fly" and 1 + math.floor(t * 10) % 6 or 1
+    local i = m.state == "fly" and 1 + math.floor(t * 10) % 8 or 1
     lg.setColor(1, 1, 1, 1)
-    if flip then lg.draw(A.gull, A.uq[i], math.floor(x) + 13, math.floor(m.y) - 26, 0, -1, 1)
-    else lg.draw(A.gull, A.uq[i], math.floor(x) - 13, math.floor(m.y) - 26) end
+    if flip then lg.draw(A.gull, A.uq[i], math.floor(x) + 28, math.floor(m.y) - 28, 0, -1, 1)
+    else lg.draw(A.gull, A.uq[i], math.floor(x) - 28, math.floor(m.y) - 28) end
   else
     sprite(GULL[(m.state == "fly" and math.floor(t * 8) % 2 or 0) + 1], GCOL, x - 7, m.y - 2, flip)
   end
