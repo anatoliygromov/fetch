@@ -50,6 +50,8 @@ Exception: the light pavement under Pepper stays (owner, 23 Oct).
 
 **No haze in prompts (owner, 23 Oct).** Never "hazy", "pale", "misty" or "faded". Deliver full local colour.
 
+**No automated clean pass on existing art (owner, 25 Oct).** Script blotch, dirt and stray cleaning smothered the details of the building, gable and cafe and holed the cafe's window railings. Existing art is fixed by hand in Aseprite or redrawn. A clean pass runs only on a new cut, before its hand polish.
+
 **Approved art is never changed without the owner's yes (owner, 4 Oct and 23 Oct).** No code-drawn characters or titles (owner, 22 Oct).
 
 ## 4 The art pipeline (playbook, 23 Oct)
@@ -131,6 +133,7 @@ Asset gates and checklist: `docs/asset_qa.md`. Nothing is done until it passes i
 | Downtown facades fade 0.10 on art/haze | 0.25 (owner, 23 Oct) |
 | Only Pepper and Mia outlined (5 Oct) | Obstacles outlined, decoration not (owner, 6 Oct) |
 | Box-filter downscale (19 Oct pipeline) | Grid only (owner, 23 Oct) |
+| "Fix free" script clean pass on existing art (23 Oct) | Hand fix in Aseprite or redraw (owner, 25 Oct) |
 | One shared 64-colour palette | One palette per level (playbook, 23 Oct) |
 | Title by a pixel artist or SpriteCook (22 Oct) | Native grid in Aseprite; artist as fallback (playbook, 23 Oct) |
 | Builds in dated Mac folders | GitHub Releases (playbook, 23 Oct) |

@@ -2,6 +2,11 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `ops/board-25oct`: the owner's board review turned into the art backlog (25 Oct)
+- 42 board items: 1 approve, 12 fix, 28 redraw, 1 open. **docs/art_backlog.md** groups them into families per level
+  (tier, method, order), River Walk first. BIBLE: no automated clean pass on existing art (owner, 25 Oct); a row in
+  the rejection log. No art changed, 0 credits.
+
 ## Branch `art/tall-backdrop-rule`: back buildings and front trees taller than the viewport (25 Oct)
 - Owner rule (25 Oct): back-layer buildings and the front row of trees are taller than the viewport; their top is never
   on screen. In BIBLE section 3 and `art/gen/rules.json` (`taller_than_viewport`).
