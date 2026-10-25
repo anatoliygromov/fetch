@@ -2,6 +2,19 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `night/25oct-cp-plan`: the City Park layer plan (prep, night of 25 Oct)
+Prep for the owner's decision; no game file, map or art changed, 0 credits.
+- **tools/layer_wireframe_tall.py:** the layer wireframe for a tall Tiled level (the River Walk tool on
+  `art/layer-plans` reads flat level files). Reads `riverwalk/level/tiled/<level>.lua`, places every piece as the park
+  art code does (scene.lua tier(), Sc.drawPropArt, Sc.drawFarArt) and draws each screen at the high and the low camera
+  in the River Walk colours; `--report` writes the per-screen counts the plan quotes. It found a ledge with no art:
+  1656-1720 at y 248, left of the old oak (scene.lua gives it to CROWN, which draws nothing).
+- **tools/layer_frames_tall.py, tools/layer_ids_hook.lua:** the look sweep (`LOOK_SWEEP=1`, one frame per screen and
+  camera height) as a contact sheet in colour and greyscale; `--ids` runs it again in a temp copy of the game with a
+  hook that turns each draw pass into a flat layer number, so each layer's luma is measured in the real frames.
+- **docs/layer_plans/citypark_tall/:** wireframe.png (9 screens x 2 cameras), contact.png and contact_grey.png
+  (9 screens x 3 cameras, 1x), layers.json (luma and screen share per layer, per frame and per camera height).
+
 ## Branch `ops/board-25oct`: the owner's board review turned into the art backlog (25 Oct)
 - 42 board items: 1 approve, 12 fix, 28 redraw, 1 open. **docs/art_backlog.md** groups them into families per level
   (tier, method, order), River Walk first. BIBLE: no automated clean pass on existing art (owner, 25 Oct); a row in
