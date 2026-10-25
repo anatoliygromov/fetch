@@ -306,7 +306,7 @@ return {
           name = "",
           type = "props",
           shape = "rectangle",
-          x = 954,
+          x = 938,
           y = -77,
           width = 250,
           height = 251,
@@ -316,7 +316,7 @@ return {
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
-            ["art"] = "rw_lime_flip",
+            ["art"] = "rw_lime",
           },
         },
         {

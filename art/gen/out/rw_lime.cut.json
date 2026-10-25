@@ -1,7 +1,7 @@
 {
  "name": "rw_lime",
  "size": [
-  235,
+  250,
   251
  ],
  "target": [
@@ -12,17 +12,19 @@
  "on_blockout": 0.968,
  "covered": 0.997,
  "stray": 0.199,
- "colours_in": 12684,
+ "colours_in": 8,
  "colours_cap": 20,
  "fails": [],
  "render": "art/gen/renders/rw_lime_r1b.png",
- "cut_by": "art/source/rw_lime/cut_lime.py (1x render, pitch 1, no resampling)",
+ "cut_by": "art/source/rw_lime/cut_lime.py then clean_lime.py (1x render, pitch 1, no resampling)",
  "measures_px": {
-  "trunk_width": "22-24 (target 23)",
-  "clear_trunk": "about 90-100 (target 100)",
-  "crown_width": "250, runs out of the right edge (target 230)"
+  "trunk_width": "22-24 at 20-80 px up (target 23)",
+  "clear_trunk": "84-100: lowest leaf 84 px up (target 100: 1.8 m instead of 2.2 m, kept)",
+  "crown_width": "250 (target 230): the right side is the render frame, carved into three round clumps (clean_lime.py)"
  },
  "waived": [
-  "19.9% stray scenery: the crown runs past its grey dome into the frame's top corners and right edge; it is the same tree (nothing copied, no scenery), and the crown is cut by the screen top in the game anyway. grid_cut would have clipped the crown to the dome, so the cut keeps the whole tree (cut_lime.py)."
+  "stray 19.9 % (grid_cut on the dome mask): the crown runs past its grey dome into the frame's top corners; same tree, no scenery; the top is above the screen in the game. The right side, cut straight by the render frame, is carved round (clean_lime.py step 1), not waived.",
+  "size: width 250 vs 230 (+8.7 %) and clear trunk 84 vs 100: the crown of a cut-off tree has no fixed width; the trunk, the measure that sets the scale, is 22-24 px. Kept, said on the board card.",
+  "palette: snapping to v1 (56 clustered colours) left 8 muddy colours; the lime keeps its own 8-colour ramps (leaves 5, bark 3), added to riverwalk.gpl v2 (tools/make_palette.py riverwalk 86), which counts only with the owner's approve."
  ]
 }

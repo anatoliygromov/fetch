@@ -13,8 +13,8 @@ Sizes (46 px/m): door opening 46 x 98 (1.0 x 2.1 m) on a granite step, fanlight 
 147 (3.2 m) from the pavement to the string course, granite plinth 16 (0.35 m). Upper floor: its wall and the bottom of
 its windows run out of the top of the screen.
 
-Image 184 x 180. The bottom row is the pavement's back edge (game y 174), so the top row is at game y -5: the
-house's top is never on screen (tools/check_backdrop.py).
+Image 184 x 180, drawn with its bottom on the pavement's back edge (game y 174): the bottom row is at game y 173 and
+the top row at game y -6, so the house's top is never on screen (tools/check_backdrop.py). Window opening 46 x 70.
 
 Usage: build_rw_home.py [OUT.png]   default riverwalk/art/scene/rw_home.png (+ an 8x parts sheet in art/source/rw_home/)
 """
@@ -27,16 +27,16 @@ from PIL import Image
 W, H = 184, 180
 OFF = 5                      # image y = game y + OFF (ground: game y 174 = image row 179)
 
-PAL = {                      # 19 colours, per-material ramps, neutral darks
+PAL = {                      # 20 colours, per-material ramps, neutral darks
     'pl_hi': (250, 214, 142), 'pl': (238, 188, 104), 'pl_sh': (212, 154, 84), 'pl_dk': (168, 110, 62),   # ochre plaster
     'st_hi': (250, 240, 220), 'st': (228, 212, 182), 'st_sh': (192, 172, 142), 'st_dk': (146, 126, 102),  # sandstone
     'gr_hi': (194, 196, 202), 'gr': (156, 158, 168), 'gr_sh': (118, 120, 132),                          # granite
     'ir': (86, 88, 100), 'ink': (40, 42, 54),                                                             # iron, dark
     'dr_hi': (112, 156, 104), 'dr': (68, 110, 72), 'dr_dk': (40, 70, 48),                                 # door green
     'gl_hi': (196, 220, 236), 'gl': (98, 126, 152),                                                       # glass (its shade: iron)
-    'brass': (244, 204, 105),
+    'brass': (244, 204, 105), 'wh': (247, 249, 250),                                                  # brass, window white
 }
-assert len(PAL) == 19
+assert len(PAL) == 20
 NAMES = list(PAL)
 
 
@@ -130,13 +130,12 @@ def part_fanlight(w=46, h=16):
 
 
 def part_window(w=46, h=72, rows=3, sky_rows=1, curtains=False):
-    """Swedish two-casement window, `rows` panes a casement, white-painted wood (stone ramp). Glass a flat mid blue
+    """Swedish two-casement window, `rows` panes a casement, white-painted wood (white, its shade the stone). Glass a flat mid blue
     with a dark top-left inner edge (the bars' shadow) and, in the top `sky_rows` panes, the sky's reflection as two
     clean diagonal streaks (3 px and 1 px). Frame lit top-left, shaded bottom-right."""
     p = Canvas(w, h)
-    p.rect(0, 0, w, h, 'st')
-    p.hline(0, 0, w, 'st_hi'); p.vline(0, 0, h, 'st_hi')
-    p.hline(1, h - 1, w - 1, 'st_sh'); p.vline(w - 1, 1, h - 1, 'st_sh')
+    p.rect(0, 0, w, h, 'wh')                                        # white-painted wood
+    p.hline(1, h - 1, w - 1, 'st'); p.vline(w - 1, 1, h - 1, 'st')  # shaded bottom and right edge
     cw = (w - 3 - 3 - 2) // 2
     ph = (h - 6 - 2 * (rows - 1)) // rows
     for k, cx in enumerate((3, 3 + cw + 2)):
@@ -150,7 +149,7 @@ def part_window(w=46, h=72, rows=3, sky_rows=1, curtains=False):
                     for v in range(1, ph):
                         sd = u + v
                         if a <= sd <= a + 2 or sd == a + 6: p.put(cx + u, y0 + v, 'gl_hi')
-    p.vline(3 + cw, 3, h - 6, 'st'); p.vline(4 + cw, 3, h - 6, 'st_sh')
+    p.vline(3 + cw, 3, h - 6, 'wh'); p.vline(4 + cw, 3, h - 6, 'st')
     if curtains:                                   # white tie-back curtains on the outer side of each casement
         gh = h - 6; tie = 3 + int(gh * 0.6)
         for k in (0, 1):
@@ -227,7 +226,7 @@ def build():
     c = Canvas(W, H)
     g = lambda y: y + OFF                                     # game y -> image y
     QX = W - 14                                               # corner quoins, 14 px
-    c.rect(0, 0, QX, H, 'pl')                                 # plaster
+    c.rect(0, 0, W, H, 'pl')                                  # plaster to the corner (short quoins show wall left of them)
     # string course between the floors (top of the ground storey at game y 27 = 147 px above the pavement)
     sc_y = g(22)
     band = Canvas(QX + 2, 8)
@@ -300,7 +299,9 @@ def build():
     step.rect(0, 0, DW + 16, 3, 'gr'); step.hline(0, 0, DW + 16, 'gr_hi'); step.hline(0, 2, DW + 16, 'gr_sh')
     c.stamp(step, DX - 8, g(172))
     # the wall lantern right of the door
-    lamp = part_lamp(); c.stamp(lamp, DX + DW + 11, g(70)); c.shadow(lamp, DX + DW + 11, g(70))                     # bracket into the wall
+    lamp = part_lamp(); c.stamp(lamp, DX + DW + 11, g(70)); c.shadow(lamp, DX + DW + 11, g(70))
+    arm = Canvas(4, 3); arm.hline(0, 0, 4, 'ink'); arm.put(0, 1, 'ink'); arm.put(0, 2, 'ir')   # bracket into the wall
+    c.stamp(arm, DX + DW + 8, g(72)); c.shadow(arm, DX + DW + 8, g(72))                     # bracket into the wall
     # the window, with its surround and sill
     WX, WY, WWd, WH = 112, g(66), 46, 70
     fr = part_window_frame(WWd + 10, WH + 10, t=5)

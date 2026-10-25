@@ -152,12 +152,12 @@
     <property name="rely.ay" type="int" value="56"/>
    </properties>
   </object>
-  <object id="11" type="props" x="954" y="-77" width="250" height="251">
+  <object id="11" type="props" x="938" y="-77" width="250" height="251">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
     <property name="layer" value="back"/>
-    <property name="art" value="rw_lime_flip"/>
+    <property name="art" value="rw_lime"/>
    </properties>
   </object>
   <object id="12" name="SAND" type="props" x="831" y="152" width="86" height="32">

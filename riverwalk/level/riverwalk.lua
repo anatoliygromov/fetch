@@ -49,8 +49,9 @@ local FX = 1560
 
 L.props = {
   -- screen 1: home
-  -- the starter composition (the user's): the house's left edge and the tree's cut left side sit exactly on the
-  -- level's left edge, which the camera never passes, so neither looks cropped; the tree leans over Pepper's start
+  -- the starter composition: the house's left edge sits exactly on the level's left edge, which the camera never
+  -- passes. (art/rw-sample-screen) The house is at true scale now (door 98 px, storey 147 px, its top above the
+  -- screen) and the street lime stands right of it, by the fallen branch, its crown over the bench
   { name = "HOME",     kind = "decor",  layer = "back", x0 = 0,    x1 = 184,  y0 = -5,  y1 = 174, art = "rw_home" },
   { name = "POT",      kind = "decor",  layer = "play", x0 = 214,  x1 = 231,  y0 = 147, y1 = 174, art = "pot" },
   -- (r6/levels, the tutorial) a branch fallen from the big tree: 21 px, the first tap hop (TAP: HOP) on flat
@@ -70,8 +71,9 @@ L.props = {
   { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 401,  x1 = 503,  y0 = 152, y1 = 184, art = "flowerbox_front", ax = 400, ay = 184 },
   { name = "BIN",      kind = "solid",  layer = "play", x0 = 641,  x1 = 676,  y0 = 128, y1 = 184, art = "bin", ax = 640, ay = 184 },
   -- bike zone 1: three perches with clear pavement between them
-  -- (art/rw-sample-screen) the same lime, mirrored, its trunk in the gap between the planter and the flower box
-  { name = "",         kind = "decor",  layer = "back", x0 = 954,  x1 = 1204, y0 = -77, y1 = 174, art = "rw_lime_flip" },
+  -- (art/rw-sample-screen) the same lime (not mirrored: the sun stays upper left), its trunk in the gap between the
+  -- planter and the flower box
+  { name = "",         kind = "decor",  layer = "back", x0 = 938,  x1 = 1188, y0 = -77, y1 = 174, art = "rw_lime" },
   { name = "SAND",     kind = "solid",  layer = "play", x0 = 831,  x1 = 917,  y0 = 152, y1 = 184, art = "gritbox_front", ax = 830, ay = 184 },
   { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 990,  x1 = 1034, y0 = 154, y1 = 184, art = "planter_sq" },
   { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 1113, x1 = 1215, y0 = 152, y1 = 184, art = "flowerbox_front", ax = 1112, ay = 184 },

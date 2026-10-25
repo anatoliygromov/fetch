@@ -21,16 +21,18 @@ def piece(w, posts):
         if 0 <= x < w and 0 <= y < H: a[y, x] = (*C[c], 255)
     for x0 in posts:                                    # posts: 3 px shaft, a 5 px foot plate
         for y in range(H):
-            put(x0, y, 'hi'); put(x0 + 1, y, 'mid'); put(x0 + 2, y, 'sh')
+            put(x0, y, 'hi'); put(x0 + 1, y, 'li'); put(x0 + 2, y, 'sh')
         for y in (H - 3, H - 2):
             for dx in range(-1, 4): put(x0 + dx, y, 'li' if y == H - 3 else 'sh')
         for dx in range(-1, 4): put(x0 + dx, H - 1, 'sh')
     for top, rows in TUBES:                             # tubes run over the posts
         for i, c in enumerate(rows):
             for x in range(w): put(x, top + i, c)
-    for x0 in posts:                                    # collars where the rails meet a post
+    for x0 in posts:                                    # collars where the lower rails meet a post: 5 px wide rings
         for top, rows in TUBES[1:]:
-            put(x0 - 1, top, 'hi'); put(x0 + 3, top + len(rows) - 1, 'sh')
+            for dy in range(-1, len(rows) + 1):
+                for dx in range(-1, 4):
+                    put(x0 + dx, top + dy, 'hi' if dy == -1 else ('sh' if dy == len(rows) else 'li'))
     return a
 
 

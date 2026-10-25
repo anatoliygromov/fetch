@@ -125,7 +125,7 @@ function Sc.art()
   -- sits back and the obstacle course stands out. The files are untouched; this is done to a copy when the game loads.
   -- (art/rw-sample-screen) rw_home and rw_lime: the true-scale house and street lime of the sample screen
   for _, n in ipairs({ "pot", "lamp_post", "building", "tree", "tree_near", "tree_far", "cafe", "gable", "rw_home",
-      "rw_lime", "rw_lime_flip" }) do
+      "rw_lime" }) do
     A[n] = newImg(Sc.fadeData(love.image.newImageData("art/scene/" .. n .. ".png")))
   end
   -- things Pepper can use (stand on, jump onto) get the characters' 1 px dark outline, so they read as part of the
