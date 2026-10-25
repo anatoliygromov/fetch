@@ -1,0 +1,22 @@
+{
+ "name": "rw_rail_bg",
+ "level": "riverwalk",
+ "layer": "back",
+ "kind": "railing",
+ "real_height_m": 1.1,
+ "target_px": [
+  84,
+  50
+ ],
+ "checks_px": {
+  "height": 50,
+  "post_spacing": 84
+ },
+ "tier": "C",
+ "family": "rw_street_backdrop",
+ "method": "built in code, tools/make_bg_railing50.py",
+ "slot": {
+  "file": "riverwalk/art/scene/rail_bg_unit.png",
+  "where": "River Walk railing by the water, screens 1-4 and 10-12 (rail_bg_left/unit/end)"
+ }
+}

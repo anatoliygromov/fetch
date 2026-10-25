@@ -1,0 +1,32 @@
+{
+ "name": "rw_lime",
+ "model": "SpriteCook Nano Banana 2.1 1K, pixel on",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/rw_lime_blockout.png",
+  "art/gen/style_card_riverwalk.png"
+ ],
+ "prompt_file": "art/gen/prompts/rw_lime.txt",
+ "k": null,
+ "frame": [
+  256,
+  256
+ ],
+ "credits": 24,
+ "tool": "spritecook",
+ "family": "rw_front_trees",
+ "tier": "B",
+ "slot": {
+  "file": "riverwalk/art/scene/rw_lime.png",
+  "where": "River Walk screen 1 (TREE, x 0, cut by the top edge) and screen 4 (x 1056, replaces tree_near)"
+ },
+ "spritecook": {
+  "model": "gemini-nano-banana-2.1",
+  "pixel": true,
+  "resolution": "1K",
+  "width": 230,
+  "height": 250
+ },
+ "ledger_job": "rw_lime@1025-143833"
+}

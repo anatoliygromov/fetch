@@ -1,0 +1,32 @@
+[
+ {
+  "name": "rw_lime",
+  "verdict": "WARN",
+  "file": "riverwalk/art/scene/rw_lime.png",
+  "level": "rw",
+  "layer": "back",
+  "fade": 0.28,
+  "w": 250,
+  "h": 251,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 17,
+   "lone": 1.1,
+   "p10": 95,
+   "median": 117,
+   "p90": 173,
+   "noise": 0.1,
+   "blotches": 0,
+   "outline": 52
+  },
+  "checks": [
+   {
+    "id": "decor-ink",
+    "sev": "warn",
+    "msg": "decoration outlined like an obstacle: 52 % of its edge is dark",
+    "pixels": []
+   }
+  ]
+ }
+]

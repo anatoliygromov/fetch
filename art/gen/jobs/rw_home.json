@@ -1,0 +1,24 @@
+{
+ "name": "rw_home",
+ "level": "riverwalk",
+ "layer": "back",
+ "kind": "building",
+ "real_height_m": 3.9,
+ "target_px": [
+  184,
+  180
+ ],
+ "checks_px": {
+  "door_opening": "46 x 98",
+  "storey": 147,
+  "window": "46 x 70",
+  "plinth": 16
+ },
+ "tier": "C",
+ "family": "rw_street_backdrop",
+ "method": "built from stamped parts, tools/build_rw_home.py",
+ "slot": {
+  "file": "riverwalk/art/scene/rw_home.png",
+  "where": "River Walk screen 1, HOME, x 0..184, y -5..174 (replaces building)"
+ }
+}

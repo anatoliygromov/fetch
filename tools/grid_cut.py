@@ -42,13 +42,16 @@ else:
     px = W / FW if pitch_arg == 'auto' else float(pitch_arg); py = H / FH if pitch_arg == 'auto' else float(pitch_arg)
     gx = np.abs(np.diff(a.sum(2), axis=1)).sum(0); gy = np.abs(np.diff(a.sum(2), axis=0)).sum(1)
     ox, oy = phase(gx, px, FW), phase(gy, py, FH)
+    if px == 1 and py == 1: ox = oy = 0.0           # a 1x render: every pixel is a cell
 out = np.zeros((FH, FW, 3), np.uint8); clean = 0
 for j in range(FH):
     y0, y1 = int(round(oy + j * py)), int(round(oy + (j + 1) * py))
     for i in range(FW):
         x0, x1 = int(round(ox + i * px)), int(round(ox + (i + 1) * px))
         if y1 > H or x1 > W: out[j, i] = (255, 0, 255); continue
-        iy, ix = max(1, (y1 - y0) // 4), max(1, (x1 - x0) // 4)
+        # inner pixels of the cell; a 1x render (SpriteCook pixel on, pitch 1-2) uses the whole cell
+        iy = max(1, (y1 - y0) // 4) if y1 - y0 >= 3 else 0
+        ix = max(1, (x1 - x0) // 4) if x1 - x0 >= 3 else 0
         cell = a[y0 + iy:y1 - iy, x0 + ix:x1 - ix].reshape(-1, 3)
         q = (cell // 6) * 6
         v, c = np.unique(q, axis=0, return_counts=True)

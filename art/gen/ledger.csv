@@ -44,3 +44,9 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-10-06 12:00,plan,sc_superseded,sc_superseded,history-spritecook,spritecook,history,1080,planned,backfill from claude/credit-audit-25oct.md
 2026-10-06 12:00,spent,sc_superseded,,,,,1080,spent,"estimate: replaced v1/v2 props, fences, unused clips, parallel waterfront session"
 2026-10-06 12:00,verdict,,sc_superseded,,,,,rejected,"estimate: replaced v1/v2 props, fences, unused clips, parallel waterfront session"
+2026-10-25 14:35,plan,rw_lime@1025-143524,rw_lime,rw_front_trees,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,
+2026-10-25 14:36,spent,rw_lime@1025-143524,,,,,24,spent,
+2026-10-25 14:38,plan,rw_lime@1025-143833,rw_lime,rw_front_trees,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,
+2026-10-25 14:38,spent,rw_lime@1025-143524,,,,,24,spent,"probe 1: 2 variants, 0.67x (trunk 17 px), kept as render only"
+2026-10-25 14:38,spent,rw_lime@1025-143524,,,,,-24,spent,correction: the 14:38 spent row repeats the 14:36 row
+2026-10-25 14:39,spent,rw_lime@1025-143833,,,,,24,spent,"retry 1: 256 frame, 2 variants"

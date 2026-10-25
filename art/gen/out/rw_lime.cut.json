@@ -1,0 +1,28 @@
+{
+ "name": "rw_lime",
+ "size": [
+  235,
+  251
+ ],
+ "target": [
+  230,
+  250
+ ],
+ "grid_clean": 1.0,
+ "on_blockout": 0.968,
+ "covered": 0.997,
+ "stray": 0.199,
+ "colours_in": 12684,
+ "colours_cap": 20,
+ "fails": [],
+ "render": "art/gen/renders/rw_lime_r1b.png",
+ "cut_by": "art/source/rw_lime/cut_lime.py (1x render, pitch 1, no resampling)",
+ "measures_px": {
+  "trunk_width": "22-24 (target 23)",
+  "clear_trunk": "about 90-100 (target 100)",
+  "crown_width": "250, runs out of the right edge (target 230)"
+ },
+ "waived": [
+  "19.9% stray scenery: the crown runs past its grey dome into the frame's top corners and right edge; it is the same tree (nothing copied, no scenery), and the crown is cut by the screen top in the game anyway. grid_cut would have clipped the crown to the dome, so the cut keeps the whole tree (cut_lime.py)."
+ ]
+}

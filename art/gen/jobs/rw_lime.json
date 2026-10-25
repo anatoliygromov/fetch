@@ -1,0 +1,32 @@
+{
+ "name": "rw_lime",
+ "level": "riverwalk",
+ "layer": "back",
+ "kind": "plant",
+ "real_height_m": 5.43,
+ "target_px": [
+  230,
+  250
+ ],
+ "checks_px": {
+  "trunk_width": 23,
+  "clear_trunk": 100,
+  "crown_width": 230
+ },
+ "subject": "a mature Stockholm street lime tree (linden) in summer, seen from the front: a straight dark grey-brown trunk with vertical bark ridges and a slightly flared foot, three main limbs forking into a tall rounded crown of fresh green heart-shaped leaves in big clumps, with small gaps between the clumps where branches show, lit from the upper left so the clumps have a bright yellow-green top edge and a deep green underside",
+ "part_map": "the dark grey column is the trunk (exactly that width and height, it touches the ground line), the mid grey bars are the main limbs going up into the crown, the big light grey shape is the leafy crown: fill it to its edge with irregular leaf clumps on the outline, keep the underside at that height, and let the crown run out of the top edge of the image, cut by the frame like a big tree seen close up.",
+ "size_sentence": "the trunk is almost as wide as the dog's head is tall, and the lowest leaves hang about four dog heights above the ground. It is a big old tree, far taller than the image, so its top is not seen.",
+ "model": "sc_nb21",
+ "variants": 2,
+ "tier": "B",
+ "family": "rw_front_trees",
+ "slot": {
+  "file": "riverwalk/art/scene/rw_lime.png",
+  "where": "River Walk screen 1 (TREE, x 0, cut by the top edge) and screen 4 (x 1056, replaces tree_near)"
+ },
+ "retry": {
+  "n": 1,
+  "changed": "blockout frame 384 -> 256 (SpriteCook's own pixel grid at 1K), crown cut by the top edge",
+  "why": "probe came back 0.67x: trunk 17 px vs 23"
+ }
+}
