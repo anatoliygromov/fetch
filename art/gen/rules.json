@@ -185,6 +185,9 @@
   "font",
   "ui"
  ],
+ "size_sheet_kinds": [
+  "animal"
+ ],
  "size_tolerance": 0.06,
  "art_direction": "Art direction: the 1994 Lion King console game (SNES / Mega Drive): hand-placed pixels, very crisp, cute and friendly for a 7 year old. Image 2 shows approved sprites from this game: match their pixel size, outline, shading and palette, but do not copy them or add them. Front-on side view. Flat fills shaded in ramps of 3 to 4 shades per material, the darkest shade a neutral dark. No anti-aliasing, no gradients, no dithering, no texture noise, no lone specks.",
  "tools": {

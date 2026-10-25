@@ -3,7 +3,10 @@
 
 A job is refused unless every rule in art/gen/rules.json holds:
   - level and layer known; the kind may be generated (buildings, fonts, UI are BUILT, never generated);
-  - size against Pepper: target height = real height x the layer's px per metre (within the tolerance);
+  - size against Pepper: target height = real height x the layer's px per metre (within the tolerance), or, when
+    the owner picked a size from a size sheet beside Pepper, that size (owner_size: px, words, sheet); an animal
+    (rules size_sheet_kinds) must carry the owner's pick (board 25 Oct 20:16: the gull and the cat were rejected
+    on size, the cat "slightly smaller than the dog", about twice true scale);
   - the blockout exists, has Pepper's real sprite at 1x, and its frame divides the model's output exactly, so the
     render lands on a whole-pixel grid (k image px per game px, the same k across and down);
   - the mask (subject only) matches the target size;
@@ -57,7 +60,18 @@ def check(path):
     if not sl.get('file') or not sl.get('where'):
         bad.append("slot missing: {'file': 'riverwalk/art/...png', 'where': 'level, screen, x'}; no slot, no credits")
     tw, th = J['target_px']
-    if lay and 'real_height_m' in J:
+    osz = J.get('owner_size') or {}
+    if J.get('kind') in R.get('size_sheet_kinds', []) and not osz:
+        bad.append(f"a{'n' if J['kind'][0] in 'aeiou' else ''} {J['kind']} is sized by the owner from a size sheet beside "
+                   f"Pepper (owner_size: px, words, sheet); board 25 Oct 20:16, gull and cat both rejected on size")
+    if lay and osz:                                                 # (night/25oct-prep) the owner's size call wins
+        if not (osz.get('px') and osz.get('words') and osz.get('sheet')):
+            bad.append("owner_size needs px (the height he picked), words (what he said, when) and sheet (the png)")
+        elif not os.path.exists(osz['sheet']):
+            bad.append(f"owner_size sheet {osz['sheet']} missing")
+        elif abs(th - osz['px']) / osz['px'] > R['size_tolerance']:
+            bad.append(f"target height {th} px but the owner picked {osz['px']} px ({osz['words']})")
+    elif lay and 'real_height_m' in J:
         want = J['real_height_m'] * lay['px_per_m']
         if abs(th - want) / want > R['size_tolerance']:
             bad.append(f"target height {th} px but {J['real_height_m']} m x {lay['px_per_m']} px/m = {want:.0f} px")

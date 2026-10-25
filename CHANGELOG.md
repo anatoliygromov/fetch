@@ -7,6 +7,12 @@ Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
   (tier, method, order), River Walk first. BIBLE: no automated clean pass on existing art (owner, 25 Oct); a row in
   the rejection log. No art changed, 0 credits.
 
+## Branch `night/25oct-prep`: prep for the owner's next calls (night of 25 Oct, 0 credits)
+- **Gull and cat sizes** (board 20:16: both redraw, gull "smaller too", cat "bigger, slightly smaller than the dog"): `art/gen/blockouts/animals_sizes_25oct.py` draws grey blockouts beside Pepper's real sprite: cat sitting 27 / 30 / 34 px (70 / 80 / 90 % of her 38 px) and running, gull 36 / 32 / 28 px span, with the rejected sizes (16 px, 44 px). `docs/review/25oct-night/prep/animals_sizes_4x.png`. Spend line draft and the per-asset cap note in the README there.
+- **River Walk scale calls** (STATUS "Known, next"): `art/gen/blockouts/rw_scale_calls_25oct.py` puts lamp posts of 138, 184 and 207 px and a 160 px rowing boat as blockouts on the sample-screen frames. Found: on the upper promenade a 4.0 m lamp's lantern is mostly above the screen and a 4.5 m lamp's is not seen at all (the checkpoint light). `docs/review/25oct-night/prep/rw_scale_calls_2x.png`.
+- **Preflight takes the owner's size:** `owner_size` (px, his words, the sheet) replaces the true-scale height check; kind "animal" must carry it (rules.json `size_sheet_kinds`). Before, preflight refused any cat above 15 px (0.33 m x 46). Tested on four sample jobs.
+- One-page notes: `docs/review/25oct-night/prep/README.md`.
+
 ## Branch `art/tall-backdrop-rule`: back buildings and front trees taller than the viewport (25 Oct)
 - Owner rule (25 Oct): back-layer buildings and the front row of trees are taller than the viewport; their top is never
   on screen. In BIBLE section 3 and `art/gen/rules.json` (`taller_than_viewport`).
