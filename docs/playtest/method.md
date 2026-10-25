@@ -79,8 +79,8 @@ bones, secrets, hints on screen; game time.
     a perch the clean run never saw it on: sneak (if she knows how) up to bark range and bark; (3) the steps whose
     clean entry is on her floor (|dy| < 10, within 480 px), with the same world sig (the magpie may be further along
     than the step saw it), where the clean run stood still or ran on (not mid-jump, not on a mover, not the frame
-    a button was pressed, not coasting on its speed with no direction held): after a stuck the nearest one at or behind her (with a 32 px run-up if the clean run was
-    running there); after an offroute or a respawn the nearest either way (ahead counts 1.5 times its distance).
+    a button was pressed, not coasting on its speed with no direction held): after a stuck the nearest one at or behind her (with a run-up of up to 32 px if the clean run was
+    running there, never past the edge of the floor she stands on: night/25oct-lab); after an offroute or a respawn the nearest either way (ahead counts 1.5 times its distance).
     She walks there (hopping what is in the way; 8 s at most) and the autopilot goes on from that step with the
     clean run's buttons; (4) nothing on her floor: the ball lies loose elsewhere (it went home after a fall): she
     walks back to it; else she walks to the nearest step with the same sig anywhere. The lab moves her there with
