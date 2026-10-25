@@ -20,9 +20,14 @@ the low road; and the top, camera y 0, the high road), with the far layers moved
 floor 60 to 236 px down the screen.
 
   python3 -I tools/layer_wireframe_tall.py citypark_tall OUT.png [--cols 3] [--scale 2] [--report OUT.json]
+  python3 -I tools/layer_wireframe_tall.py downtown_tall OUT.png --tiers 120,240 [--report OUT.json]
 
-Written for City Park's art (L.art = "park"). Downtown's town art places its pieces by other rules (scene.lua's town
-branch, arthooks.lua) and needs its own placement here before its tab.
+City Park's art (L.art = "park") is placed by classify(); Downtown's town art (L.art = "town") by classify_town(),
+after scene.lua's town branch and arthooks.lua (the roof kit, the tall fronts, the cargo bikes, the back lane's tram,
+the far spire), with the town's far layers (far roofs 0.25, old town facades 0.5) drawn as their art's silhouettes.
+--tiers Y1,Y2 picks the camera heights (default: the top and the bottom of the world). Downtown's roofs are seen from
+camera y 64 to 112, so its plan uses --tiers 120,240 (the sweep's middle and bottom heights). City Park's output is
+unchanged by the town code.
 
 --report writes the measured numbers per screen (usable pieces per road, back pieces, front pieces, empty path,
 bones, lamps, perches, sizes in px) that the layer plan quotes. Nothing in the game is read but the level export
@@ -380,6 +385,209 @@ def classify(L, rows):
     return out
 
 
+# ------------------------------------------------------------------------------------------------------------------
+# the town art code's rules (L.art = "town", the tall Downtown), in Python: scene.lua Sc.drawPropArt's town branch,
+# arthooks.lua H.townPiece (the roof kit), H.drawTownBack (the tall fronts), H.drawTrams, H.drawCargo, H.drawFarSpire,
+# Sc.drawFarArt's town branch (as on night/25oct-cp-plan 497bd84). Pieces she uses are boxed where their art is drawn;
+# the art sizes are read from the files.
+TOWN_ART = ("town_door", "town_house1", "town_house2", "town_house3", "town_sign", "town_crate_front", "town_table_front",
+            "town_parasol", "town_shopsign", "town_stall", "town_awning64", "town_awning80", "town_tramshed70",
+            "town_tramshed96", "town_statue", "town_pedestal", "town_rim", "town_bowl", "town_kiosk", "town_shelter",
+            "town_tub", "town_tier", "town_bollard", "town_roof_loggia", "town_roof_gallery72", "town_roof_gallery88",
+            "town_roof_chimney", "town_roof_dormer", "town_roof_flower_roof", "town_roof_gable", "town_roof_ledge",
+            "town_footbridge", "lamp_post")
+TOWN_KIT = ("LOGGIA", "GALLERY", "CHIMNEY", "DORMER", "FLOWER ROOF", "GUILD ROOF", "FOOTBRIDGE")
+
+
+def town_high(foot):
+    """the roofs: a box whose bottom is 130 px or more over the street (the beat sheet's high road, y 200 to 286)"""
+    return foot - 130
+
+
+def classify_town(L, rows):
+    """every drawn thing of a town level, as classify() does for the park"""
+    foot = L.get("foot", 184)
+    d = foot - 184
+    props = L.get("props", [])
+    sz = {n: art_size(n) for n in TOWN_ART}
+    hi = town_high(foot)
+    out = []
+    named = [p for p in props if p.get("name") and p.get("layer") != "front"]
+
+    def owner(p):
+        cx = (p["x0"] + p["x1"]) / 2
+        best, bd = None, 1e9
+        for q in named:
+            dd = max(0, q["x0"] - cx, cx - q["x1"])
+            if dd < bd:
+                best, bd = q, dd
+        return best
+    gset, g0 = set(), None                                    # arthooks gable(): GUILD ROOF and the steps after it
+    for i, p in enumerate(props):
+        if p.get("name") == "GUILD ROOF":
+            g0, gx1, gtop, gbot = i, p["x1"], p["y0"], p["y1"]
+            gset.add(i)
+            j = i + 1
+            while j < len(props) and not props[j].get("name") and props[j].get("kind") != "decor" and props[j]["x0"] == gx1:
+                gset.add(j); gx1 = props[j]["x1"]; gtop = min(gtop, props[j]["y0"]); j += 1
+            gbox = [p["x0"] - 1, gtop - 1, p["x0"] - 1 + sz["town_roof_gable"][0], gtop - 1 + sz["town_roof_gable"][1]]
+            gall = [p["x0"], gtop, gx1, gbot]
+
+    def centred(p, name, top):
+        w, h = sz[name]
+        x = (p["x0"] + p["x1"]) // 2 - w // 2
+        return [x, top, x + w, top + h]
+    nb = 0
+    for i, p in enumerate(props):
+        n = p.get("name") or ""
+        w, h = p["x1"] - p["x0"], p["y1"] - p["y0"]
+        road = "high" if p["y1"] <= hi else "low"
+        box = [p["x0"], p["y0"], p["x1"], p["y1"]]
+        if p.get("layer") == "front":                          # a bollard at 1.3
+            bw, bh = sz["town_bollard"]
+            cx = (p["x0"] + p["x1"]) / 2
+            top = max(221 + d, p["y0"])
+            out.append(dict(kind="front", road="low", box=[cx - bw // 2, top, cx - bw // 2 + bw, top + bh], label="bollard", scroll=1.3,
+                            mid=cx))
+            continue
+        if p.get("kind") == "decor" and p.get("layer") == "back":
+            if n == "RIDDARHOLMEN":
+                continue                                      # (drawn far: H.drawFarSpire)
+            if n in ("", "BAKERY", "GUILD HOUSE") and w >= 48 and h >= 100:
+                nb += 1                                       # a tall front (H.drawTownBack), cut at its top
+                out.append(dict(kind="back", road="both", box=box, label=(n.lower() if n else "tall front"), role="front",
+                                plaster=p.get("plaster", "")))
+            elif n == "DOOR":
+                bw, bh = sz["town_door"]
+                out.append(dict(kind="back", road="low", box=[p["x0"], 175 + d - bh, p["x0"] + bw, 175 + d], label="door"))
+            elif n == "HOUSE":
+                k = sum(1 for q in props[:i + 1] if q.get("name") == "HOUSE")
+                out.append(dict(kind="back", road="low", box=centred(p, "town_house%d" % ((k - 1) % 3 + 1), 0), label="plaza house"))
+                b = out[-1]["box"]; hh = b[3] - b[1]; b[1], b[3] = 175 + d - hh, 175 + d
+            elif n == "RIVER":
+                b = centred(p, "town_sign", 0); hh = b[3] - b[1]; b[1], b[3] = 175 + d - hh, 175 + d
+                out.append(dict(kind="back", road="low", box=b, label="river sign"))
+            continue                                          # (unnamed: posts, poles, the fountain's column)
+        if p.get("kind") == "decor" and p.get("layer") == "play":
+            if n == "STATUE":                                 # its arm and hat are ledges: an obstacle (play look)
+                bw, bh = sz["town_statue"]
+                out.append(dict(kind="usable", road="low", box=[p["x0"] - 1, p["y0"] - 4, p["x0"] - 1 + bw, p["y0"] - 4 + bh], label="statue",
+                                art_only=True))
+            else:
+                out.append(dict(kind="misplaced", road=road, box=box, label=(n or "decor").lower()))
+            continue
+        if p.get("kind") not in ("solid", "oneway"):
+            continue
+        high = p["y0"] <= foot - 120                          # arthooks high()
+        lab, dbox, extra = n.lower(), list(box), None
+        if i in gset:                                         # the stepped gable: drawn once, with its first step
+            if i != g0:
+                out.append(dict(kind="usable", road="high", box=box, draw=box, label="guild roof", i=i, hidden=True))
+                continue
+            lab, dbox, box = "guild roof", list(gbox), list(gall)
+        elif high and (n == "" or n in TOWN_KIT):
+            if n == "FOOTBRIDGE":
+                dbox = centred(p, "town_footbridge", p["y0"] - 1 - 12)
+            elif n == "GALLERY":
+                dbox = centred(p, "town_roof_gallery%d" % w, p["y0"] - 1)
+            elif n:
+                dbox = centred(p, "town_roof_" + n.lower().replace(" ", "_"), p["y0"] - 1)
+            else:
+                lab, dbox = "roof ledge", [p["x0"] - 1, p["y0"] - 1, p["x1"] + 1, p["y0"] - 1 + sz["town_roof_ledge"][1]]
+        else:
+            if not n:
+                o = owner(p)
+                on_ = o.get("name", "") if o else ""
+                if on_ == "CRATES":
+                    n = "CRATES"
+                else:
+                    lab = on_.lower() + (" hat" if on_ == "STATUE" else " ledge")
+            if n == "CRATES":
+                k = max(1, int(h / 16 + 0.5))
+                lab, dbox = "crates", [p["x0"], p["y1"] - 16 * k - 12, p["x0"] + sz["town_crate_front"][0], p["y1"]]
+            elif n == "TABLE":
+                bw, bh = sz["town_table_front"]; dbox = [p["x0"] - 1, p["y0"], p["x0"] - 1 + bw, p["y0"] + bh]
+            elif n == "PARASOL":
+                bw, bh = sz["town_parasol"]; dbox = [p["x0"], p["y0"] - 1, p["x0"] + bw, p["y0"] - 1 + bh]
+                lab = "springy parasol" if p.get("bounce") else "parasol"
+            elif n == "SIGN":                                 # the board (art rows 5 to 29) on its post
+                dbox = [p["x0"] - 1, p["y0"] - 1, p["x0"] + 46, p["y0"] + 24]
+                lab, extra = "sign", [p["x0"] + 36, p["y0"] + 24, p["x0"] + 42, p["y0"] + 106]
+            elif n == "STALL":
+                bw, bh = sz["town_stall"]; dbox = [p["x0"] - 1, p["y0"] - 15, p["x0"] - 1 + bw, p["y0"] - 15 + bh]
+            elif n == "AWNING":
+                nm = "town_awning80" if w >= 72 else "town_awning64"
+                dbox = centred(p, nm, p["y0"] - 1)
+                lab = ("window awning" if high else "awning") if not p.get("bounce") else ("springy window awning" if high else "springy awning")
+            elif n in ("GATE", "TRAM SHED"):
+                dbox, lab = [p["x0"], p["y0"], p["x1"], p["y0"] + min(h, 41)], "courtyard gate"
+            elif n == "PEDESTAL":
+                bw, bh = sz["town_pedestal"]; dbox = [p["x0"], p["y0"], p["x0"] + bw, p["y0"] + bh]
+            elif n == "ARM":
+                lab = "statue arm"
+            elif n == "RIM":
+                bw, bh = sz["town_rim"]; dbox = [p["x0"] - 1, p["y0"] - 1, p["x0"] - 1 + bw, p["y0"] - 1 + bh]
+            elif n == "FOUNTAIN":
+                bw, bh = sz["town_bowl"]; dbox = [p["x0"] - 1, p["y0"] - 1, p["x0"] - 1 + bw, p["y0"] - 1 + bh]
+                lab = "fountain bowl"
+            elif n == "KIOSK":
+                bw, bh = sz["town_kiosk"]; dbox = [p["x0"] - 1, p["y0"] - 1, p["x0"] - 1 + bw, p["y0"] - 1 + bh]
+            elif n == "SHELTER":
+                bw, bh = sz["town_shelter"]; dbox = [p["x0"], p["y0"], p["x0"] + bw, p["y0"] + bh]
+            elif n == "TUB":
+                bw, bh = sz["town_tub"]; dbox = [p["x0"], p["y0"] - 13, p["x0"] + bw, p["y0"] - 18 + bh]   # (rows 5 to 45)
+            elif n == "BALCONY":                              # drawBalcony: a 9 px railing, the slab, brackets
+                dbox = [p["x0"] - 1, p["y0"] - 9, p["x1"] + 1, p["y0"] + 11]
+            elif n == "TIER":
+                bw, bh = sz["town_tier"]; dbox = [p["x0"] - 1, p["y0"] - 1, p["x0"] - 1 + bw, p["y0"] - 1 + bh]
+                lab = "fountain tier"
+        it = dict(kind="usable", road=road, box=box, draw=dbox, label=lab, i=i)
+        if extra:
+            it["post"] = extra
+        if n in ("PEDESTAL", "ARM") or lab == "statue hat":   # one piece to a child: the statue she climbs,
+            it["set"] = "statue"                              # the fountain, a stack of crates
+        elif n in ("RIM", "FOUNTAIN", "TIER"):
+            it["set"] = "fountain"
+        elif lab == "crates":
+            for q in out:
+                if q.get("label") == "crates" and q["box"][0] <= box[2] and q["box"][2] >= box[0] and q["box"][3] >= box[1] - 1:
+                    q.setdefault("set", "crates%d" % q["i"])
+                    it["set"] = q["set"]
+        out.append(it)
+    lw, lh = sz["lamp_post"]
+    for l in L.get("lamps", []):
+        high = l["y"] < foot - 40
+        top = l["y"] - (-1 if high else 10) - lh
+        lx = l["x"] - lw // 2
+        if high:                                              # (its whole foot on the ledge, stage.lua)
+            for p in props:
+                if p.get("kind") != "decor" and p["y0"] == l["y"] and p["x0"] <= l["x"] < p["x1"]:
+                    lx = max(p["x0"], min(p["x1"] - lw, lx))
+        out.append(dict(kind="signal", road="high" if high else "low", box=[lx, top, lx + lw, top + lh], label="lamp"))
+    for z in L.get("bikes", []):                              # cargo bikes: drawn right of their courtyard gate
+        y = z.get("roadY", foot)
+        out.append(dict(kind="moving", road="low", box=[z.get("depot", z["zoneX0"]), y - 77, z["zoneX1"], y], label="cargo bike zone"))
+    for t in L.get("trams", []):                              # the vintage tram: decoration in the back lane
+        out.append(dict(kind="moving", road="both", box=[t["x0"], t["y1"] - 130, t["x1"], t["y1"]], label="tram lane (back, faded)",
+                        back=True))
+        out.append(dict(kind="back", road="low", box=[t["stop"] - 6, t["y1"] - 57, t["stop"] + 8, t["y1"]], label="tram stop"))
+    for c in L.get("critters", []):
+        out.append(dict(kind="moving", road="low", box=[c.get("x0", c["x"]) - 16, c["y"] - 33, c.get("x1", c["x"]) + 18, c["y"]], label=c.get("kind", "")))
+    for bn in L.get("bones", []):
+        out.append(dict(kind="pickup", road="high" if bn["y"] <= hi else "low", box=[bn["x"] - 5, bn["y"] - 12, bn["x"] + 6, bn["y"] - 6],
+                        label="gold" if bn.get("super") else "", gold=bool(bn.get("super")), golden=bool(bn.get("golden"))))
+    if "cat" in L:
+        c = L["cat"]
+        out.append(dict(kind="pickup", road="low", box=[c["x"] - 9, c["y"] - 29, c["x"] + 11, c["y"] + 1], label="cat"))
+    if "girl" in L:
+        g = L["girl"]
+        out.append(dict(kind="pickup", road="low", box=[g["x"] - 10, g["y"] - 59, g["x"] + 10, g["y"]], label="mia"))
+    if "ball" in L:
+        b = L["ball"]
+        out.append(dict(kind="pickup", road="low", box=[b["x"] - 3, b["y"] - 6, b["x"] + 3, b["y"]], label="ball"))
+    return out
+
+
 def surfaces(L, rows):
     """the floors Pepper can stand on: terrain tops and the tops of solid and one-way boxes"""
     S = []
@@ -423,6 +631,38 @@ def mid_trees(W):
     return out
 
 
+def mask(name, colour):
+    """an art file's silhouette in one flat colour (the far layers of the town, drawn as their art's shape)"""
+    im = Image.open(os.path.join(ART, name + ".png")).convert("RGBA")
+    a = im.split()[3].point(lambda v: 255 if v >= 128 else 0)
+    flat = Image.new("RGB", im.size, colour)
+    return flat, a
+
+
+def far_town(L, d, cam, far, mid, font, W):
+    """Sc.drawFarArt's town branch: the far roofs and spires (0.25, bottom y 160), Riddarholmen's spire on the same
+    layer (H.drawFarSpire: at the level's end it stands over its box), the old town facades (0.5, bottom y 178)"""
+    im = d._image
+    rf, ra = mask("town_roofs", C["shore"])
+    ox = int(cam * 0.25) % rf.width
+    for x in range(-ox, 320, rf.width):
+        im.paste(rf, (x, 160 - rf.height + far), ra)
+    d.text((4, 160 - 40 + far), "far roofs 0.25", fill=(90, 110, 90), font=font)
+    sp = next((p for p in L.get("props", []) if p.get("name") == "RIDDARHOLMEN"), None)
+    if sp:
+        sf, sa = mask("spire_riddarholmen", (168, 190, 168))
+        camEnd = max(0, W - 320)
+        x = int((sp["x0"] + sp["x1"]) / 2 - cam * 0.3 - camEnd * 0.7 - sf.width / 2 + 0.5)
+        if -sf.width < x < 320:
+            im.paste(sf, (x, 8 + far), sa)
+            d.text((x + sf.width + 2, 20 + far), "spire (far)", fill=(70, 92, 70), font=font)
+    ff, fa = mask("town_facades", C["mid"])
+    ox = int(cam * 0.5) % ff.width
+    for x in range(-ox, 320, ff.width):
+        im.paste(ff, (x, 178 - ff.height + mid), fa)
+    d.text((4, 178 - 12 + mid), "old town facades 0.5", fill=(70, 92, 70), font=font)
+
+
 def frame(L, rows, items, cam, cy, font, foot, W, H):
     """one screen at camera (cam, cy), 320 x 240"""
     im = Image.new("RGB", (320, 240), C["sky"])
@@ -434,15 +674,18 @@ def frame(L, rows, items, cam, cy, font, foot, W, H):
         d.ellipse([x0 - (cam * 0.05) % 120, y0 + far, x0 + 70 - (cam * 0.05) % 120, y0 + 18 + far], fill=C["clouds"])
     d.rectangle([0, 150 - 77 + far, 319, 150 + far], fill=C["city"])        # far city: the skyline, bottom y 150
     d.text((4, 150 - 77 + far + 2), "far city (128 px a level)", fill=(110, 116, 140), font=font)
-    d.rectangle([0, 177 - 31 + far, 319, 177 + far], fill=C["shore"])       # the far tree line (0.25), bottom y 177
-    d.text((4, 177 - 31 + far + 2), "tree line 0.25", fill=(90, 110, 90), font=font)
-    tw, th = art_size("park_tree1")
-    for x, i in mid_trees(W):                                               # mid trees (0.5), bottom y 180
-        sx = x - int(cam * 0.5)
-        if -tw < sx < 330:
-            d.rectangle([sx + 6, 180 - th + mid, sx + tw - 6, 180 + mid - 1], fill=C["mid"])
-            d.rectangle([sx + tw // 2 - 3, 180 - 30 + mid, sx + tw // 2 + 3, 180 + mid - 1], fill=(150, 170, 150))
-    d.text((4, 180 - 12 + mid), "mid trees 0.5", fill=(70, 92, 70), font=font)
+    if L.get("art") == "town":
+        far_town(L, d, cam, far, mid, font, W)
+    else:
+        d.rectangle([0, 177 - 31 + far, 319, 177 + far], fill=C["shore"])       # the far tree line (0.25), bottom y 177
+        d.text((4, 177 - 31 + far + 2), "tree line 0.25", fill=(90, 110, 90), font=font)
+        tw, th = art_size("park_tree1")
+        for x, i in mid_trees(W):                                               # mid trees (0.5), bottom y 180
+            sx = x - int(cam * 0.5)
+            if -tw < sx < 330:
+                d.rectangle([sx + 6, 180 - th + mid, sx + tw - 6, 180 + mid - 1], fill=C["mid"])
+                d.rectangle([sx + tw // 2 - 3, 180 - 30 + mid, sx + tw // 2 + 3, 180 + mid - 1], fill=(150, 170, 150))
+        d.text((4, 180 - 12 + mid), "mid trees 0.5", fill=(70, 92, 70), font=font)
 
     def wx(x):
         return x - cam
@@ -467,12 +710,20 @@ def frame(L, rows, items, cam, cy, font, foot, W, H):
         d.rectangle([wx(x0), wy(172 + foot - 184), wx(x1) - 1, wy(y0) - 1], fill=C["bank"])
         d.rectangle([wx(x0), wy(y0), wx(x1) - 1, wy(H)], fill=C["water"])
     back = [it for it in items if it["kind"] == "back"]
-    for it in sorted(back, key=lambda t: {"canopy": 0, "trunk": 1}.get(t.get("role"), 2)):
+    town = L.get("art") == "town"
+    for it in sorted(back, key=lambda t: {"canopy": 0, "trunk": 1, "front": 0}.get(t.get("role"), 2)):
         x0, y0, x1, y1 = it["box"]
         col = {"nest": (196, 160, 100), "leg": (214, 186, 126)}.get(it.get("role"), C["back"])
         d.rectangle([wx(x0), wy(y0), wx(x1) - 1, wy(y1) - 1], fill=col)
-        if it.get("role") == "canopy":
-            d.rectangle([wx(x0), wy(y0), wx(x1) - 1, wy(y1) - 1], outline=(214, 190, 136))
+        if it.get("role") == "canopy" or town:
+            d.rectangle([wx(x0), wy(y0), wx(x1) - 1, wy(y1) - 1], outline=(196, 166, 108) if town else (214, 190, 136))
+    for t in (items if town else []):                         # the tram lane: moving decoration on the back layer
+        if t.get("back"):
+            x0, y0, x1, y1 = t["box"]
+            for xx in range(int(wx(x0)), int(wx(x1)), 6):
+                d.line([xx, wy(y0), xx + 2, wy(y0)], fill=C["move"], width=2)
+                d.line([xx, wy(y1) - 1, xx + 2, wy(y1) - 1], fill=C["move"], width=2)
+            d.text((max(wx(x0), 0) + 3, wy(y0) + 3), t["label"], fill=C["move"], font=font)
     for it in back:
         x0, y0, x1, y1 = it["box"]
         if it.get("role") in ("trunk", "towerpost") and it["label"] == "trunk":
@@ -501,6 +752,11 @@ def frame(L, rows, items, cam, cy, font, foot, W, H):
     for it in items:                                                        # usable, then moving
         if it["kind"] == "usable":
             x0, y0, x1, y1 = it.get("draw") or it["box"]
+            if it.get("hidden"):
+                continue
+            if it.get("post"):                                # a sign's post, under its board
+                a0, b0, a1, b1 = it["post"]
+                d.rectangle([wx(a0), wy(b0), wx(a1) - 1, wy(b1) - 1], fill=C["play"], outline=C["playedge"])
             if it.get("art_only"):
                 d.rectangle([wx(x0), wy(y0), wx(x1) - 1, wy(y1) - 1], outline=C["playedge"])
                 continue
@@ -511,7 +767,7 @@ def frame(L, rows, items, cam, cy, font, foot, W, H):
                 continue
             d.rectangle([wx(x0), wy(y0), wx(x1) - 1, wy(y1) - 1], fill=C["play"], outline=C["playedge"], width=2 if y1 - y0 > 7 else 1)
     for it in items:
-        if it["kind"] == "moving":
+        if it["kind"] == "moving" and not it.get("back"):
             x0, y0, x1, y1 = it["box"]
             d.rectangle([wx(x0), wy(y0), wx(x1) - 1, wy(y1) - 1], outline=C["move"], width=2)
             d.text((wx(x0) + 3, wy(y0) + 2), it["label"], fill=C["move"], font=font)
@@ -521,7 +777,7 @@ def frame(L, rows, items, cam, cy, font, foot, W, H):
             d.text((wx(x0) + 2, wy(y0) - 11), it["label"] + " (decor on her line!)", fill=C["purple"], font=font)
     seen = set()
     for it in items:                                                        # labels of usable pieces, once each
-        if it["kind"] == "usable" and not it.get("art_only"):
+        if it["kind"] == "usable" and not it.get("art_only") and not it.get("hidden"):
             x0, y0, x1, y1 = it.get("draw") or it["box"]
             lab = it["label"]
             key = (lab, round(wx(x0) / 60))
@@ -536,9 +792,9 @@ def frame(L, rows, items, cam, cy, font, foot, W, H):
             if it.get("perch"):
                 d.polygon([(wx(x0) + 4, wy(y1) - 2), (wx(x1) - 4, wy(y1) - 2), ((wx(x0) + wx(x1)) / 2, wy(y0) + 2)], outline=C["goaltx"])
                 d.text((wx(x0) - 2, wy(y0) - 10), it["label"].replace("perch ", "p"), fill=C["goaltx"], font=font)
-            elif it["label"] == "mia":
+            elif it["label"] in ("mia", "cat"):
                 d.rectangle([wx(x0), wy(y0), wx(x1) - 1, wy(y1) - 1], fill=C["goal"], outline=C["pepper"])
-                d.text((wx(x0) + 1, wy(y0) + 2), "mia", fill=C["pepper"], font=font)
+                d.text((wx(x0) + 1, wy(y0) + 2), it["label"], fill=C["pepper"], font=font)
             else:
                 d.rectangle([wx(x0), wy(y0), wx(x1) - 1, wy(y1) - 1], fill=(255, 190, 40) if it.get("gold") else C["goal"],
                             outline=C["goaltx"])
@@ -554,12 +810,12 @@ def frame(L, rows, items, cam, cy, font, foot, W, H):
             x0, y0, x1, y1 = it["box"]
             camf = cam + (cam + 160 - it["mid"]) * 0.3
             d.rectangle([x0 - camf, wy(y0), x1 - camf - 1, wy(min(y1, H)) - 1], fill=C["front"])
-            d.text((x0 - camf + 3, wy(y0) + 3), "front bush 1.3", fill=(200, 200, 200), font=font)
+            d.text((x0 - camf + 3, wy(y0) + 3), "front " + it["label"] + " 1.3", fill=(200, 200, 200), font=font)
     return im
 
 
 # ------------------------------------------------------------------------------------------------------------------
-def report(L, rows, items, W, H, foot):
+def report(L, rows, items, W, H, foot, tiers=None):
     """the numbers per screen the plan quotes"""
     n = (W + 319) // 320
     S = []
@@ -581,8 +837,10 @@ def report(L, rows, items, W, H, foot):
             return x0 <= c < x1
         row = dict(screen=s + 1, x=[x0, x1])
         for road in ("low", "high"):
-            us = [it for it in items if it["kind"] == "usable" and it["road"] == road and on(it) and not it.get("art_only")]
+            us = [it for it in items if it["kind"] == "usable" and it["road"] == road and on(it) and not it.get("art_only") and not it.get("hidden")]
             row[f"usable_{road}"] = [it["label"] for it in us]
+            if tiers:                                           # (the town) pieces as a child sees them
+                row[f"pieces_{road}"] = len(set(it.get("set", "i%d" % it.get("i", 0)) for it in us))
             row[f"bones_{road}"] = sum(1 for it in items if it["kind"] == "pickup" and not it.get("perch") and it["label"] in ("", "gold")
                                        and it["road"] == road and on(it))
             row[f"lamps_{road}"] = [it["box"][0] + 7 for it in items if it["label"] == "lamp" and it["road"] == road and on(it)]
@@ -606,13 +864,13 @@ def report(L, rows, items, W, H, foot):
         row["empty_path_px"] = len(free)
         row["longest_empty_run_px"] = best
         row["water_px"] = len([x for x in range(x0, x1) if x in water])
-        for cy in (0, H - 240):                                 # what one frame shows (the sweep's cameras)
+        for cy in (tiers or (0, H - 240)):                      # what one frame shows (the sweep's cameras)
             def seen(it):
                 bx0, by0, bx1, by1 = it["box"]
                 return bx1 > x0 and bx0 < x1 and by1 > cy and by0 < cy + 240
             vis = [it for it in items if seen(it)]
             row[f"frame_y{cy}"] = dict(
-                usable=len([it for it in vis if it["kind"] == "usable" and not it.get("art_only")]),
+                usable=len([it for it in vis if it["kind"] == "usable" and not it.get("art_only") and not it.get("hidden")]),
                 back=len([it for it in vis if it["kind"] == "back" and it["label"] not in ("post",)]),
                 signals=len([it for it in vis if it["kind"] == "signal"]),
                 moving=len([it for it in vis if it["kind"] == "moving"]),
@@ -629,10 +887,13 @@ def main():
     L, rows = load(lv)
     W, H = len(rows[0]) * 8, len(rows) * 8
     foot = L.get("foot", 184)
-    items = classify(L, rows)
+    town = L.get("art") == "town"
+    items = classify_town(L, rows) if town else classify(L, rows)
     font = ImageFont.load_default()
     n = (W + 319) // 320
     tiers = [0, H - 240] if H > 240 else [0]                 # the high road on top, the low road under it
+    if "--tiers" in sys.argv:                                # (the town: the roofs' camera is not the top of the world)
+        tiers = [int(v) for v in sys.argv[sys.argv.index("--tiers") + 1].split(",")]
     cw, ch = 320 * S, 240 * S
     pad, head, top = 8, 22, 30
     rows_n = (n + cols - 1) // cols
@@ -641,7 +902,8 @@ def main():
     x = 4                                                   # the legend
     for col, txt in ((C["playedge"], "usable"), (C["move"], "moving"), (C["goal"], "pickup, goal, lamp, leaves"),
                      (C["back"], "decoration behind her"), (C["purple"], "on her line by mistake / ledge with no art"),
-                     (C["front"], "front (1.3)"), (C["mid"], "mid trees 0.5"), (C["shore"], "tree line 0.25"),
+                     (C["front"], "front (1.3)"), (C["mid"], "old town facades 0.5" if town else "mid trees 0.5"),
+                     (C["shore"], "far roofs, spire 0.25" if town else "tree line 0.25"),
                      (C["city"], "far city"), (C["water"], "water"), (C["pepper"], "Pepper (sweep spot)")):
         sd.rectangle([x, 8, x + 14, 20], fill=col, outline=(0, 0, 0))
         sd.text((x + 18, 9), txt, fill=(0, 0, 0), font=font)
@@ -659,7 +921,7 @@ def main():
     print("screens", n, "tiers", tiers, "size", sheet.size)
     if "--report" in sys.argv:
         rp = sys.argv[sys.argv.index("--report") + 1]
-        json.dump(dict(level=lv, size=[W, H], foot=foot, screens=report(L, rows, items, W, H, foot),
+        json.dump(dict(level=lv, size=[W, H], foot=foot, screens=report(L, rows, items, W, H, foot, tiers if town else None),
                        items=[{k: v for k, v in it.items() if k != "i"} for it in items]), open(rp, "w"), indent=1)
         print("report", rp)
 

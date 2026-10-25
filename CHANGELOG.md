@@ -2,6 +2,19 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `night/25oct-dt-plan`: the Downtown layer plan (prep, night of 25 Oct)
+Prep for the owner's decision; no game file, map or art changed, 0 credits. Stacks on `night/25oct-cp-plan` (its
+tools are reused), branched from it at 497bd84.
+- **tools/layer_wireframe_tall.py** now also places Downtown's town art (`classify_town`, after scene.lua's town
+  branch and arthooks.lua: the roof kit, the tall fronts, the cargo bikes, the back lane's tram, the far spire) and
+  draws the town's far roofs and old town facades as their art's silhouettes. `--tiers 120,240` picks the camera
+  heights (the roofs are seen from camera y 64 to 112, not the top of the world). For the town the report also
+  counts pieces (boxes that make one thing to a child: a crate stack, the statue, the fountain) apart from boxes.
+  City Park's wireframe and report were re-run and are byte-identical to before.
+- **docs/layer_plans/downtown_tall/:** wireframe.png (11 screens at camera y 120 and 240), contact.png and
+  contact_grey.png (the game's own sweep, 11 screens x camera y 0, 120, 240, 1x), layers.json (luma and screen share
+  per layer, per frame and per camera height).
+
 ## Branch `night/25oct-cp-plan`: the City Park layer plan (prep, night of 25 Oct)
 Prep for the owner's decision; no game file, map or art changed, 0 credits.
 - **tools/layer_wireframe_tall.py:** the layer wireframe for a tall Tiled level (the River Walk tool on
