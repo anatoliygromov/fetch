@@ -1,0 +1,29 @@
+{
+ "name": "rw_cyclist_adult",
+ "level": "riverwalk",
+ "layer": "char",
+ "kind": "character",
+ "real_height_m": 1.85,
+ "target_px": [
+  83,
+  85
+ ],
+ "checks_px": {
+  "wheel": 32,
+  "hubs": 51,
+  "saddle": 41,
+  "bars": 46,
+  "head": 11
+ },
+ "subject": "an adult woman of about 35 riding a black Dutch city bicycle to the right, red wool coat to the knee, dark tights, brown shoes, white cycling helmet, brown hair in a low bun, a wicker basket on the front rack",
+ "part_map": "the two dark grey rings are the wheels (exactly that size, thin even spokes), the thin grey lines are the frame, handlebar and saddle, the light grey figure is her body (round head, torso leaning slightly forward, arm to the handlebar, leg down to the pedal), the white cap is the helmet, the brown rectangle is the basket.",
+ "size_sentence": "her helmet top is about twice as high as the dog's head and each wheel is a little taller than the dog's back. She is a full-grown adult, not a child.",
+ "model": "sc_nb21",
+ "variants": 2,
+ "tier": "A",
+ "family": "rw_people",
+ "slot": {
+  "file": "riverwalk/art/scene/cyclist_adult1.png",
+  "where": "River Walk promenade bikes (rider 1), stage.lua bikes"
+ }
+}

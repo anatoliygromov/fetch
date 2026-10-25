@@ -1,0 +1,25 @@
+[
+ {
+  "name": "rw_cyclist_adult_v0_c",
+  "verdict": "PASS",
+  "file": "art/gen/out/rw_cyclist_adult_v0_c.png",
+  "level": "rw",
+  "layer": "char",
+  "fade": 0.0,
+  "w": 84,
+  "h": 85,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 20,
+   "lone": 2.0,
+   "p10": 0,
+   "median": 11,
+   "p90": 85,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ }
+]

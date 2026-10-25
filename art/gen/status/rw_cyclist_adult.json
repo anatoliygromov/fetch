@@ -1,0 +1,16 @@
+{
+ "name": "rw_cyclist_adult",
+ "family": "rw_people",
+ "tier": "A",
+ "steps": {
+  "spec": {
+   "time": "2026-10-25 13:13"
+  },
+  "blockout": {
+   "time": "2026-10-25 13:13"
+  },
+  "preflight": {
+   "time": "2026-10-25 13:13"
+  }
+ }
+}

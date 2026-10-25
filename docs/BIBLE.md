@@ -54,13 +54,15 @@ Exception: the light pavement under Pepper stays (owner, 23 Oct).
 
 1. **Keys first.** Pepper, bench, lamp, kiosk plus 3 to 5 new key pieces per level set the bar.
 2. **Aseprite is the home of every asset.** One .aseprite source per asset in the repo. Claude does the pixel work through an Aseprite MCP server. The owner directs and approves; he never draws.
-3. **Generators draft only.** A render is used only if it is on a clean grid and can be cut 1:1. Otherwise it is a reference.
+3. **Generators draft only.** A render is used only if it is on a clean grid and can be cut 1:1. Otherwise it is a reference. **Game pixels come from SpriteCook; Artlist is for mood, concepts and lighting references only (owner, 25 Oct).**
 4. **Stamped parts** for architecture and tiles.
 5. **One palette per level,** from per-material ramps with neutral darks.
 6. **Animation at 1x:** approved still, SpriteCook pixel engine at 1x, then per-frame cleanup.
 7. **The enforced gates** before the owner sees anything.
 
-Each level gets an approved golden screen before a credit is spent on its pieces.
+Each level gets an approved golden screen before a credit is spent on its pieces: its **sample screen**, final quality, built from approved pieces (owner, 25 Oct).
+
+**The order of work is `docs/WORKFLOW.md` (owner, 25 Oct):** families of 4 to 6 assets, tiers A/B/C, `tools/pipeline.py` refuses a step without its proof, the owner sees a spend line and the board only.
 
 ## 5 UI rules (owner, 23 Oct)
 
@@ -100,14 +102,16 @@ Asset gates and checklist: `docs/asset_qa.md`. Nothing is done until it passes i
 
 - Ask the owner before spending any credit (owner, 23 Oct). Credits only on final assets (owner, 23 Oct).
 - Pilots only until the brief and pilot pass. Only the art track spends SpriteCook credits (playbook, 23 Oct).
-- Log every credit per asset in `docs/art_ledger.md`.
+- Log every credit in `art/gen/ledger.csv` with `tools/ledger.py` (preflight writes the plan row; the spent row follows the charge). `tools/ledger.py report` gives yield per tool and family.
+- Caps (owner, 25 Oct): 3 paid jobs per asset, 2 retries per family, 500 Artlist and 150 SpriteCook credits a day. Over a cap needs the owner's words.
+- A weekly credit audit runs on Sundays. Target: 70 % of credits in the game.
 
 ## 8 Where things live and how sessions start
 
 - **The repo is the truth:** `anatoliygromov/fetch`. Not in the repo or on the board means it does not exist (playbook, 23 Oct).
 - **`docs/STATUS.md` is the control tower.** The producer session reads it, works and hands over through it.
 - **Decisions live on the review board:** https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk, copied into STATUS. Reversible ones go ahead on the default after 48 hours. Credits, scope and merges to main always wait.
-- **Sessions start** by reading BIBLE.md and STATUS.md only.
+- **Sessions start** with the fetch-game-manager skill: BIBLE.md, STATUS.md, WORKFLOW.md, `tools/pipeline.py status`, `tools/ledger.py report`. One producer session at a time; one session per work block.
 - **Branches:** one pull request each. Nothing enters `round1` or `main` without the owner's yes (owner, 23 Oct). Push branches, not tags.
 - **Tests,** each with its own save folder:
 
@@ -132,3 +136,6 @@ Asset gates and checklist: `docs/asset_qa.md`. Nothing is done until it passes i
 | 14 project notes at session start | BIBLE and STATUS (playbook, 23 Oct) |
 | River Walk as level 3 | River Walk first (owner, 23 Oct) |
 | 28 Nov beta fast track | Beta set after the gold level; May 2027 stands (playbook, 23 Oct) |
+| Artlist renders cut to game pixels (25 Oct pilot) | SpriteCook for pixels, Artlist references only (owner, 25 Oct) |
+| `docs/art_ledger.md` table | `art/gen/ledger.csv` via `tools/ledger.py` (owner, 25 Oct) |
+| Assets one at a time | Families of 4 to 6, tiers A/B/C, `docs/WORKFLOW.md` (owner, 25 Oct) |

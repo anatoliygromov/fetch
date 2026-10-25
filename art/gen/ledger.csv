@@ -1,0 +1,46 @@
+time,kind,job,asset,family,tool,model,credits,status,note
+2026-10-05 12:00,plan,al_proto_0305,al_proto_0305,history-artlist,artlist,history,13120,planned,backfill from claude/credit-audit-25oct.md
+2026-10-05 12:00,spent,al_proto_0305,,,,,13120,spent,"3-5 Oct prototypes: street-poc skylines, dog/cat sheets, 8 front-row buildings, layer edits; removed at v0.1"
+2026-10-05 12:00,verdict,,al_proto_0305,,,,,rejected,"3-5 Oct prototypes: street-poc skylines, dog/cat sheets, 8 front-row buildings, layer edits; removed at v0.1"
+2026-10-05 08:00,plan,al_title_painting,al_title_painting,history-artlist,artlist,history,480,planned,backfill from claude/credit-audit-25oct.md
+2026-10-05 08:00,spent,al_title_painting,,,,,480,spent,"source_title/title_original.png, regridded title on prod/integrate (estimate: one 4K render)"
+2026-10-05 08:00,verdict,,al_title_painting,,,,,in_game,"source_title/title_original.png, regridded title on prod/integrate (estimate: one 4K render)"
+2026-10-05 16:11,plan,al_title_videos,al_title_videos,history-artlist,artlist,history,6600,planned,backfill from claude/credit-audit-25oct.md
+2026-10-05 16:11,spent,al_title_videos,,,,,6600,spent,"3 image-to-video title animations, never used"
+2026-10-05 16:11,verdict,,al_title_videos,,,,,rejected,"3 image-to-video title animations, never used"
+2026-10-06 15:30,plan,al_portraits_ref,al_portraits_ref,history-artlist,artlist,history,640,planned,backfill from claude/credit-audit-25oct.md
+2026-10-06 15:30,spent,al_portraits_ref,,,,,640,spent,girl portrait used as SpriteCook reference
+2026-10-06 15:30,verdict,,al_portraits_ref,,,,,reference,girl portrait used as SpriteCook reference
+2026-10-06 15:30,plan,al_portraits_rest,al_portraits_rest,history-artlist,artlist,history,1280,planned,backfill from claude/credit-audit-25oct.md
+2026-10-06 15:30,spent,al_portraits_rest,,,,,1280,spent,Artlist portraits replaced by SpriteCook
+2026-10-06 15:30,verdict,,al_portraits_rest,,,,,rejected,Artlist portraits replaced by SpriteCook
+2026-10-23 16:30,plan,al_ui_kit,al_ui_kit,history-artlist,artlist,history,3240,planned,backfill from claude/credit-audit-25oct.md
+2026-10-23 16:30,spent,al_ui_kit,,,,,3240,spent,UI kit and HUD mockups; shipped UI redrawn on the grid
+2026-10-23 16:30,verdict,,al_ui_kit,,,,,reference,UI kit and HUD mockups; shipped UI redrawn on the grid
+2026-10-25 10:00,plan,al_golden_screens,al_golden_screens,history-artlist,artlist,history,2240,planned,backfill from claude/credit-audit-25oct.md
+2026-10-25 10:00,spent,al_golden_screens,,,,,2240,spent,"golden screens, style only"
+2026-10-25 10:00,verdict,,al_golden_screens,,,,,reference,"golden screens, style only"
+2026-10-25 10:00,plan,al_isolation_edits,al_isolation_edits,history-artlist,artlist,history,560,planned,backfill from claude/credit-audit-25oct.md
+2026-10-25 10:00,spent,al_isolation_edits,,,,,560,spent,isolation edits on a busy 4K scene failed twice
+2026-10-25 10:00,verdict,,al_isolation_edits,,,,,rejected,isolation edits on a busy 4K scene failed twice
+2026-10-25 11:00,plan,al_pilot_keep,al_pilot_keep,history-artlist,artlist,history,840,planned,backfill from claude/credit-audit-25oct.md
+2026-10-25 11:00,spent,al_pilot_keep,,,,,840,spent,3 usable pieces of the 12-image pilot
+2026-10-25 11:00,verdict,,al_pilot_keep,,,,,pending,3 usable pieces of the 12-image pilot
+2026-10-25 11:00,plan,al_pilot_rest,al_pilot_rest,history-artlist,artlist,history,2520,planned,backfill from claude/credit-audit-25oct.md
+2026-10-25 11:00,spent,al_pilot_rest,,,,,2520,spent,"9 pilot images: wrong scale, copied scenes, off grid"
+2026-10-25 11:00,verdict,,al_pilot_rest,,,,,rejected,"9 pilot images: wrong scale, copied scenes, off grid"
+2026-10-25 12:22,plan,al_cyclist_probe,al_cyclist_probe,history-artlist,artlist,history,220,planned,backfill from claude/credit-audit-25oct.md
+2026-10-25 12:22,spent,al_cyclist_probe,,,,,220,spent,"blockout probe, NB2 + Pro; Pro pick failed the eye review"
+2026-10-25 12:22,verdict,,al_cyclist_probe,,,,,pending,"blockout probe, NB2 + Pro; Pro pick failed the eye review"
+2026-10-18 12:00,plan,sc_in_game,sc_in_game,history-spritecook,spritecook,history,2320,planned,backfill from claude/credit-audit-25oct.md
+2026-10-18 12:00,spent,sc_in_game,,,,,2320,spent,"5-19 Oct: Pepper and Mia clips, portraits, River Walk, City Park, Downtown, cat, keepers, critters (estimate from shipped sources)"
+2026-10-18 12:00,verdict,,sc_in_game,,,,,in_game,"5-19 Oct: Pepper and Mia clips, portraits, River Walk, City Park, Downtown, cat, keepers, critters (estimate from shipped sources)"
+2026-10-23 05:10,plan,sc_batch1,sc_batch1,history-spritecook,spritecook,history,408,planned,backfill from claude/credit-audit-25oct.md
+2026-10-23 05:10,spent,sc_batch1,,,,,408,spent,"art batch 1, box-filtered, ""dirty, flushed"""
+2026-10-23 05:10,verdict,,sc_batch1,,,,,rejected,"art batch 1, box-filtered, ""dirty, flushed"""
+2026-10-06 16:00,plan,sc_portrait_dead_ends,sc_portrait_dead_ends,history-spritecook,spritecook,history,260,planned,backfill from claude/credit-audit-25oct.md
+2026-10-06 16:00,spent,sc_portrait_dead_ends,,,,,260,spent,portrait dead ends and the failed talk animation
+2026-10-06 16:00,verdict,,sc_portrait_dead_ends,,,,,rejected,portrait dead ends and the failed talk animation
+2026-10-06 12:00,plan,sc_superseded,sc_superseded,history-spritecook,spritecook,history,1080,planned,backfill from claude/credit-audit-25oct.md
+2026-10-06 12:00,spent,sc_superseded,,,,,1080,spent,"estimate: replaced v1/v2 props, fences, unused clips, parallel waterfront session"
+2026-10-06 12:00,verdict,,sc_superseded,,,,,rejected,"estimate: replaced v1/v2 props, fences, unused clips, parallel waterfront session"
