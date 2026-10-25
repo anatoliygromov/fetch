@@ -2,6 +2,12 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `art/layer-plans`: layer wireframes per screen (25 Oct)
+Owner, 25 Oct: "we need a per layer plan for each level and work from it". tools/layer_wireframe.py draws a level's
+screens as flat boxes per layer from its level file and map: red = usable (play), orange = moving, yellow = pickups
+and lamps, beige = decoration behind Pepper, purple = decoration standing on her line by mistake, dark = front.
+Plan doc: "FETCH! Layer Plans" (https://claude.ai/artifact/JPxc2yUJoM2hB7twgSSuRJ), River Walk tab first.
+
 ## Branch `art/title-props`: the title's thin built objects redrawn by rule (25 Oct)
 - **Props (art/source/title/tools/props.py, bg_noplate_320.png; the old layer kept in regrid/pre_props/):** sampling the painting broke thin man-made objects, so each is drawn once on the game grid from positions, widths and colours measured on the painting, palette colours only: the left lamp (finial, roof with its shade face, mid face and a 2 px lit band down the right edge as an even staircase to the brim's lit end, tan lip, two glass panes with a 1 px mullion and a frame tapering in even 4-row steps, glow orange / amber / cream, rim, collar, neck, ring, a straight post x 31..35 with ONE unbroken highlight column, moulding, base and plinth round Pepper's outline); the far quay lamp at the same design a third the size (two yellow panes with mullion and frame, 2 px post); the bench (three slats with lit top edges, end frame, seat, cross bar, cast legs); the bin (lid, four even slats, base ring); both big railing posts identical (6 px shaft with one highlight column, cap lit on the right); straight 1 px masts on the left boat (with even rigging and boom), the small boat and the boat at x 256 (with its hull). Old lamp pixels take the colour round them nearest the painting there; the sky by the left post is cleaned of specks. Rebuild: `python3 art/source/title/tools/props.py` then `build_title_regrid.py`.
 - **Checks:** new tools/props_check.py (drawn as specified, no new colours, no L-corner doubles in lines and edges, highlight and outline columns unbroken where visible): ALL PASS. stray_check 0, check_pepper PEPPER UNCHANGED, check_flow 125 of 125. Crops at 8x (painting, before, after): out/props_*_8x.png (not committed).
