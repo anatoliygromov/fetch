@@ -98,6 +98,8 @@ L.props = {
   { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 3372, x1 = 3416, y0 = 154, y1 = 184, art = "planter_sq" },
   { name = "BIN",      kind = "solid",  layer = "play", x0 = 3416, x1 = 3451, y0 = 128, y1 = 184, art = "bin", ax = 3415, ay = 184 },
   -- screen 10: the girl
+  os.getenv("PILOT_GABLE") and                                   -- pilot preview only (art/rw-gable-true, 25 Oct)
+  { name = "GABLE",    kind = "decor",  layer = "back", x0 = 3490, x1 = 3690, y0 = 0,   y1 = 174, art = "rw_gable_front" } or
   { name = "GABLE",    kind = "decor",  layer = "back", x0 = 3626, x1 = 3696, y0 = -1,  y1 = 174, art = "gable" },
   { name = "CAFE",     kind = "decor",  layer = "back", x0 = 3690, x1 = 3840, y0 = -31, y1 = 174, art = "cafe" },
   { name = "BENCH",    kind = "solid",  layer = "play", x0 = 3548, x1 = 3644, y0 = 156, y1 = 165, art = "bench", ax = 3545, ay = 184, depth = 5 },

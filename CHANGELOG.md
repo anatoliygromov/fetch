@@ -2,6 +2,14 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `art/rw-gable-true`: River Walk gable ground floor at true scale, parked as a layout guide (25 Oct)
+Owner's call (25 Oct): true-scale ground floors, upper floors cut by the top of the screen. tools/build_rw_gable_front.py
+builds a 200 x 174 front (door 46 x 100, window 52 x 76, storey 156, plinth 12) from parts drawn once, in the
+approved gable's colours plus the lamp's iron and one door highlight; asset_qa PASS (19 colours, 0 lone pixels).
+Owner: "ok, but not really artistic, super flat". Parked: kept only as the layout and size guide for the golden
+screen route (doc "FETCH! Asset Plan: levels 1 to 3"). Preview only behind PILOT_GABLE=1; the default build and the
+approved gable are unchanged. Aseprite source (7 layers) on the Mac: aseprite-work/rw_gable_front/.
+
 ## Branch `art/title-props`: the title's thin built objects redrawn by rule (25 Oct)
 - **Props (art/source/title/tools/props.py, bg_noplate_320.png; the old layer kept in regrid/pre_props/):** sampling the painting broke thin man-made objects, so each is drawn once on the game grid from positions, widths and colours measured on the painting, palette colours only: the left lamp (finial, roof with its shade face, mid face and a 2 px lit band down the right edge as an even staircase to the brim's lit end, tan lip, two glass panes with a 1 px mullion and a frame tapering in even 4-row steps, glow orange / amber / cream, rim, collar, neck, ring, a straight post x 31..35 with ONE unbroken highlight column, moulding, base and plinth round Pepper's outline); the far quay lamp at the same design a third the size (two yellow panes with mullion and frame, 2 px post); the bench (three slats with lit top edges, end frame, seat, cross bar, cast legs); the bin (lid, four even slats, base ring); both big railing posts identical (6 px shaft with one highlight column, cap lit on the right); straight 1 px masts on the left boat (with even rigging and boom), the small boat and the boat at x 256 (with its hull). Old lamp pixels take the colour round them nearest the painting there; the sky by the left post is cleaned of specks. Rebuild: `python3 art/source/title/tools/props.py` then `build_title_regrid.py`.
 - **Checks:** new tools/props_check.py (drawn as specified, no new colours, no L-corner doubles in lines and edges, highlight and outline columns unbroken where visible): ALL PASS. stray_check 0, check_pepper PEPPER UNCHANGED, check_flow 125 of 125. Crops at 8x (painting, before, after): out/props_*_8x.png (not committed).
