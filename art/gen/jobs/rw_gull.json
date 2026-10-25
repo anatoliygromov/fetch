@@ -3,18 +3,18 @@
  "level": "riverwalk",
  "layer": "char",
  "kind": "animal",
- "real_height_m": 0.37,
+ "real_height_m": 0.28,
  "target_px": [
-  40,
-  17
+  32,
+  13
  ],
  "checks_px": {
-  "wingspan": 40,
-  "body_length": 19
+  "wingspan": 32,
+  "body_length": 15
  },
  "subject": "a friendly herring gull gliding to the right, seen exactly from the side: white head and body, light grey back and wings spread wide and raised a little, black wing tips with small white spots, yellow beak with a red spot, pink feet tucked under the body, a round dark eye with a white glint",
  "part_map": "the light grey oval is the body, the small oval at its right end the head, the yellow wedge the beak, the two long grey bars the wings (far wing up-back, near wing up-front), the dark ends the black wing tips, the small wedge at the left the tail.",
- "size_sentence": "its spread wings are a little narrower than the dog is long; the body is about a third of the dog's length. A grown gull, drawn a little smaller than life.",
+ "size_sentence": "its spread wings are about two thirds of the dog's length; a small gull next to the dog.",
  "model": "sc_pe",
  "variants": 2,
  "tier": "A",
@@ -24,10 +24,10 @@
   "where": "River Walk screens 6-10 and Rooftops: the gull that circles and swoops (critters.lua), and the gull's nest (stage.lua magpie look gull)"
  },
  "extra": "Output exactly at the requested size, the gull filling the frame, transparent background.",
- "note": "owner 25 Oct 17:25 'the bird turns out massive' (58 px span); 17:27 picked about 40 px span, new still and flap",
+ "note": "owner 25 Oct 20:16-20:18: 'the gull needs to be smaller too'; go on about 32 px wingspan (was 44)",
  "retry": {
-  "n": 1,
-  "changed": "size: wingspan 58 -> 40 px (canvas 72x36 -> 44x26)",
-  "why": "owner: massive"
+  "n": 2,
+  "changed": "size 44 -> 32 px span",
+  "why": "owner: smaller"
  }
 }

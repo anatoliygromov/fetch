@@ -56,25 +56,31 @@ function Sp.updateFerry(s, m, dt)
   m.dx = nx - m.x0; m.x1 = m.x1 + m.dx; m.x0 = nx
 end
 
--- a rowing boat (a mover rowed to and fro, River Walk's harbour): a wooden hull (crisp, outlined: Pepper stands on
--- it), its deck the mover's top (y0), and a rower pulling the oars as it moves. Art: art/scene/rowboat.png; without
--- it, the boat is drawn in code below.
-local boatImg, boatQ
+-- a rowing boat (a mover rowed to and fro, River Walk's harbour and Night Harbour): a wooden hull (crisp, outlined:
+-- Pepper stands on it), its deck the mover's top (y0), and a rower pulling the oars as it moves. Art:
+-- art/scene/rowboat.png (tools/build_rowboat.py, round 2, 25 Oct: real size, a hull 182 px long, the owner's "go" on
+-- real-size boats): 8 frames of 182 x 96, the hull x 0-181, the gunwale's top (the deck) on row 56 over the middle, the
+-- rower right of the middle facing right. The mover is the hull less 2 px at each end (178 wide). Only what is above
+-- the water shows: the frame is cut at the surface (m.surface, else 12 px under the deck), so the keel and the
+-- blade in the water are hidden. Without the art, the boat is drawn in code below.
+local boatImg, boatQ = nil, {}
+local DECK, CELLW, CELLH = 56, 182, 96
 function Sp.drawRowboat(m, cam, t)
   local x0, x1, y = math.floor(m.x0 - cam + 0.5), math.floor(m.x1 - cam + 0.5), m.y0
-  if boatImg == nil then                                           -- the art (SpriteCook, tools/build_critters_art.py):
-    boatImg = false                                                -- 8 rowing frames of 70 x 70, hull x 4-64, deck row 55
+  if boatImg == nil then
+    boatImg = false
     if love.filesystem.getInfo("art/scene/rowboat.png") then
-      boatImg = lg.newImage("art/scene/rowboat.png"); boatImg:setFilter("nearest", "nearest"); boatQ = {}
-      for i = 1, 8 do boatQ[i] = lg.newQuad((i - 1) * 70, 0, 70, 70, boatImg:getDimensions()) end
+      boatImg = lg.newImage("art/scene/rowboat.png"); boatImg:setFilter("nearest", "nearest")
     end
   end
   if boatImg then                                                  -- he rows while it moves, rests at the ends. He
-    local i = math.abs(m.dx or 0) > 0 and 1 + math.floor(t * 8) % 8 or 1   -- sits at the front end (the way it goes),
-    local mid = math.floor((x0 + x1) / 2)                          -- so Pepper, boarding at the back, never hides him
+    local i = math.abs(m.dx or 0) > 0 and 1 + math.floor(t * 8) % 8 or 1   -- sits toward the front end (the way it
+    local h = math.min(CELLH, DECK + ((m.surface or (y + 12)) - y))        -- goes), so Pepper, boarding at the back,
+    boatQ[h] = boatQ[h] or {}                                              -- never hides him
+    if not boatQ[h][i] then boatQ[h][i] = lg.newQuad((i - 1) * CELLW, 0, CELLW, h, boatImg:getDimensions()) end
     lg.setColor(1, 1, 1, 1)
-    if (m.dir or 1) < 0 then lg.draw(boatImg, boatQ[i], mid - 34, y - 55)
-    else lg.draw(boatImg, boatQ[i], mid + 34, y - 55, 0, -1, 1) end
+    if (m.dir or 1) > 0 then lg.draw(boatImg, boatQ[h][i], x0 - 2, y - DECK)
+    else lg.draw(boatImg, boatQ[h][i], x0 - 2 + CELLW, y - DECK, 0, -1, 1) end
     return
   end
   local INK = { 0.11, 0.10, 0.09 }

@@ -1,0 +1,28 @@
+{
+ "name": "rw_rowboat",
+ "level": "riverwalk",
+ "layer": "play",
+ "kind": "vehicle",
+ "real_height_m": 1.48,
+ "target_px": [
+  160,
+  68
+ ],
+ "checks_px": {
+  "hull_length": 160,
+  "hull_depth": 21,
+  "rower_head_above_gunwale": 46
+ },
+ "subject": "a small wooden rowing boat with a grown man rowing it, seen exactly from the side, the bow to the left: a varnished brown wooden hull with a lighter gunwale and a white stripe, a grown man in a navy coat and a red knitted cap sitting on the middle thwart facing the stern, both hands on the oars, one oar blade dipping into the water",
+ "part_map": "the brown shape is the hull (exactly that length; its top edge is the flat gunwale the dog will stand on), the grey block the rower's body, the light circle his head, the thin brown line an oar.",
+ "size_sentence": "the boat is three times as long as the dog; the seated rower's head is higher than the dog's head. A real rowing boat and a grown man.",
+ "model": "sc_nb21",
+ "variants": 2,
+ "tier": "A",
+ "family": "animals",
+ "slot": {
+  "file": "riverwalk/art/scene/rowboat.png",
+  "where": "River Walk harbour (screens 8-9) and Night Harbour: the rowing-boat movers (setpieces.lua Sp.drawRowboat)"
+ },
+ "note": "owner 25 Oct 20:16-20:18: 'do you see the size of the boats?' then 'go' on real size about 160 px (was 62); the harbours get wider movers (level work)"
+}
