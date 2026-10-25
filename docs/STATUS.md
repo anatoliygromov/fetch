@@ -2,6 +2,20 @@
 
 As of Sun 25 Oct 2026, evening. Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
 
+## Night of 25 Oct (unattended run)
+
+Base: `ops/night-25oct` f54a219 (same as `preview/25oct-pm`). `ops/night-25oct` already existed from the evening session, so this STATUS is on `ops/night-25oct-b`. 0 credits, no art touched, nothing merged.
+- Track 1, `night/25oct-tools` (654d6a0): `tools/layout_qa8.py` no longer crashes on the v8 pause frames (STATUS "Known, next"). Tools only, no game code.
+- Audit on the base (no change): PEPPER UNCHANGED (4591 steps), flow 125/125, Tiled PASSED, BACKDROP OK. Curve (tall order, 20 seeds x 8 personas): T1, T2, T3 PASS, T4 FAIL (City Park tall lost runs 9.4%, the known failure; Downtown 1.9, Rooftops 1.2, others 0). DI kids/parents: River Walk 12.7/13.9, City Park 14.0/26.4, Downtown 12.9/16.1, Rooftops 21.2/22.1, Soder 17.4/14.3, Night 19.6/24.2.
+- layout_qa8 on 22 fresh UI frames now finishes. Open FAILs: cursor to label gap is 4 (check says 3) on four pause frames; pause_sound cursor not centred on its label; tally label left edges 48 and 71 (check expects one per side); 8 picture edges use colour (214,190,150), not outline or shadow. Either the check is stale or the UI is off. Not tuned away.
+- Skipped: Sc.railing (whole 84 px units) changes how approved River Walk art looks, so it waits for a yes. Level changes for T4: not started, no approved ask.
+
+Look at: CHANGELOG entry on `night/25oct-tools`; run `python3 tools/ui_frames.py out && python3 tools/layout_qa8.py out out_guides`.
+Decisions waiting: 1. Is the pause cursor gap 4 right (then set the check to 4)? 2. Fix Sc.railing to end flush with its prop? 3. Work on City Park tall lost runs (T4)?
+Problems: apt install of python libs broke PIL/numpy here; used a venv. Not a repo issue.
+
+---
+
 ## Today (25 Oct, afternoon and evening)
 
 Three branches, each off `prod/integrate` c1c37a4, all checks green; together on `preview/25oct-pm` (build on the Mac: `2d game test/PREVIEW 25 Oct pm/FETCH_PREVIEW_25oct_pm.love`).
