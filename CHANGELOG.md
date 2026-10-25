@@ -2,6 +2,15 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `art/rw-fixes`: River Walk fixes by hand, 0 credits (board "fix", 25 Oct)
+Each pixel chosen by eye at 8-20x, the edit recorded in `art/source/rw_fixes/edits.json`; Aseprite sources (layers "before (main v0.6)" and "fixed (game)") in `art/source/rw_fixes/`. No clean-pass script on the whole file (BIBLE 3).
+- **cloud8:** the 23 Oct free fix had merged its darkest shade away (flat bottom). Back to the original drawing with its bottom shade, lifted to (164,184,205) so it stays inside the clouds' ladder in every level; 3 single light pixels made white, 4 stray mid-tone edge pixels made the edge shade. asset_qa PASS.
+- **park_log:** two near-identical oranges merged (166,100,62 into 162,110,74); 6 brown pixels in its outline made ink, so the obstacle outline is closed. Lone pixels 4.0 % to under 3 %, PASS.
+- **pier:** decoration, so no ink outline: the dark silhouette edge (670 px) is now stone, light on the sun side, a darker stone on the shade side; 4 dotted vertical joints (15 px) redrawn as the solid joints the rest of the wall has. PASS.
+- **skyline:** 16 small blotches (near-colour patches inside a silhouette) take their surrounding colour; 2 pinholes filled. PASS.
+- **gull:** 25 stray pixels on the wings and outline (eye and beak kept); the flap's bob made even: frames moved up or down by whole pixels (eye rows 20,18,16,15,15,15 to 18,17,16,15,16,17), so the head no longer drops 5 px between the last frame and the first. Still WARN: frame 6 is drawn bigger than frame 1 (a redraw, not a fix).
+- Checks: PEPPER UNCHANGED, flow 125/125, QA 0 problems (River Walk, Downtown). Frames: docs/review/25oct/fixes/.
+
 ## Branch `ops/board-25oct`: the owner's board review turned into the art backlog (25 Oct)
 - 42 board items: 1 approve, 12 fix, 28 redraw, 1 open. **docs/art_backlog.md** groups them into families per level
   (tier, method, order), River Walk first. BIBLE: no automated clean pass on existing art (owner, 25 Oct); a row in
