@@ -276,7 +276,7 @@ function Cr.drawBird(m, cam, t)
   local x = m.x - cam
   local flip = (m.dir or -1) < 0
   if A then
-    local i = m.state == "fly" and 1 + math.floor(t * 10) % 8 or 1
+    local i = m.state == "fly" and 1 + math.floor(t * 10) % 8 or 3   -- perched: frame 3, wings folded back
     lg.setColor(1, 1, 1, 1)
     if flip then lg.draw(A.gull, A.uq[i], math.floor(x) + 28, math.floor(m.y) - 28, 0, -1, 1)
     else lg.draw(A.gull, A.uq[i], math.floor(x) - 28, math.floor(m.y) - 28) end

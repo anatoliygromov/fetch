@@ -94,6 +94,29 @@ def main():
     sheet = np.zeros((44, 48 * 8, 4), np.uint8)
     for i, f in enumerate(g):
         f, n = clean(snap(f, gp)); log.append(('gull', i + 1, n)); sheet[:, i * 48:(i + 1) * 48] = f
+    # review 25 Oct (art/gen/reviews/animals_25oct.md), by hand: f8's 1 px see-through hole at (25,6) filled from
+    # its neighbours; f6's stray foot pixel at (14,26) removed; lone pixels of the wing greys take their most common
+    # neighbouring grey (mottled near wing in f2, f7, f8)
+    from collections import Counter
+    def nbrs(a, x, y, x0, x1):
+        return [tuple(int(v) for v in a[yy, xx, :4]) for yy in range(max(0, y - 1), min(a.shape[0], y + 2))
+                for xx in range(max(x0, x - 1), min(x1, x + 2)) if (yy, xx) != (y, x) and a[yy, xx, 3]]
+    f = 7; x, y = f * 48 + 25, 6
+    if sheet[y, x, 3] == 0:
+        sheet[y, x] = Counter(nbrs(sheet, x, y, f * 48, f * 48 + 48)).most_common(1)[0][0]
+    f = 5; x, y = f * 48 + 14, 26
+    if sheet[y, x, 3] and len(nbrs(sheet, x, y, f * 48, f * 48 + 48)) <= 1: sheet[y, x] = 0
+    GREYS = {tuple(int(v) for v in c) for c in gp if max(c) - min(c) < 24 and 60 < np.mean(c) < 235}
+    for i in range(8):
+        x0 = i * 48
+        for y in range(44):
+            for x in range(x0, x0 + 48):
+                c = tuple(int(v) for v in sheet[y, x, :3])
+                if sheet[y, x, 3] == 0 or c not in GREYS: continue
+                nb = nbrs(sheet, x, y, x0, x0 + 48)
+                if any(n[:3] == c for n in nb): continue
+                g2 = [n[:3] for n in nb if n[:3] in GREYS]
+                if g2: sheet[y, x, :3] = Counter(g2).most_common(1)[0][0]
     Image.fromarray(sheet).save('riverwalk/art/gull.png')
     # it flies: the 1 px dark outline closed all round (no ground row)
     outline_complete.run('riverwalk/art/gull.png', 'riverwalk/art/gull.png')
@@ -138,6 +161,17 @@ def main():
                     from collections import Counter
                     cat[y, x, :3] = Counter(coat).most_common(1)[0][0]; merged += 1
     log.append(('cat coat lone merged', merged))
+    # review 25 Oct, by hand: idle 2 and 7 had a black clot where the haunch is (rows 20-21, x 5-11): those two rows
+    # take idle 1's haunch; four sealed 1 px pinholes take their most common neighbour
+    for f in (1, 6):
+        cat[20:22, f * 24 + 5:f * 24 + 12] = cat[20:22, 5:12]
+    for r, f, x, y in ((2, 2, 5, 18), (2, 3, 12, 20), (2, 5, 9, 21), (1, 2, 5, 19), (1, 2, 5, 20), (1, 2, 5, 21)):
+        X, Y = f * 24 + x, r * 24 + y
+        if cat[Y, X, 3] == 0:
+            nb = [tuple(int(v) for v in cat[yy, xx]) for yy in (Y - 1, Y, Y + 1) for xx in (X - 1, X, X + 1)
+                  if (yy, xx) != (Y, X) and cat[yy, xx, 3]]
+            from collections import Counter
+            cat[Y, X] = Counter(nb).most_common(1)[0][0]
     Image.fromarray(cat).save('riverwalk/art/cat.png')
     # the outline closed, each frame's lowest row left alone (the paws on the ground)
     outline_complete.run('riverwalk/art/cat.png', 'riverwalk/art/cat.png', skip_bottom=True, frames=(24, 24))

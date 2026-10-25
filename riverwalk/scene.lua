@@ -515,7 +515,7 @@ end
 -- the cat (Downtown), modelled on the user's Abyssinian: art/cat.png (tools/build_animals.py, 25 Oct: redrawn at
 -- true scale, 16 px sitting), 24 x 24 cells, rows idle / leap / run, feet at (12, 23), drawn facing right. Sitting it faces Pepper; idle holds its first pose
 -- for 2 s, then plays the tail curl, ear twitch and blink. Scared: crouch and arched back; leap: in the air by
--- its vertical speed; run: the gallop loop (frames 3 to 8).
+-- its vertical speed; run: the gallop loop (frames 5 to 8).
 local catImg, catQ
 function Sc.cat(c, camx, t, px)
   local x, y = math.floor(c.x - camx + 0.5), math.floor(c.y + 0.5)
@@ -532,7 +532,7 @@ function Sc.cat(c, camx, t, px)
     if c.heard then fr = 1 end
   elseif c.state == "scared" then row, fr = 2, math.min(4, 2 + math.floor(c.t / 0.35 * 3))
   elseif c.state == "leap" then row = 2; fr = (c.vy or 0) < -60 and 5 or ((c.vy or 0) < 60 and 6 or 7)
-  else row, fr = 3, 3 + math.floor(t * 14) % 6 end
+  else row, fr = 3, 5 + math.floor(t * 14) % 4 end                -- the gallop loop (frames 5-8; 3-4 still lift the tail)
   if c.state ~= "leap" then Sc.shadow(x, y - 1, 10) end
   lg.setColor(1, 1, 1, 1)
   lg.draw(catImg, catQ[row][fr], x, y, 0, face, 1, 12, 23)
