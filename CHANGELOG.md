@@ -1758,3 +1758,8 @@ all 2,752 steps. No collision box changed. All art is made by `tools/make_night_
 
 ## v0.1 (5 Oct 2026)
 - Approved baseline: greybox level, Pepper (14 cleaned SpriteCook clips), the girl (5 standing clips), the ball. All unapproved scenery art removed.
+
+## Title: stray pixels removed (25 Oct)
+- art/source/title/tools/destray.py: removes same-colour clusters of 1 or 2 px that are not in a checker or a 2/3 px lattice; lines of 3 px or more are never touched (verified: 0 changed pixels in shapes of 3+ px). Protected: the tagline, the eye, the cathedral, brick building and grey block window grids, the bird (art/source/title/regrid/destray_boxes.txt).
+- Applied to the four title layers consistently (pre-clean copies in art/source/title/regrid/pre_destray/). 2,262 px changed; strays 2,238 -> 0. The logo keeps its ordered-dither fade.
+- tools/stray_check.py: the same definition as a check (exit 1 on any stray), 4x map output.
