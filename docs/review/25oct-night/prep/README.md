@@ -59,7 +59,8 @@ both). Checks on the trial: see STATUS "Night of 25 Oct" on `ops/night-25oct`.
 
 - `docs/art_learnings.md` rows (on `ops/night-25oct`): gull still too big at 44 px; cat too small at true scale.
 - `tools/preflight.py` (this branch): an `owner_size` field (px, his words, the sheet he picked from) replaces the
-  true-scale height check; kind "animal" must carry it (rules.json `size_sheet_kinds`). Without this, preflight
-  refuses a 30 px cat (0.33 m x 46 = 15 px). Tested on four sample jobs (no files written).
+  true-scale height check for animals only, and an animal must carry it (rules.json `size_sheet_kinds`). Without
+  this, preflight refuses a 30 px cat (0.33 m x 46 = 15 px). Reviewed by an independent agent; its four findings
+  fixed. Tested on eight sample jobs (no files written).
 - The 218 SpriteCook credits of `art/animals`: verdict "rejected" for rw_gull and dt_cat, to write with
   `tools/ledger.py verdict` when that branch's ledger rows are merged (they exist only there).
