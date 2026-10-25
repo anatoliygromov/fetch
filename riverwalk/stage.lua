@@ -636,19 +636,8 @@ function St:draw(debug)
     end
   end
   end
-  -- River Walk's bikes ride behind the obstacles on Pepper's line (r5/bugs): the adult's bike is taller than a flower
-  -- box, so drawn in front of the box it rode through Pepper standing on it; behind it, the box hides its wheels
-  -- Downtown's cargo bikes too (r8/levels, D1): the kiosk and the gates hide their wheels; Pepper on a perch is
-  -- drawn over the tall rider (arthooks.lua)
-  use("play")
-  for _, c in ipairs(self.bikes) do if c.zone and c.zone.kind == "cargo" then AH.drawCargo(c, cam) end end
-  if not style and not grey then
-    use("play"); lg.setColor(1, 1, 1, 1)
-    for _, c in ipairs(self.bikes) do
-      local cyc = Rd.art().riders[c.rider or 1]
-      Rd.drawBike(cyc, -c.x, math.floor(c.x - cam + 0.5) - math.floor(cyc:getWidth() / 2), math.floor(c.y - cyc:getHeight() + 0.5), true)
-    end                                                            -- the art faces right; bikes ride left, wheels rolling
-  end
+  -- (bikes: drawn after Pepper, in front of the obstacles and of her: owner, 25 Oct. From r5/bugs to 25 Oct they
+  -- rode behind the obstacles.)
   -- decoration on her line takes the back look, except the pieces whose drawn parts she stands on (art/fixes:
   -- the statue, its arm and hat are ledges): they are outlined obstacles and take the play look
   local PLAYLOOK = { STATUE = true }
@@ -716,7 +705,7 @@ function St:draw(debug)
     lg.draw(ballImg, math.floor(bx - cam - 3 + 0.5), math.floor(by - 6 + 0.5))
   end
   -- bikes: an adult cyclist (art/scene/road_cyclist1-2.png, 73 x 75: the wheels as tall as Pepper's back; drawn
-  -- behind the obstacles, before the play props) centred on the zone's hit box (River Walk: 70 x 28, the bike from wheel to wheel), wheels on the pavement; greybox:
+  -- in front of Pepper, after her) centred on the zone's hit box (River Walk: 70 x 28, the bike from wheel to wheel), wheels on the pavement; greybox:
   -- a box the size of the zone's hit box (w, h), labelled with its kind (CART, TRAM) or BIKE. (Until r5/bugs the
   -- small cyclist1.png, 49 x 50, a child's bike next to Pepper.)
   if self.cat and self.cat.state ~= "gone" then
@@ -731,7 +720,7 @@ function St:draw(debug)
   use("play")
   for _, c in ipairs(self.bikes) do
     local x = c.x - cam
-    local cargo = c.zone and c.zone.kind == "cargo"                      -- (drawn behind the obstacles, above)
+    local cargo = c.zone and c.zone.kind == "cargo"                      -- (drawn in front of Pepper, below)
     local depot = not cargo and c.zone and c.zone.depot                  -- a tram entering its shed: drawn right of the door
     if depot then lg.setScissor(math.max(0, math.floor(depot - cam)), 0, 400, 240) end   -- (screen space: the whole height)
     if cargo then                                                        -- (the cargo bike: arthooks.lua, above)
@@ -740,7 +729,7 @@ function St:draw(debug)
       local z = c.zone or {}
       local bw, bh = z.w or 48, z.h or 26
       Sc.outlined(C.prop, C.propEdge, math.floor(x - bw / 2 + 0.5), c.y - bh, bw, bh); Sc.label(z.kind and z.kind:upper() or "BIKE", x, c.y - 17)
-    end                                                                  -- (River Walk's bikes: drawn behind the obstacles, above)
+    end                                                                  -- (River Walk's bikes: drawn in front of Pepper, below)
     if depot then lg.setScissor() end
   end
   if lk then Look.off() end
@@ -751,6 +740,17 @@ function St:draw(debug)
   self.pepper:draw(cam)
   if b.state == "carried" and self.pepper.anim ~= "grab" then lg.setColor(1, 1, 1, 1); lg.draw(ballImg, math.floor(b.x - cam - 3 + 0.5), math.floor(b.y - 3 + 0.5)) end
   Ex.drawFront(self.fx, cam)                                       -- and the extras in front of her
+  -- bikes in front of the obstacles and of Pepper (owner, 25 Oct: "bikes need to go in front of obstacles and
+  -- Pepper"; until then, r5/bugs, they rode behind the obstacles): River Walk's cyclists and Downtown's cargo bikes
+  use("play"); lg.setColor(1, 1, 1, 1)
+  for _, c in ipairs(self.bikes) do if c.zone and c.zone.kind == "cargo" then AH.drawCargo(c, cam) end end
+  if not style and not grey then
+    for _, c in ipairs(self.bikes) do
+      local cyc = Rd.art().riders[c.rider or 1]
+      Rd.drawBike(cyc, -c.x, math.floor(c.x - cam + 0.5) - math.floor(cyc:getWidth() / 2), math.floor(c.y - cyc:getHeight() + 0.5), true)
+    end                                                            -- the art faces right; bikes ride left, wheels rolling
+  end
+  if lk then Look.off() end
   for _, r in ipairs(self.rings) do
     lg.setColor(1, 1, 1, 1 - r.t / 0.4); lg.setLineWidth(1)
     lg.circle("line", math.floor(r.x - cam), math.floor(r.y), 6 + r.t * 70)
