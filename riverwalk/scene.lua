@@ -88,11 +88,22 @@ function Sc.railing(w, kind, h)
   else                                                             -- the open tube railing: left post, spans, end
     local l, u, en = piece("rail_bg_left"), piece("rail_bg_unit"), piece("rail_bg_end")
     local lw, uw, ew, rh = l:getWidth(), u:getWidth(), en:getWidth(), l:getHeight()
-    local n = math.max(0, math.floor((w - lw - ew) / uw))
-    d = love.image.newImageData(lw + n * uw + ew, rh)
+    -- (night/25oct-fixes) the railing reaches both ends of its prop (whole bays alone stopped up to 83 px short of
+    -- the house it meets). eo: the end piece as drawn (its empty right columns hang past the prop's end). What whole
+    -- bays leave over (r) becomes a short last bay with its own post (the unit's right r columns, r >= 12), or, when
+    -- too short for a post, the last bay drawn r px longer (the unit's left columns: tube only). Whole-pixel crops of
+    -- the pieces; nothing is scaled or redrawn.
+    local eo = ew
+    local function empty(x) for y = 0, rh - 1 do if select(4, en:getPixel(x, y)) > 0 then return false end end return true end
+    while eo > 1 and empty(eo - 1) do eo = eo - 1 end
+    local n = math.max(0, math.floor((w - lw - eo) / uw))
+    local r = math.max(0, w - lw - n * uw - eo)
+    d = love.image.newImageData(lw + n * uw + r + ew, rh)
     d:paste(l, 0, 0, 0, 0, lw, rh)
     for i = 0, n - 1 do d:paste(u, lw + i * uw, 0, 0, 0, uw, rh) end
-    d:paste(en, lw + n * uw, 0, 0, 0, ew, rh)
+    if r >= 12 then d:paste(u, lw + n * uw, 0, uw - r, 0, r, rh)
+    elseif r > 0 then d:paste(u, lw + n * uw, 0, 0, 0, r, rh) end
+    d:paste(en, lw + n * uw + r, 0, 0, 0, ew, rh)
   end
   local rh = d:getHeight()
   if kind == "fence" then

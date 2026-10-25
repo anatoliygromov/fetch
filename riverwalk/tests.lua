@@ -186,6 +186,24 @@ return function(mode, api)
       { act = function() local s = api.stage(); s.hearts = 3; tp(1850, 216) end }, { during = 8 },
       { act = function(p) local st = api.stage(); local k = st.critters[3]
           report("first gull: circles, never swoops", st.hearts == 3 and k.state == "circle", ("hearts %d, %s"):format(st.hearts, k.state)) end },
+      -- 20 (night/25oct-fixes) every quay railing is drawn from its prop's left end to its right end (whole bays
+      --    alone stopped up to 83 px short), as the game draws it: the image put on a canvas, its opaque columns
+      { act = function()
+          local Sc, bad, n = require("scene"), {}, 0
+          for _, pr in ipairs(api.stage().def.props) do
+            if pr.railing then
+              local w = pr.x1 - pr.x0; local im = Sc.railing(w, "decor"); n = n + 1
+              local cv = love.graphics.newCanvas(im:getWidth(), im:getHeight())
+              love.graphics.push("all"); love.graphics.setCanvas(cv); love.graphics.clear(0, 0, 0, 0); love.graphics.origin()
+              love.graphics.setColor(1, 1, 1, 1); love.graphics.draw(im, 0, 0); love.graphics.pop()
+              local d = cv:newImageData(); local first, last
+              for x = 0, d:getWidth() - 1 do
+                for y = 0, d:getHeight() - 1 do if select(4, d:getPixel(x, y)) > 0 then first = first or x; last = x; break end end
+              end
+              if first ~= 0 or last ~= w - 1 then bad[#bad + 1] = ("x %d-%d drawn %s-%s"):format(pr.x0, pr.x1, tostring(first and pr.x0 + first), tostring(last and pr.x0 + last + 1)) end
+            end
+          end
+          report("quay railings reach both ends of their props", n > 0 and #bad == 0, #bad == 0 and (n .. " railings") or table.concat(bad, "; ")) end },
       { act = function()
           local ok = 0; for _, r in ipairs(results) do if r then ok = ok + 1 end end
           print(("%d of %d passed"):format(ok, #results)); love.event.quit() end },
