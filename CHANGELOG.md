@@ -14,6 +14,13 @@ Prep for the owner's decision; no game file, map or art changed, 0 credits.
   hook that turns each draw pass into a flat layer number, so each layer's luma is measured in the real frames.
 - **docs/layer_plans/citypark_tall/:** wireframe.png (9 screens x 2 cameras), contact.png and contact_grey.png
   (9 screens x 3 cameras, 1x), layers.json (luma and screen share per layer, per frame and per camera height).
+- **docs/layer_plans/citypark_tall.md:** the City Park (tall) layer plan in the River Walk tab's form: the draw order
+  with a scroll y column, the seven kinds with City Park examples, every piece against Pepper (46 px a metre), the
+  9 screens at both cameras, what makes it messy (measured) and 10 decisions for the owner. Main findings: the
+  canopies and the mid trees are the same 87 px crowns at two depths; treetop trunks 8 px (0.17 m); the keeper
+  64 px and the winch man 57 to 64 px beside Mia's 59; 3 street lamps in the treetops; the far city, tree line and
+  mid trees within 5 luma (169, 166, 164) because the haze colours get lighter nearer in; no front on the high
+  road; 4 to 10 usable pieces in one low-road frame (budget 3).
 
 ## Branch `ops/board-25oct`: the owner's board review turned into the art backlog (25 Oct)
 - 42 board items: 1 approve, 12 fix, 28 redraw, 1 open. **docs/art_backlog.md** groups them into families per level
