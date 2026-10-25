@@ -3,6 +3,7 @@
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
 ## Branch `night/25oct-cp-plan`: the City Park layer plan (prep, night of 25 Oct)
+- **Fact-check (independent agent), fixes:** 12 key claims re-measured, the tools re-run (identical output). Corrected: park_tree2 is 86 px wide; the mid trees' crown is 3.8 m (4.6 m is the tree); the treetop street lamps are 101 px (2.2 m as drawn, 4.5 m real); the hedge is slightly tall (1.57 m), not "fits"; screen 9 counts pieces and boxes apart; the verdict no longer keeps the far layers' values that decision 3 changes. The decisions moved to the top, in plain words, with what each costs (code or new art).
 Prep for the owner's decision; no game file, map or art changed, 0 credits.
 - **tools/layer_wireframe_tall.py:** the layer wireframe for a tall Tiled level (the River Walk tool on
   `art/layer-plans` reads flat level files). Reads `riverwalk/level/tiled/<level>.lua`, places every piece as the park

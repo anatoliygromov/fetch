@@ -8,6 +8,23 @@ This tab works City Park through in the form of the River Walk tab. City Park in
 
 All numbers come from the engine, the level export and the art files on prod/integrate c1c37a4, 25 Oct, measured with three tools on this branch: `tools/layer_wireframe_tall.py` (the level file, placed as the park art code places it), `tools/layer_frames_tall.py --ids` (the game's own frames, with every pixel tagged by the layer that drew it) and `tools/measure_layers.py`. Nothing in the level, the engine or the art was changed. 0 credits.
 
+## Decisions for you
+
+Each answers with yes, no or a pick; the sections below hold the measurements. "Code" means numbers or drawing in the game's code, no art; anything that needs new art comes back as its own spend line.
+
+1. **Tree scale, the main call.** The trees Pepper climbs get trunks at true width (lime 23 px, plane 37, big oak 60; today 8, 12 and 32) and one leaf mass each, its top above the world, so the high road sits inside the leaves instead of under open sky. The ledges stay where they are: no level change. New art. Yes or no.
+2. **Mid trees** (the row behind, at half speed), new art in any case so they stop repeating the canopies' crowns: (a) full mid scale, 12 m trees 276 px tall, cut by the top, the far city in the gaps; (b) young 6 m trees, 138 px, the city above them; (c) keep 107 px. Pick a, b or c.
+3. **Light to dark.** The far city, the tree line and the mid trees are almost one value today (luma 169, 166, 164), so nothing reads as far. Re-tune the haze so the furthest is the lightest: about 191, 181, 154, with the back layer at 134. Code only, 0 credits. Yes or no.
+4. **The sky over the high road** is darker than the far city today (sky median 158 against 169; with decision 3 the city is 191): lighten the sky's top bands so it stays the lightest layer, or keep the deep blue, as Lion King's high skies do? Pick.
+5. **A dark leaf front** along the bottom of the screen while the camera is up in the trees, like River Walk's dark verge, never over Pepper. Code, 0 credits. Yes or no.
+6. **Signals and characters.** A lantern on a branch (0.5 m, 23 px) instead of the three street lamps standing on the high road; the keeper with the cart and the winch man as adults at 81 px (57 to 65 px today; the board said fix only); the magpie made as art (it is drawn in code today). New art. Yes, or strike any.
+7. **Duck boat** at 2.6 m (120 px; it needs a wider mover with its deck at the same height) or kept at 54 px? Pick.
+8. **Small fixes this plan found** (0 credits, none made): (a) the walk legs and the gate without an outline, a darker shade of their own colour instead; (b) the walk's rail at 1 m; (c) the ledge at x 1656-1720, y 248 drawn as a branch, or removed; (d) lamp 976 moved off the winch man; (e) the low bough's end; (f) the big oak's outline on the tree line from screen 5 on (the beat sheet's ask); (g) the leaf piles without an outline. Yes, or strike any letter.
+9. **Screen 9**, the busiest (3 usable pieces low, 6 high, 10 usable boxes in one frame, lamps 32 px apart at x 2592 and 2624): keep it as the finale peak, or thin it by moving the path lamp back along the path? Pick.
+10. **This form for a tall level** (a scroll y column, each screen at both cameras, both roads counted in one frame)? Yes, or what to add.
+
+Decision 3's numbers: city haze dccfe0, tree line haze dcc0c4 at a 40 % load-time fade, mid fade 38 %, computed as tools/measure_layers.py does (read as the shader strength the tree line comes out at 183, not 181).
+
 ## City Park layer stack
 
 City Park has 11 layers, drawn far to near in a fixed order. Three move with Pepper (back, ground, play); everything behind moves slower, the front faster. Two things are new against River Walk. The level is tall, so every layer also has a vertical scroll: on the high road the far layers rise slower than the world. And the treetops are a decoration layer of their own (trunks, canopies, the walks' legs, the arbour's posts), built in code from the level's boxes.
@@ -22,7 +39,7 @@ The exact draw order, first (furthest) to last (nearest), as St:draw runs it for
 | 1 | Clouds | 0.05 + drift | 0.3 | 14 % | 8 cloud sprites, high clouds at y -104 to -40 | far |
 | 2 | Far city | 128 px over the level | 0.3 | 52 % | River Walk's Stockholm skyline (320 x 77, bottom at y 150) | far |
 | 3 | Far tree line | 0.25 | 0.3 | 35 % fade + 30 % | park_treeline (480 x 31, bottom at y 177) | far |
-| 4 | Mid trees | 0.5 | 0.6 | 48 % fade + 14 % | park_tree1 and park_tree2 (87 x 107), 100 to 180 px apart, bottom at y 180 | far |
+| 4 | Mid trees | 0.5 | 0.6 | 48 % fade + 14 % | park_tree1 (87 x 107) and park_tree2 (86 x 107), 100 to 180 px apart, bottom at y 180 | far |
 | 5 | Pond and creek | 1.0, rows drift | 1.0 | 6 % | the far bank (lawn and earth), water rows of the river art; the water she falls into | far, hazard |
 | 6 | Treetop decoration | 1.0 | 1.0 | 20 % fade + 10 % (walk legs, tower posts: not faded, 10 %) | 8 trunks of 8 to 12 px, the big oak's 32 px trunk, 5 canopies of tree crowns, 18 legs and posts, roses | decoration |
 | 6b | Back props | 1.0 | 1.0 | 20 % fade + 10 % (gate 28 %, winch man 35 %; the nest not faded) | gate, 3 willows, old oak, swings, winch man, nest | decoration |
@@ -39,7 +56,7 @@ The exact draw order, first (furthest) to last (nearest), as St:draw runs it for
 | 9 | Front band | - | - | - | none: look.lua leaves City Park without one, "the earth band is already the dark frame" | front |
 
 Three depth faults found.
-- The canopies behind the high road (layer 6, 1.0) are cut from the same art as the mid trees (layer 4, 0.5): the crowns of park_tree1 and park_tree2, 87 px wide in both. Two depths, one size, so the eye reads one row of trees and the high road's ledges float in front of it.
+- The canopies behind the high road (layer 6, 1.0) are cut from the same art as the mid trees (layer 4, 0.5): the crowns of park_tree1 and park_tree2, 87 and 86 px wide. Two depths, one size, so the eye reads one row of trees and the high road's ledges float in front of it.
 - The high road has nothing in front of it. At camera y 0 and 24 the front layers cover 0 % of the screen; the bottom of the screen is mid trees and canopy (luma 134 to 164), lighter than the ledges she stands on.
 - The big oak, the level's landmark, is only in the world (x 2600 to 2880). The beat sheet asks for its silhouette in a far layer from screen 5 on; no far layer has it.
 
@@ -62,7 +79,7 @@ A child must tell at a glance what Pepper can use. So every placed thing is one 
 Four rules follow.
 - Decoration never stands on her line. Today none does: the play layer holds no decoration but the 3 leaf piles, which react. They are outlined and on the path like the log beside them, so they read as obstacles she cannot use (decision 9).
 - Decoration is never drawn like an obstacle. Today four pieces are. The walk legs are not faded, have a 1 px INK outline and are the darkest decoration in the level (luma 76 on screen; the back layer's darkest 10 % is 76 on screen 7 and 83 on screen 3, 88 to 114 elsewhere). The gate has a dark edge all round (asset_qa decor-ink, 100 %). The nest has an INK outline (it is the goal marker). The play tower's posts are crisp grey, which is right: they belong to the tower.
-- A lamp stands on the ground. Three street lamps stand on the high road (x 864 on the treetop walk, 1696 on the crown, 2624 on the tower's top deck): a 4.5 m street lamp in a treetop (bug 14). Lamp 976 stands in front of the winch man.
+- A lamp stands on the ground. Three street lamps stand on the high road (x 864 on the treetop walk, 1696 on the crown, 2624 on the tower's top deck): a street lamp (101 px, 2.2 m as drawn; a real one is 4.5 m) standing in a treetop (bug 14 of docs/bugs_22oct.md). Lamp 976 stands in front of the winch man.
 - Every ledge has art. One has none: 1656 to 1720 at y 248, left of the old oak's trunk. Pepper can stand on it, reached from the oak's branches beside it (y 244, 24 px across; y 272, 48 px across and 24 up). scene.lua gives it to the CROWN prop as its owner, and CROWN draws nothing for it.
 
 And the River Walk rule stands: an obstacle never sits flush against a back piece of the same colour. City Park mostly keeps it (dark bark ledges, play median 91, over canopies at 134 to 138); the arbour slats are the exception (see value, below).
@@ -98,7 +115,7 @@ City Park's pieces and the characters, measured from their files and the level:
 | Stump | play | 0.6 m | 28 px | 28 (24 wide, drawn in code) | fits |
 | Leaf pile | play, signal | 1 m x 0.5 m | 46 x 23 | 49 x 22 | fits |
 | Bench (River Walk's) | play | 1.8 m long, seat 0.45 m | 83 long, seat 21 | 103 long, seat 28 | exception: the seat height is the crawl gap |
-| Hedge | play | 1.2 to 1.5 m | 55 to 69 px | 72 (1.57 m) on two stems, crawl gap 19 | height fits; redraw to the ground with a leafy gap (board) |
+| Hedge | play | 1.2 to 1.5 m | 55 to 69 px | 72 (1.57 m) on two stems, crawl gap 19 | slightly tall (1.57 m against 1.2 to 1.5 m); redraw to the ground with a leafy gap (board) |
 | Stepping stones | play | 0.5 m | 23 px | 24 (art 26) | fit |
 | Bin (River Walk's) | play | 1.2 m | 2.1 P, 55 px | 59 | fits |
 | Picnic table | play | 0.75 m tall, 1.8 m long | 34 x 83 | 28 x 72 | exception: its top is a perch at bench height (y 300) |
@@ -122,13 +139,13 @@ City Park's pieces and the characters, measured from their files and the level:
 | Nest | back | 0.6 m | 28 px | 28 x 10 | fits |
 | Lamps on the high road | back | a lantern on a branch, 0.5 m | 23 px | street lamps, 101 | wrong object (bug 14) |
 | Bushes | front, 60 px/m | 1.2 x 0.6 m | 72 x 36 | 75 x 34 | fit |
-| Mid trees | mid, 23 px/m | 12 m tree, crown 7 m | 276 tall, crown 161 | 107 tall, crown 87 (4.6 m at that scale) | too small, and the same art as the canopies |
+| Mid trees | mid, 23 px/m | 12 m tree, crown 7 m | 276 tall, crown 161 | 107 tall (4.6 m at that scale), crown 87 (3.8 m) | too small, and the same art as the canopies |
 | Ball, bones | pickup | 0.07 m ball | 3 px | 6, 11 | exception: pickups at twice true size |
 | Clouds, far city, far tree line | far | - | their own scales | - | fit |
 
 Colour and value from the QA tools (`asset_qa.py --all`, 25 Oct; after fades and the look). One City Park fail: park_leaves_flat (8.0 % lone pixels, limit 5; the board's redraw). Warnings: the gate (decoration outlined, 100 % dark edge), the hedge, log and leaves (4.0 to 4.4 % stray), the willows (3.8 to 3.9 % stray, pinholes), the swings (4.2 % stray), the round trees (1.5 % dirt, 4.1 to 4.5 % stray), the oak, tree line, ground, bush and table (noise or blotches), the boat (3.1 % stray), the keeper cart (0.4 % dirt) and the winch man (a colour lost in one frame). Pass: lamp post, bench, bin, slide, hollow log, stones, frame.
 
-Verdict for City Park. Keep as they are: Mia, the goose, log, stump, leaf piles (once redrawn flat), stones, bin, hollow log, play tower, arbour, swings, nest, bushes, far layers. Fix at 0 credits: the walk legs and the gate without an outline, the walk's rail at 1 m, the ledge with no art, lamp 976 off the winch man, the low bough's end. Reproduce: the keeper with the cart and the winch man (adults, 81 px), the gate at true scale, the willows, true-width trunks and one canopy mass per tree, new mid trees. Make as art: the magpie, a treetop lantern. Your call: tree scale, mid trees, the duck boat, the lamp posts.
+Verdict for City Park. Keep as they are: Mia, the goose, log, stump, leaf piles (once redrawn flat), stones, bin, hollow log, play tower, arbour, swings, nest, bushes, the far city and tree line art (their values: decision 3). Fix at 0 credits: the walk legs and the gate without an outline, the walk's rail at 1 m, the ledge with no art, lamp 976 off the winch man, the low bough's end. Reproduce: the keeper with the cart and the winch man (adults, 81 px), the gate at true scale, the willows, true-width trunks and one canopy mass per tree, new mid trees. Make as art: the magpie, a treetop lantern. Your call: tree scale, mid trees, the duck boat, the lamp posts.
 
 ## City Park screen by screen
 
@@ -146,7 +163,7 @@ Budget per screen (Playbook): 1 to 2 back landmarks, 4 to 6 play pieces of which
 | 6 (1600 to 1920) | The old oak's 3 branches (way up 3); high: lime 7, the crown, the golden twig, the stub | old oak, its canopy, a trunk at 1916 | 3 oak branches and 1 ledge with no art / lime, crown, twig, stub | perches 7 and 8, lamps 1624 and 1696 (on the crown), 6 + 6 bones (one the golden bone) | bush (x 1900) | Draw the ledge at y 248 or remove it; the crown's lamp becomes a lantern; high road one over budget (4) |
 | 7 (1920 to 2240) | The creek: stop, then hop 3 stones; high: ash, alder walk, the low bough | the ash and alder canopy, 6 walk legs (5 in the creek) | 3 stones / ash, alder walk, low bough | perch 9, lamp 1936, 7 + 4 bones | - | Legs without the outline; the low bough's end goes into leaves, not a prow in the sky |
 | 8 (2240 to 2560) | Rose walk: bench, picnic table, the second cart; high: the arbour | arbour posts with roses, a trunk at 2304 added by the code | bench, picnic table / 2 arbour slats | goose (2360), leaf cart zone (2350 to 2576), perch 10, lamp 2300, 9 + 3 bones | - | Keep; give the light slats a value step from the sky |
-| 9 (2560 to 2880) | Playground: slide tower, climbing frame, Mia; high: the finale, tower to nest | the big oak's trunk and crown, the nest, swings, tower posts, an arbour post | slide tower, tower deck, climbing frame / slat, top deck, 3 boughs, nest bough | Mia (2840), perches 11 and 12, lamps 2592 and 2624, 8 + 4 bones | - | Busiest screen (3 low, 6 high, 10 in one frame): the finale peak, your call; big oak trunk at true width (60 px); the tower lamp becomes a lantern |
+| 9 (2560 to 2880) | Playground: slide tower, climbing frame, Mia; high: the finale, tower to nest | the big oak's trunk and crown, the nest, swings, tower posts, an arbour post | slide tower, tower deck, climbing frame / slat, top deck, 3 boughs, nest bough | Mia (2840), perches 11 and 12, lamps 2592 and 2624, 8 + 4 bones | - | Busiest screen (3 usable pieces low, 5 boxes; 6 high; 10 usable boxes in one frame): the finale peak, your call; big oak trunk at true width (60 px); the tower lamp becomes a lantern |
 
 Counts from `tools/layer_wireframe_tall.py --report`: 25 usable boxes on the low road, 23 ledges on the high road (1,896 px of ledge), 97 bones (68 low, 29 high; the beat sheet says 95), 11 lamps, 12 perches, 2 front pieces. Empty path per screen (px of the path at y 328 with nothing on it): 207, 153, 80 (plus 240 px of pond), 239, 116, 315, 80 (plus 240 px of creek), 101, 152.
 
@@ -201,16 +218,3 @@ The order back to front still holds from the treetops in: back 134 to 138, play 
 As in the River Walk tab: this plan approved first, then a greybox frame per screen from the game itself (`tools/layer_frames_tall.py --ids` already gives each layer's area per frame), then art per layer slot, never as a flattened scene, then the screen assembled in the game and checked in colour and greyscale. For a tall level each screen is checked at both cameras. A good sample screen is screen 6 (the old oak): both roads, the crown, the golden bone, a lamp on each road.
 
 Next: the same tab for Downtown (its street and plaza screens, tall). No credits are spent until a level's plan is approved.
-
-## Decisions for you
-
-1. This form for a tall level (a scroll y column, each screen at both cameras, both roads counted in one frame)? Yes, or what to add.
-2. Tree scale, the main call. The climbable trees get true-width trunks (lime 23 px, plane 37, big oak 60; today 8, 12 and 32) and one canopy mass each at true scale, its crown running past the top of the world, so the high road sits inside the leaves instead of under an empty sky. The ledges stay where they are: no level change. Yes or no.
-3. Mid trees, new art in any case so they are no longer the canopy's crowns: (a) true mid scale, 12 m trees at 276 px, cut by the top, the far city in the gaps; (b) young trees, 6 m at 138 px, the far city over them; (c) keep 107 px. Pick a, b or c.
-4. Values: re-order the haze so the furthest layer is the lightest. For example, city haze dccfe0, tree line haze dcc0c4 at 40 %, mid fade 38 %: far city 191, tree line 181, mid trees 154 against back 134 (today 169, 166, 164; computed with measure_layers' maths). Numbers in look.lua only, 0 credits. Yes or no.
-5. The sky over the high road: lighten the 5 bands above y 0 (luma 86 to 120 today) so the sky stays lighter than the far city (169), or keep the deeper blue, as Lion King's high skies do? Pick.
-6. A front for the high road: dark leaves at the bottom of the screen while the camera is up in the trees (drawn in screen space at 1.4x like River Walk's band, tops at screen y 206 or lower, LOOK_CHECK proving it never covers her). A code change. Yes or no.
-7. Signals and characters: treetop lanterns on a branch (0.5 m, 23 px) for the 3 high checkpoints (bug 14); the keeper with the cart and the winch man at 81 px (the board said fix only); the magpie made as art at 24 x 13. Yes, or strike any.
-8. Duck boat at 2.6 m (120 px, needs a wider mover and a deck at the same height) or kept at 54 px? Pick.
-9. Fixes this plan found, none made: the walk legs and the gate without an outline (a darker shade of their own colour); the walk's rail at 1 m; the ledge at y 248 drawn as a branch or removed; lamp 976 and the winch man apart; the low bough's end; the big oak's silhouette on the tree line from screen 5 on (the beat sheet's ask); the leaf piles drawn without an outline. Yes, or strike any.
-10. Screen 9 (3 usable low, 6 high, 10 in one frame, two lamps 32 px apart at 2592 and 2624): keep it as the finale peak, or thin it by moving the path lamp back along the path, away from the tower's lamp? Pick.
