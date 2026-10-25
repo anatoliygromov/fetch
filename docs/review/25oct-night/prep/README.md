@@ -1,5 +1,11 @@
 # Night of 25 Oct: prep for the owner's next calls
 
+**Update 21:45:** the evening session (`art/animals-r2`, `preview/25oct-late`, 21:26) already took the owner's go on
+the cat (32 px sitting), the gull (34 px span) and real-size rowing boats (182 px, harbour +256 px). Section 1 and the
+boat half of section 2 are kept for the record only; the lamp call stays open. Section 4's preflight change still
+matters: `art/animals-r2` set the cat's `real_height_m` to 0.65 (a cat is about 0.33 m) to get its 30 px past the
+true-scale check; `owner_size` records the owner's call instead.
+
 Made on the night run (0 credits, no image service). Nothing here changes the game; the sheets are grey blockouts on
 real game frames. Rules: `docs/BIBLE.md`. Board decisions read at 20:30 (the owner's review at 20:16-20:18).
 
