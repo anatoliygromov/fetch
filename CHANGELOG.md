@@ -2,6 +2,15 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `art/tall-backdrop-rule`: back buildings and front trees taller than the viewport (25 Oct)
+- Owner rule (25 Oct): back-layer buildings and the front row of trees are taller than the viewport; their top is never
+  on screen. In BIBLE section 3 and `art/gen/rules.json` (`taller_than_viewport`).
+- **tools/check_backdrop.py** fails any such decor prop whose top is on screen. River Walk today: HOME (top y 39),
+  TREE (47) and the near tree at x 1056 (39) fail; the gable (-1) and cafe (-31) pass. City Park and Downtown draw their
+  art in scene code and are checked by eye in their screen sweep for now.
+- Added to the pre-merge checks (BIBLE section 8) and the rejection log. The fix is part of the River Walk sample
+  screen (STATUS). No art changed, 0 credits.
+
 ## Branch `ops/workflow`: the workflow the owner can trust, enforced in code (25 Oct)
 Built on `prod/integrate` with `art/preflight` merged. Tools and docs only; no game file changed, 0 credits.
 - **docs/WORKFLOW.md:** the order of work for assets (families of 4 to 6, tiers A/B/C, 10 steps) and levels; the owner

@@ -36,7 +36,7 @@ Everything waiting, in one playable build (`FETCH_PREVIEW_24oct_g.love` on the o
 ## Workflow (owner, 25 Oct)
 
 - `docs/WORKFLOW.md` is the order of work; `tools/pipeline.py status` shows every asset's step. Start sessions with the fetch-game-manager skill.
-- Next art: the River Walk sample screen (approved pieces + the missing 3-4), cap 300 credits, then families. Palette: `art/palettes/riverwalk.gpl` (v1, 56 colours from approved art).
+- Next art: the River Walk sample screen (approved pieces + the missing 3-4), cap 300 credits, then families. It must fix the owner's 25 Oct rule "taller than the viewport": `tools/check_backdrop.py` fails HOME (building, top y 39), TREE (tree, 47) and tree_near (x 1056, 39). The true-scale house is built from stamped parts (0 credits); the street trees are tall limes with the crown cut by the top edge. Palette: `art/palettes/riverwalk.gpl` (v1, 56 colours from approved art).
 - Branch `ops/workflow` (this setup) is merged into `prod/integrate`.
 
 How to update this file: rewritten by the producer session at the end of each working session.

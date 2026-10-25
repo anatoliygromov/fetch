@@ -44,6 +44,8 @@ Exception: the light pavement under Pepper stays (owner, 23 Oct).
 
 **Front-on (owner, 12 Oct).** Seen from the front at Pepper's height. A front and a thin cap. No tops, sides or insides.
 
+**Taller than the viewport (owner, 25 Oct).** Back-layer buildings and the front row of trees run past the top of the screen: their top is never seen. True-scale houses (doors about 92 to 100 px, storeys about 140 px) and street trees (crowns cut by the top edge) do this by themselves. `tools/check_backdrop.py` fails a piece whose top is on screen.
+
 **Scale to Pepper (owner, 23 Oct).** What she stands on is true scale, 46 px per metre, within her 46 px jump. Big things go on a slower layer.
 
 **No haze in prompts (owner, 23 Oct).** Never "hazy", "pale", "misty" or "faded". Deliver full local colour.
@@ -117,7 +119,7 @@ Asset gates and checklist: `docs/asset_qa.md`. Nothing is done until it passes i
 
       SDL_AUDIODRIVER=dummy XDG_DATA_HOME=$(mktemp -d) xvfb-run -a love riverwalk --level X --test
 
-- **Before any merge:** `tools/check_pepper.sh`, `tools/check_flow.sh`, `tools/check_tiled.sh`, `python3 tools/check_curve.py --order riverwalk,citypark_tall,downtown_tall,rooftops,soder,night --seeds 10 --out <fresh dir>`, and `python3 -I tools/asset_qa.py` for art. GitHub Actions run the first three on every pull request and on main, and publish a Release (FETCH.love) on every push to main; the tag comes from `VERSION`.
+- **Before any merge:** `tools/check_pepper.sh`, `tools/check_flow.sh`, `tools/check_tiled.sh`, `python3 tools/check_backdrop.py`, `python3 tools/check_curve.py --order riverwalk,citypark_tall,downtown_tall,rooftops,soder,night --seeds 10 --out <fresh dir>`, and `python3 -I tools/asset_qa.py` for art. GitHub Actions run the first three on every pull request and on main, and publish a Release (FETCH.love) on every push to main; the tag comes from `VERSION`.
 - **Owner cards:** `tools/qa_card.py` refuses a card without an in-game frame (`--frame`) and a slot (`--slot` or asset_qa.SLOTS). A wrong slot fails the card. `--draft` cards are for working only, never for the owner.
 
 ## 9 Resolved contradictions

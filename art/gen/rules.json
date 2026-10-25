@@ -259,5 +259,26 @@
    "board",
    "shipped"
   ]
+ },
+ "taller_than_viewport": {
+  "_rule": "Back-layer buildings and front-row trees are taller than the viewport: their top is never seen on screen (owner, 25 Oct).",
+  "arts": [
+   "building",
+   "cafe",
+   "gable",
+   "tree",
+   "tree_near"
+  ],
+  "name_hints": [
+   "house",
+   "building",
+   "front_tall",
+   "cafe",
+   "gable"
+  ],
+  "exempt": [
+   "tree_far"
+  ],
+  "max_top_y": -1
  }
 }
