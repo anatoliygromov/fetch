@@ -313,7 +313,8 @@ function Bot.new(api, persona, opts)
   --   1. the ball lies loose within 480 px (and 64 px up or down): fetch it (walk, hop, X), then plan again;
   --   2. the magpie still has the ball on a perch the clean run never saw it on: sneak up to it, bark, plan again;
   --   3. a step on the same floor (|dy| < 10, within 480 px) with the same sig: the nearest one at or behind her
-  --      (a 32 px run-up when the clean run was moving there), else the nearest one ahead; walk there and go on;
+  --      (a run-up of up to 32 px on the same floor when the clean run was moving there), else the nearest one
+  --      ahead; walk there and go on;
   --   4. none on her floor: she walks to the nearest step with the same sig anywhere (the lab moves her there with
   --      the game's own respawn and she stands for the walk, distance / 120 px/s, at most 20 s: lab_walks);
   --   5. still none: the step with the nearest entry anywhere, from where she stands (the old way).
@@ -326,7 +327,21 @@ function Bot.new(api, persona, opts)
     entries[k] = entries[k] or { x = en.x, y = en.y, force = f, carrying = en.c, play = true, ground = en.g }
     entries[k].force = f                                           -- resume with the clean run's buttons there
     log.resumes = (log.resumes or 0) + 1
-    local tx = en.x - (runup and 32 * ((en.vx or 0) >= 0 and 1 or -1) or 0)
+    -- (night/25oct-lab) the run-up (up to 32 px back) stays on the floor the step starts from: never past its edge.
+    -- City Park tall's ash branch starts 12.7 px behind step 73 (x 1900.7), so the full run-up walked Pepper off it
+    -- onto the ledge below, the step ran her off that and down to the low road, every retry: 14 of 160 runs were lost
+    -- there. A spot counts when her paws (pepper.lua FHW, 13 px each side) less the walkback's 6 px stop would still
+    -- be on a floor at the step's height, so she cannot step off it even where the walkback stops short. (Slopes and
+    -- a crumbled plank give a shorter run-up; no usable run-up step of the six levels is on a slope.)
+    local dir, back, w = (en.vx or 0) >= 0 and 1 or -1, 0, S().world
+    if runup then
+      for d = 4, 32, 4 do
+        local x = en.x - dir * d
+        if not w:floor(x - 7, x + 7, x, en.y - 2, en.y + 2, en.y - 2) then break end
+        back = d
+      end
+    end
+    local tx = en.x - dir * back
     if math.abs(tx - p.x) > 6 and (tries or 0) < 2 then
       mode, modeT, modeData = "walkback", 0, { k = k, x = tx, blockT = 0, v2 = true, y = p.y, tries = tries or 0 }
     else resumeAt(k) end
