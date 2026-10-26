@@ -1833,6 +1833,13 @@ function Sc.drawPropArt(p, camx, def, kicked)
     if p.kind == "decor" or not o then return end                 -- posts, legs, crowns: drawn with their set piece
     n = o.name
     if style == "park" and (n == "OAK" or n == "BRANCH") then drawBranch(p, named(def, "OAK"), camx); return end
+    -- the old oak's ledge at y 248 (x 1656-1720), left of its trunk: its nearest named prop is the crown's, which draws
+    -- nothing for it, so Pepper stood on nothing (plan decision 8 c). A branch of the oak, as its others are. A ledge
+    -- Pepper uses is never removed: the oak's lower branches lead up to it.
+    if style == "park" and n == "CROWN" and p.kind == "oneway" and def.foot and p.y0 > def.foot - 90 then
+      local oak = named(def, "OAK")
+      if oak and p.x1 >= oak.x0 - 12 and p.x0 < oak.x1 then drawBranch(p, oak, camx); return end
+    end
     if style == "park" and (n == "SLIDE" or n == "PLAY TOWER") and p.kind == "oneway" then drawDeck(p, math.floor(camx)); return end   -- (art/placement: was invisible)
     if n ~= "CRATES" then return end                              -- the hat (statue), the frame's top bar (FRAME)
   end
