@@ -1682,14 +1682,17 @@ local function drawLowBough(p, t, ox)
   for i = 0, n - 1 do
     local x = x0 + i
     local e = side > 0 and i or (n - 1 - i)                        -- columns from the free end
-    local tip = ({ 6, 3, 1 })[e + 1] or 0
+    local tip = e < 10 and math.floor(7 - e * 0.7 + 0.5) or 0       -- (the underside rises to the free end gently, a bough, not a hull)
     cols[#cols + 1] = { x, y0 + (e == 0 and 1 or 0), y1 - 1 - tip }
   end
-  local reach = 20
+  -- (plan decision 8 e, owner 26 Oct) it used to curl up in 20 columns, 30 px, ending in a thin leaf clump in open
+  -- sky: a boat's prow. Now a gentler rise over 26 columns (16 px) into a leaf mass that is wider and taller than the
+  -- bough's end, so it reads as a bough going into the foliage
+  local reach = 26
   for i = 1, reach do                                               -- towards its trunk, rising into the leaves
     local x = side > 0 and (x1 - 1 + i) or (x0 - i)
-    local mid = (y0 + y1 - 1) / 2 - i * i / 13                     -- its middle line curves up (a parabola)
-    local th = (y1 - y0) - i * 0.45                                -- and it thins
+    local mid = (y0 + y1 - 1) / 2 - i * i / 42                     -- its middle line curves up (a parabola)
+    local th = (y1 - y0) - i * 0.4                                 -- and it thins
     cols[#cols + 1] = { x, math.floor(mid - th / 2 + 0.5), math.floor(mid + th / 2 + 0.5) }
   end
   lg.setColor(INK)
@@ -1706,14 +1709,20 @@ local function drawLowBough(p, t, ox)
     end
   end
   tipTwig(side > 0 and x0 - 1 or x1, y0 + 4, -side)
-  local ex = side > 0 and (x1 + reach) or (x0 - reach)              -- where it goes into the leaves: a leafy clump
+  local ex = side > 0 and (x1 + reach) or (x0 - reach)              -- where it goes into the leaves: a leafy mass
   local last = cols[#cols]
-  local ey = math.floor((last[2] + last[3]) / 2)                    -- (round its end, which goes on up out of sight)
-  for i, q in ipairs({ { -3, -6 }, { 1, -9 }, { 4, -4 }, { -6, -1 }, { 0, -2 }, { 3, 1 }, { -2, 3 }, { 5, -8 } }) do
-    lg.setColor(INK); lg.rectangle("fill", ex + side * q[1] - 2, ey + q[2] - 1, 5, 4)
+  local ey = math.floor((last[2] + last[3]) / 2)
+  local MASS = { { 0, -14 }, { -7, -11 }, { 7, -11 }, { 0, -8 }, { -12, -6 }, { 12, -6 }, { -6, -4 }, { 6, -4 }, { 0, -1 },
+    { -13, 1 }, { 13, 0 }, { -8, 3 }, { 8, 3 }, { 0, 4 }, { -3, -12 }, { 4, -14 }, { -10, -2 }, { 10, -3 } }
+  local function blob(cx, cy, w, h, c)                              -- a rounded patch of leaves: three rectangles
+    lg.setColor(c)
+    lg.rectangle("fill", cx - w / 2 + 2, cy - h / 2, w - 4, h); lg.rectangle("fill", cx - w / 2 + 1, cy - h / 2 + 1, w - 2, h - 2)
+    lg.rectangle("fill", cx - w / 2, cy - h / 2 + 2, w, h - 4)
   end
-  for i, q in ipairs({ { -3, -6 }, { 1, -9 }, { 4, -4 }, { -6, -1 }, { 0, -2 }, { 3, 1 }, { -2, 3 }, { 5, -8 } }) do
-    lg.setColor(LEAF[1 + i % 3]); lg.rectangle("fill", ex + side * q[1] - 1, ey + q[2], 3, 2)
+  for _, q in ipairs(MASS) do blob(ex + side * q[1], ey + q[2], 11, 9, INK) end     -- the mass's dark rim first
+  for i, q in ipairs(MASS) do blob(ex + side * q[1], ey + q[2], 9, 7, LEAF[1 + (i * 7) % 3]) end
+  for i, q in ipairs(MASS) do                                       -- light on the upper left of some of them
+    if i % 2 == 0 then lg.setColor(LEAF[3]); lg.rectangle("fill", ex + side * q[1] - 2, ey + q[2] - 2, 3, 1) end
   end
 end
 
