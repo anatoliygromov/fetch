@@ -1591,19 +1591,26 @@ local function drawWalk(p, ox)
   lg.setColor(WOOD[3]); lg.rectangle("fill", x0, y + hgt - 1, w, 1)
   for x = x0 + 7, x1 - 2, 8 do lg.setColor(WOOD[3]); lg.rectangle("fill", x, y + 1, 1, hgt - 2) end   -- plank joints
 end
--- its legs (behind Pepper): pairs of timbers down to the ground, or into the water (seen through it)
+-- its legs (behind Pepper): pairs of timbers down to the ground, or into the water (seen through it). Decoration:
+-- no outline, faded to the back haze like the trunks, the edge a darker shade of the timber's own colour (plan
+-- decision 8 a, owner 26 Oct; they were INK outlined and unfaded, the darkest decoration in the level)
 local function drawWalkLegs(p, ox, foot, world)
   local floorY = world and world.height or (foot + 56)
+  local c1, c2 = fadeC({ 0.30, 0.24, 0.20 }), fadeC({ 0.42, 0.34, 0.27 })     -- timber, its lit left edge
+  local c3 = { c1[1] * 0.78, c1[2] * 0.78, c1[3] * 0.78 }                    -- its shaded right edge
+  local tie = fadeC({ 0.36, 0.29, 0.23 })
+  local tie3 = { tie[1] * 0.78, tie[2] * 0.78, tie[3] * 0.78 }
   for lx = p.x0 + 6, p.x1 - 10, 60 do
     local wet = false
     for _, r in ipairs(world and world.water or {}) do if lx >= r.x0 and lx < r.x1 then wet = true end end
     local bottom = wet and floorY or foot
     local x = lx - ox
-    lg.setColor(INK); lg.rectangle("fill", x - 1, p.y1, 6, bottom - p.y1)
-    lg.setColor(0.30, 0.24, 0.20); lg.rectangle("fill", x, p.y1, 4, bottom - p.y1)
-    lg.setColor(0.42, 0.34, 0.27); lg.rectangle("fill", x, p.y1, 1, bottom - p.y1)
+    lg.setColor(c1); lg.rectangle("fill", x, p.y1, 4, bottom - p.y1)
+    lg.setColor(c2); lg.rectangle("fill", x, p.y1, 1, bottom - p.y1)
+    lg.setColor(c3); lg.rectangle("fill", x + 3, p.y1, 1, bottom - p.y1)
     for by = p.y1 + 20, bottom - 30, 40 do                           -- cross ties
-      lg.setColor(INK); lg.rectangle("fill", x - 3, by - 1, 10, 4); lg.setColor(0.36, 0.29, 0.23); lg.rectangle("fill", x - 2, by, 8, 2)
+      lg.setColor(tie); lg.rectangle("fill", x - 2, by, 8, 2)
+      lg.setColor(tie3); lg.rectangle("fill", x - 2, by + 2, 8, 1)
     end
     if wet then                                                       -- under the surface: the water's colour over it
       lg.setColor(0.33, 0.47, 0.52, 0.55); lg.rectangle("fill", x - 3, foot + 24, 10, bottom - foot - 24)
