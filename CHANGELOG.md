@@ -9,6 +9,15 @@ Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 - **Level:** riverwalk.lua props HOME, TREE, tree at 1056, the two railings; maps/riverwalk.tmx and its export regenerated (`level_to_tiled.py riverwalk`). scene.lua loads the new arts with the back fade.
 - **Tools:** `grid_cut.py` works on 1x renders (`--pitch 1`: whole cells, no phase shift).
 - **Checks:** check_backdrop BACKDROP OK (was 3 fails), PEPPER UNCHANGED, flow 125/125, Tiled PASSED, physics 54/54, QA 0 problems, autopilot GOOD GIRL!, check_curve T1-T4 PASS. Frames: docs/review/25oct/.
+## Branch `art/rw-fixes`: River Walk fixes by hand, 0 credits (board "fix", 25 Oct)
+Each pixel chosen by eye at 8-20x, the edit recorded in `art/source/rw_fixes/edits.json`; Aseprite sources (layers "before (main v0.6)" and "fixed (game)") in `art/source/rw_fixes/`. No clean-pass script on the whole file (BIBLE 3).
+- **cloud8:** the 23 Oct free fix had merged its darkest shade away (flat bottom). Back to the original drawing with its bottom shade, lifted to (164,184,205) so it stays inside the clouds' ladder in every level; the edge is one shade all round (review: 14 mixed edge pixels joined it). 80 px changed. asset_qa PASS.
+- **park_log:** two near-identical oranges merged (166,100,62 into 162,110,74); 6 brown pixels in its outline made ink, so the obstacle outline is closed. Lone pixels 4.0 % to under 3 %, PASS.
+- **pier:** decoration, so no ink outline: the dark silhouette edge (670 px) is now stone, light on the sun side, a darker stone on the shade side; 6 orphan ink dots near the edge (review) take the stone round them; 4 dotted vertical joints redrawn as the solid joints the rest of the wall has. The foot row stays dark (it meets the dark passage). PASS.
+- **skyline:** 16 small blotches (near-colour patches inside a silhouette) take their surrounding colour; 2 pinholes filled. PASS.
+- **gull:** not fixed here: the owner wants it redrawn ("it has holes and doesnt really look like a bird", 25 Oct 16:00). The file stays as on main until the redraw.
+- Independent review (art/gen/reviews/rw_fixes_25oct.md): park_log and skyline ship; cloud8 and pier fix lists applied after it.
+- Checks: PEPPER UNCHANGED, flow 125/125, QA 0 problems (River Walk, Downtown). Frames: docs/review/25oct/fixes/.
 
 ## Branch `ops/board-25oct`: the owner's board review turned into the art backlog (25 Oct)
 - 42 board items: 1 approve, 12 fix, 28 redraw, 1 open. **docs/art_backlog.md** groups them into families per level
