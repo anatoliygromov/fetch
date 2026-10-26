@@ -1017,6 +1017,47 @@ function Sc.buildArt(levelW, style)
   return L
 end
 
+-- the big oak's silhouette on the far tree line, from screen 5 on (plan decision 8 f, the beat sheet's ask): the
+-- finale's landmark stands up over the tree line, one flat dark shape in the tree line's own colour, a shade darker, no
+-- outline (decoration, far scenery). Drawn from code once: a trunk with a flared foot and a broad, scalloped crown. It
+-- moves with the tree line (0.25), so it comes in at the right edge in the last third of screen 5 and stands on the
+-- left of the last screen, over the big oak itself. A tall level with a BIG OAK only.
+local function hasProp(def, name) for _, q in ipairs(def.props) do if q.name == name then return true end end end
+local function farOakImg(T)
+  if T.farOak then return T.farOak end
+  local W, H = 140, 92
+  local src = love.image.newImageData("art/scene/park_treeline.png")
+  local r, g, b, n = 0, 0, 0, 0
+  src:mapPixel(function(_, _, pr, pg, pb, pa) if pa > 0.5 then r, g, b, n = r + pr, g + pg, b + pb, n + 1 end return pr, pg, pb, pa end)
+  local c = Sc.fadeC({ r / n, g / n, b / n }, nil, "shore")          -- the tree line's average colour, faded as it is
+  local main = { c[1] * 0.94, c[2] * 0.94, c[3] * 0.94 }
+  local low = { c[1] * 0.89, c[2] * 0.89, c[3] * 0.89 }              -- the crown's underside and the trunk
+  local d = love.image.newImageData(W, H)
+  local rr = rng(2880)
+  local function put(x, y, col) if x >= 0 and x < W and y >= 0 and y < H then d:setPixel(x, y, col[1], col[2], col[3], 1) end end
+  local cx, foot = W / 2, H - 1
+  for y = 48, foot do                                               -- the trunk, flaring at its foot
+    local e = foot - y
+    local half = 5 + (e < 10 and (10 - e) * 0.6 or 0) + (y < 60 and (60 - y) * 0.15 or 0)
+    for x = math.floor(cx - half), math.ceil(cx + half) do put(x, y, low) end
+  end
+  local blobs = {}                                                  -- the crown: overlapping lobes in a flat dome
+  for i = 0, 12 do
+    local u = i / 12 * 2 - 1
+    blobs[#blobs + 1] = { cx + u * 50 + rr(-3, 3), 40 - (1 - u * u) * 18 + rr(-3, 3), 13 + (1 - u * u) * 9 + rr(-2, 3) }
+  end
+  for _, bl in ipairs(blobs) do
+    for y = math.floor(bl[2] - bl[3]), math.ceil(bl[2] + bl[3]) do
+      for x = math.floor(bl[1] - bl[3]), math.ceil(bl[1] + bl[3]) do
+        local dx, dy = x - bl[1], (y - bl[2]) * 1.15
+        if dx * dx + dy * dy <= bl[3] * bl[3] then put(x, y, (y > bl[2] + bl[3] * 0.35) and low or main) end
+      end
+    end
+  end
+  T.farOak = newImg(d)
+  return T.farOak
+end
+
 -- layers 1 to 5 of an art level, and the water of its pond or fountain basin with the far bank behind it
 function Sc.drawFarArt(L, camx, t, w, def)
   local T, A = Sc.townArt(L.style), Sc.art()
@@ -1029,6 +1070,11 @@ function Sc.drawFarArt(L, camx, t, w, def)
   if L.style == "park" then
     Look.use("shore")
     strip(T.treeline, camx, 0.25, 177)                            -- 4 the far tree line
+    if def and def.foot and hasProp(def, "BIG OAK") then          -- the big oak's silhouette on it (a tall park's finale)
+      local oi = farOakImg(T)
+      local x = math.floor((w.width - 320) * 0.25 + 100) - math.floor(camx * 0.25) - oi:getWidth() / 2
+      if x < 330 and x + oi:getWidth() > -10 then lg.setColor(1, 1, 1, 1); lg.draw(oi, x, 177 - oi:getHeight()) end
+    end
     vpop(on); on = vpush("mid")
     Look.use("mid")
     local ox = math.floor(camx * 0.5)                             -- 5 near trees (faded)
