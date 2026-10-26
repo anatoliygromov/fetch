@@ -1,0 +1,1783 @@
+{
+ "frames": [
+  {
+   "camera_y": 0,
+   "x": 0,
+   "layers": {
+    "sky": {
+     "share": 0.61,
+     "p10": 199,
+     "median": 202,
+     "p90": 206
+    },
+    "clouds": {
+     "share": 0.068,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.092,
+     "p10": 178,
+     "median": 191,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.035,
+     "p10": 169,
+     "median": 181,
+     "p90": 199
+    },
+    "mid": {
+     "share": 0.163,
+     "p10": 135,
+     "median": 154,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.002,
+     "p10": 72,
+     "median": 107,
+     "p90": 215
+    },
+    "front": {
+     "share": 0.031,
+     "p10": 25,
+     "median": 25,
+     "p90": 37
+    }
+   }
+  },
+  {
+   "camera_y": 0,
+   "x": 320,
+   "layers": {
+    "sky": {
+     "share": 0.628,
+     "p10": 199,
+     "median": 202,
+     "p90": 206
+    },
+    "clouds": {
+     "share": 0.063,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.086,
+     "p10": 178,
+     "median": 191,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.034,
+     "p10": 169,
+     "median": 182,
+     "p90": 195
+    },
+    "mid": {
+     "share": 0.13,
+     "p10": 135,
+     "median": 154,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.038,
+     "p10": 114,
+     "median": 138,
+     "p90": 173
+    },
+    "play": {
+     "share": 0.004,
+     "p10": 20,
+     "median": 91,
+     "p90": 128
+    },
+    "front": {
+     "share": 0.017,
+     "p10": 25,
+     "median": 25,
+     "p90": 37
+    },
+    "characters": {
+     "share": 0.0,
+     "p10": 77,
+     "median": 137,
+     "p90": 237
+    }
+   }
+  },
+  {
+   "camera_y": 0,
+   "x": 640,
+   "layers": {
+    "sky": {
+     "share": 0.607,
+     "p10": 199,
+     "median": 202,
+     "p90": 206
+    },
+    "clouds": {
+     "share": 0.058,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.081,
+     "p10": 178,
+     "median": 188,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.024,
+     "p10": 169,
+     "median": 181,
+     "p90": 199
+    },
+    "mid": {
+     "share": 0.058,
+     "p10": 132,
+     "median": 154,
+     "p90": 169
+    },
+    "back": {
+     "share": 0.084,
+     "p10": 107,
+     "median": 134,
+     "p90": 173
+    },
+    "play": {
+     "share": 0.056,
+     "p10": 20,
+     "median": 80,
+     "p90": 164
+    },
+    "front": {
+     "share": 0.019,
+     "p10": 25,
+     "median": 25,
+     "p90": 75
+    },
+    "characters": {
+     "share": 0.015,
+     "p10": 1,
+     "median": 58,
+     "p90": 156
+    }
+   }
+  },
+  {
+   "camera_y": 0,
+   "x": 960,
+   "layers": {
+    "sky": {
+     "share": 0.545,
+     "p10": 199,
+     "median": 202,
+     "p90": 205
+    },
+    "clouds": {
+     "share": 0.046,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.005,
+     "p10": 178,
+     "median": 193,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.033,
+     "p10": 163,
+     "median": 181,
+     "p90": 195
+    },
+    "mid": {
+     "share": 0.047,
+     "p10": 127,
+     "median": 148,
+     "p90": 169
+    },
+    "back": {
+     "share": 0.252,
+     "p10": 114,
+     "median": 138,
+     "p90": 173
+    },
+    "play": {
+     "share": 0.019,
+     "p10": 20,
+     "median": 71,
+     "p90": 128
+    },
+    "front": {
+     "share": 0.039,
+     "p10": 25,
+     "median": 25,
+     "p90": 37
+    },
+    "characters": {
+     "share": 0.014,
+     "p10": 1,
+     "median": 58,
+     "p90": 129
+    }
+   }
+  },
+  {
+   "camera_y": 0,
+   "x": 1280,
+   "layers": {
+    "sky": {
+     "share": 0.56,
+     "p10": 199,
+     "median": 202,
+     "p90": 205
+    },
+    "clouds": {
+     "share": 0.044,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.008,
+     "p10": 172,
+     "median": 191,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.022,
+     "p10": 163,
+     "median": 181,
+     "p90": 195
+    },
+    "mid": {
+     "share": 0.069,
+     "p10": 127,
+     "median": 148,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.246,
+     "p10": 114,
+     "median": 138,
+     "p90": 173
+    },
+    "play": {
+     "share": 0.03,
+     "p10": 20,
+     "median": 91,
+     "p90": 128
+    },
+    "front": {
+     "share": 0.008,
+     "p10": 25,
+     "median": 25,
+     "p90": 75
+    },
+    "characters": {
+     "share": 0.013,
+     "p10": 1,
+     "median": 58,
+     "p90": 129
+    }
+   }
+  },
+  {
+   "camera_y": 0,
+   "x": 1600,
+   "layers": {
+    "sky": {
+     "share": 0.545,
+     "p10": 199,
+     "median": 202,
+     "p90": 205
+    },
+    "clouds": {
+     "share": 0.044,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.031,
+     "p10": 172,
+     "median": 188,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.018,
+     "p10": 169,
+     "median": 182,
+     "p90": 199
+    },
+    "mid": {
+     "share": 0.08,
+     "p10": 132,
+     "median": 148,
+     "p90": 169
+    },
+    "back": {
+     "share": 0.217,
+     "p10": 108,
+     "median": 153,
+     "p90": 184
+    },
+    "play": {
+     "share": 0.038,
+     "p10": 20,
+     "median": 91,
+     "p90": 128
+    },
+    "front": {
+     "share": 0.011,
+     "p10": 25,
+     "median": 25,
+     "p90": 75
+    },
+    "characters": {
+     "share": 0.016,
+     "p10": 1,
+     "median": 58,
+     "p90": 197
+    }
+   }
+  },
+  {
+   "camera_y": 0,
+   "x": 1920,
+   "layers": {
+    "sky": {
+     "share": 0.551,
+     "p10": 199,
+     "median": 202,
+     "p90": 205
+    },
+    "clouds": {
+     "share": 0.044,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.002,
+     "p10": 178,
+     "median": 178,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.027,
+     "p10": 163,
+     "median": 175,
+     "p90": 182
+    },
+    "mid": {
+     "share": 0.043,
+     "p10": 127,
+     "median": 143,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.206,
+     "p10": 114,
+     "median": 138,
+     "p90": 173
+    },
+    "play": {
+     "share": 0.07,
+     "p10": 20,
+     "median": 80,
+     "p90": 164
+    },
+    "front": {
+     "share": 0.042,
+     "p10": 25,
+     "median": 25,
+     "p90": 37
+    },
+    "characters": {
+     "share": 0.014,
+     "p10": 1,
+     "median": 58,
+     "p90": 129
+    }
+   }
+  },
+  {
+   "camera_y": 0,
+   "x": 2240,
+   "layers": {
+    "sky": {
+     "share": 0.621,
+     "p10": 199,
+     "median": 202,
+     "p90": 206
+    },
+    "clouds": {
+     "share": 0.044,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.054,
+     "p10": 178,
+     "median": 191,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.064,
+     "p10": 167,
+     "median": 173,
+     "p90": 186
+    },
+    "mid": {
+     "share": 0.082,
+     "p10": 135,
+     "median": 154,
+     "p90": 169
+    },
+    "back": {
+     "share": 0.056,
+     "p10": 119,
+     "median": 154,
+     "p90": 188
+    },
+    "play": {
+     "share": 0.042,
+     "p10": 20,
+     "median": 125,
+     "p90": 232
+    },
+    "front": {
+     "share": 0.023,
+     "p10": 25,
+     "median": 25,
+     "p90": 75
+    },
+    "characters": {
+     "share": 0.014,
+     "p10": 1,
+     "median": 58,
+     "p90": 129
+    }
+   }
+  },
+  {
+   "camera_y": 0,
+   "x": 2560,
+   "layers": {
+    "sky": {
+     "share": 0.248,
+     "p10": 199,
+     "median": 201,
+     "p90": 209
+    },
+    "clouds": {
+     "share": 0.013,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.079,
+     "p10": 178,
+     "median": 188,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.056,
+     "p10": 169,
+     "median": 175,
+     "p90": 195
+    },
+    "mid": {
+     "share": 0.108,
+     "p10": 135,
+     "median": 154,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.42,
+     "p10": 108,
+     "median": 134,
+     "p90": 173
+    },
+    "play": {
+     "share": 0.038,
+     "p10": 20,
+     "median": 91,
+     "p90": 182
+    },
+    "front": {
+     "share": 0.023,
+     "p10": 25,
+     "median": 25,
+     "p90": 37
+    },
+    "characters": {
+     "share": 0.014,
+     "p10": 1,
+     "median": 58,
+     "p90": 129
+    }
+   }
+  },
+  {
+   "camera_y": 24,
+   "x": 0,
+   "layers": {
+    "sky": {
+     "share": 0.618,
+     "p10": 199,
+     "median": 202,
+     "p90": 209
+    },
+    "clouds": {
+     "share": 0.061,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.077,
+     "p10": 178,
+     "median": 191,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.036,
+     "p10": 169,
+     "median": 181,
+     "p90": 199
+    },
+    "mid": {
+     "share": 0.174,
+     "p10": 132,
+     "median": 154,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.004,
+     "p10": 72,
+     "median": 107,
+     "p90": 215
+    },
+    "front": {
+     "share": 0.031,
+     "p10": 25,
+     "median": 25,
+     "p90": 37
+    }
+   }
+  },
+  {
+   "camera_y": 24,
+   "x": 320,
+   "layers": {
+    "sky": {
+     "share": 0.629,
+     "p10": 199,
+     "median": 202,
+     "p90": 209
+    },
+    "clouds": {
+     "share": 0.056,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.069,
+     "p10": 178,
+     "median": 191,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.042,
+     "p10": 169,
+     "median": 182,
+     "p90": 195
+    },
+    "mid": {
+     "share": 0.138,
+     "p10": 135,
+     "median": 154,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.039,
+     "p10": 114,
+     "median": 138,
+     "p90": 173
+    },
+    "play": {
+     "share": 0.008,
+     "p10": 2,
+     "median": 91,
+     "p90": 157
+    },
+    "front": {
+     "share": 0.018,
+     "p10": 25,
+     "median": 25,
+     "p90": 37
+    },
+    "characters": {
+     "share": 0.001,
+     "p10": 74,
+     "median": 158,
+     "p90": 237
+    }
+   }
+  },
+  {
+   "camera_y": 24,
+   "x": 640,
+   "layers": {
+    "sky": {
+     "share": 0.575,
+     "p10": 199,
+     "median": 202,
+     "p90": 205
+    },
+    "clouds": {
+     "share": 0.044,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.064,
+     "p10": 178,
+     "median": 188,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.029,
+     "p10": 163,
+     "median": 181,
+     "p90": 199
+    },
+    "mid": {
+     "share": 0.058,
+     "p10": 135,
+     "median": 154,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.13,
+     "p10": 107,
+     "median": 136,
+     "p90": 192
+    },
+    "play": {
+     "share": 0.056,
+     "p10": 20,
+     "median": 80,
+     "p90": 164
+    },
+    "front": {
+     "share": 0.03,
+     "p10": 25,
+     "median": 25,
+     "p90": 37
+    },
+    "characters": {
+     "share": 0.015,
+     "p10": 1,
+     "median": 58,
+     "p90": 156
+    }
+   }
+  },
+  {
+   "camera_y": 24,
+   "x": 960,
+   "layers": {
+    "sky": {
+     "share": 0.492,
+     "p10": 201,
+     "median": 202,
+     "p90": 209
+    },
+    "clouds": {
+     "share": 0.03,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.018,
+     "p10": 188,
+     "median": 191,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.048,
+     "p10": 163,
+     "median": 181,
+     "p90": 195
+    },
+    "mid": {
+     "share": 0.079,
+     "p10": 127,
+     "median": 148,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.261,
+     "p10": 108,
+     "median": 138,
+     "p90": 173
+    },
+    "play": {
+     "share": 0.019,
+     "p10": 20,
+     "median": 71,
+     "p90": 128
+    },
+    "front": {
+     "share": 0.039,
+     "p10": 25,
+     "median": 25,
+     "p90": 37
+    },
+    "characters": {
+     "share": 0.014,
+     "p10": 1,
+     "median": 58,
+     "p90": 129
+    }
+   }
+  },
+  {
+   "camera_y": 24,
+   "x": 1280,
+   "layers": {
+    "sky": {
+     "share": 0.516,
+     "p10": 201,
+     "median": 202,
+     "p90": 209
+    },
+    "clouds": {
+     "share": 0.032,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.016,
+     "p10": 184,
+     "median": 193,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.029,
+     "p10": 163,
+     "median": 181,
+     "p90": 199
+    },
+    "mid": {
+     "share": 0.095,
+     "p10": 127,
+     "median": 150,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.252,
+     "p10": 114,
+     "median": 138,
+     "p90": 173
+    },
+    "play": {
+     "share": 0.032,
+     "p10": 20,
+     "median": 91,
+     "p90": 128
+    },
+    "front": {
+     "share": 0.015,
+     "p10": 25,
+     "median": 25,
+     "p90": 37
+    },
+    "characters": {
+     "share": 0.014,
+     "p10": 1,
+     "median": 58,
+     "p90": 129
+    }
+   }
+  },
+  {
+   "camera_y": 24,
+   "x": 1600,
+   "layers": {
+    "sky": {
+     "share": 0.503,
+     "p10": 199,
+     "median": 202,
+     "p90": 205
+    },
+    "clouds": {
+     "share": 0.035,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.029,
+     "p10": 172,
+     "median": 188,
+     "p90": 195
+    },
+    "tree line": {
+     "share": 0.015,
+     "p10": 169,
+     "median": 182,
+     "p90": 199
+    },
+    "mid": {
+     "share": 0.086,
+     "p10": 127,
+     "median": 148,
+     "p90": 169
+    },
+    "back": {
+     "share": 0.25,
+     "p10": 108,
+     "median": 134,
+     "p90": 184
+    },
+    "play": {
+     "share": 0.05,
+     "p10": 20,
+     "median": 91,
+     "p90": 128
+    },
+    "front": {
+     "share": 0.016,
+     "p10": 25,
+     "median": 25,
+     "p90": 75
+    },
+    "characters": {
+     "share": 0.016,
+     "p10": 1,
+     "median": 58,
+     "p90": 197
+    }
+   }
+  },
+  {
+   "camera_y": 24,
+   "x": 1920,
+   "layers": {
+    "sky": {
+     "share": 0.497,
+     "p10": 201,
+     "median": 202,
+     "p90": 209
+    },
+    "clouds": {
+     "share": 0.032,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.006,
+     "p10": 187,
+     "median": 191,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.051,
+     "p10": 167,
+     "median": 175,
+     "p90": 195
+    },
+    "mid": {
+     "share": 0.071,
+     "p10": 127,
+     "median": 148,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.216,
+     "p10": 108,
+     "median": 138,
+     "p90": 173
+    },
+    "play": {
+     "share": 0.07,
+     "p10": 20,
+     "median": 80,
+     "p90": 164
+    },
+    "front": {
+     "share": 0.042,
+     "p10": 25,
+     "median": 25,
+     "p90": 37
+    },
+    "characters": {
+     "share": 0.014,
+     "p10": 1,
+     "median": 58,
+     "p90": 129
+    }
+   }
+  },
+  {
+   "camera_y": 24,
+   "x": 2240,
+   "layers": {
+    "sky": {
+     "share": 0.604,
+     "p10": 199,
+     "median": 202,
+     "p90": 209
+    },
+    "clouds": {
+     "share": 0.037,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.043,
+     "p10": 178,
+     "median": 191,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.068,
+     "p10": 167,
+     "median": 173,
+     "p90": 186
+    },
+    "mid": {
+     "share": 0.089,
+     "p10": 132,
+     "median": 154,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.068,
+     "p10": 119,
+     "median": 154,
+     "p90": 208
+    },
+    "play": {
+     "share": 0.042,
+     "p10": 20,
+     "median": 125,
+     "p90": 232
+    },
+    "front": {
+     "share": 0.035,
+     "p10": 25,
+     "median": 25,
+     "p90": 37
+    },
+    "characters": {
+     "share": 0.014,
+     "p10": 1,
+     "median": 58,
+     "p90": 129
+    }
+   }
+  },
+  {
+   "camera_y": 24,
+   "x": 2560,
+   "layers": {
+    "sky": {
+     "share": 0.284,
+     "p10": 199,
+     "median": 205,
+     "p90": 209
+    },
+    "clouds": {
+     "share": 0.004,
+     "p10": 201,
+     "median": 227,
+     "p90": 247
+    },
+    "far city": {
+     "share": 0.075,
+     "p10": 178,
+     "median": 191,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.047,
+     "p10": 167,
+     "median": 175,
+     "p90": 195
+    },
+    "mid": {
+     "share": 0.108,
+     "p10": 132,
+     "median": 154,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.421,
+     "p10": 108,
+     "median": 134,
+     "p90": 173
+    },
+    "play": {
+     "share": 0.045,
+     "p10": 20,
+     "median": 91,
+     "p90": 182
+    },
+    "front": {
+     "share": 0.0,
+     "p10": 25,
+     "median": 50,
+     "p90": 132
+    },
+    "characters": {
+     "share": 0.015,
+     "p10": 1,
+     "median": 58,
+     "p90": 156
+    }
+   }
+  },
+  {
+   "camera_y": 144,
+   "x": 0,
+   "layers": {
+    "sky": {
+     "share": 0.357,
+     "p10": 201,
+     "median": 204,
+     "p90": 205
+    },
+    "clouds": {
+     "share": 0.03,
+     "p10": 201,
+     "median": 247,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.061,
+     "p10": 184,
+     "median": 193,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.052,
+     "p10": 169,
+     "median": 182,
+     "p90": 195
+    },
+    "mid": {
+     "share": 0.156,
+     "p10": 135,
+     "median": 154,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.04,
+     "p10": 88,
+     "median": 122,
+     "p90": 205
+    },
+    "ground": {
+     "share": 0.263,
+     "p10": 31,
+     "median": 101,
+     "p90": 193
+    },
+    "play": {
+     "share": 0.024,
+     "p10": 3,
+     "median": 73,
+     "p90": 179
+    },
+    "characters": {
+     "share": 0.016,
+     "p10": 1,
+     "median": 58,
+     "p90": 156
+    }
+   }
+  },
+  {
+   "camera_y": 144,
+   "x": 320,
+   "layers": {
+    "sky": {
+     "share": 0.33,
+     "p10": 201,
+     "median": 204,
+     "p90": 205
+    },
+    "clouds": {
+     "share": 0.028,
+     "p10": 201,
+     "median": 239,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.064,
+     "p10": 178,
+     "median": 191,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.049,
+     "p10": 169,
+     "median": 181,
+     "p90": 195
+    },
+    "mid": {
+     "share": 0.119,
+     "p10": 135,
+     "median": 154,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.039,
+     "p10": 114,
+     "median": 138,
+     "p90": 173
+    },
+    "ground": {
+     "share": 0.275,
+     "p10": 31,
+     "median": 101,
+     "p90": 193
+    },
+    "play": {
+     "share": 0.079,
+     "p10": 2,
+     "median": 85,
+     "p90": 146
+    },
+    "front": {
+     "share": 0.0,
+     "p10": 15,
+     "median": 23,
+     "p90": 40
+    },
+    "characters": {
+     "share": 0.017,
+     "p10": 1,
+     "median": 58,
+     "p90": 197
+    }
+   }
+  },
+  {
+   "camera_y": 144,
+   "x": 640,
+   "layers": {
+    "sky": {
+     "share": 0.231,
+     "p10": 201,
+     "median": 202,
+     "p90": 205
+    },
+    "clouds": {
+     "share": 0.019,
+     "p10": 201,
+     "median": 247,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.05,
+     "p10": 178,
+     "median": 191,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.065,
+     "p10": 169,
+     "median": 182,
+     "p90": 195
+    },
+    "mid": {
+     "share": 0.059,
+     "p10": 127,
+     "median": 154,
+     "p90": 183
+    },
+    "water": {
+     "share": 0.057,
+     "p10": 82,
+     "median": 104,
+     "p90": 141
+    },
+    "back": {
+     "share": 0.246,
+     "p10": 105,
+     "median": 134,
+     "p90": 183
+    },
+    "ground": {
+     "share": 0.149,
+     "p10": 17,
+     "median": 71,
+     "p90": 193
+    },
+    "play": {
+     "share": 0.105,
+     "p10": 20,
+     "median": 97,
+     "p90": 185
+    },
+    "characters": {
+     "share": 0.019,
+     "p10": 1,
+     "median": 58,
+     "p90": 237
+    }
+   }
+  },
+  {
+   "camera_y": 144,
+   "x": 960,
+   "layers": {
+    "sky": {
+     "share": 0.132,
+     "p10": 199,
+     "median": 204,
+     "p90": 206
+    },
+    "clouds": {
+     "share": 0.015,
+     "p10": 201,
+     "median": 247,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.081,
+     "p10": 178,
+     "median": 191,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.057,
+     "p10": 169,
+     "median": 181,
+     "p90": 199
+    },
+    "mid": {
+     "share": 0.121,
+     "p10": 135,
+     "median": 154,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.272,
+     "p10": 108,
+     "median": 134,
+     "p90": 173
+    },
+    "ground": {
+     "share": 0.268,
+     "p10": 31,
+     "median": 101,
+     "p90": 193
+    },
+    "play": {
+     "share": 0.035,
+     "p10": 20,
+     "median": 90,
+     "p90": 161
+    },
+    "characters": {
+     "share": 0.019,
+     "p10": 1,
+     "median": 58,
+     "p90": 221
+    }
+   }
+  },
+  {
+   "camera_y": 144,
+   "x": 1280,
+   "layers": {
+    "sky": {
+     "share": 0.116,
+     "p10": 199,
+     "median": 204,
+     "p90": 206
+    },
+    "clouds": {
+     "share": 0.012,
+     "p10": 201,
+     "median": 247,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.057,
+     "p10": 178,
+     "median": 191,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.049,
+     "p10": 169,
+     "median": 181,
+     "p90": 199
+    },
+    "mid": {
+     "share": 0.158,
+     "p10": 135,
+     "median": 157,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.234,
+     "p10": 108,
+     "median": 138,
+     "p90": 173
+    },
+    "ground": {
+     "share": 0.26,
+     "p10": 31,
+     "median": 101,
+     "p90": 193
+    },
+    "play": {
+     "share": 0.097,
+     "p10": 2,
+     "median": 58,
+     "p90": 133
+    },
+    "characters": {
+     "share": 0.016,
+     "p10": 1,
+     "median": 58,
+     "p90": 197
+    }
+   }
+  },
+  {
+   "camera_y": 144,
+   "x": 1600,
+   "layers": {
+    "sky": {
+     "share": 0.146,
+     "p10": 201,
+     "median": 204,
+     "p90": 205
+    },
+    "clouds": {
+     "share": 0.014,
+     "p10": 214,
+     "median": 247,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.05,
+     "p10": 178,
+     "median": 193,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.067,
+     "p10": 169,
+     "median": 181,
+     "p90": 195
+    },
+    "mid": {
+     "share": 0.113,
+     "p10": 127,
+     "median": 148,
+     "p90": 169
+    },
+    "back": {
+     "share": 0.246,
+     "p10": 107,
+     "median": 132,
+     "p90": 171
+    },
+    "ground": {
+     "share": 0.277,
+     "p10": 31,
+     "median": 101,
+     "p90": 193
+    },
+    "play": {
+     "share": 0.067,
+     "p10": 20,
+     "median": 91,
+     "p90": 128
+    },
+    "front": {
+     "share": 0.0,
+     "p10": 15,
+     "median": 23,
+     "p90": 40
+    },
+    "characters": {
+     "share": 0.019,
+     "p10": 1,
+     "median": 58,
+     "p90": 204
+    }
+   }
+  },
+  {
+   "camera_y": 144,
+   "x": 1920,
+   "layers": {
+    "sky": {
+     "share": 0.124,
+     "p10": 199,
+     "median": 204,
+     "p90": 206
+    },
+    "clouds": {
+     "share": 0.014,
+     "p10": 201,
+     "median": 247,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.07,
+     "p10": 178,
+     "median": 191,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.081,
+     "p10": 167,
+     "median": 181,
+     "p90": 195
+    },
+    "mid": {
+     "share": 0.121,
+     "p10": 135,
+     "median": 154,
+     "p90": 183
+    },
+    "water": {
+     "share": 0.058,
+     "p10": 82,
+     "median": 104,
+     "p90": 141
+    },
+    "back": {
+     "share": 0.24,
+     "p10": 105,
+     "median": 134,
+     "p90": 173
+    },
+    "ground": {
+     "share": 0.152,
+     "p10": 17,
+     "median": 71,
+     "p90": 193
+    },
+    "play": {
+     "share": 0.123,
+     "p10": 20,
+     "median": 87,
+     "p90": 159
+    },
+    "characters": {
+     "share": 0.018,
+     "p10": 1,
+     "median": 58,
+     "p90": 197
+    }
+   }
+  },
+  {
+   "camera_y": 144,
+   "x": 2240,
+   "layers": {
+    "sky": {
+     "share": 0.278,
+     "p10": 199,
+     "median": 204,
+     "p90": 205
+    },
+    "clouds": {
+     "share": 0.018,
+     "p10": 201,
+     "median": 247,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.058,
+     "p10": 178,
+     "median": 191,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.062,
+     "p10": 167,
+     "median": 175,
+     "p90": 195
+    },
+    "mid": {
+     "share": 0.105,
+     "p10": 135,
+     "median": 154,
+     "p90": 183
+    },
+    "water": {
+     "share": 0.019,
+     "p10": 82,
+     "median": 104,
+     "p90": 141
+    },
+    "back": {
+     "share": 0.101,
+     "p10": 105,
+     "median": 138,
+     "p90": 208
+    },
+    "ground": {
+     "share": 0.249,
+     "p10": 31,
+     "median": 101,
+     "p90": 193
+    },
+    "play": {
+     "share": 0.087,
+     "p10": 2,
+     "median": 87,
+     "p90": 174
+    },
+    "characters": {
+     "share": 0.022,
+     "p10": 1,
+     "median": 58,
+     "p90": 237
+    }
+   }
+  },
+  {
+   "camera_y": 144,
+   "x": 2560,
+   "layers": {
+    "sky": {
+     "share": 0.302,
+     "p10": 201,
+     "median": 204,
+     "p90": 205
+    },
+    "clouds": {
+     "share": 0.018,
+     "p10": 201,
+     "median": 247,
+     "p90": 252
+    },
+    "far city": {
+     "share": 0.049,
+     "p10": 172,
+     "median": 188,
+     "p90": 196
+    },
+    "tree line": {
+     "share": 0.049,
+     "p10": 167,
+     "median": 181,
+     "p90": 195
+    },
+    "mid": {
+     "share": 0.083,
+     "p10": 135,
+     "median": 154,
+     "p90": 183
+    },
+    "back": {
+     "share": 0.118,
+     "p10": 101,
+     "median": 126,
+     "p90": 157
+    },
+    "ground": {
+     "share": 0.288,
+     "p10": 31,
+     "median": 101,
+     "p90": 193
+    },
+    "play": {
+     "share": 0.062,
+     "p10": 20,
+     "median": 79,
+     "p90": 182
+    },
+    "characters": {
+     "share": 0.031,
+     "p10": 1,
+     "median": 58,
+     "p90": 197
+    }
+   }
+  }
+ ],
+ "tiers": {
+  "0": {
+   "sky": {
+    "p10": 199,
+    "median": 202,
+    "share": 0.546
+   },
+   "clouds": {
+    "p10": 201,
+    "median": 239,
+    "share": 0.047
+   },
+   "far city": {
+    "p10": 178,
+    "median": 191,
+    "share": 0.049
+   },
+   "tree line": {
+    "p10": 167,
+    "median": 181,
+    "share": 0.035
+   },
+   "mid": {
+    "p10": 132,
+    "median": 154,
+    "share": 0.087
+   },
+   "back": {
+    "p10": 108,
+    "median": 138,
+    "share": 0.169
+   },
+   "play": {
+    "p10": 20,
+    "median": 80,
+    "share": 0.033
+   },
+   "front": {
+    "p10": 25,
+    "median": 25,
+    "share": 0.024
+   },
+   "characters": {
+    "p10": 1,
+    "median": 58,
+    "share": 0.011
+   }
+  },
+  "24": {
+   "sky": {
+    "p10": 199,
+    "median": 202,
+    "share": 0.524
+   },
+   "clouds": {
+    "p10": 201,
+    "median": 239,
+    "share": 0.037
+   },
+   "far city": {
+    "p10": 178,
+    "median": 191,
+    "share": 0.044
+   },
+   "tree line": {
+    "p10": 167,
+    "median": 181,
+    "share": 0.041
+   },
+   "mid": {
+    "p10": 132,
+    "median": 154,
+    "share": 0.1
+   },
+   "back": {
+    "p10": 108,
+    "median": 136,
+    "share": 0.182
+   },
+   "play": {
+    "p10": 20,
+    "median": 81,
+    "share": 0.036
+   },
+   "front": {
+    "p10": 25,
+    "median": 25,
+    "share": 0.025
+   },
+   "characters": {
+    "p10": 1,
+    "median": 58,
+    "share": 0.011
+   }
+  },
+  "144": {
+   "sky": {
+    "p10": 199,
+    "median": 204,
+    "share": 0.224
+   },
+   "clouds": {
+    "p10": 201,
+    "median": 247,
+    "share": 0.019
+   },
+   "far city": {
+    "p10": 178,
+    "median": 191,
+    "share": 0.06
+   },
+   "tree line": {
+    "p10": 169,
+    "median": 181,
+    "share": 0.059
+   },
+   "mid": {
+    "p10": 135,
+    "median": 154,
+    "share": 0.115
+   },
+   "water": {
+    "p10": 82,
+    "median": 104,
+    "share": 0.015
+   },
+   "back": {
+    "p10": 105,
+    "median": 134,
+    "share": 0.17
+   },
+   "ground": {
+    "p10": 31,
+    "median": 101,
+    "share": 0.242
+   },
+   "play": {
+    "p10": 20,
+    "median": 87,
+    "share": 0.076
+   },
+   "front": {
+    "p10": 15,
+    "median": 23,
+    "share": 0.0
+   },
+   "characters": {
+    "p10": 1,
+    "median": 58,
+    "share": 0.02
+   }
+  }
+ }
+}
