@@ -1945,7 +1945,7 @@ return {
           name = "",
           type = "lamps",
           shape = "point",
-          x = 976,
+          x = 1028,
           y = 328,
           width = 0,
           height = 0,

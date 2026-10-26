@@ -806,7 +806,7 @@
    </properties>
    <point/>
   </object>
-  <object id="101" type="lamps" x="976" y="328">
+  <object id="101" type="lamps" x="1028" y="328">
    <properties>
     <property name="checkpoint" type="bool" value="true"/>
    </properties>
