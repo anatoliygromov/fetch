@@ -2,6 +2,9 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `night/26oct-cp-code`: City Park (tall) code-only changes from the layer plan (night of 26 Oct, 0 credits)
+- **Measuring tools from `night/25oct-cp-plan`:** `tools/layer_wireframe_tall.py`, `tools/layer_frames_tall.py`, `tools/layer_ids_hook.lua` copied in unchanged, to measure before and after.
+
 ## Branch `night/25oct-fixes`: S2 fixes from STATUS "Known, next" (night of 25 Oct)
 - **Quay railings reach their ends (scene.lua `Sc.railing`, "decor"):** the railing was built from whole 84 px bays only, so it stopped short of its prop: 7 px on screen 1 (x 1281 of 1288) and 69 px on promenade B (x 3557 of 3626, a gap of water before the gable). What whole bays leave over (r) now goes into the last bays: under 12 px the last bay is drawn r px longer (the unit's tube-only left columns); from 12 px the last whole bay and r share two even shorter bays with their own posts (at least 48 px, so no two posts stand close; promenade B: 76 and 77 px). The end piece's two empty right columns hang past the prop's end. Whole-pixel crops of the approved pieces; nothing scaled or redrawn. The "fence" kind is unchanged (no level uses it). Frames: `docs/review/25oct-night/fixes/railing_*`.
 - **Test:** River Walk `--physics` test 20 draws every quay railing on a canvas, checks its opaque columns run from the prop's x0 to x1 and that no two posts (their foot plates) stand closer than 40 px, for the level's two railings and every width from 89 to 430 px: FAIL on the base (both railings short), FAIL on the first version of this fix (a 12-30 px last bay read as a doubled post, found by the independent review), PASS now (55 of 55).
