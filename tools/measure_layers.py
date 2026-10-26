@@ -25,7 +25,7 @@ S = {
  "rw": dict(clouds=L(0.9,1.6,1.0,"f7ead2",0.10), city=L(0.2,1.8,0.70,"aaa6d0",0.46), shore=L(0.5,1.5,1.05,"9fb3cc",0.30),
             mid=L(0.8,1.3,1.2,"c9d0d8",0.15), water=L(0.5,1.2,1.35,"8fb4d8",0.06), back=L(1.0,1.2,1.35,"f0e0c6",0.10),
             ground=L(0.75,1.3,1.20,"000000",0), play=L(0.7,0.8,1.18,"000000",0), front=L(0.0,1.8,1.10,"1b1934",0.40)),
- "cp": dict(clouds=L(1.2,1.7,1.0,"f9e0c0",0.14), city=L(0.2,1.9,0.60,"b8a0c2",0.52), shore=L(0.6,1.5,1.05,"c8a6ae",0.30),
+ "cp": dict(clouds=L(1.2,1.7,1.0,"f9e0c0",0.14), city=L(0.2,1.9,0.60,"dccfe0",0.52), shore=L(0.6,1.5,1.05,"dcc0c4",0.30),
             mid=L(1.0,1.3,1.25,"ecccae",0.14), water=L(0.6,1.3,1.30,"86a2bc",0.06), back=L(1.1,1.3,1.30,"f0d2b0",0.10),
             ground=L(0.8,1.0,1.10,"000000",0), play=L(0.8,0.9,1.18,"000000",0), front=L(0.0,1.8,1.10,"1e1626",0.40)),
  "dt": dict(clouds=L(0.5,1.4,1.0,"ffffff",0.04), city=L(0.2,1.7,0.70,"a7bad6",0.50), shore=L(0.4,1.4,1.00,"b2c3d9",0.34),
@@ -33,7 +33,7 @@ S = {
             ground=L(0.9,0.7,1.10,"000000",0), play=L(0.7,0.8,1.15,"000000",0), front=L(0.0,1.8,1.10,"141a26",0.40)),
 }
 # the load-time fade amounts per level and layer (look.lua Look.scripts[...].fade); layers not listed are not faded
-FADE = {"rw": dict(back=0.28), "cp": dict(shore=0.35, mid=0.48, back=0.20), "dt": dict(shore=0.70, mid=0.10, back=0.28)}
+FADE = {"rw": dict(back=0.28), "cp": dict(shore=0.40, mid=0.38, back=0.20), "dt": dict(shore=0.70, mid=0.10, back=0.28)}
 # pieces with their own amount (scene.lua park gate and winch keeper, arthooks.lua tram and spire); the haze is the level's
 OWN = {"park_gate": 0.28, "park_keeper_winch": 0.35, "tram_vintage": 0.40, "spire_riddarholmen": 0.45}
 OLD_HAZE = np.array([200, 210, 222]) / 255                        # the cool grey every fade went to before decision 3

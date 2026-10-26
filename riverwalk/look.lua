@@ -46,8 +46,8 @@ Look.scripts = {
     fade = { back = 0.28 },                                        -- (as before: decoration, railing, kiosks)
   },
   citypark = {                                                     -- golden autumn afternoon
-    layers = { clouds = L(1.2, 1.7, 1.0, "f9e0c0", 0.14), city = L(0.2, 1.9, 0.60, "b8a0c2", 0.52),
-               shore = L(0.6, 1.5, 1.05, "c8a6ae", 0.30), mid = L(1.0, 1.3, 1.25, "ecccae", 0.14),
+    layers = { clouds = L(1.2, 1.7, 1.0, "f9e0c0", 0.14), city = L(0.2, 1.9, 0.60, "dccfe0", 0.52),
+               shore = L(0.6, 1.5, 1.05, "dcc0c4", 0.30), mid = L(1.0, 1.3, 1.25, "ecccae", 0.14),
                water = L(0.6, 1.3, 1.30, "86a2bc", 0.06), back = L(1.1, 1.3, 1.30, "f0d2b0", 0.10),
                ground = L(0.8, 1.0, 1.10, "000000", 0), play = L(0.8, 0.9, 1.18, "000000", 0),
                front = L(0.0, 1.8, 1.10, "1e1626", 0.40) },
@@ -60,7 +60,7 @@ Look.scripts = {
     -- the round trees (mid) must read lighter than the willows and oaks in front of them (back), and darker than
     -- the far tree line (shore): mid up from 28 %, back down from 28 % (the gate keeps 28 %: its dark ironwork),
     -- the tree line faded too
-    fade = { shore = 0.35, mid = 0.48, back = 0.20 },
+    fade = { shore = 0.40, mid = 0.38, back = 0.20 },
   },
   downtown = {                                                     -- bright midday
     layers = { clouds = L(0.5, 1.4, 1.0, "ffffff", 0.04), city = L(0.2, 1.7, 0.70, "a7bad6", 0.50),
