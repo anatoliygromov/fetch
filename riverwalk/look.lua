@@ -51,10 +51,12 @@ Look.scripts = {
                water = L(0.6, 1.3, 1.30, "86a2bc", 0.06), back = L(1.1, 1.3, 1.30, "f0d2b0", 0.10),
                ground = L(0.8, 1.0, 1.10, "000000", 0), play = L(0.8, 0.9, 1.18, "000000", 0),
                front = L(0.0, 1.8, 1.10, "1e1626", 0.40) },
-    bands = { { 0, "6a83b8" }, { 18, "7b91bf" }, { 36, "8f9fc3" }, { 54, "a6adc3" }, { 72, "bebac0" },
+    -- the sky is the furthest layer, so the lightest (plan decision 4, owner 26 Oct): pale blues, luma 192 at the
+    -- top of the high road's sky to 204 at y 72 (the far city is 191), then the old warm horizon
+    bands = { { 0, "b8cbec" }, { 18, "bbcce9" }, { 36, "bfcde6" }, { 54, "c3cde2" }, { 72, "c8cddc" },
               { 89, "d4c3b7" }, { 104, "e5c9a9" }, { 118, "efcb9b" }, { 131, "f4cc8e" }, { 143, "f7cd86" } },
-    -- a tall level's sky goes on above y 0 (up in the treetops): deeper blues, each band 24 rows
-    above = { { -120, "39579a" }, { -96, "4060a1" }, { -72, "4a68a7" }, { -48, "5571ad" }, { -24, "5f7ab3" } },
+    -- a tall level's sky goes on above y 0 (up in the treetops): pale blues like the bands below, each band 24 rows
+    above = { { -120, "aac3ef" }, { -96, "adc5ef" }, { -72, "b0c7ef" }, { -48, "b3c9ee" }, { -24, "b6cbee" } },
     fg = { dark = hex("1d1525"), mid = hex("2b1f33"), rim = hex("594257"), warm = hex("b5793f"), warmK = 0.22 },
     kinds = {},                                                    -- (the earth band is already the dark frame)
     -- the round trees (mid) must read lighter than the willows and oaks in front of them (back), and darker than
