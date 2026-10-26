@@ -267,7 +267,14 @@
    "cafe",
    "gable",
    "tree",
-   "tree_near"
+   "tree_near",
+   "rw_home",
+   "rw_lime"
+  ],
+  "trees": [
+   "tree",
+   "tree_near",
+   "rw_lime"
   ],
   "name_hints": [
    "house",
