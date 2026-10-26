@@ -250,6 +250,9 @@ end
 -- standing on the box's bottom and cut at its top (the roofline Pepper walks on) and at its right end; the far
 -- landmark (RIDDARHOLMEN) is art/scene/spire_riddarholmen.png, faded 45%, centred on its box, standing on its bottom.
 H.BRIDGE_RAIL = 12
+-- layer plan decision 6d (26 Oct): the loggia and the galleries stand a stone darker than the houses behind them (their art
+-- measured 147 against 128 to 154); a multiplier on the colour at draw time, the art files stay as approved
+H.STONE_TINT = { LOGGIA = 0.82, GALLERY = 0.82 }
 H.SPIRE_DRIFT = 0.03                                      -- the far spire's scroll (was 0.3: on screen only from camera x 2727)
 local function tallTown(def) return def.art == "town" and def.foot ~= nil end
 local function high(def, p) return p.y0 <= def.foot - 120 end           -- the high road (the street is def.foot)
@@ -320,8 +323,8 @@ local function kitCode(p, x, def)
   else ledgeCode(x, y, w, h) end
   lg.setColor(1, 1, 1, 1)
 end
-local function drawImgOn(im, p, x, ytop)
-  lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(x + (p.x1 - p.x0) / 2 - im:getWidth() / 2), math.floor(ytop))
+local function drawImgOn(im, p, x, ytop, tint)
+  tint = tint or 1; lg.setColor(tint, tint, tint, 1); lg.draw(im, math.floor(x + (p.x1 - p.x0) / 2 - im:getWidth() / 2), math.floor(ytop))
 end
 local function threeSlice(im, x, y, w)
   local iw, ih = im:getDimensions()
@@ -358,7 +361,7 @@ function H.townPiece(p, camx, def)
       if im then drawImgOn(im, p, x, p.y0 - 1 - H.BRIDGE_RAIL); return true end
     elseif n ~= "" then
       local im = H.img("scene/town_roof_" .. slug(n) .. w) or H.img("scene/town_roof_" .. slug(n))
-      if im then drawImgOn(im, p, x, p.y0 - 1); return true end
+      if im then drawImgOn(im, p, x, p.y0 - 1, H.STONE_TINT[n]); return true end   -- (a draw-time tint: the art file is not changed)
     else
       local im = H.img("scene/town_roof_ledge")
       if im then threeSlice(im, x, p.y0, w); return true end
