@@ -106,6 +106,60 @@ button:focus-visible, textarea:focus-visible, a:focus-visible { outline: 2px sol
 
 <script>
 const ITEMS = [
+{
+ "id": "fam_rw_sample",
+ "title": "River Walk sample screen (screen 1, Home)",
+ "section": "family",
+ "group": "River Walk",
+ "layer": "back",
+ "tier": "B/C",
+ "note": "The level's golden screen: every later River Walk asset is judged by whether it sits in this screen. New: the house at true scale (door 98 px, storey 147 px, built from stamped parts, 0 credits), the street lime (trunk 23 px, crown cut by the top, SpriteCook 48 credits), the quay railing at 1.1 m = 50 px (0 credits). Kept as approved: Pepper, bench, kennel, branch, sky, far layers, pavement. The same lime also stands on screen 4. Checks: BACKDROP OK, PEPPER UNCHANGED, flow 125/125, Tiled, QA 0 problems, independent review 9/9 on all three.",
+ "question": "Approving these also adds their colours to the River Walk palette (v2). Two measures differ from the spec on the lime: lowest leaves 84 px up (spec 100) and crown 250 px wide (spec 230); the trunk, which sets the scale, is right.",
+ "images": [
+  {
+   "src": "img/fam/rw_sample_s1_ba.png",
+   "label": "screen 1 at 3x: before | after"
+  },
+  {
+   "src": "img/fam/rw_sample_s1_sheet.png",
+   "label": "screen 1: colour | greyscale, 3x and 1x"
+  },
+  {
+   "src": "img/fam/rw_sample_s4_ba.png",
+   "label": "screen 4 at 3x: before | after (the same lime)"
+  }
+ ],
+ "members": [
+  {
+   "id": "rw_home",
+   "title": "house (HOME)",
+   "slot": "rw_home.png 184x180",
+   "img": "img/fam/rw_home_4x.png",
+   "note": "Double door with fanlight and keystone, curtained window, quoins, granite plinth, lantern, drainpipe; upper floor runs off the top. Volume from the light: everything that stands out casts a 2 to 3 px shadow down and right. 18 colours.",
+   "findings": []
+  },
+  {
+   "id": "rw_lime",
+   "title": "street lime",
+   "slot": "rw_lime.png 250x251",
+   "img": "img/fam/rw_lime_3x.png",
+   "note": "Cut 1:1 from the SpriteCook render, no scaling; 8 colours; no outline, the shade side is a darker green. Screen 1 by the fallen branch, screen 4 between the planter and the flower box.",
+   "findings": [
+    "decor-ink warn: 40 % of the edge is dark green (the approved trees are 64 to 66 %)"
+   ]
+  },
+  {
+   "id": "rw_rail_bg",
+   "title": "quay railing",
+   "slot": "rail_bg_*.png, 50 px",
+   "img": "img/fam/rw_rail_bg_4x.png",
+   "note": "Handrail tube and two rails on slim posts in the lamp post's colours; open, so it never looks like the fence Pepper climbs. Used on screens 1 to 4 and 10 to 12.",
+   "findings": [
+    "decor-ink warn: 49 % (the tubes' shaded underside), same colours as the approved lamp post"
+   ]
+  }
+ ]
+},
  {
   "id": "haze",
   "title": "One haze per layer (decision 3)",
@@ -979,8 +1033,8 @@ const SECTION_NOTE = {
   free: "Fixed by script at 0 credits: windows stamped, blotches and dirt cleaned, outlines completed. Approve to merge into round1.",
   redraw: "Not fixable by script. Redraw means a brief for you to approve before any credits are spent."
 };
-let decisions = {}, tab = "decision", canWrite = true, db = null;
-try { const t = localStorage.getItem("fetch-review-tab"); if (t && SECTIONS.some(s => s[0] === t)) tab = t; } catch (e) {}
+let decisions = {}, tab = "family", canWrite = true, db = null;
+try { const t = localStorage.getItem("fetch-review-tab2"); if (t && SECTIONS.some(s => s[0] === t)) tab = t; } catch (e) {}
 
 const $ = s => document.querySelector(s);
 function el(tag, attrs = {}, ...kids) {
@@ -1007,7 +1061,7 @@ function renderSummary() {
 }
 function renderTabs() {
   $("#tabs").replaceChildren(...SECTIONS.map(([k, label]) => el("button", {
-    "aria-pressed": String(tab === k), onclick: () => { tab = k; try { localStorage.setItem("fetch-review-tab", k); } catch (e) {} ; render(); }
+    "aria-pressed": String(tab === k), onclick: () => { tab = k; try { localStorage.setItem("fetch-review-tab2", k); } catch (e) {} ; render(); }
   }, label, el("span", { class: "n", text: count(k) }))));
 }
 function picture(src, cap) {
@@ -1092,7 +1146,7 @@ function render() {
   else if (!canWrite) { ban.hidden = false; ban.textContent = "You can view this board but not record decisions."; }
   else if (note) { ban.hidden = false; ban.textContent = note; } else ban.hidden = true;
   const shown = ITEMS.filter(i => tab === "all" || i.section === tab);
-  if (tab === "family" && !shown.length) { $("#list").replaceChildren(el("div", { class: "empty", text: "No family waiting. The next one is the River Walk sample screen." })); return; }
+  if (tab === "family" && !shown.length) { $("#list").replaceChildren(el("div", { class: "empty", text: "No family waiting." })); return; }
   $("#list").replaceChildren(...(shown.length ? shown.map(itemRow) : [el("div", { class: "empty", text: "Nothing here yet." })]));
 }
 async function save(id, patch) {

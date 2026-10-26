@@ -1,0 +1,34 @@
+{
+ "name": "rw_lime",
+ "family": "rw_front_trees",
+ "tier": "B",
+ "steps": {
+  "spec": {
+   "time": "2026-10-25 14:19"
+  },
+  "blockout": {
+   "time": "2026-10-25 14:19"
+  },
+  "preflight": {
+   "time": "2026-10-25 14:41"
+  },
+  "probe": {
+   "render": "art/gen/renders/rw_lime_r1b.png",
+   "time": "2026-10-25 14:41"
+  },
+  "cut": {
+   "time": "2026-10-25 14:58"
+  },
+  "ingame": {
+   "frame": "docs/review/25oct/rw_sample_screen1_1x.png",
+   "time": "2026-10-25 15:00"
+  },
+  "polish": {
+   "aseprite": "art/source/rw_lime/rw_lime.aseprite",
+   "time": "2026-10-25 15:01"
+  },
+  "review": {
+   "time": "2026-10-25 15:28"
+  }
+ }
+}

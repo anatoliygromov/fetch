@@ -5,10 +5,10 @@
  </editorsettings>
  <properties>
   <property name="ballHomeAtLamps" type="bool" value="true"/>
-  <property name="intro" value="{ &quot;LEVEL 1&quot;, &quot;RIVER WALK&quot;, &quot;THE BALL IS ON A BOAT!&quot; }"/>
+  <property name="intro" value='{ "LEVEL 1", "RIVER WALK", "THE BALL IS ON A BOAT!" }'/>
   <property name="name" value="RIVER WALK"/>
   <property name="number" type="int" value="1"/>
-  <property name="outro" value="{ &quot;A BIRD TOOK THE BALL!&quot; }"/>
+  <property name="outro" value='{ "A BIRD TOOK THE BALL!" }'/>
   <property name="time" type="int" value="420"/>
  </properties>
  <tileset firstgid="1" name="terrain" tilewidth="8" tileheight="8" tilecount="4" columns="4">
@@ -73,40 +73,40 @@
 </data>
  </layer>
  <objectgroup id="2" name="props" color="#ffa040" draworder="index">
-  <object id="1" name="HOME" type="props" x="0" y="39" width="77" height="135">
+  <object id="1" name="HOME" type="props" x="0" y="-5" width="184" height="179">
    <properties>
     <property name="kind" value="decor"/>
     <property name="layer" value="back"/>
-    <property name="art" value="building"/>
+    <property name="art" value="rw_home"/>
    </properties>
   </object>
-  <object id="2" name="TREE" type="props" x="-2" y="47" width="114" height="127">
-   <properties>
-    <property name="kind" value="decor"/>
-    <property name="layer" value="back"/>
-    <property name="art" value="tree"/>
-   </properties>
-  </object>
-  <object id="3" name="POT" type="props" x="214" y="147" width="17" height="27">
+  <object id="2" name="POT" type="props" x="214" y="147" width="17" height="27">
    <properties>
     <property name="kind" value="decor"/>
     <property name="layer" value="play"/>
     <property name="art" value="pot"/>
    </properties>
   </object>
-  <object id="4" name="LOG" type="props" x="270" y="163" width="40" height="21">
+  <object id="3" name="LOG" type="props" x="270" y="163" width="40" height="21">
    <properties>
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
     <property name="art" value="park_log"/>
    </properties>
   </object>
-  <object id="5" type="props" x="80" y="144" width="1208" height="30">
+  <object id="4" type="props" x="184" y="124" width="1104" height="50">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
     <property name="layer" value="back"/>
     <property name="railing" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="5" name="TREE" type="props" x="120" y="-77" width="250" height="251">
+   <properties>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="art" value="rw_lime"/>
    </properties>
   </object>
   <object id="6" name="BENCH" type="props" x="93" y="156" width="96" height="9">
@@ -152,12 +152,12 @@
     <property name="rely.ay" type="int" value="56"/>
    </properties>
   </object>
-  <object id="11" type="props" x="1056" y="39" width="108" height="135">
+  <object id="11" type="props" x="938" y="-77" width="250" height="251">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="decor"/>
     <property name="layer" value="back"/>
-    <property name="art" value="tree_near"/>
+    <property name="art" value="rw_lime"/>
    </properties>
   </object>
   <object id="12" name="SAND" type="props" x="831" y="152" width="86" height="32">
@@ -230,7 +230,7 @@
     <property name="hidden" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="21" type="props" x="2880" y="144" width="746" height="30">
+  <object id="21" type="props" x="2880" y="124" width="746" height="50">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="decor"/>

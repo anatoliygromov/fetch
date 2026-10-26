@@ -12,7 +12,10 @@ from PIL import Image
 
 APPROVED = {
     'riverwalk': {
-        'keep': ['pepper.png', 'ball.png'],
+        # v2 (25 Oct, art/rw-sample-screen): the sample screen's new pieces are kept whole as their material ramps
+        # (house plaster/sandstone/granite/door/glass, lime leaves and bark, quay railing). They count as approved
+        # only with the owner's approve on the board; a reject takes them out again.
+        'keep': ['pepper.png', 'ball.png', 'scene/rw_home.png', 'scene/rw_lime.png', 'scene/rail_bg_unit.png'],
         'pool': ['girl.png', 'scene/bench.png', 'scene/bin.png', 'scene/lamp_post.png', 'scene/planter_sq.png', 'scene/pot.png',
                  'scene/flowerbox.png', 'scene/gritbox.png', 'scene/kiosk_kaffe.png', 'scene/rail_seg.png',
                  'scene/building.png', 'scene/tree.png', 'scene/cafe.png', 'scene/gable.png', 'scene/pavement.png'],

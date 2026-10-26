@@ -49,15 +49,19 @@ local FX = 1560
 
 L.props = {
   -- screen 1: home
-  -- the starter composition (the user's): the house's left edge and the tree's cut left side sit exactly on the
-  -- level's left edge, which the camera never passes, so neither looks cropped; the tree leans over Pepper's start
-  { name = "HOME",     kind = "decor",  layer = "back", x0 = 0,    x1 = 77,   y0 = 39,  y1 = 174, art = "building" },
-  { name = "TREE",     kind = "decor",  layer = "back", x0 = -2,   x1 = 112,  y0 = 47,  y1 = 174, art = "tree" },
+  -- the starter composition: the house's left edge sits exactly on the level's left edge, which the camera never
+  -- passes. (art/rw-sample-screen) The house is at true scale now (door 98 px, storey 147 px, its top above the
+  -- screen) and the street lime stands right of it, by the fallen branch, its crown over the bench
+  { name = "HOME",     kind = "decor",  layer = "back", x0 = 0,    x1 = 184,  y0 = -5,  y1 = 174, art = "rw_home" },
   { name = "POT",      kind = "decor",  layer = "play", x0 = 214,  x1 = 231,  y0 = 147, y1 = 174, art = "pot" },
   -- (r6/levels, the tutorial) a branch fallen from the big tree: 21 px, the first tap hop (TAP: HOP) on flat
   -- pavement, before the flower box asks for the held jump and the bin for the climb
   { name = "LOG",      kind = "solid",  layer = "play", x0 = 270,  x1 = 310,  y0 = 163, y1 = 184, art = "park_log" },
-  { name = "",         kind = "decor",  layer = "back", x0 = 80,   x1 = 1288, y0 = 144, y1 = 174, railing = true },   -- decorative railing by the water
+  { name = "",         kind = "decor",  layer = "back", x0 = 184,  x1 = 1288, y0 = 124, y1 = 174, railing = true },   -- decorative railing by the water
+  -- (art/rw-sample-screen) the street lime at true scale (trunk 23 px, 0.5 m), drawn after the railing so its trunk
+  -- stands on the pavement in front of it; its crown runs out of the top of the screen (y0 -77). The fallen branch
+  -- (LOG) lies by its foot.
+  { name = "TREE",     kind = "decor",  layer = "back", x0 = 120,  x1 = 370,  y0 = -77, y1 = 174, art = "rw_lime" },
   { name = "BENCH",    kind = "solid",  layer = "play", x0 = 93,   x1 = 189,  y0 = 156, y1 = 165, art = "bench", ax = 90, ay = 184, depth = 5 },
   -- Pepper's kennel by the house (drawn in code): its roof and walls are solid down to the doorway (y 148-165),
   -- 19 px to crawl in; a gold bone is inside. It ends 1 px left of her box at the start.
@@ -67,7 +71,9 @@ L.props = {
   { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 401,  x1 = 503,  y0 = 152, y1 = 184, art = "flowerbox_front", ax = 400, ay = 184 },
   { name = "BIN",      kind = "solid",  layer = "play", x0 = 641,  x1 = 676,  y0 = 128, y1 = 184, art = "bin", ax = 640, ay = 184 },
   -- bike zone 1: three perches with clear pavement between them
-  { name = "",         kind = "decor",  layer = "back", x0 = 1056, x1 = 1164, y0 = 39,  y1 = 174, art = "tree_near" },
+  -- (art/rw-sample-screen) the same lime (not mirrored: the sun stays upper left), its trunk in the gap between the
+  -- planter and the flower box
+  { name = "",         kind = "decor",  layer = "back", x0 = 938,  x1 = 1188, y0 = -77, y1 = 174, art = "rw_lime" },
   { name = "SAND",     kind = "solid",  layer = "play", x0 = 831,  x1 = 917,  y0 = 152, y1 = 184, art = "gritbox_front", ax = 830, ay = 184 },
   { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 990,  x1 = 1034, y0 = 154, y1 = 184, art = "planter_sq" },
   { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 1113, x1 = 1215, y0 = 152, y1 = 184, art = "flowerbox_front", ax = 1112, ay = 184 },
@@ -87,7 +93,7 @@ L.props = {
   -- deck: a hop, 23 px). Gulls circle over the water and swoop at a standing Pepper (crawl to duck, or bark).
   { name = "JETTY",    kind = "solid",  layer = "play", x0 = 2400, x1 = 2448, y0 = 196, y1 = 240, hidden = true },   -- drawn in code
   -- promenade B
-  { name = "",         kind = "decor",  layer = "back", x0 = 2880, x1 = 3626, y0 = 144, y1 = 174, railing = true },   -- decorative railing by the water
+  { name = "",         kind = "decor",  layer = "back", x0 = 2880, x1 = 3626, y0 = 124, y1 = 174, railing = true },   -- decorative railing by the water
   { name = "",         kind = "decor",  layer = "back", x0 = 2978, x1 = 3079, y0 = 74,  y1 = 174, art = "tree_far" },
   { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 2930, x1 = 2974, y0 = 154, y1 = 184, art = "planter_sq" },
   -- bike zone 2

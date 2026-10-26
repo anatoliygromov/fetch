@@ -2,6 +2,14 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `art/rw-sample-screen`: the River Walk sample screen (screen 1, Home), 25 Oct
+- **House (rw_home.png, 184 x 180, tier C, 0 credits):** `tools/build_rw_home.py` builds HOME at true scale from parts drawn once and stamped: double door 46 x 98 with raised panels and a fanlight, sandstone surround with entablature and keystone, a three-pane-row window with tie-back curtains, sill, corner quoins, granite plinth and step, string course at 147 px, the upper floor's window bottoms, wall lantern, drainpipe. Volume from the light (sun upper left): every part that stands out of the wall drops a 2-3 px shadow, the openings are recessed. 18 colours, asset_qa PASS (0 % lone pixels, windows identical). Top at y -5: never on screen. Replaces `building` on screen 1 (the old file stays).
+- **Street lime (rw_lime.png, 250 x 251, tier B, SpriteCook 48 credits):** probe 1 (384 frame) came back on SpriteCook's own grid at 0.67x (trunk 17 px); retry 1 on a 256 frame matched it 1:1 (trunk 22-24 px, 0.5 m). Cut 1:1 (`art/source/rw_lime/cut_lime.py`, no resampling, two k-means ramps: leaves 13, bark 7), clean pass on the new cut (`clean_lime.py`: ink removed, lit rim on the sun side, holes up to 12 px filled, specks and lone pixels, blotches merged). asset_qa WARN only (decor-ink 52 %, the approved trees are 64-66 %). Crown cut by the top (y0 -77). Screen 1 at x 120 (trunk behind the fallen branch, in front of the railing); screen 4 mirrored at x 954, trunk in the gap between the planter and the flower box (layer plan). Replaces `tree` and `tree_near`.
+- **Quay railing at 1.1 m = 50 px (tier C, 0 credits):** `tools/make_bg_railing50.py` rebuilds rail_bg_left/unit/end (was 30 px): handrail tube and two lower rails on slim posts, lamp-post colours, no ink outline, same piece widths. Screen 1's railing now starts at the house corner (x 184).
+- **Level:** riverwalk.lua props HOME, TREE, tree at 1056, the two railings; maps/riverwalk.tmx and its export regenerated (`level_to_tiled.py riverwalk`). scene.lua loads the new arts with the back fade.
+- **Tools:** `grid_cut.py` works on 1x renders (`--pitch 1`: whole cells, no phase shift).
+- **Checks:** check_backdrop BACKDROP OK (was 3 fails), PEPPER UNCHANGED, flow 125/125, Tiled PASSED, physics 54/54, QA 0 problems, autopilot GOOD GIRL!, check_curve T1-T4 PASS. Frames: docs/review/25oct/.
+
 ## Branch `ops/board-25oct`: the owner's board review turned into the art backlog (25 Oct)
 - 42 board items: 1 approve, 12 fix, 28 redraw, 1 open. **docs/art_backlog.md** groups them into families per level
   (tier, method, order), River Walk first. BIBLE: no automated clean pass on existing art (owner, 25 Oct); a row in

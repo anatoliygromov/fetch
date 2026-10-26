@@ -1,0 +1,21 @@
+{
+ "name": "rw_home",
+ "family": "rw_street_backdrop",
+ "tier": "C",
+ "steps": {
+  "spec": {
+   "time": "2026-10-25 14:59"
+  },
+  "built": {
+   "build": "tools/build_rw_home.py",
+   "time": "2026-10-25 14:59"
+  },
+  "ingame": {
+   "frame": "docs/review/25oct/rw_sample_screen1_1x.png",
+   "time": "2026-10-25 15:00"
+  },
+  "review": {
+   "time": "2026-10-25 15:28"
+  }
+ }
+}
