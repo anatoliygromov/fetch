@@ -1025,7 +1025,7 @@ end
 local function hasProp(def, name) for _, q in ipairs(def.props) do if q.name == name then return true end end end
 local function farOakImg(T)
   if T.farOak then return T.farOak end
-  local W, H = 140, 92
+  local W, H = 124, 72
   local src = love.image.newImageData("art/scene/park_treeline.png")
   local r, g, b, n = 0, 0, 0, 0
   src:mapPixel(function(_, _, pr, pg, pb, pa) if pa > 0.5 then r, g, b, n = r + pr, g + pg, b + pb, n + 1 end return pr, pg, pb, pa end)
@@ -1036,21 +1036,23 @@ local function farOakImg(T)
   local rr = rng(2880)
   local function put(x, y, col) if x >= 0 and x < W and y >= 0 and y < H then d:setPixel(x, y, col[1], col[2], col[3], 1) end end
   local cx, foot = W / 2, H - 1
-  for y = 48, foot do                                               -- the trunk, flaring at its foot
+  for y = 36, foot do                                               -- the trunk, flaring at its foot
     local e = foot - y
-    local half = 5 + (e < 10 and (10 - e) * 0.6 or 0) + (y < 60 and (60 - y) * 0.15 or 0)
+    local half = 4 + (e < 8 and (8 - e) * 0.6 or 0) + (y < 50 and (50 - y) * 0.12 or 0)
     for x = math.floor(cx - half), math.ceil(cx + half) do put(x, y, low) end
   end
-  local blobs = {}                                                  -- the crown: overlapping lobes in a flat dome
-  for i = 0, 12 do
-    local u = i / 12 * 2 - 1
-    blobs[#blobs + 1] = { cx + u * 50 + rr(-3, 3), 40 - (1 - u * u) * 18 + rr(-3, 3), 13 + (1 - u * u) * 9 + rr(-2, 3) }
+  local blobs = {}                                                  -- the crown: many small lobes in a broad dome, so its edge is leafy
+  for k = 1, 34 do
+    local a = rr(0, math.pi * 2)
+    local rad = math.sqrt(rr(0, 1)) * 0.78
+    local bx, by = cx + math.cos(a) * rad * 56, 30 + math.sin(a) * rad * 20
+    blobs[#blobs + 1] = { bx, by, rr(7, 11) }
   end
   for _, bl in ipairs(blobs) do
     for y = math.floor(bl[2] - bl[3]), math.ceil(bl[2] + bl[3]) do
       for x = math.floor(bl[1] - bl[3]), math.ceil(bl[1] + bl[3]) do
-        local dx, dy = x - bl[1], (y - bl[2]) * 1.15
-        if dx * dx + dy * dy <= bl[3] * bl[3] then put(x, y, (y > bl[2] + bl[3] * 0.35) and low or main) end
+        local dx, dy = x - bl[1], y - bl[2]
+        if dx * dx + dy * dy <= bl[3] * bl[3] then put(x, y, (dy > bl[3] * 0.25) and low or main) end
       end
     end
   end
