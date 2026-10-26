@@ -2,6 +2,20 @@
 
 As of Sun 25 Oct 2026, night (23:43). Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
 
+## Owner's go, 26 Oct evening (live)
+
+Picks given on "Ok gå" to my recommendations. 0 credits, no image service call, nothing merged into main. Picks are recorded here, not on the board.
+
+**Yes (code only, built):** both plans' haze re-tune; City Park sky (4), leaf front (5), small fixes 8 a to f; Downtown small fixes 6 a to d.
+**Picked, not built (new art, needs a credits yes for a brief):** City Park trunks at true width (1), mid trees b (2), duck boat 120 px (7), screen 9 kept (9), Downtown first floor a (1), shelter and gateways at true scale a (4). Held: City Park 6, Downtown 5.
+**Screen 12 river view:** B (gable door bay only, 116 px). Not built.
+
+**Branches** (off `prod/integrate-b` 0be7994; checks green or equal to base: PEPPER UNCHANGED, flow 125/125, Tiled PASS, QA 0, curve T1-T4 PASS)
+- `night/26oct-cp-code` (c5850e7): luma far city 169 to 191, tree line 166 to 181, mid 164 to 154; sky 158 to 202; leaf front; fixes 8 a (legs), b, c (ledge drawn as branch, Pepper stands on it), d (lamp 976 to x 1028), e, f. Skipped 8a gate and 8g leaf piles: outlines are baked into approved art. Caveat: sky 202 is close to the clouds' darkest 10 % (201). Notes: `docs/review/26oct-night/cp/README.md`.
+- `night/26oct-dt-code` (834ec4d): luma far city 163 to 187, roofs 171 to 176, old town 180 to 169; spire from screen 1; railings 46 px; four more front pieces; loggia and galleries a draw-time tint (art untouched). Downtown sky not done. Notes: `docs/review/26oct-night/dt/README.md`.
+
+---
+
 ## Night of 26 Oct, second run (21:00 Stockholm, no work)
 
 0 credits, no image service call, nothing merged. `ops/night-26oct` already belongs to the earlier run today, so this run used `ops/night-26oct-b` (same base, b2a10c6). Board read at 21:05: newest decision is still 25 Oct 19:18, so no approved work is waiting; every open item needs the owner or credits (redraws). The audit ran at 19:49 UTC on `prod/integrate` (c1c37a4) and no branch has moved since, so I did not repeat it. No new tracks.
