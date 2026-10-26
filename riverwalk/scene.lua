@@ -1573,15 +1573,22 @@ local function drawWalk(p, ox)
   local x0, x1, y = p.x0 - ox, p.x1 - ox, p.y0
   local hgt = p.y1 - p.y0
   local w = x1 - x0
-  for px = x0 + 4, x1 - 4, 40 do                                     -- rail posts and the rope between them
-    lg.setColor(INK); lg.rectangle("fill", px - 1, y - 15, 4, 15)
-    lg.setColor(WOOD[3]); lg.rectangle("fill", px, y - 14, 2, 14); lg.setColor(WOOD[2]); lg.rectangle("fill", px, y - 14, 1, 1)
+  -- the rail stands 1 m (46 px) over the deck, as a real hand rail does (plan decision 8 b, owner 26 Oct; it was 15
+  -- px, 0.3 m): posts, a hand rope along the top and a second rope half way down. It is behind Pepper and Pepper
+  -- passes through it: only the deck is a ledge.
+  local RAIL = 46
+  for px = x0 + 4, x1 - 4, 40 do                                     -- rail posts and the ropes between them
+    lg.setColor(INK); lg.rectangle("fill", px - 1, y - RAIL - 1, 4, RAIL + 1)
+    lg.setColor(WOOD[3]); lg.rectangle("fill", px, y - RAIL, 2, RAIL); lg.setColor(WOOD[2]); lg.rectangle("fill", px, y - RAIL, 1, 1)
     if px + 40 <= x1 - 4 then
       for dx = 2, 39 do
         local u = dx / 40
-        local ry = math.floor(y - 12 + 4 * 4 * u * (1 - u) * 0.5 + 0.5)
-        lg.setColor(INK); lg.rectangle("fill", px + dx, ry - 1, 1, 3)
-        lg.setColor(hex("c9b48a")); lg.rectangle("fill", px + dx, ry, 1, 1)
+        local sag = 4 * 4 * u * (1 - u) * 0.5
+        for _, top in ipairs({ y - RAIL + 3, y - 24 }) do            -- the hand rope, and the lower one
+          local ry = math.floor(top + sag + 0.5)
+          lg.setColor(INK); lg.rectangle("fill", px + dx, ry - 1, 1, 3)
+          lg.setColor(hex("c9b48a")); lg.rectangle("fill", px + dx, ry, 1, 1)
+        end
       end
     end
   end
