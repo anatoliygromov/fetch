@@ -250,6 +250,7 @@ end
 -- standing on the box's bottom and cut at its top (the roofline Pepper walks on) and at its right end; the far
 -- landmark (RIDDARHOLMEN) is art/scene/spire_riddarholmen.png, faded 45%, centred on its box, standing on its bottom.
 H.BRIDGE_RAIL = 12
+H.SPIRE_DRIFT = 0.03                                      -- the far spire's scroll (was 0.3: on screen only from camera x 2727)
 local function tallTown(def) return def.art == "town" and def.foot ~= nil end
 local function high(def, p) return p.y0 <= def.foot - 120 end           -- the high road (the street is def.foot)
 local function slug(n) return (n:lower():gsub("[^%w]+", "_")) end
@@ -484,7 +485,9 @@ function H.drawFarSpire(def, camx, worldW)
   local camEnd = math.max(0, worldW - 320)
   for _, p in ipairs(def.props) do
     if p.name == "RIDDARHOLMEN" then
-      local x = math.floor((p.x0 + p.x1) / 2 - camx * 0.3 - camEnd * 0.7 - im:getWidth() / 2 + 0.5)
+      -- (26 Oct, layer plan decision 6a: it drifts only H.SPIRE_DRIFT of the camera's way, so it is on screen from
+      -- screen 1 to the end; at the level's end it still stands where its box is)
+      local x = math.floor((p.x0 + p.x1) / 2 - (camx - camEnd) * H.SPIRE_DRIFT - camEnd - im:getWidth() / 2 + 0.5)
       if x > -im:getWidth() and x < 320 then lg.setColor(1, 1, 1, 1); lg.draw(im, x, 8) end
     end
   end
