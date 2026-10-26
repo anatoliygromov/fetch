@@ -2,6 +2,22 @@
 
 As of Sun 25 Oct 2026, night (23:43). Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
 
+## Night of 26 Oct (unattended run, 20:40 to 21:00 Stockholm)
+
+0 credits, no image service call, nothing merged. Base: `ops/night-25oct` STATUS. Board read at 20:42: no decision after the 25 Oct 20:18 ones, so no approved art work was waiting. All three 25 Oct questions are still open, so I built nothing new and audited.
+
+**Branch** `night/26oct-audit`, off `prod/integrate` c1c37a4: `docs/review/26oct-night/audit.md`. PEPPER UNCHANGED, flow 125/125, Tiled PASS, QA 0 problems on all six levels, curve T1-T4 PASS at 10 seeds. Only fail: `check_backdrop.py`, 3 pieces (building, tree, tree_near), known, fixed by `art/rw-sample-screen`.
+
+**Look at:** `docs/review/26oct-night/audit.md`.
+
+**Waiting for the owner:** the three questions of 25 Oct night are unchanged (prod/integrate-b merge, gable and cafe river view pick, City Park and Downtown plan decisions).
+
+**Problems:** `tools/check_tiled.sh` has no execute bit. apt numpy is broken here; a pip venv fixes it. The older routine may still run twice a night.
+
+**Next run, if he says nothing:** audit again, nothing new.
+
+---
+
 ## Night of 25 Oct (unattended run, 20:28 to 23:43 Stockholm)
 
 0 credits, no image service call, nothing merged, nothing posted to the board or to the Layer Plans doc. Base read at 20:30: `preview/25oct-pm` f54a219 (this branch is cut from it); the evening session's newer STATUS (`preview/25oct-late` 6c82a8b, 21:31) is kept below this section. Board at 20:16-20:18: approve cloud8_v2, park_log_v2, pier_v2, skyline_v2, rw_home, rw_lime, rw_rail_bg; redraw gull_v3 and cat_v2 (done since as `art/animals-r2`). No board decision after 20:18.
