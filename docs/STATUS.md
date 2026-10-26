@@ -2,6 +2,20 @@
 
 As of Sun 25 Oct 2026, night (23:43). Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
 
+## Night of 26 Oct, second run (21:00 Stockholm, no work)
+
+0 credits, no image service call, nothing merged. `ops/night-26oct` already belongs to the earlier run today, so this run used `ops/night-26oct-b` (same base, b2a10c6). Board read at 21:05: newest decision is still 25 Oct 19:18, so no approved work is waiting; every open item needs the owner or credits (redraws). The audit ran at 19:49 UTC on `prod/integrate` (c1c37a4) and no branch has moved since, so I did not repeat it. No new tracks.
+
+**Look at:** `docs/review/26oct-night/audit.md` on `night/26oct-audit`.
+
+**Waiting for the owner:** the three questions of 25 Oct night, unchanged. `prod/integrate-b` (0be7994) now exists from an earlier run; it is not merged anywhere.
+
+**Problems:** two routines still fire the same night. Suggest turning one off.
+
+**Next run, if he says nothing:** the same, nothing new.
+
+---
+
 ## Night of 26 Oct (unattended run, 20:40 to 21:00 Stockholm)
 
 0 credits, no image service call, nothing merged. Base: `ops/night-25oct` STATUS. Board read at 20:42: no decision after the 25 Oct 20:18 ones, so no approved art work was waiting. All three 25 Oct questions are still open, so I built nothing new and audited.
