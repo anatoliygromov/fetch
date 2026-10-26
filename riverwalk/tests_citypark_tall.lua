@@ -330,6 +330,44 @@ return function(mode, api)
       { act = function(p, s) report("giving the ball to Mia: GOOD GIRL (FETCH 2000)", s.ball.state == "given" and s.bonus and s.bonus[2] == 2000, s.ball.state) end },
       { wait = 2.6 },
       { act = function(p, s) report("the fetch ends the level", s.events.clear == true or api.getState() ~= "play", api.getState()) end },
+      -- 7 the leaf front (look.lua Look.leaves, plan decision 5): up in the trees it runs along the bottom of the
+      -- screen; it is not there on the path; it never covers Pepper (anywhere on the screen's lower half, a fall
+      -- included), a bone or Mia
+      { act = function()
+          local Look = require("look")
+          local st = simStage(); local lgm = love.graphics
+          local drawn, real = {}, lgm.draw
+          lgm.draw = function(img, x, y) if type(x) == "number" then drawn[#drawn + 1] = { x = x, y = y, w = img:getWidth(), h = img:getHeight() } end end
+          local function leaves(cam, camY)
+            drawn = {}; st.cam, st.camY = cam, camY; Look.leaves(st, cam, camY, st.camYMax); return drawn
+          end
+          local function hit(r, x0, y0, x1, y1) return r.x < x1 and r.x + r.w > x0 and r.y < y1 and r.y + r.h > y0 end
+          local up, path, bad, tested, shown = 0, 0, 0, 0, 0
+          for _, camY in ipairs({ 0, 16, 24, 48, 64 }) do
+            for cam = 0, st.world.width - 320, 40 do
+              shown = shown + #leaves(cam, camY)
+              for _, feet in ipairs({ 168, 190, 204, 222, 236 }) do          -- her feet on the screen: floor, a hop, a fall
+                st.pepper.x, st.pepper.y = cam + 150, camY + feet
+                local x0, y0, x1, y1 = st.pepper.x - cam - 26, st.pepper.y - camY - 38, st.pepper.x - cam + 26, st.pepper.y - camY
+                for _, r in ipairs(leaves(cam, camY)) do tested = tested + 1; if hit(r, x0, y0, x1, y1) then bad = bad + 1 end end
+              end
+              st.pepper.x, st.pepper.y = -999, camY + 200
+              for _, r in ipairs(leaves(cam, camY)) do
+                for _, bn in ipairs(st.bones) do
+                  if not bn.taken and hit(r, bn.x - cam - 5, bn.y - camY - 14, bn.x - cam + 5, bn.y - camY - 4) then bad = bad + 1 end
+                end
+                local g = st.girl
+                if g and hit(r, g.x - cam - 16, g.y - camY - 62, g.x - cam + 16, g.y - camY) then bad = bad + 1 end
+              end
+            end
+          end
+          for cam = 0, st.world.width - 320, 40 do path = path + #leaves(cam, st.camYMax) end
+          for cam = 0, st.world.width - 320, 40 do up = up + #leaves(cam, 112) end
+          lgm.draw = real
+          report("the leaf front runs along the high road's screen bottom", shown > 100, ("%d clumps drawn over the high road"):format(shown))
+          report("the leaf front never covers Pepper, a bone or Mia", bad == 0 and tested > 0, ("%d overlaps in %d clump checks"):format(bad, tested))
+          report("the leaf front is gone on the path (camera y 144 and from 112 up)", path == 0 and up == 0, ("%d + %d clumps drawn"):format(path, up))
+        end },
       { act = function()
           local ok = 0; for _, r in ipairs(results) do if r then ok = ok + 1 end end
           print(("%d of %d passed"):format(ok, #results)); love.event.quit() end },

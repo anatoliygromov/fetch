@@ -779,7 +779,7 @@ function St:draw(debug)
     if pr.layer == "front" then prop(pr, math.floor(cam + (cam + 160 - (pr.x0 + pr.x1) / 2) * 0.3), C.front) end
   end
   lg.pop()                                                         -- (screen space again)
-  if lk then Look.off(); Look.front(self, cam, camY) end           -- the dark foreground band (1.4x), under Pepper's lines
+  if lk then Look.off(); Look.front(self, cam, camY); Look.leaves(self, cam, camY, self.camYMax) end   -- the dark foreground band (1.4x), under Pepper's lines; a tall park's leaf front up in the trees
   if self.night then Nt.draw(self, cam) end                        -- [night hook] the darkness, the trail, the planks
   lg.setColor(1, 1, 1, 1)
   if debug then lg.push(); lg.translate(0, -camY); self:drawDebug(cam); lg.pop() end

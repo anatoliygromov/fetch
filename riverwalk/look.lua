@@ -59,6 +59,7 @@ Look.scripts = {
     above = { { -120, "aac3ef" }, { -96, "adc5ef" }, { -72, "b0c7ef" }, { -48, "b3c9ee" }, { -24, "b6cbee" } },
     fg = { dark = hex("1d1525"), mid = hex("2b1f33"), rim = hex("594257"), warm = hex("b5793f"), warmK = 0.22 },
     kinds = {},                                                    -- (the earth band is already the dark frame)
+    leafFront = true,                                              -- a tall level's high road gets the leaf front (Look.leaves)
     -- the round trees (mid) must read lighter than the willows and oaks in front of them (back), and darker than
     -- the far tree line (shore): mid up from 28 %, back down from 28 % (the gate keeps 28 %: its dark ironwork),
     -- the tree line faded too
@@ -345,6 +346,100 @@ function Look.front(stage, cam, camY)
           print(("LOOK OVERLAP clump at %d (top %d) over Pepper x %.0f y %.0f"):format(c.x, bottom - c.h, stage.pepper.x, stage.pepper.y)); io.stdout:flush()
         end
       end
+    end
+  end
+end
+
+-- 5b the leaf front (City Park tall, plan decision 5, owner 26 Oct): while the camera is up in the trees the high
+-- road has no foreground at all, so a low bank of dark leaves (code shapes in the script's own `fg` colours, back-lit
+-- like the other foreground clumps) runs along the bottom of the screen, moving 1.4x with the world x. It belongs to
+-- the high road: it slides down off the screen as the camera comes down to the path (LEAF_FROM to LEAF_TO of camY),
+-- where the bushes and the earth band are the frame. It never covers Pepper or a pickup: a clump that would touch
+-- her (her sprite's box, padded), a bone, the ball, Mia or the magpie drops down out of the way for as long as it is
+-- near (nothing is kept between frames, so a still frame always shows the same thing).
+Look.LEAF_H, Look.LEAF_FROM, Look.LEAF_TO, Look.LEAF_PAD = 22, 72, 112, 4
+local function leafClump(r, w, h)
+  local FG = S().fg
+  local d = love.image.newImageData(w, h)
+  local function put(x, y, c) if x >= 0 and x < w and y >= 0 and y < h then d:setPixel(x, y, c[1], c[2], c[3], 1) end end
+  local function solid(x, y) if x < 0 or x >= w or y < 0 or y >= h then return false end local _, _, _, a = d:getPixel(x, y); return a > 0 end
+  local base = 8                                                    -- the bank under the leaves
+  for x = 0, w - 1 do
+    local e = math.min(x, w - 1 - x)
+    for y = math.floor(h - math.min(base, 3 + e / 2)), h - 1 do put(x, y, FG.dark) end
+  end
+  for _ = 1, math.floor(w / 4) do                                   -- leaves: pointed ovals, mostly up, leaning out
+    local len, wid = r(8, h - 2), r(3.4, 5.4)
+    local ox, oy = r(5, w - 6), h - 3
+    local a = r(-1.2, 1.2)                                          -- radians from straight up
+    local dx, dy = math.sin(a), -math.cos(a)
+    for i = 0, math.floor(len * 2) do
+      local u = i / (len * 2)
+      local half = wid * math.sin(math.pi * math.min(1, u * 1.15)) ^ 0.8
+      local px, py = ox + dx * len * u, oy + dy * len * u
+      for k = -math.ceil(half), math.ceil(half) do
+        local qx, qy = math.floor(px - dy * k + 0.5), math.floor(py + dx * k + 0.5)
+        if math.abs(k) <= half then put(qx, qy, (math.abs(k) < 0.6 and u > 0.25 and u < 0.8 and r(0, 1) < 0.5) and FG.mid or FG.dark) end
+      end
+    end
+  end
+  for x = 0, w - 1 do                                               -- back light: the top pixel of each column
+    for y = 0, h - 1 do
+      if solid(x, y) then put(x, y, (r(0, 1) < FG.warmK) and FG.warm or FG.rim); break end
+    end
+  end
+  local im = lg.newImage(d); im:setFilter("nearest", "nearest")
+  return im
+end
+local function buildLeaves(stage)
+  local r, list = rng(2610), {}
+  local x = 10
+  while x < stage.world.width - 60 do
+    local w = math.floor(r(64, 120))
+    list[#list + 1] = { x = x, w = w, img = leafClump(r, w, Look.LEAF_H) }
+    x = x + w + math.floor(r(-10, 24))
+  end
+  return list
+end
+-- the rectangles (screen space) the leaves must stay clear of: Pepper, the bones, the ball, Mia, the magpie
+local function leafKeepOut(stage, cam, camY)
+  local R = {}
+  local function add(x0, y0, x1, y1) R[#R + 1] = { x0 - cam, y0 - camY, x1 - cam, y1 - camY } end
+  local p = stage.pepper
+  if p then add(p.x - 34, p.y - 48, p.x + 34, p.y + 6) end          -- (her sprite is wider than her box: 52 px nose to tail)
+  for _, bn in ipairs(stage.bones or {}) do
+    if not bn.taken then add(bn.x - 8, bn.y - 17, bn.x + 8, bn.y - 1) end
+  end
+  local b = stage.ball
+  if b and b.state ~= "home" then add(b.x - 8, b.y - 14, b.x + 8, b.y + 2) end
+  local g = stage.girl
+  if g and not g.hidden then add(g.x - 24, g.y - 70, g.x + 24, g.y + 4) end
+  local m = stage.magpie
+  if m and m.state ~= "gone" then add(m.x - 22, m.y - 24, m.x + 22, m.y + 8) end
+  return R
+end
+function Look.leaves(stage, cam, camY, camYMax)
+  if not S().leafFront or (camYMax or 0) <= 0 then return end
+  local hide = math.max(0, math.min(1, (camY - Look.LEAF_FROM) / (Look.LEAF_TO - Look.LEAF_FROM)))
+  if hide >= 1 then return end
+  stage.lkLeaves = stage.lkLeaves or buildLeaves(stage)
+  local H, k = Look.LEAF_H, Look.FRONT_SPEED - 1
+  local top = 240 - H + math.floor(hide * (H + 2) + 0.5)
+  local keep = leafKeepOut(stage, cam, camY)
+  lg.setColor(1, 1, 1, 1)
+  for _, c in ipairs(stage.lkLeaves) do
+    local mid = c.x + c.w / 2
+    local sx = math.floor(c.x - cam - (cam + 160 - mid) * k + 0.5)
+    if sx < 330 and sx + c.w > -10 then
+      local need = 0                                                -- how far down this clump must go to clear everything
+      for _, q in ipairs(keep) do
+        if q[2] < 240 and q[3] + Look.LEAF_PAD > sx and q[1] - Look.LEAF_PAD < sx + c.w and q[4] + Look.LEAF_PAD > top then
+          need = math.max(need, q[4] + Look.LEAF_PAD - top)
+        end
+      end
+      need = math.min(H + 2, math.ceil(need))
+      local y = top + need
+      if y < 240 then lg.draw(c.img, sx, y) end
     end
   end
 end
