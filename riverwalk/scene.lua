@@ -1718,8 +1718,9 @@ local function drawLowBough(p, t, ox)
     { -13, 1 }, { 13, 0 }, { -8, 3 }, { 8, 3 }, { 0, 4 }, { -3, -12 }, { 4, -14 }, { -10, -2 }, { 10, -3 } }
   local function blob(cx, cy, w, h, c)                              -- a rounded patch of leaves: three rectangles
     lg.setColor(c)
-    lg.rectangle("fill", cx - w / 2 + 2, cy - h / 2, w - 4, h); lg.rectangle("fill", cx - w / 2 + 1, cy - h / 2 + 1, w - 2, h - 2)
-    lg.rectangle("fill", cx - w / 2, cy - h / 2 + 2, w, h - 4)
+    local x, y = math.floor(cx - w / 2), math.floor(cy - h / 2)       -- (whole pixels)
+    lg.rectangle("fill", x + 2, y, w - 4, h); lg.rectangle("fill", x + 1, y + 1, w - 2, h - 2)
+    lg.rectangle("fill", x, y + 2, w, h - 4)
   end
   for _, q in ipairs(MASS) do blob(ex + side * q[1], ey + q[2], 11, 9, INK) end     -- the mass's dark rim first
   for i, q in ipairs(MASS) do blob(ex + side * q[1], ey + q[2], 9, 7, LEAF[1 + (i * 7) % 3]) end
