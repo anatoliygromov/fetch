@@ -63,8 +63,8 @@ Look.scripts = {
     fade = { shore = 0.35, mid = 0.48, back = 0.20 },
   },
   downtown = {                                                     -- bright midday
-    layers = { clouds = L(0.5, 1.4, 1.0, "ffffff", 0.04), city = L(0.2, 1.7, 0.70, "a7bad6", 0.50),
-               shore = L(0.4, 1.4, 1.00, "b2c3d9", 0.34), mid = L(0.7, 1.3, 1.15, "d6dee8", 0.18),
+    layers = { clouds = L(0.5, 1.4, 1.0, "ffffff", 0.04), city = L(0.2, 1.7, 0.70, "e4eaf0", 0.50),
+               shore = L(0.4, 1.4, 1.00, "bcc8da", 0.34), mid = L(0.7, 1.3, 1.15, "b2c3d9", 0.18),
                water = L(0.4, 1.2, 1.35, "7fb0d8", 0.05), back = L(0.8, 1.2, 1.25, "efe6da", 0.08),
                ground = L(0.9, 0.7, 1.10, "000000", 0), play = L(0.7, 0.8, 1.15, "000000", 0),
                front = L(0.0, 1.8, 1.10, "141a26", 0.40) },
