@@ -10,6 +10,8 @@ Picks given on "Ok gå" to my recommendations. 0 credits, no image service call,
 **Picked, not built (new art, needs a credits yes for a brief):** City Park trunks at true width (1), mid trees b (2), duck boat 120 px (7), screen 9 kept (9), Downtown first floor a (1), shelter and gateways at true scale a (4). Held: City Park 6, Downtown 5.
 **Screen 12 river view:** B (gable door bay only, 116 px). Not built.
 
+**Merged (owner's yes, 27 Oct):** `prod/integrate-c` (29aec89) = `prod/integrate-b` + `night/26oct-cp-code` + `night/26oct-dt-code`. Only conflicts: CHANGELOG (kept both) and `tools/layer_wireframe_tall.py` (the Downtown copy is a superset). Checks on the merge: PEPPER UNCHANGED, flow 125/125, Tiled PASS, QA 0 problems on all six levels, physics City Park 97/97 and Downtown 102/102, curve T1-T4 PASS (10 seeds). check_backdrop: 1 piece, the known River Walk gable. Not in `main`.
+
 **Branches** (off `prod/integrate-b` 0be7994; checks green or equal to base: PEPPER UNCHANGED, flow 125/125, Tiled PASS, QA 0, curve T1-T4 PASS)
 - `night/26oct-cp-code` (c5850e7): luma far city 169 to 191, tree line 166 to 181, mid 164 to 154; sky 158 to 202; leaf front; fixes 8 a (legs), b, c (ledge drawn as branch, Pepper stands on it), d (lamp 976 to x 1028), e, f. Skipped 8a gate and 8g leaf piles: outlines are baked into approved art. Caveat: sky 202 is close to the clouds' darkest 10 % (201). Notes: `docs/review/26oct-night/cp/README.md`.
 - `night/26oct-dt-code` (834ec4d): luma far city 163 to 187, roofs 171 to 176, old town 180 to 169; spire from screen 1; railings 46 px; four more front pieces; loggia and galleries a draw-time tint (art untouched). Downtown sky not done. Notes: `docs/review/26oct-night/dt/README.md`.
