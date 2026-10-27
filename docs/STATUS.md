@@ -2,6 +2,24 @@
 
 As of Sun 25 Oct 2026, night (23:43). Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
 
+## Night of 27 Oct (unattended run, 21:00 Stockholm)
+
+0 credits, no image service call, nothing merged. Base: `ops/night-26oct-c` (04a1f39). Board read 21:10: newest decision is still 25 Oct 20:18, so no approved art work waits. The 26 Oct picks that are code only are already built and merged in `prod/integrate-c`; the rest needs credits. No S1 or S2 bug found. One track: audit.
+
+**Branch** `night/27oct-audit` (83afc5d, off `prod/integrate-c` 29aec89): `docs/review/27oct-night/audit.md`. PEPPER UNCHANGED, flow 125/125, Tiled PASS, QA 0 problems on all six levels, curve T1-T4 PASS (10 seeds). Only fail: check_backdrop, the known River Walk gable.
+
+**Look at:** `docs/review/27oct-night/audit.md` on `night/27oct-audit`.
+
+**Waiting for the owner:**
+1. Merge `prod/integrate-c` into main as v0.7 (after you play it)?
+2. Credits yes for the briefs picked on 26 Oct (City Park trunks and mid trees, duck boat 120 px, Downtown first floor and shelter scale)? Gable fix B (screen 12) is a build: say go.
+
+**Problems:** none new. `tools/check_tiled.sh` has no execute bit; apt numpy is broken (venv works).
+
+**Next run, if he says nothing:** the same audit, nothing new.
+
+---
+
 ## Owner's go, 26 Oct evening (live)
 
 Picks given on "Ok gå" to my recommendations. 0 credits, no image service call, nothing merged into main. Picks are recorded here, not on the board.
