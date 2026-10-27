@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="440" height="60" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#20242c" nextlayerid="9" nextobjectid="284">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="440" height="60" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#20242c" nextlayerid="9" nextobjectid="288">
  <editorsettings>
   <export target="../riverwalk/level/tiled/downtown_tall.lua" format="lua"/>
  </editorsettings>
@@ -1020,6 +1020,34 @@
    </properties>
   </object>
   <object id="115" type="props" x="1900" y="461" width="12" height="19">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="front"/>
+   </properties>
+  </object>
+  <object id="284" type="props" x="1260" y="461" width="12" height="19">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="front"/>
+   </properties>
+  </object>
+  <object id="285" type="props" x="2440" y="461" width="12" height="19">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="front"/>
+   </properties>
+  </object>
+  <object id="286" type="props" x="3180" y="461" width="12" height="19">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="front"/>
+   </properties>
+  </object>
+  <object id="287" type="props" x="3440" y="461" width="12" height="19">
    <properties>
     <property name="name" value=""/>
     <property name="kind" value="decor"/>

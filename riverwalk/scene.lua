@@ -1293,14 +1293,22 @@ local function drawBough(p, camx)
 end
 -- a balcony (Downtown's rooftop route) over its one-way box: an iron railing at its back, the stone slab (its top
 -- the ledge), two brackets under it
+Sc.BALCONY_RAIL = 46
 local function drawBalcony(p, camx)
   local ox = math.floor(camx)
   local x0, x1, y = p.x0 - ox, p.x1 - ox, p.y0
   local w = x1 - x0
-  lg.setColor(INK); lg.rectangle("fill", x0 + 1, y - 9, w - 2, 9)    -- the railing (behind Pepper)
-  lg.setColor(0.30, 0.32, 0.36)
-  lg.rectangle("fill", x0 + 2, y - 8, w - 4, 1)
-  for x = x0 + 2, x1 - 3, 3 do lg.rectangle("fill", x, y - 8, 1, 8) end
+  -- the railing (behind Pepper): 1 m high = BALCONY_RAIL px (46 at 46 px a metre; was 9; layer plan decision 6b, 26 Oct).
+  -- Open work, so what is behind it shows: a top rail, a mid rail, balusters (1 px dark edge each side) every 6 px
+  local hh = Sc.BALCONY_RAIL
+  local gx = lg.setColor
+  local function baluster(bx) gx(INK); lg.rectangle("fill", bx, y - hh, 3, hh); gx(0.30, 0.32, 0.36); lg.rectangle("fill", bx + 1, y - hh, 1, hh) end
+  local n = math.max(1, math.floor((w - 5) / 6))                      -- (posts evenly from the first to the last, 3 px wide)
+  for i = 0, n do baluster(x0 + 2 + math.floor(i * (w - 5) / n)) end
+  gx(INK); lg.rectangle("fill", x0 + 1, y - math.floor(hh / 2) - 1, w - 2, 3)   -- the mid rail
+  gx(0.30, 0.32, 0.36); lg.rectangle("fill", x0 + 1, y - math.floor(hh / 2), w - 2, 1)
+  gx(INK); lg.rectangle("fill", x0 + 1, y - hh, w - 2, 4)             -- the top rail
+  gx(0.50, 0.52, 0.56); lg.rectangle("fill", x0 + 2, y - hh + 1, w - 4, 2)
   lg.setColor(INK); lg.rectangle("fill", x0 - 1, y - 1, w + 2, 6)     -- the slab
   lg.setColor(0.79, 0.76, 0.72); lg.rectangle("fill", x0, y, w, 1)
   lg.setColor(0.64, 0.61, 0.57); lg.rectangle("fill", x0, y + 1, w, 2)
