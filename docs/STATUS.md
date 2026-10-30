@@ -8,6 +8,9 @@ As of Sun 25 Oct 2026, night (23:43). Rules: `docs/BIBLE.md`. Decisions: the rev
 
 **Look at:** `docs/review/29oct-night/audit.md` on `ops/night-29oct` (unchanged).
 
+**Update, same night (owner asked live for a build):** one track, `night/30oct-gable-b` (be9bf9f), off `prod/integrate-c` plus `night/25oct-rw-street`. Screen 12 river view option B (his 26 Oct pick): the gable shows only its door bay, river view 116 px (was 48), railing ends at x 3636. The bay is a pixel crop of `rw_gable`, 0 credits. Checks: PEPPER UNCHANGED, flow 125/125, Tiled PASS, BACKDROP OK, River Walk QA 0 problems (7897 runs), curve T1-T4 PASS (10 seeds). Look at: `docs/review/30oct-night/gable_b/screen12_gable_b_after.png` on that branch. Caveat: the gable and cafe art is not approved on the board (old pieces say redraw; the new ones were never shown). The other 26 Oct picks need credits, not started.
+
+
 **Waiting for the owner (unchanged):**
 1. Merge `prod/integrate-c` into main as v0.7 (after you play it)?
 2. Credits yes for the 26 Oct briefs (City Park trunks and mid trees, duck boat 120 px, Downtown first floor and shelter scale)? Gable fix B (screen 12) is a build: say go.
