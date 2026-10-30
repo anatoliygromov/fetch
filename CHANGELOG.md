@@ -2,6 +2,9 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `night/30oct-gable-b`: River Walk screen 12, river view option B (night of 30 Oct, 0 credits)
+- The gable shows only its door bay (80 px, a pixel crop of `rw_gable`, `tools/crop_rw_gable_bay.py`); river view 116 px instead of 48; railing ends at x 3636. Level file and Tiled map updated. Base: `prod/integrate-c` plus `night/25oct-rw-street`. Notes: `docs/review/30oct-night/gable_b/README.md`.
+
 ## Branch `night/26oct-cp-code`: City Park (tall) code-only changes from the layer plan (night of 26 Oct, 0 credits)
 - **Measuring tools from `night/25oct-cp-plan`:** `tools/layer_wireframe_tall.py`, `tools/layer_frames_tall.py`, `tools/layer_ids_hook.lua` copied in unchanged, to measure before and after.
 - **Decision 3, haze re-tuned (look.lua citypark):** far city haze b8a0c2 to dccfe0, tree line haze c8a6ae to dcc0c4 with the load-time fade 35 to 40 %, mid fade 48 to 38 %. The ladder (`tools/measure_layers.py --ladder`, same constants updated) is now city 191, tree line 181, mid 154, back 134 (was 169, 166, 164, 134). In the game's own frames (`layer_frames_tall.py --ids`, camera y 0): far city 191 (was 169), tree line 181 (166), mid 154 (164), back 138 (138).
