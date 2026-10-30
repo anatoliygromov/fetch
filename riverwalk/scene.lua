@@ -139,8 +139,9 @@ function Sc.art()
   -- decoration (pot, lamp posts, the houses and trees) is faded the back amount towards the level's back haze, so it
   -- sits back and the obstacle course stands out. The files are untouched; this is done to a copy when the game loads.
   -- (art/rw-sample-screen) rw_home and rw_lime: the true-scale house and street lime of the sample screen
+  -- (night/25oct-rw-street) rw_gable and rw_cafe: the true-scale gable house and cafe of screen 12
   for _, n in ipairs({ "pot", "lamp_post", "building", "tree", "tree_near", "tree_far", "cafe", "gable", "rw_home",
-      "rw_lime" }) do
+      "rw_lime", "rw_gable", "rw_cafe" }) do
     A[n] = newImg(Sc.fadeData(love.image.newImageData("art/scene/" .. n .. ".png")))
   end
   -- things Pepper can use (stand on, jump onto) get the characters' 1 px dark outline, so they read as part of the
