@@ -2,6 +2,23 @@
 
 As of Sun 25 Oct 2026, night (23:43). Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
 
+## Night of 31 Oct (unattended run, 21:00 Stockholm)
+
+0 credits, no image service call, nothing merged. Base: `ops/night-30oct` (19faf0c). Board read 21:10: newest decision is still 25 Oct 19:18. No branch moved since the 30 Oct run (newest commit 30 Oct 21:12 UTC). No S1 or S2 bug known. No tracks: nothing approved is waiting, and the 29 Oct audit of `prod/integrate-c` still holds. I did not repeat it. LÖVE could not be installed this time (`apt-get install love` finds no package without `apt-get update`), so no check was run.
+
+**Look at:** `night/30oct-gable-b`, `docs/review/30oct-night/gable_b/screen12_gable_b_after.png` (unchanged, still unreviewed).
+
+**Waiting for the owner (unchanged):**
+1. Merge `prod/integrate-c` into main as v0.7 (after you play it)?
+2. Credits yes for the 26 Oct briefs (City Park trunks and mid trees, duck boat 120 px, Downtown first floor and shelter scale)?
+3. Keep gable fix B (`night/30oct-gable-b`)? The gable art is not approved on the board.
+
+**Problems:** none new beyond the LÖVE install note.
+
+**Next run, if he says nothing:** the same. Nothing new until he answers.
+
+---
+
 ## Night of 30 Oct (unattended run, 21:00 Stockholm)
 
 0 credits, no image service call, nothing merged. Base: `ops/night-29oct` (49bcd4f). Board read 21:05: newest decision is still 25 Oct 20:18. No branch moved since the 29 Oct run (newest commit 29 Oct 20:06 UTC). No S1 or S2 bug known. No tracks: nothing approved is waiting, and the 29 Oct audit of `prod/integrate-c` (29aec89) still holds because that branch has not changed. I did not repeat it.
