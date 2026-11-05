@@ -40,3 +40,19 @@ Changed: town_oriel is now only the copper roof cap, 60x9, drawn at (box centre 
 Fix list: make the solid core read as part of the art (draw a 16 px pilaster or chimney breast in front of the bay's centre, as a play piece with the outline), or narrow the bay and roof to the box (about 16 to 24 px) as in round 2 but at a believable scale.
 
 VERDICT: FAIL (1 item)
+
+
+# Round 4
+
+Reviewed 229889b against f50160f with fresh frames (camera x1560 and x1500 at y 120 and 240), pixel diff of every town_*.png, numpy luma by colour on the frames, asset_qa at the game fade. town_oriel is now the pier: 18x45, drawn at (1627, 199) over the CHIMNEY box (x1628-1644, y200-244).
+1. Scale: PASS - 18x45 is exactly the box plus its outline (16x44 plus 1 px left, right and top); the golden bone box (x1628-1644, y188-200) is unmoved, 12 px above the cap's flat top at y200.
+2. Layer: PASS - stone fill (110,103,95) 103.6 on screen, copper cap 112.7, shade 71, against the wall 150.5; a play pier 47 darker than the back, like the portal top (104).
+3. Outline: PASS - 1 px ink (18,18,26) on the top row (x1 to 16) and on both side columns, rows 1 to 44; the two top corners are transparent (the cap's rounding); the bottom row is the ground contact and not counted (the rule). asset_qa PASS.
+4. Shapes: PASS - five equal stone blocks with level seams, straight sides, 0 lone pixels, 7 colours, no semi-transparent pixels.
+5. Shading: PASS - lit left column (135,130,120), shade right, light copper top.
+6. Palette: PASS - 0 colours outside downtown.gpl.
+7. View: PASS - a flat front-on pier, a thin cap, no top face or side.
+8. Fit: PASS - round 3's hit box fault is fixed: the solid core is now the whole of the piece; the bay and its roof are decoration behind, so nothing visible is passable that looks solid. Pepper stands on the 16 px light top row (row 1) at y200 and reaches the bone as before.
+9. Read: PASS - reads as a stone pier (or chimney breast) with a copper cap, standing in front of the bay window; a child sees a pillar to climb with the golden bone on top.
+
+VERDICT: PASS

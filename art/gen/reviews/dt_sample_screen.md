@@ -74,3 +74,26 @@ Reviewed bca1ab9 with 36 fresh frames (camera x 0 to 3200, y 120 and 240). Round
 Context faults that remain (screen x, y): the plaza houses as dollhouses, door 25 px (x1536-1624, x1644-1724, x1832-1900, x2404-2492; decision 2); high road lamps across window panes (x1830, x2420); ledges as shelves (x2016-2072, x2112-2168; the dormer ledge x1920-1976, y264 reads as a lintel 12 px over the keystone); the old brick gate on screen 10 (x3072-3168); the bike clipped at its depot (x1938, x3168); far layers hidden from x1180 to 2480; hard street ends at x1180, x2480, x2640-2736; guild house storey 2 bare wall around the bay (x1552-1700, y141-227). No front's top shows.
 
 VERDICT: FAIL (2 items)
+
+
+# Round 4
+
+Reviewed 229889b against f50160f. Changed since f50160f: town_oriel.png (now the 18x45 pier, exactly the CHIMNEY box), town_oriel_bay.png (58x44, roof included) and the palette file, tools and docs; no other town_*.png differs by one pixel, riverwalk/*.lua is unchanged, maps/, riverwalk/level/ and pepper.png are unchanged against the base. All 12 files have 0 colours outside downtown.gpl.
+
+Round 3's open FAIL, the hit box smaller than the art (60 px cap and 58 px bay over a 16 px solid box), is FIXED: the solid piece and the art are the same 18x45; the bay and its roof are decoration behind it; the golden bone stays 12 px above the cap.
+
+1. Scale: PASS - everything fits; the screen-10 gate is an owner question now (below), not a measured fault of this pass.
+2. Layer: PASS - far city 187 to 194 > far roofs 169 > old town row 168.5 > houses 145 to 156 > perches and the pier 104 to 128 > Pepper 14 to 24; bay panes 99.9, roof 138.
+3. Outline: PASS - perches and the pier outlined (bottom row excepted), decoration not.
+4. Shapes: PASS - windows equal across the fronts and in the bay (0 px differ), courses identical.
+5. Shading: PASS.
+6. Palette: PASS.
+7. View: PASS.
+8. Fit (context): PASS - nothing Pepper stands on moved; art matches boxes for crates, board, legs, portal top and pier; the remaining context items are owner decisions or old art, listed below, none a new fault.
+9. Read: PASS - the guild house reads as a house with a portal, a bay and a pier.
+
+Owner questions on the card (listed, not failed): (a) screen 10's GATE (x3072-3168) keeps the old 36 px brick gate, decision 4a is not carried out where no house front stands, and the 77 px rider is twice its height; (b) the street lamp at x1958 stands in the middle of the new archway: it reads as a lamp in front of a gateway, and the bike passes in front of it.
+
+Still listed from earlier rounds (old art or unpicked decisions): plaza houses as dollhouses with 25 px doors (x1536-1624, x1644-1724, x1832-1900, x2404-2492; decision 2); high road lamps across window panes (x1830, x2420); ledges as shelves (x2016-2072, x2112-2168; the dormer ledge x1920-1976, y264 reads as a lintel 12 px over the keystone); the bike clipped at its depot (x1938, x3168); far layers hidden from x1180 to 2480; hard street ends (x1180, x2480, x2640-2736); the guild house's storey 2 is bare wall around the bay (x1552-1700, y141-227); the houses stay a calm brown and rose. No front's top shows.
+
+VERDICT: PASS
