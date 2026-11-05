@@ -1,0 +1,27 @@
+{
+ "name": "rw_car3",
+ "size": [
+  246,
+  93
+ ],
+ "target": [
+  242,
+  91
+ ],
+ "grid_clean": 1.0,
+ "on_blockout": 0.969,
+ "covered": 0.998,
+ "stray": 0.0,
+ "colours_in": 4596,
+ "colours_cap": 20,
+ "colours_out": 18,
+ "fails": [],
+ "render": "art/gen/renders/rw_car3_n5a.png",
+ "box": [
+  5,
+  143,
+  251,
+  236
+ ],
+ "cut_by": "tools/build_traffic.py cut (1x render, pitch 1, palette snap riverwalk.gpl, no resampling)"
+}

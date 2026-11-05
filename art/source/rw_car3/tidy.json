@@ -1,0 +1,6 @@
+{"body": ["f4cc69", "d49a54", "f1dbbb"], "speck": 3,
+ "glass": ["949da6", "c4dcec", "b5b9bf"], "glass_fill": "949da6", "glass_band": "c4dcec",
+ "windows": [{"name": "windscreen", "rect": [60, 15, 83, 43], "band_at": 28},
+             {"name": "front door window", "rect": [84, 15, 129, 43], "band_at": 34},
+             {"name": "rear door window", "rect": [130, 15, 170, 43], "band_at": 34},
+             {"name": "rear screen", "rect": [171, 15, 206, 43], "band_at": 29}]}

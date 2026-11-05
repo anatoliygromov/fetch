@@ -2,6 +2,13 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `art/rw-traffic2-05nov`: River Walk traffic 2, the road's other three cars (5 Nov, SpriteCook 72 credits)
+- **road_car2 (van), road_car3 (taxi), road_car5 (estate) redrawn** in the reviewed traffic family's method (art/rw-traffic-05nov): SpriteCook Nano Banana 2.1 1K pixel renders on a 256 px blockout with Pepper at 1x, cut 1:1 (pitch 1, no resampling), snapped to the River Walk palette, then `tools/fix_traffic2.py`: one ink #000000, near-ink shades merged, one wheel drawn once by rule and stamped on both centres, outer silhouette in the ink, the new cut's speck pass and glass by rule (one flat glass, one 2 px reflection band), then hand edits (art/source/NAME/hand.json; every changed pixel in edits.json). Near lane 55 px/m: van 4.4 x 1.85 m (242 x 102), taxi 4.5 x 1.7 m with its sign (246 x 93), estate 4.5 x 1.62 m with rails (250 x 89). No text or logos: the van's "STOCKHOLM DELIVERY CO." and the taxi's "TAXI" are gone; the taxi sign is a plain lit box.
+- **Taxi roof in the body colour:** the near lane shows only a car's top 48 rows, and the first cut's black roof and pillars read as a dark car with a sign in game (frame 23); the roof side and the front and rear pillars are yellow now.
+- **tools/build_traffic.py cut:** a render narrower than the 256 frame was padded with black, which kept a black column next to a subject that reaches the frame's right side; it pads with the magenta key now.
+- **riverwalk/tests.lua --test:** shots 23_traffic_taxi and 24_traffic_van (each car whole on screen by the bin). asset_qa SLOTS for road_car2, 3, 5.
+- Checks: PEPPER UNCHANGED, flow 125/125, asset_qa road_car3 and 5 PASS, road_car2 WARN (2 blotches: the crease line's two ends), the library's 7 FAILs as on the base; check_backdrop only the known gable.
+
 ## Branch `night/26oct-cp-code`: City Park (tall) code-only changes from the layer plan (night of 26 Oct, 0 credits)
 - **Measuring tools from `night/25oct-cp-plan`:** `tools/layer_wireframe_tall.py`, `tools/layer_frames_tall.py`, `tools/layer_ids_hook.lua` copied in unchanged, to measure before and after.
 - **Decision 3, haze re-tuned (look.lua citypark):** far city haze b8a0c2 to dccfe0, tree line haze c8a6ae to dcc0c4 with the load-time fade 35 to 40 %, mid fade 48 to 38 %. The ladder (`tools/measure_layers.py --ladder`, same constants updated) is now city 191, tree line 181, mid 154, back 134 (was 169, 166, 164, 134). In the game's own frames (`layer_frames_tall.py --ids`, camera y 0): far city 191 (was 169), tree line 181 (166), mid 154 (164), back 138 (138).

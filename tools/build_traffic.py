@@ -54,7 +54,7 @@ def cut(name, src):
     J = json.load(open(f'art/gen/jobs/{name}.json')); lay = R['layers'][J['layer']]
     mask = np.array(Image.open(f'art/gen/blockouts/{name}_mask.png')) > 0
     a = np.array(Image.open(src).convert('RGB')).astype(int)
-    H, W = mask.shape; a = a[:H, :W] if a.shape[0] >= H and a.shape[1] >= W else np.pad(a, ((0, max(0, H - a.shape[0])), (0, max(0, W - a.shape[1])), (0, 0)), constant_values=0)[:H, :W]
+    H, W = mask.shape; a = a[:H, :W] if a.shape[0] >= H and a.shape[1] >= W else np.dstack([np.pad(a[..., c], ((0, max(0, H - a.shape[0])), (0, max(0, W - a.shape[1]))), constant_values=v) for c, v in enumerate((255, 0, 255))])[:H, :W]  # (5 Nov, traffic 2) pad with the key, not black: a 252 px render left a black column by a subject that reaches the frame's right side
     r, g, b = a[..., 0], a[..., 1], a[..., 2]
     key = (r - g > 35) & (b - g > 35) & (r > 120) & (b > 120)
     # blends into the magenta: pinkish-purple pixels joined to the key (repeat: fringes 2 px deep)

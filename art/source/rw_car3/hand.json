@@ -1,0 +1,111 @@
+[
+ {
+  "rect": [
+   24,
+   71,
+   240,
+   71
+  ],
+  "only": [
+   "d49a54"
+  ],
+  "to": "f4cc69",
+  "why": "sill: the ragged edge between body yellow and the sill shade made one straight line (row 71 body, rows 72-74 shade)"
+ },
+ {
+  "rect": [
+   24,
+   72,
+   240,
+   74
+  ],
+  "only": [
+   "f4cc69"
+  ],
+  "to": "d49a54",
+  "why": "sill: the ragged edge between body yellow and the sill shade made one straight line (row 71 body, rows 72-74 shade)"
+ },
+ {
+  "rect": [
+   3,
+   71,
+   23,
+   79
+  ],
+  "only": [
+   "f4cc69"
+  ],
+  "to": "d49a54",
+  "why": "front bumper: its lower part one shade, no yellow dabs"
+ },
+ {
+  "rect": [
+   76,
+   42,
+   86,
+   47
+  ],
+  "only": [
+   "d49a54"
+  ],
+  "to": "f4cc69",
+  "why": "the shade blob under the mirror taken out"
+ },
+ {
+  "rect": [
+   10,
+   54,
+   16,
+   59
+  ],
+  "only": [
+   "d49a54",
+   "f4cc69",
+   "a86e3e"
+  ],
+  "to": "f1c57e",
+  "why": "headlamp: its amber half one clean colour (no shade dabs in the lens)"
+ },
+ {
+  "rect": [
+   86,
+   13,
+   178,
+   17
+  ],
+  "only": [
+   "282a36",
+   "565864"
+  ],
+  "to": "f4cc69",
+  "why": "taxi roof in the body colour: the game shows only the top 48 rows of a car in the near lane, and with a black roof and pillars the taxi read as a dark car with a sign (in-game frame 23); roof side, front pillar and rear pillar now yellow, the window rubbers and the centre pillar stay dark"
+ },
+ {
+  "rect": [
+   170,
+   13,
+   205,
+   41
+  ],
+  "only": [
+   "282a36",
+   "565864"
+  ],
+  "to": "f4cc69",
+  "why": "taxi roof in the body colour: the game shows only the top 48 rows of a car in the near lane, and with a black roof and pillars the taxi read as a dark car with a sign (in-game frame 23); roof side, front pillar and rear pillar now yellow, the window rubbers and the centre pillar stay dark"
+ },
+ {
+  "rect": [
+   58,
+   13,
+   100,
+   40
+  ],
+  "only": [
+   "282a36",
+   "565864"
+  ],
+  "to": "f4cc69",
+  "why": "taxi roof in the body colour: the game shows only the top 48 rows of a car in the near lane, and with a black roof and pillars the taxi read as a dark car with a sign (in-game frame 23); roof side, front pillar and rear pillar now yellow, the window rubbers and the centre pillar stay dark"
+ }
+]

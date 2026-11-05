@@ -84,6 +84,8 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          "cyclist_adult1": (88, 87, 0, 0), "cyclist_adult2": (88, 87, 0, 0),         # (fix round 1: padded 2 px a side)
          "cyclist_adult1_pedal": (704, 87, 0, 0), "cyclist_adult2_pedal": (704, 87, 0, 0),
          "road_car1": (241, 88, 12, 8), "road_car4": (185, 77, 12, 8),
+         # (5 Nov, art/rw-traffic2-05nov) the road's other three cars at 55 px/m: van 1.85 m, taxi 1.45 m + sign, estate + rails
+         "road_car2": (242, 102, 12, 8), "road_car3": (246, 93, 12, 8), "road_car5": (250, 89, 12, 8),
          "road_rider1": (104, 102, 0, 0), "road_rider2": (104, 103, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",

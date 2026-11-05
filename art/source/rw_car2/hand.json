@@ -1,0 +1,122 @@
+[
+ {
+  "rect": [
+   10,
+   40,
+   236,
+   54
+  ],
+  "only": [
+   "faf0dc"
+  ],
+  "to": "faf6f0",
+  "why": "the light band under the windows one flat colour: the cream dashes in it (asset_qa blotches) take the band's colour"
+ },
+ {
+  "rect": [
+   10,
+   56,
+   236,
+   57
+  ],
+  "only": [
+   "faf0dc"
+  ],
+  "to": "faf6f0",
+  "why": "the strip under the crease line one flat colour"
+ },
+ {
+  "rect": [
+   10,
+   44,
+   40,
+   53
+  ],
+  "only": [
+   "949da6",
+   "5b5b5b",
+   "d6ceca",
+   "e9d1b2",
+   "c2c4ca",
+   "faf0dc"
+  ],
+  "to": "faf6f0",
+  "why": "bonnet: the broken dashed shut line and the shade dabs taken out (a dashed line reads dirty, review car1 R5)"
+ },
+ {
+  "rect": [
+   31,
+   52,
+   40,
+   56
+  ],
+  "only": [
+   "f1c57e",
+   "e9d1b2"
+  ],
+  "to": "faf6f0",
+  "why": "side marker: the ragged amber patch out"
+ },
+ {
+  "rect": [
+   34,
+   53,
+   37,
+   54
+  ],
+  "to": "f1c57e",
+  "why": "side marker redrawn as one clean 4 x 2 amber lamp"
+ },
+ {
+  "rect": [
+   60,
+   1,
+   232,
+   6
+  ],
+  "only": [
+   "f1c57e"
+  ],
+  "to": "faf6f0",
+  "why": "roof: the orange stripe becomes the roof's light highlight (no warm glint lines, review car1 R5)"
+ },
+ {
+  "rect": [
+   232,
+   44,
+   240,
+   64
+  ],
+  "only": [
+   "f1c57e"
+  ],
+  "to": "ce3531",
+  "why": "tail lamp red (it came out amber after the palette snap)"
+ },
+ {
+  "rect": [
+   232,
+   44,
+   240,
+   64
+  ],
+  "only": [
+   "5b5b5b"
+  ],
+  "to": "7d1c24",
+  "why": "tail lamp: its divider a dark red, not grey"
+ },
+ {
+  "rect": [
+   167,
+   2,
+   230,
+   3
+  ],
+  "only": [
+   "e9d1b2"
+  ],
+  "to": "faf6f0",
+  "why": "roof: three loose shade specks in the highlight row"
+ }
+]

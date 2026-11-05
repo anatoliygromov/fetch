@@ -1,0 +1,80 @@
+[
+ {
+  "xy": [
+   [
+    127,
+    47
+   ],
+   [
+    126,
+    48
+   ],
+   [
+    127,
+    48
+   ],
+   [
+    126,
+    47
+   ],
+   [
+    125,
+    47
+   ]
+  ],
+  "to": "9c9ea8",
+  "why": "a speck under the front door handle taken out (its handle shadow stays)"
+ },
+ {
+  "rect": [
+   74,
+   9,
+   92,
+   31
+  ],
+  "only": [
+   "565864",
+   "878c92"
+  ],
+  "to": "c2c4ca",
+  "why": "windscreen pillar: the grey anti-alias dots along its two ink lines taken out (straight lines straight)"
+ },
+ {
+  "rect": [
+   243,
+   45,
+   244,
+   49
+  ],
+  "to": "e1e1e1",
+  "why": "tail lamp: the reversing lamp lens one light colour (it read as a grey blotch of the body)"
+ },
+ {
+  "rect": [
+   60,
+   60,
+   180,
+   60
+  ],
+  "only": [
+   "565864",
+   "878c92",
+   "282a36"
+  ],
+  "to": "373737",
+  "why": "side moulding: one colour along its top row, no light dots"
+ },
+ {
+  "rect": [
+   120,
+   2,
+   230,
+   2
+  ],
+  "only": [
+   "565864"
+  ],
+  "to": "282a36",
+  "why": "roof rail: its bar one dark, no light dots"
+ }
+]
