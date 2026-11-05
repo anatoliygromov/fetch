@@ -356,7 +356,7 @@ return function(mode, api)
       s.road.list = {}
       for _, v in ipairs(list) do
         local car = v[1] == "car"
-        local im = car and A.cars[v[2]] or (A.riders or A.cyclists)[v[2]]
+        local im = car and A.cars[v[2]] or (A.lane or A.riders or A.cyclists)[v[2]]
         local sp = { 0, s.world.width }
         for _, q in ipairs(s.road.spans) do if v[3] >= q[1] and v[3] < q[2] then sp = q end end
         local e = { im = im, x = v[3], w = im:getWidth(), vx = (v[4] and 1 or -1) * 0.01, sp = sp, bob = 0,

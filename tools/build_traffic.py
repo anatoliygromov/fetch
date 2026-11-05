@@ -157,7 +157,7 @@ def wheel_px(cx, cy, R_, spokes, rot, col):
     return out
 
 
-def wheels(name, src=None, dst=None, rot=0.0, centres=None):
+def wheels(name, src=None, dst=None, rot=0.0, centres=None, guess=None, rs=(14, 15, 16)):
     """Redraw both wheels of a cyclist. Inside each wheel's disc the cut's pixels are kept only where they are part
     of the bike or the rider (components of 8 px or more inside the disc, or joined to the frame outside it); the
     tyre ring is the new wheel's. Writes the edits list."""
@@ -165,8 +165,8 @@ def wheels(name, src=None, dst=None, rot=0.0, centres=None):
     a = np.array(Image.open(src).convert('RGBA')); h, w = a.shape[:2]
     cj = json.load(open(f'art/gen/out/{name}.cut.json')); bx, by = cj['box'][:2]
     bom = json.load(open(f'art/gen/blockouts/{name}.json')); G = bom['ground']
-    guess = [(144 - bx, G - 16 - by), (195 - bx, G - 16 - by)]
-    fits = centres or [fit_wheel(a, gx, gy)[1:] for gx, gy in guess]
+    guess = [(gx - bx, gy - by) for gx, gy in guess] if guess else [(144 - bx, G - 16 - by), (195 - bx, G - 16 - by)]
+    fits = centres or [fit_wheel(a, gx, gy, rs)[1:] for gx, gy in guess]
     pal = {tuple(c) for c in a[a[..., 3] > 0][:, :3].tolist()}
     byl = sorted(pal, key=lambda c: 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2])
     grey = [c for c in byl if max(c) - min(c) < 24]
@@ -219,11 +219,11 @@ def fix_key(src, dst, key=((155, 46, 118), (196, 60, 150), (149, 69, 178))):
     Image.fromarray(out).save(dst); return ed
 
 
-def pipeline_cyclist(name, rot=0.0):
+def pipeline_cyclist(name, rot=0.0, guess=None, rs=(14, 15, 16)):
     S = f'art/source/{name}'
     os.system(f'python3 -I tools/cleanpass.py {S}/{name}_cut.png {S}/{name}_clean.png --tol 90')
     ed = fix_key(f'{S}/{name}_clean.png', f'{S}/{name}_clean.png')
-    f, e = wheels(name, src=f'{S}/{name}_clean.png')
+    f, e = wheels(name, src=f'{S}/{name}_clean.png', guess=guess, rs=rs)
     os.system(f'python3 -I tools/outline_complete.py {S}/{name}_wheels.png {S}/{name}_ol.png --skip-bottom')
     json.dump({'centres': [list(map(int, c)) for c in f], 'key_edits': ed, 'wheel_edits': e}, open(f'{S}/edits_build.json', 'w'))
     return f
@@ -231,6 +231,9 @@ def pipeline_cyclist(name, rot=0.0):
 
 if __name__ == '__main__' and sys.argv[1] == 'cyclist':
     pipeline_cyclist(sys.argv[2])
+if __name__ == '__main__' and sys.argv[1] == 'lanerider':                 # 55 px/m: wheels 39 px (R 18-20)
+    k = 55 / 46
+    pipeline_cyclist(sys.argv[2], guess=[(130, round(200 - 16 * k)), (round(130 + 51 * k), round(200 - 16 * k))], rs=(17, 18, 19, 20))
 
 
 def pipeline_car(name):

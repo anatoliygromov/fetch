@@ -1,0 +1,114 @@
+[
+{
+"xy": [
+[
+48,
+10
+],
+[
+49,
+10
+],
+[
+49,
+11
+],
+[
+51,
+11
+],
+[
+49,
+12
+],
+[
+51,
+12
+]
+],
+"to": "f7a67f",
+"why": "face: skin round the eye, no socket blob (review A5)"
+},
+{
+"xy": [
+[
+50,
+10
+],
+[
+51,
+10
+],
+[
+42,
+11
+]
+],
+"to": "373737",
+"why": "face: a dark brow over the eye; hair under the helmet one colour (review A5, A3)"
+},
+{
+"xy": [
+[
+50,
+11
+],
+[
+50,
+12
+]
+],
+"to": "000000",
+"why": "face: a clear dark pupil on skin (review A5)"
+},
+{
+"xy": [
+[
+53,
+14
+],
+[
+53,
+15
+],
+[
+52,
+15
+]
+],
+"to": "f7a67f",
+"why": "face: the nose in skin, not grey (review A5)"
+},
+{
+"xy": [
+[
+52,
+17
+]
+],
+"to": "373737",
+"why": "face: beard edge one colour (review A5)"
+},
+{
+"xy": [
+[
+42,
+3
+],
+[
+47,
+3
+],
+[
+50,
+5
+],
+[
+51,
+6
+]
+],
+"to": "878c92",
+"why": "helmet: the dotted vent row made three clean vents (review A3)"
+}
+]

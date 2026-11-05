@@ -1,0 +1,27 @@
+{
+ "name": "rw_road_rider1",
+ "level": "riverwalk",
+ "layer": "lane",
+ "kind": "character",
+ "real_height_m": 1.85,
+ "target_px": [
+  99,
+  102
+ ],
+ "checks_px": {
+  "wheel": 39,
+  "hubs": 61,
+  "head": 13
+ },
+ "subject": "an adult woman of about 35 riding a black Dutch city bicycle to the right, sitting upright: red wool coat to the knee, dark grey tights, brown shoes, white cycling helmet, brown hair in a low bun, a wicker basket on the front rack; round wheels with thin even spokes and grey tyres; lit from the upper left: the highlights on the left and top of the helmet, the back and the shoulders, the shade on the right",
+ "part_map": "the two dark grey rings are the wheels (exactly that size, thin even spokes), the thin grey lines are the frame, handlebar and saddle, the light grey figure is her body (round head, torso leaning slightly forward, arm to the handlebar, leg down to the pedal), the white cap is the helmet, the brown rectangle is the basket.",
+ "size_sentence": "her helmet top is about two and a half times as high as the dog's head and each wheel is about one and a half times as tall as the dog's back. A full-grown adult, drawn a little bigger than the dog's scale because this lane is nearer the viewer.",
+ "model": "sc_nb21",
+ "variants": 2,
+ "tier": "A",
+ "family": "rw_traffic",
+ "slot": {
+  "file": "riverwalk/art/scene/road_rider1.png",
+  "where": "River Walk road's bike lane (road.lua riders: the lane art when it exists), top row at y 190, only rows 0-49 show; rider 1"
+ }
+}

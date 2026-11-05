@@ -23,6 +23,7 @@ local Rd = {}
 Rd.__index = Rd
 
 local art
+Rd.PEDAL_PX = 26                                                    -- px ridden per pedal-loop frame (8 frames a turn)
 local function load()
   if art then return art end
   art = { cars = {}, cyclists = {}, riders = {} }
@@ -33,6 +34,11 @@ local function load()
   -- true-scale adult riders of the first art batch, facing right) replace road_cyclist1-2 when they are there
   local function has(n) return love.filesystem.getInfo("art/scene/" .. n .. ".png") ~= nil end
   for i = 1, 2 do art.riders[i] = img(has("cyclist_adult" .. i) and ("cyclist_adult" .. i) or ("road_cyclist" .. i)) end
+  -- (5 Nov, art/rw-traffic-05nov) the bike lane is nearer the viewer than the promenade (55 px a metre, like the
+  -- cars), so its riders are their own art at that scale (road_rider1-2.png, 104 x 102); only their top 50 rows
+  -- show (RIDER_TOP), so they have no pedal loop. Without them the promenade riders ride the lane too.
+  art.lane = {}
+  for i = 1, 2 do art.lane[i] = has("road_rider" .. i) and img("road_rider" .. i) or art.riders[i] end
   -- rolling wheels (tools/make_wheels.py): the same art in 4 frames, the spokes a quarter of a gap further each;
   -- px = how far the bike rolls per frame (wheel radius x spoke gap / 4)
   art.roll = {}
@@ -46,11 +52,14 @@ local function load()
   for i = 1, 2 do
     roll(art.cyclists[i], "cyclist" .. i, 9.5, 8)
     if has("cyclist_adult" .. i .. "_pedal") then                  -- a pedal loop: frames of the still's size side by
-      local still, im = art.riders[i], img("cyclist_adult" .. i .. "_pedal")   -- side; one frame per 6 px ridden
+      local still, im = art.riders[i], img("cyclist_adult" .. i .. "_pedal")   -- side; one frame per PEDAL_PX ridden
       local w, h = still:getWidth(), still:getHeight()
       local q = {}
       for f = 0, math.floor(im:getWidth() / w) - 1 do q[f] = lg.newQuad(f * w, 0, w, h, im:getWidth(), im:getHeight()) end
-      art.roll[still] = { im = im, q = q, px = 6, n = #q + 1 }
+      -- (5 Nov) the loop's 8 frames are one pedal turn: one frame per 26 px ridden makes a turn every 208 px, about
+      -- one a second at the riders' 190-240 px/s (was 6 px: 4-5 turns a second). The frame is still chosen by the
+      -- distance ridden, so the legs never run faster than the bike.
+      art.roll[still] = { im = im, q = q, px = Rd.PEDAL_PX, n = #q + 1 }
     elseif not has("cyclist_adult" .. i) then roll(art.riders[i], "road_cyclist" .. i, 14.5, 12) end
   end
   return art
@@ -154,7 +163,7 @@ function Rd:update(dt, cam)
     self.list[#self.list + 1] = { im = im, x = right and (cam - w - 4) or (cam + 324), w = w, vx = right and vx or -vx, base = vx,
       top = Rd.CAR_TOP, flip = right, sp = sp, bob = 0, f = f, cam0 = cam }      -- (car art faces left)
   else                                                              -- a cyclist, either way
-    local im = art.riders[rng:random(1, #art.riders)]
+    local im = art.lane[rng:random(1, #art.lane)]
     local w, right = im:getWidth(), rng:random() < 0.5
     local vx = 190 + rng:random() * 50
     local f = rowF(Rd.RIDER_TOP, im)

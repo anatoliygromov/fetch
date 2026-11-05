@@ -15,5 +15,15 @@
  "rw_cyclist_adult_still_1x": "8f2bfa34-daeb-4b45-b41d-65d87839288d",
  "rw_cyclist_adult2_still_1x": "f0307dee-239e-46c0-8ff5-cac840caeb96",
  "rw_cyclist_adult_pedal_anim": "002db27b-0aa2-437d-9c1f-ebdebb82f6c4",
- "rw_cyclist_adult2_pedal_anim": "823d3015-e7ee-46f3-8919-cd5de0e49784"
+ "rw_cyclist_adult2_pedal_anim": "823d3015-e7ee-46f3-8919-cd5de0e49784",
+ "rw_road_rider1_n5a": "a95a11e5-27d5-4a79-9cd6-b6a951ef6e19",
+ "rw_road_rider1_n5b": "af1c3551-ee7f-4580-8b87-d2bdc53faa24",
+ "rw_road_rider2_n5a": "d192e7b2-cc50-4b3b-981e-2c800c38f186",
+ "rw_road_rider2_n5b": "784dd5e1-d3f8-4dcd-a86f-967b439ecbb7",
+ "rw_road_rider1_blockout256": "13d11a23-3a0b-4321-bb21-358039ea1a51",
+ "rw_road_rider2_blockout256": "49538ad2-edd4-4056-8d86-9e476f6e7cde",
+ "rw_cyclist_adult_r1": "568065de-a712-4065-8a46-123f9ac0f5df",
+ "rw_cyclist_adult2_r1": "5d678b60-571a-4aa8-a7fa-bd8f322e22ea",
+ "rw_road_rider2_r1a": "21b28591-b75e-4c00-ac1e-d8f13c01ee5b",
+ "rw_road_rider2_r1b": "a7f6456b-46f5-4d97-8192-1de8f6fb9eb0"
 }
