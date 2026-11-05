@@ -19,6 +19,39 @@ Not tonight, by the rules: the duck boat and other City Park and Downtown pieces
 
 Progress is added below as tracks finish.
 
+## Result (night of 5-6 Nov)
+
+**SpriteCook: 600 credits spent of the 900 ceiling** (3,634 to 3,034; ledger `art/gen/ledger.csv` matches the account to the credit). Artlist 0. Every job preflighted with the owner's words; no family went over 3 paid jobs per asset or 2 retries.
+
+**On the board, five family cards** (each piece passed an independent reviewer that did not make it, after 1 to 4 rounds):
+
+| Card | Pieces | Credits | Questions for the owner |
+| --- | --- | --- | --- |
+| River Walk water | ferry (now a small water taxi on the same route boxes), mooring pile (built) | 24 | keep the water taxi, or change the level for a bigger ferry? |
+| River Walk traffic | 2 promenade riders with pedal loops, 2 lane riders at 55 px/m, estate car, hatchback | 220 | car sizes; redraw the other cars too (done, next card) |
+| River Walk traffic 2 | van, taxi (blank lit roof box), estate | 72 | van side plain or a picture without letters? |
+| City Park sample screen | lime, ash, 3 young mid trees PASS; the old oak shown but NOT passed (leaf patchwork after 3 rounds and a re-cut) | 284 | yes to regenerate the oak (about 76, over the family retry cap)? trunk widths (oak 54, lime 36, ash 29-33 vs plan 46/60 and 23) |
+| Downtown sample screen | fronts 1-4 past the top, portal top, bay window with the golden bone pier, shelter, gateway, crates, board on crate legs (all built, 0 credits) | 0 | screen 10's old brick gate (no house there); the checkpoint lamp in front of the arch. Note: the street is darker and calmer than before so it sits below the far layers |
+
+**Playable build:** `2d game test/PREVIEW 6 Nov night/FETCH_PREVIEW_06nov.love` = branch `preview/05nov-night` (all five families merged on top of `prod/integrate-c`; not an integration branch, nothing merged into main or prod). Checks on it: PEPPER UNCHANGED, flow 125/125, Tiled PASS, physics River Walk 55/55, City Park tall 97/97, Downtown tall 102/102, curve T1-T4 PASS, asset QA 6 FAIL (all old library art: building, cafe, gable, rail_bg_left, town_bollard, park_leaves_flat). check_backdrop: the known River Walk gable only.
+
+**Branches:** `art/rw-traffic-05nov`, `art/rw-traffic2-05nov`, `art/rw-water-05nov`, `art/cp-sample-05nov`, `art/dt-sample-05nov`, `preview/05nov-night`, `ops/spritecook-05nov`.
+
+**Tool fixes found tonight** (each on its branch, all in the preview):
+- `tools/grid_cut.py` skipped palette lines with a leading space (every colour with red under 100), so palette snaps lost every dark. Fixed.
+- `tools/preflight.py` priced references once per job; SpriteCook bills them per variation (a 2-variant job with 3 references is 76, not 52). Fixed.
+- `tools/pipeline.py` now reads only the latest "# Round N" section of a review.
+- `tools/asset_qa.py`: `--layer lane` works; `--file` uses the game's own fade when `--fade` is not given.
+- New: `tools/aseprite_io.py` (write and check .aseprite without the app, so polish works when the Mac sleeps), `tools/grid4_cut.py`, `tools/build_traffic.py`, `tools/build_ferry.py`, `tools/build_pile.py`, `tools/build_dt_street.py`.
+
+**Not spent, by the rules:** City Park and Downtown pieces wait for their sample screens' approval (BIBLE 4); the oak regeneration and anything over a family cap wait for the owner's words; animals round 2 still waits on the board.
+
+**Waiting for the owner (max 3):**
+1. The board: five family cards from tonight (approve, fix or reject per piece; the questions above).
+2. Play `FETCH_PREVIEW_06nov.love`.
+3. Still open from before: merge `prod/integrate-c` into main as v0.7.
+
+
 ---
 
 
