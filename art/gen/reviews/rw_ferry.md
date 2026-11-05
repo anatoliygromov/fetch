@@ -51,3 +51,51 @@ forward wheelhouse; here a centred white box on a centred cabin makes a stacked 
 3. Density: the hull and wheelhouse need the detail the bench has (a rub rail or second strake line, two bollards or cleats, a cabin door with a handle, a handrail or mast on the roofs, panel line on the wheelhouse), while keeping the route lines (rows 0, 30, 52) and one unbroken ink outline.
 
 VERDICT: FAIL (4 items: windows repeated/symmetry, staff outline, staff placement, density next to the bench)
+
+---
+
+# Round 2 (after fix round 1, commit 6c5a228), 5 Nov 2026
+
+Same method (5x and 10x enlargements, numpy, asset_qa, card, board and in-game frames, level diff). asset_qa PASS (16 colours, all in riverwalk.gpl, outline 100 %, no semi-alpha). Level file diff since round 1: none. pepper.png: not in the diff.
+
+## The four round 1 FAILs
+1. Wheelhouse windows: FIXED. Both are 11 x 11 glass (107 px each), left cols 103-113, right cols 129-139, rows 9-19, same glint; mirrored about col 121 (left margin 3 px, right margin 3 px). The three portholes (4 before) are identical (47 px glass + 5 px glint, x 69, 89, 109, 20 px apart, rows 41-47).
+2. Flagstaff outline: FIXED. Ink cap at (17,231), yellow tip (18,231), shaft cols 230-232, rooted in the deck ink row 52. Zero non-ink edge pixels on the whole sprite.
+3. Flagstaff in the air: FIXED. It now stands on the deck at cols 230-232, inside the hull and inside the deck box (box ends col 237).
+4. Density: FIXED for the most part (see item 9).
+
+## Checks on what the new detail added
+- Route lines still exact: deck ink row 52 = y 206, cols 2-237 (the run now ends at col 237, the box edge); cabin roof ink row 30 = y 184, cols 60-180; wheelhouse roof ink row 0 = y 154, cols 97-145. Cleats stand 3 px above the deck (rows 49-51, cols 19-23 and 207-211) and are decoration, not boxes.
+- Dabs: none. The 68 diagonal or single pixels are the porthole and window glints, the lifebuoy octagon corners, the door knob (46,164), cleat edges and the bow stair: deliberate, same ramps.
+- Boot top on the water (ingame_ferry_deck_1x, measured): boot line #ce3531 (row 69) on screen luma 97, red bottom luma 54, river behind luma 78, hull grey band luma 160-187, white 229-253. The boot line separates the grey band from the red bottom in colour and in greyscale; the bottom reads darker than the water (54 against 78) and the hull stays readable. PASS.
+- New defect: the cabin door's bottom ink row (row 51, cols 153-167) sits directly on the deck ink row 52, so the ink is 2 px thick for 15 px (2 x 2 ink blocks at row 51, cols 153-166). Fix: remove the door's bottom ink row, let the door end on the deck line (the door frame then has ink left, top, right and the deck line below).
+
+## asset_qa.md checklist (9)
+1. Repeated parts the same: PASS. Wheelhouse windows identical, portholes identical (20 px apart), fenders (cols 36 and 198) identical, cleats identical (5 px caps), the two hull ends lit/shaded mirror-consistently.
+2. Round and symmetric: PASS. Windows mirrored about col 121; lifebuoy is a 15 px octagon with 8 even bands (red, white, dark red, white); bow and stern curves are even stairs.
+3. One light direction, ramps, no dabs: PASS. Upper left: white bow highlight, shaded stern, lit left edge of cabin and wheelhouse; hull in lit white (fbfbfa), mid white (e1e1e1), shade grey (b5b9bf, 9c9ea8), orange rub rail (d49a54 / bf6d36 / a86e3e), boot line, red bottom. Lifebuoy is lit top-left and shaded bottom-right.
+4. Outline 1 px everywhere, one ink colour, no doubled stretches: FAIL (1 item). Ink #010102 throughout and the staff is closed, but rows 51-52 over cols 153-166 are doubled ink under the cabin door (see above).
+5. Faces: PASS (not applicable: no characters).
+6. Scale against Pepper, slot, anchor: PASS. Slot 252 x 79 OK; every Pepper surface lands on its box line (table above). The small-boat reading from round 1 stands (cabin 0.48 m, wheelhouse 0.65 m): an owner call, not a pixel defect.
+7. Mirrored as the game draws it: PASS (not applicable: the ferry is drawn unflipped).
+8. In game: PASS. ingame_ferry_deck, pontoon, wheelhouse frames: Pepper's feet on the deck line, cabin roof and wheelhouse roof; the door, lifebuoy and portholes read at 1x; only the part below the waterline (red bottom) is behind the water as before; cleats and staff never catch her.
+9. Next to bench, bin, lamp (crisp, clean, same density): PASS. Same pixel size, 16 colours against the bench's 16, no noise. The hull is now three lit bands, rub rail, boot line, red bottom with two fenders and two cleats; the cabin has a door with a window and knob, three portholes, a lifebuoy and plank seams; the wheelhouse has panel lines. At 1x it matches the bench and bin; at 3x the long white hull is still the plainest area (about 14 % flat e1e1e1 now, 1421 px, down from 30 %) but no longer reads as unfinished.
+
+## rules.json review_checklist (9)
+- Scale: PASS (boxes exact, slot OK, Pepper unchanged).
+- Layer: PASS (on screen darkest 2, median 128, light 230: play row).
+- Outline: FAIL (the 15 px doubled ink under the door; everything else closed).
+- Shapes: PASS (staff on the deck, round things round, straight lines straight, even steps).
+- Shading: PASS (3-4 shade ramps per material, light upper left, no mottling, no lone specks).
+- Palette: PASS (16 colours, all in the level palette; the new lifebuoy red #ce3531 is a palette colour; whites neutral, ink neutral).
+- View: PASS (front-on, a front and thin caps, no tops: cleats and door are seen from the front).
+- Fit: PASS (see item 9).
+- Read: PASS (a cute harbour launch for a 7 year old, lifebuoy and door read at 1x, flag reads as Sweden's, no text or logos).
+
+## Believable Stockholm water taxi?
+Better: the door, cleats, rub rail and lifebuoy now give the boat things at human scale to compare with, but the proportions still read as a cartoon launch or toy (cabin knee-high to a person), forced by the route boxes. Same owner call as round 1.
+
+## Must-fix (round 2)
+1. Remove the door's bottom ink row at row 51, cols 153-167 (doubled ink with the deck line at row 52).
+
+VERDICT: FAIL (1 item: doubled 2 px ink under the cabin door, row 51, cols 153-166)

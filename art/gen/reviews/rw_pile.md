@@ -26,3 +26,35 @@ drawn. Rows 0-18 contain: the rim (rows 0-1), the domed top, the first lashing b
 - Rim light: only 10 px wide on row 0 and 8 on row 1, fine at 1x; no change needed.
 
 VERDICT: PASS
+
+---
+
+# Round 2 (after fix round 1, commit 6c5a228), 5 Nov 2026
+
+asset_qa PASS. Measured: 18 x 182, 2930 opaque px, 8 colours, no semi-alpha, file median luma 39.4, visible part (rows 0-18 and 0-14) median luma 28, darkest on screen 11. Level file: unchanged since round 1.
+
+The round 1 nit is FIXED: the two lashing bands (rows 8-13 and 70-75) are now byte-identical (checked on all four channels). The rim is two rows (row 0 cols 4-13, row 1 cols 2-9 lit and 10-15 a step darker), unchanged.
+
+## asset_qa.md checklist (9)
+1. Repeated parts the same: PASS (both lashing bands identical, same checker phase).
+2. Round and symmetric: PASS (body cols 1-16, bands cols 0-17, even 3 px corner steps on the dome).
+3. One light direction, ramps, no dabs: PASS (left #282a36, centre #21273a, right #17181f, grain in 1 px lines; the #44423a lashing twist pixels are deliberate).
+4. Outline 1 px, one ink: PASS (dark silhouette edge #050a17 at 1 px; no light outline on the front layer).
+5. Faces: PASS (not applicable: no characters).
+6. Scale and slot: PASS (18 x 182 OK; 0.3 m post at the front layer's 60 px/m).
+7. Mirrored: PASS (not applicable: not flipped).
+8. In game: PASS (only the top 15-19 px show at the bottom edge, with the first band; tops at y 221 and 225 are below every line Pepper stands on).
+9. Next to bench, bin, lamp: PASS (same pixel size, clean, no semi-alpha; a front-layer silhouette with rim, grain and lashing is as dense as it needs to be).
+
+## rules.json review_checklist (9)
+- Scale: PASS (slot and size OK).
+- Layer: PASS (median luma 39.4 in the file, 28 to 30 on screen, limit 40; darker than the play ferry's 128).
+- Outline: PASS (dark silhouette, no light outline).
+- Shapes: PASS (round post, even dome).
+- Shading: PASS (light left, three columns of shade, thin rim).
+- Palette: PASS (8 colours, all in riverwalk.gpl).
+- View: PASS (front-on post with a thin cap).
+- Fit: PASS (front layer; same pixel size as the approved props).
+- Read: PASS (a harbour post with a rope lashing at 1x).
+
+VERDICT: PASS
