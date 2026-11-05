@@ -1,0 +1,26 @@
+[
+ {
+  "name": "rw_gable",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/rw_gable.png",
+  "level": "rw",
+  "layer": "back",
+  "fade": 0.28,
+  "w": 148,
+  "h": 180,
+  "building": true,
+  "frames": null,
+  "info": {
+   "colours": 20,
+   "lone": 0.0,
+   "p10": 139,
+   "median": 197,
+   "p90": 234,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 0,
+   "windows": "no window panes found"
+  },
+  "checks": []
+ }
+]

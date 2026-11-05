@@ -1,0 +1,21 @@
+{
+ "name": "rw_gable_bay",
+ "family": "rw_street_backdrop",
+ "tier": "C",
+ "steps": {
+  "spec": {
+   "time": "2026-11-05 23:30"
+  },
+  "built": {
+   "build": "tools/build_rw_gable.py",
+   "time": "2026-11-05 23:30"
+  },
+  "ingame": {
+   "frame": "docs/review/05nov/rw-street/ingame_x3700_1x.png",
+   "time": "2026-11-05 23:30"
+  },
+  "review": {
+   "time": "2026-11-05 23:35"
+  }
+ }
+}

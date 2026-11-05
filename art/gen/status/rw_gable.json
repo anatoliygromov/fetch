@@ -1,0 +1,21 @@
+{
+ "name": "rw_gable",
+ "family": "rw_street_backdrop",
+ "tier": "C",
+ "steps": {
+  "spec": {
+   "time": "2026-10-25 20:04"
+  },
+  "built": {
+   "build": "tools/build_rw_gable.py",
+   "time": "2026-10-25 20:04"
+  },
+  "ingame": {
+   "frame": "docs/review/25oct-night/rw_street/rw_screen12_after_1x.png",
+   "time": "2026-10-25 20:04"
+  },
+  "review": {
+   "time": "2026-10-25 20:36"
+  }
+ }
+}
