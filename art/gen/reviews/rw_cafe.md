@@ -13,3 +13,18 @@ Round 2, on branch head 139dc79 (round 1 is kept in rw_cafe_round1.md). Method a
 Fix list: none.
 
 Verdict: every round 1 defect is gone, the changes to the window height, corbels, door header and awning shadow introduced nothing new, and the lone-pixel scan finds only designed details. It meets the rw_home bar, is not flat, and Mia reads in front of it. Ready for the owner's card.
+
+
+# Round 1 (05 Nov, screen 12 street, branch art/rw-street-05nov)
+Reviewer: independent (sonnet), did not build this piece. Judged from rw_cafe.png (124x180), the level code (riverwalk.lua CAFE x3716-3840, y0 -6) and fresh --lookshots frames at the bay, the cafe and the level's end (camera max 3520), plus a greyscale copy. asset_qa --layer back --level rw --fade 0.28 --building: PASS, 20 colours, alpha 255.
+1. Scale: PASS - door and shop lights read at 46 px/m against Pepper (51 px) and Mia (about 59 px); upper-storey windows repeat at pitch 59 px. Ground storey to cornice band about 142 px, same as rw_home.
+2. Layer: PASS (note) - p10 159, median 188, p90 235. Cream walls are lighter than the far city (median about 169-194) but that is the documented River Walk back-row exception (docs/layer_ladder.md), and approved rw_home is lighter still (median 208). Darkest values keep the ladder order. In the greyscale frame it sits level with the home front and well above the mid-grey far city, so the cream (174) does not fight the far layers. Mia and Pepper separate from it.
+3. Outline: PASS - decoration, no outline; edges are darker shades of their own colour (x 0-123 sampled at awning, transom, granite).
+4. Shapes: PASS - upper windows pixel-identical (offset 59, 0 px differ), shop lights and transom panes repeat identically, awning stripes even, walls flat. Lone pixels 129 (0.58 %), all designed glint diagonals, under 2 %.
+5. Shading: PASS - one light direction (top left), glass glints on the shop panes, awning shaded below the valance.
+6. Palette: PASS - 20 colours, within the family of rw_home and rw_gable_bay; no stray hues.
+7. View: PASS - flat front elevation, same as the home and the bay. Top at game y -6, never on screen (check_backdrop OK).
+8. Fit: PASS - joins the bay at x 3716 without a seam. Right edge: the piece ends at x 3840, which is the level width and the screen edge at max camera 3520+320, so the cut is never seen and no end corner is needed. Window railings: there are none in this piece (shop glass with mullions only), so the 25 Oct holes cannot occur; no transparent pixels anywhere.
+9. Read: PASS - reads as a cafe (striped awning, shop windows, door) at 320x240 and in greyscale. River view over the bench stays 116 px tall and clear.
+VERDICT: PASS
+Notes for the owner, not defects: median is lighter than the far city (same as the approved home); a corner pilaster at the far right is not needed because it is off screen.
