@@ -248,7 +248,8 @@
  },
  "palettes": {
   "riverwalk": "art/palettes/riverwalk.gpl",
-  "citypark": "art/palettes/citypark.gpl"
+  "citypark": "art/palettes/citypark.gpl",
+  "downtown": "art/palettes/downtown.gpl"
  },
  "_models_note": "credits = per image; a job costs (credits + credits_per_reference x references) x variations (5 Nov: references are billed per variation). Prices from list_generation_models, 25 Oct.",
  "review_checklist": [

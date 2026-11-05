@@ -42,10 +42,14 @@ return function(api)
       local xs = {}
       for x = 0, w.width - 320, step do xs[#xs + 1] = x end
       if xs[#xs] ~= w.width - 320 then xs[#xs + 1] = w.width - 320 end
+      -- (art/dt-sample) LOOK_XS="1920,1700" and LOOK_YS="120,240": only these camera spots (sample screen frames);
+      -- LOOK_PX: Pepper at the camera + this (default 140)
+      if os.getenv("LOOK_XS") then xs = {}; for v in os.getenv("LOOK_XS"):gmatch("%-?%d+") do xs[#xs + 1] = tonumber(v) end end
+      if os.getenv("LOOK_YS") then tiers = {}; for v in os.getenv("LOOK_YS"):gmatch("%-?%d+") do tiers[#tiers + 1] = tonumber(v) end end
       s.bikes = {}; s.bikeT = 99
       for _, cy in ipairs(tiers) do
         for _, cx in ipairs(xs) do
-          local px = cx + 140
+          local px = cx + (tonumber(os.getenv("LOOK_PX") or "") or 140)
           local fy = w:floor(px - 4, px + 4, px, cy + 60, cy + 236, -1e9)
           p.vx, p.vy, p.onGround, p.ground, p.mode, p.crouch, p.invuln = 0, 0, true, nil, "normal", false, 0
           if fy then p.x, p.y = px, fy else p.x, p.y = -999, cy + 200 end

@@ -1,0 +1,24 @@
+{
+ "name": "town_front_tall4",
+ "level": "downtown",
+ "layer": "back",
+ "kind": "building",
+ "real_height_m": 9.4,
+ "target_px": [
+  148,
+  432
+ ],
+ "checks_px": {
+  "storey": 140,
+  "ground_floor": 152,
+  "upper_windows": "2 x 44 x 74 at the sides"
+ },
+ "tier": "C",
+ "family": "dt_sample",
+ "method": "built from stamped parts, tools/build_tall_fronts.py",
+ "build": "tools/build_tall_fronts.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_front_tall4.png",
+  "where": "Downtown tall, GUILD HOUSE x 1552-1700, full height (decision 1a as written, review round 1)"
+ }
+}

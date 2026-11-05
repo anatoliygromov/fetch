@@ -582,6 +582,7 @@ function St:draw(debug)
   if style == "park" then Sc.drawTreetops(self.def, cam, self.world) end   -- a tall park's treetops: trunks, canopies
   if style then AH.drawTownBack(self, cam) end                    -- the tall Downtown: the spire, the tall house fronts
   AH.drawTrams(self, cam)                                          -- the back lane's tram and its stop sign (faded)
+  if style then AH.drawTownStops(self, cam) end                    -- the tall Downtown: the shelters, in front of the tram
   for _, pr in ipairs(self.def.props) do if pr.layer == "back" then prop(pr, cam, C.back) end end
   if style then Sc.drawSpout(self.def, cam) end
   Sp.drawBack(self, cam)                                           -- code-drawn decoration (kiosks)
@@ -641,6 +642,7 @@ function St:draw(debug)
   -- Downtown's cargo bikes too (r8/levels, D1): the kiosk and the gates hide their wheels; Pepper on a perch is
   -- drawn over the tall rider (arthooks.lua)
   use("play")
+  if style then AH.drawTownPerches(self, cam) end                  -- the tall Downtown's crate perches: behind the rider
   for _, c in ipairs(self.bikes) do if c.zone and c.zone.kind == "cargo" then AH.drawCargo(c, cam) end end
   if not style and not grey then
     use("play"); lg.setColor(1, 1, 1, 1)

@@ -1,0 +1,24 @@
+{
+ "name": "town_front_tall2",
+ "level": "downtown",
+ "layer": "back",
+ "kind": "building",
+ "real_height_m": 9.4,
+ "target_px": [
+  88,
+  432
+ ],
+ "checks_px": {
+  "storey": 140,
+  "ground_floor": 152,
+  "upper_window": "44 x 74"
+ },
+ "tier": "C",
+ "family": "dt_sample",
+ "method": "built from stamped parts, tools/build_tall_fronts.py",
+ "build": "tools/build_tall_fronts.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_front_tall2.png",
+  "where": "Downtown tall fronts, bay 2 (shop), full height (decision 1a)"
+ }
+}

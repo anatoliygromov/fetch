@@ -1,0 +1,23 @@
+{
+ "name": "town_oriel_bay",
+ "level": "downtown",
+ "layer": "back",
+ "kind": "building",
+ "real_height_m": 0.78,
+ "target_px": [
+  58,
+  44
+ ],
+ "checks_px": {
+  "roof": "decoration copper, 150 / 138 / 124 on screen",
+  "lights": "two, 18 wide, the house's frames and panes"
+ },
+ "tier": "C",
+ "family": "dt_sample",
+ "method": "built from stamped parts, tools/build_dt_street.py",
+ "build": "tools/build_dt_street.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_oriel_bay.png",
+  "where": "Downtown tall, the guild house's bay window under the CHIMNEY's roof, centred, bottom on the box's bottom (y 244) (arthooks.lua drawTownBays; decision 1a, review round 2)"
+ }
+}

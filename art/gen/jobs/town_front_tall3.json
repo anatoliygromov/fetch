@@ -1,0 +1,25 @@
+{
+ "name": "town_front_tall3",
+ "level": "downtown",
+ "layer": "back",
+ "kind": "building",
+ "real_height_m": 9.4,
+ "target_px": [
+  96,
+  432
+ ],
+ "checks_px": {
+  "storey": 140,
+  "ground_floor": 152,
+  "upper_window": "44 x 74",
+  "gate": "56 wide, 2.6 m"
+ },
+ "tier": "C",
+ "family": "dt_sample",
+ "method": "built from stamped parts, tools/build_tall_fronts.py",
+ "build": "tools/build_tall_fronts.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_front_tall3.png",
+  "where": "Downtown tall fronts, bay 3 (carriage gate), full height (decision 1a)"
+ }
+}

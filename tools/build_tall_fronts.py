@@ -7,7 +7,12 @@ docs/BIBLE.md section 3: 46 px a metre, the crispness bar, decoration without an
   python3 -I tools/build_tall_fronts.py --parts out.png a sheet of the three at 4x with the role colours
 
 Each front is one bay of a ground floor, 3.1 m high (plinth 0.17 m, the floor 2.95 m), under a stone cornice; the
-first floor starts above it. The game shows only the lower 114 to 176 px (each back box is cut at its top, the
+first floor starts above it. (art/dt-sample-05nov, layer plan decision 1a, owner 26 Oct: the houses run on past the
+top of the screen. Each file is now 432 px tall: the ground floor's rows 88-239 as before at the bottom (rows 280-431),
+and two upper storeys of 140 px (3.0 m) above it, the first floor's floor on the ground floor's cornice. One upper
+window, drawn once (1.0 x 1.6 m: three panes across, three down, in a stone surround under a hood, on a sill), stamped
+on every upper storey of every bay, centred, so all upper windows of the street are pixel-identical; a string course
+between the two upper storeys. The image's top is at y -18 in the tall level: never on screen.) The game shows only the lower 114 to 176 px (each back box is cut at its top, the
 roofline the high road runs on, arthooks.lua), so the bays are what counts:
   1  (80 px)  a panelled double door (0.96 x 2.1 m) under a glazed transom, in a stone surround with a keystone
   2  (88 px)  a shop front: painted pilasters, a fascia, a three-pane window (1.1 x 1.7 m) over a panelled riser
@@ -31,10 +36,14 @@ TOP = 131                                    # every feature starts at or below 
 
 # per-material ramps (full local colour; the game fades decoration towards the level's haze)
 C = dict(
-    W=(214, 168, 104), S=(176, 128, 80),                          # yellow plaster, its shade (swapped per building)
-    L=(222, 214, 198), T=(176, 166, 152), V=(116, 108, 102),      # granite: lit, mid, dark
-    G=(62, 72, 88), R=(98, 114, 130),                             # glass, its reflection
-    F=(228, 224, 214),                                            # window frames and glazing bars
+    # (art/dt-sample-05nov, review round 1: the back layer sits below the far layers on screen. The look's back fade
+    # (28 %) and shader lift every colour, so the file colours are set from their on-screen luma: plaster 152 and
+    # its shade 138, granite 166 / 148 / 126, frames 170. tools/asset_qa.py measures them as drawn.)
+    W=(135, 106, 66), S=(116, 85, 53),                            # yellow plaster, its shade (swapped per building)
+    L=(135, 130, 120), T=(110, 103, 95), V=(77, 72, 68),          # granite: lit, mid, dark
+    G=(31, 37, 45), R=(47, 55, 62),                               # glass, its reflection (panes about 100 on screen,
+                                                                  # 50 under the plaster: review round 2)
+    F=(140, 137, 131),                                            # window frames and glazing bars
     K=(104, 66, 44), J=(136, 92, 60), D=(68, 44, 32),             # oak: leaf, lit panel edge, shadow / joints
     N=(56, 88, 70), M=(84, 120, 94),                              # painted shopfront green, lit
     I=(52, 50, 54),                                               # iron straps and rings
@@ -96,7 +105,6 @@ def common(cv):
     cv.rect(0, H - 1, w - 1, H - 1, "V")
     for x in range(8 + (w // 2) % 24, w - 4, 24):                    # its joints, on a 24 px grid
         cv.rect(x, PLINTH + 1, x, H - 2, "V")
-    window_first_floor(cv, w // 2, 58)
 
 # ---- the three bays ---------------------------------------------------------------------------------------------
 def front_door(w=80):
@@ -202,18 +210,79 @@ def front_gate(w=96):
     cv.rect(ox0 - 2, PLINTH - 1, ox1 + 2, PLINTH - 1, "L")           # the threshold
     return cv
 
-FRONTS = {1: front_door, 2: front_shop, 3: front_gate}
-WIDTHS = {1: 80, 2: 88, 3: 96}
+# ---- the upper storeys (art/dt-sample-05nov) ---------------------------------------------------------------------
+STOREY, UPPER = 140, 280                     # an upper storey (3.0 m); two of them above the ground floor's cornice
 
-def render(cv):
-    im = np.zeros((H, cv.w, 4), np.uint8)
-    for y in range(H):
-        for x in range(cv.w):
-            im[y, x] = (*C[cv.role[y, x]], 255)
+def upper_window(cv, cx, y0):
+    """the upper window, drawn once: glass 40 x 70 in a 2 px frame (44 x 74), panes 12 x 22 with 2 px bars and a lit
+    left column; a 3 px stone surround (lit top and left, shade right); a hood above (lit top, dark lip); a sill below
+    (lit top, dark lip) with its cast shadow on the wall; the surround and hood cast 2 px of shadow to the right"""
+    w, h = 44, 74
+    x0 = cx - w // 2; x1 = x0 + w - 1; y1 = y0 + h - 1
+    cv.rect(x0 - 3, y0 - 3, x1 + 3, y1, "T")                       # the surround
+    cv.rect(x0 - 3, y0 - 3, x1 + 3, y0 - 3, "L"); cv.rect(x0 - 3, y0 - 3, x0 - 3, y1, "L")
+    cv.rect(x1 + 3, y0 - 2, x1 + 3, y1, "V")
+    cv.rect(x1 + 4, y0 - 3, x1 + 5, y1 + 6, "S")                   # its cast shadow, right
+    cv.rect(x0 - 6, y0 - 7, x1 + 6, y0 - 7, "L")                   # the hood: lit top, two mid, dark lip
+    cv.rect(x0 - 6, y0 - 6, x1 + 6, y0 - 5, "T")
+    cv.rect(x0 - 6, y0 - 4, x1 + 6, y0 - 4, "V")
+    cv.rect(x1 + 7, y0 - 6, x1 + 8, y0 - 3, "S")                   # the hood's cast shadow, right
+    cv.rect(x0, y0, x1, y1, "F")                                   # the frame and bars
+    for px in (x0 + 2, x0 + 16, x0 + 30):
+        for py in (y0 + 2, y0 + 26, y0 + 50):
+            cv.rect(px, py, px + 11, py + 21, "G")
+            cv.rect(px, py, px, py + 21, "R")                       # the pane's lit left column
+    cv.rect(x0 - 5, y1 + 1, x1 + 5, y1 + 1, "L")                   # the sill: lit top, mid, dark lip
+    cv.rect(x0 - 5, y1 + 2, x1 + 5, y1 + 3, "T")
+    cv.rect(x0 - 5, y1 + 4, x1 + 5, y1 + 4, "V")
+    cv.rect(x0 - 4, y1 + 5, x1 + 7, y1 + 6, "S")                   # the sill's cast shadow under it
+
+def course(cv, y):
+    """the string course: the same 7 rows as the ground floor's cornice (lit top, three mid, dark lip, two rows of its
+    shadow on the wall), on the 140 px storey pitch (rows 140 and 280 of the full file)"""
+    w = cv.w
+    cv.rect(0, y, w - 1, y, "L"); cv.rect(0, y + 1, w - 1, y + 3, "T"); cv.rect(0, y + 4, w - 1, y + 4, "V")
+    cv.rect(0, y + 5, w - 1, y + 6, "S")
+
+def upper(w, xs=None):
+    """the two upper storeys of a bay (rows 0-279 of the file): wall, the string course on the first floor's top
+    (row 140, a storey above the ground floor's cornice at row 280), a window each, centred (or, xs = {storey: [x]},
+    at the x's given per storey: 0 the second floor, 1 the first)"""
+    global H
+    keep, H = H, UPPER                       # (Canvas clips to the global H)
+    try:
+        cv = Canvas(w)
+        course(cv, 0); course(cv, STOREY)                           # (row 0 is never on screen: the two storeys identical)
+        for k in range(2):
+            for cx in (xs[k] if xs else [w // 2]):
+                upper_window(cv, cx, k * STOREY + 26)
+        return cv.role
+    finally:
+        H = keep
+
+def front_guild(w=148):
+    """the guild house (layer plan decision 1a): one 148 px house, the carriage gate under the portal top (the stepped
+    gable's perches, drawn by tools/build_dt_street.py); two windows on the second floor; the first floor is the bay
+    window's, standing on the portal's top (the chimney's perch)"""
+    return front_gate(w)
+
+FRONTS = {1: front_door, 2: front_shop, 3: front_gate, 4: front_guild}
+WIDTHS = {1: 80, 2: 88, 3: 96, 4: 148}
+# the guild house (review round 2): on the second floor two windows with the street's margins (14 px left, 12 right:
+# the window's cast shadow is on its right), whole and identical; on the first floor none: its bay window stands there
+# (tools/build_dt_street.py town_oriel_bay.png, drawn by arthooks.lua)
+UPPER_X = {4: {0: [42, 106], 1: []}}
+
+def render(role):
+    im = np.zeros((role.shape[0], role.shape[1], 4), np.uint8)
+    for y in range(role.shape[0]):
+        for x in range(role.shape[1]):
+            im[y, x] = (*C[role[y, x]], 255)
     return im
 
 def build():
-    return {i: render(FRONTS[i](WIDTHS[i])) for i in FRONTS}
+    """the full-height fronts: two upper storeys over the ground floor (its rows from the cornice down)"""
+    return {i: render(np.vstack([upper(WIDTHS[i], UPPER_X.get(i)), FRONTS[i](WIDTHS[i]).role[CORNICE:]])) for i in FRONTS}
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
@@ -226,15 +295,15 @@ if __name__ == "__main__":
         p = os.path.join(OUT, f"town_front_tall{i}.png")
         assert len({tuple(c) for c in im.reshape(-1, 4)}) <= 20, "colours"
         for col in (0, im.shape[1] - 1):                             # the edge columns: plain (the game repeats them)
-            assert set(map(tuple, im[64:, col, :3].tolist())) <= {C[k] for k in "WSLTV"}, f"front {i}: a feature on column {col}"
+            assert set(map(tuple, im[:, col, :3].tolist())) <= {C[k] for k in "WSLTV"}, f"front {i}: a feature on column {col}"
         if o.check:
             ok = os.path.exists(p) and np.array_equal(np.array(Image.open(p).convert("RGBA")), im)
             print(p, "matches the build" if ok else "DIFFERS from the build"); bad += not ok
         else:
             Image.fromarray(im).save(p); print(p, im.shape[1], "x", im.shape[0], len({tuple(c) for c in im.reshape(-1, 4)}), "colours")
     if o.parts:
-        z = 4; sheet = Image.new("RGBA", (sum(im.shape[1] * z + 20 for im in ims.values()) + 20, H * z + 40), (60, 60, 66, 255)); x = 20
+        z = 4; sheet = Image.new("RGBA", (sum(im.shape[1] * z + 20 for im in ims.values()) + 20, max(im.shape[0] for im in ims.values()) * z + 40), (60, 60, 66, 255)); x = 20
         for im in ims.values():
-            sheet.alpha_composite(Image.fromarray(im).resize((im.shape[1] * z, H * z), Image.NEAREST), (x, 20)); x += im.shape[1] * z + 20
+            sheet.alpha_composite(Image.fromarray(im).resize((im.shape[1] * z, im.shape[0] * z), Image.NEAREST), (x, 20)); x += im.shape[1] * z + 20
         sheet.save(o.parts)
     sys.exit(1 if bad else 0)
