@@ -15,6 +15,8 @@ from scipy import ndimage
 sys.path.insert(0, 'tools')
 import aseprite_io
 
+if os.path.exists('art/source/cp_oak/RECUT'):
+    sys.exit('history: the oak was re-cut on 5 Nov (tools/recut_cp_oak.py); the round scripts no longer run')
 def hx(s): return np.array([int(s[i:i + 2], 16) for i in (1, 3, 5)])
 
 def load(name):

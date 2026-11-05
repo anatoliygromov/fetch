@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""cut_cp_tree.py RENDER NAME [--leaf K] [--bark K] [--rim-lum L] [--bark-box x0,y0,x1,y1]: cut a City Park tree from its SpriteCook render
+"""cut_cp_tree.py RENDER NAME [--leaf K] [--bark K] [--rim-lum L] [--bark-box x0,y0,x1,y1] [--mode N]: cut a City Park tree from its SpriteCook render
 (5 Nov 2026, the City Park sample screen). The River Walk lime's method (art/source/rw_lime/cut_lime.py and
 clean_lime.py), made one script for every tree of the family.
 
@@ -67,6 +67,22 @@ for sel, k in ((leaf.reshape(-1), KL), (bark.reshape(-1), KB)):
                 cols[j] = cols[o[int(np.argmin([((cols[i] - cols[j]) ** 2).sum() for i in o]))]]
     rgb[sel] = np.rint(cols[lab_]).astype(int)
 rgb = rgb.reshape(a.shape)
+MODE = int(a_[a_.index('--mode') + 1]) if '--mode' in a_ else 0
+if MODE:                                                             # (5 Nov, oak re-cut) a 3x3 majority on the cluster
+    from scipy.ndimage import generic_filter                         # labels of each material, MODE passes: ragged fields
+    for sel in (leaf, bark):                                         # and 1-3 px islands join their clump. It only picks
+        key = (rgb[..., 0] << 16) | (rgb[..., 1] << 8) | rgb[..., 2]  # among the material's own colours (no averaging)
+        key = np.where(sel, key, -1)
+        def maj(v):
+            c = int(v[4])
+            if c < 0: return c
+            u, n = np.unique(v[v >= 0], return_counts=True)
+            m = u[n.argmax()]
+            return int(m) if n.max() >= 5 else c
+        for _ in range(MODE):
+            key = generic_filter(key, maj, size=3, mode='constant', cval=-1)
+        k2 = key[sel]
+        rgb[sel] = np.stack([(k2 >> 16) & 255, (k2 >> 8) & 255, k2 & 255], -1)
 ys, xs = np.nonzero(tree)
 box = (xs.min(), ys.min(), xs.max() + 1, ys.max() + 1)
 rgb = rgb[box[1]:box[3], box[0]:box[2]]; al = tree[box[1]:box[3], box[0]:box[2]].copy()

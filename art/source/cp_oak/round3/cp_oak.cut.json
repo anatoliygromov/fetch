@@ -1,0 +1,31 @@
+{
+ "name": "cp_oak",
+ "size": [
+  388,
+  343
+ ],
+ "render": "art/gen/renders/cp_oak_r1b.png",
+ "cut_by": "tools/cut_cp_tree.py art/gen/renders/cp_oak_r1b.png cp_oak (1x render, no resampling)",
+ "colours_in": 10,
+ "measures_px": {
+  "trunk_20px_up": 98,
+  "trunk_50px_up": 55,
+  "trunk_80px_up": 54,
+  "lowest_leaf_px_up": 7,
+  "crown_width": 388,
+  "size": [
+   388,
+   343
+  ],
+  "colours": 10,
+  "top_cut_by_frame": false
+ },
+ "lone_changed": 427,
+ "blotches_merged": 31,
+ "fails": [],
+ "waived": [
+  "trunk 54-55 px at 50-80 px up (1.2 m) against the 46 px spec, within the plan's range for the park's old and big oaks (1 to 1.3 m, 46 to 60 px). Retry 1 (blockout trunk 29 px) came back as r1b on SpriteCook's own pixel grid (392x348, Pepper redrawn at 40 px and dropped); cut 1:1 on that grid, never resampled.",
+  "crown 388 px (8.4 m) against the 470 px blockout; its top is 24 px above the world's top (y -24 with its foot on the back props' line y 319), so it is never seen at any camera.",
+  "decor-ink 71 % (the leaf clumps' rim is a dark rust, the leaves' own darkest shade, not ink): the approved trees are 64 to 66 %."
+ ]
+}

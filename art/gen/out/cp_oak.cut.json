@@ -5,8 +5,8 @@
   343
  ],
  "render": "art/gen/renders/cp_oak_r1b.png",
- "cut_by": "tools/cut_cp_tree.py art/gen/renders/cp_oak_r1b.png cp_oak (1x render, no resampling)",
- "colours_in": 10,
+ "cut_by": "tools/recut_cp_oak.py: tools/cut_cp_tree.py --leaf 5 --bark 4 --rim-lum 60 --mode 2, tools/polish_cp_trees.py, then the round 1 rules on the new colours (edits.json \"recut\")",
+ "colours_in": 9,
  "measures_px": {
   "trunk_20px_up": 98,
   "trunk_50px_up": 55,
@@ -17,15 +17,14 @@
    388,
    343
   ],
-  "colours": 10,
+  "colours": 9,
   "top_cut_by_frame": false
  },
- "lone_changed": 427,
- "blotches_merged": 31,
+ "lone_changed": 248,
+ "blotches_merged": 19,
  "fails": [],
  "waived": [
-  "trunk 54-55 px at 50-80 px up (1.2 m) against the 46 px spec, within the plan's range for the park's old and big oaks (1 to 1.3 m, 46 to 60 px). Retry 1 (blockout trunk 29 px) came back as r1b on SpriteCook's own pixel grid (392x348, Pepper redrawn at 40 px and dropped); cut 1:1 on that grid, never resampled.",
-  "crown 388 px (8.4 m) against the 470 px blockout; its top is 24 px above the world's top (y -24 with its foot on the back props' line y 319), so it is never seen at any camera.",
-  "decor-ink 71 % (the leaf clumps' rim is a dark rust, the leaves' own darkest shade, not ink): the approved trees are 64 to 66 %."
+  "trunk 54-55 px at 50-80 px up (old oak spec 46, big oak 60): owner question on the board",
+  "re-cut 5 Nov after three review rounds of pixel fixes (round 1-3 files in art/source/cp_oak/round3/)"
  ]
 }
