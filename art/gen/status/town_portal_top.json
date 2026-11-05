@@ -1,0 +1,18 @@
+{
+ "name": "town_portal_top",
+ "family": "dt_sample",
+ "tier": "C",
+ "steps": {
+  "spec": {
+   "time": "2026-11-05 22:41"
+  },
+  "built": {
+   "build": "tools/build_dt_street.py",
+   "time": "2026-11-05 22:41"
+  },
+  "ingame": {
+   "frame": "docs/review/05nov/dt-sample/frames_after/sweep_downtown_y120_x1560.png",
+   "time": "2026-11-05 22:44"
+  }
+ }
+}

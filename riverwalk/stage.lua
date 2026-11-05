@@ -642,6 +642,7 @@ function St:draw(debug)
   -- Downtown's cargo bikes too (r8/levels, D1): the kiosk and the gates hide their wheels; Pepper on a perch is
   -- drawn over the tall rider (arthooks.lua)
   use("play")
+  if style then AH.drawTownPerches(self, cam) end                  -- the tall Downtown's crate perches: behind the rider
   for _, c in ipairs(self.bikes) do if c.zone and c.zone.kind == "cargo" then AH.drawCargo(c, cam) end end
   if not style and not grey then
     use("play"); lg.setColor(1, 1, 1, 1)

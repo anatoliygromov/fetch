@@ -344,16 +344,12 @@ function H.townPiece(p, camx, def)
   if not tallTown(def) then return false end
   if p.layer == "back" and (isFront(p) or p.name == "RIDDARHOLMEN") then return true end   -- (H.drawTownBack)
   -- layer plan decision 4a (owner, 26 Oct; art/dt-sample-05nov): the cargo bike's hiding places stand at true scale
-  -- behind her (H.drawTownGateways, H.drawTownStops); their old tops, her perches, are the baker's bread crates:
-  -- the GATE's solid box a stack of crates (art/scene/town_crates<w>.png), the SHELTER's one-way top the baker's long
-  -- board (town_breadboard.png) on two stacks of crates end-on (decoration, drawn with the shelter). Each image at
-  -- the box's x0 - 1, y0 - 1 (its outline round the box). (tools/build_dt_street.py)
-  if H.FIRST_FLOOR and p.layer == "play" and (p.name == "GATE" or p.name == "SHELTER") then
-    local im = p.name == "GATE" and H.img("scene/town_crates" .. (p.x1 - p.x0)) or (p.name == "SHELTER" and H.img("scene/town_breadboard"))
-    if im then
-      if p.name == "GATE" then Sc.shadow((p.x0 + p.x1) / 2 - camx, p.y1 - 1, p.x1 - p.x0 + 4) end
-      lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(p.x0 - camx) - 1, p.y0 - 1); return true
-    end
+  -- behind her (H.drawTownGateways, H.drawTownStops); their old tops, her perches, are the baker's bread crates, drawn
+  -- in their own pass before the cargo bikes so the rider is never cut by them (H.drawTownPerches, review round 1).
+  -- A GATE with no house front to hold its gateway (screen 10) keeps the old gate piece.
+  if H.FIRST_FLOOR and p.layer == "play" then
+    if p.name == "GATE" and H.gatewayX(def, p) and H.img("scene/town_crates" .. (p.x1 - p.x0)) then return true end
+    if p.name == "SHELTER" and H.img("scene/town_breadboard") then return true end
   end
   if p.layer ~= "play" or p.kind == "decor" or not high(def, p) then return false end
   local x = math.floor(p.x0 - camx)
@@ -361,7 +357,8 @@ function H.townPiece(p, camx, def)
   local g = gable(def)
   if g and g.set[p] then                                               -- the stepped gable: drawn once, with its first step
     if p ~= g[1] then return true end
-    local im = H.img("scene/town_roof_gable")
+    local im = H.FIRST_FLOOR and H.img("scene/town_portal_top") or H.img("scene/town_roof_gable")   -- (decision 1a:
+    -- the stepped gable becomes the guild house's portal top, its steps where they were; tools/build_dt_street.py)
     if im then lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(g.x0 - camx) - 1, g.top - 1); return true end
     for q in pairs(g.set) do local qx = math.floor(q.x0 - camx); rect(INK, qx - 1, q.y0 - 1, q.x1 - q.x0 + 2, 10); brickFace(qx, q.y0 + 2, q.x1 - q.x0, 7); rect(STONE, qx, q.y0, q.x1 - q.x0, 2) end
     lg.setColor(1, 1, 1, 1); return true
@@ -371,8 +368,11 @@ function H.townPiece(p, camx, def)
     if n == "FOOTBRIDGE" then
       local im = H.img("scene/town_footbridge")
       if im then drawImgOn(im, p, x, p.y0 - 1 - H.BRIDGE_RAIL); return true end
-    elseif n == "DORMER" and H.FIRST_FLOOR and H.img("scene/town_hood") then   -- (decision 1a: the dormer becomes
-      drawImgOn(H.img("scene/town_hood"), p, x, p.y0 - 1); return true          -- a copper window hood on the front)
+    elseif n == "CHIMNEY" and H.FIRST_FLOOR and H.img("scene/town_oriel") then   -- (decision 1a: the chimney becomes
+      drawImgOn(H.img("scene/town_oriel"), p, x, p.y0 - 1); return true          -- the guild house's bay window, its
+                                                                               -- roof the perch with the golden bone)
+    elseif n == "DORMER" and H.FIRST_FLOOR and H.img("scene/town_roof_ledge") then   -- (review round 1: no window
+      threeSlice(H.img("scene/town_roof_ledge"), x, p.y0, w); return true             -- under it for a hood: a ledge)
     elseif n ~= "" then
       local im = H.img("scene/town_roof_" .. slug(n) .. w) or H.img("scene/town_roof_" .. slug(n))
       if im then drawImgOn(im, p, x, p.y0 - 1, H.STONE_TINT[n]); return true end   -- (a draw-time tint: the art file is not changed)
@@ -426,13 +426,15 @@ end
 -- symmetrically or widened with its own edge column (every feature is centred and at most 70 px wide), and all in
 -- the box's plaster (`plaster` property, else in turn), swapped by exact colour before the fade. The cut at the
 -- box's top (the roofline the high road runs on) gets a stone coping; the box's right edge a 2 px shade.
-local SRC = { { 214, 168, 104 }, { 176, 128, 80 } }                 -- the art's plaster: wall, shade (0-255)
+local SRC = { { 135, 106, 66 }, { 116, 85, 53 } }                    -- the art's plaster: wall, shade (0-255)
+-- (art/dt-sample-05nov, review round 1: the houses sit below the far layers on screen, about 146 to 156 after the
+-- back fade and shader, the old town row 168, the far roofs 169 to 176; each colour set from its on-screen luma)
 H.PLASTER = {
   yellow = SRC,
-  red = { { 172, 92, 70 }, { 130, 66, 52 } },
-  cream = { { 222, 198, 152 }, { 184, 156, 114 } },
-  ochre = { { 190, 140, 92 }, { 150, 106, 70 } },
-  stone = { { 164, 150, 136 }, { 128, 114, 104 } },
+  red = { { 154, 82, 63 }, { 127, 64, 51 } },
+  cream = { { 129, 115, 88 }, { 110, 94, 68 } },
+  ochre = { { 137, 101, 66 }, { 114, 81, 53 } },
+  stone = { { 115, 105, 96 }, { 96, 86, 78 } },
 }
 H.PLASTER_ORDER = { "yellow", "red", "cream", "ochre", "stone" }
 local COPING = { { 222 / 255, 214 / 255, 198 / 255 }, { 176 / 255, 166 / 255, 152 / 255 }, { 116 / 255, 108 / 255, 102 / 255 } }
@@ -464,6 +466,7 @@ local function bays(p, W)                                            -- { { fron
   local list = {}
   W = W or p.x1 - p.x0
   if p.fronts then for k in tostring(p.fronts):gmatch("%d") do list[#list + 1] = tonumber(k) end end
+  if H.FIRST_FLOOR and p.name == "GUILD HOUSE" then list = { 4 } end   -- (its own 148 px front, round 1)
   local n = #list > 0 and #list or math.max(1, math.floor(W / 88 + 0.5))
   local base, extra, x, out = math.floor(W / n), W - math.floor(W / n) * n, p.x0, {}
   for b = 1, n do
@@ -474,10 +477,12 @@ local function bays(p, W)                                            -- { { fron
 end
 -- layer plan decision 1a (owner, 26 Oct; art/dt-sample-05nov): the houses run on past the top of the screen. A front
 -- box whose `cut` property is not set is drawn at its full height (the files are 432 px: the ground floor and two upper
--- storeys, the top at y -18, never on screen), with no coping. The guild house keeps its cut (its stepped gable is
--- the high road there): `cut` = true on it, and on any box that should still end at its top.
+-- storeys, the top at y -18, never on screen), with no coping. The guild house too (review round 1, pick 1a as
+-- written): its front is town_front_tall4 (148 px, the gate under the portal top, the upper windows at the sides),
+-- its stepped gable is drawn as the portal top and its chimney as the bay window's roof (townPiece). A box with
+-- `cut` = true still ends at its top.
 H.FIRST_FLOOR = true
-local function cutAtTop(p) return not H.FIRST_FLOOR or p.cut or p.name == "GUILD HOUSE" end
+local function cutAtTop(p) return not H.FIRST_FLOOR or p.cut end
 local function drawBay(f, x, w, y0, y1, full)
   local ih = full and f.h or math.min(f.h, y1 - y0)
   local sy = f.h - ih
@@ -588,9 +593,10 @@ function H.drawTownBack(s, cam)
   lg.setColor(1, 1, 1, 1)
 end
 
--- (decision 4a, art/dt-sample-05nov) the courtyard gateways at true scale, 3 m (138 px), in the street's front wall
--- behind each GATE (its crates are her perch): decoration on the back line (y 414), faded as the fronts, centred on
--- the box; drawn with the fronts, so the tram passes in front of them. tools/build_dt_street.py.
+-- (decision 4a, art/dt-sample-05nov; review round 1) the courtyard gateway at true scale, 3 m (138 px): an arch in a
+-- house's ground floor, centred in the house (the bay) whose front holds the GATE's right end, the bike's way out;
+-- decoration on the back line (y 414), faded as the fronts, drawn with them (the tram passes in front). No house
+-- front there (screen 10): no gateway, and the GATE keeps its old piece (townPiece). tools/build_dt_street.py.
 local decoCache = {}
 local function decoImg(n)
   local key = n .. "#" .. Look.key
@@ -604,35 +610,81 @@ local function decoImg(n)
   return decoCache[key]
 end
 H.BACK_LINE = 10                                         -- the back line: 10 px behind her street (def.foot - 10)
+local gwCache = setmetatable({}, { __mode = "k" })
+function H.gatewayX(def, p)                              -- the gateway's centre x for a GATE, or nil
+  gwCache[def] = gwCache[def] or {}
+  local c = gwCache[def]
+  if c[p] == nil then
+    c[p] = false
+    if love.filesystem.getInfo("art/scene/town_gateway.png") then
+      local ex = p.x1 - 1
+      for _, q in ipairs(def.props) do
+        if isFront(q) and not cutAtTop(q) and ex >= q.x0 and ex < q.x1 then
+          for _, b in ipairs(bays(q)) do if ex >= b[2] and ex < b[2] + b[3] then c[p] = b[2] + b[3] / 2 end end
+        end
+      end
+    end
+  end
+  return c[p] or nil
+end
 function H.drawTownGateways(def, cam)
   if not (tallTown(def) and H.FIRST_FLOOR) then return end
+  local im = decoImg("town_gateway")
+  if not im then return end
   for _, p in ipairs(def.props) do
     if p.name == "GATE" and p.layer == "play" then
-      local im = decoImg("town_gateway" .. (p.x1 - p.x0))
-      if im then
-        local x = math.floor((p.x0 + p.x1) / 2 - im:getWidth() / 2 - cam)
+      local cx = H.gatewayX(def, p)
+      if cx then
+        local x = math.floor(cx - im:getWidth() / 2 - cam)
         if x < 330 and x + im:getWidth() > -10 then lg.setColor(1, 1, 1, 1); lg.draw(im, x, def.foot - H.BACK_LINE - im:getHeight()) end
       end
     end
   end
 end
--- (decision 4a) the tram stop shelter at true scale, 2.5 m (115 px), and the two stacks of bread crates that carry the
--- baker's board (the SHELTER's perch): decoration on the back line, faded; drawn after the tram (stage.lua), which
--- stops behind it. The stacks stand at the box's two ends, under the board, on her street (def.foot).
+-- (decision 4a) the tram stop shelter at true scale, 2.5 m (115 px): decoration on the back line, faded; drawn after
+-- the tram (stage.lua), which stops behind it.
 function H.drawTownStops(s, cam)
   local def = s.def
   if not (tallTown(def) and H.FIRST_FLOOR) then return end
-  local sh, leg = decoImg("town_shelter_tall"), decoImg("town_crate_leg")
+  local sh = decoImg("town_shelter_tall")
   if not sh then return end
   for _, p in ipairs(def.props) do
     if p.name == "SHELTER" and p.layer == "play" and p.x1 - cam > -100 and p.x0 - cam < 420 then
       lg.setColor(1, 1, 1, 1)
       lg.draw(sh, math.floor((p.x0 + p.x1) / 2 - sh:getWidth() / 2 - cam), def.foot - H.BACK_LINE - sh:getHeight())
-      if leg then
-        for _, lx in ipairs({ p.x0, p.x1 - leg:getWidth() }) do lg.draw(leg, math.floor(lx - cam), def.foot - leg:getHeight()) end
+    end
+  end
+end
+-- (decision 4a, review round 1) the perches of the hiding places, play pieces with their 1 px outline, drawn before
+-- the cargo bikes (stage.lua) so the rider passes in front of them, never cut at the waist: the GATE's crates
+-- (town_crates<w>.png at x0 - 1, y0 - 1, only where the gateway stands), the SHELTER's baker's board
+-- (town_breadboard.png, x0 - 1, y0 - 1) on two stacks of the same bread crates end-on (town_crate_leg.png, at the
+-- box's two ends, on her street).
+function H.drawTownPerches(s, cam)
+  local def = s.def
+  if not (tallTown(def) and H.FIRST_FLOOR) then return end
+  local board, leg = H.img("scene/town_breadboard"), H.img("scene/town_crate_leg")
+  for _, p in ipairs(def.props) do
+    if p.layer == "play" and p.x1 - cam > -20 and p.x0 - cam < 340 then
+      if p.name == "GATE" and H.gatewayX(def, p) then
+        local im = H.img("scene/town_crates" .. (p.x1 - p.x0))
+        if im then
+          Sc.shadow((p.x0 + p.x1) / 2 - cam, p.y1 - 1, p.x1 - p.x0 + 4)
+          lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(p.x0 - cam) - 1, p.y0 - 1)
+        end
+      elseif p.name == "SHELTER" and board then
+        lg.setColor(1, 1, 1, 1)
+        if leg then
+          for _, lx in ipairs({ p.x0 - 1, p.x1 + 1 - leg:getWidth() }) do
+            Sc.shadow(lx + leg:getWidth() / 2 - cam, def.foot - 1, leg:getWidth() + 2)
+            lg.setColor(1, 1, 1, 1); lg.draw(leg, math.floor(lx - cam), def.foot - leg:getHeight())
+          end
+        end
+        lg.draw(board, math.floor(p.x0 - cam) - 1, p.y0 - 1)
       end
     end
   end
+  lg.setColor(1, 1, 1, 1)
 end
 
 return H

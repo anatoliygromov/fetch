@@ -5,7 +5,7 @@ BEFORE_DIR / AFTER_DIR hold tools/dt_sample_frames.sh frames (sweep_downtown_y<c
 this branch. Writes to OUT_DIR:
   dt_sample_s7_ba.png        screen 7 (camera x 1920) at 3x, before | after, high road (y 120) over street (y 240)
   dt_sample_s7_sheet.png     screen 7 after: colour | greyscale (Rec.601 luma, as the look shader) at 3x, then 1x
-  dt_sample_hiding_ba.png    the gateway and the shelter (camera x 1840) and the second pair (x 2960), street, 3x, before | after
+  dt_sample_hiding_ba.png    the gateway and the shelter (camera x 1840), street, and the guild house (x 1560), high road, 3x, before | after
   dt_<piece>_5x.png          each new piece at 5x (4x for the fronts) beside the approved bench, bin and lamp
 """
 import os, sys
@@ -51,12 +51,11 @@ if __name__ == "__main__":
     grid([[z(fr(B, 120, 1920), 3), z(fr(A, 120, 1920), 3)], [z(fr(B, 240, 1920), 3), z(fr(A, 240, 1920), 3)]]).save(f"{O}/dt_sample_s7_ba.png")
     hi, st = fr(A, 120, 1920), fr(A, 240, 1920)
     grid([[z(hi, 3), z(grey(hi), 3)], [z(st, 3), z(grey(st), 3)], [hi, grey(hi), st, grey(st)]]).save(f"{O}/dt_sample_s7_sheet.png")
-    grid([[z(fr(B, 240, 1840), 3), z(fr(A, 240, 1840), 3)], [z(fr(B, 240, 2960), 3), z(fr(A, 240, 2960), 3)]]).save(f"{O}/dt_sample_hiding_ba.png")
-    piece_sheet(["town_front_tall1", "town_front_tall2", "town_front_tall3"], 2, f"{O}/dt_fronts_2x.png")
+    grid([[z(fr(B, 240, 1840), 3), z(fr(A, 240, 1840), 3)], [z(fr(B, 120, 1560), 3), z(fr(A, 120, 1560), 3)]]).save(f"{O}/dt_sample_hiding_ba.png")
+    piece_sheet(["town_front_tall1", "town_front_tall2", "town_front_tall3", "town_front_tall4"], 2, f"{O}/dt_fronts_2x.png")
     piece_sheet(["town_shelter_tall", "town_breadboard", "town_crate_leg"], 5, f"{O}/dt_shelter_5x.png")
-    piece_sheet(["town_gateway70", "town_crates70"], 5, f"{O}/dt_gateway_5x.png")
-    piece_sheet(["town_gateway96", "town_crates96"], 4, f"{O}/dt_gateway96_4x.png")
-    piece_sheet(["town_hood"], 5, f"{O}/dt_hood_5x.png")
+    piece_sheet(["town_gateway", "town_crates70"], 5, f"{O}/dt_gateway_5x.png")
+    piece_sheet(["town_portal_top", "town_oriel"], 5, f"{O}/dt_guild_5x.png")
     # the upper window at 6x: the one part stamped on every upper storey
     win = Image.open(os.path.join(ART, "town_front_tall1.png")).convert("RGB").crop((8, 150, 72, 250))
     z(win, 6).save(f"{O}/dt_window_6x.png")

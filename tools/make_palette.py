@@ -26,8 +26,11 @@ APPROVED = {
         # board did not reject (apple crates, tubs, fountain rim and bowl, shop sign, tier; table and awnings: fix
         # only, their outlines). The sample screen's built pieces are kept whole as their ramps (plaster, granite,
         # glass, pine, crust, steel, copper); they count as approved only with the owner's approve on the board.
-        'keep': ['pepper.png', 'ball.png', 'scene/town_front_tall1.png', 'scene/town_shelter_tall.png',
-                 'scene/town_gateway70.png', 'scene/town_crates70.png', 'scene/town_hood.png'],
+        # (Review round 1: v1 is made FROM these built pieces, so their "only palette colours" check passes by
+        # construction, not by evidence: the card says so. Re-made after the round 1 value change.)
+        'keep': ['pepper.png', 'ball.png', 'scene/town_front_tall1.png', 'scene/town_front_tall2.png',
+                 'scene/town_front_tall4.png', 'scene/town_shelter_tall.png', 'scene/town_gateway.png',
+                 'scene/town_crates70.png', 'scene/town_portal_top.png', 'scene/town_oriel.png'],
         'pool': ['girl.png', 'scene/bench.png', 'scene/bin.png', 'scene/lamp_post.png', 'scene/town_crate_front.png',
                  'scene/town_tub.png', 'scene/town_rim.png', 'scene/town_bowl.png', 'scene/town_shopsign.png',
                  'scene/town_tier.png', 'scene/town_table_front.png', 'scene/town_awning64.png', 'scene/town_awning80.png'],

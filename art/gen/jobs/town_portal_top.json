@@ -1,0 +1,22 @@
+{
+ "name": "town_portal_top",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 1.06,
+ "target_px": [
+  122,
+  50
+ ],
+ "checks_px": {
+  "steps": "the GUILD ROOF boxes x 1560-1680, y 244-272, unchanged"
+ },
+ "tier": "C",
+ "family": "dt_sample",
+ "method": "built from stamped parts, tools/build_dt_street.py",
+ "build": "tools/build_dt_street.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_portal_top.png",
+  "where": "Downtown tall, the stepped gable (GUILD ROOF and the steps right of it), at x0 - 1, top - 1 (arthooks.lua townPiece; decision 1a)"
+ }
+}

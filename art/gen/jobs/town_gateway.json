@@ -1,23 +1,23 @@
 {
- "name": "town_gateway96",
+ "name": "town_gateway",
  "level": "downtown",
  "layer": "back",
  "kind": "building",
  "real_height_m": 3.0,
  "target_px": [
-  140,
+  80,
   138
  ],
  "checks_px": {
   "height": "138 (3.0 m)",
-  "opening": "108 wide"
+  "opening": "56 wide, 96 to the spring"
  },
  "tier": "C",
  "family": "dt_sample",
  "method": "built from stamped parts, tools/build_dt_street.py",
  "build": "tools/build_dt_street.py",
  "slot": {
-  "file": "riverwalk/art/scene/town_gateway96.png",
-  "where": "Downtown tall, GATE x 3072 (decision 4a)"
+  "file": "riverwalk/art/scene/town_gateway.png",
+  "where": "Downtown tall, centred in the house (bay) holding the GATE x 1868's right end (x 1912-2000), bottom on y 414 (arthooks.lua drawTownGateways; decision 4a)"
  }
 }

@@ -4,19 +4,25 @@ parts drawn once and stamped on integer grids (tier C; BIBLE 3: 46 px a metre, t
 binary alpha, 0 credits).
 
 Layer plan decision 4a (owner, 26 Oct): the cargo bike's hiding places at true scale behind Pepper, the perches on
-their old tops drawn as stacks of the baker's bread crates. Decision 1a: the dormer becomes a window hood.
+their old tops drawn as stacks of the baker's bread crates. Decision 1a: the guild house's stepped gable becomes a
+portal top and its chimney a bay window's roof. Review round 1 (5 Nov): every value set from its on-screen luma (back
+below the far layers, play perches mid-tone like the apple crates), one crate size, the gateway an arch in a house.
 
   town_shelter_tall.png  back, decoration (no outline): the tram stop shelter, 2.5 m (115 px) tall, 3.0 m (140 px)
-                         long; steel posts, a flat roof, a glass back wall with reflections, a bench, a lit poster
+                         long; steel posts, a flat roof, clear glass with one reflection band per pane, a lit poster
                          (a cinnamon bun, no text). Centred on the SHELTER box, standing on the back line (y 414).
-  town_gateway70.png,    back, decoration: the courtyard gateway, 3 m (138 px) tall, in rusticated stone under a
-  town_gateway96.png     cornice; the passage is dark, a sunny courtyard at its far end. Centred on the GATE box.
-  town_crates70.png,     play, obstacle (1 px dark outline): the GATE's solid perch (70 or 96 x 36) as two rows of
-  town_crates96.png      bread crates, 34 or 31 x 17 each (0.74 x 0.37 m), drawn at the box's x0 - 1, y0 - 1.
-  town_breadboard.png    play, the SHELTER's one-way perch (72 px, 48 px up): the baker's long board, outlined,
-                         drawn at x0 - 1, y0 - 1.
-  town_crate_leg.png     back, decoration: the board's two legs, three bread crates end-on (16 x 14 each).
-  town_hood.png          play, the DORMER's ledge (56 px) as a copper window hood on two stone consoles, outlined.
+  town_gateway.png       back, decoration: the courtyard gateway, 3 m (138 px) tall, 80 wide: rusticated piers and a
+                         stone arch, no wall of its own (the house's plaster shows round it); the dark passage with a
+                         sunny courtyard at its end. Centred in the house that holds the GATE's right end (arthooks).
+  town_crates70.png      play, obstacle (1 px dark outline): the GATE's solid perch (70 x 36) as 2 x 2 bread crates,
+                         34 x 17 each (0.74 x 0.37 m) on an 18 px pitch, drawn at the box's x0 - 1, y0 - 1.
+  town_breadboard.png    play, the SHELTER's one-way perch (72 px, 48 px up): the baker's board, two planks, outlined,
+                         drawn at x0 - 1, y0 - 1 (rows 375-386).
+  town_crate_leg.png     play, outlined: the board's two legs, two of the same crates end-on (16 x 17 on the 18 px pitch).
+  town_portal_top.png    play, outlined: the guild house's portal top on the stepped gable's boxes (GUILD ROOF and the
+                         steps right of it), stone steps, a gold medallion, a moulded base; at the steps' x0 - 1, top - 1.
+  town_oriel.png         play, outlined: the CHIMNEY's solid box (16 x 44) as a slim bay window with a copper roof, the
+                         golden bone's perch; at x0 - 1, y0 - 1, standing on the portal top.
 
   python3 -I tools/build_dt_street.py             write them all (riverwalk/art/scene/)
   python3 -I tools/build_dt_street.py --check     fail if a file on disk differs from the build
@@ -31,14 +37,16 @@ OUT = os.path.join(ROOT, "riverwalk", "art", "scene")
 
 C = dict(
     ink=(18, 18, 26),                                                   # the obstacles' outline (arthooks INK)
-    wl=(236, 208, 160), wm=(208, 172, 118), ws=(164, 124, 80), wd=(118, 84, 54), wi=(70, 48, 36),   # pine crate wood, interior
-    bl=(232, 168, 84), bm=(194, 120, 52), bd=(140, 78, 34),             # bread crust
+    # play (no fade): crate wood median about 110 on screen, as the apple crates; bread a warm step apart
+    wl=(150, 124, 88), wm=(130, 104, 68), ws=(104, 78, 48), wd=(82, 58, 36), wi=(52, 38, 30),   # pine crate wood, interior
+    bl=(178, 124, 60), bm=(150, 94, 42), bd=(112, 64, 28),              # bread crust
     sl=(132, 146, 156), sm=(88, 100, 112), ss=(64, 74, 86), sd=(46, 54, 64),   # steel (dark, so it reads faded)
-    gl=(204, 222, 228), gm=(178, 200, 208), gw=(232, 242, 244),         # glass: lit, mid, a streak
-    pc=(244, 236, 214), pk=(234, 150, 172),                            # the poster's card, pink icing
-    tl=(222, 214, 198), tm=(176, 166, 152), tv=(116, 108, 102),         # granite (the fronts' L, T, V)
+    gb=(150, 166, 174),                                                # the glass's reflection band
+    pc=(178, 170, 148), pk=(186, 112, 132),                            # the poster's card, pink icing
+    tl=(135, 130, 120), tm=(110, 103, 95), tv=(77, 72, 68),             # granite (the fronts' L, T, V)
     pd=(58, 50, 56), pdd=(42, 36, 42), pf=(84, 76, 80),                # the passage, its shade, its floor
-    cw=(226, 206, 160), cg=(96, 146, 84), cgd=(70, 112, 66),            # the courtyard: sunny wall, a bush
+    cw=(170, 154, 118), cg=(96, 146, 84), cgd=(70, 112, 66),            # the courtyard: sunny wall, a bush
+    og=(62, 72, 88), ol=(98, 114, 130),                                # the bay window's glass (the fronts' G, R)
     cl=(150, 206, 176), cm=(104, 166, 140), cs=(72, 122, 102),          # copper (the roof kit's copper)
 )
 
@@ -92,7 +100,6 @@ def crate(w, h=17):
     cv.rect(0, 0, w - 1, 0, "wl")                                       # top rail
     cv.rect(w // 2 - 4, 1, w // 2 + 3, 1, "wd")                          # the hand slot
     o1, o2, mid = (3, 7), (11, 13), 8
-    if h < 17: o1, o2, mid = (3, 6), (10, 11), 7                         # (end-on, 14 tall: shorter openings)
     cv.rect(3, o1[0], w - 4, o1[1], "wi")
     cv.rect(3, o2[0], w - 4, o2[1], "wi")
     iw = w - 6; n = (iw + 1) // 8; x0 = 3 + (iw - (n * 8 - 1)) // 2
@@ -113,9 +120,9 @@ def crate(w, h=17):
 
 
 def crates(box_w):
-    """the GATE's solid perch: two rows of crates in one dark outline, a dark line between crates"""
-    n = 2 if box_w < 80 else 3
-    cw = (box_w + 1 - (n + 1)) // n                                      # 70: 34, 96: 31
+    """the GATE's solid perch: 2 x 2 crates of 34 x 17 in one dark outline, a dark line between crates (18 px pitch)"""
+    n = 2; cw = (box_w + 1 - (n + 1)) // n                               # 70: 34
+    assert cw == 34, "one crate size: the GATE box must be 70 wide"
     W = n * (cw + 1) + 1; H = 2 * (17 + 1) + 1
     cv = Cv(W, H)
     cv.rect(0, 0, W - 1, H - 1, "ink")
@@ -126,33 +133,85 @@ def crates(box_w):
 
 
 def breadboard():
-    """the baker's long board on the shelter's perch: 72 + 2 px, a 5 px plank in its outline"""
-    cv = Cv(74, 7)
-    cv.rect(0, 0, 73, 6, "ink")
-    cv.rect(1, 1, 72, 5, "wm"); cv.rect(1, 1, 72, 1, "wl"); cv.rect(1, 5, 72, 5, "ws")
-    for x in range(10, 70, 18): cv.rect(x, 3, x + 5, 3, "ws")               # a few grain lines, on an 18 px grid
+    """the baker's board on the shelter's perch: 72 + 2 px, two planks of 5 px in one outline, 12 rows (y 375-386),
+    so the crate legs under it are two whole crates"""
+    cv = Cv(74, 12)
+    cv.rect(0, 0, 73, 11, "ink")
+    for y in (1, 6):
+        cv.rect(1, y, 72, y + 4, "wm"); cv.rect(1, y, 72, y, "wl"); cv.rect(1, y + 4, 72, y + 4, "ws")
+    for x in range(10, 70, 18): cv.rect(x, 3, x + 5, 3, "ws"); cv.rect(x + 9, 8, x + 14, 8, "ws")   # grain, 18 px grid
     return cv
 
 
 def crate_leg():
-    """three bread crates end-on (16 x 14), stacked: decoration, no outline (the bottom row is the darkest wood)"""
-    cv = Cv(16, 42)
-    part = crate(16, 14)
-    for r in range(3): cv.stamp(part, 0, r * 14)
+    """two of the same bread crates end-on (16 x 17, 18 px pitch), in one dark outline: they hold her perch"""
+    cv = Cv(18, 37)
+    cv.rect(0, 0, 17, 36, "ink")
+    part = crate(16)
+    for r in range(2): cv.stamp(part, 1, 1 + r * 18)
     return cv
 
 
-def hood():
-    """the dormer's ledge (56 px) as a copper window hood with standing seams, on two stepped stone consoles"""
-    W = 58; cv = Cv(W, 19)
-    cv.rect(1, 1, W - 2, 1, "cl"); cv.rect(1, 2, W - 2, 4, "cm"); cv.rect(1, 5, W - 2, 5, "cs")
-    for x in range(8, W - 4, 8): cv.rect(x, 2, x, 4, "cs"); cv.rect(x + 1, 2, x + 1, 4, "cl")   # standing seams
-    for cx in (9, W - 10):                                                # consoles: 6, 4, 2 wide, stepped down
-        for i, (half, rows) in enumerate(((4, 4), (3, 4), (2, 3))):
-            y0 = 6 + sum((4, 4, 3)[:i])
-            cv.rect(cx - half, y0, cx + half - 1, y0 + rows - 1, "tm")
-            cv.rect(cx - half, y0, cx - half, y0 + rows - 1, "tl")
-            cv.rect(cx + half - 1, y0, cx + half - 1, y0 + rows - 1, "tv")
+# the guild house's stepped gable boxes (riverwalk/level/tiled/downtown_tall.lua: GUILD ROOF and the steps right of
+# it, 6 px tall; nothing here moves them): x0, x1, top
+STEPS = [(1560, 1568, 272), (1568, 1576, 268), (1576, 1584, 264), (1584, 1592, 260), (1592, 1600, 256), (1600, 1608, 252),
+         (1608, 1616, 248), (1616, 1656, 244), (1656, 1664, 248), (1664, 1672, 252), (1672, 1680, 256)]
+PORTAL_BASE = 292                                                         # the portal top's base moulding, game y
+
+
+def portal_top():
+    """the guild house's portal top: stone blocks under every step of the gable (the steps' tops lit, the risers lit on
+    the rising side and shaded on the falling side), coursed joints, a gold medallion, a moulded base; outlined"""
+    X0, Y0 = STEPS[0][0] - 1, min(t for _, _, t in STEPS) - 1
+    W = STEPS[-1][1] - STEPS[0][0] + 2; H = PORTAL_BASE - Y0 + 1
+    cv = Cv(W, H)
+    for x0, x1, t in STEPS: cv.rect(x0 - X0, t - Y0, x1 - 1 - X0, PORTAL_BASE - 1 - Y0, "tm")
+    for y in range(H):                                                    # coursed blocks: 8 px courses, 16 px blocks
+        gy = y + Y0
+        if (gy - 244) % 8 == 7:
+            for x in range(W):
+                if cv.a[y, x] == "tm": cv.put(x, y, "tv")
+        else:
+            off = 8 if ((gy - 244) // 8) % 2 else 0
+            for x in range(W):
+                if cv.a[y, x] == "tm" and (x + X0 - 1560 + off) % 16 == 15: cv.put(x, y, "tv")
+    top = max(t for _, _, t in STEPS)
+    for i, (x0, x1, t) in enumerate(STEPS):                               # step tops lit; risers by the light
+        cv.rect(x0 - X0, t - Y0, x1 - 1 - X0, t - Y0, "tl")
+        prev = STEPS[i - 1][2] if i else PORTAL_BASE
+        nxt = STEPS[i + 1][2] if i + 1 < len(STEPS) else PORTAL_BASE
+        if prev > t: cv.rect(x0 - X0, t - Y0, x0 - X0, prev - 1 - Y0, "tl")
+        if nxt > t: cv.rect(x1 - 1 - X0, t - Y0 + 1, x1 - 1 - X0, nxt - 1 - Y0, "tv")
+    cx, cy, R = 1620 - X0, 268 - Y0, 7.5                                  # the gold medallion (the bakers' guild)
+    for y in range(int(cy - R) - 1, int(cy + R) + 2):
+        for x in range(int(cx - R) - 1, int(cx + R) + 2):
+            d = np.hypot(x + 0.5 - cx, y + 0.5 - cy)
+            if d < R:
+                c = "bm"
+                if d > R - 1.6: c = "bl" if (x + 0.5 - cx) + (y + 0.5 - cy) < 0 else "bd"
+                elif d < 2.6: c = "bd"
+                cv.put(x, y, c)
+    b = PORTAL_BASE - Y0                                                  # the base moulding, the full width
+    cv.rect(0, b - 5, W - 1, b - 5, "tl"); cv.rect(0, b - 4, W - 1, b - 2, "tm"); cv.rect(0, b - 1, W - 1, b - 1, "tv")
+    cv.a[:, 0] = ""; cv.a[:, -1] = ""; cv.a[0] = ""; cv.a[-1] = ""
+    cv.a[:, 1] = np.where(cv.a[:, 1] != "", cv.a[:, 1], ""); cv.outline()
+    return cv
+
+
+def oriel():
+    """the guild house's bay window on the CHIMNEY box (16 x 44, solid): a copper roof with a flat top (the golden
+    bone's perch), a stone body with a tall window, a moulded corbel; 18 x 45 with its outline, standing on the portal"""
+    W, H = 18, 45
+    cv = Cv(W, H)
+    cv.rect(1, 1, 16, 44, "tm")
+    cv.rect(1, 1, 16, 1, "cl"); cv.rect(1, 2, 16, 7, "cm"); cv.rect(1, 8, 16, 8, "cs")     # the roof
+    for x in (5, 9, 13): cv.rect(x, 2, x, 7, "cs")                        # standing seams, 4 px apart
+    cv.rect(1, 9, 16, 9, "tl"); cv.rect(1, 9, 1, 34, "tl"); cv.rect(16, 10, 16, 34, "tv")   # the body's frame
+    cv.rect(4, 12, 13, 31, "tl")                                          # the window: frame, two lights, a bar
+    cv.rect(5, 13, 12, 30, "og"); cv.rect(5, 13, 5, 30, "ol"); cv.rect(5, 21, 12, 22, "tl")
+    cv.rect(1, 35, 16, 35, "tl"); cv.rect(1, 36, 16, 37, "tm"); cv.rect(1, 38, 16, 38, "tv")   # sill moulding
+    for i, y in enumerate(range(39, 44)):                                 # the corbel: stepped mouldings
+        cv.rect(1, y, 16, y, "tv" if y % 2 else "tm")
     cv.a[0] = ""; cv.a[:, 0] = ""; cv.a[:, -1] = ""
     cv.outline()
     return cv
@@ -168,11 +227,9 @@ def shelter():
     cv.rect(2, roof - 1, W - 3, roof - 1, "sd")                         # the roof's underside
     gx0, gx1, gy0, gy1 = 4, W - 5, roof, H - 13                          # the glass, 13 px clear of the pavement
     cv.rect(gx0, gy0, gx1, gy0 + 1, "sm")                                # its top rail
-    for sx in range(gx0 + 8, gx1 - 40, 30):                              # reflections: two diagonal streaks, 30 apart
-        for k in range(28):
-            y = gy0 + 12 + k
-            cv.rect(sx + k // 2, y, sx + k // 2 + 1, y, "gw")
-            cv.rect(sx + 5 + k // 2, y, sx + 5 + k // 2, y, "gl")
+    for sx in (44, 96):                                                  # one clean 45 degree band, 2 px, per pane
+        for k in range(22):
+            cv.rect(sx + k, gy0 + 12 + k, sx + k + 1, gy0 + 12 + k, "gb")
     cv.rect(gx0, gy1 - 1, gx1, gy1 - 1, "sm")                            # the glass's bottom rail
     cv.rect(gx0, gy1, gx1, gy1, "ss")
     for px in (0, W // 2 - 2, W - 4):                                    # posts, 4 px: lit, mid, mid, shade
@@ -204,66 +261,61 @@ def shelter():
     return cv
 
 
-def gateway(box_w):
-    """the courtyard gateway, 138 px (3 m) tall: rusticated piers, a stone arch with a keystone, a cornice; the
-    passage dark, a sunny courtyard wall with a bush at its far end"""
-    op = box_w + 12                                                      # the opening (70: 82, 96: 108)
-    pier = 16; W = op + 2 * pier; H = 138
-    r = op // 2; cx = W // 2
-    cvn = 8; ring = 8; spring = cvn + ring + r                           # the arch springs here (from the top)
+def gateway():
+    """the courtyard gateway, 138 px (3 m) tall, 80 wide, an arch in a house's ground floor: rusticated piers (12 px)
+    on 12 px courses, a stone arch (7 px ring, 15 degree joints, a keystone), no wall of its own; the passage dark, a
+    sunny courtyard wall with a window and a bush at its far end. Opening 56 wide, 96 px to the spring (2.1 m: the
+    cargo bike's rider passes under)"""
+    W, H, pier, ring, r = 80, 138, 12, 7, 28
+    cx, spring = W // 2, 7 + ring + r                                     # the ring's outer top on row 7: the piers are 8
+                                                                          # whole 12 px courses (spring row 42)
     cv = Cv(W, H)
-    cv.rect(0, 0, W - 1, H - 1, "tm")
-    cv.rect(0, 0, W - 1, 0, "tl"); cv.rect(0, 1, W - 1, 4, "tm"); cv.rect(0, 5, W - 1, 5, "tv"); cv.rect(0, 6, W - 1, 7, "tm")   # cornice
-    cv.rect(0, 0, 0, H - 1, "tl"); cv.rect(W - 1, 1, W - 1, H - 1, "tv")
     hole = np.zeros((H, W), bool)
     for y in range(H):
         for x in range(W):
-            if y >= spring: hole[y, x] = pier <= x < W - pier
-            else:
-                d = np.hypot(x + 0.5 - cx, y + 0.5 - spring)
-                if d < r: hole[y, x] = True
-                elif d < r + ring:                                         # the voussoirs: light stone, dark joints
-                    a = np.degrees(np.arctan2(spring - (y + 0.5), (x + 0.5) - cx))
-                    joint = any(abs(a - j) < 0.55 * 180 / np.pi / max(d, 1) * 1.0 for j in range(15, 180, 15)) and abs(a - 90) > 9
-                    edge = d > r + ring - 1.0
-                    cv.put(x, y, "tv" if (joint or edge) else "tl")
-    for i, y in enumerate(range(spring, H, 12)):                         # rusticated piers: 12 px courses, joints dark
+            if y >= spring:
+                if pier <= x < W - pier: hole[y, x] = True
+                continue
+            d = np.hypot(x + 0.5 - cx, y + 0.5 - spring)
+            if d < r: hole[y, x] = True
+            elif d < r + ring:
+                a = np.degrees(np.arctan2(spring - (y + 0.5), (x + 0.5) - cx))
+                joint = any(abs(a - j) < 0.55 * 180 / np.pi / max(d, 1) for j in range(15, 180, 15)) and abs(a - 90) > 9
+                edge = d > r + ring - 1.0 or d < r + 1.0
+                cv.put(x, y, "tv" if joint or (edge and a < 90) else ("tl" if edge else "tm"))
+    for i, y in enumerate(range(spring, H, 12)):                          # the piers
         yb = min(y + 11, H - 1)
         for (bx0, bx1) in ((0, pier - 1), (W - pier, W - 1)):
             cv.rect(bx0, y, bx1, yb, "tm"); cv.rect(bx0, y, bx1, y, "tl"); cv.rect(bx0, y, bx0, yb, "tl")
             cv.rect(bx1, y + 1, bx1, yb, "tv")
             if yb == y + 11: cv.rect(bx0 + 1, yb, bx1, yb, "tv")
-    # the passage and the courtyard at its end
+    cv.rect(0, spring - 2, pier + 1, spring - 1, "tl"); cv.rect(W - pier - 2, spring - 2, W - 1, spring - 1, "tl")   # imposts
+    cv.rect(0, spring - 1, pier + 1, spring - 1, "tv"); cv.rect(W - pier - 2, spring - 1, W - 1, spring - 1, "tv")
     for y, x in zip(*np.nonzero(hole)): cv.put(x, y, "pd")
-    cv.rect(pier, H - 9, W - pier - 1, H - 1, "pf")                      # its floor, lighter
-    yx0, yx1, yy0 = cx - op // 4, cx + op // 4 - 1, H - 58               # the courtyard: a sunny wall, 1.2 m of bush
+    cv.rect(pier, H - 9, W - pier - 1, H - 1, "pf")                      # the passage's floor
+    yx0, yx1, yy0 = cx - 12, cx + 11, H - 52                             # the courtyard at its end
     cv.rect(yx0, yy0, yx1, H - 10, "cw")
-    for wx in (yx0 + 5, yx1 - 14):                                        # two windows: a light frame, glass, a bar
-        cv.rect(wx, yy0 + 7, wx + 9, yy0 + 22, "pc"); cv.rect(wx + 1, yy0 + 8, wx + 8, yy0 + 21, "gm")
-        cv.rect(wx + 1, yy0 + 14, wx + 8, yy0 + 14, "pc"); cv.rect(wx + 1, yy0 + 8, wx + 1, yy0 + 21, "gl")
-    for i, x in enumerate(range(yx0, yx1 + 1, 8)):                        # the bush: round tops on an 8 px grid
+    cv.rect(yx0 + 7, yy0 + 7, yx0 + 16, yy0 + 22, "pc"); cv.rect(yx0 + 8, yy0 + 8, yx0 + 15, yy0 + 21, "og")
+    cv.rect(yx0 + 8, yy0 + 14, yx0 + 15, yy0 + 14, "pc"); cv.rect(yx0 + 8, yy0 + 8, yx0 + 8, yy0 + 21, "ol")
+    for x in range(yx0, yx1 + 1, 8):                                       # the bush: round tops on an 8 px grid
         for dx, dy in ((2, 0), (3, 0), (4, 0), (5, 0), (1, 1), (6, 1), (0, 2), (7, 2)):
             if x + dx <= yx1: cv.put(x + dx, H - 25 + dy, "cg")
         cv.rect(x, H - 22, min(x + 7, yx1), H - 10, "cg")
-    cv.rect(yx0, H - 12, yx1, H - 11, "cgd")                              # its shaded foot
-    cv.rect(yx0, H - 10, yx1, H - 10, "cgd")
-    # the shadow under the arch and on the left reveal (light from the upper left)
-    for y in range(H):
+    cv.rect(yx0, H - 12, yx1, H - 11, "cgd")
+    for y in range(H):                                                    # the shadow under the arch, left reveal
         for x in range(W):
-            if hole[y, x] and (not hole[y - 1, x] or not hole[y - 2, x] or (x > 0 and not hole[y, x - 1]) or (x > 1 and not hole[y, x - 2])):
-                if cv.a[y, x] == "pd": cv.put(x, y, "pdd")
-    kx = cx - 5                                                          # the keystone
-    cv.rect(kx, cvn, kx + 9, cvn + ring + 3, "tm"); cv.rect(kx, cvn, kx + 9, cvn, "tl"); cv.rect(kx, cvn, kx, cvn + ring + 3, "tl")
-    cv.rect(kx + 9, cvn + 1, kx + 9, cvn + ring + 3, "tv"); cv.rect(kx + 1, cvn + ring + 3, kx + 9, cvn + ring + 3, "tv")
+            if hole[y, x] and cv.a[y, x] == "pd" and (not hole[y - 1, x] or not hole[y - 2, x] or not hole[y, x - 1] or not hole[y, x - 2]):
+                cv.put(x, y, "pdd")
+    kx = cx - 4                                                           # the keystone, rows 3-16
+    cv.rect(kx, 3, kx + 7, 16, "tm"); cv.rect(kx, 3, kx + 7, 3, "tl"); cv.rect(kx, 3, kx, 16, "tl")
+    cv.rect(kx + 7, 4, kx + 7, 16, "tv"); cv.rect(kx + 1, 16, kx + 7, 16, "tv")
     return cv
 
 
 def build():
     return {
-        "town_shelter_tall": shelter(),
-        "town_gateway70": gateway(70), "town_gateway96": gateway(96),
-        "town_crates70": crates(70), "town_crates96": crates(96),
-        "town_breadboard": breadboard(), "town_crate_leg": crate_leg(), "town_hood": hood(),
+        "town_shelter_tall": shelter(), "town_gateway": gateway(), "town_crates70": crates(70),
+        "town_breadboard": breadboard(), "town_crate_leg": crate_leg(), "town_portal_top": portal_top(), "town_oriel": oriel(),
     }
 
 

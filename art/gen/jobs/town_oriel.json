@@ -1,0 +1,22 @@
+{
+ "name": "town_oriel",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 0.96,
+ "target_px": [
+  18,
+  45
+ ],
+ "checks_px": {
+  "box": "CHIMNEY 16 x 44 solid, unchanged; the golden bone on its roof"
+ },
+ "tier": "C",
+ "family": "dt_sample",
+ "method": "built from stamped parts, tools/build_dt_street.py",
+ "build": "tools/build_dt_street.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_oriel.png",
+  "where": "Downtown tall, CHIMNEY x 1628 y 200, at x0 - 1, y0 - 1 (decision 1a: the bay window's roof)"
+ }
+}

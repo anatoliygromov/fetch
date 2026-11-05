@@ -36,10 +36,13 @@ TOP = 131                                    # every feature starts at or below 
 
 # per-material ramps (full local colour; the game fades decoration towards the level's haze)
 C = dict(
-    W=(214, 168, 104), S=(176, 128, 80),                          # yellow plaster, its shade (swapped per building)
-    L=(222, 214, 198), T=(176, 166, 152), V=(116, 108, 102),      # granite: lit, mid, dark
+    # (art/dt-sample-05nov, review round 1: the back layer sits below the far layers on screen. The look's back fade
+    # (28 %) and shader lift every colour, so the file colours are set from their on-screen luma: plaster 152 and
+    # its shade 138, granite 166 / 148 / 126, frames 170. tools/asset_qa.py measures them as drawn.)
+    W=(135, 106, 66), S=(116, 85, 53),                            # yellow plaster, its shade (swapped per building)
+    L=(135, 130, 120), T=(110, 103, 95), V=(77, 72, 68),          # granite: lit, mid, dark
     G=(62, 72, 88), R=(98, 114, 130),                             # glass, its reflection
-    F=(228, 224, 214),                                            # window frames and glazing bars
+    F=(140, 137, 131),                                            # window frames and glazing bars
     K=(104, 66, 44), J=(136, 92, 60), D=(68, 44, 32),             # oak: leaf, lit panel edge, shadow / joints
     N=(56, 88, 70), M=(84, 120, 94),                              # painted shopfront green, lit
     I=(52, 50, 54),                                               # iron straps and rings
@@ -233,23 +236,37 @@ def upper_window(cv, cx, y0):
     cv.rect(x0 - 5, y1 + 4, x1 + 5, y1 + 4, "V")
     cv.rect(x0 - 4, y1 + 5, x1 + 7, y1 + 6, "S")                   # the sill's cast shadow under it
 
-def upper(w):
-    """the two upper storeys of a bay (rows 0-279 of the file): wall, a string course between them, a window each"""
+def course(cv, y):
+    """the string course: the same 7 rows as the ground floor's cornice (lit top, three mid, dark lip, two rows of its
+    shadow on the wall), on the 140 px storey pitch (rows 140 and 280 of the full file)"""
+    w = cv.w
+    cv.rect(0, y, w - 1, y, "L"); cv.rect(0, y + 1, w - 1, y + 3, "T"); cv.rect(0, y + 4, w - 1, y + 4, "V")
+    cv.rect(0, y + 5, w - 1, y + 6, "S")
+
+def upper(w, xs=None):
+    """the two upper storeys of a bay (rows 0-279 of the file): wall, the string course on the first floor's top
+    (row 140, a storey above the ground floor's cornice at row 280), a window each, centred (or at the x's given)"""
     global H
     keep, H = H, UPPER                       # (Canvas clips to the global H)
     try:
         cv = Canvas(w)
-        cv.rect(0, STOREY - 4, w - 1, STOREY - 4, "L")              # the string course on the first floor's top
-        cv.rect(0, STOREY - 3, w - 1, STOREY - 2, "T")
-        cv.rect(0, STOREY - 1, w - 1, STOREY - 1, "V")
+        course(cv, 0); course(cv, STOREY)                           # (row 0 is never on screen: the two storeys identical)
         for k in range(2):
-            upper_window(cv, w // 2, k * STOREY + 26)
+            for cx in (xs or [w // 2]):
+                upper_window(cv, cx, k * STOREY + 26)
         return cv.role
     finally:
         H = keep
 
-FRONTS = {1: front_door, 2: front_shop, 3: front_gate}
-WIDTHS = {1: 80, 2: 88, 3: 96}
+def front_guild(w=148):
+    """the guild house (layer plan decision 1a): one 148 px house, the carriage gate under the portal top (the stepped
+    gable's perches, drawn by tools/build_dt_street.py), the upper windows at the sides: the bay window stands on the
+    portal's top between them (the chimney's perch)"""
+    return front_gate(w)
+
+FRONTS = {1: front_door, 2: front_shop, 3: front_gate, 4: front_guild}
+WIDTHS = {1: 80, 2: 88, 3: 96, 4: 148}
+UPPER_X = {4: [74 - 46, 74 + 46]}                                    # the guild house: two windows, the middle free
 
 def render(role):
     im = np.zeros((role.shape[0], role.shape[1], 4), np.uint8)
@@ -260,7 +277,7 @@ def render(role):
 
 def build():
     """the full-height fronts: two upper storeys over the ground floor (its rows from the cornice down)"""
-    return {i: render(np.vstack([upper(WIDTHS[i]), FRONTS[i](WIDTHS[i]).role[CORNICE:]])) for i in FRONTS}
+    return {i: render(np.vstack([upper(WIDTHS[i], UPPER_X.get(i)), FRONTS[i](WIDTHS[i]).role[CORNICE:]])) for i in FRONTS}
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()

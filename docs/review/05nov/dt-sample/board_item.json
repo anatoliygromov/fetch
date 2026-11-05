@@ -1,12 +1,12 @@
 {
  "id": "fam_dt_sample",
- "title": "Downtown sample screen (screen 7: the shelter street)",
+ "title": "Downtown sample screen (screen 7: the shelter street, and the guild house)",
  "section": "family",
  "group": "Downtown",
  "layer": "back",
  "tier": "C",
- "note": "The level's golden screen, with your 26 Oct picks 1a and 4a. The houses now run on past the top of the screen at true scale: the ground floors you know, then two upper storeys of 3 m with one window drawn once and repeated on every storey (built from parts, 0 credits). The tram stop shelter (2.5 m) and the courtyard gateways (3 m) stand behind Pepper at true scale; her perches stay exactly where they were: the gate is a stack of bread crates, the shelter's top a baker's board on two stacks of crates. The dormer is a copper window hood. Nothing she stands on moved. Checks: PEPPER UNCHANGED, flow 125/125, Tiled, physics 102/102, QA 0 problems, autopilot GOOD GIRL, curve T1-T4 PASS, asset QA PASS on all 11 pieces.",
- "question": "On the high road the houses now fill the whole screen behind her, so the far roofs, the old town row and the spire show only where the street has gaps (screens 1-4, 6, 9-11). Keep the full-height street, or open gaps (lower houses) so the spire stays in view?",
+ "note": "The level's golden screen with your 26 Oct picks 1a and 4a, built from parts, 0 credits, after one independent review round (its 9 findings fixed). The houses run on past the top of the screen at true scale, one window repeated on every storey, and now sit below the far layers in value (on screen: houses 145-152, old town row 169, far roofs 172-181). The guild house runs up too: its stepped gable is the portal top with a gold medallion, its chimney a slim bay window with the golden bone on its roof. Tram stop shelter (2.5 m) and a courtyard gateway (3 m, an arch in one house) behind Pepper; her perches are where they were, as bread crates, a baker's board on crate legs (mid-tone, outlined, like the apple crates). The cargo bike now rides in front of the crates, never cut at the waist. Checks: PEPPER UNCHANGED, flow 125/125, Tiled, physics 102/102, QA 0 problems, autopilot GOOD GIRL, curve T1-T4 PASS, asset QA PASS on all 11 pieces (measured as drawn, the back fade 0.28). The Downtown palette v1 is made from these pieces, so their palette check passes by construction, not as evidence.",
+ "question": "Left as they are for you: the small plaza houses in front of the tall fronts (your decision 2, not picked); lamp posts across window panes (moving them moves checkpoints); the high road's stone ledges reading as shelves; the far layers and the spire hidden on the tall street (x 1180-2480); the street's hard ends (x 1180, 2480, the lone house at 2640). Screen 10 keeps the old brick gate (no house there for a gateway). Keep the full-height street, or open gaps so the spire stays in view?",
  "images": [
   {
    "src": "img/fam/dt_sample_s7_ba.png",
@@ -18,50 +18,50 @@
   },
   {
    "src": "img/fam/dt_sample_hiding_ba.png",
-   "label": "the hiding places at 3x: before | after (screen 6-7, then screen 10)"
+   "label": "at 3x, before | after: the gateway and the shelter (street), the guild house (high road)"
   }
  ],
  "members": [
   {
    "id": "dt_fronts_v2",
    "title": "house fronts, full height",
-   "slot": "town_front_tall1-3.png, 80/88/96 x 432",
+   "slot": "town_front_tall1-4.png, 80/88/96/148 x 432",
    "img": "img/fam/dt_fronts_2x.png",
-   "note": "Two upper storeys of 140 px (3.0 m) over the 152 px ground floor; one window (1.0 x 1.6 m) in a stone surround under a hood, on a sill, stamped on every storey; a string course. The plaster takes each house's colour. The guild house keeps its stepped gable.",
+   "note": "Two upper storeys of 140 px (3.0 m) over the 152 px ground floor; one window (1.0 x 1.6 m) stamped on every storey; the string course is the ground floor's cornice repeated on the 140 px pitch. The plaster takes each house's colour, about 146-156 on screen. Front 4 is the guild house: windows at the sides, the bay window between.",
    "findings": []
+  },
+  {
+   "id": "dt_guild",
+   "title": "guild house portal top and bay window",
+   "slot": "town_portal_top.png 122 x 50, town_oriel.png 18 x 45",
+   "img": "img/fam/dt_guild_5x.png",
+   "note": "The stepped gable's perches unchanged, drawn as the stone portal top over the guild house's gate, with a gold medallion; the chimney's perch is the bay window's copper roof, the golden bone on it. Outlined, mid-tone.",
+   "findings": [
+    "the guild house's gate is behind the plaza houses (decision 2 not picked)"
+   ]
   },
   {
    "id": "dt_shelter_tall",
    "title": "tram stop shelter",
    "slot": "town_shelter_tall.png 140 x 115",
    "img": "img/fam/dt_shelter_5x.png",
-   "note": "2.5 m tall, 3 m long, decoration (no outline). Clear glass (the house shows through), a poster with a cinnamon bun, no text. The board on its crates in front is her perch, 48 px up as before.",
+   "note": "2.5 m tall, 3 m long, decoration. Clear glass with one reflection band per pane, a poster with a cinnamon bun, no text.",
    "findings": []
   },
   {
    "id": "dt_gateway",
    "title": "courtyard gateway",
-   "slot": "town_gateway70.png 114 x 138, town_gateway96.png 140 x 138",
+   "slot": "town_gateway.png 80 x 138",
    "img": "img/fam/dt_gateway_5x.png",
-   "note": "3 m tall, decoration: rusticated piers, a stone arch, the dark passage with a sunny courtyard at its end, where the cargo bike comes from. The crates in front are the old perch (70 x 36), outlined.",
-   "findings": [
-    "screen 10: the wide gateway stands alone on the flooded square (no house behind it), so its top shows"
-   ]
-  },
-  {
-   "id": "dt_crates",
-   "title": "bread crates",
-   "slot": "town_crates70/96.png, town_breadboard.png, town_crate_leg.png",
-   "img": "img/fam/dt_gateway96_4x.png",
-   "note": "Pine crates with loaves, 0.74 x 0.37 m, one dark outline round the stack (an obstacle); the legs under the board are the same crates end-on, decoration behind her.",
+   "note": "3 m tall, an arch in the house at x 1912-2000 (not across two houses): rusticated piers, a stone arch, the dark passage with a sunny courtyard at its end, where the cargo bike comes out. Screen 10 keeps the old brick gate: no house there.",
    "findings": []
   },
   {
-   "id": "dt_hood",
-   "title": "window hood (was the dormer)",
-   "slot": "town_hood.png 58 x 19",
-   "img": "img/fam/dt_hood_5x.png",
-   "note": "Copper with standing seams on two stone consoles, outlined; the ledge she stands on is where it was.",
+   "id": "dt_crates",
+   "title": "bread crates and the baker's board",
+   "slot": "town_crates70.png, town_breadboard.png, town_crate_leg.png",
+   "img": "img/fam/dt_shelter_5x.png",
+   "note": "One crate everywhere: 34 x 17 front-on, 16 x 17 end-on, on an 18 px pitch, pine with loaves, mid-tone (about 105 on screen, the apple crates 107), outlined: they are her perches. The board is two planks on two crates end-on at each end.",
    "findings": []
   }
  ]

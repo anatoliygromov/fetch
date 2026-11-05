@@ -74,11 +74,11 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          "roof_gallery72": (74, 32, 0, 8), "roof_chimney": (18, 46, 0, 0), "roof_dormer": (58, 36, 0, 9),
          "footbridge": (162, 52, 0, 13), "house_tall_a": (80, 240, 0, 0), "house_tall_b": (88, 240, 0, 0),
          "house_tall_c": (96, 240, 0, 0), "tram_vintage": (300, 130, 30, 15),
-         # art/dt-sample-05nov (docs/art_hooks_r8.md, arthooks.lua): the full-height fronts, decision 4a and the hood
+         # art/dt-sample-05nov (docs/art_hooks_r8.md, arthooks.lua): the full-height fronts, decisions 1a and 4a
          "town_front_tall1": (80, 432, 0, 0), "town_front_tall2": (88, 432, 0, 0), "town_front_tall3": (96, 432, 0, 0),
-         "town_shelter_tall": (140, 115, 0, 0), "town_gateway70": (114, 138, 0, 0), "town_gateway96": (140, 138, 0, 0),
-         "town_crates70": (71, 37, 0, 0), "town_crates96": (97, 37, 0, 0), "town_breadboard": (74, 7, 0, 0),
-         "town_crate_leg": (16, 42, 0, 0), "town_hood": (58, 19, 0, 0)}
+         "town_front_tall4": (148, 432, 0, 0), "town_shelter_tall": (140, 115, 0, 0), "town_gateway": (80, 138, 0, 0),
+         "town_crates70": (71, 37, 0, 0), "town_breadboard": (74, 12, 0, 0), "town_crate_leg": (18, 37, 0, 0),
+         "town_portal_top": (122, 50, 0, 0), "town_oriel": (18, 45, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",
@@ -88,7 +88,7 @@ HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_t
         "roof_awning56": "(no hook: the kit has no awning)"}
 BUILDINGS = {"town_house1", "town_house2", "town_house3", "town_facades", "town_row", "building", "cafe", "gable",
              "facades_square", "house_tall_a", "house_tall_b", "house_tall_c", "town_front_tall1", "town_front_tall2",
-             "town_front_tall3"}
+             "town_front_tall3", "town_front_tall4"}
 ORGANIC = {"tree", "tree_far", "tree_near", "park_tree1", "park_tree2", "park_oak", "park_willow", "park_willow_tall",
            "park_hedge", "park_bush", "park_leaves", "park_leaves_flat", "park_treeline", "skyline", "far_shore_bridge"}
 FROZEN = {"pepper"}                                               # Pepper's files are frozen: report only
@@ -573,14 +573,22 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("names", nargs="*"); ap.add_argument("--all", action="store_true"); ap.add_argument("--json")
     ap.add_argument("--file"); ap.add_argument("--layer", default="play"); ap.add_argument("--level", default="rw")
-    ap.add_argument("--fade", type=float, default=0.0); ap.add_argument("--building", action="store_true")
+    ap.add_argument("--fade", type=float, default=None, help="the load-time fade; default: the game's own for that "
+                    "file (its registry entry, else the level's amount for the layer), so a --file check measures what the game draws")
+    ap.add_argument("--building", action="store_true")
     ap.add_argument("--frames", help="WxH of one frame for a sheet")
     o = ap.parse_args()
     reps = []
     if o.file:
         fr = tuple(int(v) for v in o.frames.split("x")) if o.frames else None
         layer = None if o.layer == "char" else o.layer
-        reps.append(check(os.path.splitext(os.path.basename(o.file))[0], os.path.abspath(o.file), o.level, layer, o.fade, o.building, fr))
+        name = os.path.splitext(os.path.basename(o.file))[0]
+        fade = o.fade
+        if fade is None:                                   # (art/dt-sample-05nov: the result depended on --fade)
+            reg = registry()
+            fade = reg[name]["fade"] if name in reg else ML.fade_in(name, o.level, layer)
+            print(f"(fade {fade:.2f}: the game's load-time fade for {name}, {o.level} {o.layer})")
+        reps.append(check(name, os.path.abspath(o.file), o.level, layer, fade, o.building, fr))
     else:
         reg = registry()
         names = list(reg) if o.all else o.names
