@@ -15,3 +15,19 @@ Reviewer: independent gate 8 reviewer (Claude, session 01XkeHCnH2RKgEVTGUWoSKBw;
 9. Read: cute and clear for a 7 year old at 1x: PASS. Face redrawn clean (dark eye, nose bump, beard, hidden mouth, no brown patch or blue speckle), bearded cyclist with helmet and backpack reads at 1x in the road frame (board/rwtraffic_road_car4_lanerider2_3x.png).
 
 VERDICT: FAIL (1 item)
+
+# Round 4
+
+Reviewer: independent gate 8 reviewer (same reviewer as above; did not make the asset). Checked commit 085cef0 against d69660f: road_rider2.png differs in exactly 10 px at x59-64, y2-4 (#c2c4ca to the shade grey #878c92), alpha unchanged, nothing else. Helmet left/right third luma 129/132 (round 3: 129/142): the right-hand bright end is gone, the helmet is top-lit and neutral. The other eight items are unchanged from round 3 (PASS).
+
+1. Scale: right size next to Pepper and in its slot (within 2 px): PASS. Unchanged, 104x103, 55 px/m.
+2. Layer: values on its ladder row: PASS. Unchanged; script WARN 1 blotch only.
+3. Outline: unbroken 1 px ink: PASS. Unchanged; the 10 px are interior helmet pixels.
+4. Shapes: round things round, straight lines straight, no lumps or jaggies: PASS. Unchanged, wheels untouched.
+5. Shading: ramps of 3-4 shades, light upper left, no mottling, no lone specks: PASS. Helmet 129/132, no longer lit from the right; jacket 73/68 left-lit, fringe gone; the scattered jacket and backpack dabs stay at 20 lone px per 1000, noted not failed.
+6. Palette: only level-palette colours, whites white, darks neutral, within colour cap: PASS. 15 colours, no new colour.
+7. View: side profile as road traffic, no tops/insides: PASS. Unchanged.
+8. Fit: beside bench, bin, lamp at 1x and 3x as crisp and dense: PASS. Unchanged.
+9. Read: cute and clear for a 7 year old at 1x: PASS. Unchanged.
+
+VERDICT: PASS
