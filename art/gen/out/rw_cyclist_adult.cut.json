@@ -1,0 +1,27 @@
+{
+ "name": "rw_cyclist_adult",
+ "size": [
+  84,
+  87
+ ],
+ "target": [
+  83,
+  85
+ ],
+ "grid_clean": 1.0,
+ "on_blockout": 0.881,
+ "covered": 1.0,
+ "stray": 0.0,
+ "colours_in": 2041,
+ "colours_cap": 24,
+ "colours_out": 22,
+ "fails": [],
+ "render": "art/gen/renders/rw_cyclist_adult_n5b.png",
+ "box": [
+  128,
+  82,
+  212,
+  169
+ ],
+ "cut_by": "tools/build_traffic.py cut (1x render, pitch 1, palette snap riverwalk.gpl, no resampling)"
+}

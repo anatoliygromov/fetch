@@ -1,0 +1,13 @@
+{
+ "name": "rw_car1",
+ "family": "rw_traffic",
+ "tier": "A",
+ "steps": {
+  "spec": {
+   "time": "2026-11-05 21:55"
+  },
+  "blockout": {
+   "time": "2026-11-05 21:55"
+  }
+ }
+}

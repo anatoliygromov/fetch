@@ -50,3 +50,5 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-10-25 14:38,spent,rw_lime@1025-143524,,,,,24,spent,"probe 1: 2 variants, 0.67x (trunk 17 px), kept as render only"
 2026-10-25 14:38,spent,rw_lime@1025-143524,,,,,-24,spent,correction: the 14:38 spent row repeats the 14:36 row
 2026-10-25 14:39,spent,rw_lime@1025-143833,,,,,24,spent,"retry 1: 256 frame, 2 variants"
+2026-11-05 21:55,plan,rw_cyclist_adult@1105-215536,rw_cyclist_adult,rw_traffic,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 21:56,spent,rw_cyclist_adult@1105-215536,,,,,24,spent,

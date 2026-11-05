@@ -1,0 +1,27 @@
+{
+ "name": "rw_car4",
+ "level": "riverwalk",
+ "layer": "lane",
+ "kind": "vehicle",
+ "real_height_m": 1.3,
+ "target_px": [
+  181,
+  71
+ ],
+ "checks_px": {
+  "wheel": 32,
+  "wheelbase": 132,
+  "length": 181
+ },
+ "subject": "a small bright red five-door city hatchback car, seen exactly from the side, the nose pointing LEFT: short sloping bonnet, tall rounded cabin, two side windows with a black pillar between them, a near-vertical tailgate on the right, black door handles, silver steel wheels with simple round hubcaps and black tyres, a light amber headlamp at the left nose and a red tail lamp at the right end",
+ "part_map": "the big mid grey shape is the car body (exactly that length and height; the short bonnet on the left, the windscreen sloping up, the rounded roof, the square tailgate on the right), the light grey band is the glass of the side windows, the two dark grey circles are the wheels (exactly that size and place), the small pale square at the left is the headlamp.",
+ "size_sentence": "the car is about three and a half dogs long and its roof is a little less than twice as high as the dog's head. A real small car, not a toy.",
+ "model": "sc_nb21",
+ "variants": 2,
+ "tier": "A",
+ "family": "rw_traffic",
+ "slot": {
+  "file": "riverwalk/art/scene/road_car4.png",
+  "where": "River Walk road in front of the promenade (road.lua art.cars[4]); faces left, flipped for the near lane"
+ }
+}
