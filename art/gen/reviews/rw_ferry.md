@@ -99,3 +99,15 @@ Better: the door, cleats, rub rail and lifebuoy now give the boat things at huma
 1. Remove the door's bottom ink row at row 51, cols 153-167 (doubled ink with the deck line at row 52).
 
 VERDICT: FAIL (1 item: doubled 2 px ink under the cabin door, row 51, cols 153-166)
+
+---
+
+# Round 3 (fix commit 9c77195), 5 Nov 2026
+
+Pixel diff of ferry.png against the round 2 version (6c5a228): exactly 13 pixels differ, all on row 51, cols 154-166, now #a86e3e door wood instead of ink. Nothing else changed (same size 252 x 79, same opaque shape). Door frame ink stays at cols 153 and 167 (left and right sides, continuous from row 40 to row 51).
+
+Result of the one open item:
+- asset_qa.md 4 and rules.json Outline: PASS. 2x2 ink blocks: 0 (was 14). Non-ink edge pixels: 0. Deck ink row 52 is cols 2-237, one unbroken 1 px line; the door now ends on it. asset_qa PASS.
+- All other items stay as in Round 2: asset_qa.md items 1-3 and 5-9 PASS, rules.json Scale, Layer, Shapes, Shading, Palette, View, Fit, Read PASS (the route lines, row 0, 30 and 52, are untouched).
+
+VERDICT: PASS
