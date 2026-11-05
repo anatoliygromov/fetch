@@ -134,7 +134,6 @@ hline(155, 166, 38, WB)
 rect(157, 40, 163, 44, K); rect(158, 41, 162, 43, N); put(161, 41, S); put(160, 42, S)
 put(164, 46, Y); put(164, 47, K)                         # the handle
 for x in range(153, 168): put(x, 51, WS if 154 <= x <= 166 else K)
-hline(153, 167, 51, K)                                    # the threshold on the sill
 
 # ---- wheelhouse: roof y 0-4 over x 97-145, body y 5-29 over x 99-143 ----
 hline(97, 145, 0, K); hline(97, 145, 4, K)
