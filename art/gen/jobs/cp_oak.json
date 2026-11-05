@@ -1,0 +1,32 @@
+{
+ "name": "cp_oak",
+ "level": "citypark",
+ "kind": "plant",
+ "tier": "B",
+ "family": "cp_sample",
+ "layer": "back",
+ "real_height_m": 11.0,
+ "target_px": [
+  470,
+  506
+ ],
+ "model": "sc_nb21_2k",
+ "variants": 2,
+ "checks_px": {
+  "trunk_width": 46,
+  "clear_trunk": 110,
+  "crown_width": 470
+ },
+ "subject": "a huge old park oak tree in golden autumn, seen from the front: a massive gnarled brown trunk with deep bark furrows and big roots flaring at its foot, heavy crooked limbs spreading out and up into one enormous rounded mass of autumn oak leaves in big clumps, rich orange and amber with golden yellow tops and a few rust-red clumps, gaps between the clumps where dark crooked branches show, lit from the upper left so each clump has a bright golden top edge and a deep rust-brown underside",
+ "part_map": "the dark grey column is the trunk (exactly that width and height, it touches the ground line, its foot flares into roots), the mid grey bars are the main limbs going up into the crown, the big light grey shape is the leafy crown: fill it to its edge with irregular leaf clumps on the outline, keep the underside at that height, and let the crown run out of the top edge of the image, cut by the frame like a giant tree seen close up.",
+ "size_sentence": "the trunk is a bit wider than the dog is tall, and the lowest leaves hang about three dog heights above the ground. It is a giant old oak, far taller and wider than the image, so its top is not seen.",
+ "slot": {
+  "file": "riverwalk/art/scene/cp_oak.png",
+  "where": "City Park tall, screen 6, the old oak (OAK, x 1724): replaces park_oak and the canopy boxes 24 and 53 in the tall level only"
+ },
+ "retry": {
+  "n": 1,
+  "changed": "blockout trunk 46 -> 29 px (and its limbs to match)",
+  "why": "probe (variant a, 512 grid, Pepper 52 px) drew the trunk 72-78 px at 1-1.2 m up, 1.6x the 46 px spec; variant b came back on a 249 px grid (half scale)"
+ }
+}

@@ -1,0 +1,78 @@
+{
+ "id": "fam_cp_sample",
+ "title": "City Park sample screen (screen 6, the old oak)",
+ "section": "family",
+ "group": "City Park",
+ "layer": "back + mid",
+ "tier": "B",
+ "note": "Your picks of 26 Oct: the trees Pepper climbs at true width with one leaf mass whose top is above the world (decision 1), and young 6 m mid trees (decision 2b). Screen 6 at both cameras: up on the high road she runs through the old oak's leaves; down on the path the oak stands at full size with its branches as her ledges. New: the old oak (trunk 54 px), a park lime at x 1528 and an ash at x 1916 whose crown leans over the treetop walk, so screen 7's walk is in leaves too; three young mid trees (a lime, a maple, a birch, 139 px). After four review rounds (the oak re-cut from its own render with the lime's pipeline): no ink edges, no tree lighter than the tree line behind it, no loose limbs or flat crown cuts, clumps of 3 to 4 shades, old small crowns end cleanly beside the new ones. Nothing she stands on moved. Checks: PEPPER UNCHANGED, flow 125/125, Tiled, physics 97/97, QA 0 problems, curve T1-T4 PASS. Layers light to dark: sky 202, far city 191, tree line 181, mid 154-159, back 118-141, play 80-91. SpriteCook 284 credits.",
+ "question": "Scale calls for you. Oak: trunk 54 px (1.2 m); the plan said 46 for the old oak and 60 for the big oak on screen 9. Lime and ash: trunks 36 and 29-33 px against the spec's 23 (0.5 m); both models drew them wider, and they sit inside the plan's true range for park trees (0.4 to 0.8 m). The lime's crown is now 371 px (8 m, the plan's lime crown). Keep these trunks, or ask for slimmer ones?",
+ "images": [
+  {
+   "src": "img/fam/cp_s6_high_ba_3x.png",
+   "label": "screen 6, high road, 3x: before | after"
+  },
+  {
+   "src": "img/fam/cp_s6_low_ba_3x.png",
+   "label": "screen 6, path, 3x: before | after"
+  },
+  {
+   "src": "img/fam/cp_s6_sheet.png",
+   "label": "screen 6 after: colour | greyscale, 3x and 1x, both cameras"
+  },
+  {
+   "src": "img/fam/cp_s5_s6_s7_high_2x.png",
+   "label": "screens 5, 6, 7 on the high road, 2x"
+  },
+  {
+   "src": "img/fam/cp_s5_s6_s7_low_2x.png",
+   "label": "screens 5, 6, 7 on the path, 2x"
+  },
+  {
+   "src": "img/fam/cp_oak_recut_vs_round3_vs_lime_4x.png",
+   "label": "oak leaves at 4x: round 3 | re-cut | the lime"
+  }
+ ],
+ "members": [
+  {
+   "id": "cp_oak",
+   "title": "old oak",
+   "slot": "cp_oak.png 388x343",
+   "img": "img/fam/cp_oak_2x.png",
+   "note": "Replaces the small old oak in the tall level only. Re-cut from its own render with the pipeline that made the lime and ash (leaf clumps of 4 shades, no ink, darkest a dark brown, highlight under the tree line). Trunk 54 px (your call), crown 388 px, top above the world. 8 colours. Flatter than the lime: if you want it as crisp, it needs a regeneration (credits).",
+   "findings": [
+    "blotches warn: 19 small patches of near colours"
+   ]
+  },
+  {
+   "id": "cp_lime",
+   "title": "park lime",
+   "slot": "cp_lime.png 371x509",
+   "img": "img/fam/cp_lime_2x.png",
+   "note": "Remade in round 3 with a new method (GPT 2.5 following a blockout at the plan's size, the approved River Walk lime and the oak as style), cut 1:1 on its own grid. Trunk 36 px (owner's call), crown 371 px, top 190 px above the world, at x 1528. Clumps of 3 to 4 shades, bark edge a darker brown. 9 colours.",
+   "findings": [
+    "decor-ink warn 67 % (dark brown limb edges and the leaves' dark maroon)"
+   ]
+  },
+  {
+   "id": "cp_ash",
+   "title": "ash",
+   "slot": "cp_ash.png 509x505",
+   "img": "img/fam/cp_ash_2x.png",
+   "note": "New: the ash at x 1916 (screen 6's right edge, screen 7), its crown leaning right over the treetop walk. Same method as the lime. Trunk 29-33 px (owner's call), diamond bark, top 186 px above the world. 10 colours.",
+   "findings": [
+    "blotches warn: 2 small patches"
+   ]
+  },
+  {
+   "id": "cp_midtrees",
+   "title": "young mid trees",
+   "slot": "cp_mid_lime/maple/birch.png, 139 px",
+   "img": "img/fam/cp_midtrees_4x.png",
+   "note": "Young 6 m trees at the mid scale (23 px a metre), in turn along the half-speed row of the tall level, the far city seen between them. Highlights brought under the far city (about 172 on screen), birch trunk a warm grey. 7-8 colours each, no outline.",
+   "findings": [
+    "maple: decor-ink warn 38 % (its own dark red rim)"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,30 @@
+{
+ "name": "cp_lime",
+ "size": [
+  371,
+  509
+ ],
+ "render": "art/gen/renders/cp_lime_r2a_raw.png",
+ "cut_by": "tools/grid4_cut.py (4 px majority, 92 % clean cells) then tools/cut_cp_tree.py --leaf 5 --bark 4 --rim-lum 60 + 4 bark boxes",
+ "colours_in": 9,
+ "measures_px": {
+  "trunk_20px_up": 51,
+  "trunk_50px_up": 38,
+  "trunk_80px_up": 36,
+  "lowest_leaf_px_up": 0,
+  "crown_width": 371,
+  "size": [
+   371,
+   509
+  ],
+  "colours": 9,
+  "top_cut_by_frame": true
+ },
+ "lone_changed": 253,
+ "blotches_merged": 39,
+ "fails": [],
+ "waived": [
+  "trunk 36 px (spec 23): the render drew it wider (GPT 2.5 and NB 2.1 alike); within the plan's true range for park trees (0.4-0.8 m, 18-37 px). Owner's call on the board.",
+  "crown 371 px (8 m; spec 250, the plan's lime crown 8 m = 368 px)"
+ ]
+}

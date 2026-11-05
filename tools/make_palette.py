@@ -11,6 +11,14 @@ import numpy as np
 from PIL import Image
 
 APPROVED = {
+    'citypark': {
+        # v1 (5 Nov, art/cp-sample-05nov): the City Park sample screen's new trees kept whole as their material ramps
+        # (lime and oak leaves and bark, the three young mid trees); they count as approved only with the owner's
+        # approve on the board. The pool is the approved shared keys City Park draws (bench, bin, lamp) and Mia.
+        'keep': ['pepper.png', 'ball.png', 'scene/cp_lime.png', 'scene/cp_oak.png', 'scene/cp_mid_lime.png',
+                 'scene/cp_mid_maple.png', 'scene/cp_mid_birch.png', 'scene/cp_ash.png'],
+        'pool': ['girl.png', 'scene/bench.png', 'scene/bin.png', 'scene/lamp_post.png'],
+    },
     'riverwalk': {
         # v2 (25 Oct, art/rw-sample-screen): the sample screen's new pieces are kept whole as their material ramps
         # (house plaster/sandstone/granite/door/glass, lime leaves and bark, quay railing). They count as approved

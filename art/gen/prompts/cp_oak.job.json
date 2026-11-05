@@ -1,0 +1,32 @@
+{
+ "name": "cp_oak",
+ "model": "SpriteCook Nano Banana 2.1 2K, pixel on",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/cp_oak_blockout.png",
+  "art/gen/style_card_citypark.png"
+ ],
+ "prompt_file": "art/gen/prompts/cp_oak.txt",
+ "k": null,
+ "frame": [
+  512,
+  512
+ ],
+ "credits": 36,
+ "tool": "spritecook",
+ "family": "cp_sample",
+ "tier": "B",
+ "slot": {
+  "file": "riverwalk/art/scene/cp_oak.png",
+  "where": "City Park tall, screen 6, the old oak (OAK, x 1724): replaces park_oak and the canopy boxes 24 and 53 in the tall level only"
+ },
+ "spritecook": {
+  "model": "gemini-nano-banana-2.1",
+  "pixel": true,
+  "resolution": "2K",
+  "width": 470,
+  "height": 506
+ },
+ "ledger_job": "cp_oak@1105-220416"
+}

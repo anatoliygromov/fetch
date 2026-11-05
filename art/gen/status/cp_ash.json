@@ -1,0 +1,34 @@
+{
+ "name": "cp_ash",
+ "family": "cp_sample",
+ "tier": "B",
+ "steps": {
+  "spec": {
+   "time": "2026-11-05 22:40"
+  },
+  "blockout": {
+   "time": "2026-11-05 22:40"
+  },
+  "preflight": {
+   "time": "2026-11-05 22:48"
+  },
+  "probe": {
+   "render": "art/gen/renders/cp_ash_a_raw.png",
+   "time": "2026-11-05 22:48"
+  },
+  "cut": {
+   "time": "2026-11-05 22:48"
+  },
+  "ingame": {
+   "frame": "docs/review/05nov/cp-sample/after_y144_x1920_1x.png",
+   "time": "2026-11-05 22:48"
+  },
+  "polish": {
+   "aseprite": "art/source/cp_ash/cp_ash.aseprite",
+   "time": "2026-11-05 22:48"
+  },
+  "review": {
+   "time": "2026-11-05 23:05"
+  }
+ }
+}

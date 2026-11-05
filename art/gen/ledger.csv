@@ -70,3 +70,15 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-05 22:35,spent,rw_road_rider2@1105-223501,,,,,24,spent,"fix round 1, family retry 1"
 2026-11-05 22:18,plan,rw_ferry@1105-221805,rw_ferry,rw_water,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
 2026-11-05 22:19,spent,rw_ferry@1105-221805,,,,,24,spent,
+2026-11-05 21:56,plan,cp_lime@1105-215619,cp_lime,cp_sample,spritecook,"SpriteCook Nano Banana 2.1 2K, pixel on",36,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 21:57,spent,cp_lime@1105-215619,,,,,36,spent,
+2026-11-05 22:01,plan,cp_oak@1105-220152,cp_oak,cp_sample,spritecook,"SpriteCook Nano Banana 2.1 2K, pixel on",36,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 22:01,plan,cp_midtrees@1105-220153,cp_midtrees,cp_sample,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 22:03,spent,cp_oak@1105-220152,,,,,36,spent,
+2026-11-05 22:03,spent,cp_midtrees@1105-220153,,,,,24,spent,
+2026-11-05 22:04,plan,cp_oak@1105-220416,cp_oak,cp_sample,spritecook,"SpriteCook Nano Banana 2.1 2K, pixel on",36,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 22:05,spent,cp_oak@1105-220416,,,,,36,spent,
+2026-11-05 22:40,plan,cp_lime@1105-224056,cp_lime,cp_sample,spritecook,SpriteCook GPT 2.5 Sunburst 2K medium (follows the reference grid),52,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 22:40,plan,cp_ash@1105-224057,cp_ash,cp_sample,spritecook,SpriteCook GPT 2.5 Sunburst 2K medium (follows the reference grid),52,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 22:42,spent,cp_lime@1105-224056,,,,,76,spent,
+2026-11-05 22:42,spent,cp_ash@1105-224057,,,,,76,spent,

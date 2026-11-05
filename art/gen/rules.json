@@ -53,7 +53,7 @@
   },
   "citypark": {
    "light": "City Park, a golden autumn afternoon: warm amber sun from the upper left, warm highlights, violet-blue shadows",
-   "style_card": "art/gen/style_card_riverwalk.png"
+   "style_card": "art/gen/style_card_citypark.png"
   },
   "downtown": {
    "light": "Downtown, a bright midday: high white sun from the upper left, crisp short shadows, clean saturated colours",
@@ -152,6 +152,32 @@
     "model": "pixel-engine-image-v1",
     "pixel": true
    }
+  },
+  "sc_nb21_2k": {
+   "name": "SpriteCook Nano Banana 2.1 2K, pixel on",
+   "tool": "spritecook",
+   "credits": 18,
+   "out": null,
+   "spritecook": {
+    "model": "gemini-nano-banana-2.1",
+    "pixel": true,
+    "resolution": "2K"
+   },
+   "_note": "5 Nov: for subjects taller than 256 px (City Park trees run from the path past the top of the high road); the probe checks that 2K returns a ~512 px grid"
+  },
+  "sc_gpt25_2k": {
+   "name": "SpriteCook GPT 2.5 Sunburst 2K medium (follows the reference grid)",
+   "tool": "spritecook",
+   "credits": 14,
+   "out": null,
+   "spritecook": {
+    "model": "gpt-image-2.5-sunburst",
+    "pixel": true,
+    "resolution": "2K",
+    "quality": "medium"
+   },
+   "credits_per_reference": 8,
+   "_note": "5 Nov round 3 (City Park lime and ash): the method change after two failed review rounds; a 512 frame at 4 px per art px"
   }
  },
  "default_model": "sc_nb21",
@@ -221,9 +247,10 @@
   "C": "far layers, sky, ground, pavement, anything repeated or geometric. Built in code or from stamped parts, never generated."
  },
  "palettes": {
-  "riverwalk": "art/palettes/riverwalk.gpl"
+  "riverwalk": "art/palettes/riverwalk.gpl",
+  "citypark": "art/palettes/citypark.gpl"
  },
- "_models_note": "credits = per image; a job costs credits x variations (+ credits_per_reference x references). Prices from list_generation_models, 25 Oct.",
+ "_models_note": "credits = per image; a job costs (credits + credits_per_reference x references) x variations (5 Nov: references are billed per variation). Prices from list_generation_models, 25 Oct.",
  "review_checklist": [
   "Scale: right size next to Pepper and in its slot (check measures within 2 px)",
   "Layer: its values sit on its layer-ladder row (darkest, contrast), lighter than the layer in front",

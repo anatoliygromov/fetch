@@ -1,0 +1,29 @@
+{
+ "name": "cp_ash",
+ "size": [
+  509,
+  505
+ ],
+ "render": "art/gen/renders/cp_ash_a_raw.png",
+ "cut_by": "tools/grid4_cut.py (89 % clean cells) then tools/cut_cp_tree.py --leaf 6 --bark 4 --rim-lum 60 --bark-box 96,342,152,505",
+ "colours_in": 10,
+ "measures_px": {
+  "trunk_20px_up": 37,
+  "trunk_50px_up": 33,
+  "trunk_80px_up": 29,
+  "lowest_leaf_px_up": 163,
+  "crown_width": 509,
+  "size": [
+   509,
+   505
+  ],
+  "colours": 10,
+  "top_cut_by_frame": true
+ },
+ "lone_changed": 317,
+ "blotches_merged": 131,
+ "fails": [],
+ "waived": [
+  "trunk 29 px (spec 23): the render drew it wider (GPT 2.5 and NB 2.1 alike); within the plan's true range for park trees (0.4-0.8 m, 18-37 px). Owner's call on the board."
+ ]
+}
