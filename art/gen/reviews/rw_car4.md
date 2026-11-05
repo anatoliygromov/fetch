@@ -1,6 +1,6 @@
 # Review for the pipeline: rw_car4
 
-Reviewer: independent (did not make the asset); transcribed from art/gen/reviews/road_car4.md (the reviewer's own words, its latest round). The game files: road_car4.
+Reviewer: independent gate 8 reviewer (Claude, session 01XkeHCnH2RKgEVTGUWoSKBw; did not make the asset). Checked line by line against my own road_car4.md (Round 2 items R1-R9 and VERDICT): all 9 items and the verdict match; signed 5 Nov. The game files and their pixels are unchanged since that review (git diff cad8c43..f450098 on the png files is empty).
 
 ## Round 2
 
