@@ -39,3 +39,13 @@ game cuts each pedal frame by the still's width (road.lua quads), so none is nee
 | --- | --- |
 | road_rider1 (new, lane) | 24 |
 | road_rider2 (new, lane) | 24 + 24 (family retry 1: both variants came back on a 2-3 px grid; the one input changed: the style images, card only) |
+
+## Fix round 2 (review round 2: the 6 promenade and car files PASS; the lane riders FAIL on light, fringe, face)
+
+0 credits, by hand (tools/fix_traffic_r2.py, art/source/rw_road_rider*/hand_r2.json, edits.json step r2_hand):
+the lane riders relit from the upper left by mirroring each row's run of every material's shades (helmet, coat or
+jacket, backpack), so the light side and the shade side swap; rider 2's skin-coloured fringe on the backpack flap,
+shoulder and sleeve taken out (the hand on the handlebar stays); rider 2's face redrawn (skin forehead, dark brow, eye
+with white and pupil, skin nose and cheek, one-colour beard with a lip). The last family retry was not needed.
+The 4 pieces that passed are `review` done in tools/pipeline.py (art/gen/reviews/rw_*.md transcribe the reviewer's
+round 2 checklist in the pipeline's format). tools/pipeline.py from art/rw-water-05nov (d0fcea6) cherry-picked.

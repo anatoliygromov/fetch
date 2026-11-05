@@ -53,7 +53,7 @@
    "title": "lane rider 1",
    "slot": "road_rider1.png 104x102",
    "img": "img/fam/road_rider1_5x.png",
-   "note": "The same woman at the lane's scale, lit from the upper left. Only the top 50 rows show in the game.",
+   "note": "The same woman at the lane's scale, lit from the upper left like the level (helmet and coat relit by hand). Only the top 50 rows show in the game.",
    "findings": [
     "asset_qa warns only: 2 small blotches (below the screen edge)"
    ]
@@ -63,7 +63,7 @@
    "title": "lane rider 2",
    "slot": "road_rider2.png 104x103",
    "img": "img/fam/road_rider2_5x.png",
-   "note": "The same man at the lane's scale.",
+   "note": "The same man at the lane's scale, lit from the upper left; his face redrawn by hand (eye with white and pupil, skin forehead, one-colour beard).",
    "findings": [
     "asset_qa warns only: 1 small blotch"
    ]
