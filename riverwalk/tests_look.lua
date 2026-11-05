@@ -86,7 +86,7 @@ return function(api)
     p.x, p.y, p.vx, p.vy, p.onGround, p.ground, p.mode, p.crouch, p.invuln = sp[1], sp[2], 0, 0, true, nil, "normal", false, 0
     s.cam = math.max(0, math.min(s.world.width - 320, sp[1] - 140)); s.bikes = {}; s.bikeT = 99
     if os.getenv("LOOK_BIKE") then                                  -- (art/preflight) a parked bike for card frames
-      s.bikes[1] = { x = sp[1] + tonumber(os.getenv("LOOK_BIKE")), y = sp[2], rider = 1, speed = 0, warn = 99,
+      s.bikes[1] = { x = sp[1] + tonumber(os.getenv("LOOK_BIKE")), y = sp[2], rider = tonumber(os.getenv("LOOK_RIDER") or "1"), speed = 0, warn = 99,   -- (5 Nov: LOOK_RIDER=2, the second rider)
                       zone = { speed = 0, endX = -1e9, w = 48, h = 26 } }
     end
   end

@@ -1,0 +1,31 @@
+{
+ "name": "rw_car1",
+ "size": [
+  241,
+  88
+ ],
+ "target": [
+  233,
+  80
+ ],
+ "grid_clean": 1.0,
+ "on_blockout": 0.963,
+ "covered": 1.0,
+ "stray": 0.0,
+ "colours_in": 3794,
+ "colours_cap": 20,
+ "colours_out": 18,
+ "fails": [],
+ "render": "art/gen/renders/rw_car1_n5b.png",
+ "box": [
+  9,
+  150,
+  250,
+  238
+ ],
+ "cut_by": "tools/build_traffic.py cut (1x render, pitch 1, palette snap riverwalk.gpl, no resampling)",
+ "waived": [
+  "size 241x88 against the 233x80 guess: the render drew a real estate car (a 2000s Swedish estate is 4.7 x 1.5 m, roof rails 1.55 m: 259 x 85 px at 55 px/m); 241 x 88 is 4.4 x 1.6 m with the rails, inside 7 % of the real car. Kept, said on the board card.",
+  "size 241x88 vs 233x80"
+ ]
+}

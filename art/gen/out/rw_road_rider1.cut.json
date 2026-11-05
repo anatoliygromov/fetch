@@ -1,0 +1,31 @@
+{
+ "name": "rw_road_rider1",
+ "size": [
+  100,
+  102
+ ],
+ "target": [
+  99,
+  102
+ ],
+ "grid_clean": 1.0,
+ "on_blockout": 0.754,
+ "covered": 0.97,
+ "stray": 0.0,
+ "colours_in": 2279,
+ "colours_cap": 20,
+ "colours_out": 18,
+ "fails": [],
+ "render": "art/gen/renders/rw_road_rider1_n5a.png",
+ "box": [
+  110,
+  95,
+  210,
+  197
+ ],
+ "cut_by": "tools/build_traffic.py cut (1x render, pitch 1, palette snap riverwalk.gpl, no resampling)",
+ "waived": [
+  "on blockout 75 %: the rider is drawn 100 x 102 against the 99 x 102 target (size exact), shifted a few pixels inside the frame; the blockout's parts are all drawn (97 % covered).",
+  "only 75% of the drawing lands on the blockout"
+ ]
+}

@@ -1,0 +1,88 @@
+{
+ "id": "fam_rw_traffic",
+ "title": "River Walk traffic: two riders with pedal loops, two lane riders, two cars",
+ "section": "family",
+ "group": "River Walk",
+ "layer": "char / road lane",
+ "tier": "A",
+ "note": "Your redraw calls on the road cars and cyclists (25 Oct). Made at true scale from a blockout with Pepper at 1x, on SpriteCook's own pixel grid (no resizing anywhere), snapped to the River Walk palette, then fixed by hand after an independent review (every changed pixel in art/source/<name>/edits.json). One ink for the family, the bench's black; one wheel drawn once and stamped twice; faces with a nose, mouth and clear eye. The promenade riders are 1.85 m at Pepper's scale (87 px) with a pedal loop that turns once a second. The road's bike lane is nearer than the promenade (55 px a metre, like the cars), so its riders are their own pictures at that size; only their top half shows above the screen edge. SpriteCook 220 credits.",
+ "question": "The cars came out a little bigger than my guess (estate 241 x 88 px, hatchback 185 x 77): both are still at or under real car size. Keep? The road's other three cars (taxi, van, car 5) are the old art: redraw them in the same style next?",
+ "images": [
+  {
+   "src": "img/fam/rwtraffic_promenade_rider1_3x.png",
+   "label": "promenade at 3x: rider 1 by the bench, colour | greyscale"
+  },
+  {
+   "src": "img/fam/rwtraffic_promenade_rider2_3x.png",
+   "label": "promenade at 3x: rider 2 by the lamp and bin, colour | greyscale"
+  },
+  {
+   "src": "img/fam/rwtraffic_road_car1_lanerider1_3x.png",
+   "label": "the road at 3x: the estate and lane rider 1"
+  },
+  {
+   "src": "img/fam/rwtraffic_road_car4_lanerider2_3x.png",
+   "label": "the road at 3x: the hatchback and lane rider 2"
+  },
+  {
+   "src": "img/fam/rwtraffic_before_after_3x.png",
+   "label": "before | after at 3x"
+  }
+ ],
+ "members": [
+  {
+   "id": "cyclist_adult1_v2",
+   "title": "rider 1 (woman, red coat), promenade",
+   "slot": "cyclist_adult1.png 88x87 + cyclist_adult1_pedal.png 8 x 88x87",
+   "img": "img/fam/cyclist_adult1_5x.png",
+   "note": "Pedal loop: legs from SpriteCook's animation, everything else the still in all 8 frames; the wheels turn through 4 steps; one pedal turn per 208 px ridden.",
+   "findings": [
+    "asset_qa warns only: 1 small blotch in the pedal frames"
+   ]
+  },
+  {
+   "id": "cyclist_adult2_v2",
+   "title": "rider 2 (man, green jacket), promenade",
+   "slot": "cyclist_adult2.png 88x87 + cyclist_adult2_pedal.png",
+   "img": "img/fam/cyclist_adult2_5x.png",
+   "note": "The second rider; the two take turns on the promenade.",
+   "findings": []
+  },
+  {
+   "id": "road_rider1_v1",
+   "title": "lane rider 1",
+   "slot": "road_rider1.png 104x102",
+   "img": "img/fam/road_rider1_5x.png",
+   "note": "The same woman at the lane's scale, lit from the upper left like the level (helmet and coat relit by hand). Only the top 50 rows show in the game.",
+   "findings": [
+    "asset_qa warns only: 2 small blotches (below the screen edge)"
+   ]
+  },
+  {
+   "id": "road_rider2_v1",
+   "title": "lane rider 2",
+   "slot": "road_rider2.png 104x103",
+   "img": "img/fam/road_rider2_5x.png",
+   "note": "The same man at the lane's scale, lit from the upper left; his face redrawn by hand (eye with white and pupil, skin forehead, one-colour beard).",
+   "findings": [
+    "asset_qa warns only: 1 small blotch"
+   ]
+  },
+  {
+   "id": "road_car1_v2",
+   "title": "estate car (navy)",
+   "slot": "road_car1.png 241x88",
+   "img": "img/fam/road_car1_4x.png",
+   "note": "4.4 m long at the road's scale; the frame crops its wheels as before.",
+   "findings": []
+  },
+  {
+   "id": "road_car4_v2",
+   "title": "small hatchback (red)",
+   "slot": "road_car4.png 185x77",
+   "img": "img/fam/road_car4_4x.png",
+   "note": "3.4 m long.",
+   "findings": []
+  }
+ ]
+}

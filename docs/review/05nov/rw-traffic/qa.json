@@ -1,0 +1,270 @@
+[
+ {
+  "name": "cyclist_adult1",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/cyclist_adult1.png",
+  "level": "rw",
+  "layer": "char",
+  "fade": 0.0,
+  "w": 88,
+  "h": 87,
+  "building": false,
+  "frames": null,
+  "group": "River Walk",
+  "info": {
+   "colours": 16,
+   "lone": 2.3,
+   "p10": 0,
+   "median": 55,
+   "p90": 159,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "cyclist_adult2",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/cyclist_adult2.png",
+  "level": "rw",
+  "layer": "char",
+  "fade": 0.0,
+  "w": 88,
+  "h": 87,
+  "building": false,
+  "frames": null,
+  "group": "River Walk",
+  "info": {
+   "colours": 15,
+   "lone": 1.6,
+   "p10": 0,
+   "median": 55,
+   "p90": 139,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "cyclist_adult1_pedal",
+  "verdict": "WARN",
+  "file": "riverwalk/art/scene/cyclist_adult1_pedal.png",
+  "level": "rw",
+  "layer": "char",
+  "fade": 0.0,
+  "w": 704,
+  "h": 87,
+  "building": false,
+  "frames": [
+   88,
+   87
+  ],
+  "group": "River Walk",
+  "info": {
+   "colours": 16,
+   "lone": 2.2,
+   "p10": 0,
+   "median": 55,
+   "p90": 159,
+   "noise": 0.1,
+   "blotches": 1,
+   "frames": {
+    "fw": 88,
+    "fh": 87,
+    "count": 8
+   },
+   "outline_min": 99
+  },
+  "checks": [
+   {
+    "id": "blotches",
+    "sev": "warn",
+    "msg": "1 blotch(es) of 2-24 px in a near colour",
+    "pixels": [
+     [
+      658,
+      51
+     ],
+     [
+      656,
+      52
+     ],
+     [
+      657,
+      52
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "name": "cyclist_adult2_pedal",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/cyclist_adult2_pedal.png",
+  "level": "rw",
+  "layer": "char",
+  "fade": 0.0,
+  "w": 704,
+  "h": 87,
+  "building": false,
+  "frames": [
+   88,
+   87
+  ],
+  "group": "River Walk",
+  "info": {
+   "colours": 15,
+   "lone": 1.7,
+   "p10": 0,
+   "median": 55,
+   "p90": 139,
+   "noise": 0.0,
+   "blotches": 0,
+   "frames": {
+    "fw": 88,
+    "fh": 87,
+    "count": 8
+   },
+   "outline_min": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "road_car1",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/road_car1.png",
+  "level": "rw",
+  "layer": "lane",
+  "fade": 0.0,
+  "w": 241,
+  "h": 88,
+  "building": false,
+  "frames": null,
+  "group": "River Walk",
+  "info": {
+   "colours": 16,
+   "lone": 1.0,
+   "p10": 2,
+   "median": 36,
+   "p90": 129,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "road_car4",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/road_car4.png",
+  "level": "rw",
+  "layer": "lane",
+  "fade": 0.0,
+  "w": 185,
+  "h": 77,
+  "building": false,
+  "frames": null,
+  "group": "River Walk",
+  "info": {
+   "colours": 16,
+   "lone": 1.0,
+   "p10": 20,
+   "median": 97,
+   "p90": 200,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "road_rider1",
+  "verdict": "WARN",
+  "file": "riverwalk/art/scene/road_rider1.png",
+  "level": "rw",
+  "layer": "lane",
+  "fade": 0.0,
+  "w": 104,
+  "h": 102,
+  "building": false,
+  "frames": null,
+  "group": "River Walk",
+  "info": {
+   "colours": 13,
+   "lone": 2.2,
+   "p10": 2,
+   "median": 52,
+   "p90": 160,
+   "noise": 0.1,
+   "blotches": 1,
+   "outline": 100
+  },
+  "checks": [
+   {
+    "id": "blotches",
+    "sev": "warn",
+    "msg": "1 blotch(es) of 2-24 px in a near colour",
+    "pixels": [
+     [
+      48,
+      23
+     ],
+     [
+      49,
+      24
+     ],
+     [
+      49,
+      25
+     ],
+     [
+      50,
+      25
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "name": "road_rider2",
+  "verdict": "WARN",
+  "file": "riverwalk/art/scene/road_rider2.png",
+  "level": "rw",
+  "layer": "lane",
+  "fade": 0.0,
+  "w": 104,
+  "h": 103,
+  "building": false,
+  "frames": null,
+  "group": "River Walk",
+  "info": {
+   "colours": 15,
+   "lone": 2.0,
+   "p10": 2,
+   "median": 52,
+   "p90": 160,
+   "noise": 0.0,
+   "blotches": 1,
+   "outline": 100
+  },
+  "checks": [
+   {
+    "id": "blotches",
+    "sev": "warn",
+    "msg": "1 blotch(es) of 2-24 px in a near colour",
+    "pixels": [
+     [
+      43,
+      56
+     ],
+     [
+      43,
+      57
+     ]
+    ]
+   }
+  ]
+ }
+]

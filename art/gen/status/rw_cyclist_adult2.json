@@ -1,0 +1,34 @@
+{
+ "name": "rw_cyclist_adult2",
+ "family": "rw_traffic",
+ "tier": "A",
+ "steps": {
+  "spec": {
+   "time": "2026-11-05 21:55"
+  },
+  "blockout": {
+   "time": "2026-11-05 21:55"
+  },
+  "preflight": {
+   "time": "2026-11-05 22:09"
+  },
+  "probe": {
+   "render": "art/gen/renders/rw_cyclist_adult2_n5a.png",
+   "time": "2026-11-05 22:09"
+  },
+  "cut": {
+   "time": "2026-11-05 22:09"
+  },
+  "ingame": {
+   "frame": "docs/review/05nov/rw-traffic/ingame_promenade_rider2_1x.png",
+   "time": "2026-11-05 22:09"
+  },
+  "polish": {
+   "aseprite": "art/source/rw_cyclist_adult2/rw_cyclist_adult2.aseprite",
+   "time": "2026-11-05 22:09"
+  },
+  "review": {
+   "time": "2026-11-05 22:49"
+  }
+ }
+}

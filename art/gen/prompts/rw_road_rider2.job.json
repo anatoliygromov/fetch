@@ -1,0 +1,32 @@
+{
+ "name": "rw_road_rider2",
+ "model": "SpriteCook Nano Banana 2.1 1K, pixel on",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/rw_road_rider2_blockout.png",
+  "art/gen/style_card_riverwalk.png"
+ ],
+ "prompt_file": "art/gen/prompts/rw_road_rider2.txt",
+ "k": null,
+ "frame": [
+  256,
+  256
+ ],
+ "credits": 24,
+ "tool": "spritecook",
+ "family": "rw_traffic",
+ "tier": "A",
+ "slot": {
+  "file": "riverwalk/art/scene/road_rider2.png",
+  "where": "River Walk road's bike lane (road.lua riders: the lane art when it exists), top row at y 190, only rows 0-49 show; rider 2"
+ },
+ "spritecook": {
+  "model": "gemini-nano-banana-2.1",
+  "pixel": true,
+  "resolution": "1K",
+  "width": 99,
+  "height": 102
+ },
+ "ledger_job": "rw_road_rider2@1105-223501"
+}

@@ -24,6 +24,12 @@
    "colours": 20,
    "outline": "a 1 px dark outline around the whole silhouette, one ink colour"
   },
+  "lane": {
+   "px_per_m": 55,
+   "colours": 20,
+   "outline": "a 1 px dark outline around the whole silhouette, one ink colour",
+   "_note": "the road's near lane in front of the promenade (road.lua): drawn bigger than the play line, about 55 px a metre"
+  },
   "back": {
    "px_per_m": 46,
    "colours": 20,

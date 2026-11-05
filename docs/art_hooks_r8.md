@@ -32,8 +32,9 @@ box (the old rails) are no longer drawn.
 
 | File | Size (px) | Facing | Anchor and rules | Replaces |
 | --- | --- | --- | --- | --- |
-| `art/scene/cyclist_adult1.png`, `cyclist_adult2.png` | about 76 x 76 | **right** (mirrored when riding left) | The promenade bikes: centred on the bike's x, bottom row on the pavement (the hit box stays 70 x 28, wheel to wheel). The road's cyclists: top row at y 190 (below Pepper's feet; the frame crops the wheels, as now) | `road_cyclist1-2.png` (both uses) |
-| `art/scene/cyclist_adult1_pedal.png`, `cyclist_adult2_pedal.png` | frames of the still's size side by side (8 frames: 608 x 76) | right | One frame per 6 px ridden, looped. Optional: without it the still is drawn (the old `_roll` wheel frames are not used with the new riders) | `road_cyclist1-2_roll.png` |
+| `art/scene/cyclist_adult1.png`, `cyclist_adult2.png` | 88 x 87 (5 Nov: true scale, 1.85 m with the helmet = 85 px at 46 px/m; wheels 31 px; 2 px clear each side so no wheel touches the edge) | **right** (mirrored when riding left) | The promenade bikes: centred on the bike's x, bottom row on the pavement (the hit box stays 70 x 28, wheel to wheel). The road's cyclists: top row at y 190 (below Pepper's feet; the frame crops the wheels, as now) | `road_cyclist1-2.png` (both uses) |
+| `art/scene/cyclist_adult1_pedal.png`, `cyclist_adult2_pedal.png` | frames of the still's size side by side (8 frames: 704 x 87, no gutter: the game cuts each frame by the still's width) | right | One frame per 26 px ridden (road.lua `Rd.PEDAL_PX`: a pedal turn about once a second at riding speed), looped. Optional: without it the still is drawn (the old `_roll` wheel frames are not used with the new riders) | `road_cyclist1-2_roll.png` |
+| `art/scene/road_rider1.png`, `road_rider2.png` | 104 x 102 (5 Nov: the bike lane's 55 px/m, like the cars; 1.85 m with the helmet = 102 px) | **right** (mirrored when riding left), lit from the upper left | The road's bike lane only: top row at y 190, rows 0-49 show (head, body, hands); no pedal loop | the promenade riders in the lane |
 
 ## Mia's throw (FETCH FRENZY, the bonus round)
 

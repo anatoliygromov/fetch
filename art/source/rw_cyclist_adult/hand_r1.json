@@ -1,0 +1,254 @@
+[
+{
+"xy": [
+[
+54,
+12
+],
+[
+54,
+13
+]
+],
+"to": "000000",
+"why": "face: nose step, outline (review A5)"
+},
+{
+"xy": [
+[
+53,
+12
+],
+[
+53,
+13
+]
+],
+"to": "f7a67f",
+"why": "face: nose step, skin (review A5)"
+},
+{
+"xy": [
+[
+50,
+15
+],
+[
+51,
+15
+]
+],
+"to": "7d1c24",
+"why": "face: a clean mouth, two lip pixels (review A5)"
+},
+{
+"xy": [
+[
+49,
+15
+],
+[
+52,
+14
+],
+[
+50,
+16
+],
+[
+47,
+17
+]
+],
+"to": "f7a67f",
+"why": "face: tan smudges round the mouth and chin to skin (review A5)"
+},
+{
+"xy": [
+[
+50,
+8
+],
+[
+51,
+8
+],
+[
+52,
+10
+],
+[
+44,
+9
+],
+[
+44,
+10
+]
+],
+"to": "5a2e2a",
+"why": "hair: forehead line in one brown (review A3)"
+},
+{
+"xy": [
+[
+45,
+1
+],
+[
+46,
+1
+],
+[
+51,
+2
+],
+[
+52,
+3
+],
+[
+50,
+4
+],
+[
+52,
+4
+]
+],
+"to": "f7f9fa",
+"why": "helmet: lone dabs in the white shell (review A3)"
+},
+{
+"xy": [
+[
+47,
+2
+],
+[
+48,
+2
+],
+[
+49,
+2
+],
+[
+47,
+3
+]
+],
+"to": "767884",
+"why": "helmet: one clean vent slot (review A3)"
+},
+{
+"xy": [
+[
+37,
+4
+],
+[
+38,
+4
+],
+[
+39,
+4
+],
+[
+37,
+5
+],
+[
+38,
+5
+]
+],
+"to": "9c9ea8",
+"why": "helmet: the back in one shade (review A3)"
+},
+{
+"xy": [
+[
+40,
+4
+],
+[
+41,
+5
+],
+[
+45,
+5
+],
+[
+46,
+5
+],
+[
+47,
+5
+]
+],
+"to": "e1e1e1",
+"why": "helmet: light-blue dabs to the shell shade (review A3)"
+},
+{
+"xy": [
+[
+39,
+16
+],
+[
+41,
+16
+],
+[
+42,
+17
+],
+[
+43,
+18
+],
+[
+44,
+19
+],
+[
+46,
+20
+],
+[
+46,
+21
+],
+[
+46,
+22
+],
+[
+45,
+23
+],
+[
+46,
+23
+],
+[
+46,
+24
+],
+[
+37,
+25
+],
+[
+48,
+25
+]
+],
+"to": "7d1c24",
+"why": "coat: brown and ink dabs in the red collar and back to the coat's dark red (review A3)"
+}
+]

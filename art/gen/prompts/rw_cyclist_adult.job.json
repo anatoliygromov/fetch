@@ -10,16 +10,16 @@
  "prompt_file": "art/gen/prompts/rw_cyclist_adult.txt",
  "k": null,
  "frame": [
-  150,
-  112
+  256,
+  256
  ],
  "credits": 24,
  "tool": "spritecook",
- "family": "rw_people",
+ "family": "rw_traffic",
  "tier": "A",
  "slot": {
   "file": "riverwalk/art/scene/cyclist_adult1.png",
-  "where": "River Walk promenade bikes (rider 1), stage.lua bikes"
+  "where": "River Walk: the promenade bikes (stage.lua, rider 1) and the road's bike lane (road.lua riders[1]); its pedal loop cyclist_adult1_pedal.png"
  },
  "spritecook": {
   "model": "gemini-nano-banana-2.1",
@@ -28,5 +28,5 @@
   "width": 83,
   "height": 85
  },
- "ledger_job": "rw_cyclist_adult@1025-131348"
+ "ledger_job": "rw_cyclist_adult@1105-215536"
 }
