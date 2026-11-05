@@ -1,0 +1,12 @@
+{
+ "name": "rw_pile",
+ "level": "riverwalk",
+ "layer": "front",
+ "kind": "decoration",
+ "real_height_m": 3.0,
+ "target_px": [18, 182],
+ "subject": "a tarred timber mooring pile, 0.27 m thick, rising out of the bottom of the screen in front of the river; built by rule (tools/build_pile.py)",
+ "tier": "C",
+ "family": "rw_water",
+ "slot": {"file": "riverwalk/art/scene/pile.png", "where": "River Walk front layer, level/riverwalk.lua: piles at x 1548, 1572, 2098 (tops y 221-225)"}
+}

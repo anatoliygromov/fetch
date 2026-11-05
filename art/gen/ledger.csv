@@ -62,3 +62,5 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-05 22:04,plan,rw_cyclist_adult2_pedal@1105-2210,rw_cyclist_adult2,rw_traffic,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"owner 5 Nov 21:45: go use it (pedal loop, 8 frames)"
 2026-11-05 22:04,spent,rw_cyclist_adult_pedal@1105-2210,,,,,26,spent,
 2026-11-05 22:04,spent,rw_cyclist_adult2_pedal@1105-2210,,,,,26,spent,
+2026-11-05 22:18,plan,rw_ferry@1105-221805,rw_ferry,rw_water,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 22:19,spent,rw_ferry@1105-221805,,,,,24,spent,

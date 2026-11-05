@@ -1,0 +1,27 @@
+{
+ "name": "rw_ferry",
+ "size": [
+  252,
+  81
+ ],
+ "target": [
+  250,
+  79
+ ],
+ "grid_clean": 1.0,
+ "on_blockout": 0.902,
+ "covered": 0.999,
+ "stray": 0.0,
+ "colours_in": 3440,
+ "colours_cap": 20,
+ "colours_out": 18,
+ "fails": [],
+ "render": "art/gen/renders/rw_ferry_n5a.png",
+ "box": [
+  2,
+  158,
+  254,
+  239
+ ],
+ "cut_by": "tools/build_traffic.py cut (1x render, pitch 1, palette snap riverwalk.gpl, no resampling)"
+}

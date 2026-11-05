@@ -1,0 +1,25 @@
+[
+ {
+  "name": "ferry",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/ferry.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 252,
+  "h": 79,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 15,
+   "lone": 0.1,
+   "p10": 2,
+   "median": 128,
+   "p90": 230,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ }
+]
