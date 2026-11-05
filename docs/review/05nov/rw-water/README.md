@@ -23,7 +23,7 @@ seen from above (no tops), the bow stood 5 px above her deck box and the wheelho
 raked stem and rounded transom, strake, white topsides lit at the bow and shaded at the stern, boot line, red bottom;
 cabin with roof cap, roof shadow, two plank seams; four portholes stamped from the cleanest one of the cut (identical,
 22 px apart); lifebuoy, windows, fenders and flag drawn by rule. The edits list is every pixel that differs from the
-cut placed where the game draws it (8,383 of 10,8xx: the method is a rebuild on the render's design). One 1 px ink
+cut placed where the game draws it (8383 of 10342 opaque pixels: the method is a rebuild on the render's design). One 1 px ink
 outline all round; no railings (the board's holes and clutter).
 
 ## Checks
