@@ -1,0 +1,32 @@
+{
+ "name": "rw_ferry",
+ "model": "SpriteCook Nano Banana 2.1 1K, pixel on",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/rw_ferry_blockout.png",
+  "art/gen/style_card_riverwalk.png"
+ ],
+ "prompt_file": "art/gen/prompts/rw_ferry.txt",
+ "k": null,
+ "frame": [
+  256,
+  256
+ ],
+ "credits": 24,
+ "tool": "spritecook",
+ "family": "rw_water",
+ "tier": "A",
+ "slot": {
+  "file": "riverwalk/art/scene/ferry.png",
+  "where": "River Walk screen 6, the boat at x 1560 (level/riverwalk.lua BOAT, art ferry, bottom anchored at y 233); Pepper's boxes deck y 206 (x 1562-1797), cabin roof y 184 (x 1620-1740), wheelhouse roof y 154 (x 1657-1705) stay as they are"
+ },
+ "spritecook": {
+  "model": "gemini-nano-banana-2.1",
+  "pixel": true,
+  "resolution": "1K",
+  "width": 250,
+  "height": 79
+ },
+ "ledger_job": "rw_ferry@1105-221805"
+}

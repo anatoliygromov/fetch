@@ -1,0 +1,21 @@
+{
+ "name": "rw_ferry",
+ "level": "riverwalk",
+ "layer": "play",
+ "kind": "vehicle",
+ "real_height_m": 1.72,
+ "target_px": [250, 79],
+ "checks_px": {"deck_row": 52, "cabin_roof_row": 30, "wheelhouse_roof_row": 0, "waterline_row": 70,
+               "cabin_x": [60, 180], "wheelhouse_x": [97, 145], "hull_x": [2, 237]},
+ "subject": "a small classic Stockholm harbour water taxi (a 5.5 m wooden motor launch) seen exactly from the side, the bow pointing LEFT: a white wooden hull with a varnished golden-brown mahogany rubbing strake along the top edge and red antifouling paint below the waterline; on the flat deck a low varnished mahogany cabin with four dark rounded windows in a row and a white roof; on top of the cabin a small white wheelhouse with a dark sloped windscreen facing the bow and one small side window, a white flat roof; a red and white lifebuoy hung on the cabin's back wall; a short wooden flag staff at the stern with a small blue flag with a yellow cross",
+ "part_map": "the long dark grey shape at the bottom is the hull (exactly that length; its flat top edge is the deck, the bow raked on the left, the stern square on the right), the lower red-brown band of the hull is the red bottom paint below the waterline, the mid grey box on the deck is the mahogany cabin (exactly that width and height, its top is a flat roof), the light grey row of small boxes on it are its windows, the small light grey box on top of the cabin is the wheelhouse (exactly that size, its top a flat roof), the dark slanted patch at its left is the windscreen, the small red ring is the lifebuoy, the thin line at the far right is the flag staff with the small blue flag.",
+ "size_sentence": "the boat is about five dogs long, the cabin roof stands a little lower above the deck than the dog's back, and the wheelhouse is about as tall as the dog's head. It is a real small boat at true size next to the dog, not a toy and not a big ship.",
+ "model": "sc_nb21",
+ "variants": 2,
+ "tier": "A",
+ "family": "rw_water",
+ "slot": {
+  "file": "riverwalk/art/scene/ferry.png",
+  "where": "River Walk screen 6, the boat at x 1560 (level/riverwalk.lua BOAT, art ferry, bottom anchored at y 233); Pepper's boxes deck y 206 (x 1562-1797), cabin roof y 184 (x 1620-1740), wheelhouse roof y 154 (x 1657-1705) stay as they are"
+ }
+}

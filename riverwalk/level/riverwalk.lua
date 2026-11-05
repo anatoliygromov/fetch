@@ -82,7 +82,8 @@ L.props = {
   { name = "AWNING",   kind = "oneway", layer = "play", x0 = 736,  x1 = 824,  y0 = 112, y1 = 116, hidden = true },
   { name = "AWNING",   kind = "oneway", layer = "play", x0 = 888,  x1 = 968,  y0 = 112, y1 = 116, hidden = true },
   -- steps, quay and the river
-  -- the ferry (art/scene/ferry.png, 252 x 93): one image; three hidden boxes give its deck (y 206), the saloon
+  -- the boat (art/scene/ferry.png, 252 x 79, 5 Nov: a small harbour water taxi at true scale, built on the boxes'
+  -- own lines by tools/build_ferry.py): one image; three hidden boxes give its deck (y 206), the saloon
   -- roof (y 184, 22 px up: a hop) and the wheelhouse roof (y 154, 30 px up: a held jump). The hull sits 9 px
   -- into the river.
   { name = "BOAT",     kind = "solid",  layer = "play", x0 = FX + 2,   x1 = FX + 237, y0 = 206, y1 = 236, art = "ferry", ax = FX, ay = 233, noshadow = true },
