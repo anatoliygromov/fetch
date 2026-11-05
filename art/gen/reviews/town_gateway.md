@@ -19,3 +19,21 @@ Round 1 findings: block across a seam (FIXED: no wall of its own, inside one hou
 Context (screen file): the street lamp at x1958 stands in the middle of the passage.
 
 VERDICT: PASS
+
+
+# Round 3
+
+Reviewed bca1ab9 against c3cb066 with 36 fresh frames (18 camera x at y 120 and 240), pixel diff of every file, luma by colour on the frames, asset_qa at the game fade.
+
+Changed: the courtyard window's panes darker (160 px).
+1. Scale: PASS - 138 px.
+2. Layer: PASS - stone 148 to 166, interior 111, house plaster 150.
+3. Outline: PASS - none.
+4. Shapes: PASS - 33 lone pixels (0.34 %), jambs identical.
+5. Shading: PASS.
+6. Palette: PASS - 0 outside downtown.gpl.
+7. View: PASS.
+8. Fit: PASS - in the house x1912-2000.
+9. Read: PASS - an archway. The street lamp (x1958) stands in its middle: a lamp in front of a gateway, which a child reads as a lamp; not a defect, an owner note.
+
+VERDICT: PASS

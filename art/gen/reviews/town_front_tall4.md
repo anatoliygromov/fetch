@@ -20,3 +20,21 @@ New in round 1; checked as a new piece.
 Fix list: move the windows in 16 to 20 px from each edge, window 58 wide with its shadow whole (the front is wide enough: 148 - 2 x 18 = 112 between).
 
 VERDICT: FAIL (1 item)
+
+
+# Round 3
+
+Reviewed bca1ab9 against c3cb066 with 36 fresh frames (18 camera x at y 120 and 240), pixel diff of every file, luma by colour on the frames, asset_qa at the game fade.
+
+Changed: windows moved to x14 and x78 (margins 14 left, 12 right, shadow whole); the panes darker. The storey-2 windows are gone (the bay stands there).
+1. Scale: PASS - windows 58x87 as the other fronts, storey 140.
+2. Layer: PASS - plaster 150.5, panes 99.9.
+3. Outline: PASS - none.
+4. Shapes: PASS - both storey-3 windows equal the other fronts' window (0 px differ at x14 and x78, row 17); both whole, clear of the edges; courses identical at rows 0, 140, 280; 0 lone pixels. Round 2's clipping is fixed.
+5. Shading: PASS.
+6. Palette: PASS.
+7. View: PASS.
+8. Fit: PASS - crisp. Storey 2 (x1552-1700, y141-227) is now bare wall around the 58x36 bay: acceptable, noted in the screen file.
+9. Read: PASS - a house front with a bay.
+
+VERDICT: PASS

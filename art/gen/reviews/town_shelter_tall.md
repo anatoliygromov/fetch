@@ -20,3 +20,21 @@ Round 1 findings: glints dashed and white, contrast 159 (FIXED: one 2 px diagona
 Fix list: dim the poster card to about 150 (card colour 170 to 175 raw instead of 208).
 
 VERDICT: FAIL (1 item)
+
+
+# Round 3
+
+Reviewed bca1ab9 against c3cb066 with 36 fresh frames (18 camera x at y 120 and 240), pixel diff of every file, luma by colour on the frames, asset_qa at the game fade.
+
+Changed: poster card and glint colours (1,317 px).
+1. Scale: PASS - 115 px.
+2. Layer: PASS - poster card (160,148,135) = 150.1 on screen (round 2: 194), plaster 145 to 156, old town row 168.5; no back pixel group above the far row.
+3. Outline: PASS - none.
+4. Shapes: PASS - posts, panes and bands unchanged; 5 lone pixels (0.10 %).
+5. Shading: PASS.
+6. Palette: PASS - 0 outside downtown.gpl.
+7. View: PASS.
+8. Fit: PASS - crisp.
+9. Read: PASS - a shelter; the poster no longer pulls the eye.
+
+VERDICT: PASS

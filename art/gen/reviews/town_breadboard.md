@@ -20,3 +20,21 @@ Round 1 findings: median 179, equal to the wall (FIXED: planks 104 to 128 on scr
 Fix list: paint (73,8) ink.
 
 VERDICT: FAIL (1 item)
+
+
+# Round 3
+
+Reviewed bca1ab9 against c3cb066 with 36 fresh frames (18 camera x at y 120 and 240), pixel diff of every file, luma by colour on the frames, asset_qa at the game fade.
+
+Changed: the one outline pixel at (73,8), now ink (1 px, 0 other px).
+1. Scale: PASS.
+2. Layer: PASS - 104 to 128 on screen.
+3. Outline: PASS - rows 0 and 11 and columns 0 and 73 are all ink (18,18,26): closed.
+4. Shapes: PASS - 0 lone pixels.
+5. Shading: PASS.
+6. Palette: PASS.
+7. View: PASS.
+8. Fit: PASS.
+9. Read: PASS.
+
+VERDICT: PASS

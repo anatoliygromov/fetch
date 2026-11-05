@@ -55,3 +55,22 @@ Branch art/dt-sample-05nov at 0c95386 (Downtown tall, owner picks 1a and 4a). Me
 - No front's top shows: all run to y -18 (checked at camera y 0 and 120). No front ends in mid-air.
 
 VERDICT: FAIL (4 items)
+
+
+# Round 3
+
+Reviewed bca1ab9 with 36 fresh frames (camera x 0 to 3200, y 120 and 240). Round 2's open FAILs: front 4's windows (FIXED: whole, margins 14 and 12), the poster card (FIXED: 150 on screen), the board's outline notch (FIXED), the oriel (CHANGED: a 58x36 bay window of the house's scale plus a copper roof cap; the bay passes, the cap fails on its hit box). Pass pieces unchanged (crates, legs, portal top: 0 px differ; the fronts, gateway and shelter: pane or poster colours only). maps/, riverwalk/level/ and pepper.png still unchanged against the base. Darker panes: 99.9 on screen against plaster 145 to 156 (contrast 46 to 56, back range 100 to 171, within 120); 0 lone pixels in the fronts; the grid is crisp.
+
+1. Scale: FAIL - screen 10's GATE (x3072-3168) is still the old 36 px brick gate, decision 4a is not carried out there and the 77 px rider (zone x3120-3300) is twice its height. Everything else fits (the bay window is 58 wide like the house's windows).
+2. Layer: PASS - far city 187 to 194 > far roofs 169 > old town row 168.5 > houses 145 to 156 > perches 104 to 128 and the copper cap 88 to 113 > Pepper 14 to 24; the poster and bay are no longer above their neighbours.
+3. Outline: PASS - perches outlined, decoration not; the board's outline is closed.
+4. Shapes: PASS - every window equal across all four fronts (0 px differ), courses identical, 0 to 0.34 % lone pixels.
+5. Shading: PASS.
+6. Palette: PASS - 0 colours outside downtown.gpl (built from these pieces). Houses stay a calm brown and rose; owner's eye.
+7. View: PASS - flat front-on pieces.
+8. Fit (context): FAIL - (a) the CHIMNEY's 16 px solid box in the middle of a 58 px bay and a 60 px roof (town_oriel item 8): invisible wall on the plateau at x1628 and x1644, a passable roof slope; (b) the remaining faults below.
+9. Read: PASS - the guild house reads as a house with a portal and a bay. The street lamp at x1958 in the middle of the archway reads as a lamp in front of a gateway to a child's eye, and the bike passes in front of it: an owner note, not a defect.
+
+Context faults that remain (screen x, y): the plaza houses as dollhouses, door 25 px (x1536-1624, x1644-1724, x1832-1900, x2404-2492; decision 2); high road lamps across window panes (x1830, x2420); ledges as shelves (x2016-2072, x2112-2168; the dormer ledge x1920-1976, y264 reads as a lintel 12 px over the keystone); the old brick gate on screen 10 (x3072-3168); the bike clipped at its depot (x1938, x3168); far layers hidden from x1180 to 2480; hard street ends at x1180, x2480, x2640-2736; guild house storey 2 bare wall around the bay (x1552-1700, y141-227). No front's top shows.
+
+VERDICT: FAIL (2 items)

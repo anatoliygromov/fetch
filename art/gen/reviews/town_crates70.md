@@ -18,3 +18,21 @@ Round 1 findings: as light as the wall (FIXED: crate wood 107, shade 81, bread 1
 9. Read: PASS - bread crates, clearly a perch. Only the GATE at x1868-1938 uses it; the one at x3072-3168 keeps the old brick gate.
 
 VERDICT: PASS
+
+
+# Round 3
+
+Reviewed bca1ab9 against c3cb066 with 36 fresh frames (18 camera x at y 120 and 240), pixel diff of every file, luma by colour on the frames, asset_qa at the game fade.
+
+Unchanged since round 2: 0 px differ against c3cb066, and the draw code for it is unchanged.
+1. Scale: PASS (unchanged).
+2. Layer: PASS (unchanged; perch values 104 to 107, portal top 104, wall 150).
+3. Outline: PASS (unchanged).
+4. Shapes: PASS (unchanged).
+5. Shading: PASS (unchanged).
+6. Palette: PASS (unchanged).
+7. View: PASS (unchanged).
+8. Fit: PASS (unchanged; the portal top's 11 step tops still equal the boxes).
+9. Read: PASS (unchanged).
+
+VERDICT: PASS

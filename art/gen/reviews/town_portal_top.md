@@ -18,3 +18,21 @@ New in round 1 (replaces town_roof_gable in this level).
 9. Read: PASS - a brick stepped pediment over the guild gate. Notes: it is 122 wide over a 48 px door, and from the street the door is covered by the iron balcony (x1552-1608, y344) and the plaza houses, so the pediment reads as a hat over a wall; it is the heaviest dark mass on the high road. Owner call.
 
 VERDICT: PASS
+
+
+# Round 3
+
+Reviewed bca1ab9 against c3cb066 with 36 fresh frames (18 camera x at y 120 and 240), pixel diff of every file, luma by colour on the frames, asset_qa at the game fade.
+
+Unchanged since round 2: 0 px differ against c3cb066, and the draw code for it is unchanged.
+1. Scale: PASS (unchanged).
+2. Layer: PASS (unchanged; perch values 104 to 107, portal top 104, wall 150).
+3. Outline: PASS (unchanged).
+4. Shapes: PASS (unchanged).
+5. Shading: PASS (unchanged).
+6. Palette: PASS (unchanged).
+7. View: PASS (unchanged).
+8. Fit: PASS (unchanged; the portal top's 11 step tops still equal the boxes).
+9. Read: PASS (unchanged).
+
+VERDICT: PASS

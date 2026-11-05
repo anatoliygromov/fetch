@@ -18,3 +18,21 @@ Round 1 findings: string courses unequal and 144 apart (FIXED: rows 0-4 and 7-14
 9. Read: PASS - friendly town fronts, no text. Note: with every plaster at 145 to 156 the street is a calm, somewhat drab brown and rose; board call.
 
 VERDICT: PASS
+
+
+# Round 3
+
+Reviewed bca1ab9 against c3cb066 with 36 fresh frames (18 camera x at y 120 and 240), pixel diff of every file, luma by colour on the frames, asset_qa at the game fade.
+
+Changed since round 2: only the pane colours (raw (62,72,88) to (31,37,45) and its shade), 4,752 to 7,272 px per file; everything else 0 px.
+1. Scale: PASS - unchanged (door 93, storey 140, window 58x87).
+2. Layer: PASS - panes now 99.9 on screen, plaster 145 to 156, frames 171, old town row 168.5. Pane against plaster 46 to 56 (round 2: 21 to 31), the back layer's range in the S7 frame is 100 to 171, within the limit of 120.
+3. Outline: PASS - none, alpha 255.
+4. Shapes: PASS - windows pixel-identical on both storeys and equal to the other fronts and to the guild front's windows (0 px differ); courses identical at rows 0, 140, 280; 0 lone pixels; the darker panes did not break the crisp grid (9 equal panes, bars unbroken).
+5. Shading: PASS.
+6. Palette: PASS - 0 colours outside downtown.gpl.
+7. View: PASS - front-on.
+8. Fit: PASS - 0.00 % lone pixels, crisp.
+9. Read: PASS - windows now read as glass again.
+
+VERDICT: PASS
