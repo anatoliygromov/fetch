@@ -1,5 +1,27 @@
 # FETCH! Status
 
+## Night of 5 Nov: SpriteCook run (live session, owner asleep)
+
+**Owner, 21:45 and 21:47:** "we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible" and "Make sure you can execute over night without me needing to do stuff, I go sleep now". Read as: the yes on tonight's total, and his words to lift the 150 a day SpriteCook cap for tonight only. Every other rule stands: preflight on every job, 3 paid jobs per asset, 2 retries per family, gates 1 to 8, nothing reaches him but the board, nothing merged to main.
+
+**Balance at start:** SpriteCook 3,634. Artlist: 0 tonight.
+
+**Plan, ceiling 900 SpriteCook credits** (the rest stays for the fix rounds after his board review):
+
+| Track | Branch | What | Method | Cap |
+| --- | --- | --- | --- | --- |
+| 1 | `art/rw-traffic-05nov` | River Walk road traffic family (A): promenade cyclist (rw_cyclist_adult), road_cyclist1 and 2 with their roll clips, road_car1, road_car4 | SpriteCook stills at the lane scale, pixel-engine animation at 1x, polish, review | 300 |
+| 2 | `art/cp-sample-05nov` | City Park sample screen, screen 6 (old oak) at both cameras, with his 26 Oct picks 1 (true-width trunks, one leaf mass per tree) and 2b (young 6 m mid trees, 138 px) | SpriteCook for the plants; screen built in the game | 300 |
+| 3 | `art/dt-sample-05nov` | Downtown sample screen, with his 26 Oct picks 1a (first floor: houses run past the top) and 4a (shelter and gateway at true scale, crates as perches) | built from stamped parts (0 credits); SpriteCook only for organic pieces | 150 |
+| 4 | `art/rw-water-05nov` (after track 1) | River Walk ferry (A); the pile built (C) | SpriteCook still, polish, review | 150 |
+
+Not tonight, by the rules: the duck boat and other City Park and Downtown pieces wait for their sample screens (BIBLE 4); animals round 2 and the gable fix B still wait on the board.
+
+Progress is added below as tracks finish.
+
+---
+
+
 As of Sun 25 Oct 2026, 15:30. Rules: `docs/BIBLE.md`. Decisions: the review board, https://claude.ai/artifact/36whD8obiWsrZc4AvPCdXk.
 
 ## Today (25 Oct, afternoon): the River Walk sample screen
