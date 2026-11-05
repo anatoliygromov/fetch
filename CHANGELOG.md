@@ -7,6 +7,7 @@ Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 - **Taxi roof in the body colour:** the near lane shows only a car's top 48 rows, and the first cut's black roof and pillars read as a dark car with a sign in game (frame 23); the roof side and the front and rear pillars are yellow now.
 - **tools/build_traffic.py cut:** a render narrower than the 256 frame was padded with black, which kept a black column next to a subject that reaches the frame's right side; it pads with the magenta key now.
 - **riverwalk/tests.lua --test:** shots 23_traffic_taxi and 24_traffic_van (each car whole on screen by the bin). asset_qa SLOTS for road_car2, 3, 5.
+- **Review round 1 fixes (0 credits, by hand, art/source/NAME/hand.json):** van: the windscreen A-pillar one black line plus one flat band (its edge strip flat glass, the line closed at row 19), 12 bonnet specks taken out, the stray orange side marker removed; estate: an ink row over the lower roof-rack rail (y 5, x 129-220). Taxi passed unchanged.
 - Checks: PEPPER UNCHANGED, flow 125/125, asset_qa road_car3 and 5 PASS, road_car2 WARN (2 blotches: the crease line's two ends), the library's 7 FAILs as on the base; check_backdrop only the known gable.
 
 ## Branch `night/26oct-cp-code`: City Park (tall) code-only changes from the layer plan (night of 26 Oct, 0 credits)

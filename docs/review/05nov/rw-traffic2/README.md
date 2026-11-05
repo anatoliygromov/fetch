@@ -33,3 +33,10 @@ from the 2x window; ingame_*_1x.png and before_*_1x.png. Board images: board/. C
 4. The wheels are drawn by rule (flat steel wheel, 4 holes) rather than copied from the render as on car1 and car4.
 5. road_car2: asset_qa WARN on 2 blotches, the two ends of the e9d1b2 crease line at row 55 (x 9-19 and 60-62); a
    few light specks may remain on the van's bonnet (x 15-30, y 45-52).
+
+## Review round 1 fixes (d2c2804: taxi PASS; van and estate fixes), 0 credits
+- road_car2: A-pillar rows 5-42 (x 33-70): the windscreen's edge strip one flat glass #35455f (15 px), the pillar's
+  black line closed at (52, 19) where a grey dab broke it, the band between the two black lines one flat #faf6f0
+  (236 px; rows 5-8 at the roof corner included, where the same dashes ran on); the 12 bonnet specks take their
+  neighbours' colour; the 8 px orange side marker removed. 272 px changed in all, all inside x 4-70, y 5-58.
+- road_car5: an ink row over the lower roof-rack rail, (129-220, 5): 85 px. Nothing else changed.
