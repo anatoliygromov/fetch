@@ -52,3 +52,13 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-10-25 14:39,spent,rw_lime@1025-143833,,,,,24,spent,"retry 1: 256 frame, 2 variants"
 2026-11-05 21:55,plan,rw_cyclist_adult@1105-215536,rw_cyclist_adult,rw_traffic,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
 2026-11-05 21:56,spent,rw_cyclist_adult@1105-215536,,,,,24,spent,
+2026-11-05 22:00,plan,rw_cyclist_adult2@1105-220037,rw_cyclist_adult2,rw_traffic,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 22:00,plan,rw_car1@1105-220041,rw_car1,rw_traffic,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 22:00,plan,rw_car4@1105-220041,rw_car4,rw_traffic,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 22:01,spent,rw_cyclist_adult2@1105-220037,,,,,24,spent,
+2026-11-05 22:01,spent,rw_car1@1105-220041,,,,,24,spent,
+2026-11-05 22:02,spent,rw_car4@1105-220041,,,,,24,spent,
+2026-11-05 22:04,plan,rw_cyclist_adult_pedal@1105-2210,rw_cyclist_adult,rw_traffic,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"owner 5 Nov 21:45: go use it (pedal loop, 8 frames)"
+2026-11-05 22:04,plan,rw_cyclist_adult2_pedal@1105-2210,rw_cyclist_adult2,rw_traffic,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"owner 5 Nov 21:45: go use it (pedal loop, 8 frames)"
+2026-11-05 22:04,spent,rw_cyclist_adult_pedal@1105-2210,,,,,26,spent,
+2026-11-05 22:04,spent,rw_cyclist_adult2_pedal@1105-2210,,,,,26,spent,

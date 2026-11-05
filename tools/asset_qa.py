@@ -56,7 +56,9 @@ FRAMES = {
 }
 ROLL = ("road_cyclist1_roll", "road_cyclist2_roll")              # 4 frames side by side (drawn: Rd.art().riders)
 # what the game never draws (loaded but unused, or replaced in the played level): not checked
-NOT_DRAWN = {"cyclist1", "cyclist2", "cyclist1_roll", "cyclist2_roll", "town_spout"}
+NOT_DRAWN = {"cyclist1", "cyclist2", "cyclist1_roll", "cyclist2_roll", "town_spout",
+             # (5 Nov) road.lua draws cyclist_adult1-2 and their pedal loops when they are there: the old riders are unused
+             "road_cyclist1", "road_cyclist2", "road_cyclist1_roll", "road_cyclist2_roll"}
 # measure_layers' layer is the prop's map layer; the look the game draws it with can differ (stage.lua: decoration on
 # Pepper's line takes the back look)
 LAYER_FIX = {"pier": "back"}
@@ -73,7 +75,12 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          "roof_gable": (122, 80, 0, 20), "roof_loggia": (122, 48, 0, 12), "roof_gallery88": (90, 32, 0, 8),
          "roof_gallery72": (74, 32, 0, 8), "roof_chimney": (18, 46, 0, 0), "roof_dormer": (58, 36, 0, 9),
          "footbridge": (162, 52, 0, 13), "house_tall_a": (80, 240, 0, 0), "house_tall_b": (88, 240, 0, 0),
-         "house_tall_c": (96, 240, 0, 0), "tram_vintage": (300, 130, 30, 15)}
+         "house_tall_c": (96, 240, 0, 0), "tram_vintage": (300, 130, 30, 15),
+         # (5 Nov, art/rw-traffic-05nov) the new riders at true scale: 1.85 m with the helmet at 46 px/m = 85 px, plus
+         # the wheels' ground row; the cars at the near lane's 55 px/m (road.lua)
+         "cyclist_adult1": (84, 87, 2, 2), "cyclist_adult2": (84, 87, 2, 2),
+         "cyclist_adult1_pedal": (672, 87, 0, 0), "cyclist_adult2_pedal": (672, 87, 0, 0),
+         "road_car1": (241, 88, 12, 8), "road_car4": (185, 77, 12, 8)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",
@@ -548,6 +555,13 @@ def registry():
         p = os.path.join(ART, "scene", n + ".png")
         if os.path.exists(p) and n not in out:
             out[n] = dict(path=p, level=lvl, layer=layer, fade=fade, group="Extra", building=False, frames=FRAMES.get(n), levels=None)
+    for n in ("cyclist_adult1", "cyclist_adult2"):                # (5 Nov) the riders: char layer, with their pedal loops
+        p = os.path.join(ART, "scene", n + ".png"); q = os.path.join(ART, "scene", n + "_pedal.png")
+        if os.path.exists(p) and n not in out:
+            out[n] = dict(path=p, level="rw", layer=None, fade=0.0, group="River Walk", building=False, frames=None, levels=None)
+            if os.path.exists(q):
+                out[n + "_pedal"] = dict(path=q, level="rw", layer=None, fade=0.0, group="River Walk", building=False,
+                                         frames=Image.open(p).size, levels=None)
     for n in ROLL:
         p = os.path.join(ART, "scene", n + ".png")
         if os.path.exists(p):

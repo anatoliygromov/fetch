@@ -231,3 +231,131 @@ def pipeline_cyclist(name, rot=0.0):
 
 if __name__ == '__main__' and sys.argv[1] == 'cyclist':
     pipeline_cyclist(sys.argv[2])
+
+
+def pipeline_car(name):
+    S = f'art/source/{name}'
+    os.system(f'python3 -I tools/cleanpass.py {S}/{name}_cut.png {S}/{name}_clean.png --tol 90')
+    ed = fix_key(f'{S}/{name}_clean.png', f'{S}/{name}_clean.png')
+    os.system(f'python3 -I tools/outline_complete.py {S}/{name}_clean.png {S}/{name}_ol.png')
+    json.dump({'key_edits': ed}, open(f'{S}/edits_build.json', 'w'))
+
+
+if __name__ == '__main__' and sys.argv[1] == 'car':
+    pipeline_car(sys.argv[2])
+
+
+def fix_blotches(src, dst, layer, max_px=8, why='blotch: a small patch in a near colour takes its surrounding colour'):
+    """asset_qa's blotches (2-24 px of a near colour inside a fill): patches up to max_px take the colour around them.
+    Longer ones are drawn lines (door seams) and stay. Returns the edits."""
+    import subprocess, tempfile
+    tj = tempfile.mktemp(suffix='.json')
+    subprocess.run(['python3', '-I', 'tools/asset_qa.py', '--file', src, '--layer', layer, '--level', 'rw', '--json', tj],
+                   capture_output=True)
+    d = json.load(open(tj))[0]; a = np.array(Image.open(src).convert('RGBA')); out = a.copy(); ed = []
+    pts_ = [tuple(p) for c in d['checks'] if c['id'] == 'blotches' for p in c['pixels']]
+    m = np.zeros(a.shape[:2], bool)
+    for x, y in pts_: m[y, x] = True
+    lbl, n = label(m)
+    for i in range(1, n + 1):
+        comp = lbl == i
+        if comp.sum() > max_px: continue
+        ring = grow(comp, 1) & ~comp & (a[..., 3] > 0)
+        cols = [tuple(c) for c in a[ring].tolist()]
+        if not cols: continue
+        c = max(set(cols), key=cols.count)
+        for y, x in zip(*np.nonzero(comp)):
+            ed.append({'x': int(x), 'y': int(y), 'from': [int(v) for v in a[y, x]], 'to': list(c), 'why': why})
+            out[y, x] = c
+    Image.fromarray(out).save(dst); return ed
+
+
+if __name__ == '__main__' and sys.argv[1] == 'blotches':
+    e = fix_blotches(sys.argv[3], sys.argv[4], sys.argv[5])
+    p = f'art/source/{sys.argv[2]}/edits_polish.json'
+    old = json.load(open(p)) if os.path.exists(p) else []
+    json.dump(old + e, open(p, 'w')); print(len(e), 'px')
+
+
+def pedal(name, zone=(18, 40, 58, 87), off=(8, 13), nframes=8):
+    """The pedal loop: 8 frames of the still's size. Outside the leg zone every frame is the polished still,
+    pixel-identical; in the zone (hip to pedals, not the wheels) the pixel-engine frame's pixels, snapped to the
+    still's own colours (no flicker, no new colour); the wheels are redrawn by rule in every frame, turned 22.5 degrees
+    a frame (one frame per 6 px ridden is about 22 degrees on a 31 px wheel; 8 x 22.5 = 180, a whole spoke step:
+    the loop is seamless)."""
+    S = f'art/source/{name}'
+    st = np.array(Image.open(f'{S}/{name}_pol.png').convert('RGBA')); H, W = st.shape[:2]
+    cl = np.array(Image.open(f'{S}/{name}_clean.png').convert('RGBA'))
+    sh = np.array(Image.open(f'art/gen/renders/{name}_pedal_sheet.png').convert('RGBA'))
+    fw = sh.shape[1] // nframes
+    cols = np.unique(st[st[..., 3] > 0][:, :3], axis=0).astype(float)
+    cent = json.load(open(f'{S}/edits_build.json'))['centres']
+    Y, X = np.mgrid[0:H, 0:W]
+    disc = np.zeros((H, W), bool)
+    for cx, cy, R_ in cent: disc |= np.hypot(X - cx, Y - cy) < R_ + 0.5
+    x0, y0, x1, y1 = zone
+    zm = np.zeros((H, W), bool); zm[y0:y1, x0:x1] = True; zm &= ~disc
+    frames = []
+    for f in range(nframes):
+        fr = sh[off[1]:off[1] + H, f * fw + off[0]:f * fw + off[0] + W].copy()
+        out = st.copy()
+        # the wheels, turned: inside each disc only the bike's own pieces are kept (found on the cut before its
+        # wheels were drawn, as wheels() does), the rest is cleared and the wheel drawn again at this frame's turn
+        for cx, cy, R_ in cent:
+            d = np.hypot(X - cx, Y - cy)
+            spk = (d < R_ - 1.5) & (cl[..., 3] > 0)
+            lbl, n = label(spk); sz = np.bincount(lbl.ravel())
+            keepm = np.zeros_like(spk)
+            for i in range(1, n + 1):
+                comp = lbl == i
+                if sz[i] >= 8 or (grow(comp, 1) & (cl[..., 3] > 0) & ~(d < R_ + 0.5)).any(): keepm |= comp
+            out[(d < R_ + 0.5) & ~keepm] = 0
+            ink = tuple(int(v) for v in st[int(cy) + R_, int(cx)][:3])
+            wc = dict(ink=ink, tyre=ink, rim=tuple(int(v) for v in st[int(cy) + R_ - 1, int(cx)][:3]),
+                      spoke=(55, 55, 55), hub=tuple(int(v) for v in st[int(cy), int(cx)][:3]))
+            for (x, y), c in wheel_px(cx, cy, R_, 8, 22.5 * f, wc).items():
+                if 0 <= x < W and 0 <= y < H and not (keepm[y, x] and np.hypot(x - cx, y - cy) < R_ - 1.5):
+                    out[y, x] = (*c, 255)
+        # the legs from the pixel-engine frame, snapped to the still's colours
+        a = fr[..., 3] > 127
+        rgb = fr[..., :3].reshape(-1, 3).astype(float)
+        idx = np.argmin(((rgb[:, None] - cols[None]) ** 2).sum(2), 1)
+        snap = cols[idx].reshape(H, W, 3).astype(np.uint8)
+        out[zm & a, :3] = snap[zm & a]; out[zm & a, 3] = 255
+        out[zm & ~a] = 0
+        frames.append(out)
+    sheet = np.concatenate(frames, 1)
+    Image.fromarray(sheet).save(f'{S}/{name}_pedal_raw.png')
+    return frames
+
+
+if __name__ == '__main__' and sys.argv[1] == 'pedal':
+    pedal(sys.argv[2])
+
+
+def finish_pedal(name):
+    """The pedal sheet's polish: the outline closed per frame, pinholes asset_qa finds filled with the colour around
+    them; every changed pixel listed in edits_pedal.json."""
+    S = f'art/source/{name}'; import subprocess, tempfile
+    raw = f'{S}/{name}_pedal_raw.png'; ol = f'{S}/{name}_pedal_ol.png'
+    subprocess.run(['python3', '-I', 'tools/outline_complete.py', raw, ol, '--skip-bottom', '--frames', '84x87'])
+    tj = tempfile.mktemp(suffix='.json')
+    subprocess.run(['python3', '-I', 'tools/asset_qa.py', '--file', ol, '--layer', 'char', '--level', 'rw', '--frames', '84x87', '--json', tj], capture_output=True)
+    d = json.load(open(tj))[0]; a = np.array(Image.open(ol).convert('RGBA')); out = a.copy(); ed = []
+    for c in d['checks']:
+        if c['id'] != 'pinholes': continue
+        for x, y in c['pixels']:
+            nb = [tuple(a[yy, xx]) for yy, xx in ((y - 1, x), (y + 1, x), (y, x - 1), (y, x + 1)) if a[yy, xx, 3] > 0]
+            if nb:
+                out[y, x] = max(set(nb), key=nb.count)
+                ed.append({'x': int(x), 'y': int(y), 'from': [int(v) for v in a[y, x]], 'to': [int(v) for v in out[y, x]], 'why': 'pinhole'})
+    r = np.array(Image.open(raw).convert('RGBA'))
+    for y, x in zip(*np.nonzero((out != r).any(2))):
+        if not any(e['x'] == x and e['y'] == y for e in ed):
+            ed.append({'x': int(x), 'y': int(y), 'from': [int(v) for v in r[y, x]], 'to': [int(v) for v in out[y, x]], 'why': 'outline closed (outline_complete.py)'})
+    Image.fromarray(out).save(f'{S}/{name}_pedal.png'); json.dump(ed, open(f'{S}/edits_pedal.json', 'w'))
+    print(name, 'pedal polish', len(ed), 'px')
+
+
+if __name__ == '__main__' and sys.argv[1] == 'finish_pedal':
+    finish_pedal(sys.argv[2])

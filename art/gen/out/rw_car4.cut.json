@@ -1,0 +1,31 @@
+{
+ "name": "rw_car4",
+ "size": [
+  185,
+  77
+ ],
+ "target": [
+  181,
+  71
+ ],
+ "grid_clean": 1.0,
+ "on_blockout": 0.983,
+ "covered": 0.999,
+ "stray": 0.0,
+ "colours_in": 5490,
+ "colours_cap": 20,
+ "colours_out": 18,
+ "fails": [],
+ "render": "art/gen/renders/rw_car4_n5a.png",
+ "box": [
+  34,
+  161,
+  219,
+  238
+ ],
+ "cut_by": "tools/build_traffic.py cut (1x render, pitch 1, palette snap riverwalk.gpl, no resampling)",
+ "waived": [
+  "size 185x77 against the 181x71 guess: a real small five-door hatchback is 3.6-3.8 x 1.4-1.5 m (198-209 x 77-83 px at 55 px/m); 185 x 77 is 3.4 x 1.4 m, a real small car. Kept, said on the board card.",
+  "size 185x77 vs 181x71"
+ ]
+}

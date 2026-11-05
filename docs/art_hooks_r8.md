@@ -32,8 +32,8 @@ box (the old rails) are no longer drawn.
 
 | File | Size (px) | Facing | Anchor and rules | Replaces |
 | --- | --- | --- | --- | --- |
-| `art/scene/cyclist_adult1.png`, `cyclist_adult2.png` | about 76 x 76 | **right** (mirrored when riding left) | The promenade bikes: centred on the bike's x, bottom row on the pavement (the hit box stays 70 x 28, wheel to wheel). The road's cyclists: top row at y 190 (below Pepper's feet; the frame crops the wheels, as now) | `road_cyclist1-2.png` (both uses) |
-| `art/scene/cyclist_adult1_pedal.png`, `cyclist_adult2_pedal.png` | frames of the still's size side by side (8 frames: 608 x 76) | right | One frame per 6 px ridden, looped. Optional: without it the still is drawn (the old `_roll` wheel frames are not used with the new riders) | `road_cyclist1-2_roll.png` |
+| `art/scene/cyclist_adult1.png`, `cyclist_adult2.png` | 84 x 87 (5 Nov: true scale, 1.85 m with the helmet = 85 px at 46 px/m; wheels 31 px) | **right** (mirrored when riding left) | The promenade bikes: centred on the bike's x, bottom row on the pavement (the hit box stays 70 x 28, wheel to wheel). The road's cyclists: top row at y 190 (below Pepper's feet; the frame crops the wheels, as now) | `road_cyclist1-2.png` (both uses) |
+| `art/scene/cyclist_adult1_pedal.png`, `cyclist_adult2_pedal.png` | frames of the still's size side by side (8 frames: 672 x 87) | right | One frame per 6 px ridden, looped. Optional: without it the still is drawn (the old `_roll` wheel frames are not used with the new riders) | `road_cyclist1-2_roll.png` |
 
 ## Mia's throw (FETCH FRENZY, the bonus round)
 

@@ -1,0 +1,70 @@
+{
+ "id": "fam_rw_traffic",
+ "title": "River Walk traffic: two riders with pedal loops, two cars",
+ "section": "family",
+ "group": "River Walk",
+ "layer": "char / road lane",
+ "tier": "A",
+ "note": "Your redraw calls on the road cars and cyclists (25 Oct). Made at true scale from a blockout with Pepper at 1x, on SpriteCook's own pixel grid (no resizing anywhere), snapped to the River Walk palette, then polished pixel by pixel (every changed pixel listed in art/source/<name>/edits.json). The riders are 1.85 m with the helmet (87 px), the same art on the promenade and in the bike lane; their wheels are drawn by rule, round with 8 even spokes, and turn in the pedal loop. The cars are at the road lane's 55 px a metre. SpriteCook 148 credits.",
+ "question": "The cars came out a little bigger than my guess (estate 241 x 88 px, hatchback 185 x 77): both are still at or under real car size. Keep, or ask for them smaller? The road's other three cars (taxi, van, car 5) are the old art: redraw them in the same style next?",
+ "images": [
+  {
+   "src": "img/fam/rwtraffic_promenade_rider1_3x.png",
+   "label": "promenade at 3x: rider 1 by the bench, colour | greyscale"
+  },
+  {
+   "src": "img/fam/rwtraffic_promenade_rider2_3x.png",
+   "label": "promenade at 3x: rider 2 by the lamp and bin, colour | greyscale"
+  },
+  {
+   "src": "img/fam/rwtraffic_road_car1_rider1_3x.png",
+   "label": "the road at 3x: the estate and rider 1 in the near lane"
+  },
+  {
+   "src": "img/fam/rwtraffic_road_car4_rider2_3x.png",
+   "label": "the road at 3x: the hatchback and rider 2"
+  },
+  {
+   "src": "img/fam/rwtraffic_before_after_3x.png",
+   "label": "before | after at 3x"
+  }
+ ],
+ "members": [
+  {
+   "id": "cyclist_adult1_v2",
+   "title": "rider 1 (woman, red coat)",
+   "slot": "cyclist_adult1.png 84x87 + cyclist_adult1_pedal.png 8 x 84x87",
+   "img": "img/fam/cyclist_adult1_5x.png",
+   "note": "Promenade bike and bike lane. Pedal loop: legs from SpriteCook's animation, everything else pixel-identical in all 8 frames, wheels turning.",
+   "findings": [
+    "asset_qa warns only: 3.8 % lone pixels (the round wheels' stepped rims)"
+   ]
+  },
+  {
+   "id": "cyclist_adult2_v2",
+   "title": "rider 2 (man, green jacket)",
+   "slot": "cyclist_adult2.png 84x87 + cyclist_adult2_pedal.png",
+   "img": "img/fam/cyclist_adult2_5x.png",
+   "note": "The second rider; the two take turns on the promenade.",
+   "findings": [
+    "asset_qa warns only: 3.6 % lone pixels; 5 small blotches in the pedal frames"
+   ]
+  },
+  {
+   "id": "road_car1_v2",
+   "title": "estate car (navy)",
+   "slot": "road_car1.png 241x88",
+   "img": "img/fam/road_car1_4x.png",
+   "note": "4.4 m long at the road's scale; the frame crops its wheels as before.",
+   "findings": []
+  },
+  {
+   "id": "road_car4_v2",
+   "title": "small hatchback (red)",
+   "slot": "road_car4.png 185x77",
+   "img": "img/fam/road_car4_4x.png",
+   "note": "3.4 m long.",
+   "findings": []
+  }
+ ]
+}

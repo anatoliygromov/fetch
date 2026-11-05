@@ -11,6 +11,21 @@
   },
   "preflight": {
    "time": "2026-10-25 13:13"
+  },
+  "probe": {
+   "render": "art/gen/renders/rw_cyclist_adult_n5b.png",
+   "time": "2026-11-05 22:09"
+  },
+  "cut": {
+   "time": "2026-11-05 22:09"
+  },
+  "ingame": {
+   "frame": "docs/review/05nov/rw-traffic/ingame_promenade_rider1_1x.png",
+   "time": "2026-11-05 22:09"
+  },
+  "polish": {
+   "aseprite": "art/source/rw_cyclist_adult/rw_cyclist_adult.aseprite",
+   "time": "2026-11-05 22:09"
   }
  }
 }

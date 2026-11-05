@@ -1,0 +1,32 @@
+{
+ "name": "rw_cyclist_adult2",
+ "model": "SpriteCook Nano Banana 2.1 1K, pixel on",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/rw_cyclist_adult2_blockout.png",
+  "art/gen/style_card_riverwalk.png"
+ ],
+ "prompt_file": "art/gen/prompts/rw_cyclist_adult2.txt",
+ "k": null,
+ "frame": [
+  256,
+  256
+ ],
+ "credits": 24,
+ "tool": "spritecook",
+ "family": "rw_traffic",
+ "tier": "A",
+ "slot": {
+  "file": "riverwalk/art/scene/cyclist_adult2.png",
+  "where": "River Walk: the promenade bikes (stage.lua, rider 2) and the road's bike lane (road.lua riders[2]); its pedal loop cyclist_adult2_pedal.png"
+ },
+ "spritecook": {
+  "model": "gemini-nano-banana-2.1",
+  "pixel": true,
+  "resolution": "1K",
+  "width": 83,
+  "height": 85
+ },
+ "ledger_job": "rw_cyclist_adult2@1105-220037"
+}
