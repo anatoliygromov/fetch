@@ -55,7 +55,7 @@ if __name__ == "__main__":
     piece_sheet(["town_front_tall1", "town_front_tall2", "town_front_tall3", "town_front_tall4"], 2, f"{O}/dt_fronts_2x.png")
     piece_sheet(["town_shelter_tall", "town_breadboard", "town_crate_leg"], 5, f"{O}/dt_shelter_5x.png")
     piece_sheet(["town_gateway", "town_crates70"], 5, f"{O}/dt_gateway_5x.png")
-    piece_sheet(["town_portal_top", "town_oriel"], 5, f"{O}/dt_guild_5x.png")
+    piece_sheet(["town_portal_top", "town_oriel", "town_oriel_bay"], 5, f"{O}/dt_guild_5x.png")
     # the upper window at 6x: the one part stamped on every upper storey
     win = Image.open(os.path.join(ART, "town_front_tall1.png")).convert("RGB").crop((8, 150, 72, 250))
     z(win, 6).save(f"{O}/dt_window_6x.png")

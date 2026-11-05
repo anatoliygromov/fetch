@@ -30,7 +30,8 @@ APPROVED = {
         # construction, not by evidence: the card says so. Re-made after the round 1 value change.)
         'keep': ['pepper.png', 'ball.png', 'scene/town_front_tall1.png', 'scene/town_front_tall2.png',
                  'scene/town_front_tall4.png', 'scene/town_shelter_tall.png', 'scene/town_gateway.png',
-                 'scene/town_crates70.png', 'scene/town_portal_top.png', 'scene/town_oriel.png'],
+                 'scene/town_crates70.png', 'scene/town_portal_top.png', 'scene/town_oriel.png',
+                 'scene/town_oriel_bay.png'],
         'pool': ['girl.png', 'scene/bench.png', 'scene/bin.png', 'scene/lamp_post.png', 'scene/town_crate_front.png',
                  'scene/town_tub.png', 'scene/town_rim.png', 'scene/town_bowl.png', 'scene/town_shopsign.png',
                  'scene/town_tier.png', 'scene/town_table_front.png', 'scene/town_awning64.png', 'scene/town_awning80.png'],

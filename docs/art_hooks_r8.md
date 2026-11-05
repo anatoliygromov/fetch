@@ -100,7 +100,8 @@ Delete (or rename) its file: the placeholder or the old art comes back. The plac
 | `town_front_tall1-3.png` | 80, 88, 96 x **432** | as above, but every front box (and any box without `cut`) is drawn at its full height: the file's bottom on y 414, its top at y -18 (two upper storeys of 140 px over the 152 px ground floor), no coping; a gap of up to 8 px to the next front is closed by the last bay |
 | `town_front_tall4.png` | 148 x 432 | the GUILD HOUSE's front (its gate, the upper windows at the sides) |
 | `town_portal_top.png` | 122 x 50 | the stepped gable (GUILD ROOF and the steps right of it) as the guild house's portal top: at the steps' x0 - 1, top - 1 |
-| `town_oriel.png` | 18 x 45 | the CHIMNEY (16 x 44, solid) as the bay window, its roof the golden bone's perch: at x0 - 1, y0 - 1 |
+| `town_oriel.png` | 60 x 9 | the CHIMNEY (16 x 44, solid): the bay window's copper roof, its flat top the box's top (the golden bone's perch), centred, at y0 - 1 |
+| `town_oriel_bay.png` | 58 x 36 | decoration: the bay window under it, centred on the CHIMNEY box, bottom on the box's bottom, drawn with the fronts |
 | `town_crates70.png` | 71 x 37 | a GATE (70 x 36) whose right end is in a full-height house: at x0 - 1, y0 - 1, drawn before the cargo bikes (another GATE keeps the old gate piece) |
 | `town_breadboard.png` | 74 x 12 | the SHELTER's one-way perch (72 x 4, 48 px up): at x0 - 1, y0 - 1, drawn before the cargo bikes |
 | `town_crate_leg.png` | 18 x 37 | two per SHELTER (play, outlined): at its box's x0 - 1 and x1 - 17, bottom on the street (y 424), before the cargo bikes |

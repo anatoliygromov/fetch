@@ -41,7 +41,8 @@ C = dict(
     # its shade 138, granite 166 / 148 / 126, frames 170. tools/asset_qa.py measures them as drawn.)
     W=(135, 106, 66), S=(116, 85, 53),                            # yellow plaster, its shade (swapped per building)
     L=(135, 130, 120), T=(110, 103, 95), V=(77, 72, 68),          # granite: lit, mid, dark
-    G=(62, 72, 88), R=(98, 114, 130),                             # glass, its reflection
+    G=(31, 37, 45), R=(47, 55, 62),                               # glass, its reflection (panes about 100 on screen,
+                                                                  # 50 under the plaster: review round 2)
     F=(140, 137, 131),                                            # window frames and glazing bars
     K=(104, 66, 44), J=(136, 92, 60), D=(68, 44, 32),             # oak: leaf, lit panel edge, shadow / joints
     N=(56, 88, 70), M=(84, 120, 94),                              # painted shopfront green, lit
@@ -245,14 +246,15 @@ def course(cv, y):
 
 def upper(w, xs=None):
     """the two upper storeys of a bay (rows 0-279 of the file): wall, the string course on the first floor's top
-    (row 140, a storey above the ground floor's cornice at row 280), a window each, centred (or at the x's given)"""
+    (row 140, a storey above the ground floor's cornice at row 280), a window each, centred (or, xs = {storey: [x]},
+    at the x's given per storey: 0 the second floor, 1 the first)"""
     global H
     keep, H = H, UPPER                       # (Canvas clips to the global H)
     try:
         cv = Canvas(w)
         course(cv, 0); course(cv, STOREY)                           # (row 0 is never on screen: the two storeys identical)
         for k in range(2):
-            for cx in (xs or [w // 2]):
+            for cx in (xs[k] if xs else [w // 2]):
                 upper_window(cv, cx, k * STOREY + 26)
         return cv.role
     finally:
@@ -260,13 +262,16 @@ def upper(w, xs=None):
 
 def front_guild(w=148):
     """the guild house (layer plan decision 1a): one 148 px house, the carriage gate under the portal top (the stepped
-    gable's perches, drawn by tools/build_dt_street.py), the upper windows at the sides: the bay window stands on the
-    portal's top between them (the chimney's perch)"""
+    gable's perches, drawn by tools/build_dt_street.py); two windows on the second floor; the first floor is the bay
+    window's, standing on the portal's top (the chimney's perch)"""
     return front_gate(w)
 
 FRONTS = {1: front_door, 2: front_shop, 3: front_gate, 4: front_guild}
 WIDTHS = {1: 80, 2: 88, 3: 96, 4: 148}
-UPPER_X = {4: [74 - 46, 74 + 46]}                                    # the guild house: two windows, the middle free
+# the guild house (review round 2): on the second floor two windows with the street's margins (14 px left, 12 right:
+# the window's cast shadow is on its right), whole and identical; on the first floor none: its bay window stands there
+# (tools/build_dt_street.py town_oriel_bay.png, drawn by arthooks.lua)
+UPPER_X = {4: {0: [42, 106], 1: []}}
 
 def render(role):
     im = np.zeros((role.shape[0], role.shape[1], 4), np.uint8)

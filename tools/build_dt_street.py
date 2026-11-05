@@ -21,8 +21,9 @@ below the far layers, play perches mid-tone like the apple crates), one crate si
   town_crate_leg.png     play, outlined: the board's two legs, two of the same crates end-on (16 x 17 on the 18 px pitch).
   town_portal_top.png    play, outlined: the guild house's portal top on the stepped gable's boxes (GUILD ROOF and the
                          steps right of it), stone steps, a gold medallion, a moulded base; at the steps' x0 - 1, top - 1.
-  town_oriel.png         play, outlined: the CHIMNEY's solid box (16 x 44) as a slim bay window with a copper roof, the
-                         golden bone's perch; at x0 - 1, y0 - 1, standing on the portal top.
+  town_oriel.png         play, outlined: the bay window's copper roof on the CHIMNEY's solid box (16 x 44): its flat top
+                         the box's top (the golden bone's perch), its sides falling to the bay's 58 px; at y0 - 1, centred.
+  town_oriel_bay.png     back, decoration: the bay window under it (58 x 36, world y 208-243), on the portal top.
 
   python3 -I tools/build_dt_street.py             write them all (riverwalk/art/scene/)
   python3 -I tools/build_dt_street.py --check     fail if a file on disk differs from the build
@@ -42,11 +43,14 @@ C = dict(
     bl=(178, 124, 60), bm=(150, 94, 42), bd=(112, 64, 28),              # bread crust
     sl=(132, 146, 156), sm=(88, 100, 112), ss=(64, 74, 86), sd=(46, 54, 64),   # steel (dark, so it reads faded)
     gb=(150, 166, 174),                                                # the glass's reflection band
-    pc=(178, 170, 148), pk=(186, 112, 132),                            # the poster's card, pink icing
+    pc=(113, 108, 94), pk=(104, 63, 74),                               # the poster's card (150 on screen), pink icing
     tl=(135, 130, 120), tm=(110, 103, 95), tv=(77, 72, 68),             # granite (the fronts' L, T, V)
     pd=(58, 50, 56), pdd=(42, 36, 42), pf=(84, 76, 80),                # the passage, its shade, its floor
     cw=(170, 154, 118), cg=(96, 146, 84), cgd=(70, 112, 66),            # the courtyard: sunny wall, a bush
-    og=(62, 72, 88), ol=(98, 114, 130),                                # the bay window's glass (the fronts' G, R)
+    og=(31, 37, 45), ol=(47, 55, 62),                                  # window glass (the fronts' G, R)
+    of=(140, 137, 131),                                                # window frames (the fronts' F)
+    bb=(101, 84, 62), bs=(76, 63, 46),                                 # the bay window's body (135 on screen), its shade
+    rl=(106, 146, 124), rm=(81, 130, 109), rs=(61, 104, 87),            # the bay's copper roof (play: 132 / 113 / 88)
     cl=(150, 206, 176), cm=(104, 166, 140), cs=(72, 122, 102),          # copper (the roof kit's copper)
 )
 
@@ -139,7 +143,7 @@ def breadboard():
     cv.rect(0, 0, 73, 11, "ink")
     for y in (1, 6):
         cv.rect(1, y, 72, y + 4, "wm"); cv.rect(1, y, 72, y, "wl"); cv.rect(1, y + 4, 72, y + 4, "ws")
-    for x in range(10, 70, 18): cv.rect(x, 3, x + 5, 3, "ws"); cv.rect(x + 9, 8, x + 14, 8, "ws")   # grain, 18 px grid
+    for x in range(10, 70, 18): cv.rect(x, 3, x + 5, 3, "ws"); cv.rect(x + 9, 8, min(x + 14, 72), 8, "ws")   # grain, 18 px grid
     return cv
 
 
@@ -199,21 +203,41 @@ def portal_top():
 
 
 def oriel():
-    """the guild house's bay window on the CHIMNEY box (16 x 44, solid): a copper roof with a flat top (the golden
-    bone's perch), a stone body with a tall window, a moulded corbel; 18 x 45 with its outline, standing on the portal"""
-    W, H = 18, 45
+    """the guild house's bay window roof on the CHIMNEY box (16 x 44, solid; the golden bone on it): a copper roof,
+    front-on, a thin cap: its flat top is the box's top (16 px, the perch), its sides fall to the bay's width (58)
+    over 7 rows, the left slope lit and the right in shade; outlined (play). The bay under it is decoration (oriel_bay)."""
+    W, H = 60, 9
     cv = Cv(W, H)
-    cv.rect(1, 1, 16, 44, "tm")
-    cv.rect(1, 1, 16, 1, "cl"); cv.rect(1, 2, 16, 7, "cm"); cv.rect(1, 8, 16, 8, "cs")     # the roof
-    for x in (5, 9, 13): cv.rect(x, 2, x, 7, "cs")                        # standing seams, 4 px apart
-    cv.rect(1, 9, 16, 9, "tl"); cv.rect(1, 9, 1, 34, "tl"); cv.rect(16, 10, 16, 34, "tv")   # the body's frame
-    cv.rect(4, 12, 13, 31, "tl")                                          # the window: frame, two lights, a bar
-    cv.rect(5, 13, 12, 30, "og"); cv.rect(5, 13, 5, 30, "ol"); cv.rect(5, 21, 12, 22, "tl")
-    cv.rect(1, 35, 16, 35, "tl"); cv.rect(1, 36, 16, 37, "tm"); cv.rect(1, 38, 16, 38, "tv")   # sill moulding
-    for i, y in enumerate(range(39, 44)):                                 # the corbel: stepped mouldings
-        cv.rect(1, y, 16, y, "tv" if y % 2 else "tm")
-    cv.a[0] = ""; cv.a[:, 0] = ""; cv.a[:, -1] = ""
+    halves = [8, 12, 15, 19, 22, 26, 29]                                  # half widths, rows 1-7 (world y 200-206)
+    for k, hw in enumerate(halves):
+        y = 1 + k
+        cv.rect(30 - hw, y, 29 + hw, y, "rm")
+        if k: cv.rect(30 - hw, y, 30 - halves[k - 1] - 1, y, "rl"); cv.rect(29 + halves[k - 1] + 1, y, 29 + hw, y, "rs")
+    cv.rect(22, 1, 37, 1, "rl")                                           # the flat top, lit (the perch)
+    cv.rect(1, 7, 58, 7, "rs")                                            # the eave, in shade
     cv.outline()
+    return cv
+
+
+def oriel_bay():
+    """the bay window itself, decoration (no outline): 58 wide, from under the roof (world y 208) to the portal top's
+    crown (243): a stone lintel, a window as the house's (44 wide, three panes across, 2 px bars) in the bay's own
+    darker body, a 3 px shade down its right edge, a sill, a corbel stepping in to the crown's 40 px top"""
+    W, H = 58, 36
+    cv = Cv(W, H)
+    cv.rect(0, 0, W - 1, H - 1, "bb")
+    cv.rect(W - 3, 0, W - 1, H - 1, "bs")                                 # the projecting bay's shade edge
+    cv.rect(0, 0, W - 1, 0, "tl"); cv.rect(0, 1, W - 1, 1, "tm"); cv.rect(0, 2, W - 1, 2, "tv")   # lintel
+    x0 = 7; y0, y1 = 5, 25                                                # the window, 44 x 21, frames as the house's
+    cv.rect(x0, y0, x0 + 43, y1, "of")
+    for px in (x0 + 2, x0 + 16, x0 + 30):
+        cv.rect(px, y0 + 2, px + 11, y1 - 2, "og"); cv.rect(px, y0 + 2, px, y1 - 2, "ol")
+    cv.rect(x0 - 3, y1 + 1, x0 + 46, y1 + 1, "tl"); cv.rect(x0 - 3, y1 + 2, x0 + 46, y1 + 3, "tm")   # sill
+    cv.rect(x0 - 3, y1 + 4, x0 + 46, y1 + 4, "tv")
+    for i, (a, b) in enumerate(((3, 54), (6, 51), (9, 48))):              # the corbel, stepping in to 40 px
+        y = 31 + i * 2 - (1 if i else 0)
+        cv.rect(0, y, W - 1, H - 1, "")
+        cv.rect(a, y, b, H - 1, "tm"); cv.rect(a, y, b, y, "tl"); cv.rect(b, y + 1, b, H - 1, "tv")
     return cv
 
 
@@ -316,6 +340,7 @@ def build():
     return {
         "town_shelter_tall": shelter(), "town_gateway": gateway(), "town_crates70": crates(70),
         "town_breadboard": breadboard(), "town_crate_leg": crate_leg(), "town_portal_top": portal_top(), "town_oriel": oriel(),
+        "town_oriel_bay": oriel_bay(),
     }
 
 

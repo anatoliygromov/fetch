@@ -31,6 +31,19 @@ Frames: `frames_before/`, `frames_after/` (1x, `tools/dt_sample_frames.sh`), boa
 
 Left for the owner (card notes, no change): the plaza houses at small scale (decision 2), lamps across window panes, the high road ledges as shelves (their old art, 137 on screen, only 11 above the back), the far layers hidden on the tall street (x 1180-2480), the street ends.
 
+## Review round 2 (c3cb066: fronts 1-3, gateway, crates, legs, portal top PASS) and what changed
+
+| Finding | Change |
+| --- | --- |
+| town_front_tall4: windows flush with the house edges, the right one clipped by 2 columns | Second floor: two windows with the street's margins (14 px left, 12 right, the cast shadow on the right), whole and pixel-identical (blocks at x 14 and 78); first floor: no windows, the bay window stands there |
+| town_shelter_tall: poster card 194 on screen | Card (113, 108, 94): about 150 on screen; the pink a step under it |
+| town_breadboard: (73, 8) not ink | The second plank's grain stops at x 72: the outline is closed |
+| town_oriel: a chimney with a small window, at the wall's value | Now a bay window at the house's scale: `town_oriel_bay.png` (decoration, 58 wide, 135 on screen, a 44 px window with the house's panes and frames, a 3 px shade down its right edge, a sill, a corbel stepping in to the crown) under `town_oriel.png` (play, the copper roof, front-on, a thin cap 9 rows: its flat 16 px top is the CHIMNEY box's top, the golden bone exactly where it was; 113-132 on screen) |
+| Street lamp x 1958 inside the arch (x 1916-1996) | Not moved: no other house front fits. House 1912-2000 is the only one where the cargo bike comes out (its run starts at x 1930); 2000-2180 are behind the shelter, 1700-1912 has the plaza houses and the fountain in front. The lamp is a checkpoint (it cannot move). The lamp stands in front of the arch: a card note |
+| Window panes drab (124, 26 under the plaster) | Glass (31, 37, 45), reflection (47, 55, 62): panes about 100 on screen, 52 under the plaster; the back contrast stays within 120 (frames 171 to panes 100) |
+
+Card notes, no change (round 2): the portal top partly behind the balcony and plaza houses, the dormer ledge reading as a lintel, the shelves, screen 10's old brick gate (no house there), the plaza houses at small scale, the far layers hidden on the tall street, the street ends, the bike's depot clip.
+
 ## Luma after round 1 (median / darkest 10 %, share of the screen; `tools/layer_frames_tall.py downtown_tall --ids`)
 
 | Frame | Back before | Back after | Play after | Far layers visible |
@@ -43,7 +56,7 @@ Left for the owner (card notes, no change): the plaza houses at small scale (dec
 
 Order: far city 187-194 > far roofs 172-181 > old town row 169 > houses 145-152 > play 104-137 > Pepper 58.
 
-## Checks (round 1 head)
+## Checks (round 2 head: the same results)
 PEPPER UNCHANGED (4591 steps), flow 125/125, Tiled PASSED, `downtown_tall --physics` 102/102, `--qa` 0 problems in 14643
 runs, `--auto` GOOD GIRL, `check_curve` T1-T4 PASS (order riverwalk..night, 10 seeds), `asset_qa`: the 11 pieces PASS as
 drawn (library 8 FAIL as on the base), check_backdrop: only the known River Walk gable.

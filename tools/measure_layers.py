@@ -136,7 +136,8 @@ add(["town_tramshed70", "town_tramshed96", "town_crate_front", "town_parasol", "
      "town_shopsign"], "dt", "play", group="Downtown")
 add(["town_bollard"], "dt", "front", group="Downtown")
 # art/dt-sample-05nov: the sample screen (decisions 1a and 4a), built by tools/build_tall_fronts.py, build_dt_street.py
-add(["town_front_tall1", "town_front_tall2", "town_front_tall3", "town_front_tall4", "town_shelter_tall", "town_gateway"],
+add(["town_front_tall1", "town_front_tall2", "town_front_tall3", "town_front_tall4", "town_shelter_tall", "town_gateway",
+     "town_oriel_bay"],
     "dt", "back", True, group="Downtown")
 add(["town_crates70", "town_breadboard", "town_crate_leg", "town_portal_top", "town_oriel"], "dt", "play", group="Downtown")
 add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, group="Characters (never shaded)")

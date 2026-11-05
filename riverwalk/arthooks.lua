@@ -369,8 +369,9 @@ function H.townPiece(p, camx, def)
       local im = H.img("scene/town_footbridge")
       if im then drawImgOn(im, p, x, p.y0 - 1 - H.BRIDGE_RAIL); return true end
     elseif n == "CHIMNEY" and H.FIRST_FLOOR and H.img("scene/town_oriel") then   -- (decision 1a: the chimney becomes
-      drawImgOn(H.img("scene/town_oriel"), p, x, p.y0 - 1); return true          -- the guild house's bay window, its
-                                                                               -- roof the perch with the golden bone)
+      drawImgOn(H.img("scene/town_oriel"), p, x, p.y0 - 1); return true          -- the roof of the guild house's bay
+                                                                               -- window, H.drawTownBays; its flat top
+                                                                               -- the perch with the golden bone)
     elseif n == "DORMER" and H.FIRST_FLOOR and H.img("scene/town_roof_ledge") then   -- (review round 1: no window
       threeSlice(H.img("scene/town_roof_ledge"), x, p.y0, w); return true             -- under it for a hood: a ledge)
     elseif n ~= "" then
@@ -566,6 +567,7 @@ function H.drawTownBack(s, cam)
       end
     end
     H.drawTownGateways(def, cam)
+    H.drawTownBays(def, cam)
     lg.setColor(1, 1, 1, 1)
     return
   end
@@ -638,6 +640,19 @@ function H.drawTownGateways(def, cam)
         local x = math.floor(cx - im:getWidth() / 2 - cam)
         if x < 330 and x + im:getWidth() > -10 then lg.setColor(1, 1, 1, 1); lg.draw(im, x, def.foot - H.BACK_LINE - im:getHeight()) end
       end
+    end
+  end
+end
+-- (decision 1a, review round 2) the guild house's bay window: decoration under the copper roof that is the CHIMNEY's
+-- perch (town_oriel.png, townPiece), centred on the box, its bottom on the box's bottom (the portal top's crown); drawn
+-- with the fronts, faded as they are. tools/build_dt_street.py town_oriel_bay.png.
+function H.drawTownBays(def, cam)
+  if not (tallTown(def) and H.FIRST_FLOOR) then return end
+  local im = decoImg("town_oriel_bay")
+  if not im then return end
+  for _, p in ipairs(def.props) do
+    if p.name == "CHIMNEY" and p.layer == "play" and p.x1 - cam > -40 and p.x0 - cam < 360 then
+      lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor((p.x0 + p.x1) / 2 - im:getWidth() / 2 - cam), p.y1 - im:getHeight())
     end
   end
 end

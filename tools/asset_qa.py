@@ -78,7 +78,7 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          "town_front_tall1": (80, 432, 0, 0), "town_front_tall2": (88, 432, 0, 0), "town_front_tall3": (96, 432, 0, 0),
          "town_front_tall4": (148, 432, 0, 0), "town_shelter_tall": (140, 115, 0, 0), "town_gateway": (80, 138, 0, 0),
          "town_crates70": (71, 37, 0, 0), "town_breadboard": (74, 12, 0, 0), "town_crate_leg": (18, 37, 0, 0),
-         "town_portal_top": (122, 50, 0, 0), "town_oriel": (18, 45, 0, 0)}
+         "town_portal_top": (122, 50, 0, 0), "town_oriel": (60, 9, 0, 0), "town_oriel_bay": (58, 36, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",
