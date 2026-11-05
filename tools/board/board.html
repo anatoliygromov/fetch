@@ -107,6 +107,332 @@ button:focus-visible, textarea:focus-visible, a:focus-visible { outline: 2px sol
 <script>
 const ITEMS = [
 {
+ "id": "fam_cp_sample",
+ "title": "City Park sample screen (screen 6, the old oak)",
+ "section": "family",
+ "group": "City Park",
+ "layer": "back + mid",
+ "tier": "B",
+ "note": "Your picks of 26 Oct: the trees Pepper climbs at true width with one leaf mass whose top is above the world (decision 1), and young 6 m mid trees (decision 2b). Screen 6 at both cameras: up on the high road she runs through the old oak's leaves; down on the path the oak stands at full size with its branches as her ledges. New: the old oak (trunk 54 px), a park lime at x 1528 and an ash at x 1916 whose crown leans over the treetop walk, so screen 7's walk is in leaves too; three young mid trees (a lime, a maple, a birch, 139 px). An independent reviewer went through four rounds. The lime, the ash and the three mid trees PASS: no ink edges, no tree lighter than the tree line behind it, no loose limbs or flat crown cuts, clumps of 3 to 4 shades, old small crowns end cleanly beside the new ones. Nothing she stands on moved. Checks: PEPPER UNCHANGED, flow 125/125, Tiled, physics 97/97, QA 0 problems, curve T1-T4 PASS. Layers light to dark: sky 202, far city 191, tree line 181, mid 154-159, back 118-141, play 80-91. SpriteCook 284 credits. Made 5 Nov night.",
+ "question": "Two calls. 1) The oak did NOT pass review: its leaves stay patchy after three fix rounds and a re-cut (see the 4x strip: round 3 | re-cut | lime). Regenerating it with the lime's method costs about 76 SpriteCook credits, over the family's retry cap, so it needs your yes: mark the oak Fix to say yes. 2) Scale: oak trunk 54 px (plan: 46 for the old oak, 60 for the big oak); lime 36 and ash 29-33 px against the spec's 23, both inside the plan's true range for park trees (0.4 to 0.8 m). Keep these trunks, or ask for slimmer ones?",
+ "images": [
+  {
+   "src": "img/fam/cp_s6_high_ba_3x.png",
+   "label": "screen 6, high road, 3x: before | after"
+  },
+  {
+   "src": "img/fam/cp_s6_low_ba_3x.png",
+   "label": "screen 6, path, 3x: before | after"
+  },
+  {
+   "src": "img/fam/cp_s6_sheet.png",
+   "label": "screen 6 after: colour | greyscale, 3x and 1x, both cameras"
+  },
+  {
+   "src": "img/fam/cp_s5_s6_s7_high_2x.png",
+   "label": "screens 5, 6, 7 on the high road, 2x"
+  },
+  {
+   "src": "img/fam/cp_s5_s6_s7_low_2x.png",
+   "label": "screens 5, 6, 7 on the path, 2x"
+  },
+  {
+   "src": "img/fam/cp_oak_recut_vs_round3_vs_lime_4x.png",
+   "label": "oak leaves at 4x: round 3 | re-cut | the lime"
+  }
+ ],
+ "members": [
+  {
+   "id": "cp_oak",
+   "title": "old oak (not passed: shown for context)",
+   "slot": "cp_oak.png 388x343",
+   "img": "img/fam/cp_oak_2x.png",
+   "note": "Replaces the small old oak in the tall level only. Re-cut from its own render with the pipeline that made the lime and ash (leaf clumps of 4 shades, no ink, darkest a dark brown, highlight under the tree line). Trunk 54 px (your call), crown 388 px, top above the world. 8 colours. Flatter than the lime: if you want it as crisp, it needs a regeneration (credits).",
+   "findings": [
+    "independent review: FAIL on leaf patchwork (crispness) after 3 rounds and a re-cut",
+    "blotches warn: 19 small patches of near colours"
+   ]
+  },
+  {
+   "id": "cp_lime",
+   "title": "park lime",
+   "slot": "cp_lime.png 371x509",
+   "img": "img/fam/cp_lime_2x.png",
+   "note": "Remade in round 3 with a new method (GPT 2.5 following a blockout at the plan's size, the approved River Walk lime and the oak as style), cut 1:1 on its own grid. Trunk 36 px (owner's call), crown 371 px, top 190 px above the world, at x 1528. Clumps of 3 to 4 shades, bark edge a darker brown. 9 colours.",
+   "findings": [
+    "decor-ink warn 67 % (dark brown limb edges and the leaves' dark maroon)"
+   ]
+  },
+  {
+   "id": "cp_ash",
+   "title": "ash",
+   "slot": "cp_ash.png 509x505",
+   "img": "img/fam/cp_ash_2x.png",
+   "note": "New: the ash at x 1916 (screen 6's right edge, screen 7), its crown leaning right over the treetop walk. Same method as the lime. Trunk 29-33 px (owner's call), diamond bark, top 186 px above the world. 10 colours.",
+   "findings": [
+    "blotches warn: 2 small patches"
+   ]
+  },
+  {
+   "id": "cp_midtrees",
+   "title": "young mid trees",
+   "slot": "cp_mid_lime/maple/birch.png, 139 px",
+   "img": "img/fam/cp_midtrees_4x.png",
+   "note": "Young 6 m trees at the mid scale (23 px a metre), in turn along the half-speed row of the tall level, the far city seen between them. Highlights brought under the far city (about 172 on screen), birch trunk a warm grey. 7-8 colours each, no outline.",
+   "findings": [
+    "maple: decor-ink warn 38 % (its own dark red rim)"
+   ]
+  }
+ ]
+},
+{
+ "id": "fam_rw_traffic",
+ "title": "River Walk traffic: two riders with pedal loops, two lane riders, two cars",
+ "section": "family",
+ "group": "River Walk",
+ "layer": "char / road lane",
+ "tier": "A",
+ "note": "Your redraw calls on the road cars and cyclists (25 Oct). Made at true scale from a blockout with Pepper at 1x, on SpriteCook's own pixel grid (no resizing anywhere), snapped to the River Walk palette, then fixed by hand after an independent review (every changed pixel in art/source/<name>/edits.json). One ink for the family, the bench's black; one wheel drawn once and stamped twice; faces with a nose, mouth and clear eye. The promenade riders are 1.85 m at Pepper's scale (87 px) with a pedal loop that turns once a second. The road's bike lane is nearer than the promenade (55 px a metre, like the cars), so its riders are their own pictures at that size; only their top half shows above the screen edge. SpriteCook 220 credits. An independent reviewer failed rounds 1 to 3 (inks, faces, stray pixels, strobing wheels, rider scale on the road, light direction); all fixed, every piece PASS in its last round. Made 5 Nov night.",
+ "question": "The cars came out a little bigger than my guess (estate 241 x 88 px, hatchback 185 x 77): both are still at or under real car size. Keep? The road's other three cars (taxi, van, car 5) are the old art: redraw them in the same style next?",
+ "images": [
+  {
+   "src": "img/fam/rwtraffic_promenade_rider1_3x.png",
+   "label": "promenade at 3x: rider 1 by the bench, colour | greyscale"
+  },
+  {
+   "src": "img/fam/rwtraffic_promenade_rider2_3x.png",
+   "label": "promenade at 3x: rider 2 by the lamp and bin, colour | greyscale"
+  },
+  {
+   "src": "img/fam/rwtraffic_road_car1_lanerider1_3x.png",
+   "label": "the road at 3x: the estate and lane rider 1"
+  },
+  {
+   "src": "img/fam/rwtraffic_road_car4_lanerider2_3x.png",
+   "label": "the road at 3x: the hatchback and lane rider 2"
+  },
+  {
+   "src": "img/fam/rwtraffic_before_after_3x.png",
+   "label": "before | after at 3x"
+  }
+ ],
+ "members": [
+  {
+   "id": "cyclist_adult1_v2",
+   "title": "rider 1 (woman, red coat), promenade",
+   "slot": "cyclist_adult1.png 88x87 + cyclist_adult1_pedal.png 8 x 88x87",
+   "img": "img/fam/cyclist_adult1_5x.png",
+   "note": "Pedal loop: legs from SpriteCook's animation, everything else the still in all 8 frames; the wheels turn through 4 steps; one pedal turn per 208 px ridden.",
+   "findings": [
+    "asset_qa warns only: 1 small blotch in the pedal frames"
+   ]
+  },
+  {
+   "id": "cyclist_adult2_v2",
+   "title": "rider 2 (man, green jacket), promenade",
+   "slot": "cyclist_adult2.png 88x87 + cyclist_adult2_pedal.png",
+   "img": "img/fam/cyclist_adult2_5x.png",
+   "note": "The second rider; the two take turns on the promenade.",
+   "findings": []
+  },
+  {
+   "id": "road_rider1_v1",
+   "title": "lane rider 1",
+   "slot": "road_rider1.png 104x102",
+   "img": "img/fam/road_rider1_5x.png",
+   "note": "The same woman at the lane's scale, lit from the upper left like the level (helmet and coat relit by hand). Only the top 50 rows show in the game.",
+   "findings": [
+    "asset_qa warns only: 2 small blotches (below the screen edge)"
+   ]
+  },
+  {
+   "id": "road_rider2_v1",
+   "title": "lane rider 2",
+   "slot": "road_rider2.png 104x103",
+   "img": "img/fam/road_rider2_5x.png",
+   "note": "The same man at the lane's scale, lit from the upper left; his face redrawn by hand (eye with white and pupil, skin forehead, one-colour beard).",
+   "findings": [
+    "asset_qa warns only: 1 small blotch"
+   ]
+  },
+  {
+   "id": "road_car1_v2",
+   "title": "estate car (navy)",
+   "slot": "road_car1.png 241x88",
+   "img": "img/fam/road_car1_4x.png",
+   "note": "4.4 m long at the road's scale; the frame crops its wheels as before.",
+   "findings": []
+  },
+  {
+   "id": "road_car4_v2",
+   "title": "small hatchback (red)",
+   "slot": "road_car4.png 185x77",
+   "img": "img/fam/road_car4_4x.png",
+   "note": "3.4 m long.",
+   "findings": []
+  }
+ ]
+},
+{
+ "id": "fam_rw_water",
+ "title": "River Walk water: the boat on screen 6 and the mooring piles",
+ "section": "family",
+ "group": "River Walk",
+ "layer": "play / front",
+ "tier": "A / C",
+ "note": "Your redraw calls on the ferry and the pile (25 Oct). The route Pepper runs on the boat (deck, cabin roof, wheelhouse roof) is 5 m long at her scale, so a commuter ferry drawn on it read as a toy. It is now a small harbour water taxi at true size on exactly those lines: nothing in the level moved. Design and colours from one SpriteCook render; every part drawn by rule in its colours: one unbroken outline, no thin railings, identical portholes and windows, a rub rail, cleats, a cabin door, a lifebuoy, the white hull shaded in three bands. An independent reviewer failed rounds 1 and 2 (plain hull, unequal windows, the flagstaff, a doubled ink row under the door); all fixed, round 3 PASS on both pieces. The piles are built by rule (0 credits): a dark tarred post with a rim of light on top and a rope lashing, the part that shows at the bottom of the screen. SpriteCook 24 credits. Made 5 Nov night.",
+ "question": "The boat is a water taxi now, not a ferry (a real ferry would be about four times longer than the route). Keep the smaller boat, or change the level so a bigger ferry fits?",
+ "images": [
+  {
+   "src": "img/fam/rwwater_ferry_deck_3x.png",
+   "label": "screen 6 at 3x: Pepper on the deck, colour | greyscale"
+  },
+  {
+   "src": "img/fam/rwwater_ferry_wheelhouse_3x.png",
+   "label": "screen 6 at 3x: Pepper on the wheelhouse roof by the ball, colour | greyscale"
+  },
+  {
+   "src": "img/fam/rwwater_ferry_pontoon_piles_3x.png",
+   "label": "the pontoon, the bow and two piles at 3x, colour | greyscale"
+  },
+  {
+   "src": "img/fam/rwwater_before_after_3x.png",
+   "label": "before | after at 3x"
+  }
+ ],
+ "members": [
+  {
+   "id": "rw_ferry_v2",
+   "title": "the boat (ferry.png)",
+   "slot": "ferry.png 252x79",
+   "img": "img/fam/rw_ferry_4x.png",
+   "note": "Deck y 206, cabin roof y 184, wheelhouse roof y 154 as before; 16 colours.",
+   "findings": []
+  },
+  {
+   "id": "rw_pile_v2",
+   "title": "mooring pile",
+   "slot": "pile.png 18x182",
+   "img": "img/fam/rw_pile_4x.png",
+   "note": "Front layer: no outline, 8 colours, the top 60 px shown (only the top 15-19 px are on screen).",
+   "findings": []
+  }
+ ]
+},
+{
+ "id": "fam_animals_r2",
+ "title": "Animals round 2: bigger cat, smaller gull, real-size rowing boats",
+ "section": "family",
+ "group": "River Walk + Downtown + Night Harbour",
+ "layer": "play",
+ "tier": "A",
+ "note": "Your calls: the cat bigger, slightly smaller than the dog; the gull smaller; the boats at real size with wider harbours. The cat sits 32 px tall (Pepper stands 38), the gull spans 34 px, the boat's hull is 182 px long: 4 m at Pepper's scale. A grown man rows it, and only what is above the water shows. The River Walk harbour is 256 px wider and each Night Harbour boat gap 128 px wider, so the boats have room to row. An independent reviewer checked everything twice and all its fixes are in. SpriteCook 178 credits, within your 260.",
+ "question": "The boat came out 182 px long, not the 160 I planned (a real rowing boat is 3-4 m). Keep it, or ask for a smaller boat?",
+ "images": [
+  {
+   "src": "img/fam/anim2_rw_boat_ba_3x.png",
+   "label": "River Walk harbour at 3x: old boat | new boat, Pepper on board"
+  },
+  {
+   "src": "img/fam/anim2_dt_cat_ba_3x.png",
+   "label": "Downtown at 3x: old cat | new cat on the statue's arm"
+  },
+  {
+   "src": "img/fam/anim2_lineup_5x.png",
+   "label": "Sizes at 5x: Pepper, the cat, the gull"
+  }
+ ],
+ "members": [
+  {
+   "id": "cat_r2",
+   "title": "cat",
+   "slot": "cat.png, 3 rows x 8, 48x48",
+   "img": "img/fam/anim2_cat_sheet_4x.png",
+   "note": "32 px sitting. Rows: sitting (tail curl and blink, played there and back), scared and leap, run (loops frames 5-8).",
+   "findings": [
+    "asset_qa warns only: the leap leaves the ground"
+   ]
+  },
+  {
+   "id": "gull_r2",
+   "title": "gull",
+   "slot": "gull.png, 8 frames 36x44",
+   "img": "img/fam/anim2_gull_sheet_5x.png",
+   "note": "34 px wingspan, a 7-frame wingbeat, feet tucked in. Frame 4 (wings swept back) is the swoop.",
+   "findings": [
+    "asset_qa warns only: a wingbeat changes the size between frames"
+   ]
+  },
+  {
+   "id": "rowboat_r2",
+   "title": "rowing boat",
+   "slot": "rowboat.png, 8 frames 182x96",
+   "img": "img/fam/anim2_rowboat_frames_3x.png",
+   "note": "The 3 poses of the stroke (played 1 1 2 3 3 3 2 1). The hull is the same in every frame; the bottom is hidden under the water in the game.",
+   "findings": [
+    "asset_qa warns only: some wood-grain blotches on the hull"
+   ]
+  }
+ ]
+},
+{
+ "id": "fam_rw_fixes",
+ "title": "River Walk fixes by hand (0 credits)",
+ "section": "family",
+ "group": "River Walk",
+ "layer": "various",
+ "tier": "fix",
+ "note": "Four of the five pieces you marked Fix this morning (the gull is being redrawn, your call at 15:59), fixed pixel by pixel (no clean-pass script; every changed pixel listed in art/source/rw_fixes/edits.json). Each picture: before | after. An independent review checked them; its fix list is applied.",
+  "images": [
+  {
+   "src": "img/fam/rwfix_s7_ba.png",
+   "label": "screen 7 at 3x: before | after (pier, skyline)"
+  },
+  {
+   "src": "img/fam/rwfix_s1_ba.png",
+   "label": "screen 1 at 3x: before | after (fallen branch, skyline)"
+  },
+  {
+   "src": "img/fam/rwfix_s8_ba.png",
+   "label": "screen 8 at 3x: before | after (clouds, skyline)"
+  }
+ ],
+ "members": [
+  {
+   "id": "cloud8_v2",
+   "title": "cloud8",
+   "slot": "cloud8.png",
+   "img": "img/fam/rwfix_cloud8_ba_10x.png",
+   "note": "This morning's script had merged its darkest shade away, so its bottom went flat. The original drawing is back with its bottom shade, a touch lighter so it stays inside the sky's rules in every level; the edge is one shade all round.",
+   "findings": []
+  },
+  {
+   "id": "park_log_v2",
+   "title": "fallen branch (park_log)",
+   "slot": "park_log.png",
+   "img": "img/fam/rwfix_park_log_ba_10x.png",
+   "note": "Two almost identical oranges made one; six brown pixels in its outline made dark, so the outline is closed (it is an obstacle).",
+   "findings": []
+  },
+  {
+   "id": "pier_v2",
+   "title": "bridge pier",
+   "slot": "pier.png",
+   "img": "img/fam/rwfix_pier_ba_3x.png",
+   "note": "Decoration, so no black outline: its edge is now a darker stone (light on the sun side). Four dotted joints in the wall made solid like the rest.",
+   "findings": []
+  },
+  {
+   "id": "skyline_v2",
+   "title": "skyline",
+   "slot": "skyline.png",
+   "img": "img/fam/rwfix_skyline_ba_3x.png",
+   "note": "16 small blotches inside the silhouettes take their surrounding colour; 2 pinholes filled. Hard to see at 1x: that is the point.",
+   "findings": []
+  }
+ ]
+},
+{
  "id": "fam_rw_sample",
  "title": "River Walk sample screen (screen 1, Home)",
  "section": "family",
