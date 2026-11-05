@@ -15,7 +15,11 @@ APPROVED = {
         # v2 (25 Oct, art/rw-sample-screen): the sample screen's new pieces are kept whole as their material ramps
         # (house plaster/sandstone/granite/door/glass, lime leaves and bark, quay railing). They count as approved
         # only with the owner's approve on the board; a reject takes them out again.
-        'keep': ['pepper.png', 'ball.png', 'scene/rw_home.png', 'scene/rw_lime.png', 'scene/rail_bg_unit.png'],
+        # v3 (25 Oct night, night/25oct-rw-street): + the screen 12 gable and cafe ramps (orange-ochre plaster, grey
+        # sandstone, oak, geranium; cream plaster, sage paint, awning red), same terms. Run with N = kept + 45 (v2's
+        # 45 colours from the pool): python3 tools/make_palette.py riverwalk 109
+        'keep': ['pepper.png', 'ball.png', 'scene/rw_home.png', 'scene/rw_lime.png', 'scene/rail_bg_unit.png',
+                 'scene/rw_gable.png', 'scene/rw_cafe.png'],
         'pool': ['girl.png', 'scene/bench.png', 'scene/bin.png', 'scene/lamp_post.png', 'scene/planter_sq.png', 'scene/pot.png',
                  'scene/flowerbox.png', 'scene/gritbox.png', 'scene/kiosk_kaffe.png', 'scene/rail_seg.png',
                  'scene/building.png', 'scene/tree.png', 'scene/cafe.png', 'scene/gable.png', 'scene/pavement.png'],

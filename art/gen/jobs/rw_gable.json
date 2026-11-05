@@ -1,0 +1,24 @@
+{
+ "name": "rw_gable",
+ "level": "riverwalk",
+ "layer": "back",
+ "kind": "building",
+ "real_height_m": 3.9,
+ "target_px": [
+  148,
+  180
+ ],
+ "checks_px": {
+  "door_opening": "46 x 98",
+  "transom": 12,
+  "window": "46 x 72",
+  "socle": 16
+ },
+ "tier": "C",
+ "family": "rw_street_backdrop",
+ "method": "built from stamped parts, tools/build_rw_gable.py",
+ "slot": {
+  "file": "riverwalk/art/scene/rw_gable.png",
+  "where": "River Walk screen 12, GABLE, x 3568..3716, y -6..174 (replaces gable; the railing ends at 3568)"
+ }
+}
