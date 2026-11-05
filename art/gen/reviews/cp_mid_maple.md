@@ -10,4 +10,11 @@
 8. Fit: PASS at 1x (specks soften with the fade), WARN at 3x.
 9. Read: PASS. A bright red-orange tree, cute.
 
-VERDICT: FAIL (1 items)
+VERDICT (round 1): FAIL (1 items)
+
+## Round 2 (fix 02fd5cb, fresh frames /tmp/review_cp/r2)
+
+5. Shading: PASS now. Lone pixels 119 to 51 (1.0 %, below rw_lime's 1.6 %); the dark #471616 mass is 6.8 % of the art (was 14.5 %), the large blotch gone. 8 colours, still decor-ink WARN 38 % (a red shade rim, on screen min 116).
+Nothing broken: crown still reads, no merged islands, trunk 6-7 px unchanged. Maple highlight #f27116 is luma 141, under the city. Items 1-4, 6-9 PASS as in round 1.
+
+VERDICT: PASS

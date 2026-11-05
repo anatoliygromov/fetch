@@ -1,6 +1,6 @@
 {
  "name": "cp_lime",
- "model": "SpriteCook Nano Banana 2.1 2K, pixel on",
+ "model": "SpriteCook GPT 2.5 Sunburst 2K medium (follows the reference grid)",
  "modelId": null,
  "settings": null,
  "inputs": [
@@ -13,20 +13,21 @@
   512,
   512
  ],
- "credits": 36,
+ "credits": 52,
  "tool": "spritecook",
  "family": "cp_sample",
  "tier": "B",
  "slot": {
   "file": "riverwalk/art/scene/cp_lime.png",
-  "where": "City Park tall, the climbed limes: screen 6 (trunk x 1528, and the ash slot x 1916), drawn by Sc.drawTreetops over the old canopy boxes"
+  "where": "City Park tall, the lime at x 1528 (screens 5 and 6), drawn by Sc.drawTreetops"
  },
  "spritecook": {
-  "model": "gemini-nano-banana-2.1",
+  "model": "gpt-image-2.5-sunburst",
   "pixel": true,
   "resolution": "2K",
+  "quality": "medium",
   "width": 250,
   "height": 506
  },
- "ledger_job": "cp_lime@1105-215619"
+ "ledger_job": "cp_lime@1105-224056"
 }

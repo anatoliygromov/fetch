@@ -1520,9 +1520,11 @@ local function drawCanopy(c, ox, T)
   local r = rng(c.x0 * 3 + c.y0)
   lg.setColor(1, 1, 1, 1)
   local function put(cr, x, y, flip)
-    if CANOPY_SKIP then                                             -- an old crown touching a new tree's crown: left out,
-      for _, a in ipairs(CANOPY_SKIP) do                             -- so the old canopy ends in whole crowns before it
-        if x < a.x1 and x + cr.w > a.x0 then return end
+    if CANOPY_SKIP then                                             -- an old crown that the new tree's leaves cover at its
+      local cy = math.floor(y + cr.h / 2)                            -- middle row is left out (round 2: the box test left
+      for _, a in ipairs(CANOPY_SKIP) do                             -- sky wedges where the new crown is narrow); one
+        local r = a.rows and a.rows[cy - a.y0]                       -- beside it stays and goes on behind it
+        if r and x + 6 < a.x0 + r[2] and x + cr.w - 6 > a.x0 + r[1] then return end
       end
     end
     x, y = math.floor(x - ox), math.floor(y)
@@ -1777,7 +1779,7 @@ end
 -- per tree, trunk and one leaf mass whose top is above the world (tools/cut_cp_tree.py). Keyed by the trunk's x in the
 -- tall City Park (OAK: the old oak). Its trunk is not drawn in code, the canopy boxes inside its crown are skipped, and
 -- the art stands on the back props' line (the path - 9, as the old oak's art did), faded as back decoration.
-local TREE_ART = { [1528] = "cp_lime", OAK = "cp_oak" }   -- (x 1916, the ash: its code trunk until the ash is made; review 5 Nov: no second lime)
+local TREE_ART = { [1528] = "cp_lime", [1916] = "cp_ash", OAK = "cp_oak" }
 local TREE_FADE = 0.28           -- their own amount, as the gate's: the bark's darkest 10 % then sits at the back layer's 80
 local TA_IMG = {}
 local function treeArtImg(n)
@@ -1788,7 +1790,13 @@ local function treeArtImg(n)
   local w, h = d:getDimensions()
   local sx, cnt = 0, 0                                               -- the trunk's centre: 30 px above its foot
   for x = 0, w - 1 do local _, _, _, a = d:getPixel(x, h - 31); if a > 0 then sx = sx + x; cnt = cnt + 1 end end
-  local t = { im = newImg(Sc.fadeData(d, TREE_FADE)), w = w, h = h, cx = cnt > 0 and math.floor(sx / cnt + 0.5) or math.floor(w / 2) }
+  local rows = {}                                                    -- each row's opaque x extent (the old canopies' test)
+  for y = 0, h - 1 do
+    local x0, x1
+    for x = 0, w - 1 do local _, _, _, a = d:getPixel(x, y); if a > 0 then x0 = x0 or x; x1 = x end end
+    rows[y] = x0 and { x0, x1 } or false
+  end
+  local t = { im = newImg(Sc.fadeData(d, TREE_FADE)), w = w, h = h, rows = rows, cx = cnt > 0 and math.floor(sx / cnt + 0.5) or math.floor(w / 2) }
   TA_IMG[key] = t
   return t
 end
@@ -1801,7 +1809,8 @@ local function treeArt(def, TI)
       t.hasArt = true
       local a = treeArtImg(n)
       local cx = math.floor((t.x0 + t.x1) / 2)
-      TI.arttrees[#TI.arttrees + 1] = { name = n, cx = cx, x0 = cx - a.cx, x1 = cx - a.cx + a.w, oak = t.art }
+      TI.arttrees[#TI.arttrees + 1] = { name = n, cx = cx, x0 = cx - a.cx, x1 = cx - a.cx + a.w, oak = t.art,
+        y0 = TI.foot - 9 - a.h, rows = a.rows }
     end
   end
   table.sort(TI.arttrees, function(a, b) return (a.oak and 1 or 0) < (b.oak and 1 or 0) end)   -- the oak in front

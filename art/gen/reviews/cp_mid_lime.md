@@ -12,4 +12,13 @@
 
 Task checks (7): the far city is visible between these trees, not above them: tree top is at screen y 42, city top at about y 73. That follows from the plan's 138 px and is not a defect of this file.
 
-VERDICT: PASS
+VERDICT (round 1): PASS
+
+## Round 2 (fix 02fd5cb; file unchanged)
+
+New finding, present in round 1 and missed there: the mid layer's brightest pixels are lighter than the far city. On screen the crown highlights #fcc23e (12.5 % of this art) are (255,202,65) and (255,202,88), luma 196-202; 3320 mid pixels at 196 or over across screens 5-9 (mid p99 204), against city max 195 and median 190, tree line p99 198. Median order still holds (mid 154 against city 190).
+
+2. Layer: FAIL (minor). Lower the #fcc23e highlight to about luma 170-175 on screen (raw about 150-155).
+All other items unchanged: PASS (1, 3-9).
+
+VERDICT: FAIL (1 items)

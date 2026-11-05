@@ -10,22 +10,23 @@
    "time": "2026-11-05 21:56"
   },
   "preflight": {
-   "time": "2026-11-05 21:56"
+   "time": "2026-11-05 22:48"
   },
   "probe": {
-   "render": "art/gen/renders/cp_lime_a.png",
-   "time": "2026-11-05 22:15"
+   "time": "2026-11-05 22:48",
+   "render": "art/gen/renders/cp_lime_r2a_raw.png",
+   "note": "retry 2 (round 3): GPT 2.5 Sunburst 2K with rw_lime and cp_oak as style"
   },
   "cut": {
-   "time": "2026-11-05 22:15"
+   "time": "2026-11-05 22:48"
   },
   "ingame": {
-   "frame": "docs/review/05nov/cp-sample/after_y144_x1600_1x.png",
-   "time": "2026-11-05 22:16"
+   "frame": "docs/review/05nov/cp-sample/after_y144_x1920_1x.png",
+   "time": "2026-11-05 22:48"
   },
   "polish": {
    "aseprite": "art/source/cp_lime/cp_lime.aseprite",
-   "time": "2026-11-05 22:16"
+   "time": "2026-11-05 22:48"
   }
  }
 }

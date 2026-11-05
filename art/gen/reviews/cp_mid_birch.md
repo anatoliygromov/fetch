@@ -10,4 +10,11 @@
 8. Fit: PASS apart from the value fault in item 2.
 9. Read: PASS. Cute and clear.
 
+VERDICT (round 1): FAIL (1 items)
+
+## Round 2 (fix 02fd5cb, fresh frames /tmp/review_cp/r2)
+
+2. Layer: FAIL (minor, the trunk is fixed). The trunk is now #706860 (luma 105) with #504a46; on screen 138-156 (screen 6 y144, x 222-223, y 140-160), under the city (190-195) and sky: round 1 defect fixed, the trunk reads as a grey-tan pole now. But the crown highlight #f9c219 (17.9 % of the art) is (255,202,65) on screen, luma 196-202, over the city's max 195 (shared with cp_mid_lime: 3320 mid px at 196+, mid p99 204). Lower it to about 170-175 on screen.
+Other items unchanged: PASS. 7 colours; lone 52 (2.2 %), invisible after the fade.
+
 VERDICT: FAIL (1 items)

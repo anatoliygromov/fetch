@@ -12,4 +12,16 @@ Fresh frames rendered by me: tools/layer_frames_tall.py citypark_tall /tmp/revie
 
 Frames: /tmp/review_cp/fresh/frames, my enlargements /tmp/review_cp/s567_y*.png, c_*.png, z_*.png.
 
-VERDICT: FAIL (6 items)
+VERDICT (round 1): FAIL (6 items)
+
+## Round 2 (fix 02fd5cb, fresh frames /tmp/review_cp/r2, all 27 re-rendered and measured)
+
+1. Ledges against limbs: PASS. Colour and greyscale (r2_s567_y*_g.png), high and low: ledges still stand out by ink and tufts; ring deltas unchanged (15 weak ledge/background pairs, as round 1). The loose oak limbs are gone, which helps. The lime's loose bars are not.
+2. Value order: FAIL (minor). Back layer fixed: p10 106, median 135, p99 188 (was 209), 2.0 % at 185+; sky 202, city 190-195, tree line 175-181, mid 154, play 79-91. The birch trunk is fixed (138-156). Remaining: mid crown highlights 196-204, 3320 px (5.6 % of mid), over city max 195 (see cp_mid_lime/cp_mid_birch). Also a back max of 215 exists (a few px, not trees).
+3. Scale: PASS, owner questions, measures: oak trunk 55 (46/60), lime trunk 35-36, crown 468 x 508 (23 / 250), mids 139 tall and trunks 5-8.
+4. Decoration outline: FAIL. Oak fixed; lime still has the near-black #261020 ink on trunk and limbs (5.6 %).
+5. Crispness: FAIL. Oak and lime patchwork stays; asset_qa blotch WARN is new on both (oak 19, lime 14). Maple fixed (51 lone). 
+6. Mid-air ends, seams: FAIL. Fixed: the old yellow starburst at screen 5 is gone; no old canopy overlaps a new crown; oak right edge and lime edges scalloped, no flat cut. New by the fixes: (a) the x 1916 tree is now only its 8 px code trunk, flat-topped in open sky at world y about 168 (screen x 316-324, y 144-150 at camera y 24; visible at the right edge of screen 6, and at x 0-8 of screen 7 at y144), a bare pole with no crown, ending in mid-air; (b) screen 7 at camera y 0 and 24 is 52-56 % open sky (round 1: 21 %): the treetop walk from about world x 2000 to 2300 now stands under open sky with only the old low canopies (the plan wanted the high road inside leaves); (c) a wedge of sky now shows between the lime's left edge and the old canopy at screen 5 (screen x 0-90, y 40-130 at y144). The ash is the open piece the builder noted; it needs either a crown there or an owner nod.
+7. Mid trees: FAIL (minor, same as item 2). Birch trunk fixed, three-design cycle fine, city between the trees not above (plan numbers).
+
+VERDICT: FAIL (5 items)

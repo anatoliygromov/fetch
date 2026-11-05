@@ -12,4 +12,20 @@ Used at trunk x 1528 and x 1916 (same sprite twice, not mirrored). Positions are
 8. Fit: FAIL. Not as crisp or as dense as rw_lime/bench/lamp at 1x and 3x; also 1.9x the lime's size, so it overpowers the oak beside it. Old small canopies still abut its edges (screen item 6).
 9. Read: PASS. Friendly autumn tree, reads at 1x.
 
-VERDICT: FAIL (6 items)
+VERDICT (round 1): FAIL (6 items)
+
+## Round 2 (fix 02fd5cb, fresh frames /tmp/review_cp/r2)
+
+Scale is an owner question: trunk 35-36 at 50-60 up (39 at 40, 44 at 20), crown 458-468 wide, 508 tall. Not failed. Now used once (x 1528); x 1916 is back to its 8 px code trunk.
+
+1. Scale: PASS (owner question, measures above).
+2. Layer: PASS. Highlight #fdd527 became #e4901a (luma 155); on screen back p99 188, max of the lime about 190. No lighter than the city.
+3. Outline: FAIL. Still ink: #261020 (luma 24) is now 5.6 % of the art (was 4.1 %), edge below 60 on 53 % of the edge (unchanged), asset_qa decor-ink 52 %. The trunk's right half and all limbs are that near-black violet, 6x/5x crop of file (150-330,350-508) shows a thick ink side and ring round every limb. Only #0e0508 was removed. On screen it sets the back layer's minimum at 67.
+4. Shapes: FAIL. The loose limb bars were not removed from the lime: still present at file (419,360)-(440,415), (398,390)-(414,427), (379,146)-(389,161), (96,197)-(109,209), (93,396)-(100,421), (414,403)-(432,421), (378,389)-(388,407). Three of the round 1 ten are gone ((44,267), (364,12), (435,211)).
+5. Shading: FAIL. Patchwork unchanged; asset_qa now also WARNs blotches: 14 patches. Flecks inside the orange remain at (157-167,173-182) and (83-93,203-212).
+6. Palette: PASS (8 colours).
+7. View: PASS.
+8. Fit: FAIL (same as 5; still 1.9x the rw_lime in crown width, owner question).
+9. Read: PASS.
+
+VERDICT: FAIL (4 items)

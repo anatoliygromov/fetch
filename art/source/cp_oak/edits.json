@@ -239364,5 +239364,2561 @@
 "why": "pinhole closed"
 }
 ]
+},
+"round3": {
+"from": "art/source/cp_oak/cp_oak_round1.png",
+"review": "art/gen/reviews/cp_oak.md (Round 2)",
+"edits": [
+{
+"x": 51,
+"y": 64,
+"from": [
+131,
+41,
+24
+],
+"to": [
+174,
+64,
+21
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 52,
+"y": 64,
+"from": [
+131,
+41,
+24
+],
+"to": [
+174,
+64,
+21
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 51,
+"y": 65,
+"from": [
+131,
+41,
+24
+],
+"to": [
+174,
+64,
+21
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 52,
+"y": 65,
+"from": [
+131,
+41,
+24
+],
+"to": [
+174,
+64,
+21
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 180,
+"y": 68,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 181,
+"y": 68,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 180,
+"y": 69,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 181,
+"y": 69,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 180,
+"y": 70,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 181,
+"y": 70,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 182,
+"y": 70,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 183,
+"y": 70,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 180,
+"y": 71,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 181,
+"y": 71,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 182,
+"y": 71,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 183,
+"y": 71,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 199,
+"y": 108,
+"from": [
+131,
+41,
+24
+],
+"to": [
+174,
+64,
+21
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 200,
+"y": 108,
+"from": [
+131,
+41,
+24
+],
+"to": [
+174,
+64,
+21
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 199,
+"y": 109,
+"from": [
+131,
+41,
+24
+],
+"to": [
+174,
+64,
+21
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 200,
+"y": 109,
+"from": [
+131,
+41,
+24
+],
+"to": [
+174,
+64,
+21
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 197,
+"y": 110,
+"from": [
+131,
+41,
+24
+],
+"to": [
+174,
+64,
+21
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 198,
+"y": 110,
+"from": [
+131,
+41,
+24
+],
+"to": [
+174,
+64,
+21
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 199,
+"y": 110,
+"from": [
+131,
+41,
+24
+],
+"to": [
+174,
+64,
+21
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 200,
+"y": 110,
+"from": [
+131,
+41,
+24
+],
+"to": [
+174,
+64,
+21
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 197,
+"y": 111,
+"from": [
+131,
+41,
+24
+],
+"to": [
+174,
+64,
+21
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 198,
+"y": 111,
+"from": [
+131,
+41,
+24
+],
+"to": [
+174,
+64,
+21
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 199,
+"y": 111,
+"from": [
+131,
+41,
+24
+],
+"to": [
+174,
+64,
+21
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 200,
+"y": 111,
+"from": [
+131,
+41,
+24
+],
+"to": [
+174,
+64,
+21
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 29,
+"y": 197,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 30,
+"y": 197,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 31,
+"y": 197,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 32,
+"y": 197,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 33,
+"y": 197,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 34,
+"y": 197,
+"from": [
+131,
+41,
+24
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 140,
+"y": 62,
+"from": [
+174,
+64,
+21
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 140,
+"y": 63,
+"from": [
+174,
+64,
+21
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 140,
+"y": 64,
+"from": [
+174,
+64,
+21
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 140,
+"y": 65,
+"from": [
+174,
+64,
+21
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 119,
+"y": 75,
+"from": [
+174,
+64,
+21
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 120,
+"y": 75,
+"from": [
+174,
+64,
+21
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 189,
+"y": 82,
+"from": [
+174,
+64,
+21
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 190,
+"y": 82,
+"from": [
+174,
+64,
+21
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 189,
+"y": 83,
+"from": [
+174,
+64,
+21
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 190,
+"y": 83,
+"from": [
+174,
+64,
+21
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 290,
+"y": 88,
+"from": [
+174,
+64,
+21
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 290,
+"y": 89,
+"from": [
+174,
+64,
+21
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 290,
+"y": 90,
+"from": [
+174,
+64,
+21
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 290,
+"y": 91,
+"from": [
+174,
+64,
+21
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 265,
+"y": 90,
+"from": [
+174,
+64,
+21
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 265,
+"y": 91,
+"from": [
+174,
+64,
+21
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 292,
+"y": 132,
+"from": [
+174,
+64,
+21
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 292,
+"y": 133,
+"from": [
+174,
+64,
+21
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 80,
+"y": 164,
+"from": [
+174,
+64,
+21
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 81,
+"y": 164,
+"from": [
+174,
+64,
+21
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 46,
+"y": 171,
+"from": [
+174,
+64,
+21
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 47,
+"y": 171,
+"from": [
+174,
+64,
+21
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 131,
+"y": 24,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 131,
+"y": 25,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 272,
+"y": 36,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 273,
+"y": 36,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 272,
+"y": 37,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 273,
+"y": 37,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 270,
+"y": 38,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 271,
+"y": 38,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 272,
+"y": 38,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 273,
+"y": 38,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 270,
+"y": 39,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 271,
+"y": 39,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 272,
+"y": 39,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 273,
+"y": 39,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 53,
+"y": 42,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 53,
+"y": 43,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 53,
+"y": 44,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 53,
+"y": 45,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 63,
+"y": 44,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 64,
+"y": 44,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 63,
+"y": 45,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 64,
+"y": 45,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 121,
+"y": 93,
+"from": [
+220,
+110,
+29
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 122,
+"y": 93,
+"from": [
+220,
+110,
+29
+],
+"to": [
+131,
+41,
+24
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 95,
+"y": 161,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 95,
+"y": 162,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 108,
+"y": 167,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 109,
+"y": 167,
+"from": [
+220,
+110,
+29
+],
+"to": [
+228,
+140,
+40
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 127,
+"y": 46,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 128,
+"y": 46,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 127,
+"y": 47,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 128,
+"y": 47,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 114,
+"y": 60,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 115,
+"y": 60,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 116,
+"y": 60,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 117,
+"y": 60,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 118,
+"y": 60,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 114,
+"y": 61,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 115,
+"y": 61,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 116,
+"y": 61,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 117,
+"y": 61,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 118,
+"y": 61,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 116,
+"y": 62,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 117,
+"y": 62,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 118,
+"y": 62,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 119,
+"y": 62,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 116,
+"y": 63,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 117,
+"y": 63,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 118,
+"y": 63,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 119,
+"y": 63,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 76,
+"y": 94,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 77,
+"y": 94,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 78,
+"y": 94,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 79,
+"y": 94,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 76,
+"y": 95,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 77,
+"y": 95,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 78,
+"y": 95,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 79,
+"y": 95,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 78,
+"y": 96,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 79,
+"y": 96,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 78,
+"y": 97,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 79,
+"y": 97,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 147,
+"y": 104,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 148,
+"y": 104,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 149,
+"y": 104,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 150,
+"y": 104,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 147,
+"y": 105,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 148,
+"y": 105,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 149,
+"y": 105,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 150,
+"y": 105,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 149,
+"y": 106,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 150,
+"y": 106,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 151,
+"y": 106,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 152,
+"y": 106,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 149,
+"y": 107,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 150,
+"y": 107,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 151,
+"y": 107,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 152,
+"y": 107,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 112,
+"y": 108,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 113,
+"y": 108,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 114,
+"y": 108,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 112,
+"y": 109,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 113,
+"y": 109,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 114,
+"y": 109,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 52,
+"y": 128,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 52,
+"y": 129,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 51,
+"y": 130,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 52,
+"y": 130,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 53,
+"y": 130,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 16,
+"y": 149,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 17,
+"y": 149,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 15,
+"y": 150,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 16,
+"y": 150,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 17,
+"y": 150,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 15,
+"y": 151,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 16,
+"y": 151,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 17,
+"y": 151,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 18,
+"y": 151,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 19,
+"y": 151,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 16,
+"y": 152,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 17,
+"y": 152,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 18,
+"y": 152,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 17,
+"y": 153,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 18,
+"y": 153,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 102,
+"y": 173,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 103,
+"y": 173,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 104,
+"y": 173,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 105,
+"y": 173,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 102,
+"y": 174,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 103,
+"y": 174,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 104,
+"y": 174,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 105,
+"y": 174,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 67,
+"y": 249,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+},
+{
+"x": 68,
+"y": 249,
+"from": [
+228,
+140,
+40
+],
+"to": [
+220,
+110,
+29
+],
+"why": "leaf patch merged into its clump"
+}
+]
 }
 }

@@ -186,16 +186,17 @@ for _i in range(1, _n + 1):
     for y, x in zip(*np.nonzero(_m)): E.set(y, x, max(set(_v), key=_v.count), 'pinhole closed')
 save('cp_oak', E)
 
-# --- cp_lime
-rgb, al = load('cp_lime'); E = Ed(rgb, al)
+# --- cp_lime (round 1 only: replaced in round 3 by a new render, art/source/cp_lime/ROUND3; round 2 files in round2/)
+rgb, al = load('cp_lime') if not os.path.exists('art/source/cp_lime/ROUND3') else (None, None)
+E = Ed(rgb, al) if rgb is not None else None
 LIME_LEAF = ['#3d1413', '#79200f', '#bf4403', '#ed8b04', '#fdd527']
-floating(E, [(419, 360, 440, 415), (398, 390, 414, 427), (44, 267, 84, 277), (379, 146, 389, 161), (96, 197, 109, 209),
+if E is not None: floating(E, [(419, 360, 440, 415), (398, 390, 414, 427), (44, 267, 84, 277), (379, 146, 389, 161), (96, 197, 109, 209),
              (93, 396, 101, 421), (364, 12, 378, 32), (414, 403, 432, 421), (378, 389, 388, 407), (435, 211, 447, 227)],
          LIME_LEAF[1:])   # (the lime's loose bars are drawn in its darkest leaf red #3d1413: that colour goes in the boxes)
-ink(E, ['#0e0508', '#261020'], ['#553128', '#8f7963'], '#553128', '#0e0508', '#261020', '#3d1413', '#79200f', leaf_edge_only=True)
-recolour(E, '#ed8b04', '#d97a06', 'leaf ramp one step down')
-recolour(E, '#fdd527', '#e4901a', 'highlight down to luma 156 (about 174 on screen)')
-save('cp_lime', E)
+if E is not None: ink(E, ['#0e0508', '#261020'], ['#553128', '#8f7963'], '#553128', '#0e0508', '#261020', '#3d1413', '#79200f', leaf_edge_only=True)
+if E is not None: recolour(E, '#ed8b04', '#d97a06', 'leaf ramp one step down')
+if E is not None: recolour(E, '#fdd527', '#e4901a', 'highlight down to luma 156 (about 174 on screen)')
+if E is not None: save('cp_lime', E)
 
 # --- cp_mid_maple
 rgb, al = load('cp_mid_maple'); E = Ed(rgb, al)

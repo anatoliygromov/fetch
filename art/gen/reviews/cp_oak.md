@@ -14,4 +14,20 @@ Judged from the file (5x/6x crops), fresh game frames (tools/layer_frames_tall.p
 
 Task checks: (1) ledges against limbs, PASS (ledge ink luma 20 against limb edge 67; ledge body 91-128 is near trunk 100, so the outline carries it); (7) n/a.
 
-VERDICT: FAIL (6 items)
+VERDICT (round 1): FAIL (6 items)
+
+## Round 2 (fix 02fd5cb, fresh frames /tmp/review_cp/r2, 27 frames)
+
+Scale is an owner question: measures unchanged, trunk 55 at 50 up, 61 at 40, 98 at 20 (old oak spec 46, big oak 60). Not failed.
+
+1. Scale: PASS (owner question, measures above).
+2. Layer: PASS. Highlight #f6ad35 is now #e48c28 (luma 154, 8.4 %). Back layer on screen (screens 5-9, all cameras): p10 106, median 135, p99 188, 2.0 % at 185 or over (round 1: p99 209, 5.4 % at 190+). Below city (190-195) and tree line.
+3. Outline: PASS. #150e15 is gone; the darkest colour is now #332324 (luma 39, 10.7 %), a dark bark brown used as shade inside the trunk and limbs, no 1-2 px near-black ring (6x crop of file (130-290,140-260)). Screen-level: back min 67 (from the lime, see cp_lime). asset_qa still WARNs decor-ink 73 % (relative-darkness measure), which I judge a shade of its own colour now.
+4. Shapes: PASS. All nine floating limb fragments are deleted (checked each round 1 box: crown leaf only). Flat cuts carved: x=0 now 19 px in three runs (rows 103-110, 149-152, 168-174; was 55 px), x=387 four px (89-90, 99-100). Carved edges look round in the 5x crop; no new notches.
+5. Shading: FAIL. Patchwork is reduced a little but still 3-tone blotches without leaf structure, and asset_qa now WARNs blotches: 19 patches of 2-24 px in a near colour (it did not before), e.g. file (120-300,40-140), the maroon islands at (20-60,60-80) and (0-90,140-200). Lone 0.95 %. Merged leaf islands: the dark maroon gap areas between puffs have become larger flat fields, which is cleaner but flatter.
+6. Palette: PASS (8 colours).
+7. View: PASS.
+8. Fit: FAIL. Still blotchy against rw_lime at 1x/3x. The old-canopy overlap is fixed (round 1 item 8 seam): no starburst at screen 5 (x 55-130, y 30-95 at y144) any more.
+9. Read: PASS.
+
+VERDICT: FAIL (2 items)

@@ -111,7 +111,7 @@ def check(path):
         if not J.get(f): bad.append(f"'{f}' missing")
     cost = 0
     if model:
-        cost = model['credits'] * J.get('variants', 1) + model.get('credits_per_reference', 0) * J.get('references', 0)
+        cost = (model['credits'] + model.get('credits_per_reference', 0) * J.get('references', 0)) * J.get('variants', 1)   # (5 Nov: SpriteCook bills the references per variation: 2 x (14 + 3 x 8) = 76, not 52)
         cap = R['caps']; ok = OWNER_OK
         done = ledger.jobs(n)
         if done >= cap['paid_jobs_per_asset'] and not ok:

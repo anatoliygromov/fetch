@@ -16,7 +16,7 @@ APPROVED = {
         # (lime and oak leaves and bark, the three young mid trees); they count as approved only with the owner's
         # approve on the board. The pool is the approved shared keys City Park draws (bench, bin, lamp) and Mia.
         'keep': ['pepper.png', 'ball.png', 'scene/cp_lime.png', 'scene/cp_oak.png', 'scene/cp_mid_lime.png',
-                 'scene/cp_mid_maple.png', 'scene/cp_mid_birch.png'],
+                 'scene/cp_mid_maple.png', 'scene/cp_mid_birch.png', 'scene/cp_ash.png'],
         'pool': ['girl.png', 'scene/bench.png', 'scene/bin.png', 'scene/lamp_post.png'],
     },
     'riverwalk': {

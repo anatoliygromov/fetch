@@ -1,0 +1,33 @@
+{
+ "name": "cp_ash",
+ "model": "SpriteCook GPT 2.5 Sunburst 2K medium (follows the reference grid)",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/cp_ash_blockout.png",
+  "art/gen/style_card_citypark.png"
+ ],
+ "prompt_file": "art/gen/prompts/cp_ash.txt",
+ "k": null,
+ "frame": [
+  512,
+  512
+ ],
+ "credits": 52,
+ "tool": "spritecook",
+ "family": "cp_sample",
+ "tier": "B",
+ "slot": {
+  "file": "riverwalk/art/scene/cp_ash.png",
+  "where": "City Park tall, the ASH at x 1916 (screen 6 right edge, screen 7), its crown over the alder walk; drawn by Sc.drawTreetops"
+ },
+ "spritecook": {
+  "model": "gpt-image-2.5-sunburst",
+  "pixel": true,
+  "resolution": "2K",
+  "quality": "medium",
+  "width": 492,
+  "height": 506
+ },
+ "ledger_job": "cp_ash@1105-224057"
+}
