@@ -44,6 +44,13 @@ Left for the owner (card notes, no change): the plaza houses at small scale (dec
 
 Card notes, no change (round 2): the portal top partly behind the balcony and plaza houses, the dormer ledge reading as a lintel, the shelves, screen 10's old brick gate (no house there), the plaza houses at small scale, the far layers hidden on the tall street, the street ends, the bike's depot clip.
 
+## Review round 3 (f50160f: 11 of 13 PASS) and what changed
+
+| Finding | Change |
+| --- | --- |
+| town_oriel: a 60 px outlined roof over the 16 px solid CHIMNEY box (art wider than its hit box; an invisible core in the bay) | Split: `town_oriel.png` is now exactly the box (18 x 45 with its outline): the bay window's central stone pier under a copper cap, the golden bone's perch at y 200 unchanged, so what stops Pepper is what she sees. The bay's roof across 58 px moved into `town_oriel_bay.png` (decoration, no outline, edges a darker copper, 124 to 150 on screen), with two lights either side of the pier |
+| Screen 10 keeps the old brick gate | No change (no house there): on the card as the question, with the lamp in the arch |
+
 ## Luma after round 1 (median / darkest 10 %, share of the screen; `tools/layer_frames_tall.py downtown_tall --ids`)
 
 | Frame | Back before | Back after | Play after | Far layers visible |
@@ -56,7 +63,7 @@ Card notes, no change (round 2): the portal top partly behind the balcony and pl
 
 Order: far city 187-194 > far roofs 172-181 > old town row 169 > houses 145-152 > play 104-137 > Pepper 58.
 
-## Checks (round 2 head: the same results)
+## Checks (round 3 head: the same results)
 PEPPER UNCHANGED (4591 steps), flow 125/125, Tiled PASSED, `downtown_tall --physics` 102/102, `--qa` 0 problems in 14643
 runs, `--auto` GOOD GIRL, `check_curve` T1-T4 PASS (order riverwalk..night, 10 seeds), `asset_qa`: the 11 pieces PASS as
 drawn (library 8 FAIL as on the base), check_backdrop: only the known River Walk gable.

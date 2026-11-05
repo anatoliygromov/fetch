@@ -5,8 +5,8 @@
  "group": "Downtown",
  "layer": "back",
  "tier": "C",
- "note": "The level's golden screen with your 26 Oct picks 1a and 4a, built from parts, 0 credits, after two independent review rounds (all findings fixed or noted). The houses run on past the top of the screen at true scale, one window repeated on every storey, and now sit below the far layers in value (on screen: houses 145-152, old town row 169, far roofs 172-181). The guild house runs up too: its stepped gable is the portal top with a gold medallion, its chimney a slim bay window with the golden bone on its roof. Tram stop shelter (2.5 m) and a courtyard gateway (3 m, an arch in one house) behind Pepper; her perches are where they were, as bread crates, a baker's board on crate legs (mid-tone, outlined, like the apple crates). The cargo bike now rides in front of the crates, never cut at the waist. Checks: PEPPER UNCHANGED, flow 125/125, Tiled, physics 102/102, QA 0 problems, autopilot GOOD GIRL, curve T1-T4 PASS, asset QA PASS on all 11 pieces (measured as drawn, the back fade 0.28). The Downtown palette v1 is made from these pieces, so their palette check passes by construction, not as evidence.",
- "question": "Left as they are for you: the small plaza houses in front of the tall fronts (your decision 2, not picked); lamp posts across window panes (moving them moves checkpoints); the high road's stone ledges reading as shelves; the far layers and the spire hidden on the tall street (x 1180-2480); the street's hard ends (x 1180, 2480, the lone house at 2640). Screen 10 keeps the old brick gate (no house there for a gateway); the dormer's ledge reads as a lintel; the bike's depot clip at the gate. Keep the full-height street, or open gaps so the spire stays in view?",
+ "note": "The level's golden screen with your 26 Oct picks 1a and 4a, built from parts, 0 credits, after three independent review rounds (all findings fixed, or asked below). The houses run on past the top of the screen at true scale, one window repeated on every storey, and now sit below the far layers in value (on screen: houses 145-152, old town row 169, far roofs 172-181). The guild house runs up too: its stepped gable is the portal top with a gold medallion, its chimney a slim bay window with the golden bone on its roof. Tram stop shelter (2.5 m) and a courtyard gateway (3 m, an arch in one house) behind Pepper; her perches are where they were, as bread crates, a baker's board on crate legs (mid-tone, outlined, like the apple crates). The cargo bike now rides in front of the crates, never cut at the waist. Checks: PEPPER UNCHANGED, flow 125/125, Tiled, physics 102/102, QA 0 problems, autopilot GOOD GIRL, curve T1-T4 PASS, asset QA PASS on all 11 pieces (measured as drawn, the back fade 0.28). The Downtown palette v1 is made from these pieces, so their palette check passes by construction, not as evidence. Left as they are (notes): the small plaza houses in front of the tall fronts (your decision 2, not picked); the guild house's portal top partly behind a balcony and the plaza houses; lamp posts across window panes (moving them moves checkpoints); the high road's stone ledges reading as shelves, the dormer's ledge as a lintel; the far layers and the spire hidden on the tall street (x 1180-2480); the street's hard ends (x 1180, 2480, the lone house at 2640); the cargo bike's clip at its depot.",
+ "question": "Two calls for you: (1) screen 10 keeps the old brick gate, because there is no house there to hold a gateway: keep it, or add a house front there? (2) the street lamp at x 1958 is a checkpoint and stands in front of the new gateway's arch, the only house where the cargo bike comes out: keep it, or move the checkpoint?",
  "images": [
   {
    "src": "img/fam/dt_sample_s7_ba.png",
@@ -33,9 +33,9 @@
   {
    "id": "dt_guild",
    "title": "guild house portal top and bay window",
-   "slot": "town_portal_top.png 122 x 50, town_oriel.png 60 x 9, town_oriel_bay.png 58 x 36",
+   "slot": "town_portal_top.png 122 x 50, town_oriel.png 18 x 45, town_oriel_bay.png 58 x 44",
    "img": "img/fam/dt_guild_5x.png",
-   "note": "The stepped gable's perches unchanged, drawn as the stone portal top over the guild house's gate, with a gold medallion. Above it the bay window at the house's scale (a 44 px window like the others, its body a step darker than the wall); its copper roof's flat top is the old chimney's perch, the golden bone exactly where it was.",
+   "note": "The stepped gable's perches unchanged, drawn as the stone portal top over the guild house's gate, with a gold medallion. Above it the bay window: its central stone pier with a copper cap is exactly the old chimney's box, the golden bone where it was; the bay round it (copper roof, two lights) is decoration.",
    "findings": [
     "the portal top is partly behind the balcony and the plaza houses (decision 2 not picked)"
    ]
@@ -54,9 +54,7 @@
    "slot": "town_gateway.png 80 x 138",
    "img": "img/fam/dt_gateway_5x.png",
    "note": "3 m tall, an arch in the house at x 1912-2000 (not across two houses): rusticated piers, a stone arch, the dark passage with a sunny courtyard at its end, where the cargo bike comes out. Screen 10 keeps the old brick gate: no house there.",
-   "findings": [
-    "the street lamp at x 1958 (a checkpoint, it cannot move) stands in front of the arch: no other house fits the gateway (the cargo bike comes out here)"
-   ]
+   "findings": []
   },
   {
    "id": "dt_crates",

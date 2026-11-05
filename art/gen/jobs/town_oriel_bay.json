@@ -6,11 +6,11 @@
  "real_height_m": 0.78,
  "target_px": [
   58,
-  36
+  44
  ],
  "checks_px": {
-  "window": "44 wide, three panes across, as the house's",
-  "body": "about 135 on screen"
+  "roof": "decoration copper, 150 / 138 / 124 on screen",
+  "lights": "two, 18 wide, the house's frames and panes"
  },
  "tier": "C",
  "family": "dt_sample",
