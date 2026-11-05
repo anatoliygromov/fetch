@@ -15,3 +15,19 @@ Reviewer: independent gate 8 reviewer (Claude, session 01XkeHCnH2RKgEVTGUWoSKBw;
 9. Read: cute and clear for a 7 year old at 1x: PASS. Silver estate with roof rack, big side glass, round headlamp: clear at 1x.
 
 VERDICT: FAIL (1 item)
+
+# Round 2
+
+Reviewer: same independent gate 8 reviewer as above (did not make the asset). Checked commit f87d747 against d2c2804: road_car5.png differs in exactly 85 px (x129-220, y5), nothing else; road_car3.png is unchanged.
+
+1. Scale: right size next to Pepper and in its slot (within 2 px): PASS. Unchanged (250x89).
+2. Layer: values on its ladder row: PASS. Ink #000000 darkest; 19 colours, none new.
+3. Outline: unbroken 1 px ink: PASS. The 85 px at x129-220,y5 are now #000000 (diff: exactly those 85 px, alpha 0 to opaque), so no exposed edge px is non-ink (0 of all edge px incl. borders). Reading: the rack is the upper rail (y0-3, black/grey/dark/black) and a lower bar (y5-7, black over #373737) with a 1 px see-through slit at y4 between the uprights; it reads as a roof rack with rail and bar, not a solid slab, and matches the stepped rack of car1.
+4. Shapes: round things round, straight lines straight, no lumps or jaggies: PASS. Unchanged; rack lines straight and uprights clean; wheels identical.
+5. Shading: ramps of 3-4 shades, light upper left, no mottling, no lone specks: PASS. Unchanged, 46 lone px (2.9 per 1000, 16 are lug nuts).
+6. Palette: only level-palette colours, whites white, darks neutral, within colour cap: PASS. 19 colours, all in riverwalk.gpl.
+7. View: side profile as road traffic, no tops/insides: PASS. Unchanged; no text or logos.
+8. Fit: beside bench, bin, lamp at 1x and 3x as crisp and dense: PASS. Unchanged apart from the rack row; same ink and density as car1/car4.
+9. Read: cute and clear for a 7 year old at 1x: PASS. Silver estate with roof rack, clear at 1x.
+
+VERDICT: PASS
