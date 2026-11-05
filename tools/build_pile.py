@@ -36,7 +36,7 @@ for y0 in (8, 70):                                       # rope lashings, a hair
     a[y0, 0:18] = EDGE; a[y0 + 5, 0:18] = EDGE
     for y in range(y0 + 1, y0 + 5):
         for x in range(0, 18):
-            a[y, x] = ROPE_HI if (x + y) % 4 == 0 and x < 15 else ROPE
+            a[y, x] = ROPE_HI if (x + y - y0) % 4 == 1 and x < 15 else ROPE   # the same twist in both lashings
         a[y, 0] = EDGE; a[y, 17] = EDGE
 
 out = Image.fromarray(a, 'RGBA')

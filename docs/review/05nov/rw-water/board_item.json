@@ -5,7 +5,7 @@
  "group": "River Walk",
  "layer": "play / front",
  "tier": "A / C",
- "note": "Your redraw calls on the ferry and the pile (25 Oct). The route Pepper runs on the boat (deck, cabin roof, wheelhouse roof) is 5 m long at her scale, so a commuter ferry drawn on it read as a toy. It is now a small harbour water taxi at true size on exactly those lines: nothing in the level moved. Design and colours from one SpriteCook render; every flat part drawn by rule in its colours (one unbroken outline, no thin railings, four identical portholes), every changed pixel listed. The piles are built by rule (0 credits): a dark tarred post with a rim of light on top and a rope lashing, the part that shows at the bottom of the screen. SpriteCook 24 credits.",
+ "note": "Your redraw calls on the ferry and the pile (25 Oct). The route Pepper runs on the boat (deck, cabin roof, wheelhouse roof) is 5 m long at her scale, so a commuter ferry drawn on it read as a toy. It is now a small harbour water taxi at true size on exactly those lines: nothing in the level moved. Design and colours from one SpriteCook render; every part drawn by rule in its colours: one unbroken outline, no thin railings, identical portholes and windows, a rub rail, cleats, a cabin door, a lifebuoy, the white hull shaded in three bands. An independent reviewer failed round 1 (plain hull, unequal windows, the flagstaff); all fixed. The piles are built by rule (0 credits): a dark tarred post with a rim of light on top and a rope lashing, the part that shows at the bottom of the screen. SpriteCook 24 credits.",
  "question": "The boat is a water taxi now, not a ferry (a real ferry would be about four times longer than the route). Keep the smaller boat, or change the level so a bigger ferry fits?",
  "images": [
   {
@@ -31,7 +31,7 @@
    "title": "the boat (ferry.png)",
    "slot": "ferry.png 252x79",
    "img": "img/fam/rw_ferry_4x.png",
-   "note": "Deck y 206, cabin roof y 184, wheelhouse roof y 154 as before; 15 colours.",
+   "note": "Deck y 206, cabin roof y 184, wheelhouse roof y 154 as before; 16 colours.",
    "findings": []
   },
   {

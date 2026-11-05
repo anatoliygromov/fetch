@@ -56,27 +56,39 @@ def stern(y):  # the transom, nearly upright, rounding into the bottom
     return 237 - int(round(9 * ((y - 52) / 26) ** 3))
 
 
+RB = hexc('#ce3531')                                                   # the boot top stripe, the lifebuoy's red
+# rows of the topsides, light from the upper left in three bands (fix round 1: the flat white read as unfinished)
+BAND = {56: P, 57: P, 58: P, 59: Wh, 60: Wh, 61: Wh, 62: Wh, 63: Wh, 64: Wh, 65: B, 66: B, 67: B, 68: B, 69: G}
 for y in range(52, 79):
     x0, x1 = bow(y), stern(y)
     if y == 52 or y == 78:
         hline(x0, x1, y, K); continue
-    c = (WL if y == 53 else WB if y == 54 else Rd if y == 55 else P if y == 56 else
-         B if y in (67, 68) else G if y == 69 else Rd if y == 70 else Wh if y < 67 else R)
+    c = (WL if y == 53 else WB if y == 54 else Rd if y == 55 else BAND[y] if y in BAND else RB if y == 70
+         else Rd if y == 77 else R)
     hline(x0 + 1, x1 - 1, y, c)
-    if 56 <= y <= 66:                                     # the sun from the upper left: a bright bow, a shaded stern
-        put(x0 + 1, y, P); put(x1 - 1, y, B); put(x1 - 2, y, B if y > 60 else c)
-    if 71 <= y <= 77: put(x1 - 1, y, Rd)
+    if 56 <= y <= 68:                                     # a brighter bow, a shaded stern
+        put(x0 + 1, y, P); put(x1 - 1, y, B if y < 65 else G)
+    if 71 <= y <= 76: put(x1 - 1, y, Rd)
     put(x0, y, K); put(x1, y, K)
-    # close the outline where the edge steps by more than one pixel between rows
-    px0, px1 = bow(y - 1), stern(y - 1)
+    px0, px1 = bow(y - 1), stern(y - 1)                   # close the outline where the edge steps more than 1 px
     for x in range(px0 + 1, x0): put(x, y - 1, K) if y - 1 > 52 else None
     for x in range(x1 + 1, px1): put(x, y - 1, K) if y - 1 > 52 else None
+# the rub rail: a varnished timber along the hull at the sheer's second line, lit on top
+for y, c in ((61, WL), (62, WB), (63, WS)):
+    hline(bow(y) + 2, stern(y) - 2, y, c)
+
+# ---- deck cleats: two small bronze-grey cleats on the deck line, fore and aft ----
+CLEAT = ['.KKKKK.', 'KPWWWBK', '.KWWBK.', '.KBGGK.']
+for cx in (18, 206):
+    for r, row in enumerate(CLEAT):
+        for i, ch in enumerate(row):
+            if ch != '.': put(cx + i, 48 + r, {'K': K, 'P': P, 'W': Wh, 'B': B, 'G': G}[ch])
 
 # ---- cabin: roof y 30-34 over x 60-180, mahogany walls y 35-51 over x 61-179 ----
 hline(60, 180, 30, K); hline(60, 180, 34, K)
 for y, c in ((31, P), (32, Wh), (33, B)):
     hline(61, 179, y, c)
-put(60, 31, K); put(60, 32, K); put(60, 33, K); put(180, 31, K); put(180, 32, K); put(180, 33, K)
+for y in (31, 32, 33): put(60, y, K); put(180, y, K)
 rect(62, 35, 178, 51, WB)
 hline(62, 178, 35, WS); hline(62, 178, 36, WS)           # the roof's shadow on the wall (sun high, upper left)
 for y in range(37, 52): put(62, y, WL)                  # sunlit front edge
@@ -86,17 +98,15 @@ for y in range(35, 52): put(61, y, K); put(179, y, K)
 for y in (38, 49):                                       # two plank seams in the varnished wood
     hline(63, 177, y, WS)
 
-# ---- portholes: the cleanest of the cut's four (cut x 72-83, y 37-45), stamped four times, 22 px apart ----
+# ---- portholes: the cleanest of the cut's four (cut x 72-83, y 37-45), stamped three times, 20 px apart ----
 cut = np.array(Image.open(f'{SRC}/rw_ferry_cut.png').convert('RGBA'))
 GLASSY = {K[:3], N[:3], S[:3], L[:3], (118, 120, 132), (57, 56, 71)}
 ph = cut[37:46, 72:84].copy()
-keep = np.array([[tuple(p[:3]) in GLASSY for p in row] for row in ph])
-# the ring: keep the ink ring and everything inside it (fill each row between its first and last ink)
-mask = np.zeros(keep.shape, bool)
+mask = np.zeros(ph.shape[:2], bool)
 for r in range(ph.shape[0]):
     ks = [i for i in range(ph.shape[1]) if tuple(ph[r, i, :3]) == K[:3]]
     if ks: mask[r, ks[0]:ks[-1] + 1] = True
-PORTS = (70, 92, 114, 136)
+PORTS = (68, 88, 108)
 for px in PORTS:
     for r in range(ph.shape[0]):
         for i in range(ph.shape[1]):
@@ -104,21 +114,29 @@ for px in PORTS:
                 c = tuple(ph[r, i, :3])
                 put(px + i, 40 + r, ph[r, i] if c in GLASSY else N)
 
-# ---- lifebuoy: drawn by rule (round, 8 even bands red and white, ink rims), on the cabin's back wall ----
+# ---- lifebuoy: drawn by rule (round, 8 even bands red and white, ink rims), 15 px, hung from the roof's edge ----
 import math
-LCX, LCY = 165, 43
-for y in range(LCY - 8, LCY + 9):
-    for x in range(LCX - 8, LCX + 9):
+LCX, LCY = 135, 43
+for y in range(LCY - 9, LCY + 10):
+    for x in range(LCX - 9, LCX + 10):
         d = math.hypot(x - LCX, y - LCY)
-        if d > 6.6 or d < 2.4: continue
-        if d > 5.6 or d < 3.4: put(x, y, K); continue
+        if d > 7.6 or d < 2.9: continue
+        if d > 6.6 or d < 3.9: put(x, y, K); continue
         band = int(((math.degrees(math.atan2(y - LCY, x - LCX)) + 22.5) % 360) // 45) % 2
         lit = (x - LCX) + (y - LCY) < 0                       # the upper left half catches the sun
-        put(x, y, (P if lit else Wh) if band else (R if lit else Rd))
-put(LCX, LCY - 7, K)                                            # the cord it hangs on, to the roof's edge
-for y in range(35, LCY - 6): put(LCX, y, WS)
+        put(x, y, (P if lit else Wh) if band else (RB if lit else R))
 
-# ---- wheelhouse: roof y 0-4 over x 97-145, body y 5-29, its front raked (x 101 at the top to 98 at the foot) ----
+# ---- cabin door (aft), with a brass handle and a small window ----
+rect(153, 37, 167, 51, K)
+rect(154, 38, 166, 51, WS)
+for y in range(38, 52): put(154, y, WB)                  # the door's lit edge
+hline(155, 166, 38, WB)
+rect(157, 40, 163, 44, K); rect(158, 41, 162, 43, N); put(161, 41, S); put(160, 42, S)
+put(164, 46, Y); put(164, 47, K)                         # the handle
+for x in range(153, 168): put(x, 51, WS if 154 <= x <= 166 else K)
+hline(153, 167, 51, K)                                    # the threshold on the sill
+
+# ---- wheelhouse: roof y 0-4 over x 97-145, body y 5-29 over x 99-143 ----
 hline(97, 145, 0, K); hline(97, 145, 4, K)
 for y, c in ((1, P), (2, Wh), (3, B)):
     hline(98, 144, y, c)
@@ -128,29 +146,36 @@ for y in range(5, 30):
     hline(100, 142, y, Wh)
     put(100, y, P); put(142, y, B)
     if y == 5: hline(100, 142, y, B)                    # the roof's shadow
-# windscreen (the front pane, taller) and the side window: glass with one glint each
-rect(102, 8, 114, 20, K); rect(103, 9, 113, 19, N)
-for i in range(8): put(111 - i, 10 + i, S); put(112 - i, 10 + i, S)
-rect(119, 8, 132, 18, K); rect(120, 9, 131, 17, N)
-for i in range(6): put(128 - i, 10 + i, S); put(129 - i, 10 + i, S)
+# two identical windows mirrored about col 121 (11 x 11 glass), one glint each, the same pixels
+WIN = np.zeros((13, 13), int)                            # 0 ink, 1 glass, 2 glint
+WIN[1:12, 1:12] = 1
+for i in range(7): WIN[2 + i, 9 - i] = 2; WIN[2 + i, 10 - i] = 2
+for wx in (102, 128):
+    for r in range(13):
+        for i in range(13):
+            put(wx + i, 8 + r, (K, N, S)[WIN[r, i]])
+# a lower panel line and a seam down the middle: the wheelhouse's front planking
+hline(102, 140, 23, B)
+for y in range(23, 30): put(121, y, B)
+hline(101, 141, 29, B)
 
-# ---- fenders: two blue fenders on ropes over the side (a harbour boat's), ink rims ----
+# ---- fenders: two blue fenders on ropes over the side (a harbour boat's), ink rims, rounded ends ----
 for fx in (34, 196):
     put(fx + 2, 53, K); put(fx + 2, 54, K)
-    rect(fx, 55, fx + 4, 63, K)
-    rect(fx + 1, 56, fx + 3, 62, L); put(fx + 1, 56, K); put(fx + 3, 56, K); put(fx + 1, 62, K); put(fx + 3, 62, K)
-    put(fx, 55, Wh); put(fx + 4, 55, Wh); put(fx, 63, Wh); put(fx + 4, 63, Wh)   # rounded ends
-    for y in range(57, 62): put(fx + 1, y, S)
+    hline(fx + 1, fx + 3, 55, K); hline(fx + 1, fx + 3, 64, K)
+    for y in range(56, 64):
+        put(fx, y, K); put(fx + 4, y, K)
+        hline(fx + 1, fx + 3, y, L); put(fx + 1, y, S)
 
-# ---- stern flag staff and flag (beyond Pepper's deck box, x 238 on) ----
-for y in range(19, 53):
-    put(238, y, K); put(239, y, WB if y > 19 else K); put(240, y, K)
-put(239, 19, Y)                                          # the gilded knob
-rect(241, 20, 251, 28, K)
-rect(241, 21, 250, 27, L)
-for y in range(21, 28): put(244, y, Y); put(245, y, Y)
-for x in range(241, 251): put(x, 24, Y)
-put(241, 21, L)
+# ---- stern flag staff (rooted on the aft deck) and flag ----
+put(231, 17, K)
+put(230, 18, K); put(231, 18, Y); put(232, 18, K)        # the gilded knob, capped
+for y in range(19, 52):
+    put(230, y, K); put(231, y, WB); put(232, y, K)
+rect(233, 19, 243, 27, K)
+rect(233, 20, 242, 26, L)
+for y in range(20, 27): put(236, y, Y); put(237, y, Y)
+for x in range(233, 243): put(x, 23, Y)
 
 # ---- write, then list every pixel that differs from the cut as the game places it ----
 os.makedirs(SRC, exist_ok=True)

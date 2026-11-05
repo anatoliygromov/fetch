@@ -23,11 +23,22 @@ seen from above (no tops), the bow stood 5 px above her deck box and the wheelho
 raked stem and rounded transom, strake, white topsides lit at the bow and shaded at the stern, boot line, red bottom;
 cabin with roof cap, roof shadow, two plank seams; four portholes stamped from the cleanest one of the cut (identical,
 22 px apart); lifebuoy, windows, fenders and flag drawn by rule. The edits list is every pixel that differs from the
-cut placed where the game draws it (8383 of 10342 opaque pixels: the method is a rebuild on the render's design). One 1 px ink
+cut placed where the game draws it (9644 of 10387 opaque pixels: the method is a rebuild on the render's design). One 1 px ink
 outline all round; no railings (the board's holes and clutter).
 
+## Fix round 1 (independent review art/gen/reviews/rw_ferry.md: FAIL on 4 items; 0 credits)
+| Finding | What changed (tools/build_ferry.py) |
+| --- | --- |
+| Wheelhouse windows unequal, off centre | two identical 13 x 13 windows (11 x 11 glass, the same glint), at x 102 and 128, mirrored about col 121, 2 px from each wall; a lower panel line (row 23) and a seam at col 121 |
+| Flagstaff outline open at the tip and the base | ink cap at (17, 231) over the gilded knob; the staff stands on the deck line (row 52), closed both sides |
+| Flagstaff standing in the air past the transom | moved onto the aft deck, cols 230-232, rooted in row 52; the flag flies at x 233-243 |
+| Too plain beside the bench | the white topsides in three bands lit from the upper left (P / W / B, G at the turn); a varnished rub rail (rows 61-63) along the hull; a bright red boot top stripe (#ce3531) on the waterline; two deck cleats (x 18, 206); an aft cabin door with a small window and a brass handle; fenders redrawn with rounded ends (no corner dabs) |
+| Lifebuoy small (0.28 m) | 15 px, ink rims, 8 bands, its red brighter (#ce3531); the cabin now has three portholes (still identical, 20 px apart), the lifebuoy and the door |
+Kept: rows 0, 30 and 52 on Pepper's boxes, one unbroken ink outline, the water-taxi design. Pile nit: both lashings
+now have the same twist (byte-identical bands); median luma 39.4.
+
 ## Checks
-asset_qa ferry PASS (15 colours, outline 100 %, lone 0.1 %), pile PASS (8 colours). PEPPER UNCHANGED, flow 125/125,
+asset_qa ferry PASS (16 colours, outline 100 %), pile PASS (8 colours). PEPPER UNCHANGED, flow 125/125,
 River Walk --physics 55 PASS (ferry deck to saloon roof, saloon roof to wheelhouse roof, pontoon), check_backdrop:
 only the known gable (unchanged from the base). .aseprite sources round-trip pixel for pixel.
 
