@@ -573,7 +573,7 @@ def registry():
                                          frames=Image.open(p).size, levels=None)
     for n in ROLL:
         p = os.path.join(ART, "scene", n + ".png")
-        if os.path.exists(p):
+        if os.path.exists(p) and n not in NOT_DRAWN:
             w, h = Image.open(p).size
             out[n] = dict(path=p, level="rw", layer="play", fade=0.0, group="River Walk", building=False, frames=(w // 4, h), levels=None)
     for n in ("cyclist_a_84_pedal", "cyclist_b_84_pedal", "cyclist_a_92_pedal", "cyclist_b_92_pedal", "cargobike_pedal"):
