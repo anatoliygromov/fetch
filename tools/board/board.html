@@ -107,6 +107,209 @@ button:focus-visible, textarea:focus-visible, a:focus-visible { outline: 2px sol
 <script>
 const ITEMS = [
 {
+ "id": "fam_rw_traffic2",
+ "title": "River Walk traffic 2: the van, the taxi and the estate",
+ "section": "family",
+ "group": "River Walk",
+ "layer": "road lane",
+ "tier": "A",
+ "note": "The road's other three cars, made like the traffic family above (same method, one black ink, wheels drawn once and stamped twice, glass with one clean reflection, light from the upper left, no text or logos). Near lane, 55 px a metre: a white panel van (4.4 x 1.85 m), a yellow taxi with a plain lit roof box (the old one said TAXI), a silver 1990s estate with roof rails. Only their top half shows above the screen edge, so the taxi's roof is yellow (with a black roof it read as a dark car). SpriteCook 72 credits. An independent reviewer passed the taxi in round 1 and the van and estate in round 2 (a dashed windscreen pillar, bonnet specks and a grey rack rail fixed by hand). Made 5 Nov night.",
+ "question": "The van's old side said STOCKHOLM DELIVERY CO.; text is out, so its side is plain. Keep it plain, or give it a simple picture (a bun or a parcel, no letters)?",
+ "images": [
+  {
+   "src": "img/fam/rwtraffic2_road_van_3x.png",
+   "label": "the road at 3x: the van by the bin, colour | greyscale"
+  },
+  {
+   "src": "img/fam/rwtraffic2_road_taxi_3x.png",
+   "label": "the road at 3x: the taxi by the bin, colour | greyscale"
+  },
+  {
+   "src": "img/fam/rwtraffic2_road_estate_3x.png",
+   "label": "the road at 3x: the estate by the bench, colour | greyscale"
+  },
+  {
+   "src": "img/fam/rwtraffic2_before_after_3x.png",
+   "label": "before | after at 3x (van, taxi, estate)"
+  }
+ ],
+ "members": [
+  {
+   "id": "road_car2_v2",
+   "title": "white panel van",
+   "slot": "road_car2.png 242x102",
+   "img": "img/fam/road_car2_4x.png",
+   "note": "4.4 m long, 1.85 m tall.",
+   "findings": [
+    "asset_qa warns only: 2 blotches (the ends of a crease line)"
+   ]
+  },
+  {
+   "id": "road_car3_v2",
+   "title": "yellow taxi",
+   "slot": "road_car3.png 246x93",
+   "img": "img/fam/road_car3_4x.png",
+   "note": "A saloon with a plain lit roof box, no letters.",
+   "findings": []
+  },
+  {
+   "id": "road_car5_v2",
+   "title": "silver estate",
+   "slot": "road_car5.png 250x89",
+   "img": "img/fam/road_car5_4x.png",
+   "note": "A boxy 1990s estate with roof rails (the rails make it 8 px taller than the body).",
+   "findings": []
+  }
+ ]
+},
+{
+ "id": "fam_dt_sample",
+ "title": "Downtown sample screen (screen 7: the shelter street, and the guild house)",
+ "section": "family",
+ "group": "Downtown",
+ "layer": "back",
+ "tier": "C",
+ "note": "The level's golden screen with your 26 Oct picks 1a and 4a, built from parts, 0 credits, after four independent review rounds, every piece PASS in the last (all findings fixed, or asked below). The houses run on past the top of the screen at true scale, one window repeated on every storey, and now sit below the far layers in value (on screen: houses 145-152, old town row 169, far roofs 172-181). The guild house runs up too: its stepped gable is the portal top with a gold medallion, its chimney a bay window whose centre pier carries the golden bone on its copper cap (the pier is exactly the box she stands on). Tram stop shelter (2.5 m) and a courtyard gateway (3 m, an arch in one house) behind Pepper; her perches are where they were, as bread crates, a baker's board on crate legs (mid-tone, outlined, like the apple crates). The cargo bike now rides in front of the crates, never cut at the waist. Checks: PEPPER UNCHANGED, flow 125/125, Tiled, physics 102/102, QA 0 problems, autopilot GOOD GIRL, curve T1-T4 PASS, asset QA PASS on all 11 pieces (measured as drawn, the back fade 0.28). The Downtown palette v1 is made from these pieces, so their palette check passes by construction, not as evidence. Left as they are (notes): the small plaza houses in front of the tall fronts (your decision 2, not picked); the guild house's portal top partly behind a balcony and the plaza houses; lamp posts across window panes (moving them moves checkpoints); the high road's stone ledges reading as shelves, the dormer's ledge as a lintel; the far layers and the spire hidden on the tall street (x 1180-2480); the street's hard ends (x 1180, 2480, the lone house at 2640); the cargo bike's clip at its depot. Look out for: to sit below the far layers the street had to get darker and calmer than before (brown and rose, not the old bright yellow); the upper storeys are plain walls with one window each. If you want it brighter, the far layers must get lighter first. Made 5 Nov night.",
+ "question": "Two calls for you: (1) screen 10 keeps the old brick gate, because there is no house there to hold a gateway: keep it, or add a house front there? (2) the street lamp at x 1958 is a checkpoint and stands in front of the new gateway's arch, the only house where the cargo bike comes out: keep it, or move the checkpoint?",
+ "images": [
+  {
+   "src": "img/fam/dt_sample_s7_ba.png",
+   "label": "screen 7 at 3x: before | after, high road over street"
+  },
+  {
+   "src": "img/fam/dt_sample_s7_sheet.png",
+   "label": "screen 7: colour | greyscale, 3x and 1x"
+  },
+  {
+   "src": "img/fam/dt_sample_hiding_ba.png",
+   "label": "at 3x, before | after: the gateway and the shelter (street), the guild house (high road)"
+  }
+ ],
+ "members": [
+  {
+   "id": "dt_fronts_v2",
+   "title": "house fronts, full height",
+   "slot": "town_front_tall1-4.png, 80/88/96/148 x 432",
+   "img": "img/fam/dt_fronts_2x.png",
+   "note": "Two upper storeys of 140 px (3.0 m) over the 152 px ground floor; one window (1.0 x 1.6 m) stamped on every storey; the string course is the ground floor's cornice repeated on the 140 px pitch. The plaster takes each house's colour, about 146-156 on screen. Front 4 is the guild house: windows at the sides, the bay window between. Panes about 100 on screen, 50 under the plaster. Front 4 (the guild house): two windows on the second floor, the bay window on the first.",
+   "findings": []
+  },
+  {
+   "id": "dt_guild",
+   "title": "guild house portal top and bay window",
+   "slot": "town_portal_top.png 122 x 50, town_oriel.png 18 x 45, town_oriel_bay.png 58 x 44",
+   "img": "img/fam/dt_guild_5x.png",
+   "note": "The stepped gable's perches unchanged, drawn as the stone portal top over the guild house's gate, with a gold medallion. Above it the bay window: its central stone pier with a copper cap is exactly the old chimney's box, the golden bone where it was; the bay round it (copper roof, two lights) is decoration.",
+   "findings": [
+    "the portal top is partly behind the balcony and the plaza houses (decision 2 not picked)"
+   ]
+  },
+  {
+   "id": "dt_shelter_tall",
+   "title": "tram stop shelter",
+   "slot": "town_shelter_tall.png 140 x 115",
+   "img": "img/fam/dt_shelter_5x.png",
+   "note": "2.5 m tall, 3 m long, decoration. Clear glass with one reflection band per pane, a poster with a cinnamon bun, no text.",
+   "findings": []
+  },
+  {
+   "id": "dt_gateway",
+   "title": "courtyard gateway",
+   "slot": "town_gateway.png 80 x 138",
+   "img": "img/fam/dt_gateway_5x.png",
+   "note": "3 m tall, an arch in the house at x 1912-2000 (not across two houses): rusticated piers, a stone arch, the dark passage with a sunny courtyard at its end, where the cargo bike comes out. Screen 10 keeps the old brick gate: no house there.",
+   "findings": []
+  },
+  {
+   "id": "dt_crates",
+   "title": "bread crates and the baker's board",
+   "slot": "town_crates70.png, town_breadboard.png, town_crate_leg.png",
+   "img": "img/fam/dt_shelter_5x.png",
+   "note": "One crate everywhere: 34 x 17 front-on, 16 x 17 end-on, on an 18 px pitch, pine with loaves, mid-tone (about 105 on screen, the apple crates 107), outlined: they are her perches. The board is two planks on two crates end-on at each end.",
+   "findings": []
+  }
+ ]
+},
+{
+ "id": "fam_cp_sample",
+ "title": "City Park sample screen (screen 6, the old oak)",
+ "section": "family",
+ "group": "City Park",
+ "layer": "back + mid",
+ "tier": "B",
+ "note": "Your picks of 26 Oct: the trees Pepper climbs at true width with one leaf mass whose top is above the world (decision 1), and young 6 m mid trees (decision 2b). Screen 6 at both cameras: up on the high road she runs through the old oak's leaves; down on the path the oak stands at full size with its branches as her ledges. New: the old oak (trunk 54 px), a park lime at x 1528 and an ash at x 1916 whose crown leans over the treetop walk, so screen 7's walk is in leaves too; three young mid trees (a lime, a maple, a birch, 139 px). An independent reviewer went through four rounds. The lime, the ash and the three mid trees PASS: no ink edges, no tree lighter than the tree line behind it, no loose limbs or flat crown cuts, clumps of 3 to 4 shades, old small crowns end cleanly beside the new ones. Nothing she stands on moved. Checks: PEPPER UNCHANGED, flow 125/125, Tiled, physics 97/97, QA 0 problems, curve T1-T4 PASS. Layers light to dark: sky 202, far city 191, tree line 181, mid 154-159, back 118-141, play 80-91. SpriteCook 284 credits. Made 5 Nov night.",
+ "question": "Two calls. 1) The oak did NOT pass review: its leaves stay patchy after three fix rounds and a re-cut (see the 4x strip: round 3 | re-cut | lime). Regenerating it with the lime's method costs about 76 SpriteCook credits, over the family's retry cap, so it needs your yes: mark the oak Fix to say yes. 2) Scale: oak trunk 54 px (plan: 46 for the old oak, 60 for the big oak); lime 36 and ash 29-33 px against the spec's 23, both inside the plan's true range for park trees (0.4 to 0.8 m). Keep these trunks, or ask for slimmer ones?",
+ "images": [
+  {
+   "src": "img/fam/cp_s6_high_ba_3x.png",
+   "label": "screen 6, high road, 3x: before | after"
+  },
+  {
+   "src": "img/fam/cp_s6_low_ba_3x.png",
+   "label": "screen 6, path, 3x: before | after"
+  },
+  {
+   "src": "img/fam/cp_s6_sheet.png",
+   "label": "screen 6 after: colour | greyscale, 3x and 1x, both cameras"
+  },
+  {
+   "src": "img/fam/cp_s5_s6_s7_high_2x.png",
+   "label": "screens 5, 6, 7 on the high road, 2x"
+  },
+  {
+   "src": "img/fam/cp_s5_s6_s7_low_2x.png",
+   "label": "screens 5, 6, 7 on the path, 2x"
+  },
+  {
+   "src": "img/fam/cp_oak_recut_vs_round3_vs_lime_4x.png",
+   "label": "oak leaves at 4x: round 3 | re-cut | the lime"
+  }
+ ],
+ "members": [
+  {
+   "id": "cp_oak",
+   "title": "old oak (not passed: shown for context)",
+   "slot": "cp_oak.png 388x343",
+   "img": "img/fam/cp_oak_2x.png",
+   "note": "Replaces the small old oak in the tall level only. Re-cut from its own render with the pipeline that made the lime and ash (leaf clumps of 4 shades, no ink, darkest a dark brown, highlight under the tree line). Trunk 54 px (your call), crown 388 px, top above the world. 8 colours. Flatter than the lime: if you want it as crisp, it needs a regeneration (credits).",
+   "findings": [
+    "independent review: FAIL on leaf patchwork (crispness) after 3 rounds and a re-cut",
+    "blotches warn: 19 small patches of near colours"
+   ]
+  },
+  {
+   "id": "cp_lime",
+   "title": "park lime",
+   "slot": "cp_lime.png 371x509",
+   "img": "img/fam/cp_lime_2x.png",
+   "note": "Remade in round 3 with a new method (GPT 2.5 following a blockout at the plan's size, the approved River Walk lime and the oak as style), cut 1:1 on its own grid. Trunk 36 px (owner's call), crown 371 px, top 190 px above the world, at x 1528. Clumps of 3 to 4 shades, bark edge a darker brown. 9 colours.",
+   "findings": [
+    "decor-ink warn 67 % (dark brown limb edges and the leaves' dark maroon)"
+   ]
+  },
+  {
+   "id": "cp_ash",
+   "title": "ash",
+   "slot": "cp_ash.png 509x505",
+   "img": "img/fam/cp_ash_2x.png",
+   "note": "New: the ash at x 1916 (screen 6's right edge, screen 7), its crown leaning right over the treetop walk. Same method as the lime. Trunk 29-33 px (owner's call), diamond bark, top 186 px above the world. 10 colours.",
+   "findings": [
+    "blotches warn: 2 small patches"
+   ]
+  },
+  {
+   "id": "cp_midtrees",
+   "title": "young mid trees",
+   "slot": "cp_mid_lime/maple/birch.png, 139 px",
+   "img": "img/fam/cp_midtrees_4x.png",
+   "note": "Young 6 m trees at the mid scale (23 px a metre), in turn along the half-speed row of the tall level, the far city seen between them. Highlights brought under the far city (about 172 on screen), birch trunk a warm grey. 7-8 colours each, no outline.",
+   "findings": [
+    "maple: decor-ink warn 38 % (its own dark red rim)"
+   ]
+  }
+ ]
+},
+{
  "id": "fam_rw_traffic",
  "title": "River Walk traffic: two riders with pedal loops, two lane riders, two cars",
  "section": "family",
