@@ -25,6 +25,7 @@
  "fails": [],
  "waived": [
   "size and scale: the 2K render drew the tree 1.6x the blockout. Trunk 35-36 px (0.8 m) against the 23 px spec; crown 468 px (10 m) against 250. Kept: the plan's own true sizes for the park's trees are trunks 0.4 to 0.8 m (18 to 37 px) and a lime's crown 8 m across (368 px), so this is a big old lime at true scale, not a shrunk or stretched one. Said on the board card.",
-  "lowest leaves 61 px up (spec 90): the low clumps at the crown's sides; the limes' ledges (96 to 144 px up) are in the leaves as asked."
+  "lowest leaves 61 px up (spec 90): the low clumps at the crown's sides; the limes' ledges (96 to 144 px up) are in the leaves as asked.",
+  "Review round 1 (5 Nov): scale FAIL kept as the owner's call. The producer's fix (an edit of the approved rw_lime, 23 px trunk, 251 px tall, same size) was not run and no credit spent: in citypark_tall (384 px tall, foot on y 319) a 251 px tree ends at y 68, so its top and the sky above it show at the high road's cameras (y 0 and 24): against the owner's 25 Oct taller-than-the-viewport rule and decision 1 (top above the world)."
  ]
 }

@@ -1513,12 +1513,18 @@ local function crowns()
   CROWNS[Look.key] = { c("park_tree1", 78, 52), c("park_tree2", 78, 52), oak = c("park_oak", 76, 58) }
   return CROWNS[Look.key]
 end
+local CANOPY_SKIP = nil                                            -- (5 Nov) x spans of the art trees' crowns
 local function drawCanopy(c, ox, T)
   local Q = crowns()
   local w, h = c.x1 - c.x0, c.y1 - c.y0
   local r = rng(c.x0 * 3 + c.y0)
   lg.setColor(1, 1, 1, 1)
   local function put(cr, x, y, flip)
+    if CANOPY_SKIP then                                             -- an old crown touching a new tree's crown: left out,
+      for _, a in ipairs(CANOPY_SKIP) do                             -- so the old canopy ends in whole crowns before it
+        if x < a.x1 and x + cr.w > a.x0 then return end
+      end
+    end
     x, y = math.floor(x - ox), math.floor(y)
     if x > 330 or x + cr.w < -10 then return end
     if flip then lg.draw(cr.im, cr.q, x + cr.w, y, 0, -1, 1) else lg.draw(cr.im, cr.q, x, y) end
@@ -1771,7 +1777,7 @@ end
 -- per tree, trunk and one leaf mass whose top is above the world (tools/cut_cp_tree.py). Keyed by the trunk's x in the
 -- tall City Park (OAK: the old oak). Its trunk is not drawn in code, the canopy boxes inside its crown are skipped, and
 -- the art stands on the back props' line (the path - 9, as the old oak's art did), faded as back decoration.
-local TREE_ART = { [1528] = "cp_lime", [1916] = "cp_lime", OAK = "cp_oak" }
+local TREE_ART = { [1528] = "cp_lime", OAK = "cp_oak" }   -- (x 1916, the ash: its code trunk until the ash is made; review 5 Nov: no second lime)
 local TREE_FADE = 0.28           -- their own amount, as the gate's: the bark's darkest 10 % then sits at the back layer's 80
 local TA_IMG = {}
 local function treeArtImg(n)
@@ -1847,7 +1853,9 @@ function Sc.drawTreetops(def, camx, world)
   for _, c in ipairs(TI.canopies) do                                 -- canopies, over the trunks' tops
     local inside = false                                             -- (one inside an art tree's crown: its leaves)
     for _, a in ipairs(AT) do if c.x0 >= a.x0 and c.x1 <= a.x1 then inside = true end end
+    CANOPY_SKIP = AT                                                 -- (review 5 Nov: no old crown overlaps a new one)
     if not inside and c.x1 - ox > -120 and c.x0 - ox < 440 then drawCanopy(c, ox, T) end
+    CANOPY_SKIP = nil
   end
   lg.setColor(1, 1, 1, 1)
   for _, a in ipairs(AT) do                                          -- the art trees, over the canopies

@@ -5,23 +5,62 @@
  "group": "City Park",
  "layer": "back + mid",
  "tier": "B",
- "note": "Your picks of 26 Oct: the trees Pepper climbs at true width with one leaf mass whose top is above the world (decision 1), and young 6 m mid trees (decision 2b). Screen 6 at both cameras: up on the high road she now runs through the old oak's leaves; down on the path the oak stands at full size with its branches as her ledges. New: the old oak (trunk 1.2 m, 54 px), the park lime (trunk 0.8 m, 36 px, here and on the ash's place at the right edge until the ash is made), three young mid trees (a lime, a maple, a birch, 138 px). Nothing she stands on moved. Checks: PEPPER UNCHANGED, flow 125/125, Tiled, physics 97/97, QA 0 problems, curve T1-T4 PASS. Layers stay light to dark: sky 202, far city 191, tree line 181, mid 159, back 134-138, play 80-87. SpriteCook 132 credits.",
- "question": "The model drew the trees bigger than the spec: lime trunk 36 px (spec 23) and crown 10 m, oak trunk 54 px (spec 46). Both are inside the plan's true sizes for park trees (trunks 0.4-0.8 m, an oak 1-1.3 m), so I kept them. Keep, or ask for slimmer limes? Screens 5 and 7 still mix the new trees with the old small crowns until the rest of the family is made.",
+ "note": "Your picks of 26 Oct: the trees Pepper climbs at true width with one leaf mass whose top is above the world (decision 1), and young 6 m mid trees (decision 2b). Screen 6 at both cameras: up on the high road she runs through the old oak's leaves; down on the path the oak stands at full size with its branches as her ledges. New: the old oak (trunk 54 px), a park lime at x 1528 (screens 5 and 6), three young mid trees (a lime, a maple, a birch, 139 px). The ash at x 1916 keeps its old trunk until it is made. Review round 1 fixed: no ink edges on the trees (the bark's own darker brown), highlights brought down so the trees are never lighter than the tree line behind them, the oak's loose limb pieces and flat crown cut, the maple's specks, the birch trunk no longer a bright pole, old small crowns no longer poke through the new ones. Nothing she stands on moved. Checks: PEPPER UNCHANGED, flow 125/125, Tiled, physics 97/97, QA 0 problems, curve T1-T4 PASS. Layers light to dark: sky 202, far city 191, tree line 181, mid 154-159, back 118-138, play 80-91. SpriteCook 132 credits.",
+ "question": "Two scale calls for you. Oak: its trunk is 54 px (1.2 m); the plan said 46 px for the old oak and 60 px for the big oak on screen 9. Keep 54, or ask for a slimmer old oak? Lime: scale over spec, your call: trunk 36 px (spec 23), crown 468 px (spec 250). A recolour of the approved River Walk lime (23 px trunk) was not made: it is 251 px tall, so in this 384 px tall level its top would end at y 68 and show with sky above it on the high road, against your taller-than-the-screen rule. Keep this lime, or a slimmer lime made taller than the screen?",
  "images": [
-  {"src": "img/fam/cp_s6_high_ba_3x.png", "label": "screen 6, high road, 3x: before | after"},
-  {"src": "img/fam/cp_s6_low_ba_3x.png", "label": "screen 6, path, 3x: before | after"},
-  {"src": "img/fam/cp_s6_sheet.png", "label": "screen 6 after: colour | greyscale, 3x and 1x, both cameras"},
-  {"src": "img/fam/cp_s5_s6_s7_high_2x.png", "label": "screens 5, 6, 7 on the high road, 2x"}
+  {
+   "src": "img/fam/cp_s6_high_ba_3x.png",
+   "label": "screen 6, high road, 3x: before | after"
+  },
+  {
+   "src": "img/fam/cp_s6_low_ba_3x.png",
+   "label": "screen 6, path, 3x: before | after"
+  },
+  {
+   "src": "img/fam/cp_s6_sheet.png",
+   "label": "screen 6 after: colour | greyscale, 3x and 1x, both cameras"
+  },
+  {
+   "src": "img/fam/cp_s5_s6_s7_high_2x.png",
+   "label": "screens 5, 6, 7 on the high road, 2x"
+  },
+  {
+   "src": "img/fam/cp_s5_s6_s7_low_2x.png",
+   "label": "screens 5, 6, 7 on the path, 2x"
+  }
  ],
  "members": [
-  {"id": "cp_oak", "title": "old oak", "slot": "cp_oak.png 388x343", "img": "img/fam/cp_oak_2x.png",
-   "note": "Replaces the small old oak in the tall level only. Trunk 54 px, roots flared; crown 388 px, its top 24 px above the world. No outline: the leaf clumps' edges are their own darkest rust. 10 colours. Faded 28 % like the gate so its darkest bark sits at the back layer's 80.",
-   "findings": ["decor-ink warn: 71 % of the edge is dark rust (the approved trees are 64 to 66 %)"]},
-  {"id": "cp_lime", "title": "park lime", "slot": "cp_lime.png 468x508", "img": "img/fam/cp_lime_2x.png",
-   "note": "Trunk 36 px, crown 468 px, top 189 px above the world. Stands at x 1528 and in the ash's place (x 1916). 9 colours.",
-   "findings": ["decor-ink warn: 52 % of the edge is dark"]},
-  {"id": "cp_midtrees", "title": "young mid trees", "slot": "cp_mid_lime/maple/birch.png, 139 px", "img": "img/fam/cp_midtrees_4x.png",
-   "note": "Young 6 m trees at the mid scale (23 px a metre), in turn along the half-speed row of the tall level; the far city shows above them. 8 colours each, no outline.",
-   "findings": ["maple: decor-ink warn 39 %"]}
+  {
+   "id": "cp_oak",
+   "title": "old oak",
+   "slot": "cp_oak.png 388x343",
+   "img": "img/fam/cp_oak_2x.png",
+   "note": "Replaces the small old oak in the tall level only. Trunk 54 px, roots flared; crown 388 px, its top above the world. No outline: the bark's edge is its own darker brown, the leaves' edge their dark rust. 8 colours. Faded 28 % like the gate so its darkest bark sits at the back layer's 80.",
+   "findings": [
+    "decor-ink warn 73 %: the edge is the bark's dark brown and the leaves' dark rust (their own darker shades, no ink)",
+    "blotches warn: 19 small highlight dabs, now close to the mid orange after the highlight came down"
+   ]
+  },
+  {
+   "id": "cp_lime",
+   "title": "park lime",
+   "slot": "cp_lime.png 468x508",
+   "img": "img/fam/cp_lime_2x.png",
+   "note": "Scale over spec, your call (see the question). Trunk 36 px, crown 468 px, top 189 px above the world; at x 1528 only. No ink edge, highlight under the tree line. 8 colours.",
+   "findings": [
+    "decor-ink warn 52 %",
+    "blotches warn: 14 small highlight dabs"
+   ]
+  },
+  {
+   "id": "cp_midtrees",
+   "title": "young mid trees",
+   "slot": "cp_mid_lime/maple/birch.png, 139 px",
+   "img": "img/fam/cp_midtrees_4x.png",
+   "note": "Young 6 m trees at the mid scale (23 px a metre), in turn along the half-speed row of the tall level, the far city seen between them. Birch trunk a warm grey (about 150 on screen), maple specks and dark blotch cleaned. 7-8 colours each, no outline.",
+   "findings": [
+    "maple: decor-ink warn 38 % (its own dark red rim)"
+   ]
+  }
  ]
 }

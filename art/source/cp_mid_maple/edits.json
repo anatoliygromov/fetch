@@ -452,5 +452,6041 @@
 ],
 "why": "glint"
 }
+],
+"round1": {
+"from": "art/source/cp_mid_maple/cp_mid_maple_polish.png",
+"review": "art/gen/reviews/cp_mid_maple.md",
+"edits": [
+{
+"x": 39,
+"y": 1,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 28,
+"y": 3,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 46,
+"y": 3,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 48,
+"y": 3,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 24,
+"y": 4,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 26,
+"y": 4,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 29,
+"y": 4,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 25,
+"y": 5,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 28,
+"y": 5,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 49,
+"y": 6,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 56,
+"y": 7,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 52,
+"y": 9,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 18,
+"y": 10,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 45,
+"y": 10,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 57,
+"y": 10,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 13,
+"y": 13,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 13,
+"y": 14,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 13,
+"y": 15,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 14,
+"y": 15,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 27,
+"y": 17,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 26,
+"y": 18,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 27,
+"y": 18,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 43,
+"y": 18,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 57,
+"y": 18,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 42,
+"y": 19,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 57,
+"y": 19,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 61,
+"y": 19,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 10,
+"y": 20,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 30,
+"y": 20,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 53,
+"y": 20,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 54,
+"y": 20,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 10,
+"y": 21,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 53,
+"y": 21,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 55,
+"y": 21,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 53,
+"y": 22,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 56,
+"y": 22,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 57,
+"y": 22,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 7,
+"y": 23,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 8,
+"y": 23,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 30,
+"y": 23,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 52,
+"y": 23,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 44,
+"y": 24,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 51,
+"y": 24,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 43,
+"y": 25,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 40,
+"y": 26,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 41,
+"y": 26,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 48,
+"y": 26,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 49,
+"y": 26,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 57,
+"y": 26,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 58,
+"y": 26,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 59,
+"y": 26,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 56,
+"y": 27,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 19,
+"y": 28,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 26,
+"y": 28,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 27,
+"y": 28,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 55,
+"y": 28,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 65,
+"y": 28,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 66,
+"y": 28,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 13,
+"y": 29,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 53,
+"y": 29,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 54,
+"y": 29,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 30,
+"y": 30,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 21,
+"y": 31,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 6,
+"y": 32,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 7,
+"y": 32,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 6,
+"y": 33,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 9,
+"y": 33,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 10,
+"y": 33,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 67,
+"y": 33,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 68,
+"y": 33,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 5,
+"y": 34,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 6,
+"y": 34,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 25,
+"y": 34,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 30,
+"y": 34,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 31,
+"y": 34,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 7,
+"y": 35,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 35,
+"y": 36,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 36,
+"y": 36,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 46,
+"y": 36,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 47,
+"y": 36,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 29,
+"y": 37,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 37,
+"y": 37,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 41,
+"y": 37,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 28,
+"y": 38,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 29,
+"y": 38,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 37,
+"y": 38,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 51,
+"y": 38,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 36,
+"y": 39,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 51,
+"y": 39,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 68,
+"y": 39,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 36,
+"y": 40,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 43,
+"y": 40,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 44,
+"y": 40,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 51,
+"y": 40,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 45,
+"y": 41,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 46,
+"y": 41,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 36,
+"y": 42,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 3,
+"y": 43,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 4,
+"y": 43,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 66,
+"y": 44,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 43,
+"y": 45,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 50,
+"y": 45,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 51,
+"y": 45,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 52,
+"y": 45,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 17,
+"y": 46,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 49,
+"y": 46,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 53,
+"y": 46,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 68,
+"y": 46,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 53,
+"y": 47,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 34,
+"y": 48,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 54,
+"y": 48,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 55,
+"y": 48,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 56,
+"y": 49,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 19,
+"y": 50,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 24,
+"y": 50,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 28,
+"y": 50,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 3,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 4,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 6,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 17,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 33,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 34,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 55,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 4,
+"y": 52,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 6,
+"y": 52,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 22,
+"y": 52,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 32,
+"y": 52,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 3,
+"y": 53,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 6,
+"y": 53,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 9,
+"y": 53,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 14,
+"y": 53,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 15,
+"y": 53,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 13,
+"y": 54,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 55,
+"y": 54,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 12,
+"y": 55,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 31,
+"y": 55,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 32,
+"y": 55,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 63,
+"y": 55,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 11,
+"y": 56,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 9,
+"y": 57,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 10,
+"y": 57,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 57,
+"y": 57,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 64,
+"y": 57,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 8,
+"y": 58,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 29,
+"y": 58,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 52,
+"y": 58,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 57,
+"y": 58,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 64,
+"y": 58,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 66,
+"y": 58,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 52,
+"y": 59,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 13,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 14,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 15,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 16,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 49,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 13,
+"y": 61,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 17,
+"y": 61,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 49,
+"y": 61,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 33,
+"y": 62,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 34,
+"y": 62,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 50,
+"y": 62,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 51,
+"y": 62,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 14,
+"y": 63,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 35,
+"y": 63,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 36,
+"y": 63,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 37,
+"y": 63,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 52,
+"y": 63,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 53,
+"y": 63,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 12,
+"y": 64,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 14,
+"y": 64,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 12,
+"y": 65,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 13,
+"y": 65,
+"from": [
+71,
+22,
+22
+],
+"to": [
+242,
+113,
+22
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 10,
+"y": 66,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 34,
+"y": 66,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 61,
+"y": 68,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 62,
+"y": 68,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 13,
+"y": 69,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 57,
+"y": 69,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 58,
+"y": 69,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 61,
+"y": 69,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 11,
+"y": 70,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 12,
+"y": 70,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 32,
+"y": 70,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 45,
+"y": 70,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 52,
+"y": 70,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 57,
+"y": 70,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 59,
+"y": 70,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 60,
+"y": 70,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 10,
+"y": 71,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 32,
+"y": 71,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 55,
+"y": 71,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 56,
+"y": 71,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 57,
+"y": 71,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 14,
+"y": 72,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 15,
+"y": 72,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 18,
+"y": 72,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 47,
+"y": 72,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 17,
+"y": 73,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 24,
+"y": 73,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 46,
+"y": 73,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 48,
+"y": 73,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 50,
+"y": 73,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 51,
+"y": 73,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 54,
+"y": 73,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 17,
+"y": 74,
+"from": [
+71,
+22,
+22
+],
+"to": [
+223,
+74,
+10
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 23,
+"y": 74,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 45,
+"y": 74,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 48,
+"y": 74,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 49,
+"y": 74,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 52,
+"y": 74,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 53,
+"y": 74,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 54,
+"y": 74,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 16,
+"y": 75,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 17,
+"y": 75,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 22,
+"y": 75,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 55,
+"y": 75,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 18,
+"y": 76,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 20,
+"y": 77,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 25,
+"y": 77,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 26,
+"y": 77,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 33,
+"y": 77,
+"from": [
+73,
+28,
+23
+],
+"to": [
+123,
+92,
+68
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 21,
+"y": 78,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 23,
+"y": 78,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 24,
+"y": 78,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 38,
+"y": 78,
+"from": [
+73,
+28,
+23
+],
+"to": [
+123,
+92,
+68
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 39,
+"y": 78,
+"from": [
+73,
+28,
+23
+],
+"to": [
+123,
+92,
+68
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 19,
+"y": 79,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 22,
+"y": 79,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 22,
+"y": 80,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 44,
+"y": 80,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 26,
+"y": 81,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 45,
+"y": 81,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 45,
+"y": 82,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 33,
+"y": 84,
+"from": [
+73,
+28,
+23
+],
+"to": [
+123,
+92,
+68
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 38,
+"y": 85,
+"from": [
+73,
+28,
+23
+],
+"to": [
+123,
+92,
+68
+],
+"why": "dark speck in the crown"
+},
+{
+"x": 36,
+"y": 113,
+"from": [
+73,
+28,
+23
+],
+"to": [
+123,
+92,
+68
+],
+"why": "stray dark pixel in the trunk"
+},
+{
+"x": 50,
+"y": 40,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 50,
+"y": 41,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 61,
+"y": 42,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 64,
+"y": 42,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 65,
+"y": 42,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 69,
+"y": 42,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 60,
+"y": 43,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 61,
+"y": 43,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 62,
+"y": 43,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 63,
+"y": 43,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 64,
+"y": 43,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 65,
+"y": 43,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 70,
+"y": 43,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 60,
+"y": 44,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 61,
+"y": 44,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 62,
+"y": 44,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 63,
+"y": 44,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 64,
+"y": 44,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 65,
+"y": 44,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 62,
+"y": 45,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 63,
+"y": 45,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 62,
+"y": 46,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 63,
+"y": 46,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 59,
+"y": 48,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 60,
+"y": 48,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 61,
+"y": 48,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 62,
+"y": 48,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 63,
+"y": 48,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 59,
+"y": 49,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 60,
+"y": 49,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 61,
+"y": 49,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 62,
+"y": 49,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 63,
+"y": 49,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 56,
+"y": 50,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 57,
+"y": 50,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 58,
+"y": 50,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 59,
+"y": 50,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 60,
+"y": 50,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 61,
+"y": 50,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 62,
+"y": 50,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 63,
+"y": 50,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 64,
+"y": 50,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 65,
+"y": 50,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 66,
+"y": 50,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 56,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 57,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 58,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 59,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 60,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 61,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 62,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 63,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 64,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 65,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 66,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 67,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 68,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 69,
+"y": 51,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 57,
+"y": 52,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 58,
+"y": 52,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 59,
+"y": 52,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 60,
+"y": 52,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 61,
+"y": 52,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 62,
+"y": 52,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 63,
+"y": 52,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 64,
+"y": 52,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 65,
+"y": 52,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 66,
+"y": 52,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 67,
+"y": 52,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 68,
+"y": 52,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 57,
+"y": 53,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 58,
+"y": 53,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 59,
+"y": 53,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 60,
+"y": 53,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 61,
+"y": 53,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 62,
+"y": 53,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 63,
+"y": 53,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 66,
+"y": 53,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 67,
+"y": 53,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 68,
+"y": 53,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 56,
+"y": 54,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 57,
+"y": 54,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 58,
+"y": 54,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 59,
+"y": 54,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 60,
+"y": 54,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 61,
+"y": 54,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 62,
+"y": 54,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 63,
+"y": 54,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 68,
+"y": 54,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 56,
+"y": 55,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 57,
+"y": 55,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 58,
+"y": 55,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 59,
+"y": 55,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 58,
+"y": 56,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 59,
+"y": 56,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 53,
+"y": 59,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 54,
+"y": 59,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 57,
+"y": 59,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 58,
+"y": 59,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 59,
+"y": 59,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 60,
+"y": 59,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 64,
+"y": 59,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 65,
+"y": 59,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 66,
+"y": 59,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 53,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 54,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 55,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 56,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 57,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 58,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 59,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 60,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 61,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 62,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 64,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 65,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 66,
+"y": 60,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 53,
+"y": 61,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 60,
+"y": 61,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 61,
+"y": 61,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 62,
+"y": 61,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 63,
+"y": 61,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 64,
+"y": 61,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 65,
+"y": 61,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 66,
+"y": 61,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 53,
+"y": 62,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 62,
+"y": 62,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 63,
+"y": 62,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 64,
+"y": 62,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 65,
+"y": 62,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 63,
+"y": 63,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 64,
+"y": 63,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 65,
+"y": 63,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 64,
+"y": 64,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 42,
+"y": 68,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 43,
+"y": 68,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 40,
+"y": 69,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 41,
+"y": 69,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 40,
+"y": 70,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 42,
+"y": 70,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 44,
+"y": 70,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 40,
+"y": 71,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 41,
+"y": 71,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 42,
+"y": 71,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 43,
+"y": 71,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 44,
+"y": 71,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 40,
+"y": 72,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 41,
+"y": 72,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 42,
+"y": 72,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 43,
+"y": 72,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 44,
+"y": 72,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 40,
+"y": 73,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 41,
+"y": 73,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 42,
+"y": 73,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 43,
+"y": 73,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 40,
+"y": 74,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 41,
+"y": 74,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 44,
+"y": 75,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 43,
+"y": 76,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 55,
+"y": 78,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 50,
+"y": 79,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 51,
+"y": 79,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 50,
+"y": 80,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 48,
+"y": 82,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 41,
+"y": 83,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+},
+{
+"x": 40,
+"y": 84,
+"from": [
+71,
+22,
+22
+],
+"to": [
+165,
+48,
+8
+],
+"why": "dark blotch inside the crown -> next shade"
+}
 ]
+}
 }
