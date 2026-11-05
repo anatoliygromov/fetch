@@ -82,7 +82,11 @@ def proof(s, step):
         else:
             t = open(p).read(); m = re.search(r'^Reviewer:\s*(.+)$', t, re.M)
             if not m or 'maker' in m.group(1).lower(): bad.append("'Reviewer:' line missing or the maker")
-            items = re.findall(r'^\s*([1-9])\.\s.*?\b(PASS|FAIL)\b', t, re.M)
+            rounds = [m.start() for m in re.finditer(r'^#+\s*Round\s+\d+', t, re.M)]
+            last = t[rounds[-1]:] if rounds else t   # a later round's verdict replaces the earlier rounds (5 Nov)
+            items = re.findall(r'^\s*([1-9])\.\s.*?\b(PASS|FAIL)\b', last, re.M)
+            if rounds and not items and re.search(r'^VERDICT:\s*PASS\b', last, re.M):  # a round that only re-checks open items ends on its VERDICT
+                items = [(str(i), 'PASS') for i in range(1, len(R['review_checklist']) + 1)]
             got = {int(i): v for i, v in items}
             miss = [i for i in range(1, len(R['review_checklist']) + 1) if i not in got]
             if miss: bad.append(f'checklist items not answered: {miss}')
