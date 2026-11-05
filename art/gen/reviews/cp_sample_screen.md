@@ -1,3 +1,5 @@
+Reviewer: independent gate-8 art reviewer (Claude, did not make these assets), rounds 1-3, 5 Nov 2026
+
 # Review gate 8: City Park sample screen (screens 5-7, x 1280-2240) - 5 Nov 2026, independent reviewer
 
 Fresh frames rendered by me: tools/layer_frames_tall.py citypark_tall /tmp/review_cp/fresh --ids (27 frames, cameras y 0, 24, 144). Measured with the id maps, Rec.601 luma, on screens 5, 6, 7 unless stated. I also compared the builder's before/after frames; they match my renders.
@@ -25,3 +27,19 @@ VERDICT (round 1): FAIL (6 items)
 7. Mid trees: FAIL (minor, same as item 2). Birch trunk fixed, three-design cycle fine, city between the trees not above (plan numbers).
 
 VERDICT: FAIL (5 items)
+
+# Round 3 (dc2b405; fresh frames /tmp/review_cp/r3, 27 frames; screens 5-8 viewed at y 0, 24, 144 in colour and greyscale)
+
+Measures (owner question, not failed): oak trunk 55 (spec 46/60), lime trunk 38, crown 371 x 509 (23 / 250), ash trunk 33-37, crown 509 x 505, mids 139 tall and trunks 5-8.
+
+1. Ledges against limbs and leaves: PASS. Ink and tufts keep them clear in colour and greyscale, high and low; 12 of 41 ledge/background pairs have a weak body-luma difference (under 40), as before, carried by the outline. No loose ink bars remain in any tree.
+2. Value order: PASS. Sky 203, far city 190 (max 195), tree line 175-181, mid 154 (p99 184, max 184), back 135 (p10 112; p99 188), play 79-91. Back pixels at 190 or over are only lamp glass and arbour slats (screen 8). Both round 2 faults (mid highlights, birch trunk) fixed.
+3. Scale: PASS (owner question, measures above).
+4. Decoration outline: PASS. Oak, lime, ash and mids have no ink edge; the back minimum on screens 5-8 is 67 (old lamp posts).
+5. Crispness against rw_lime and bench/lamp: FAIL (minor). Lime and ash are clean (lone 0.35-0.37 %, none or 2 blotches); the oak still has 9 blotches and patchy leaf fields (cp_oak.md item 5).
+6. Mid-air ends, crown cuts, seams: PASS. The bare pole at x 1916 is gone (the ash trunk, 33-37 px, carries the walk); the sky wedge at screen 5 is gone; screen 7 sky share is 6-10 % (round 2: 52-56 %); no old canopy crown overlaps a new one; no flat vertical cuts at the frame joins (x 1600, 1920, 2240). Notes: the screen 5 top-left corner is open sky (23 %), a natural crown edge; screen 8 stays 53 % open sky at the high camera, which is the arbour and was open before this branch. The old fine-grained canopies sit under the ash's and lime's lower edges, a visible step in leaf size (the rest of the family is not made).
+7. Mid trees: PASS. Lime, maple and birch in a fixed cycle, none repeated in one frame; the city shows between them (tree tops at screen y 42, city top about 73: the plan's 138 px, not a file fault); mid is lighter than back and darker than tree line.
+8. Grid cut of the new lime and ash: PASS. No half cells or doubled pixels; see cp_lime.md item 5 and cp_ash.md item 5.
+9. Read for a 7 year old: PASS. One autumn family of oak, lime and ash with clear ledges.
+
+VERDICT: FAIL (1 items)

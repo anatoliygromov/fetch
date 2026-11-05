@@ -1,3 +1,5 @@
+Reviewer: independent gate-8 art reviewer (Claude, did not make these assets), rounds 1-3, 5 Nov 2026
+
 # Review gate 8: cp_oak.png (old oak, 388x343) - 5 Nov 2026, independent reviewer
 
 Judged from the file (5x/6x crops), fresh game frames (tools/layer_frames_tall.py citypark_tall --ids, 27 frames) and scene.lua. Rec.601 luma. File pixel positions are x,y in cp_oak.png; screen positions are in the 320x240 frame.
@@ -31,3 +33,19 @@ Scale is an owner question: measures unchanged, trunk 55 at 50 up, 61 at 40, 98 
 9. Read: PASS.
 
 VERDICT: FAIL (2 items)
+
+# Round 3 (dc2b405; fresh frames /tmp/review_cp/r3, screens 5-8 at y 0, 24, 144)
+
+Scale is an owner question: trunk 55 at 50 up, 61 at 40, 98 at 20 (old oak spec 46, big oak 60). Not failed.
+
+1. Scale: PASS (not applicable as a fail: owner question, measures above).
+2. Layer: PASS. Highlight luma 154 raw; trees on screen stay under 190 (back p99 188; the few back pixels at 190+ are lamp glass and arbour slats, screen 8).
+3. Outline: PASS. Darkest #332324 (luma 39) is bark shade; no ink ring. asset_qa decor-ink WARN 73 % is the relative-darkness measure.
+4. Shapes: PASS. No loose limb bits; flat cuts stay carved (x=0: 19 px in rows 103-110, 149-152, 168-174; x=387: 4 px).
+5. Shading: FAIL (minor). The merges cut asset_qa blotches from 19 to 9, but leaf fields are still irregular 3-tone patchwork with small dark islands, e.g. file (115-130,125-135) (small ring island), (20-60,60-80), and ragged maroon fields between puffs at (100-300,40-170). Lone 0.95 %. Cleaner than round 1, still the least crisp of the three big trees.
+6. Palette: PASS (8 colours).
+7. View: PASS.
+8. Fit: PASS (1x). In the frames it reads as one family with the new lime and ash; at 3x it is noisier than the lime.
+9. Read: PASS.
+
+VERDICT: FAIL (1 items)

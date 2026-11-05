@@ -1,3 +1,5 @@
+Reviewer: independent gate-8 art reviewer (Claude, did not make these assets), rounds 1-3, 5 Nov 2026
+
 # Review gate 8: cp_mid_lime.png (young mid tree, 80x139) - 5 Nov 2026, independent reviewer
 
 1. Scale: PASS. 139 px tall (spec 138), trunk 6-8 px (spec 6), crown 80 px (3.5 m) over 90 rows. Pepper at the mid scale is 13 px; tree is 10.7 Pepper-heights, right for a 6 m tree.
@@ -22,3 +24,11 @@ New finding, present in round 1 and missed there: the mid layer's brightest pixe
 All other items unchanged: PASS (1, 3-9).
 
 VERDICT: FAIL (1 items)
+
+# Round 3 (dc2b405; highlights lowered)
+
+2. Layer: PASS. Highlight #fcc23e became #d8941c (luma 154 raw). On screen the mid layer is p10 131, median 154, p90 174, p99 184, max 184 (screens 5-9): below the city (190-195), the tree line (175-181 median) and the sky. Round 2 fault fixed.
+5. Shading: PASS (with note). The edit merged the two mid tones: #a95906 is now 68.9 % of the art, with thin curved highlight strokes (#d8941c, 12.5 %). At 5x it reads as a flat brown blob; at 1x in the game (mid fade 48 %) it reads as a textured golden tree. Lone 1.13 %.
+Other items unchanged: 1 scale PASS (139 tall, trunk 6), 3 outline PASS, 4 shapes PASS, 6 palette PASS (7 colours), 7 view PASS, 8 fit PASS, 9 read PASS.
+
+VERDICT: PASS

@@ -1,3 +1,5 @@
+Reviewer: independent gate-8 art reviewer (Claude, did not make these assets), rounds 1-3, 5 Nov 2026
+
 # Review gate 8: cp_mid_birch.png (young mid tree, 28x139) - 5 Nov 2026, independent reviewer
 
 1. Scale: PASS. 139 tall, trunk 5 px (spec 6), crown 28 wide (a poplar-like column).
@@ -18,3 +20,11 @@ VERDICT (round 1): FAIL (1 items)
 Other items unchanged: PASS. 7 colours; lone 52 (2.2 %), invisible after the fade.
 
 VERDICT: FAIL (1 items)
+
+# Round 3 (dc2b405; highlights lowered)
+
+2. Layer: PASS. Crown highlight #f9c219 became #d4951e (luma 154 raw); on screen the mid layer max is 184 and the trunk 138-156. Round 2 fault fixed.
+5. Shading: PASS. Lone 52 (2.2 %), crown-edge dots, invisible after the fade at 1x. 7 colours; the trunk is now a plain grey #706860 with #504a46 marks, a little bland but correct in value.
+Other items unchanged: 1 scale PASS (139 tall, trunk 5), 3 outline PASS, 4 shapes PASS, 6 palette PASS, 7 view PASS, 8 fit PASS, 9 read PASS.
+
+VERDICT: PASS

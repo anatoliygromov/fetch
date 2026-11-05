@@ -1,3 +1,5 @@
+Reviewer: independent gate-8 art reviewer (Claude, did not make these assets), rounds 1-3, 5 Nov 2026
+
 # Review gate 8: cp_mid_maple.png (young mid tree, 72x139) - 5 Nov 2026, independent reviewer
 
 1. Scale: PASS. 139 tall, trunk 6-8 px, crown 71 wide.
@@ -16,5 +18,11 @@ VERDICT (round 1): FAIL (1 items)
 
 5. Shading: PASS now. Lone pixels 119 to 51 (1.0 %, below rw_lime's 1.6 %); the dark #471616 mass is 6.8 % of the art (was 14.5 %), the large blotch gone. 8 colours, still decor-ink WARN 38 % (a red shade rim, on screen min 116).
 Nothing broken: crown still reads, no merged islands, trunk 6-7 px unchanged. Maple highlight #f27116 is luma 141, under the city. Items 1-4, 6-9 PASS as in round 1.
+
+VERDICT: PASS
+
+# Round 3 (dc2b405; file unchanged from round 2)
+
+All 9 items as round 2: scale PASS (139 tall, trunk 6-7), layer PASS (highlight luma 141, mid max on screen 184), outline PASS (maroon rim #471616 on 38 % of the edge, a shade of its own red; screen min 116), shapes PASS, shading PASS (lone 51, 1.0 %), palette PASS (8 colours), view PASS, fit PASS, read PASS.
 
 VERDICT: PASS
