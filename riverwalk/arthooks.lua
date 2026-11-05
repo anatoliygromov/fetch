@@ -343,6 +343,18 @@ end
 function H.townPiece(p, camx, def)
   if not tallTown(def) then return false end
   if p.layer == "back" and (isFront(p) or p.name == "RIDDARHOLMEN") then return true end   -- (H.drawTownBack)
+  -- layer plan decision 4a (owner, 26 Oct; art/dt-sample-05nov): the cargo bike's hiding places stand at true scale
+  -- behind her (H.drawTownGateways, H.drawTownStops); their old tops, her perches, are the baker's bread crates:
+  -- the GATE's solid box a stack of crates (art/scene/town_crates<w>.png), the SHELTER's one-way top the baker's long
+  -- board (town_breadboard.png) on two stacks of crates end-on (decoration, drawn with the shelter). Each image at
+  -- the box's x0 - 1, y0 - 1 (its outline round the box). (tools/build_dt_street.py)
+  if H.FIRST_FLOOR and p.layer == "play" and (p.name == "GATE" or p.name == "SHELTER") then
+    local im = p.name == "GATE" and H.img("scene/town_crates" .. (p.x1 - p.x0)) or (p.name == "SHELTER" and H.img("scene/town_breadboard"))
+    if im then
+      if p.name == "GATE" then Sc.shadow((p.x0 + p.x1) / 2 - camx, p.y1 - 1, p.x1 - p.x0 + 4) end
+      lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(p.x0 - camx) - 1, p.y0 - 1); return true
+    end
+  end
   if p.layer ~= "play" or p.kind == "decor" or not high(def, p) then return false end
   local x = math.floor(p.x0 - camx)
   local n = p.name or ""
@@ -359,6 +371,8 @@ function H.townPiece(p, camx, def)
     if n == "FOOTBRIDGE" then
       local im = H.img("scene/town_footbridge")
       if im then drawImgOn(im, p, x, p.y0 - 1 - H.BRIDGE_RAIL); return true end
+    elseif n == "DORMER" and H.FIRST_FLOOR and H.img("scene/town_hood") then   -- (decision 1a: the dormer becomes
+      drawImgOn(H.img("scene/town_hood"), p, x, p.y0 - 1); return true          -- a copper window hood on the front)
     elseif n ~= "" then
       local im = H.img("scene/town_roof_" .. slug(n) .. w) or H.img("scene/town_roof_" .. slug(n))
       if im then drawImgOn(im, p, x, p.y0 - 1, H.STONE_TINT[n]); return true end   -- (a draw-time tint: the art file is not changed)
@@ -446,8 +460,9 @@ local function frontImg(k, plaster)
   end
   return frontCache[key]
 end
-local function bays(p)                                               -- { { front, x, w }, ... } for a box
-  local W, list = p.x1 - p.x0, {}
+local function bays(p, W)                                            -- { { front, x, w }, ... } for a box
+  local list = {}
+  W = W or p.x1 - p.x0
   if p.fronts then for k in tostring(p.fronts):gmatch("%d") do list[#list + 1] = tonumber(k) end end
   local n = #list > 0 and #list or math.max(1, math.floor(W / 88 + 0.5))
   local base, extra, x, out = math.floor(W / n), W - math.floor(W / n) * n, p.x0, {}
@@ -457,8 +472,14 @@ local function bays(p)                                               -- { { fron
   end
   return out
 end
-local function drawBay(f, x, w, y0, y1)
-  local ih = math.min(f.h, y1 - y0)
+-- layer plan decision 1a (owner, 26 Oct; art/dt-sample-05nov): the houses run on past the top of the screen. A front
+-- box whose `cut` property is not set is drawn at its full height (the files are 432 px: the ground floor and two upper
+-- storeys, the top at y -18, never on screen), with no coping. The guild house keeps its cut (its stepped gable is
+-- the high road there): `cut` = true on it, and on any box that should still end at its top.
+H.FIRST_FLOOR = true
+local function cutAtTop(p) return not H.FIRST_FLOOR or p.cut or p.name == "GUILD HOUSE" end
+local function drawBay(f, x, w, y0, y1, full)
+  local ih = full and f.h or math.min(f.h, y1 - y0)
   local sy = f.h - ih
   lg.setColor(1, 1, 1, 1)
   if w <= f.w then
@@ -506,24 +527,40 @@ function H.drawTownBack(s, cam)
   end
   if frontImg(1, "yellow") then                                      -- the fronts' art (all three) is there
     local nb = 0
+    -- (decision 1a) a full-height house closes a gap of up to 8 px to the next front (else a sliver of sky shows
+    -- between two houses all the way up): its last bay runs on to the next front
+    local nextX = {}
+    for _, p in ipairs(def.props) do
+      if isFront(p) then
+        for _, q in ipairs(def.props) do
+          if q ~= p and isFront(q) and q.x0 > p.x1 and q.x0 - p.x1 <= 8 then nextX[p] = q.x0 end
+        end
+      end
+    end
     for _, p in ipairs(def.props) do
       if isFront(p) then
         nb = nb + 1
         local plaster = p.plaster or H.PLASTER_ORDER[(nb - 1) % #H.PLASTER_ORDER + 1]
-        if p.x1 - cam > -10 and p.x0 - cam < 330 then
-          for bi, b in ipairs(bays(p)) do
+        if p.x1 - cam > -20 and p.x0 - cam < 330 then
+          local full = not cutAtTop(p)
+          local top, px1 = p.y0, (full and nextX[p]) or p.x1
+          for bi, b in ipairs(bays(p, px1 - p.x0)) do
             local f = frontImg(b[1] or ((nb + bi) % 3 + 1), plaster) or frontImg(1, plaster)
-            drawBay(f, math.floor(b[2] - cam), b[3], p.y0, p.y1)
+            drawBay(f, math.floor(b[2] - cam), b[3], p.y0, p.y1, full)
+            if full then top = math.min(top, p.y1 - f.h) end
           end
-          local x0, x1 = math.floor(p.x0 - cam), math.floor(p.x1 - cam)
+          local x0, x1 = math.floor(p.x0 - cam), math.floor(px1 - cam)
           local sh = Sc.fadeC({ H.PLASTER[plaster][2][1] / 255 * 0.86, H.PLASTER[plaster][2][2] / 255 * 0.86, H.PLASTER[plaster][2][3] / 255 * 0.86 })
-          rect(sh, x1 - 2, p.y0, 2, p.y1 - p.y0)                       -- the building's right edge in shade
-          rect(faded(COPING[1]), x0 - 1, p.y0, x1 - x0 + 2, 1)         -- the coping on the cut
-          rect(faded(COPING[2]), x0 - 1, p.y0 + 1, x1 - x0 + 2, 2)
-          rect(faded(COPING[3]), x0 - 1, p.y0 + 3, x1 - x0 + 2, 1)
+          rect(sh, x1 - 2, top, 2, p.y1 - top)                         -- the building's right edge in shade
+          if not full then
+            rect(faded(COPING[1]), x0 - 1, p.y0, x1 - x0 + 2, 1)       -- the coping on the cut
+            rect(faded(COPING[2]), x0 - 1, p.y0 + 1, x1 - x0 + 2, 2)
+            rect(faded(COPING[3]), x0 - 1, p.y0 + 3, x1 - x0 + 2, 1)
+          end
         end
       end
     end
+    H.drawTownGateways(def, cam)
     lg.setColor(1, 1, 1, 1)
     return
   end
@@ -549,6 +586,53 @@ function H.drawTownBack(s, cam)
     end
   end
   lg.setColor(1, 1, 1, 1)
+end
+
+-- (decision 4a, art/dt-sample-05nov) the courtyard gateways at true scale, 3 m (138 px), in the street's front wall
+-- behind each GATE (its crates are her perch): decoration on the back line (y 414), faded as the fronts, centred on
+-- the box; drawn with the fronts, so the tram passes in front of them. tools/build_dt_street.py.
+local decoCache = {}
+local function decoImg(n)
+  local key = n .. "#" .. Look.key
+  if decoCache[key] == nil then
+    decoCache[key] = false
+    local path = "art/scene/" .. n .. ".png"
+    if love.filesystem.getInfo(path) then
+      local im = lg.newImage(Sc.fadeData(love.image.newImageData(path))); im:setFilter("nearest", "nearest"); decoCache[key] = im
+    end
+  end
+  return decoCache[key]
+end
+H.BACK_LINE = 10                                         -- the back line: 10 px behind her street (def.foot - 10)
+function H.drawTownGateways(def, cam)
+  if not (tallTown(def) and H.FIRST_FLOOR) then return end
+  for _, p in ipairs(def.props) do
+    if p.name == "GATE" and p.layer == "play" then
+      local im = decoImg("town_gateway" .. (p.x1 - p.x0))
+      if im then
+        local x = math.floor((p.x0 + p.x1) / 2 - im:getWidth() / 2 - cam)
+        if x < 330 and x + im:getWidth() > -10 then lg.setColor(1, 1, 1, 1); lg.draw(im, x, def.foot - H.BACK_LINE - im:getHeight()) end
+      end
+    end
+  end
+end
+-- (decision 4a) the tram stop shelter at true scale, 2.5 m (115 px), and the two stacks of bread crates that carry the
+-- baker's board (the SHELTER's perch): decoration on the back line, faded; drawn after the tram (stage.lua), which
+-- stops behind it. The stacks stand at the box's two ends, under the board, on her street (def.foot).
+function H.drawTownStops(s, cam)
+  local def = s.def
+  if not (tallTown(def) and H.FIRST_FLOOR) then return end
+  local sh, leg = decoImg("town_shelter_tall"), decoImg("town_crate_leg")
+  if not sh then return end
+  for _, p in ipairs(def.props) do
+    if p.name == "SHELTER" and p.layer == "play" and p.x1 - cam > -100 and p.x0 - cam < 420 then
+      lg.setColor(1, 1, 1, 1)
+      lg.draw(sh, math.floor((p.x0 + p.x1) / 2 - sh:getWidth() / 2 - cam), def.foot - H.BACK_LINE - sh:getHeight())
+      if leg then
+        for _, lx in ipairs({ p.x0, p.x1 - leg:getWidth() }) do lg.draw(leg, math.floor(lx - cam), def.foot - leg:getHeight()) end
+      end
+    end
+  end
 end
 
 return H
