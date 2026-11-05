@@ -909,6 +909,12 @@ function Sc.townArt(style)
     -- the far tree line (shore), the round trees (mid) and the back decoration, each faded to its own layer's haze
     T.treeline = fadeImg("park_treeline", nil, "shore")
     for _, n in ipairs({ "tree1", "tree2" }) do T[n] = fadeImg("park_" .. n, nil, "mid") end
+    -- (5 Nov, plan decision 2b) the tall City Park's mid row: young 6 m trees at the mid scale (138 px), a lime, a
+    -- maple and a birch in turn, new art so the row stops repeating the high road's canopies
+    if love.filesystem.getInfo("art/scene/cp_mid_lime.png") then
+      T.cpmid = {}
+      for _, n in ipairs({ "cp_mid_lime", "cp_mid_maple", "cp_mid_birch" }) do T.cpmid[#T.cpmid + 1] = fadeImg(n, nil, "mid") end
+    end
     for _, n in ipairs({ "swings", "oak", "willow", "willow_tall", "winch" }) do T[n] = fadeImg("park_" .. n) end
     T.gate = fadeImg("park_gate", 0.28)                           -- (its own amount: dark ironwork, ladder darkest 80)
     T.boat = img("park_boat_front")                               -- front-on (tools/make_front_view.py)
@@ -1080,8 +1086,8 @@ function Sc.drawFarArt(L, camx, t, w, def)
     vpop(on); on = vpush("mid")
     Look.use("mid")
     local ox = math.floor(camx * 0.5)                             -- 5 near trees (faded)
-    for _, tr in ipairs(L.trees) do
-      local im = T["tree" .. tr.i]
+    for k, tr in ipairs(L.trees) do
+      local im = (def and def.foot and T.cpmid) and T.cpmid[1 + (k - 1) % #T.cpmid] or T["tree" .. tr.i]
       local x = tr.x - ox
       if x < 330 and x + im:getWidth() > -10 then lg.draw(im, x, 180 - im:getHeight()) end
     end
@@ -1761,6 +1767,47 @@ local function drawNest(p, ox)
   end
 end
 
+-- (5 Nov, the City Park sample screen; owner's picks 26 Oct, plan decision 1) trees at true scale: a SpriteCook piece
+-- per tree, trunk and one leaf mass whose top is above the world (tools/cut_cp_tree.py). Keyed by the trunk's x in the
+-- tall City Park (OAK: the old oak). Its trunk is not drawn in code, the canopy boxes inside its crown are skipped, and
+-- the art stands on the back props' line (the path - 9, as the old oak's art did), faded as back decoration.
+local TREE_ART = { [1528] = "cp_lime", [1916] = "cp_lime", OAK = "cp_oak" }
+local TREE_FADE = 0.28           -- their own amount, as the gate's: the bark's darkest 10 % then sits at the back layer's 80
+local TA_IMG = {}
+local function treeArtImg(n)
+  local key = n .. "/" .. Look.key
+  if TA_IMG[key] ~= nil then return TA_IMG[key] end
+  if not love.filesystem.getInfo("art/scene/" .. n .. ".png") then TA_IMG[key] = false; return false end
+  local d = love.image.newImageData("art/scene/" .. n .. ".png")
+  local w, h = d:getDimensions()
+  local sx, cnt = 0, 0                                               -- the trunk's centre: 30 px above its foot
+  for x = 0, w - 1 do local _, _, _, a = d:getPixel(x, h - 31); if a > 0 then sx = sx + x; cnt = cnt + 1 end end
+  local t = { im = newImg(Sc.fadeData(d, TREE_FADE)), w = w, h = h, cx = cnt > 0 and math.floor(sx / cnt + 0.5) or math.floor(w / 2) }
+  TA_IMG[key] = t
+  return t
+end
+local function treeArt(def, TI)
+  if TI.arttrees then return TI.arttrees end
+  TI.arttrees = {}
+  for _, t in ipairs(TI.trunks) do
+    local n = t.art and TREE_ART.OAK or (not t.extra and TREE_ART[t.x0])
+    if n and treeArtImg(n) then
+      t.hasArt = true
+      local a = treeArtImg(n)
+      local cx = math.floor((t.x0 + t.x1) / 2)
+      TI.arttrees[#TI.arttrees + 1] = { name = n, cx = cx, x0 = cx - a.cx, x1 = cx - a.cx + a.w, oak = t.art }
+    end
+  end
+  table.sort(TI.arttrees, function(a, b) return (a.oak and 1 or 0) < (b.oak and 1 or 0) end)   -- the oak in front
+  return TI.arttrees
+end
+function Sc.oakHasArt(def)
+  local TI = def.foot and tier(def)
+  if not TI then return false end
+  for _, a in ipairs(treeArt(def, TI)) do if a.oak then return true end end
+  return false
+end
+
 -- the tier's decoration, behind Pepper: trunks, posts, walk legs, canopies (called before the back props)
 function Sc.drawTreetops(def, camx, world)
   if def.art ~= "park" then return end
@@ -1789,15 +1836,23 @@ function Sc.drawTreetops(def, camx, world)
   local function canopyOver(t)                                       -- the canopy a trunk goes up into
     for _, c in ipairs(TI.canopies) do if c.x0 <= t.x1 and c.x1 >= t.x0 and c.y1 <= t.y0 + 60 then return c end end
   end
+  local AT = treeArt(def, TI)
   for _, t in ipairs(TI.trunks) do                                   -- trunks
-    if not t.art and t.x1 - ox > -20 and t.x0 - ox < 340 then
+    if not t.art and not t.hasArt and t.x1 - ox > -20 and t.x0 - ox < 340 then
       local c = canopyOver(t)
       local top = c and math.floor((c.y0 + c.y1) / 2) or t.y0
       drawTrunk(t, math.min(top, t.y0), foot, ox, t.x1 - t.x0 >= 24)
     end
   end
   for _, c in ipairs(TI.canopies) do                                 -- canopies, over the trunks' tops
-    if c.x1 - ox > -120 and c.x0 - ox < 440 then drawCanopy(c, ox, T) end
+    local inside = false                                             -- (one inside an art tree's crown: its leaves)
+    for _, a in ipairs(AT) do if c.x0 >= a.x0 and c.x1 <= a.x1 then inside = true end end
+    if not inside and c.x1 - ox > -120 and c.x0 - ox < 440 then drawCanopy(c, ox, T) end
+  end
+  lg.setColor(1, 1, 1, 1)
+  for _, a in ipairs(AT) do                                          -- the art trees, over the canopies
+    local im = treeArtImg(a.name)
+    if a.x1 - ox > -10 and a.x0 - ox < 330 then lg.draw(im.im, a.x0 - ox, foot - 9 - im.h) end
   end
   for p, r in pairs(TI.role) do                                      -- posts and legs
     if p.x1 - ox > -20 and p.x0 - ox < 340 then
@@ -1886,7 +1941,7 @@ function Sc.drawPropArt(p, camx, def, kicked)
       lg.setColor(0.33, 0.47, 0.52, 0.55); lg.rectangle("fill", math.floor(x) - 1, water, T.stone:getWidth(), 240 + d - water)
     elseif n == "BIN" then shadowUnder(p, camx); at(A.bin, x - 1, 184 + d - A.bin:getHeight())
     elseif n == "PICNIC TABLE" then shadowUnder(p, camx); at(T.table, x, p.y0)
-    elseif n == "OAK" then at(T.oak, x + w / 2 - 94, 175 + d - T.oak:getHeight())
+    elseif n == "OAK" then if not Sc.oakHasArt(def) then at(T.oak, x + w / 2 - 94, 175 + d - T.oak:getHeight()) end
     elseif n == "BRANCH" then drawBranch(p, named(def, "OAK"), camx)
     elseif n == "SLIDE" or n == "FRAME" then
       if n == "FRAME" then at(T.frame, x - 1, 119 + d) end            -- (the slide: Sc.drawTerrainArt, over the path)

@@ -1,0 +1,31 @@
+{
+ "name": "cp_midtrees",
+ "family": "cp_sample",
+ "tier": "B",
+ "steps": {
+  "spec": {
+   "time": "2026-11-05 21:56"
+  },
+  "blockout": {
+   "time": "2026-11-05 21:56"
+  },
+  "preflight": {
+   "time": "2026-11-05 22:01"
+  },
+  "probe": {
+   "render": "art/gen/renders/cp_midtrees_a.png",
+   "time": "2026-11-05 22:15"
+  },
+  "cut": {
+   "time": "2026-11-05 22:15"
+  },
+  "ingame": {
+   "frame": "docs/review/05nov/cp-sample/after_y144_x1600_1x.png",
+   "time": "2026-11-05 22:16"
+  },
+  "polish": {
+   "aseprite": "art/source/cp_mid_lime/cp_mid_lime.aseprite",
+   "time": "2026-11-05 22:16"
+  }
+ }
+}

@@ -50,3 +50,11 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-10-25 14:38,spent,rw_lime@1025-143524,,,,,24,spent,"probe 1: 2 variants, 0.67x (trunk 17 px), kept as render only"
 2026-10-25 14:38,spent,rw_lime@1025-143524,,,,,-24,spent,correction: the 14:38 spent row repeats the 14:36 row
 2026-10-25 14:39,spent,rw_lime@1025-143833,,,,,24,spent,"retry 1: 256 frame, 2 variants"
+2026-11-05 21:56,plan,cp_lime@1105-215619,cp_lime,cp_sample,spritecook,"SpriteCook Nano Banana 2.1 2K, pixel on",36,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 21:57,spent,cp_lime@1105-215619,,,,,36,spent,
+2026-11-05 22:01,plan,cp_oak@1105-220152,cp_oak,cp_sample,spritecook,"SpriteCook Nano Banana 2.1 2K, pixel on",36,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 22:01,plan,cp_midtrees@1105-220153,cp_midtrees,cp_sample,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 22:03,spent,cp_oak@1105-220152,,,,,36,spent,
+2026-11-05 22:03,spent,cp_midtrees@1105-220153,,,,,24,spent,
+2026-11-05 22:04,plan,cp_oak@1105-220416,cp_oak,cp_sample,spritecook,"SpriteCook Nano Banana 2.1 2K, pixel on",36,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 22:05,spent,cp_oak@1105-220416,,,,,36,spent,

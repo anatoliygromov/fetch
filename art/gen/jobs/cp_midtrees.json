@@ -1,0 +1,27 @@
+{
+ "name": "cp_midtrees",
+ "level": "citypark",
+ "kind": "plant",
+ "tier": "B",
+ "family": "cp_sample",
+ "layer": "mid",
+ "real_height_m": 6.0,
+ "target_px": [
+  193,
+  138
+ ],
+ "model": "sc_nb21",
+ "variants": 2,
+ "checks_px": {
+  "height": 138,
+  "trunk_width": 6,
+  "crown_width": "84 and 74"
+ },
+ "subject": "three young park trees in golden autumn, side by side, each seen from the front with its whole crown: on the left a young lime with a rounded crown of golden yellow leaf clumps, in the middle a young maple with a round crown of orange and red leaf clumps, on the right a slim young birch with a narrow crown of yellow leaves and a white trunk; slim straight trunks; leaves in a few big clumps, lit from the upper left so the clumps have a bright top edge and a deeper underside",
+ "part_map": "each dark grey bar is a slim trunk (exactly that width, it touches the ground line), each light grey oval is that tree's whole crown: fill it to its edge with leaf clumps, a slightly irregular leafy outline, keep each crown's size and height.",
+ "size_sentence": "each young tree is about three and a half times as tall as the dog. These trees stand far behind the dog, so they are drawn at half the dog's scale: same pixel size, smaller subject.",
+ "slot": {
+  "file": "riverwalk/art/scene/cp_mid_lime.png",
+  "where": "City Park tall, the mid row (0.5 speed), lime, maple, birch in turn: riverwalk/art/scene/cp_mid_lime.png, cp_mid_maple.png, cp_mid_birch.png (scene.lua T.cpmid); park_tree1 and park_tree2 stay for the flat City Park"
+ }
+}

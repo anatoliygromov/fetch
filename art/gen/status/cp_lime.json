@@ -1,0 +1,31 @@
+{
+ "name": "cp_lime",
+ "family": "cp_sample",
+ "tier": "B",
+ "steps": {
+  "spec": {
+   "time": "2026-11-05 21:56"
+  },
+  "blockout": {
+   "time": "2026-11-05 21:56"
+  },
+  "preflight": {
+   "time": "2026-11-05 21:56"
+  },
+  "probe": {
+   "render": "art/gen/renders/cp_lime_a.png",
+   "time": "2026-11-05 22:15"
+  },
+  "cut": {
+   "time": "2026-11-05 22:15"
+  },
+  "ingame": {
+   "frame": "docs/review/05nov/cp-sample/after_y144_x1600_1x.png",
+   "time": "2026-11-05 22:16"
+  },
+  "polish": {
+   "aseprite": "art/source/cp_lime/cp_lime.aseprite",
+   "time": "2026-11-05 22:16"
+  }
+ }
+}

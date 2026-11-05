@@ -1,0 +1,27 @@
+{
+ "id": "fam_cp_sample",
+ "title": "City Park sample screen (screen 6, the old oak)",
+ "section": "family",
+ "group": "City Park",
+ "layer": "back + mid",
+ "tier": "B",
+ "note": "Your picks of 26 Oct: the trees Pepper climbs at true width with one leaf mass whose top is above the world (decision 1), and young 6 m mid trees (decision 2b). Screen 6 at both cameras: up on the high road she now runs through the old oak's leaves; down on the path the oak stands at full size with its branches as her ledges. New: the old oak (trunk 1.2 m, 54 px), the park lime (trunk 0.8 m, 36 px, here and on the ash's place at the right edge until the ash is made), three young mid trees (a lime, a maple, a birch, 138 px). Nothing she stands on moved. Checks: PEPPER UNCHANGED, flow 125/125, Tiled, physics 97/97, QA 0 problems, curve T1-T4 PASS. Layers stay light to dark: sky 202, far city 191, tree line 181, mid 159, back 134-138, play 80-87. SpriteCook 132 credits.",
+ "question": "The model drew the trees bigger than the spec: lime trunk 36 px (spec 23) and crown 10 m, oak trunk 54 px (spec 46). Both are inside the plan's true sizes for park trees (trunks 0.4-0.8 m, an oak 1-1.3 m), so I kept them. Keep, or ask for slimmer limes? Screens 5 and 7 still mix the new trees with the old small crowns until the rest of the family is made.",
+ "images": [
+  {"src": "img/fam/cp_s6_high_ba_3x.png", "label": "screen 6, high road, 3x: before | after"},
+  {"src": "img/fam/cp_s6_low_ba_3x.png", "label": "screen 6, path, 3x: before | after"},
+  {"src": "img/fam/cp_s6_sheet.png", "label": "screen 6 after: colour | greyscale, 3x and 1x, both cameras"},
+  {"src": "img/fam/cp_s5_s6_s7_high_2x.png", "label": "screens 5, 6, 7 on the high road, 2x"}
+ ],
+ "members": [
+  {"id": "cp_oak", "title": "old oak", "slot": "cp_oak.png 388x343", "img": "img/fam/cp_oak_2x.png",
+   "note": "Replaces the small old oak in the tall level only. Trunk 54 px, roots flared; crown 388 px, its top 24 px above the world. No outline: the leaf clumps' edges are their own darkest rust. 10 colours. Faded 28 % like the gate so its darkest bark sits at the back layer's 80.",
+   "findings": ["decor-ink warn: 71 % of the edge is dark rust (the approved trees are 64 to 66 %)"]},
+  {"id": "cp_lime", "title": "park lime", "slot": "cp_lime.png 468x508", "img": "img/fam/cp_lime_2x.png",
+   "note": "Trunk 36 px, crown 468 px, top 189 px above the world. Stands at x 1528 and in the ash's place (x 1916). 9 colours.",
+   "findings": ["decor-ink warn: 52 % of the edge is dark"]},
+  {"id": "cp_midtrees", "title": "young mid trees", "slot": "cp_mid_lime/maple/birch.png, 139 px", "img": "img/fam/cp_midtrees_4x.png",
+   "note": "Young 6 m trees at the mid scale (23 px a metre), in turn along the half-speed row of the tall level; the far city shows above them. 8 colours each, no outline.",
+   "findings": ["maple: decor-ink warn 39 %"]}
+ ]
+}

@@ -1,0 +1,26 @@
+{
+ "name": "cp_mid_birch",
+ "size": [
+  28,
+  139
+ ],
+ "render": "art/gen/renders/cp_mid_birch_from_midtrees_a.png",
+ "cut_by": "tools/cut_cp_tree.py art/gen/renders/cp_mid_birch_from_midtrees_a.png cp_mid_birch --leaf 5 --bark 3 --rim-lum 95 (1x render, no resampling)",
+ "colours_in": 8,
+ "measures_px": {
+  "trunk_20px_up": 5,
+  "trunk_50px_up": 1,
+  "trunk_80px_up": 0,
+  "lowest_leaf_px_up": 40,
+  "crown_width": 28,
+  "size": [
+   28,
+   139
+  ],
+  "colours": 8,
+  "top_cut_by_frame": false
+ },
+ "lone_changed": 0,
+ "blotches_merged": 0,
+ "fails": []
+}
