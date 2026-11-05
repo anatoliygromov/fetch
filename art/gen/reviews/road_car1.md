@@ -39,3 +39,42 @@ PASS (no flags).
 | R9 | Read: cute and clear for a 7 year old at 1x | PASS | Friendly dark estate, reads at 1x. |
 
 VERDICT: FAIL (5 items)
+
+## Round 2 (re-review of fix round 1, commits 928382c, 8ea91ce)
+
+Navy estate, 241x88.
+
+Script (--layer lane --level rw): PASS
+
+
+
+### Measurements and notes (round 2)
+
+- Fixed round 1 defects: A1 fixed, A3 fixed, A4 fixed, R3 fixed, R5 fixed.
+- In game (docs/review/05nov/rw-traffic/board/rwtraffic_road_car1_lanerider1_3x.png): rows 0-47 show; lane rider 1 beside it is 102 px high against the car 88 px, rider top y190 vs roof y192 with the rider 12 px nearer the viewer (wheel bottom y292 vs 280); wheels of the bike (37 px) are now larger than the car wheels (33 px).
+- Light from the top (top 94 / bottom 60).
+
+### Checklist round 2 (every item answered)
+
+| # | Item | Result | Position and reason |
+|---|---|---|---|
+| A1 | Every repeated part the same (wheels, spokes, hubs) | PASS | Rims now stamped: front/rear identical 812/812 px within r16 at the exact 149 px shift (was 366/484). |
+| A2 | Wheels round, spokes even, symmetric parts symmetric | PASS | Tyres round and symmetric; five rim spokes evenly spaced (5-fold star). |
+| A3 | One light direction; ramps, no random dark/light dabs | PASS | Glint lines continuous: shoulder line y35 runs x113-132, 134-181, 183-206 (two 1 px gaps at x133, x182; was 11 dashes); hood glints are stepped lines under the outline; rack (x105-190,y0-2) clean #5b5b5b/#1c1c1c. Lone px 157 (10.4 per 1000). |
+| A4 | Outline 1 px everywhere, one ink colour, no doubled/2 px stretches | PASS | All 616 exposed edge px are #000000 (tail-light edge fixed). |
+| A5 | Faces, hands, feet whole in every frame; nothing boils between frames | PASS | PASS (not applicable: a car has no faces, hands or frames) |
+| A6 | Scale vs Pepper (46 px/m) and the 55 px/m lane; slot and anchor | PASS | 241x88 = 4.38 m x 1.60 m at 55 px/m; slot and CAR_TOP 192 as the code uses; script slot PASS. |
+| A7 | Mirrored as the game draws it, still reads right | PASS | Faces left, flipped when going right; no lettering, rear light and headlight read both ways. |
+| A8 | In game: only the part that shows is clean | PASS | Rows 0-47 show: roof rack, glass, mirrors, handles; clean. Wheels never visible. |
+| A9 | Next to approved bench, bin, lamp: as crisp, clean, same pixel size | PASS | 10 lone px per 1000 (bench 16); 16 colours; same ink as the bench; crisp at 3x. |
+| R1 | Scale: right size next to Pepper and in its slot (within 2 px) | PASS | 4.38 m x 1.60 m at 55 px/m. |
+| R2 | Layer: values on its ladder row | PASS | Ink #010102 darkest; lane/play row. |
+| R3 | Outline: unbroken 1 px ink | PASS | Outline #000000 on every exposed edge px. |
+| R4 | Shapes: round things round, straight lines straight, no lumps or jaggies | PASS | Rim and tyre round; panel lines straight; roofline clean. |
+| R5 | Shading: ramps of 3-4 shades, light upper left, no mottling, no lone specks | PASS | Glints are continuous stepped highlight lines, body in flat bands; no mottling. |
+| R6 | Palette: only level-palette colours, whites white, darks neutral, within colour cap | PASS | 16 colours (cap 20), all in riverwalk.gpl; ink #000000 same as bench; tan glint (#c0ac8e) is the one warm accent. |
+| R7 | View: side profile as road traffic, no tops/insides | PASS | Side profile, no tops; glass is flat blue-grey, no interior. |
+| R8 | Fit: beside bench, bin, lamp at 1x and 3x as crisp and dense | PASS | Crisp beside bench/bin/lamp at 1x and 3x. |
+| R9 | Read: cute and clear for a 7 year old at 1x | PASS | Friendly dark estate, reads at 1x. |
+
+VERDICT (round 2): PASS

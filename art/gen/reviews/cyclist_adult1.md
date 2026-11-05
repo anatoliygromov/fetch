@@ -41,3 +41,44 @@ FAIL stray: 3.8 % lone pixels (aim under 3 %) | colours: 21 colours, the play la
 | R9 | Read: cute and clear for a 7 year old at 1x | PASS | Red coat and white helmet read at 1x, friendly. (Face detail under A5.) |
 
 VERDICT: FAIL (11 items)
+
+## Round 2 (re-review of fix round 1, commits 928382c, 8ea91ce)
+
+Still, 88x87 (promenade only).
+
+Script (--layer lane --level rw): PASS
+
+
+
+### Measurements and notes (round 2)
+
+- Round 1 fixed: ink (one #000000), basket outline, face (nose, lip), wheel clip (x2-85), wheel identity, colours 21 to 16, lone px 112 to 67.
+- Fixed round 1 defects: A1 fixed, A3 fixed, A4 fixed, A5 fixed, A6 resolved by road_rider1 (lane scale), A9 fixed, R5 fixed, R6 fixed.
+- Merged #373737 inside the silhouette: used for far leg, spokes and far-side tubes; against #000000 it is clearly lighter (luma 55), so it reads as a shade, not as ink; the exposed 1 px tubes are the only place it touches the background.
+- Wheels stamped on one axle line: rings c(18,70) and c(70,70), r14.05, deviation -0.45..+0.37; outer radius 16.2-16.6 on every free 15 degrees; 8 spokes at 45 degrees; sprite bbox x2-85, so no tyre touches the border (col 0 and col 87 empty). Lower-half ring+spokes identical rear/front 275/331; the differences sit at x27-36 (chain case and fork overlap) and 1 px at the rear-left arc.
+- Lit from the right/top (helmet luma L/R 158/181); stage.lua always draws these mirrored (riding left), so the light arrives from the left like the level. road.lua no longer uses them while road_rider1-2 exist.
+
+### Checklist round 2 (every item answered)
+
+| # | Item | Result | Position and reason |
+|---|---|---|---|
+| A1 | Every repeated part the same (wheels, spokes, hubs) | PASS | Wheels stamped: lower ring identical 275/331 px, rest are frame-tube overlaps (x27-36,y73-76) and 1 px at the left arc; round 1 clip and 42-px mismatch fixed. |
+| A2 | Wheels round, spokes even, symmetric parts symmetric | PASS | Ring r14.05 +/-0.45 on both wheels, outer r 16.2-16.6, 8 spokes at 45 degrees; x2-85 margin, no clip. |
+| A3 | One light direction; ramps, no random dark/light dabs | PASS | Lone pixels 67 (23 per 1000, was 112/38); no dabs in coat or frame; helmet has one grey 3x3 vent (47-49,2-4), reads as a vent. One light direction (from the right/top in the art, see A7). |
+| A4 | Outline 1 px everywhere, one ink colour, no doubled/2 px stretches | PASS | Outer silhouette ink #000000 on 661 edge px; basket now inked (was brown). Only exceptions: 5 brown px (47,36),(49,37),(57,39),(45,40),(44,49) at hand/knee, and #373737 far-side frame tubes about 25 px (e.g. (51-54,44-48),(52,52),(56,55)) drawn 1 px grey over the gap: reads as depth, not a second ink on the outline. |
+| A5 | Faces, hands, feet whole in every frame; nothing boils between frames | PASS | Face has eye, brow, nose bump (about (54-55,11-12)) and red lip ((50-52,15)); hands whole; still, no frames. |
+| A6 | Scale vs Pepper (46 px/m) and the 55 px/m lane; slot and anchor | PASS | 88x87 (padded 2 px a side, hooks doc updated); 87 px = 1.89 m at 46 px/m beside Pepper; wheel 33 px outer. The 55 px/m lane now uses road_rider1-2, so the old lane-scale defect no longer applies to this file. |
+| A7 | Mirrored as the game draws it, still reads right | PASS | Faces right, always drawn flipped on the promenade (stage.lua), basket in front, correct in ingame_promenade_rider1; mirrored light comes from the left as the level. |
+| A8 | In game: only the part that shows is clean | PASS | Promenade: whole bike at 1x, clean (docs/review/05nov/rw-traffic/ingame_promenade_rider1_1x.png). Not drawn on the road any more. |
+| A9 | Next to approved bench, bin, lamp: as crisp, clean, same pixel size | PASS | 23 lone px per 1000 vs bench 16, bin 10, lamp 0; 16 colours vs 7-16; ink #000000 like the bench; same pixel size, crisp at 3x. |
+| R1 | Scale: right size next to Pepper and in its slot (within 2 px) | PASS | 1.89 m at 46 px/m; slot 88x87. |
+| R2 | Layer: values on its ladder row | PASS | Ink #000000 darkest; script lane layer PASS. |
+| R3 | Outline: unbroken 1 px ink | PASS | Unbroken 1 px #000000 outline (script outline 100 %); exceptions in A4 are interior tubes. |
+| R4 | Shapes: round things round, straight lines straight, no lumps or jaggies | PASS | Wheels round (fit +/-0.45), tubes straight. |
+| R5 | Shading: ramps of 3-4 shades, light upper left, no mottling, no lone specks | PASS | Coat in 3 shades, trousers 2, no mottling. |
+| R6 | Palette: only level-palette colours, whites white, darks neutral, within colour cap | PASS | 16 colours (cap 20), all in riverwalk.gpl; ink pure black; darks neutral (#373737, #000000). |
+| R7 | View: side profile as road traffic, no tops/insides | PASS | Side profile, thin basket cap, no tops or insides. |
+| R8 | Fit: beside bench, bin, lamp at 1x and 3x as crisp and dense | PASS | As crisp as the bench at 3x; see A9. |
+| R9 | Read: cute and clear for a 7 year old at 1x | PASS | Red coat, white helmet, friendly face with nose and lip, reads at 1x. |
+
+VERDICT (round 2): PASS
