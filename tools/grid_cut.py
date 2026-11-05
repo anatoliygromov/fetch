@@ -92,7 +92,7 @@ if palf and os.path.exists(palf):
     # snap every pixel to the level's locked palette (nearest in Lab); no new colour, no averaging
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     from make_palette import lab
-    pal = np.array([[int(v) for v in l.split()[:3]] for l in open(palf) if l[:1].strip().isdigit()], float)
+    pal = np.array([[int(v) for v in l.split()[:3]] for l in open(palf) if l.split() and l.split()[0].isdigit()], float)
     arr = np.array(im); al = arr[..., 3]; px = arr[..., :3].reshape(-1, 3).astype(float)
     idx = np.argmin(((lab(px)[:, None] - lab(pal)[None]) ** 2).sum(2), 1)
     arr[..., :3] = pal[idx].reshape(arr.shape[0], arr.shape[1], 3).astype(np.uint8)

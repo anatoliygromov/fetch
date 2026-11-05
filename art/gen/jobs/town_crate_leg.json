@@ -1,0 +1,22 @@
+{
+ "name": "town_crate_leg",
+ "level": "downtown",
+ "layer": "back",
+ "kind": "decoration",
+ "real_height_m": 0.91,
+ "target_px": [
+  16,
+  42
+ ],
+ "checks_px": {
+  "crate end": "16 x 14, three high"
+ },
+ "tier": "C",
+ "family": "dt_sample",
+ "method": "built from stamped parts, tools/build_dt_street.py",
+ "build": "tools/build_dt_street.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_crate_leg.png",
+  "where": "Downtown tall, the board's legs at the SHELTER box's ends, on y 424 (drawTownStops; decision 4a)"
+ }
+}

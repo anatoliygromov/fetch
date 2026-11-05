@@ -1,0 +1,23 @@
+{
+ "name": "town_crates70",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 0.78,
+ "target_px": [
+  71,
+  37
+ ],
+ "checks_px": {
+  "crate": "34 x 17 (0.74 x 0.37 m)",
+  "box": "70 x 36"
+ },
+ "tier": "C",
+ "family": "dt_sample",
+ "method": "built from stamped parts, tools/build_dt_street.py",
+ "build": "tools/build_dt_street.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_crates70.png",
+  "where": "Downtown tall, GATE x 1868 (solid 70 x 36), at x0 - 1, y0 - 1 (arthooks.lua townPiece; decision 4a)"
+ }
+}

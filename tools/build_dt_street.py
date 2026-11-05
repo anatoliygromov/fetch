@@ -37,7 +37,7 @@ C = dict(
     gl=(204, 222, 228), gm=(178, 200, 208), gw=(232, 242, 244),         # glass: lit, mid, a streak
     pc=(244, 236, 214), pk=(234, 150, 172),                            # the poster's card, pink icing
     tl=(222, 214, 198), tm=(176, 166, 152), tv=(116, 108, 102),         # granite (the fronts' L, T, V)
-    pd=(84, 76, 80), pdd=(64, 58, 62), pf=(104, 96, 98),               # the passage, its shade, its floor
+    pd=(58, 50, 56), pdd=(42, 36, 42), pf=(84, 76, 80),                # the passage, its shade, its floor
     cw=(226, 206, 160), cg=(96, 146, 84), cgd=(70, 112, 66),            # the courtyard: sunny wall, a bush
     cl=(150, 206, 176), cm=(104, 166, 140), cs=(72, 122, 102),          # copper (the roof kit's copper)
 )
@@ -177,6 +177,11 @@ def shelter():
     cv.rect(gx0, gy1, gx1, gy1, "ss")
     for px in (0, W // 2 - 2, W - 4):                                    # posts, 4 px: lit, mid, mid, shade
         cv.rect(px, roof - 1, px + 3, H - 1, "sm"); cv.rect(px, roof - 1, px, H - 1, "sl"); cv.rect(px + 3, roof - 1, px + 3, H - 1, "ss")
+        fx0, fx1 = max(0, px - 1), min(W - 1, px + 4)                    # a foot plate (bolted to the pavement)
+        cv.rect(fx0, H - 3, fx1, H - 3, "sl"); cv.rect(fx0, H - 2, fx1, H - 1, "ss")
+        cv.rect(px, roof + 1, px + 3, roof + 1, "sd")                    # the post's collar under the roof
+    cv.rect(0, 2, W - 1, 2, "sl")                                        # the roof's fascia: a lit line, a dark groove
+    cv.rect(0, 3, W - 1, 3, "ss")
     # (no bench: the baker's board on its crates stands in front of the shelter and is the seat; art/dt-sample-05nov)
     ax0, ax1, ay0, ay1 = 5, 35, 30, 92                                   # the poster at the left end: clear of the crates,
                                                                          # and of the stop sign on the right (arthooks)

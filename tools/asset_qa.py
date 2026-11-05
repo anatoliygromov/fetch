@@ -73,7 +73,12 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          "roof_gable": (122, 80, 0, 20), "roof_loggia": (122, 48, 0, 12), "roof_gallery88": (90, 32, 0, 8),
          "roof_gallery72": (74, 32, 0, 8), "roof_chimney": (18, 46, 0, 0), "roof_dormer": (58, 36, 0, 9),
          "footbridge": (162, 52, 0, 13), "house_tall_a": (80, 240, 0, 0), "house_tall_b": (88, 240, 0, 0),
-         "house_tall_c": (96, 240, 0, 0), "tram_vintage": (300, 130, 30, 15)}
+         "house_tall_c": (96, 240, 0, 0), "tram_vintage": (300, 130, 30, 15),
+         # art/dt-sample-05nov (docs/art_hooks_r8.md, arthooks.lua): the full-height fronts, decision 4a and the hood
+         "town_front_tall1": (80, 432, 0, 0), "town_front_tall2": (88, 432, 0, 0), "town_front_tall3": (96, 432, 0, 0),
+         "town_shelter_tall": (140, 115, 0, 0), "town_gateway70": (114, 138, 0, 0), "town_gateway96": (140, 138, 0, 0),
+         "town_crates70": (71, 37, 0, 0), "town_crates96": (97, 37, 0, 0), "town_breadboard": (74, 7, 0, 0),
+         "town_crate_leg": (16, 42, 0, 0), "town_hood": (58, 19, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",
@@ -82,7 +87,8 @@ HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_t
         "house_tall_c": "town_front_tall3", "facades_square": "town_row", "spire_riddarholmen": "town_spire",
         "roof_awning56": "(no hook: the kit has no awning)"}
 BUILDINGS = {"town_house1", "town_house2", "town_house3", "town_facades", "town_row", "building", "cafe", "gable",
-             "facades_square", "house_tall_a", "house_tall_b", "house_tall_c"}
+             "facades_square", "house_tall_a", "house_tall_b", "house_tall_c", "town_front_tall1", "town_front_tall2",
+             "town_front_tall3"}
 ORGANIC = {"tree", "tree_far", "tree_near", "park_tree1", "park_tree2", "park_oak", "park_willow", "park_willow_tall",
            "park_hedge", "park_bush", "park_leaves", "park_leaves_flat", "park_treeline", "skyline", "far_shore_bridge"}
 FROZEN = {"pepper"}                                               # Pepper's files are frozen: report only

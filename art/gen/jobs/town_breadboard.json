@@ -1,0 +1,22 @@
+{
+ "name": "town_breadboard",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 0.11,
+ "target_px": [
+  74,
+  7
+ ],
+ "checks_px": {
+  "box": "72 x 4 one-way at 48 px up"
+ },
+ "tier": "C",
+ "family": "dt_sample",
+ "method": "built from stamped parts, tools/build_dt_street.py",
+ "build": "tools/build_dt_street.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_breadboard.png",
+  "where": "Downtown tall, SHELTER perch x 2048 and 3236 (one-way 72 x 4), at x0 - 1, y0 - 1 (decision 4a)"
+ }
+}

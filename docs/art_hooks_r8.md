@@ -92,3 +92,15 @@ left end), 2640-2736 (262, its right end).
 
 Delete (or rename) its file: the placeholder or the old art comes back. The placeholders are in `arthooks.lua`
 (`cargoCode`, `tramCode`, `kitCode`, `frontCode`, `spireCode`).
+
+## Downtown sample screen (art/dt-sample-05nov, decisions 1a and 4a)
+
+| File | Size | Where and how it is drawn |
+| --- | --- | --- |
+| `town_front_tall1-3.png` | 80, 88, 96 x **432** | as above, but every front box but the guild house (and any box with `cut`) is drawn at its full height: the file's bottom on y 414, its top at y -18 (two upper storeys of 140 px over the 152 px ground floor), no coping; a gap of up to 8 px to the next front is closed by the last bay |
+| `town_hood.png` | 58 x 19 | the DORMER's ledge (56 px): image at the box's x0 - 1, y0 - 1 (outline over the top she walks on) |
+| `town_crates70.png`, `town_crates96.png` | 71 x 37, 97 x 37 | the GATE's solid box (70 or 96 x 36) as bread crates: at x0 - 1, y0 - 1 |
+| `town_breadboard.png` | 74 x 7 | the SHELTER's one-way perch (72 x 4, 48 px up): at x0 - 1, y0 - 1 |
+| `town_crate_leg.png` | 16 x 42 | decoration: two per SHELTER, at its box's x0 and x1 - 16, bottom on the street (y 424) |
+| `town_shelter_tall.png` | 140 x 115 | decoration: centred on the SHELTER box, bottom on y 414, drawn after the tram |
+| `town_gateway70.png`, `town_gateway96.png` | 114 x 138, 140 x 138 | decoration: centred on the GATE box of that width, bottom on y 414, drawn with the fronts |

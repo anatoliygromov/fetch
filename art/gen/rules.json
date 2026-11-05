@@ -215,7 +215,8 @@
   "C": "far layers, sky, ground, pavement, anything repeated or geometric. Built in code or from stamped parts, never generated."
  },
  "palettes": {
-  "riverwalk": "art/palettes/riverwalk.gpl"
+  "riverwalk": "art/palettes/riverwalk.gpl",
+  "downtown": "art/palettes/downtown.gpl"
  },
  "_models_note": "credits = per image; a job costs credits x variations (+ credits_per_reference x references). Prices from list_generation_models, 25 Oct.",
  "review_checklist": [

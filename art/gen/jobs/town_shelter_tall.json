@@ -1,0 +1,23 @@
+{
+ "name": "town_shelter_tall",
+ "level": "downtown",
+ "layer": "back",
+ "kind": "building",
+ "real_height_m": 2.5,
+ "target_px": [
+  140,
+  115
+ ],
+ "checks_px": {
+  "height": "115 (2.5 m)",
+  "length": "140 (3.0 m)"
+ },
+ "tier": "C",
+ "family": "dt_sample",
+ "method": "built from stamped parts, tools/build_dt_street.py",
+ "build": "tools/build_dt_street.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_shelter_tall.png",
+  "where": "Downtown tall, SHELTER x 2048 and 3236, centred, bottom on y 414, after the tram (arthooks.lua drawTownStops; decision 4a)"
+ }
+}

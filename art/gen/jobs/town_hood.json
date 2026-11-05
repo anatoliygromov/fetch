@@ -1,0 +1,23 @@
+{
+ "name": "town_hood",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 0.41,
+ "target_px": [
+  58,
+  19
+ ],
+ "checks_px": {
+  "box": "56 x 6 one-way",
+  "consoles": "8, 6, 4 wide"
+ },
+ "tier": "C",
+ "family": "dt_sample",
+ "method": "built from stamped parts, tools/build_dt_street.py",
+ "build": "tools/build_dt_street.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_hood.png",
+  "where": "Downtown tall, DORMER x 1920 y 264 (decision 1a: the dormer becomes a window hood), townPiece"
+ }
+}
