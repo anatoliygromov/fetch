@@ -322,7 +322,9 @@ def part_entablature(w, cap=3):
 
 # ---- the house ----------------------------------------------------------------------------------------------------
 
-def build():
+def build(bay=False):
+    """bay=True: screen 12's river view option B (owner, 26 Oct): only the door bay, as its own narrow front (its own
+    corner lesene on the left, no window column, no wall anchor), cropped to x 68-148 by build_bay()."""
     c = Canvas(W, H)
     g = lambda y: y + OFF                                     # game y -> image row
     c.rect(0, 0, W, H, 'pl')
@@ -331,7 +333,7 @@ def build():
     EAR = 2
     # upper floor: the window bottoms over the window and over the door, eared surrounds, sills, flower boxes
     UB = g(20)                                                 # the upper windows' bottom (game y 20)
-    for wx in (WX, DX):
+    for wx in ((DX,) if bay else (WX, DX)):
         sur = part_eared_surround(46 + 8, 43, ear=EAR)              # its bottom band hides under the 3 px sill
         c.stamp(sur, wx - 4 - EAR, UB - 40); c.shadow(sur, wx - 4 - EAR, UB - 40)
         up = part_window(46, 40, rows=2, sky_rows=2)
@@ -341,7 +343,7 @@ def build():
         box = part_flowerbox(48)
         c.stamp(box, wx - 1, UB - 11); c.shadow(box, wx - 1, UB - 11)
     # the iron wall anchors at the floor line: by the corner and between the bays
-    for ax in (10, 67):                                         # centres 12 and 69: symmetric about the window axis
+    for ax in (() if bay else (10, 67)):                                         # centres 12 and 69: symmetric about the window axis
         an = part_anchor(); c.stamp(an, ax, g(26)); c.shadow(an, ax, g(26))
     # the smooth stone socle, 16 px
     c.rect(0, g(158), W, 16, 'st')
@@ -352,16 +354,19 @@ def build():
     c.stamp(les, 0, 0); c.shadow(les, 0, 0, dx=2, dy=0)
     # the window: eared surround, hood, the window, sill
     WY, WH = g(66), 72
-    sur = part_eared_surround(46 + 8, WH + 8, ear=EAR)
-    c.stamp(sur, WX - 4 - EAR, WY - 4); c.shadow(sur, WX - 4 - EAR, WY - 4)
-    hood = part_hood(46 + 8 + 2 * EAR + 4, 5)
-    c.stamp(hood, WX - 4 - EAR - 2, WY - 9); c.shadow(hood, WX - 4 - EAR - 2, WY - 9)
-    win = part_window(46, WH, rows=4)
-    c.stamp(win, WX, WY)
-    c.remap(WX, WY, 2, WH, {'wh': 'st_hi'})                                # the reveal's shade on the left
-    c.remap(WX, WY, 46, 2, {'wh': 'st_hi'})                                # and under the lintel (the frame's own
-                                                                           # shade line stays one tone)
-    sill = part_sill(46 + 14, 5); c.stamp(sill, WX - 7, WY + WH + 4); c.shadow(sill, WX - 7, WY + WH + 4)
+    if bay:
+        les = part_lesene(8, g(158)); c.stamp(les, 68, 0); c.shadow(les, 68, 0, dx=2, dy=0)
+    if not bay:
+        sur = part_eared_surround(46 + 8, WH + 8, ear=EAR)
+        c.stamp(sur, WX - 4 - EAR, WY - 4); c.shadow(sur, WX - 4 - EAR, WY - 4)
+        hood = part_hood(46 + 8 + 2 * EAR + 4, 5)
+        c.stamp(hood, WX - 4 - EAR - 2, WY - 9); c.shadow(hood, WX - 4 - EAR - 2, WY - 9)
+        win = part_window(46, WH, rows=4)
+        c.stamp(win, WX, WY)
+        c.remap(WX, WY, 2, WH, {'wh': 'st_hi'})                                # the reveal's shade on the left
+        c.remap(WX, WY, 46, 2, {'wh': 'st_hi'})                                # and under the lintel (the frame's own
+                                                                               # shade line stays one tone)
+        sill = part_sill(46 + 14, 5); c.stamp(sill, WX - 7, WY + WH + 4); c.shadow(sill, WX - 7, WY + WH + 4)
     # the portal: pilasters on bases with capitals, entablature, segmental pediment
     PL, PR = DX - 7, DX + 46                                   # pilaster x (7 px each)
     top = g(61)                                                # transom top (12 px); leaves from game y 73 to 171
@@ -393,6 +398,13 @@ def build():
     return c
 
 
+def build_bay():
+    """rw_gable_bay.png: the door bay alone, 80 x 180 (x 68-148 of the full gable's grid), every part whole."""
+    c = build(bay=True)
+    im = c.image()
+    return im.crop((68, 0, W, H))
+
+
 def verify(c):
     """The repeats are pixel-identical in the finished image (the window check of asset_qa sees no panes this big):
     the two upper windows with their surrounds and flower boxes, the two pilasters with their bases and capitals."""
@@ -417,6 +429,7 @@ if __name__ == '__main__':
     out = sys.argv[1] if len(sys.argv) > 1 else 'riverwalk/art/scene/rw_gable.png'
     c = build()
     c.image().save(out)
+    build_bay().save('riverwalk/art/scene/rw_gable_bay.png')
     os.makedirs('art/source/rw_gable', exist_ok=True)
     parts_sheet(parts(), PAL).image(8).save('art/source/rw_gable/parts_8x.png')
     a = c.a

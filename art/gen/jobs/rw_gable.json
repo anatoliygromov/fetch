@@ -19,6 +19,6 @@
  "method": "built from stamped parts, tools/build_rw_gable.py",
  "slot": {
   "file": "riverwalk/art/scene/rw_gable.png",
-  "where": "River Walk screen 12, GABLE, x 3568..3716, y -6..174 (replaces gable; the railing ends at 3568)"
+  "where": "River Walk screen 12, GABLE, x 3568..3716, y -6..174 (replaces gable; the railing ends at 3568) (5 Nov: not drawn in the game; the source grid of rw_gable_bay)"
  }
 }
