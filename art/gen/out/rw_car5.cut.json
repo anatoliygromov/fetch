@@ -1,0 +1,31 @@
+{
+ "name": "rw_car5",
+ "size": [
+  250,
+  89
+ ],
+ "target": [
+  242,
+  81
+ ],
+ "grid_clean": 1.0,
+ "on_blockout": 0.968,
+ "covered": 0.999,
+ "stray": 0.0,
+ "colours_in": 2553,
+ "colours_cap": 20,
+ "colours_out": 18,
+ "fails": [],
+ "render": "art/gen/renders/rw_car5_n5a.png",
+ "box": [
+  2,
+  148,
+  252,
+  237
+ ],
+ "cut_by": "tools/build_traffic.py cut (1x render, pitch 1, palette snap riverwalk.gpl, no resampling)",
+ "waived": [
+  "height 89 vs 81 px (+10 %): the roof rails stand 8 px on the roof; the body itself is 81 px (1.48 m). The car is 1.62 m with its rails at 55 px/m, at real size for a 1990s estate with rails, as road_car1 (241 x 88 against 233 x 80) was kept in the reviewed traffic family. Variant b (251 x 91) was larger.",
+  "size 250x89 vs 242x81"
+ ]
+}

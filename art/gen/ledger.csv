@@ -82,3 +82,9 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-05 22:40,plan,cp_ash@1105-224057,cp_ash,cp_sample,spritecook,SpriteCook GPT 2.5 Sunburst 2K medium (follows the reference grid),52,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
 2026-11-05 22:42,spent,cp_lime@1105-224056,,,,,76,spent,
 2026-11-05 22:42,spent,cp_ash@1105-224057,,,,,76,spent,
+2026-11-05 22:58,plan,rw_car2@1105-225800,rw_car2,rw_traffic2,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 22:58,spent,rw_car2@1105-225800,,,,,24,spent,
+2026-11-05 23:03,plan,rw_car3@1105-230350,rw_car3,rw_traffic2,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 23:03,plan,rw_car5@1105-230350,rw_car5,rw_traffic2,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 23:04,spent,rw_car3@1105-230350,,,,,24,spent,
+2026-11-05 23:04,spent,rw_car5@1105-230350,,,,,24,spent,

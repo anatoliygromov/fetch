@@ -1,0 +1,32 @@
+{
+ "name": "rw_car5",
+ "model": "SpriteCook Nano Banana 2.1 1K, pixel on",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/rw_car5_blockout.png",
+  "art/gen/style_card_riverwalk.png"
+ ],
+ "prompt_file": "art/gen/prompts/rw_car5.txt",
+ "k": null,
+ "frame": [
+  256,
+  256
+ ],
+ "credits": 24,
+ "tool": "spritecook",
+ "family": "rw_traffic2",
+ "tier": "A",
+ "slot": {
+  "file": "riverwalk/art/scene/road_car5.png",
+  "where": "River Walk road in front of the promenade, near and far lane (road.lua art.cars[5]); faces left, flipped for the near lane"
+ },
+ "spritecook": {
+  "model": "gemini-nano-banana-2.1",
+  "pixel": true,
+  "resolution": "1K",
+  "width": 242,
+  "height": 81
+ },
+ "ledger_job": "rw_car5@1105-230350"
+}

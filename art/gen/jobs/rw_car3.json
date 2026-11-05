@@ -1,0 +1,27 @@
+{
+ "name": "rw_car3",
+ "level": "riverwalk",
+ "layer": "lane",
+ "kind": "vehicle",
+ "real_height_m": 1.65,
+ "target_px": [
+  242,
+  91
+ ],
+ "checks_px": {
+  "wheel": 34,
+  "wheelbase": 149,
+  "length": 242
+ },
+ "subject": "a bright yellow Stockholm taxi, a four-door saloon car from the 2000s, seen exactly from the side, the nose pointing LEFT: long bonnet, sloping windscreen, a black roof, two side windows with black pillars, a separate boot at the right, a plain cream lit box on the roof centre with nothing written on it, black door handles, silver wheels with black tyres, a light amber headlamp at the left nose and a red tail lamp at the right end",
+ "part_map": "the big mid grey shape is the car body (exactly that length and height; the bonnet on the left, the windscreen sloping up, the roof, the rear window sloping down to the boot on the right), the cream box on the roof is the taxi roof sign (a plain lit box, no letters), the light grey band is the glass of the side windows, the two dark grey circles are the wheels (exactly that size and place), the small cream square at the left is the headlamp.",
+ "size_sentence": "the taxi is about four and a half dogs long and its roof is about twice as high as the dog's head. A real full-size car, not a toy.",
+ "model": "sc_nb21",
+ "variants": 2,
+ "tier": "A",
+ "family": "rw_traffic2",
+ "slot": {
+  "file": "riverwalk/art/scene/road_car3.png",
+  "where": "River Walk road in front of the promenade, near and far lane (road.lua art.cars[3]); faces left, flipped for the near lane"
+ }
+}

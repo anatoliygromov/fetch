@@ -1,0 +1,4 @@
+{"body": ["faf0dc", "faf6f0", "e9d1b2", "d6ceca", "e1e1e1", "c2c4ca"], "speck": 3,
+ "glass": ["35455f", "5f7387", "565864", "7b8087"], "glass_fill": "35455f", "glass_band": "5f7387",
+ "windows": [{"name": "windscreen", "rect": [36, 4, 66, 44], "band_at": 40},
+             {"name": "cab side window", "rect": [67, 8, 98, 42], "band_at": 30}]}

@@ -375,7 +375,11 @@ return function(mode, api)
           { act = function() traffic({ { "car", 4, 2830, true }, { "rider", 2, 3020, false } }) end }, { wait = 0.05 }, shot("21_traffic_planter", 2760),
           { act = function() tp(140, 184); api.stage().pepper.face = 1; hold("down") end }, { wait = 0.4 },
           { act = function() traffic({ { "car", 5, 60, true } }) end }, { wait = 0.05 }, shot("22_traffic_crawl", 0),
-          { act = function() release() end } })
+          { act = function() release() end },
+          -- (5 Nov, art/rw-traffic2-05nov) the van and the taxi whole on screen, beside the bin
+          { act = function() tp(700, 184) end }, { wait = 0.3 },
+          { act = function() traffic({ { "car", 3, 560, true } }) end }, { wait = 0.05 }, shot("23_traffic_taxi", 520),
+          { act = function() traffic({ { "car", 2, 560, true } }) end }, { wait = 0.05 }, shot("24_traffic_van", 520) })
     steps[#steps + 1] = { wait = 0.3 }; steps[#steps + 1] = { act = function() love.event.quit() end }
   end
 

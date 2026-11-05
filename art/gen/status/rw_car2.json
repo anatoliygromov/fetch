@@ -1,0 +1,34 @@
+{
+ "name": "rw_car2",
+ "family": "rw_traffic2",
+ "tier": "A",
+ "steps": {
+  "spec": {
+   "time": "2026-11-05 22:57"
+  },
+  "blockout": {
+   "time": "2026-11-05 22:57"
+  },
+  "preflight": {
+   "time": "2026-11-05 23:03"
+  },
+  "probe": {
+   "render": "art/gen/renders/rw_car2_n5b.png",
+   "time": "2026-11-05 23:03"
+  },
+  "cut": {
+   "time": "2026-11-05 23:03"
+  },
+  "ingame": {
+   "frame": "docs/review/05nov/rw-traffic2/ingame_24_traffic_van_1x.png",
+   "time": "2026-11-05 23:13"
+  },
+  "polish": {
+   "aseprite": "art/source/rw_car2/rw_car2.aseprite",
+   "time": "2026-11-05 23:13"
+  },
+  "review": {
+   "time": "2026-11-05 23:23"
+  }
+ }
+}

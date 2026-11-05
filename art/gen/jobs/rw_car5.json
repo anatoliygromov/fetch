@@ -1,0 +1,27 @@
+{
+ "name": "rw_car5",
+ "level": "riverwalk",
+ "layer": "lane",
+ "kind": "vehicle",
+ "real_height_m": 1.48,
+ "target_px": [
+  242,
+  81
+ ],
+ "checks_px": {
+  "wheel": 34,
+  "wheelbase": 152,
+  "length": 242
+ },
+ "subject": "a silver Swedish estate car (station wagon) from the 1990s, boxy and square, seen exactly from the side, the nose pointing LEFT: flat bonnet, upright windscreen, a long flat roof with black roof rails, three side windows in a row with black pillars, an upright square tailgate on the right, a black bumper strip, black door handles, dark grey wheels with simple silver hubcaps and black tyres, a light amber headlamp at the left nose and a red tail lamp at the right end",
+ "part_map": "the big mid grey shape is the car body (exactly that length and height; the bonnet low on the left, the upright windscreen, the long flat roof, the square back on the right), the light grey band is the glass of the side windows, the two dark grey circles are the wheels (exactly that size and place), the small cream square at the left is the headlamp.",
+ "size_sentence": "the car is about four and a half dogs long and its roof is about twice as high as the dog's head. A real full-size family car, not a toy.",
+ "model": "sc_nb21",
+ "variants": 2,
+ "tier": "A",
+ "family": "rw_traffic2",
+ "slot": {
+  "file": "riverwalk/art/scene/road_car5.png",
+  "where": "River Walk road in front of the promenade, near and far lane (road.lua art.cars[5]); faces left, flipped for the near lane"
+ }
+}

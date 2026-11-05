@@ -1,0 +1,27 @@
+{
+ "name": "rw_car2",
+ "level": "riverwalk",
+ "layer": "lane",
+ "kind": "vehicle",
+ "real_height_m": 1.85,
+ "target_px": [
+  242,
+  102
+ ],
+ "checks_px": {
+  "wheel": 34,
+  "wheelbase": 151,
+  "length": 242
+ },
+ "subject": "a small white Swedish city panel van (delivery van) from the 2010s, seen exactly from the side, the nose pointing LEFT: short sloping bonnet, steep windscreen, one cab side window, a tall plain white cargo box with a sliding side door seam, a thin dark grey bumper strip, black door handles, silver steel wheels with black tyres, a light amber headlamp at the left nose and a red tail lamp at the right end; the cargo side is plain white with no writing",
+ "part_map": "the big mid grey shape is the van body (exactly that length and height; the short bonnet on the left, the steep windscreen, the tall flat roof and the square back on the right), the light grey quad is the cab side window, the two dark grey circles are the wheels (exactly that size and place), the small cream square at the left is the headlamp.",
+ "size_sentence": "the van is about four and a half dogs long and its roof is about two and a half times as high as the dog's head. A real full-size van, not a toy.",
+ "model": "sc_nb21",
+ "variants": 2,
+ "tier": "A",
+ "family": "rw_traffic2",
+ "slot": {
+  "file": "riverwalk/art/scene/road_car2.png",
+  "where": "River Walk road in front of the promenade, near and far lane (road.lua art.cars[2]); faces left, flipped for the near lane"
+ }
+}
