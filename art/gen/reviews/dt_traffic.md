@@ -54,3 +54,23 @@ Frames differ only in legs, wheels and pedal area (x 5-110).
 9. Read: PASS.
 
 VERDICT: FAIL (2 items: Shading, Fit). Redraw the far leg as one dark ramp and the near leg at one width, then re-run.
+
+# Round 2
+
+Reviewer: independent gate-8 art reviewer (did not make these), 6 Nov 2026, head 536ddcb. Own frames in art/gen/reviews/dt_traffic_frames/: r2_tram_stop_cam2460_1x.png, r2_tram_end_6x.png, r2_tram_mid_1x.png, r2_pedal_legs8x.png (colour), r2_pedal_legs8x_grey.png, r2_cargo_game5x.png (+_grey). asset_qa: tram_vintage PASS, cargo_bike_pedal PASS. check_backdrop: OK.
+
+## tram_vintage.png (586x188)
+
+2. Layer: PASS. Measured on my own frame (LOOK_TRAM=2357, downtown_tall): cream band and window frames are (184,170,149) = luma 172, 2,835 px; lit edge (174,160,143) = 162; body 150, windows 137. Brightest tram pixel 172, not 212. Same spot without the tram: the houses behind it are luma 150 (median), so the cream is still 22 above its backdrop, but it equals the mid median (170) and sits under the far city (175). It is no longer the whitest thing in the grey frame; the awnings, bones and house walls (201) are brighter. Note: the lit edge measures 162 on screen, not 177.
+Scale 586 px = 12.7 m at 46 px/m, unchanged. Other items unchanged from round 1 (all PASS).
+End at the stop: PASS. Tram at x 2357 (left 2064, door at 2124, rear end 2650). At camera 2460 the body runs to screen x 190 and meets the red house, which starts at 180 and is drawn over it. No sliver of sky, no end wall (r2_tram_end_6x.png). The tangent is gone.
+
+VERDICT: PASS
+
+## cargo_bike_pedal.png (8 x 116x88)
+
+4. Shapes: PASS. 5. Shading: PASS. Near leg is one trouser ramp (3 shades, one diagonal light streak), far leg one darker shade with its own 1 px ink, apart from the green stem and seat tube in frames 0, 2 and 5 (r2_pedal_legs8x.png). No two-grey mottling left. Thigh row y 50 is 20-22 px wide in all 8 frames (round 1: 14 px against 9). Shin width moves 24 to 31 px at y 68 with the pedal turn, which reads as the pedal turn. Minor: a 2 px background gap inside the far knee in frame 5 (about x 78, y 50), invisible at 1x.
+8. Fit: PASS. In grey at 5x and 8x the legs are as crisp as the box and the wheel; no longer the weak spot. Items 1-3, 6, 7, 9 unchanged, PASS.
+Note: the in-game bike parked still uses cargo_bike.png, so the pedal legs are seen in motion only; I judged them from the sheet on a backdrop colour.
+
+VERDICT: PASS
