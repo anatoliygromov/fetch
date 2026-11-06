@@ -23,6 +23,13 @@ shallow ones the true-scale house fronts need (a piece hanging lower would cover
   town_roof_flower_roof.png    90 x 14   a ledge with five terracotta flower boxes along its front
   town_footbridge.png         162 x 52   iron railing (12 rows, behind Pepper), the deck (its outline row 12), an
                                          iron arch with struts under it
+
+art/dt-roofs-06nov: the pieces the game draws (ledge, galleries, loggia, flower roof, footbridge) are redrawn in the
+Downtown sample screen's ramps (tools/build_dt_street.py: ink 18, 18, 26; granite 135 / 110 / 77; every colour from
+art/palettes/downtown.gpl), about 103 on screen like town_portal_top, below the houses' 145 to 152, so arthooks.lua's
+draw-time tint is off. Ledge: a 6 row slab, one modillion per 8 px tile. Galleries: an 8 x 20 vase baluster on a 10 px
+pitch. Footbridge: posts on the deck joints, a 4 px arch (ink, lit, iron, ink), hangers every 16 px. The chimney,
+dormer and gable are not drawn while the sample screen's first floor is on (H.FIRST_FLOOR) and keep their 23 Oct art.
 """
 import os, sys, argparse
 import numpy as np
@@ -43,10 +50,19 @@ C = {
     "Z": (70, 62, 68), "z": (98, 88, 92),                               # the arcade's shadowed back wall
     "r": (214, 62, 78), "y": (244, 196, 66), "g": (70, 122, 62), "h": (112, 162, 84),   # flowers, leaves
     "t": (184, 100, 66), "u": (140, 72, 50),                            # terracotta
+    # (art/dt-roofs-06nov) the redrawn pieces take the Downtown sample screen's ramps, every colour from
+    # art/palettes/downtown.gpl: the obstacles' ink and granite of town_portal_top / town_oriel (tools/build_dt_street.py)
+    "ink": (18, 18, 26),
+    "g1": (135, 130, 120), "g2": (110, 103, 95), "g3": (77, 72, 68), "g4": (58, 50, 56), "g5": (42, 36, 42),   # granite, recess
+    "s1": (132, 146, 156), "s2": (88, 100, 112), "s3": (64, 74, 86), "s4": (46, 54, 64),                       # iron (the shelter's steel)
+    "o1": (136, 92, 60), "o2": (104, 66, 44), "o3": (68, 44, 32),                                              # oak (the fronts' doors)
+    "t1": (207, 123, 82), "t2": (122, 59, 42),                                                                 # terracotta
+    "f1": (247, 134, 113), "f2": (206, 53, 49), "fy": (244, 204, 105),                                         # geraniums, a yellow
+    "l1": (96, 146, 84), "l2": (70, 112, 66), "l3": (43, 74, 56),                                              # leaves
 }
 
 class Cv:
-    def __init__(self, w, h): self.w, self.h = w, h; self.a = np.full((h, w), ".", dtype="<U1")
+    def __init__(self, w, h): self.w, self.h = w, h; self.a = np.full((h, w), ".", dtype="<U3")
     def put(self, x, y, r):
         if 0 <= x < self.w and 0 <= y < self.h: self.a[y, x] = r
     def rect(self, x0, y0, x1, y1, r):
@@ -56,12 +72,12 @@ class Cv:
         for dy, row in enumerate(rows):
             for dx, ch in enumerate(row):
                 if ch != ".": self.put(x + dx, y + dy, ch)
-    def outline(self):
+    def outline(self, ink="K"):
         """ink every opaque pixel that touches transparency or the image edge (4-neighbours)"""
         op = self.a != "."
         pad = np.pad(op, 1, constant_values=False)
         edge = op & ~(pad[:-2, 1:-1] & pad[2:, 1:-1] & pad[1:-1, :-2] & pad[1:-1, 2:])
-        self.a[edge] = "K"
+        self.a[edge] = ink
     def image(self):
         im = np.zeros((self.h, self.w, 4), np.uint8)
         for y in range(self.h):
@@ -85,15 +101,6 @@ def brick_wall(cv, mask_fn, x0, x1, y0, y1, gx=0, gy=0):
             cv.put(x, y, "c" if row == 0 else ("b" if row == 2 else "B"))
 
 # ---- the pieces ---------------------------------------------------------------------------------------------------
-def ledge():
-    cv = Cv(16, 9)
-    cv.rect(0, 0, 15, 6, "T"); slab(cv, 1, 14, 1); cv.rect(1, 5, 14, 5, "U")
-    cv.rect(14, 1, 14, 5, "U")                                        # the right end in shade
-    for mx in (6,):                                                   # one modillion per 8 px of the middle
-        cv.rect(mx, 6, mx + 3, 8, "U"); cv.rect(mx, 7, mx, 7, "T")
-    cv.outline()
-    return cv
-
 def chimney():
     cv = Cv(18, 46)
     cv.rect(1, 6, 16, 45, "B")
@@ -140,44 +147,6 @@ def gable():
     cv.outline()
     return cv
 
-BALUSTER = [".KTK.", ".KTK.", "KLTUK", "KLTUK", "KLTUK", "KLTUK", "KLTUK", "KLTUK", ".KTK.", ".KTK.", ".KTK.",
-            "KLTUK", "KLTUK", "KLTUK", "KLTUK", ".KTK.", ".KTK.", ".KTK.", "KLTUK", "KLTUK"]
-def gallery(w):
-    cv = Cv(w, 32)
-    cv.rect(0, 0, w - 1, 5, "T"); slab(cv, 1, w - 2, 1)                # the handrail (Pepper's edge)
-    cv.rect(0, 26, w - 1, 31, "T"); slab(cv, 1, w - 2, 27)            # the plinth
-    for px in (0, w - 7):                                             # end pedestals with a sunk panel
-        cv.rect(px, 0, px + 6, 31, "T"); cv.rect(px + 1, 1, px + 1, 30, "L"); cv.rect(px + 5, 1, px + 5, 30, "V")
-        slab(cv, px + 1, px + 5, 1); cv.rect(px + 2, 8, px + 4, 22, "U"); cv.rect(px + 2, 8, px + 4, 8, "V")
-    inner0, inner1 = 7, w - 8
-    n = (inner1 - inner0 + 1 - 5) // 8 + 1
-    start = inner0 + (inner1 - inner0 + 1 - ((n - 1) * 8 + 5)) // 2
-    for i in range(n): cv.stamp(BALUSTER, start + i * 8, 6)
-    cv.outline()
-    return cv
-
-def loggia():
-    cv = Cv(122, 26)
-    cv.rect(0, 0, 121, 25, "T")
-    slab(cv, 1, 120, 1); cv.rect(1, 5, 120, 5, "U")                   # the cornice
-    for x in range(2, 120, 4): cv.rect(x, 7, x + 1, 8, "U")           # dentils under it
-    cv.rect(1, 6, 120, 6, "V")
-    for i in range(5):                                                # five arches 18 wide between piers of 5
-        a0 = 6 + i * 23; a1 = a0 + 17; cxa = (a0 + a1) / 2; r = 9
-        for y in range(10, 24):
-            for x in range(a0, a1 + 1):
-                if y >= 10 + r or np.hypot(x + 0.5 - (cxa + 0.5), y + 0.5 - (10 + r)) < r:
-                    cv.put(x, y, "Z" if (y > 19 or x < a0 + 4) else "z")
-        for x in range(a0 - 1, a1 + 2):                               # the arch's ring: lit on the left half
-            for y in range(9, 10 + r):
-                d = np.hypot(x + 0.5 - (cxa + 0.5), y + 0.5 - (10 + r))
-                if r <= d < r + 1.2 and cv.a[y, x] == "T": cv.put(x, y, "L" if x < cxa else "V")
-        cv.rect(a1 + 1, 10 + r, a1 + 1, 23, "L")                      # the pier's lit left face
-        cv.rect(a0 - 1, 10 + r, a0 - 1, 23, "V")
-    slab(cv, 1, 120, 22); cv.rect(1, 25, 120, 25, "V")                # the sill under the arcade
-    cv.outline()
-    return cv
-
 def dormer():
     cv = Cv(58, 36)
     cv.rect(0, 0, 57, 7, "C")                                         # the copper roof: seams every 6 px
@@ -197,41 +166,118 @@ def dormer():
     cv.outline()
     return cv
 
-FLOWERS = ["..r.y..r..y.", ".rgryhgyrhr.", "ghhgghhgghgh"]
+# ---- the pieces redrawn on art/dt-roofs-06nov (the sample screen's ramps and ink, every part drawn once) ------------
+# Light from the upper left: a lit top row (g1), the stone (g2), its shade (g3) on the right and under; recesses g4/g5.
+def keyed(cv, rows, key, x, y):
+    """stamp a part drawn as rows of characters, each mapped to a colour key ('.' stays as it is)"""
+    for dy, row in enumerate(rows):
+        for dx, ch in enumerate(row):
+            if ch != ".": cv.put(x + dx, y + dy, key[ch])
+
+def stone_band(cv, x0, x1, y0, rows):
+    """a moulded stone band's front, rows y0 .. y0 + rows - 1: lit top, stone, a shade row"""
+    cv.rect(x0, y0, x1, y0, "g1"); cv.rect(x0, y0 + 1, x1, y0 + rows - 2, "g2"); cv.rect(x0, y0 + rows - 1, x1, y0 + rows - 1, "g3")
+
+# the stone ledge, a 3-slice (arthooks.lua threeSlice: the left 4 px, the middle 8 repeated, the right 4): a slab 6 rows
+# deep (0.13 m) on one modillion per 8 px, 3 rows under it
+LEDGE_L = ["kkkk", "kaaa", "kabb", "kabb", "kccc", "kkkk", "....", "....", "...."]
+LEDGE_M = ["kkkkkkkk", "aaaaaaaa", "bbbbbbbb", "bbbbbbbb", "cccccccc", "kkkabckk", "..kabck.", "..kbcck.", "..kkkkk."]
+LEDGE_R = ["kkkk", "aack", "bbck", "bbck", "ccck", "kkkk", "....", "....", "...."]
+STONE_KEY = {"k": "ink", "a": "g1", "b": "g2", "c": "g3", "d": "g4", "e": "g5"}
+
+def ledge():
+    cv = Cv(16, 9)
+    keyed(cv, LEDGE_L, STONE_KEY, 0, 0); keyed(cv, LEDGE_M, STONE_KEY, 4, 0); keyed(cv, LEDGE_R, STONE_KEY, 12, 0)
+    return cv
+
+# a vase baluster, 8 x 20, drawn once: a block under the rail, a neck, the belly (lit on the left), a neck, a foot
+BALUSTER8 = ["kabbbbck", "kabbbbck", ".kabbck.", "..kbck..", "..kbck..", "..kbck..", ".kabbck.", ".kabbck.",
+             "kaabbbck", "kaabbbck", "kaabbbck", "kaabbbck", "kabbbbck", ".kabbck.", "..kbck..", "..kbck..",
+             ".kabbck.", "kabbbbck", "kabbbbck", "kbbbbcck"]
+
+def gallery(w):
+    """a balustrade 32 rows (0.7 m): the handrail (rows 0-5, Pepper's edge), vase balusters on a 10 px pitch, the plinth
+    (rows 26-31), a pedestal with a sunk panel at each end; one ink outline round it"""
+    cv = Cv(w, 32)
+    cv.rect(0, 0, w - 1, 5, "g2"); stone_band(cv, 1, w - 2, 1, 4)
+    cv.rect(0, 26, w - 1, 31, "g2"); stone_band(cv, 1, w - 2, 27, 4)
+    for px in (0, w - 7):                                             # the end pedestals
+        cv.rect(px, 0, px + 6, 31, "g2"); cv.rect(px + 1, 1, px + 1, 30, "g1"); cv.rect(px + 5, 1, px + 5, 30, "g3")
+        cv.rect(px + 1, 1, px + 5, 1, "g1")
+        cv.rect(px + 2, 8, px + 4, 22, "g3"); cv.rect(px + 2, 23, px + 4, 23, "g1")   # the sunk panel, its lit sill
+    inner0, inner1 = 7, w - 8
+    n = (inner1 - inner0 + 1 - 8) // 10 + 1                           # on a 10 px pitch, centred
+    start = inner0 + (inner1 - inner0 + 1 - ((n - 1) * 10 + 8)) // 2
+    for i in range(n): keyed(cv, BALUSTER8, STONE_KEY, start + i * 10, 6)
+    cv.outline("ink")
+    return cv
+
+def loggia():
+    """a cornice (rows 0-6, a dentil course) over a blind arcade of five round arches on a 24 px pitch, a sill"""
+    W, Hh = 122, 26
+    cv = Cv(W, Hh)
+    cv.rect(0, 0, W - 1, Hh - 1, "g2")
+    stone_band(cv, 1, W - 2, 1, 4)                                    # the cornice
+    cv.rect(1, 5, W - 2, 6, "g3")                                     # dentils: blocks of 2 on a 4 px grid, in shade
+    for x in range(2, W - 2, 4): cv.rect(x, 5, x + 1, 5, "g2")
+    cv.rect(1, 7, W - 2, 7, "g4")                                     # the cornice's shadow on the wall
+    R = 8
+    for i in range(5):
+        a0 = 5 + i * 24; cx = a0 + 8                                  # the opening 16 wide (a0 .. a0 + 15), the crown at row 9
+        spring = 9 + R
+        for y in range(9, 22):
+            for x in range(a0 - 1, a0 + 17):
+                dx = x + 0.5 - cx
+                inside = (y >= spring and a0 <= x <= a0 + 15) or (y < spring and np.hypot(dx, y + 0.5 - spring) < R)
+                ring = (not inside) and ((y >= spring and x in (a0 - 1, a0 + 16)) or (y < spring and np.hypot(dx, y + 0.5 - spring) < R + 1))
+                if inside: cv.put(x, y, "g5" if (y < spring - 3 or x < a0 + 2) else "g4")   # the recess, its shadow
+                elif ring: cv.put(x, y, "g1" if dx < 0 else "g3")       # the arch's ring: lit on the left, shade right
+    stone_band(cv, 1, W - 2, 22, 3)                                   # the sill
+    cv.outline("ink")
+    return cv
+
+# geraniums along a flower box, 12 wide, rows over the box: blooms (light, red), leaves (light, mid, dark)
+FLOWERS6 = [".pr.....pr..", ".prr....prr.", "mrrrmmmmrrrm", "llmmllmmllmm"]   # (no lone pixels)
+FLOWER_KEY = {"p": "f1", "r": "f2", "l": "l1", "m": "l2", "d": "l3", "y": "fy"}
+
 def flower_roof():
+    """a stone ledge (rows 0-5) with five terracotta window boxes hung on its front, geraniums in them (never over
+    the ledge's top: Pepper walks there)"""
     cv = Cv(90, 14)
-    cv.rect(0, 0, 89, 6, "T"); slab(cv, 1, 88, 1); cv.rect(1, 5, 88, 5, "U")
-    for i in range(5):                                                # five boxes 14 wide, 4 px apart, centred
-        bx = 3 + i * 17
-        cv.rect(bx, 6, bx + 13, 13, "t"); cv.rect(bx, 6, bx + 13, 6, "c"); cv.rect(bx, 12, bx + 13, 13, "u")
-        cv.rect(bx + 13, 7, bx + 13, 12, "u")
-        cv.stamp(FLOWERS, bx + 1, 3)                                  # flowers in front of the slab, never over its top
-    cv.outline()
+    cv.rect(0, 0, 89, 5, "g2"); stone_band(cv, 1, 88, 1, 4)
+    for i in range(5):                                                # five boxes 14 wide, 3 px apart, centred
+        bx = 4 + i * 17
+        cv.rect(bx, 6, bx + 13, 13, "t2"); cv.rect(bx, 6, bx + 13, 6, "t1"); cv.rect(bx + 13, 7, bx + 13, 12, "o3")
+        cv.rect(bx, 12, bx + 13, 12, "o3")
+        keyed(cv, FLOWERS6, FLOWER_KEY, bx + 1, 2)                    # rows 2-5, in front of the ledge's face
+    cv.outline("ink")
     return cv
 
 def footbridge():
+    """an iron footbridge 162 x 52: the railing (rows 0-11, behind Pepper: a top rail, bars every 4 px, posts on the
+    deck's joints), the oak deck (its outline row 12 = the box's top - 1), an iron arch from wall to wall with hangers"""
     W, Hh = 162, 52
     cv = Cv(W, Hh)
-    # the railing (rows 0-11, behind Pepper): a top rail, thin bars every 4 px, posts every 20 px
-    cv.rect(1, 1, W - 2, 2, "i"); cv.rect(1, 2, W - 2, 2, "I")
-    for x in range(3, W - 2, 4): cv.rect(x, 3, x, 11, "I")
-    for x in list(range(1, W - 2, 20)) + [W - 4]:
-        cv.rect(x, 1, x + 2, 11, "I"); cv.rect(x, 1, x, 11, "i")
-    # the deck (its outline row 12 is the box's top - 1): an oak edge beam with plank ends
-    cv.rect(0, 12, W - 1, 19, "O")
-    cv.rect(1, 13, W - 2, 13, "o"); cv.rect(1, 18, W - 2, 18, "d")
-    for x in range(6, W - 2, 8): cv.rect(x, 14, x, 17, "d")
-    # the arch: from the walls at row 47 up to the deck in the middle, 3 px thick iron, struts every 10 px
-    def arch_y(x): return 20 + (Hh - 7 - 20) * (2 * (x + 0.5) / W - 1) ** 2
-    for x in range(1, W - 1):
+    # the deck, rows 12-19: an oak edge beam, plank joints every 16 px
+    cv.rect(0, 12, W - 1, 19, "o2"); cv.rect(1, 13, W - 2, 13, "o1"); cv.rect(1, 18, W - 2, 18, "o3")
+    for x in range(16, W - 2, 16): cv.rect(x, 14, x, 17, "o3")
+    # the railing: a top rail (rows 0-3: ink, lit, iron, ink), 1 px bars (rows 4-11) every 4 px, a 4 px post at each
+    # end and every 32 px, on the deck's joints
+    cv.rect(0, 0, W - 1, 3, "s3"); cv.rect(1, 1, W - 2, 1, "s2")
+    for x in range(4, W - 3, 4): cv.rect(x, 4, x, 11, "s3")
+    for x in [0] + list(range(31, W - 8, 32)) + [W - 4]:
+        cv.rect(x, 0, x + 3, 11, "s3"); cv.rect(x + 1, 1, x + 1, 11, "s2")
+    # the arch: a 3 px iron band from the walls (row 46) up to the deck's underside at the middle
+    def arch_y(x): return 20 + 26 * (2 * (x + 0.5) / W - 1) ** 2
+    for x in range(0, W):
         y = int(round(arch_y(x)))
-        cv.rect(x, y, x, y + 2, "I"); cv.put(x, y, "i")
-    for x in list(range(10, W - 6, 10)):
-        y = int(round(arch_y(x)))
-        if y > 22: cv.rect(x, 20, x + 1, y - 1, "I"); cv.put(x, 20, "i")
-    for x in (1, W - 2):                                              # the springing plates on the walls
-        cv.rect(x - 1 if x > 1 else x, Hh - 9, x + 1 if x == 1 else x, Hh - 2, "I")
-    cv.outline()
+        cv.rect(x, y, x, y + 3, "s3"); cv.put(x, y + 1, "s2")
+    for x in range(12, W - 8, 16):                                    # hangers between the arch and the deck
+        for hx in (x, W - 1 - x):
+            y = int(round(arch_y(hx)))
+            if y > 22: cv.rect(hx, 20, hx, y - 1, "s3")
+    cv.rect(0, 44, 2, 51, "s3"); cv.rect(W - 3, 44, W - 1, 51, "s3")  # the springing plates on the walls
+    cv.outline("ink")
     return cv
 
 PIECES = {"town_roof_ledge": ledge, "town_roof_chimney": chimney, "town_roof_gable": gable,
