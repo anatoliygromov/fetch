@@ -96,7 +96,7 @@ HOUSES = {
         shade={"bf5b42": "854733", "b95e43": "854733", "854733": "5a3a33", "86624f": "5a3a33", "5d5957": "5d5957",
                "5a3a33": "5a3a33", "eaedde": "854733", "b9bdac": "5d5957", "282b36": "5a3a33"},
         remap={}, value=1.0, flat={},
-        pixels={(26, 15): "b9bdac"}),   # the attic window: its left lining one colour (review round 1)                                       # (already at the fronts' value: 157 on screen)
+        pixels={(26, 15): "b9bdac", (26, 18): "b9bdac", (26, 19): "b9bdac", (26, 20): "b9bdac", (26, 21): "b9bdac"}),   # the attic window: its left lining one colour, the full pane height (review rounds 1 and 2)                                       # (already at the fronts' value: 157 on screen)
 }
 
 
