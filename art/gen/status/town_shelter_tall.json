@@ -1,21 +1,18 @@
 {
  "name": "town_shelter_tall",
- "family": "dt_sample",
+ "family": "dt_night_06nov",
  "tier": "C",
  "steps": {
   "spec": {
-   "time": "2026-11-05 22:21"
+   "time": "2026-11-06 21:07"
   },
   "built": {
    "build": "tools/build_dt_street.py",
-   "time": "2026-11-05 22:21"
+   "time": "2026-11-06 21:07"
   },
   "ingame": {
-   "frame": "docs/review/05nov/dt-sample/frames_after/sweep_downtown_y240_x1920.png",
-   "time": "2026-11-05 22:21"
-  },
-  "review": {
-   "time": "2026-11-05 23:15"
+   "frame": "docs/review/06nov-night/dt/frames/sweep_downtown_y240_x1924.png",
+   "time": "2026-11-06 21:07"
   }
  }
 }

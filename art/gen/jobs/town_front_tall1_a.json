@@ -1,0 +1,21 @@
+{
+ "name": "town_front_tall1_a",
+ "level": "downtown",
+ "layer": "back",
+ "kind": "decoration",
+ "real_height_m": 9.39,
+ "target_px": [
+  80,
+  432
+ ],
+ "tier": "C",
+ "family": "dt_night_06nov",
+ "method": "built from parts drawn once, stamped on integer grids, tools/build_dt_facades.py",
+ "build": "tools/build_dt_facades.py",
+ "frame": "docs/review/06nov-night/dt/frames/sweep_downtown_y120_x1884.png",
+ "slot": {
+  "file": "riverwalk/art/scene/town_front_tall1_a.png",
+  "where": "Downtown tall, a front box whose style property selects it (arthooks.lua frontImg), bottom on y 414"
+ },
+ "concept": "art/gen/concepts/dt_highroad_concept_a.png (design only)"
+}

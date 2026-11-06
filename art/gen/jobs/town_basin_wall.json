@@ -1,0 +1,21 @@
+{
+ "name": "town_basin_wall",
+ "level": "downtown",
+ "layer": "ground",
+ "kind": "decoration",
+ "real_height_m": 1.22,
+ "target_px": [
+  10,
+  56
+ ],
+ "tier": "C",
+ "family": "dt_night_06nov",
+ "method": "built from parts drawn once, stamped on integer grids, tools/build_dt_details.py",
+ "build": "tools/build_dt_details.py",
+ "frame": "docs/review/06nov-night/dt/frames/sweep_downtown_y240_x1632.png",
+ "slot": {
+  "file": "riverwalk/art/scene/town_basin_wall.png",
+  "where": "Downtown tall, under each fountain RIM on the water side, y 424-479"
+ },
+ "concept": "art/gen/concepts/dt_highroad_concept_a.png (design only)"
+}
