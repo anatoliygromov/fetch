@@ -593,13 +593,14 @@ function St:draw(debug)
   local w = self.world
   if not self.ground then
     if style then self.ground = Sc.paintGroundArt(w, style, self.def.foot)
-    else self.ground = grey and Sc.paintGroundGrey(w) or Sc.paintGround(w, self.def.props) end
+    else self.ground = grey and Sc.paintGroundGrey(w) or Sc.paintGround(w, self.def.props, self.def) end
   end
   use("ground")
   for _, ps in ipairs(self.def.passages or {}) do Sc.passageBack(ps, cam) end
   lg.setColor(1, 1, 1, 1)
   self.ground:draw(cam, camY)                                      -- (in chunks, the ones on screen: scene.lua)
   if lk then Look.road(self, cam, Sc) end                          -- the road rows recede (row scrolling)
+  if self.def.ground == "quay" then Sc.drawRoadEnds(cam) end      -- (art/rw-ground-06nov) the kerb turns the road's ends
   for _, ps in ipairs(self.def.passages or {}) do Sc.passageFront(ps, cam) end
   if style then Sc.drawTerrainArt(self.def, cam, self.t) end         -- the slide, the fountain's jets
   -- the river Pepper can fall into is not drawn: it is a gap in the quay, and the river art shows through
