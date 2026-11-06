@@ -1102,6 +1102,7 @@ function Sc.drawFarArt(L, camx, t, w, def)
     strip(T.facades, camx, 0.5, 178)                              -- 5 old town facades (faded)
   end
   vpop(on); on = vpush("world")                                   -- (the ponds are in the world)
+  Sc.pondPools, Sc.pondT = pools(w), t                             -- (a stepping stone stands in them: drawPropArt)
   -- the pond / basin: its far bank, then the water (rows of the river art, each moving on its own)
   Look.use("ground")
   local gw = T.ground:getWidth()
@@ -1945,6 +1946,29 @@ local function drawTierProp(p, camx, def)
   return true
 end
 
+-- a stepping stone's reflection (art/cp-pond-06nov): under the waterline wy, a dark copy of the rock's lower
+-- outline, narrowing and breaking up row by row, each row swaying 1 px on its own (as the water's rows do). Flat
+-- colours of the pond's own deep water, no alpha, no dither. x, w: the rock's art (its outline included).
+local REFL = { hex("2f5568"), hex("3d6878") }
+function Sc.stoneReflection(x, wy, w, t)
+  for i = 0, 6 do
+    if i < 4 or i % 2 == 0 then
+      local inset = 1 + math.floor(i * 0.7) + (i == 0 and 0 or 1)
+      local sway = math.floor(math.sin(t * 2.1 + i * 1.3) * 1.2 + 0.5)
+      local c = i < 3 and REFL[1] or REFL[2]
+      lg.setColor(c)
+      if i >= 3 then                                                  -- the lower rows break into two dashes
+        local half = math.floor((w - 2 * inset) / 2)
+        lg.rectangle("fill", x + inset + sway, wy + i, half - 2, 1)
+        lg.rectangle("fill", x + inset + half + 1 + sway, wy + i, w - 2 * inset - half - 1, 1)
+      else
+        lg.rectangle("fill", x + inset + sway, wy + i, w - 2 * inset, 1)
+      end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+
 -- one prop of an art level. kicked: a leaf pile Pepper has run through.
 function Sc.drawPropArt(p, camx, def, kicked)
   local style = def.art
@@ -1996,9 +2020,21 @@ function Sc.drawPropArt(p, camx, def, kicked)
     elseif n == "BENCH" then Sc.shadow(x + w / 2, 183 + d, w + 10, 5); at(A.bench, x - 3, 184 + d - A.bench:getHeight())
     elseif n == "HEDGE" then Sc.shadow(x + w / 2, 183 + d, w + 4, 5); at(T.hedge, x + math.floor((w - T.hedge:getWidth()) / 2), p.y0)   -- (6 Nov: 66 px art, its outline 1 px outside the box each side)
     elseif n == "STONE" then
-      at(T.stone, x - 1, p.y0 - 1)
-      local water = 208 + d                                       -- under the surface: the pond's colour over it
-      lg.setColor(0.33, 0.47, 0.52, 0.55); lg.rectangle("fill", math.floor(x) - 1, water, T.stone:getWidth(), 240 + d - water)
+      -- (art/cp-pond-06nov, the owner: "this thing looks weird") a stepping stone is the top of a rock standing out
+      -- of the water: its art (26 x 21, tools/fix_cp_pond.py) ends at the waterline, its last row the pond's dark
+      -- edge row, cut there if the water is higher; under it only a dark reflection, wobbling. It filled its box
+      -- down to the bottom of the world under a see-through wash: a grey glass pillar. The box is unchanged.
+      local wy
+      for _, q in ipairs(Sc.pondPools or {}) do
+        if q.x0 < p.x1 and q.x1 > p.x0 and q.y0 > p.y0 and q.y0 < p.y1 then wy = q.y0 end
+      end
+      if wy then
+        local sw, sh = T.stone:getDimensions()
+        local rows = math.min(sh, wy - (p.y0 - 1))
+        if not T.stoneQ or T.stoneQ.rows ~= rows then T.stoneQ = { q = lg.newQuad(0, 0, sw, rows, sw, sh), rows = rows } end
+        lg.setColor(1, 1, 1, 1); lg.draw(T.stone, T.stoneQ.q, math.floor(x) - 1, p.y0 - 1)
+        Sc.stoneReflection(math.floor(x) - 1, wy, sw, Sc.pondT or 0)
+      else at(T.stone, x - 1, p.y0 - 1) end                         -- (on dry ground: the rock on its box, as before)
     elseif n == "BIN" then shadowUnder(p, camx); at(A.bin, x - 1, 184 + d - A.bin:getHeight())
     elseif n == "PICNIC TABLE" then shadowUnder(p, camx); at(T.table, x, p.y0)
     elseif n == "OAK" then if not Sc.oakHasArt(def) then at(T.oak, x + w / 2 - 94, 175 + d - T.oak:getHeight()) end
