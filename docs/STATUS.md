@@ -1,5 +1,29 @@
 # FETCH! Status
 
+## Evening of 6 Nov, producer session 2 (18:30 to 21:10): the asset run for River Walk, City Park and Downtown
+
+**Owner:** 18:38 "Spend the credits, make assets"; 18:45 "All 3 levels now, up to 2,000" (lifts BIBLE 4's sample-screen wait and the 150 a day cap for this run only); 18:43 "use more agents for efficiency"; 19:12 "you're spending SpriteCook credits on assets with wrong scale" (all paid calls stopped at 19:12 and not resumed); then "looks weird" on the City Park pond, the Downtown high road, the River Walk asphalt joins, and the dark hint panels.
+
+**Two producer sessions ran at once tonight** (BIBLE 8 says one). The other one made `preview/06nov` (hud-v8, bikes-front, road, rowing boats). This session never pushed to it; `preview/06nov-run` is built on top of it.
+
+**Credits (SpriteCook):** this session 632 (oak 76, birch 48, City Park props 216, City Park critters 62, oak climbing parts 60, Downtown traffic 134, Downtown props 36). Wasted on wrong scale: 108 (Nano Banana 2.1 renders: cargo bike 24, tram 36, hedge 24, tub 24) plus a duplicate duck boat (48). The other session: 302 (rowing boats 162, willow 76, rower 64). Balance 2,100 at 21:00. Artlist 0 (own account, 60,530, renews 26 Nov). Ledger on `preview/06nov-run` matches the account for this session's jobs.
+
+**New rule, now code:** `tools/scale_gate.py` measures Pepper and the subject in every paid render before any cut or retry; preflight refuses Nano Banana 2.1 for blockout jobs (`rules.json no_blockout_models`); the default model is GPT 2.5 Sunburst. Line in `docs/art_learnings.md`.
+
+**Build:** `preview/06nov-run` (head after this commit), `2d game test/PREVIEW 6 Nov late/FETCH_PREVIEW_06nov_late.love`. Checks: PEPPER UNCHANGED, flow 125/125, Tiled, BACKDROP OK, physics on all 8 levels, autopilot GOOD GIRL on the three, QA 0 problems, asset_qa 4 old FAILs (base 6), curve T1-T4 PASS.
+
+**Merged into the run branch** (each family passed an independent review, 1 to 3 rounds): tools/scale-gate-06nov, art/cp-oak-06nov, art/rw-props-06nov, art/rw-ground-06nov, art/rw-audit-06nov, art/dt-traffic-06nov, art/dt-props-06nov, art/dt-roofs-06nov, art/dt-built-06nov, art/dt-highroad-06nov, art/dt-audit-06nov, art/cp-built-06nov, art/cp-props-06nov, art/cp-critters-06nov, art/cp-pond-06nov, art/cp-audit-06nov, ui/hint-bubbles-06nov. **Not merged:** art/cp-boughs-06nov (oak climbing branches FAILED two review rounds: the game keeps the code branches; method change is the owner's call), art/cp-backtrees-06nov (willow spec only).
+
+**State per level** (everything the game draws, measured by hooking love.graphics.draw over the full sweep and an autopilot run):
+- River Walk: new and on the board: road and quay joins, bridge arch, front hedges, birch, grit box, pontoon, kennel, bone outline. Waiting on the board from 5 Nov: traffic (2 cards), water taxi and piles, street (gable bay, cafe). Approved: bench, bin, lamp, kiosks, planter, flower box, pavement, haze, cloud8, park_log, pier, skyline, home, lime, railing. Owner calls: kiosks (60 px), lamps (101 or 207 px), the wooden pier's legs, kennel, jetty and pontoon sizes, the other session's rowing boats (not on the board).
+- City Park tall: new and on the board: old oak (round 4 PASS), magpie, duck boat (two to pick from), goose fly row, hedge, leaves, hollow log, bush, pond with bank and waterline, granite stones, rope bridges, arbour, play tower, keeper's winch, climbing frame, front bushes, earth bands, gate, swings. Still code-drawn and weak: the oak climbing branches, the bare peach plain at the high camera. On the board from 5 Nov: lime, ash, mid trees.
+- Downtown tall: new and on the board: tram (solid, true size), cargo bike, props, roof kit, balconies, fountain, facades, far roofs, door, gate, house 3, bollard, fixes on houses 1 and 2, awnings and table, the high road on true-scale fronts (flag H.PLAZA_FRONTS), the quay and canal edges, lanterns, footbridge piers. Owner calls: plaza houses (true-scale fronts or doll houses), kiosk, parasol and stall boxes below true scale, tram size, statue. On the board from 5 Nov: the sample screen pieces.
+- All levels: every in-level hint in the light speech bubble.
+
+**Waiting for the owner (board v13, 14 new cards at the top):** approve, fix or reject per piece; the questions on each card; the decision card on the oak climbing branches (about 300 to 380 credits for whole trees, or keep the code). Also: which session is the producer; resume paid jobs (1,444 left of his 2,000 for this run).
+
+**Known:** `maps/riverwalk.tmx` differs from `level/riverwalk.lua` (13 places, decorative); `tools/check_flow.sh` shares one save folder, so parallel runs fail falsely (give it its own XDG_DATA_HOME); asset_qa's bone exception is out of date (bones now outlined).
+
 ## Evening of 6 Nov: fixes from the owner's play of the 6 Nov preview (live session, 0 credits)
 
 **Owner, 19:06 to 19:13:** the cyclist rides behind the flower boxes; old speech panel; "boat is still ridiculously small"; "this asphalt transition is crazy", "the asphalt is moving weirdly", "why asphalt color differ here?". 19:10: "Go".
