@@ -2389,6 +2389,23 @@ function Sc.drawTreetops(def, camx, world)
     if not inside and c.x1 - ox > -120 and c.x0 - ox < 440 then drawCanopy(c, ox, T) end
     CANOPY_SKIP = nil
   end
+  for p, r in pairs(TI.role) do                                      -- (night 6 Nov, cp) the low bough's trunk again, from
+    if r == "lowbough" and p.x1 - ox > -60 and p.x0 - ox < 380 then  -- under the bough down, over the canopy that hid it:
+      local t = trunkOf(TI, p)                                        -- the bough grows out of a trunk seen to the ground,
+      if t and not t.art and not t.hasArt then
+        drawTrunk(t, p.y0 - 24, foot, ox, t.x1 - t.x0 >= 24)         -- (it runs on 24 px over the bough, and the canopy's
+        local sx0, sy0 = lg.transformPoint(t.x0 - ox - 20, 0)          -- leaves are laid again over that top, so the trunk
+        local sx1, sy1 = lg.transformPoint(t.x1 - ox + 20, p.y0 - 10)  -- goes up into the crown and the bough branches off)
+        if sy1 > 0 and sx1 > 0 and sx0 < 320 then
+          lg.setScissor(math.max(0, math.floor(sx0)), 0, math.max(1, math.floor(sx1 - math.max(0, sx0))), math.floor(sy1))
+          for _, c in ipairs(TI.canopies) do
+            if c.x0 <= t.x1 and c.x1 >= t.x0 and c.y1 >= p.y0 - 30 then CANOPY_SKIP = AT; drawCanopy(c, ox, T); CANOPY_SKIP = nil end
+          end
+          lg.setScissor()
+        end
+      end
+    end
+  end
   lg.setColor(1, 1, 1, 1)
   for _, a in ipairs(AT) do                                          -- the art trees, over the canopies
     local im = treeArtImg(a.name)
