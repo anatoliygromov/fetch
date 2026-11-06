@@ -67,11 +67,11 @@ def edge_mask(a):
     return on & ~nb
 
 
-def inward(a, x, y, skip):
+def inward(a, x, y, skip, reach=3):
     """the colour one step inside the silhouette from an edge pixel (the first opaque neighbour, scanning 1-3 px in
-    the four directions, that is not one of the `skip` colours)"""
+    the four directions, that is not one of the `skip` colours; review round 1: up to `reach` px)"""
     h, w = a.shape[:2]
-    for d in range(1, 4):
+    for d in range(1, reach + 1):
         for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)):
             xx, yy = x + dx * d, y + dy * d
             if 0 <= xx < w and 0 <= yy < h and a[yy, xx, 3] and "%02x%02x%02x" % tuple(a[yy, xx, :3]) not in skip:
@@ -85,16 +85,18 @@ HOUSES = {
     "town_house1": dict(
         ink={"020100"},
         shade={"b1b8a4": "767b69", "b4b89d": "767b69", "bcc0af": "767b69", "767b69": "767b69", "8c9089": "767b69",
-               "5c5856": "767b69", "edf1e1": "767b69", "5b3b34": "5c5856", "282b36": "5c5856"},
+               "5c5856": "767b69", "edf1e1": "767b69", "5b3b34": "5c5856", "282b36": "5c5856", "d6dccb": "767b69"},
         # contrast: glass 282b36 -> 3a3e4a (+9 luma), frames edf1e1 -> d6dccb (-21 luma), every pixel of each;
         # then every colour x 0.66 (value): the house at the sample screen's back value (on screen about 150, as the
         # tall fronts behind it; it was 201, lighter than the old town row across the square)
-        remap={"282b36": "3a3e4a", "edf1e1": "d6dccb"}, value=0.66),
+        remap={"282b36": "3a3e4a", "edf1e1": "d6dccb"}, value=0.66, flat={"b4b89d": "b1b8a4", "bcc0af": "b1b8a4"},
+        pixels={(19, 113): "767b69", (19, 114): "767b69", (22, 117): "767b69", (23, 117): "767b69"}),   # the step's ends
     "town_house2": dict(
         ink={"020100", "151c28", "282b36"},
         shade={"bf5b42": "854733", "b95e43": "854733", "854733": "5a3a33", "86624f": "5a3a33", "5d5957": "5d5957",
-               "5a3a33": "5a3a33", "eaedde": "854733", "b9bdac": "5d5957"},
-        remap={}, value=1.0),                                       # (already at the fronts' value: 157 on screen)
+               "5a3a33": "5a3a33", "eaedde": "854733", "b9bdac": "5d5957", "282b36": "5a3a33"},
+        remap={}, value=1.0, flat={},
+        pixels={(26, 15): "b9bdac"}),   # the attic window: its left lining one colour (review round 1)                                       # (already at the fronts' value: 157 on screen)
 }
 
 
@@ -113,6 +115,21 @@ def fix_house(name):
             c = "%02x%02x%02x" % tuple(a0[42, x, :3])
             if a0[42, x, 3] and not em[42, x] and c in R["ink"]:
                 E.set(x, 42, hx("5a3a33"), "the cornice's black lip -> the plaster's darkest shade")
+    # review round 1 (gate 8, 6 Nov): every black pixel left (the roof slopes' second ink row, the feet, the door
+    # jambs and sill; house 2's gable shoulders, cornice ends and foot) -> the darker shade of the nearest material
+    # within 8 px; then house 1's wall mottle (b4b89d) -> the one wall colour, house 2's stray light pane pixels ->
+    # the glass
+    ink = R["ink"] - {"282b36"}
+    for y, x in zip(*np.nonzero(opaque(E.a))):
+        c = "%02x%02x%02x" % tuple(E.a[y, x, :3])
+        if c in ink:
+            m = inward(a0, x, y, R["ink"] | {"282b36"}, reach=8)
+            E.set(x, y, hx(R["shade"].get(m, "767b69" if name == "town_house1" else "5a3a33")),
+                  "review round 1: a black pixel left -> the darker shade of the nearest material")
+    for (x, y), rgb in R.get("pixels", {}).items(): E.set(x, y, hx(rgb), "review round 1: a stray pixel -> its fill")
+    for y, x in zip(*np.nonzero(opaque(E.a))):
+        c = "%02x%02x%02x" % tuple(E.a[y, x, :3])
+        if c in R["flat"]: E.set(x, y, hx(R["flat"][c]), "review round 1: wall mottle -> the one wall colour")
     for y, x in zip(*np.nonzero(opaque(E.a))):
         c = "%02x%02x%02x" % tuple(E.a[y, x, :3])
         if c in R["remap"]: E.set(x, y, hx(R["remap"][c]), "contrast: glass lighter, frames darker (whole colour)")

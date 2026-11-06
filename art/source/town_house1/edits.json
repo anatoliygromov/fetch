@@ -2,7 +2,7 @@
 "asset": "town_house1",
 "source": "art/source/town_house1/town_house1_before.png",
 "tool": "tools/fix_dt_06nov.py",
-"changed": 6968,
+"changed": 7563,
 "edits": [
 {
 "x": 27,
@@ -1944,6 +1944,4171 @@
 "rule": "silhouette outline -> the darker shade of the material it edges"
 },
 {
+"x": 23,
+"y": 5,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 7,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 19,
+"y": 10,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 15,
+"y": 15,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 39,
+"y": 16,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 12,
+"y": 19,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 44,
+"y": 22,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 7,
+"y": 25,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 47,
+"y": 26,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 2,
+"y": 31,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 51,
+"y": 31,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 92,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 22,
+"y": 92,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 92,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 24,
+"y": 92,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 25,
+"y": 92,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 26,
+"y": 92,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 27,
+"y": 92,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 28,
+"y": 92,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 29,
+"y": 92,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 30,
+"y": 92,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 31,
+"y": 92,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 92,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 93,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 93,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 94,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 94,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 95,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 95,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 96,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 96,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 97,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 97,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 98,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 98,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 99,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 99,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 100,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 100,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 101,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 101,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 102,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 102,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 103,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 103,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 104,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 104,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 105,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 105,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 106,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 106,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 107,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 107,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 108,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 108,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 109,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 109,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 110,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 110,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 111,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 111,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 112,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 112,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 113,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 113,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 20,
+"y": 114,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 114,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 22,
+"y": 114,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 31,
+"y": 114,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 114,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 33,
+"y": 114,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 19,
+"y": 115,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 20,
+"y": 115,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 115,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 22,
+"y": 115,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 115,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 24,
+"y": 115,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 25,
+"y": 115,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 26,
+"y": 115,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 27,
+"y": 115,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 28,
+"y": 115,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 29,
+"y": 115,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 30,
+"y": 115,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 31,
+"y": 115,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 115,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 33,
+"y": 115,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 115,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 19,
+"y": 116,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 20,
+"y": 116,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 116,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 22,
+"y": 116,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 116,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 27,
+"y": 116,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 28,
+"y": 116,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 29,
+"y": 116,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 30,
+"y": 116,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 31,
+"y": 116,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 116,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 33,
+"y": 116,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 116,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 1,
+"y": 117,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 20,
+"y": 117,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 117,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 22,
+"y": 117,
+"was": "020100",
+"now": "5c5856",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 31,
+"y": 117,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 117,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 33,
+"y": 117,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 52,
+"y": 117,
+"was": "020100",
+"now": "767b69",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 19,
+"y": 113,
+"was": "5c5856",
+"now": "767b69",
+"rule": "review round 1: a stray pixel -> its fill"
+},
+{
+"x": 19,
+"y": 114,
+"was": "5c5856",
+"now": "767b69",
+"rule": "review round 1: a stray pixel -> its fill"
+},
+{
+"x": 22,
+"y": 117,
+"was": "5c5856",
+"now": "767b69",
+"rule": "review round 1: a stray pixel -> its fill"
+},
+{
+"x": 23,
+"y": 117,
+"was": "5c5856",
+"now": "767b69",
+"rule": "review round 1: a stray pixel -> its fill"
+},
+{
+"x": 27,
+"y": 5,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 26,
+"y": 6,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 27,
+"y": 6,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 25,
+"y": 7,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 26,
+"y": 7,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 27,
+"y": 7,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 28,
+"y": 7,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 27,
+"y": 8,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 28,
+"y": 8,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 29,
+"y": 8,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 27,
+"y": 9,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 28,
+"y": 9,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 29,
+"y": 9,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 30,
+"y": 9,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 13,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 14,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 22,
+"y": 14,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 32,
+"y": 14,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 14,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 34,
+"y": 14,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 19,
+"y": 15,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 15,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 15,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 22,
+"y": 15,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 31,
+"y": 15,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 32,
+"y": 15,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 15,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 16,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 19,
+"y": 16,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 16,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 16,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 22,
+"y": 16,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 31,
+"y": 16,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 32,
+"y": 16,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 17,
+"y": 17,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 17,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 19,
+"y": 17,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 17,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 17,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 22,
+"y": 17,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 31,
+"y": 17,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 17,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 17,
+"y": 18,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 19,
+"y": 18,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 18,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 18,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 37,
+"y": 18,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 16,
+"y": 19,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 17,
+"y": 19,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 19,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 19,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 37,
+"y": 19,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 38,
+"y": 19,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 15,
+"y": 20,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 16,
+"y": 20,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 20,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 14,
+"y": 21,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 15,
+"y": 21,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 21,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 21,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 22,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 23,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 40,
+"y": 23,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 41,
+"y": 23,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 12,
+"y": 24,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 24,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 41,
+"y": 24,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 11,
+"y": 25,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 26,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 42,
+"y": 26,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 43,
+"y": 26,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 27,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 42,
+"y": 27,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 9,
+"y": 28,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 8,
+"y": 29,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 7,
+"y": 30,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 32,
+"y": 30,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 31,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 7,
+"y": 31,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 8,
+"y": 31,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 31,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 22,
+"y": 31,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 23,
+"y": 31,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 24,
+"y": 31,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 25,
+"y": 31,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 26,
+"y": 31,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 27,
+"y": 31,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 28,
+"y": 31,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 29,
+"y": 31,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 30,
+"y": 31,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 31,
+"y": 31,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 32,
+"y": 31,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 5,
+"y": 32,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 7,
+"y": 32,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 5,
+"y": 33,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 33,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 35,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 35,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 36,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 40,
+"y": 38,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 43,
+"y": 38,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 50,
+"y": 38,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 8,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 9,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 10,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 12,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 13,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 23,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 24,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 25,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 28,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 29,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 30,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 38,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 39,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 40,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 41,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 42,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 43,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 44,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 45,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 46,
+"y": 39,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 48,
+"y": 39,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 49,
+"y": 39,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 39,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 48,
+"y": 40,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 49,
+"y": 40,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 50,
+"y": 40,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 40,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 49,
+"y": 41,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 50,
+"y": 41,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 41,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 42,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 42,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 42,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 50,
+"y": 42,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 42,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 43,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 43,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 43,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 43,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 19,
+"y": 50,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 19,
+"y": 51,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 51,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 51,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 19,
+"y": 52,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 52,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 52,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 34,
+"y": 52,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 52,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 52,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 19,
+"y": 53,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 53,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 53,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 53,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 34,
+"y": 53,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 54,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 54,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 19,
+"y": 54,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 54,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 54,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 34,
+"y": 54,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 54,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 54,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 55,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 55,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 19,
+"y": 55,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 55,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 55,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 55,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 34,
+"y": 55,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 55,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 55,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 48,
+"y": 55,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 49,
+"y": 55,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 56,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 19,
+"y": 56,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 56,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 56,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 48,
+"y": 56,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 49,
+"y": 56,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 57,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 57,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 58,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 59,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 60,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 61,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 2,
+"y": 62,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 2,
+"y": 63,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 64,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 2,
+"y": 65,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 65,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 2,
+"y": 66,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 66,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 66,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 66,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 2,
+"y": 67,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 67,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 67,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 67,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 67,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 71,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 72,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 77,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 19,
+"y": 77,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 77,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 78,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 78,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 78,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 19,
+"y": 78,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 78,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 78,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 78,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 78,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 2,
+"y": 79,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 79,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 79,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 79,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 79,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 19,
+"y": 79,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 79,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 79,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 79,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 79,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 48,
+"y": 79,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 2,
+"y": 80,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 80,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 80,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 80,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 48,
+"y": 80,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 81,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 5,
+"y": 81,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 81,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 5,
+"y": 82,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 82,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 83,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 83,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 84,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 22,
+"y": 84,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 23,
+"y": 84,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 38,
+"y": 84,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 39,
+"y": 84,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 41,
+"y": 87,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 42,
+"y": 87,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 2,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 13,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 16,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 17,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 19,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 32,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 34,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 37,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 38,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 39,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 49,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 50,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 89,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 2,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 8,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 9,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 10,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 11,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 12,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 17,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 37,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 38,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 39,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 43,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 44,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 49,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 50,
+"y": 90,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 91,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 21,
+"y": 91,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 22,
+"y": 91,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 23,
+"y": 91,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 24,
+"y": 91,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 28,
+"y": 91,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 29,
+"y": 91,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 30,
+"y": 91,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 31,
+"y": 91,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 32,
+"y": 91,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 91,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 92,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 92,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 92,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 93,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 93,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 93,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 93,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 94,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 94,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 94,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 94,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 94,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 95,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 95,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 95,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 96,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 96,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 2,
+"y": 97,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 97,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 97,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 97,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 97,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 2,
+"y": 98,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 98,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 98,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 98,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 98,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 98,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 99,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 99,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 99,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 99,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 100,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 100,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 100,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 100,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 101,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 101,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 101,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 101,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 102,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 102,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 102,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 102,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 102,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 103,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 103,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 20,
+"y": 103,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 30,
+"y": 103,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 103,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 103,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 103,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 104,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 104,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 104,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 105,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 105,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 105,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 105,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 105,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 2,
+"y": 106,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 106,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 106,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 106,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 106,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 106,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 106,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 106,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 48,
+"y": 106,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 49,
+"y": 106,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 50,
+"y": 106,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 2,
+"y": 107,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 107,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 107,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 107,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 107,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 107,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 48,
+"y": 107,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 49,
+"y": 107,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 50,
+"y": 107,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 107,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 2,
+"y": 108,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 108,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 108,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 16,
+"y": 108,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 17,
+"y": 108,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 108,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 108,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 48,
+"y": 108,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 49,
+"y": 108,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 50,
+"y": 108,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 108,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 109,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 109,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 5,
+"y": 109,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 16,
+"y": 109,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 17,
+"y": 109,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 109,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 109,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 37,
+"y": 109,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 41,
+"y": 109,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 42,
+"y": 109,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 45,
+"y": 109,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 46,
+"y": 109,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 47,
+"y": 109,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 48,
+"y": 109,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 49,
+"y": 109,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 50,
+"y": 109,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 109,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 5,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 7,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 8,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 10,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 11,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 17,
+"y": 110,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 110,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 35,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 38,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 39,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 40,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 41,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 42,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 43,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 44,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 45,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 46,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 47,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 48,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 49,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 50,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 110,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 5,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 7,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 8,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 9,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 10,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 11,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 12,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 13,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 14,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 15,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 111,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 37,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 38,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 39,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 40,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 41,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 42,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 43,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 44,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 45,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 46,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 47,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 48,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 50,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 111,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 3,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 4,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 5,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 6,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 7,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 10,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 11,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 12,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 13,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 14,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 15,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 18,
+"y": 112,
+"was": "bcc0af",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 36,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 37,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 38,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 39,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 40,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 41,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 42,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 43,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 44,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 45,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 46,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 50,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 51,
+"y": 112,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
+"x": 33,
+"y": 113,
+"was": "b4b89d",
+"now": "b1b8a4",
+"rule": "review round 1: wall mottle -> the one wall colour"
+},
+{
 "x": 36,
 "y": 12,
 "was": "282b36",
@@ -11739,8 +15904,8 @@
 {
 "x": 23,
 "y": 5,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -11767,8 +15932,8 @@
 {
 "x": 27,
 "y": 5,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -11830,15 +15995,15 @@
 {
 "x": 26,
 "y": 6,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 27,
 "y": 6,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -11907,29 +16072,29 @@
 {
 "x": 25,
 "y": 7,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 26,
 "y": 7,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 27,
 "y": 7,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 28,
 "y": 7,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -11956,8 +16121,8 @@
 {
 "x": 32,
 "y": 7,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -12019,22 +16184,22 @@
 {
 "x": 27,
 "y": 8,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 28,
 "y": 8,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 29,
 "y": 8,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -12124,29 +16289,29 @@
 {
 "x": 27,
 "y": 9,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 28,
 "y": 9,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 29,
 "y": 9,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 30,
 "y": 9,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -12187,8 +16352,8 @@
 {
 "x": 19,
 "y": 10,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -12705,8 +16870,8 @@
 {
 "x": 33,
 "y": 13,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -12782,15 +16947,15 @@
 {
 "x": 21,
 "y": 14,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 22,
 "y": 14,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -12859,22 +17024,22 @@
 {
 "x": 32,
 "y": 14,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 14,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 34,
 "y": 14,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -12915,8 +17080,8 @@
 {
 "x": 15,
 "y": 15,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -12943,29 +17108,29 @@
 {
 "x": 19,
 "y": 15,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 20,
 "y": 15,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 15,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 22,
 "y": 15,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13027,22 +17192,22 @@
 {
 "x": 31,
 "y": 15,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 32,
 "y": 15,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 15,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13118,36 +17283,36 @@
 {
 "x": 18,
 "y": 16,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 19,
 "y": 16,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 20,
 "y": 16,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 16,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 22,
 "y": 16,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13209,15 +17374,15 @@
 {
 "x": 31,
 "y": 16,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 32,
 "y": 16,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13265,8 +17430,8 @@
 {
 "x": 39,
 "y": 16,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13307,43 +17472,43 @@
 {
 "x": 17,
 "y": 17,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 18,
 "y": 17,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 19,
 "y": 17,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 20,
 "y": 17,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 17,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 22,
 "y": 17,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13405,8 +17570,8 @@
 {
 "x": 31,
 "y": 17,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13440,8 +17605,8 @@
 {
 "x": 36,
 "y": 17,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13510,8 +17675,8 @@
 {
 "x": 17,
 "y": 18,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13524,8 +17689,8 @@
 {
 "x": 19,
 "y": 18,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13538,8 +17703,8 @@
 {
 "x": 21,
 "y": 18,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13643,15 +17808,15 @@
 {
 "x": 36,
 "y": 18,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 37,
 "y": 18,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13692,8 +17857,8 @@
 {
 "x": 12,
 "y": 19,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13720,22 +17885,22 @@
 {
 "x": 16,
 "y": 19,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 17,
 "y": 19,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 18,
 "y": 19,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13755,8 +17920,8 @@
 {
 "x": 21,
 "y": 19,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13867,15 +18032,15 @@
 {
 "x": 37,
 "y": 19,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 38,
 "y": 19,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13937,15 +18102,15 @@
 {
 "x": 15,
 "y": 20,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 16,
 "y": 20,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -13979,8 +18144,8 @@
 {
 "x": 21,
 "y": 20,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -14168,15 +18333,15 @@
 {
 "x": 14,
 "y": 21,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 15,
 "y": 21,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -14210,15 +18375,15 @@
 {
 "x": 20,
 "y": 21,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 21,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -14469,8 +18634,8 @@
 {
 "x": 21,
 "y": 22,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -14630,8 +18795,8 @@
 {
 "x": 44,
 "y": 22,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -14735,8 +18900,8 @@
 {
 "x": 21,
 "y": 23,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -14868,15 +19033,15 @@
 {
 "x": 40,
 "y": 23,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 41,
 "y": 23,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -14945,8 +19110,8 @@
 {
 "x": 12,
 "y": 24,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -15008,8 +19173,8 @@
 {
 "x": 21,
 "y": 24,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -15148,8 +19313,8 @@
 {
 "x": 41,
 "y": 24,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -15197,8 +19362,8 @@
 {
 "x": 7,
 "y": 25,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -15225,8 +19390,8 @@
 {
 "x": 11,
 "y": 25,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -15589,8 +19754,8 @@
 {
 "x": 21,
 "y": 26,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -15736,15 +19901,15 @@
 {
 "x": 42,
 "y": 26,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 43,
 "y": 26,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -15771,8 +19936,8 @@
 {
 "x": 47,
 "y": 26,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -15897,8 +20062,8 @@
 {
 "x": 21,
 "y": 27,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -16044,8 +20209,8 @@
 {
 "x": 42,
 "y": 27,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -16128,8 +20293,8 @@
 {
 "x": 9,
 "y": 28,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -16450,8 +20615,8 @@
 {
 "x": 8,
 "y": 29,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -16786,8 +20951,8 @@
 {
 "x": 7,
 "y": 30,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -16961,8 +21126,8 @@
 {
 "x": 32,
 "y": 30,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -17108,8 +21273,8 @@
 {
 "x": 2,
 "y": 31,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -17136,22 +21301,22 @@
 {
 "x": 6,
 "y": 31,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 7,
 "y": 31,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 8,
 "y": 31,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -17241,85 +21406,85 @@
 {
 "x": 21,
 "y": 31,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 22,
 "y": 31,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 23,
 "y": 31,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 24,
 "y": 31,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 25,
 "y": 31,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 26,
 "y": 31,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 27,
 "y": 31,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 28,
 "y": 31,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 29,
 "y": 31,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 30,
 "y": 31,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 31,
 "y": 31,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 32,
 "y": 31,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -17451,8 +21616,8 @@
 {
 "x": 51,
 "y": 31,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -17493,8 +21658,8 @@
 {
 "x": 5,
 "y": 32,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -17507,8 +21672,8 @@
 {
 "x": 7,
 "y": 32,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -17864,15 +22029,15 @@
 {
 "x": 5,
 "y": 33,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 6,
 "y": 33,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -18585,25 +22750,25 @@
 {
 "x": 3,
 "y": 35,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
-"y": 35,
-"was": "b4b89d",
-"now": "777968",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 5,
 "y": 35,
 "was": "b1b8a4",
 "now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
+"x": 5,
+"y": 35,
+"was": "b1b8a4",
+"now": "75796c",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
 "x": 6,
 "y": 35,
 "was": "b1b8a4",
@@ -18956,8 +23121,8 @@
 {
 "x": 4,
 "y": 36,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -19936,8 +24101,8 @@
 {
 "x": 40,
 "y": 38,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -19957,8 +24122,8 @@
 {
 "x": 43,
 "y": 38,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -20006,8 +24171,8 @@
 {
 "x": 50,
 "y": 38,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -20076,22 +24241,22 @@
 {
 "x": 8,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 9,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 10,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -20104,15 +24269,15 @@
 {
 "x": 12,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 13,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -20181,22 +24346,22 @@
 {
 "x": 23,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 24,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 25,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -20216,22 +24381,22 @@
 {
 "x": 28,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 29,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 30,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -20286,64 +24451,64 @@
 {
 "x": 38,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 39,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 40,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 41,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 42,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 43,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 44,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 45,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 46,
 "y": 39,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -20356,29 +24521,29 @@
 {
 "x": 48,
 "y": 39,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 49,
-"y": 39,
-"was": "bcc0af",
-"now": "7c7f74",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 50,
 "y": 39,
 "was": "b1b8a4",
 "now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
+"x": 50,
+"y": 39,
+"was": "b1b8a4",
+"now": "75796c",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
 "x": 51,
 "y": 39,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -20720,29 +24885,29 @@
 {
 "x": 48,
 "y": 40,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 49,
 "y": 40,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 50,
 "y": 40,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 51,
 "y": 40,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -21091,22 +25256,22 @@
 {
 "x": 49,
 "y": 41,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 50,
 "y": 41,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 51,
 "y": 41,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -21154,8 +25319,8 @@
 {
 "x": 6,
 "y": 42,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -21259,8 +25424,8 @@
 {
 "x": 21,
 "y": 42,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -21364,8 +25529,8 @@
 {
 "x": 36,
 "y": 42,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -21462,15 +25627,15 @@
 {
 "x": 50,
 "y": 42,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 51,
 "y": 42,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -21518,8 +25683,8 @@
 {
 "x": 6,
 "y": 43,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -21623,8 +25788,8 @@
 {
 "x": 21,
 "y": 43,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -21728,8 +25893,8 @@
 {
 "x": 36,
 "y": 43,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -21833,8 +25998,8 @@
 {
 "x": 51,
 "y": 43,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -24157,8 +28322,8 @@
 {
 "x": 19,
 "y": 50,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -24521,22 +28686,22 @@
 {
 "x": 19,
 "y": 51,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 20,
 "y": 51,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 51,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -24885,214 +29050,214 @@
 {
 "x": 19,
 "y": 52,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 20,
-"y": 52,
-"was": "bcc0af",
-"now": "7c7f74",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 21,
-"y": 52,
-"was": "b4b89d",
-"now": "777968",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 22,
-"y": 52,
-"was": "d6dccb",
-"now": "8d9186",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 23,
-"y": 52,
-"was": "8c9089",
-"now": "5c5f5a",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 24,
-"y": 52,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 25,
-"y": 52,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 26,
-"y": 52,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 27,
-"y": 52,
-"was": "d6dccb",
-"now": "8d9186",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 28,
-"y": 52,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 29,
-"y": 52,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 30,
-"y": 52,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 31,
-"y": 52,
-"was": "8c9089",
-"now": "5c5f5a",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 32,
-"y": 52,
-"was": "d6dccb",
-"now": "8d9186",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 33,
 "y": 52,
 "was": "b1b8a4",
 "now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
-"x": 34,
-"y": 52,
-"was": "b4b89d",
-"now": "777968",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 35,
-"y": 52,
-"was": "b4b89d",
-"now": "777968",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 36,
-"y": 52,
-"was": "b4b89d",
-"now": "777968",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 37,
-"y": 52,
-"was": "d6dccb",
-"now": "8d9186",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 38,
-"y": 52,
-"was": "8c9089",
-"now": "5c5f5a",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 39,
-"y": 52,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 40,
-"y": 52,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 41,
-"y": 52,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 42,
-"y": 52,
-"was": "d6dccb",
-"now": "8d9186",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 43,
-"y": 52,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 44,
-"y": 52,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 45,
-"y": 52,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 46,
-"y": 52,
-"was": "8c9089",
-"now": "5c5f5a",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 47,
-"y": 52,
-"was": "d6dccb",
-"now": "8d9186",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 48,
+"x": 21,
 "y": 52,
 "was": "b1b8a4",
 "now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
+"x": 22,
+"y": 52,
+"was": "d6dccb",
+"now": "8d9186",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 23,
+"y": 52,
+"was": "8c9089",
+"now": "5c5f5a",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 24,
+"y": 52,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 25,
+"y": 52,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 26,
+"y": 52,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 27,
+"y": 52,
+"was": "d6dccb",
+"now": "8d9186",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 28,
+"y": 52,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 29,
+"y": 52,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 30,
+"y": 52,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 31,
+"y": 52,
+"was": "8c9089",
+"now": "5c5f5a",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 32,
+"y": 52,
+"was": "d6dccb",
+"now": "8d9186",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 33,
+"y": 52,
+"was": "b1b8a4",
+"now": "75796c",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 34,
+"y": 52,
+"was": "b1b8a4",
+"now": "75796c",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 35,
+"y": 52,
+"was": "b1b8a4",
+"now": "75796c",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 36,
+"y": 52,
+"was": "b1b8a4",
+"now": "75796c",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 37,
+"y": 52,
+"was": "d6dccb",
+"now": "8d9186",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 38,
+"y": 52,
+"was": "8c9089",
+"now": "5c5f5a",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 39,
+"y": 52,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 40,
+"y": 52,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 41,
+"y": 52,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 42,
+"y": 52,
+"was": "d6dccb",
+"now": "8d9186",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 43,
+"y": 52,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 44,
+"y": 52,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 45,
+"y": 52,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 46,
+"y": 52,
+"was": "8c9089",
+"now": "5c5f5a",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 47,
+"y": 52,
+"was": "d6dccb",
+"now": "8d9186",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 48,
+"y": 52,
+"was": "b1b8a4",
+"now": "75796c",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
 "x": 49,
 "y": 52,
 "was": "b1b8a4",
@@ -25249,123 +29414,123 @@
 {
 "x": 19,
 "y": 53,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 20,
-"y": 53,
-"was": "b4b89d",
-"now": "777968",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 21,
-"y": 53,
-"was": "b4b89d",
-"now": "777968",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 22,
-"y": 53,
-"was": "d6dccb",
-"now": "8d9186",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 23,
-"y": 53,
-"was": "8c9089",
-"now": "5c5f5a",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 24,
-"y": 53,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 25,
-"y": 53,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 26,
-"y": 53,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 27,
-"y": 53,
-"was": "d6dccb",
-"now": "8d9186",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 28,
-"y": 53,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 29,
-"y": 53,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 30,
-"y": 53,
-"was": "3a3e4a",
-"now": "262931",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 31,
-"y": 53,
-"was": "8c9089",
-"now": "5c5f5a",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 32,
-"y": 53,
-"was": "d6dccb",
-"now": "8d9186",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 33,
-"y": 53,
-"was": "b4b89d",
-"now": "777968",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 34,
-"y": 53,
-"was": "b4b89d",
-"now": "777968",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 35,
 "y": 53,
 "was": "b1b8a4",
 "now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
+"x": 21,
+"y": 53,
+"was": "b1b8a4",
+"now": "75796c",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 22,
+"y": 53,
+"was": "d6dccb",
+"now": "8d9186",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 23,
+"y": 53,
+"was": "8c9089",
+"now": "5c5f5a",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 24,
+"y": 53,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 25,
+"y": 53,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 26,
+"y": 53,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 27,
+"y": 53,
+"was": "d6dccb",
+"now": "8d9186",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 28,
+"y": 53,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 29,
+"y": 53,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 30,
+"y": 53,
+"was": "3a3e4a",
+"now": "262931",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 31,
+"y": 53,
+"was": "8c9089",
+"now": "5c5f5a",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 32,
+"y": 53,
+"was": "d6dccb",
+"now": "8d9186",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 33,
+"y": 53,
+"was": "b1b8a4",
+"now": "75796c",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 34,
+"y": 53,
+"was": "b1b8a4",
+"now": "75796c",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 35,
+"y": 53,
+"was": "b1b8a4",
+"now": "75796c",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
 "x": 36,
 "y": 53,
 "was": "b1b8a4",
@@ -25522,8 +29687,8 @@
 {
 "x": 6,
 "y": 54,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -25606,29 +29771,29 @@
 {
 "x": 18,
 "y": 54,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 19,
 "y": 54,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 20,
 "y": 54,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 54,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -25718,22 +29883,22 @@
 {
 "x": 34,
 "y": 54,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 35,
 "y": 54,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 36,
 "y": 54,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -25886,8 +30051,8 @@
 {
 "x": 6,
 "y": 55,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -25970,29 +30135,29 @@
 {
 "x": 18,
 "y": 55,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 19,
 "y": 55,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 20,
 "y": 55,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 55,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -26075,29 +30240,29 @@
 {
 "x": 33,
 "y": 55,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 34,
 "y": 55,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 35,
 "y": 55,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 36,
 "y": 55,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -26180,15 +30345,15 @@
 {
 "x": 48,
 "y": 55,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 49,
 "y": 55,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -26334,22 +30499,22 @@
 {
 "x": 18,
 "y": 56,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 19,
 "y": 56,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 20,
 "y": 56,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -26439,8 +30604,8 @@
 {
 "x": 33,
 "y": 56,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -26544,15 +30709,15 @@
 {
 "x": 48,
 "y": 56,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 49,
 "y": 56,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -26712,25 +30877,25 @@
 {
 "x": 20,
 "y": 57,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
-"y": 57,
-"was": "b4b89d",
-"now": "777968",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 22,
 "y": 57,
 "was": "b1b8a4",
 "now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
+"x": 22,
+"y": 57,
+"was": "b1b8a4",
+"now": "75796c",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
 "x": 23,
 "y": 57,
 "was": "b1b8a4",
@@ -27293,8 +31458,8 @@
 {
 "x": 51,
 "y": 58,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -27657,8 +31822,8 @@
 {
 "x": 51,
 "y": 59,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -28021,8 +32186,8 @@
 {
 "x": 51,
 "y": 60,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -28385,8 +32550,8 @@
 {
 "x": 51,
 "y": 61,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -28406,8 +32571,8 @@
 {
 "x": 2,
 "y": 62,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -28770,8 +32935,8 @@
 {
 "x": 2,
 "y": 63,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -29477,8 +33642,8 @@
 {
 "x": 51,
 "y": 64,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -29498,8 +33663,8 @@
 {
 "x": 2,
 "y": 65,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -29841,8 +34006,8 @@
 {
 "x": 51,
 "y": 65,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -29862,8 +34027,8 @@
 {
 "x": 2,
 "y": 66,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -29890,8 +34055,8 @@
 {
 "x": 6,
 "y": 66,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -29995,8 +34160,8 @@
 {
 "x": 21,
 "y": 66,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -30100,8 +34265,8 @@
 {
 "x": 36,
 "y": 66,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -30226,8 +34391,8 @@
 {
 "x": 2,
 "y": 67,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -30254,8 +34419,8 @@
 {
 "x": 6,
 "y": 67,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -30352,15 +34517,15 @@
 {
 "x": 20,
 "y": 67,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 67,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -30464,8 +34629,8 @@
 {
 "x": 36,
 "y": 67,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -32025,8 +36190,8 @@
 {
 "x": 51,
 "y": 71,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -32389,8 +36554,8 @@
 {
 "x": 51,
 "y": 72,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -33978,22 +38143,22 @@
 {
 "x": 18,
 "y": 77,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 19,
 "y": 77,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 20,
 "y": 77,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -34244,8 +38409,8 @@
 {
 "x": 4,
 "y": 78,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -34258,8 +38423,8 @@
 {
 "x": 6,
 "y": 78,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -34342,29 +38507,29 @@
 {
 "x": 18,
 "y": 78,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 19,
 "y": 78,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 20,
 "y": 78,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 78,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -34461,15 +38626,15 @@
 {
 "x": 35,
 "y": 78,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 36,
 "y": 78,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -34594,22 +38759,22 @@
 {
 "x": 2,
 "y": 79,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 3,
 "y": 79,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 79,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -34622,8 +38787,8 @@
 {
 "x": 6,
 "y": 79,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -34706,29 +38871,29 @@
 {
 "x": 18,
 "y": 79,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 19,
 "y": 79,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 20,
 "y": 79,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 79,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -34825,15 +38990,15 @@
 {
 "x": 35,
 "y": 79,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 36,
 "y": 79,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -34916,8 +39081,8 @@
 {
 "x": 48,
 "y": 79,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -34958,22 +39123,22 @@
 {
 "x": 2,
 "y": 80,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 3,
 "y": 80,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 80,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -35070,8 +39235,8 @@
 {
 "x": 18,
 "y": 80,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -35280,8 +39445,8 @@
 {
 "x": 48,
 "y": 80,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -35336,22 +39501,22 @@
 {
 "x": 4,
 "y": 81,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 5,
 "y": 81,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 6,
 "y": 81,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -35707,15 +39872,15 @@
 {
 "x": 5,
 "y": 82,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 6,
 "y": 82,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -36057,15 +40222,15 @@
 {
 "x": 3,
 "y": 83,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 83,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -36421,8 +40586,8 @@
 {
 "x": 3,
 "y": 84,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -36554,15 +40719,15 @@
 {
 "x": 22,
 "y": 84,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 23,
 "y": 84,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -36666,15 +40831,15 @@
 {
 "x": 38,
 "y": 84,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 39,
 "y": 84,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -37779,15 +41944,15 @@
 {
 "x": 41,
 "y": 87,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 42,
 "y": 87,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -38234,15 +42399,15 @@
 {
 "x": 2,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 3,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -38311,8 +42476,8 @@
 {
 "x": 13,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -38332,29 +42497,29 @@
 {
 "x": 16,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 17,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 18,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 19,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -38444,57 +42609,57 @@
 {
 "x": 32,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 34,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 35,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 36,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 37,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 38,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 39,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -38563,22 +42728,22 @@
 {
 "x": 49,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 50,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 51,
 "y": 89,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -38598,8 +42763,8 @@
 {
 "x": 2,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -38640,36 +42805,36 @@
 {
 "x": 8,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 9,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 10,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 11,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 12,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -38703,15 +42868,15 @@
 {
 "x": 17,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 18,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -38829,36 +42994,36 @@
 {
 "x": 35,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 36,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 37,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 38,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 39,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -38885,15 +43050,15 @@
 {
 "x": 43,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 44,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -38927,15 +43092,15 @@
 {
 "x": 49,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 50,
 "y": 90,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -39088,36 +43253,36 @@
 {
 "x": 20,
 "y": 91,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 91,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 22,
 "y": 91,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 23,
 "y": 91,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 24,
 "y": 91,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -39144,43 +43309,43 @@
 {
 "x": 28,
 "y": 91,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 29,
 "y": 91,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 30,
 "y": 91,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 31,
 "y": 91,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 32,
 "y": 91,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 91,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -39452,99 +43617,99 @@
 {
 "x": 20,
 "y": 92,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 92,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 22,
 "y": 92,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 23,
 "y": 92,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 24,
 "y": 92,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 25,
 "y": 92,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 26,
 "y": 92,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 27,
 "y": 92,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 28,
 "y": 92,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 29,
 "y": 92,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 30,
 "y": 92,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 31,
 "y": 92,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 32,
 "y": 92,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 92,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -39557,8 +43722,8 @@
 {
 "x": 35,
 "y": 92,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -39718,8 +43883,8 @@
 {
 "x": 6,
 "y": 93,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -39823,8 +43988,8 @@
 {
 "x": 21,
 "y": 93,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -39900,8 +44065,8 @@
 {
 "x": 32,
 "y": 93,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -39921,15 +44086,15 @@
 {
 "x": 35,
 "y": 93,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 36,
 "y": 93,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -40033,8 +44198,8 @@
 {
 "x": 51,
 "y": 93,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -40082,8 +44247,8 @@
 {
 "x": 6,
 "y": 94,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -40187,8 +44352,8 @@
 {
 "x": 21,
 "y": 94,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -40264,15 +44429,15 @@
 {
 "x": 32,
 "y": 94,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 94,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -40285,15 +44450,15 @@
 {
 "x": 35,
 "y": 94,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 36,
 "y": 94,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -40397,8 +44562,8 @@
 {
 "x": 51,
 "y": 94,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -40551,8 +44716,8 @@
 {
 "x": 21,
 "y": 95,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -40628,15 +44793,15 @@
 {
 "x": 32,
 "y": 95,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 95,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -40649,8 +44814,8 @@
 {
 "x": 35,
 "y": 95,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -40761,8 +44926,8 @@
 {
 "x": 51,
 "y": 95,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -40915,8 +45080,8 @@
 {
 "x": 21,
 "y": 96,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -40992,15 +45157,15 @@
 {
 "x": 32,
 "y": 96,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 96,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -41125,8 +45290,8 @@
 {
 "x": 51,
 "y": 96,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -41146,22 +45311,22 @@
 {
 "x": 2,
 "y": 97,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 3,
 "y": 97,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 97,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -41279,8 +45444,8 @@
 {
 "x": 21,
 "y": 97,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -41356,15 +45521,15 @@
 {
 "x": 32,
 "y": 97,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 97,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -41489,8 +45654,8 @@
 {
 "x": 51,
 "y": 97,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -41510,22 +45675,22 @@
 {
 "x": 2,
 "y": 98,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 3,
 "y": 98,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 98,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -41643,8 +45808,8 @@
 {
 "x": 21,
 "y": 98,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -41720,15 +45885,15 @@
 {
 "x": 32,
 "y": 98,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 98,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -41748,8 +45913,8 @@
 {
 "x": 36,
 "y": 98,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -41853,8 +46018,8 @@
 {
 "x": 51,
 "y": 98,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -41881,15 +46046,15 @@
 {
 "x": 3,
 "y": 99,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 99,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -42007,8 +46172,8 @@
 {
 "x": 21,
 "y": 99,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -42084,15 +46249,15 @@
 {
 "x": 32,
 "y": 99,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 99,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -42105,8 +46270,8 @@
 {
 "x": 35,
 "y": 99,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -42245,15 +46410,15 @@
 {
 "x": 3,
 "y": 100,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 100,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -42371,8 +46536,8 @@
 {
 "x": 21,
 "y": 100,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -42448,15 +46613,15 @@
 {
 "x": 32,
 "y": 100,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 100,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -42581,8 +46746,8 @@
 {
 "x": 51,
 "y": 100,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -42609,15 +46774,15 @@
 {
 "x": 3,
 "y": 101,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 101,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -42735,8 +46900,8 @@
 {
 "x": 21,
 "y": 101,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -42812,15 +46977,15 @@
 {
 "x": 32,
 "y": 101,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 101,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -42945,8 +47110,8 @@
 {
 "x": 51,
 "y": 101,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -42973,15 +47138,15 @@
 {
 "x": 3,
 "y": 102,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 102,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -43099,8 +47264,8 @@
 {
 "x": 21,
 "y": 102,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -43176,15 +47341,15 @@
 {
 "x": 32,
 "y": 102,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 102,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -43197,15 +47362,15 @@
 {
 "x": 35,
 "y": 102,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 36,
 "y": 102,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -43337,15 +47502,15 @@
 {
 "x": 3,
 "y": 103,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 103,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -43456,15 +47621,15 @@
 {
 "x": 20,
 "y": 103,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 103,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -43526,8 +47691,8 @@
 {
 "x": 30,
 "y": 103,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -43540,15 +47705,15 @@
 {
 "x": 32,
 "y": 103,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 103,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -43561,15 +47726,15 @@
 {
 "x": 35,
 "y": 103,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 36,
 "y": 103,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -43701,15 +47866,15 @@
 {
 "x": 3,
 "y": 104,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 104,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -43827,8 +47992,8 @@
 {
 "x": 21,
 "y": 104,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -43904,15 +48069,15 @@
 {
 "x": 32,
 "y": 104,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 104,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -44065,15 +48230,15 @@
 {
 "x": 3,
 "y": 105,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 105,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -44086,8 +48251,8 @@
 {
 "x": 6,
 "y": 105,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -44191,8 +48356,8 @@
 {
 "x": 21,
 "y": 105,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -44268,8 +48433,8 @@
 {
 "x": 32,
 "y": 105,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -44289,15 +48454,15 @@
 {
 "x": 35,
 "y": 105,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 36,
 "y": 105,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -44422,22 +48587,22 @@
 {
 "x": 2,
 "y": 106,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 3,
 "y": 106,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 106,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -44450,8 +48615,8 @@
 {
 "x": 6,
 "y": 106,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -44534,8 +48699,8 @@
 {
 "x": 18,
 "y": 106,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -44555,8 +48720,8 @@
 {
 "x": 21,
 "y": 106,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -44632,15 +48797,15 @@
 {
 "x": 32,
 "y": 106,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 106,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -44653,15 +48818,15 @@
 {
 "x": 35,
 "y": 106,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 36,
 "y": 106,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -44744,32 +48909,32 @@
 {
 "x": 48,
 "y": 106,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 49,
-"y": 106,
-"was": "b4b89d",
-"now": "777968",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 50,
-"y": 106,
-"was": "b4b89d",
-"now": "777968",
-"rule": "value: every colour x 0.66, the sample screen's back value"
-},
-{
-"x": 51,
 "y": 106,
 "was": "b1b8a4",
 "now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
+"x": 50,
+"y": 106,
+"was": "b1b8a4",
+"now": "75796c",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
+"x": 51,
+"y": 106,
+"was": "b1b8a4",
+"now": "75796c",
+"rule": "value: every colour x 0.66, the sample screen's back value"
+},
+{
 "x": 52,
 "y": 106,
 "was": "767b69",
@@ -44786,22 +48951,22 @@
 {
 "x": 2,
 "y": 107,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 3,
 "y": 107,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 107,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -44814,8 +48979,8 @@
 {
 "x": 6,
 "y": 107,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -44898,8 +49063,8 @@
 {
 "x": 18,
 "y": 107,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -44919,8 +49084,8 @@
 {
 "x": 21,
 "y": 107,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -44996,15 +49161,15 @@
 {
 "x": 32,
 "y": 107,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 107,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45108,29 +49273,29 @@
 {
 "x": 48,
 "y": 107,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 49,
 "y": 107,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 50,
 "y": 107,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 51,
 "y": 107,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45150,22 +49315,22 @@
 {
 "x": 2,
 "y": 108,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 3,
 "y": 108,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 108,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45248,22 +49413,22 @@
 {
 "x": 16,
 "y": 108,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 17,
 "y": 108,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 18,
 "y": 108,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45283,8 +49448,8 @@
 {
 "x": 21,
 "y": 108,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45360,8 +49525,8 @@
 {
 "x": 32,
 "y": 108,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45381,8 +49546,8 @@
 {
 "x": 35,
 "y": 108,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45472,29 +49637,29 @@
 {
 "x": 48,
 "y": 108,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 49,
 "y": 108,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 50,
 "y": 108,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 51,
 "y": 108,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45521,22 +49686,22 @@
 {
 "x": 3,
 "y": 109,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 109,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 5,
 "y": 109,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45612,22 +49777,22 @@
 {
 "x": 16,
 "y": 109,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 17,
 "y": 109,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 18,
 "y": 109,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45647,8 +49812,8 @@
 {
 "x": 21,
 "y": 109,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45724,15 +49889,15 @@
 {
 "x": 32,
 "y": 109,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 109,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45759,8 +49924,8 @@
 {
 "x": 37,
 "y": 109,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45787,15 +49952,15 @@
 {
 "x": 41,
 "y": 109,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 42,
 "y": 109,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45815,50 +49980,50 @@
 {
 "x": 45,
 "y": 109,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 46,
 "y": 109,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 47,
 "y": 109,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 48,
 "y": 109,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 49,
 "y": 109,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 50,
 "y": 109,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 51,
 "y": 109,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45885,43 +50050,43 @@
 {
 "x": 3,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 5,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 6,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 7,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 8,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45934,15 +50099,15 @@
 {
 "x": 10,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 11,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -45983,15 +50148,15 @@
 {
 "x": 17,
 "y": 110,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 18,
 "y": 110,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46011,8 +50176,8 @@
 {
 "x": 21,
 "y": 110,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46088,15 +50253,15 @@
 {
 "x": 32,
 "y": 110,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46109,15 +50274,15 @@
 {
 "x": 35,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 36,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46130,99 +50295,99 @@
 {
 "x": 38,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 39,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 40,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 41,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 42,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 43,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 44,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 45,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 46,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 47,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 48,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 49,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 50,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 51,
 "y": 110,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46249,92 +50414,92 @@
 {
 "x": 3,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 5,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 6,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 7,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 8,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 9,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 10,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 11,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 12,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 13,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 14,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 15,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46354,8 +50519,8 @@
 {
 "x": 18,
 "y": 111,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46375,8 +50540,8 @@
 {
 "x": 21,
 "y": 111,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46452,15 +50617,15 @@
 {
 "x": 32,
 "y": 111,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46480,92 +50645,92 @@
 {
 "x": 36,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 37,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 38,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 39,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 40,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 41,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 42,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 43,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 44,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 45,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 46,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 47,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 48,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46578,15 +50743,15 @@
 {
 "x": 50,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 51,
 "y": 111,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46613,36 +50778,36 @@
 {
 "x": 3,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 4,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 5,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 6,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 7,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46662,43 +50827,43 @@
 {
 "x": 10,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 11,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 12,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 13,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 14,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 15,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46718,8 +50883,8 @@
 {
 "x": 18,
 "y": 112,
-"was": "bcc0af",
-"now": "7c7f74",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46739,8 +50904,8 @@
 {
 "x": 21,
 "y": 112,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46816,15 +50981,15 @@
 {
 "x": 32,
 "y": 112,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46844,78 +51009,78 @@
 {
 "x": 36,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 37,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 38,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 39,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 40,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 41,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 42,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 43,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 44,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 45,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 46,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -46942,15 +51107,15 @@
 {
 "x": 50,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 51,
 "y": 112,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -47089,8 +51254,8 @@
 {
 "x": 19,
 "y": 113,
-"was": "5c5856",
-"now": "3d3a39",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -47103,8 +51268,8 @@
 {
 "x": 21,
 "y": 113,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -47180,15 +51345,15 @@
 {
 "x": 32,
 "y": 113,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 113,
-"was": "b4b89d",
-"now": "777968",
+"was": "b1b8a4",
+"now": "75796c",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -47453,29 +51618,29 @@
 {
 "x": 19,
 "y": 114,
-"was": "5c5856",
-"now": "3d3a39",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 20,
 "y": 114,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 114,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 22,
 "y": 114,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -47537,22 +51702,22 @@
 {
 "x": 31,
 "y": 114,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 32,
 "y": 114,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 114,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -47817,113 +51982,113 @@
 {
 "x": 19,
 "y": 115,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 20,
 "y": 115,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 115,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 22,
 "y": 115,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 23,
 "y": 115,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 24,
 "y": 115,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 25,
 "y": 115,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 26,
 "y": 115,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 27,
 "y": 115,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 28,
 "y": 115,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 29,
 "y": 115,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 30,
 "y": 115,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 31,
 "y": 115,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 32,
 "y": 115,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 115,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 34,
 "y": 115,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -48181,36 +52346,36 @@
 {
 "x": 19,
 "y": 116,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 20,
 "y": 116,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 116,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 22,
 "y": 116,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 23,
 "y": 116,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -48237,57 +52402,57 @@
 {
 "x": 27,
 "y": 116,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 28,
 "y": 116,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 29,
 "y": 116,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 30,
 "y": 116,
-"was": "020100",
-"now": "010100",
+"was": "5c5856",
+"now": "3d3a39",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 31,
 "y": 116,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 32,
 "y": 116,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 116,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 34,
 "y": 116,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -48419,8 +52584,8 @@
 {
 "x": 1,
 "y": 117,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -48552,29 +52717,29 @@
 {
 "x": 20,
 "y": 117,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 21,
 "y": 117,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 22,
 "y": 117,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 23,
 "y": 117,
-"was": "5c5856",
-"now": "3d3a39",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -48629,22 +52794,22 @@
 {
 "x": 31,
 "y": 117,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 32,
 "y": 117,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
 "x": 33,
 "y": 117,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 },
 {
@@ -48776,8 +52941,8 @@
 {
 "x": 52,
 "y": 117,
-"was": "020100",
-"now": "010100",
+"was": "767b69",
+"now": "4e5145",
 "rule": "value: every colour x 0.66, the sample screen's back value"
 }
 ]

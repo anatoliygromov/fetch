@@ -43,3 +43,11 @@ Each card's in-game frame is `frame_<name>.png` (two spots side by side). Cards:
 - Screen 10's gate stands free in a courtyard wall (no house there); its perch is a granite doorstep, not crates (the
   sample screen's one crate size does not fit 96 px).
 - The balconies, their railings and the springy awning's coil are code-drawn and belong to the roof route track.
+
+## Review round 1 (gate 8, 146ed3f: 10 of 12 PASS) and what changed
+
+| Finding | Change (tools/fix_dt_06nov.py, tools/build_dt_built.py; every pixel in edits.json) |
+| --- | --- |
+| town_house1: black dots on both roof slopes and the feet; black door jambs and sill; wall mottle (291 px of 119,121,104) | every black pixel left takes the darker shade of the nearest material within 8 px; the wall's two dirt colours become the one wall colour; the step's two leftover ends the wall shade. No pixel under luma 20 |
+| town_house2: near-black pixels at the gable shoulders, cornice ends and foot; a stray pixel in the attic window's left pane (26,15) | the same black rule; (26,15) the lining's colour, so the lining runs one colour down the pane's left |
+| town_tramshed96: the beige courtyard wall with a window, seen over the doorstep, read as a hut in the arch | the passage redrawn: dark, its vault and left reveal darker, and at its end a smaller arch of daylight (a sunny wall, a bush, lit cobbles), no window. Opening and sizes unchanged |

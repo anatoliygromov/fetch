@@ -2,7 +2,7 @@
 "asset": "town_house2",
 "source": "art/source/town_house2/town_house2_before.png",
 "tool": "tools/fix_dt_06nov.py",
-"changed": 216,
+"changed": 323,
 "edits": [
 {
 "x": 26,
@@ -1515,6 +1515,755 @@
 "was": "020100",
 "now": "5a3a33",
 "rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 16,
+"y": 10,
+"was": "020100",
+"now": "854733",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 19,
+"y": 10,
+"was": "151c28",
+"now": "854733",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 38,
+"y": 10,
+"was": "020100",
+"now": "854733",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 41,
+"y": 10,
+"was": "020100",
+"now": "854733",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 17,
+"y": 11,
+"was": "020100",
+"now": "854733",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 40,
+"y": 11,
+"was": "020100",
+"now": "854733",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 0,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 57,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 20,
+"y": 99,
+"was": "151c28",
+"now": "854733",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 99,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 22,
+"y": 99,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 99,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 24,
+"y": 99,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 25,
+"y": 99,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 26,
+"y": 99,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 31,
+"y": 99,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 99,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 33,
+"y": 99,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 99,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 35,
+"y": 99,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 36,
+"y": 99,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 37,
+"y": 99,
+"was": "151c28",
+"now": "854733",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 101,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 24,
+"y": 101,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 25,
+"y": 101,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 26,
+"y": 101,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 27,
+"y": 101,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 28,
+"y": 101,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 29,
+"y": 101,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 30,
+"y": 101,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 31,
+"y": 101,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 101,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 33,
+"y": 101,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 101,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 102,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 33,
+"y": 102,
+"was": "020100",
+"now": "5d5957",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 102,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 103,
+"was": "151c28",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 103,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 104,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 104,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 105,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 105,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 106,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 106,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 107,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 107,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 108,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 108,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 109,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 109,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 110,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 110,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 111,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 111,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 112,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 112,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 113,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 113,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 114,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 114,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 115,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 115,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 116,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 116,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 117,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 117,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 118,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 118,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 119,
+"was": "151c28",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 119,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 120,
+"was": "020100",
+"now": "5d5957",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 120,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 121,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 121,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 22,
+"y": 122,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 122,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 122,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 35,
+"y": 122,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 20,
+"y": 123,
+"was": "020100",
+"now": "5d5957",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 22,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 23,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 24,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 25,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 26,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 27,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 28,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 29,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 30,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 31,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 32,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 33,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 34,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 35,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 36,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 37,
+"y": 123,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 20,
+"y": 124,
+"was": "020100",
+"now": "5d5957",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 21,
+"y": 124,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 22,
+"y": 124,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 35,
+"y": 124,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 36,
+"y": 124,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 37,
+"y": 124,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 2,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 22,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 35,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "review round 1: a black pixel left -> the darker shade of the nearest material"
+},
+{
+"x": 26,
+"y": 15,
+"was": "5d5957",
+"now": "b9bdac",
+"rule": "review round 1: a stray pixel -> its fill"
 }
 ]
 }

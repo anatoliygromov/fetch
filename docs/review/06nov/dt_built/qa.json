@@ -37,12 +37,12 @@
   "frames": null,
   "group": "Downtown",
   "info": {
-   "colours": 10,
-   "lone": 0.7,
+   "colours": 7,
+   "lone": 0.3,
    "p10": 103,
    "median": 158,
    "p90": 175,
-   "noise": 0.0,
+   "noise": 0.1,
    "blotches": 0,
    "outline": 1,
    "windows": {
@@ -160,8 +160,8 @@
   "frames": null,
   "group": "Downtown",
   "info": {
-   "colours": 11,
-   "lone": 0.4,
+   "colours": 9,
+   "lone": 0.2,
    "p10": 105,
    "median": 157,
    "p90": 205,
@@ -907,11 +907,11 @@
   "frames": null,
   "group": "Downtown",
   "info": {
-   "colours": 14,
+   "colours": 11,
    "lone": 0.0,
    "p10": 112,
    "median": 150,
-   "p90": 150,
+   "p90": 162,
    "noise": 0.0,
    "blotches": 0,
    "outline": 0

@@ -471,7 +471,8 @@ def home():
 # 4  the courtyard gate of screen 10 and its doorstep
 # =================================================================================================================
 GATE = dict(BDS.C)
-GATE.update(br=(137, 101, 66), bs=(114, 81, 53))                     # the wall's plaster: arthooks H.PLASTER.ochre
+GATE.update(br=(137, 101, 66), bs=(114, 81, 53),                     # the wall's plaster: arthooks H.PLASTER.ochre
+            cy=(198, 184, 146))                                         # the courtyard's sunlit cobbles
 
 
 def courtyard_gate():
@@ -493,6 +494,34 @@ def courtyard_gate():
         cv.rect(x0, 10, x1, 10, "tl"); cv.rect(x0, 11, x1, 13, "tm"); cv.rect(x0, 14, x1, 14, "tv"); cv.rect(x0, 15, x1, 15, "bs")
     cv.rect(gx - 4, 4, gx - 4, H - 1, "tl"); cv.rect(gx + gw.w + 3, 4, gx + gw.w + 3, H - 1, "bs")   # the gate's bay edges
     cv.stamp(gw.a, gx, H - gw.h)
+    # (review round 1, 6 Nov: the gateway's courtyard wall with a window, seen over the doorstep, read as a hut in the
+    # arch) the passage is redrawn as a dark way through: the vault darkest at the top and on the left reveal, and at
+    # its far end a smaller arch of daylight, the sunny courtyard: a lit wall, a green bush, its cobbles
+    hole = np.isin(cv.a, ["pd", "pdd", "pf", "cw", "pc", "og", "ol", "cg", "cgd"])
+    hole[:, :gx] = False; hole[:, gx + gw.w:] = False
+    cv.a[hole] = "pd"
+    for y in range(H):                                             # the vault's shade: 3 rows under the arch, the
+        for x in range(W):                                         # left reveal 3 columns
+            if hole[y, x] and (not hole[y - 3, x] or not hole[y, x - 3]): cv.put(x, y, "pdd")
+    cx, r = W // 2, 13                                             # the far arch: 26 wide, spring 58 rows over the foot
+    spring = H - 58
+    for y in range(spring - r, H):
+        for x in range(cx - r, cx + r):
+            inside = y >= spring or np.hypot(x + 0.5 - cx, y + 0.5 - spring) < r
+            if not inside: continue
+            k = "cw"                                               # the courtyard's sunny far wall
+            if y >= H - 44: k = "cg"                               # a bush across it
+            if y >= H - 30: k = "cy"                               # the sunlit cobbles
+            cv.put(x, y, k)
+    for x in range(cx - r, cx + r, 8):                             # the bush's round tops on an 8 px grid
+        for dy, (a, b) in enumerate(((2, 5), (1, 6), (0, 7), (0, 7))):
+            for dx in range(a, b + 1):
+                if x + dx < cx + r: cv.put(x + dx, H - 47 + dy, "cg")
+    cv.rect(cx - r, H - 31, cx + r - 1, H - 31, "cgd")             # the bush's shade on the cobbles
+    for y in range(spring - r - 1, H):                             # the far arch's own dark reveal, 1 px
+        for x in range(cx - r - 1, cx + r + 1):
+            if cv.a[y, x] == "pd" and any(cv.a[y + dy, x + dx] in ("cw", "cg", "cy", "cgd") for dx, dy in ((1, 0), (-1, 0), (0, 1)) if 0 <= y + dy < H):
+                cv.put(x, y, "pdd")
     return cv
 
 
