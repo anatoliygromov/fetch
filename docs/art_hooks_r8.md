@@ -177,3 +177,15 @@ Built by `tools/build_dt_audit.py` (`--check`); `town_rim.png` by `tools/build_d
 | `town_punt.png` | 52 x 14 | play, outlined (scene.lua PARASOL with no table over water): its gunwale at the street + 13, the pole's foot 2 px inside it |
 | `town_lantern_bracket.png` | 18 x 12 | back, faded as the lamp (`H.wallLantern`, stage.lua): a lamp on a high-road ledge is the lamp's lantern (rows 0-26) hanging from this bracket, 44 px over the ledge, on the house front's nearest bay edge |
 | (code) | | `Sc.quayEnds`: kerb corner and quoins where the street ends at water; the far quay's coursed face and the waterline in a town pool; `H.flowerBrackets` under the FLOWER ROOF; street awnings' counters and missing posts (scene.lua AWNING); CRATES drawn only above the street; the tram's fade 0.10; the stop sign after the shelter |
+
+## Downtown facade lift (night/06nov-dt, 0 credits)
+
+Built by `tools/build_dt_facades.py` (`--check`) after the producer's concept dt_highroad_concept_a (design only).
+
+| File | Size | Slot and anchor |
+| --- | --- | --- |
+| `town_front_tall<k>_<s>.png` | 80 / 88 / 96 / 88 / 148 / 148 x 432 (k 1, 2, 3, 5, 6, 7) | as `town_front_tall<k>.png`: a front box whose `style` property is s (a-f) draws them (arthooks.lua `frontImg`, `H.STYLED`); the plaster W / S swapped per box; window glass, frame and sill rows unchanged (the carried-down French windows meet them). k 7: the LOGGIA's house as one 148 px portal bay, two window axes (x 40, 108) |
+| `town_drainpipe.png` | 6 x 432 | a full-height front box with `pipe` = true: at its right end - 8, bottom on the box's bottom (y 414), faded as the fronts |
+| `town_bridge_springer.png` | 14 x 20 | play, outlined: the FOOTBRIDGE's arch feet, on the two house corners, top at the bridge art's row 42; the right one mirrored (arthooks.lua townPiece) |
+| `town_basin_wall.png` | 10 x 56 | ground: under a fountain RIM on the water's side, from the rim's bottom (y 424) down; mirrored on the right (scene.lua RIM) |
+| `town_shelter_tall.png` | 140 x 115 | unchanged slot (decoration, centred on the SHELTER, bottom on y 414), redrawn in green cast iron |
