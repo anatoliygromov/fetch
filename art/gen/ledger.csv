@@ -99,6 +99,8 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-06 18:55,plan,town_tub@1106-185500,town_tub,dt_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:56,spent,town_tub@1106-185500,,,,,24,spent,
 2026-11-06 18:56,plan,town_tub@1106-185640,town_tub,dt_props_06nov,spritecook,"SpriteCook Pixel Engine Image (exact 16-128 px, no references)",12,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:56,plan,rw_birch@1106-185632,rw_birch,rw_props_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),48,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:57,spent,town_tub@1106-185640,,,,,12,spent,
+2026-11-06 18:57,spent,rw_birch@1106-185632,,,,,48,spent,
 2026-11-06 18:58,plan,dt_cargo_bike_pedal@1106-185806,dt_cargo_bike_pedal,dt_traffic_06nov,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:58,spent,dt_cargo_bike_pedal@1106-185806,,,,,26,spent,

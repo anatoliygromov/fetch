@@ -1,0 +1,31 @@
+{
+ "name": "rw_birch",
+ "family": "rw_props_06nov",
+ "tier": "B",
+ "steps": {
+  "spec": {
+   "time": "2026-11-06 18:56"
+  },
+  "blockout": {
+   "time": "2026-11-06 18:56"
+  },
+  "preflight": {
+   "time": "2026-11-06 18:56"
+  },
+  "probe": {
+   "render": "art/gen/renders/rw_birch_a_raw.png",
+   "time": "2026-11-06 19:00"
+  },
+  "cut": {
+   "time": "2026-11-06 19:00"
+  },
+  "ingame": {
+   "frame": "docs/review/06nov/rw_props_06nov/frames/sweep_riverwalk_y000_x0400.png",
+   "time": "2026-11-06 19:00"
+  },
+  "polish": {
+   "aseprite": "art/source/rw_birch/rw_birch.aseprite",
+   "time": "2026-11-06 19:00"
+  }
+ }
+}

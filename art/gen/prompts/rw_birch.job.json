@@ -1,0 +1,33 @@
+{
+ "name": "rw_birch",
+ "model": "SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid)",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/rw_birch_blockout.png",
+  "art/gen/style_card_riverwalk.png"
+ ],
+ "prompt_file": "art/gen/prompts/rw_birch.txt",
+ "k": null,
+ "frame": [
+  256,
+  256
+ ],
+ "credits": 48,
+ "tool": "spritecook",
+ "family": "rw_props_06nov",
+ "tier": "B",
+ "slot": {
+  "file": "riverwalk/art/scene/rw_birch.png",
+  "where": "River Walk screen 2 (x 520) and screen 10 (x 2978), behind the railing on the back line: replaces tree_far"
+ },
+ "spritecook": {
+  "model": "gpt-image-2.5-sunburst",
+  "pixel": true,
+  "resolution": "1K",
+  "quality": "medium",
+  "width": 196,
+  "height": 250
+ },
+ "ledger_job": "rw_birch@1106-185632"
+}

@@ -1,0 +1,140 @@
+{
+"name": "cloud5",
+"06nov": [
+{
+"x": 48,
+"y": 21,
+"from": [
+209,
+221,
+236
+],
+"to": [
+238,
+242,
+247
+],
+"why": "no dither: takes its four neighbours' colour"
+},
+{
+"x": 50,
+"y": 21,
+"from": [
+209,
+221,
+236
+],
+"to": [
+238,
+242,
+247
+],
+"why": "no dither: takes its four neighbours' colour"
+},
+{
+"x": 52,
+"y": 21,
+"from": [
+209,
+221,
+236
+],
+"to": [
+238,
+242,
+247
+],
+"why": "no dither: takes its four neighbours' colour"
+},
+{
+"x": 44,
+"y": 22,
+"from": [
+238,
+242,
+247
+],
+"to": [
+209,
+221,
+236
+],
+"why": "no dither: takes its four neighbours' colour"
+},
+{
+"x": 47,
+"y": 22,
+"from": [
+209,
+221,
+236
+],
+"to": [
+238,
+242,
+247
+],
+"why": "no dither: takes its four neighbours' colour"
+},
+{
+"x": 49,
+"y": 22,
+"from": [
+209,
+221,
+236
+],
+"to": [
+238,
+242,
+247
+],
+"why": "no dither: takes its four neighbours' colour"
+},
+{
+"x": 51,
+"y": 22,
+"from": [
+209,
+221,
+236
+],
+"to": [
+238,
+242,
+247
+],
+"why": "no dither: takes its four neighbours' colour"
+},
+{
+"x": 53,
+"y": 22,
+"from": [
+209,
+221,
+236
+],
+"to": [
+238,
+242,
+247
+],
+"why": "no dither: takes its four neighbours' colour"
+},
+{
+"x": 45,
+"y": 23,
+"from": [
+238,
+242,
+247
+],
+"to": [
+209,
+221,
+236
+],
+"why": "no dither: takes its four neighbours' colour"
+}
+]
+}

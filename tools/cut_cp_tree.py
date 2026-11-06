@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""cut_cp_tree.py RENDER NAME [--leaf K] [--bark K] [--rim-lum L] [--bark-box x0,y0,x1,y1] [--mode N]: cut a City Park tree from its SpriteCook render
+"""cut_cp_tree.py RENDER NAME [--leaf K] [--bark K] [--rim-lum L] [--bark-box x0,y0,x1,y1] [--mode N] [--green]: cut a City Park tree from its SpriteCook render
 (5 Nov 2026, the City Park sample screen). The River Walk lime's method (art/source/rw_lime/cut_lime.py and
 clean_lime.py), made one script for every tree of the family.
 
@@ -47,6 +47,9 @@ def mean(ch): return ndimage.uniform_filter(np.where(tree, ch, 0).astype(float),
 mr, mg, mb = mean(r), mean(g), mean(b)
 sat = (np.maximum(np.maximum(mr, mg), mb) - np.minimum(np.minimum(mr, mg), mb))
 leaf = tree & (sat > 70) & (mr - mb > 60)
+if '--green' in a_:                                                 # (6 Nov, rw_birch) green summer leaves: green over
+    leaf = tree & (mg - mb > 30) & (mg > mr + 5)                     # blue and red; the white trunk, its marks and the
+                                                                     # dark limbs are bark
 for _i, _v in enumerate(a_):                                       # (5 Nov, round 3) the trunk under the crown is bark,
     if _v == '--bark-box':                                           # whatever its lit orange streaks say (repeatable)
         bx0, by0, bx1, by1 = map(int, a_[_i + 1].split(','))
