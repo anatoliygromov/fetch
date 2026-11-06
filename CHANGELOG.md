@@ -2,6 +2,7 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+<<<<<<< HEAD
 ## Branch `art/rw-water-05nov`: River Walk water family (5 Nov, SpriteCook 24 credits)
 - 5 Nov (art/rw-street-05nov): River Walk screen 12, the gable's door bay is now built as its own narrow front (tools/build_rw_gable.py build_bay(), corner lesene) instead of a pixel crop that cut a wall anchor and the next window's sills; brings in night/25oct-rw-street and night/30oct-gable-b (option B). 0 credits.
 - **The boat on screen 6 (ferry.png, 252 x 93 to 252 x 79):** the board's redraw (broken outline, holed railings, cluttered upper deck). A commuter ferry at true scale would be 20-25 m (about 1,000 px); the route Pepper runs (deck y 206, cabin roof y 184, wheelhouse roof y 154) is a 5.5 m boat, so it is now a small harbour water taxi at true size on exactly those lines: white hull with a mahogany rubbing strake and red bottom, a mahogany cabin with four identical portholes and a lifebuoy, a white wheelhouse, two fenders, a stern flag. Design and colours from one SpriteCook render (NB 2.1, 1 job, 2 variants, 24 credits); the cut was mottled after the palette snap, its foredeck was drawn from above and stood 5 px above her deck, its wheelhouse 5 px under her roof box, so every flat part is drawn by rule in the cut's colours (`tools/build_ferry.py`, every pixel against the cut in `art/source/rw_ferry/edits.json`). No railings: one unbroken 1 px ink outline. Fix round 1 (independent review): two identical wheelhouse windows mirrored about its middle, the flagstaff rooted on the aft deck with a closed outline, the white hull in three lit bands, a rub rail, a red boot top stripe, two deck cleats, a cabin door with a brass handle, a bigger lifebuoy (15 px). 16 colours. Nothing in the level moves: same boxes, same bottom anchor (y 233).
@@ -131,6 +132,14 @@ Built on `prod/integrate` with `art/preflight` merged. Tools and docs only; no g
 - **docs/BIBLE.md** (sections 4, 7, 8, 9), **docs/STATUS.md**, **docs/art_learnings.md** (with the rejection log),
   docs/art_ledger.md points to the new ledger.
 - Checks: PEPPER UNCHANGED (4591 steps), flow 125 of 125.
+=======
+## Branch `play/bikes-front`: bikes ride in front of the obstacles and Pepper (25 Oct)
+Owner, 25 Oct: "bikes need to go in front of obstacles and Pepper". stage.lua draws River Walk's cyclists and
+Downtown's cargo bikes after Pepper (play look), before the near-lane road traffic and the front frame. Until now
+(r5/bugs) they rode behind the obstacles. A rider passing under a perched Pepper now covers her for about half a
+second: this replaces "nothing may cover Pepper" for passing bikes. Checks: PEPPER UNCHANGED (4591 steps), flow
+125/125, River Walk physics 54/54.
+>>>>>>> origin/play/bikes-front
 
 ## Branch `art/title-props`: the title's thin built objects redrawn by rule (25 Oct)
 - **Props (art/source/title/tools/props.py, bg_noplate_320.png; the old layer kept in regrid/pre_props/):** sampling the painting broke thin man-made objects, so each is drawn once on the game grid from positions, widths and colours measured on the painting, palette colours only: the left lamp (finial, roof with its shade face, mid face and a 2 px lit band down the right edge as an even staircase to the brim's lit end, tan lip, two glass panes with a 1 px mullion and a frame tapering in even 4-row steps, glow orange / amber / cream, rim, collar, neck, ring, a straight post x 31..35 with ONE unbroken highlight column, moulding, base and plinth round Pepper's outline); the far quay lamp at the same design a third the size (two yellow panes with mullion and frame, 2 px post); the bench (three slats with lit top edges, end frame, seat, cross bar, cast legs); the bin (lid, four even slats, base ring); both big railing posts identical (6 px shaft with one highlight column, cap lit on the right); straight 1 px masts on the left boat (with even rigging and boom), the small boat and the boat at x 256 (with its hull). Old lamp pixels take the colour round them nearest the painting there; the sky by the left post is cleaned of specks. Rebuild: `python3 art/source/title/tools/props.py` then `build_title_regrid.py`.
