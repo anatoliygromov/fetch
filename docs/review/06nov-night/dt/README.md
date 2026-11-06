@@ -54,9 +54,11 @@ No box Pepper stands on moved. The map changes are box properties (`style`, `pip
 Cards: `round1/cards/` (basin, jets, urn, footbridge, shelter), frames `round1/frames/`. `town_jet`, `town_guild_pier` and
 `town_footbridge` belong to the dt_roofs and dt_highroad families and need their gate 8 again.
 
-**A new decision for the owner (part of decision 2):** with fronts along the whole street, the sky, the far city and
-Riddarholmen's spire (decision 6a: on screen on all 11 screens) are no longer seen anywhere in the tall Downtown.
-Leave a gap (over the canal, or a low courtyard wall) so the spire shows, or keep the street closed.
+**Fix round 2:** those 22 boxes are behind one flag, `H.CLOSED_STREET` (arthooks.lua), default false, because decision
+6a (the spire on screen) is the owner's pick and decision 2 is open. With it off the ends are open squares: the mid row
+(scroll 0.5) across them, the sky and the spire above, and every front flank on a square ends in granite quoins
+(`town_quoin.png`). There were no plaza houses at scroll 1.0 on the ends; what the review saw there is the mid row.
+`decision2_street/open_vs_closed_y<y>_x<x>.png`: open (left) against closed (right), colour and grey, 24 spots.
 
 ## Open questions for the owner
 
@@ -67,7 +69,8 @@ Leave a gap (over the canal, or a low courtyard wall) so the spire shows, or kee
    guild house keeps the high road branch's granite ground floor with the steps as its coping. Say if you want the
    gable anyway.
 3. **The house styles:** six styles, picked per house in the map. Keep, or fewer and calmer?
-4. **The far sky and the spire:** see fix round 1 above.
+4. **Decision 2, the street:** open squares at both ends with the spire (default) or the closed street
+   (`H.CLOSED_STREET = true`)? Sheets in `decision2_street/`.
 
 Review gate 8 (independent reviewer) is
 for the producer; `art/gen/reviews/town_shelter_tall.md` is the old shelter's and needs a new review.

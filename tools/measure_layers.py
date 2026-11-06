@@ -167,7 +167,7 @@ add(["town_front_tall5", "town_front_tall6", "town_balcony_door", "town_window_d
 add(["town_guild_steps", "town_guild_pier", "town_console"], "dt", "play", group="Downtown")
 # night/06nov-dt: the styled fronts and the downpipe faded as the fronts; the bridge's springers on Pepper's line; the
 # basin's wall is ground (drawn unfaded, the ground's face)
-add([f"town_front_tall{k}_{s}" for k in (1, 2, 3, 5, 6, 7) for s in "abcdef"] + ["town_drainpipe"], "dt", "back", True, group="Downtown")
+add([f"town_front_tall{k}_{s}" for k in (1, 2, 3, 5, 6, 7) for s in "abcdef"] + ["town_drainpipe", "town_quoin"], "dt", "back", True, group="Downtown")
 add(["town_bridge_springer"], "dt", "play", group="Downtown")
 add(["town_basin"], "dt", "ground", group="Downtown")
 # art/dt-audit-06nov (tools/build_dt_audit.py): the drain in the quay wall (ground), the footbridge's piers (back,

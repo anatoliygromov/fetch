@@ -469,6 +469,9 @@ def home():
     for y in range(role.shape[0]):
         for x in range(gw):
             im[y, x] = (*C[role[y, x]], 255)
+    qn = BF.quoin()[:, ::-1]                                       # (fix round 2) its right flank on the square: quoins
+    m = qn[..., 3] > 0
+    im[:, gw - qn.shape[1]:][m] = qn[m]
     return im
 
 

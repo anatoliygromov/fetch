@@ -1953,6 +1953,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -1974,6 +1975,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -1994,6 +1996,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2015,6 +2018,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2035,6 +2039,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2055,6 +2060,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2076,6 +2082,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2096,6 +2103,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2116,6 +2124,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2137,6 +2146,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2157,6 +2167,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2178,6 +2189,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2198,6 +2210,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2219,6 +2232,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2239,6 +2253,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2259,6 +2274,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2279,6 +2295,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2300,6 +2317,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2320,6 +2338,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2340,6 +2359,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2361,6 +2381,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",
@@ -2381,6 +2402,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["closed"] = true,
             ["name"] = "",
             ["kind"] = "decor",
             ["layer"] = "back",

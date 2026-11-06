@@ -296,7 +296,12 @@ H.SPIRE_DRIFT = 0.03                                      -- the far spire's scr
 local function tallTown(def) return def.art == "town" and def.foot ~= nil end
 local function high(def, p) return p.y0 <= def.foot - 120 end           -- the high road (the street is def.foot)
 local function slug(n) return (n:lower():gsub("[^%w]+", "_")) end
+-- (night/06nov-dt, fix round 2) the closed street: the fronts that fill the squares at both ends and the canal gap
+-- (box property `closed`, objects 289-310). Off by default: decision 6a (owner, 26 Oct: the spire on screen) holds,
+-- decision 2 is open; true closes the street in one line.
+H.CLOSED_STREET = false
 local function isFront(p)
+  if p.closed and not H.CLOSED_STREET then return false end
   return p.kind == "decor" and p.layer == "back" and (p.name == "" or p.name == nil or p.name == "BAKERY" or p.name == "GUILD HOUSE")
     and p.x1 - p.x0 >= 48 and p.y1 - p.y0 >= 100
 end
@@ -419,6 +424,7 @@ end
 -- elsewhere: the fronts and the spire, H.drawTownBack)
 function H.townPiece(p, camx, def)
   if not tallTown(def) then return false end
+  if p.closed and not H.CLOSED_STREET then return true end           -- (fix round 2: an open square, nothing drawn)
   if p.layer == "back" and (isFront(p) or p.name == "RIDDARHOLMEN") then return true end   -- (H.drawTownBack)
   -- layer plan decision 4a (owner, 26 Oct; art/dt-sample-05nov): the cargo bike's hiding places stand at true scale
   -- behind her (H.drawTownGateways, H.drawTownStops); their old tops, her perches, are the baker's bread crates, drawn
@@ -712,6 +718,7 @@ function H.drawTownBack(s, cam)
         end
       end
     end
+    if H.drawFlanks then H.drawFlanks(def, cam) end                  -- (fix round 2) quoins where a front meets a square
     H.drawTownGateways(def, cam)
     H.drawTownBays(def, cam)
     H.drawHighWall(def, cam)
@@ -1168,6 +1175,32 @@ function H.wallLantern(im, lx, ly, def, cam)
   lg.draw(br, left + 6 - 14, top - 6)
   lg.draw(im, q, left, top)
   return left, top
+end
+
+-- (night/06nov-dt, fix round 2) a full-height front whose flank meets an open square (no front within 8 px; with
+-- H.CLOSED_STREET off: x 140, 1180, 2480, 2640, 2816) ends in dressed quoins (town_quoin.png, tools/build_dt_facades.py),
+-- not a cut (the start house has them in its file, tools/build_dt_built.py)
+function H.drawFlanks(def, cam)
+  local q = decoImg("town_quoin")
+  if not q then return end
+  local fl = frontsOf(def)
+  local function near(x, left)
+    for _, g in ipairs(fl) do
+      if not cutAtTop(g.p) then
+        if left and g.x1 <= x and g.x1 >= x - 8 then return true end
+        if not left and g.p.x0 >= x and g.p.x0 <= x + 8 then return true end
+      end
+    end
+    return false
+  end
+  lg.setColor(1, 1, 1, 1)
+  for _, f in ipairs(fl) do
+    if not cutAtTop(f.p) and f.x1 - cam > -20 and f.p.x0 - cam < 340 then
+      local y = f.p.y1 - q:getHeight()
+      if not near(f.p.x0, true) then lg.draw(q, math.floor(f.p.x0 - cam), y) end
+      if not near(f.x1, false) then lg.draw(q, math.floor(f.x1 - cam), y, 0, -1, 1) end
+    end
+  end
 end
 
 return H

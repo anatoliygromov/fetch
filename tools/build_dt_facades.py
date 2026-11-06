@@ -373,8 +373,23 @@ def drainpipe():
     g.rect(0, FH - 10, 0, FH - 7, "L")
     return render(g.a, C)
 
+def quoin():
+    """(fix round 2) the flank of a front that ends at an open square: dressed granite quoins on the corner, 10 x 432,
+    long and short blocks in turn (10 and 6 px into the wall, 14 px courses), lit top and left, a dark joint under
+    each, the arris on the left (the left flank as drawn; the right one mirrored); no shadow (the wall's plaster
+    differs per house)"""
+    g = G(10, FH, ".")
+    for i, y0 in enumerate(range(FH - 8, -14, -14)):                  # up from the plinth's top, on the 14 px course
+        y1 = min(FH - 9, y0 + 13); y0 = max(0, y0)
+        w = 10 if i % 2 == 0 else 6
+        g.rect(0, y0, w - 1, y1, "T"); g.rect(0, y0, w - 1, y0, "L"); g.rect(0, y0, 0, y1, "L")
+        g.rect(w - 1, y0 + 1, w - 1, y1, "V"); g.rect(0, y1, w - 1, y1, "V")
+    g.rect(0, FH - 8, 9, FH - 1, "T"); g.rect(0, FH - 8, 9, FH - 8, "L"); g.rect(0, FH - 1, 9, FH - 1, "V")   # plinth
+    g.rect(0, 0, 0, FH - 1, "V")                                      # the arris
+    return render(g.a, C)
+
 def build():
-    out = {}
+    out = {"town_quoin": quoin()}
     for s in STYLES:
         for k in (1, 2, 3, 5, 6, 7):
             out[f"town_front_tall{k}_{s}"] = front(k, s)

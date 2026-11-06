@@ -29,6 +29,8 @@ return function(api)
   if os.getenv("LOOK_SWEEP") then
     -- (art/dt-highroad-06nov) LOOK_OLDHOUSES=1: decision 2a off, the old plaza houses (arthooks H.PLAZA_FRONTS)
     if os.getenv("LOOK_OLDHOUSES") then (package.loaded.arthooks or require("arthooks")).PLAZA_FRONTS = false end
+    -- (night/06nov-dt, fix round 2) LOOK_CLOSED=1: the closed street (arthooks H.CLOSED_STREET, decision 2)
+    if os.getenv("LOOK_CLOSED") then (package.loaded.arthooks or require("arthooks")).CLOSED_STREET = true end
     love.update = function(dt)
       dt = 1 / 60; T = T + dt
       old(dt)
