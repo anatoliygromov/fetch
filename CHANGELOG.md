@@ -2,6 +2,8 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `art/rw-audit-06nov`: River Walk audit fixes (6 Nov, 0 credits)
+- **gritbox_front.png (88 x 32, same slot and box), built by rule (`tools/fix_rw_audit_06nov.py`):** the green chest with a 3/4 side face read as a dumpster and merged with the kiosk's green. Now front-on: a pine grit box, a lid board 2 px wider than the body each side, three planks, end battens with a nail per plank, an iron hasp; 7 colours, 1 px ink outline.
 ## Branch `art/rw-props-06nov`: River Walk props triage and remakes (6 Nov, SpriteCook 48 credits)
 - **rw_birch.png (192 x 250, new, replaces tree_far on screens 2 and 10):** tree_far was a 2.2 m tree on the 46 px/m line, drawn with an ink edge (66 %), 4.5 % lone pixels and 10 pinholes. Now a silver birch at true scale (trunk 0.35 m, crown cut by the top, y0 -76), SpriteCook GPT 2.5 1K with the blockout and rw_lime 4x (1 job, 2 variants, 48), cut 1:1 by `tools/grid4_cut.py`, `tools/cut_cp_tree.py --green` (new: green summer leaves), `tools/polish_cp_trees.py`, two rules in `tools/fix_rw_props_06nov.py`. scene.lua loads it with the back fade; rules.json lists it as a tree; measure_layers and asset_qa know it.
 - **Hand fixes by rule, 0 credits (`tools/fix_rw_props_06nov.py`, every pixel in `art/source/NAME/edits.json`):** gritbox_front loses its "SAND" letters (no text in art); cloud2 and cloud5 lose their checker dither patches.
