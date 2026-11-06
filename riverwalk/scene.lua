@@ -2585,6 +2585,13 @@ function Sc.drawPropArt(p, camx, def, kicked)
       end
       local im = w >= 72 and T.awning80 or T.awning64
       local sq = (p.squashT or 0) > 0 and 2 or 0                  -- a springy one dips as it launches her
+      if def.foot and p.y0 < def.foot - 120 and p.y0 - 268 > 0 and p.y0 - 268 <= 10 then   -- (night/06nov-dt) on the
+        local ax = math.floor(x + w / 2 - im:getWidth() / 2)     -- high road: hung from the ground floor's cornice
+        for _, bx in ipairs({ ax + 3, ax + im:getWidth() - 6 }) do   -- (y 262-268) on two iron hangers
+          lg.setColor(INK); lg.rectangle("fill", bx, 267, 3, p.y0 - 267)
+          lg.setColor(0.45, 0.48, 0.52); lg.rectangle("fill", bx + 1, 267, 1, p.y0 - 268)
+        end
+      end
       at(im, x + w / 2 - im:getWidth() / 2, p.y0 - 1 + sq)
       if p.bounce then                                            -- springs on top of its posts: it is springy
         for _, q in ipairs(def.props) do
