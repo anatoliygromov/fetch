@@ -1828,7 +1828,14 @@ end
 -- the play tower: a yellow deck (crisp), grey posts (crisp, as the slide tower's)
 local function drawDeck(p, ox)
   local di, dx, dy_ = built(p, "deck")
-  if di then lg.setColor(1, 1, 1, 1); lg.draw(di, dx - ox, dy_); return end
+  if di then
+    lg.setColor(1, 1, 1, 1)
+    for _, part in ipairs({ "support", "support2" }) do               -- (art/cp-audit-06nov) the post under its free end
+      local si, sx, sy = built(p, part)
+      if si then lg.draw(si, sx - ox, sy) end
+    end
+    lg.draw(di, dx - ox, dy_); return
+  end
   local x0, x1, y, hgt = p.x0 - ox, p.x1 - ox, p.y0, p.y1 - p.y0
   lg.setColor(INK); lg.rectangle("fill", x0 - 1, y - 1, x1 - x0 + 2, hgt + 2)
   lg.setColor(DECK[1]); lg.rectangle("fill", x0, y, x1 - x0, hgt)
