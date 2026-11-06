@@ -281,9 +281,9 @@ def footbridge():
         cv.rect(x, 0, x + 3, 11, "s3"); cv.rect(x + 1, 1, x + 1, 11, "s2")
     # the arch: a 3 px iron band from the walls (row 46) up to the deck's underside at the middle
     def arch_y(x): return 20 + 26 * (2 * (x + 0.5) / W - 1) ** 2
-    for x in range(0, W):
-        y = int(round(arch_y(x)))
-        cv.rect(x, y, x, y + 3, "s3"); cv.put(x, y + 1, "s2")
+    for x in range(0, W):                                             # (night/06nov-dt, review round 1: a 3 px rib
+        y = int(round(arch_y(x)))                                     # inside its ink, it read as a wire)
+        cv.rect(x, y, x, y + 4, "s3"); cv.put(x, y + 1, "s2"); cv.put(x, y + 2, "s2")
     for x in range(12, W - 8, 16):                                    # hangers between the arch and the deck
         for hx in (x, W - 1 - x):
             y = int(round(arch_y(hx)))

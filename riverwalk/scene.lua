@@ -1198,6 +1198,7 @@ function Sc.drawFarArt(L, camx, t, w, def)
       Look.use("water")
       local tint = L.style == "park" and { 0.80, 0.93, 0.86 } or { 0.92, 1, 1 }
       local ww, wh = A.water:getDimensions()
+      if L.style == "park" then
       for y = p.y0, w.height - 1 do                               -- (down to the bottom of the world)
         local row = math.min(wh - 1, 20 + (y - p.y0))
         local depth = (y - p.y0) / 32
@@ -1205,7 +1206,25 @@ function Sc.drawFarArt(L, camx, t, w, def)
         lg.setColor(tint)
         lg.draw(A.water, A.waterQ[row], -o, y); lg.draw(A.water, A.waterQ[row], ww - o, y)
       end
-      if L.style ~= "park" then                                   -- (art/dt-audit-06nov) the waterline: the quay's
+      else                                                        -- (night/06nov-dt, review round 1: "a flat saturated
+        -- slab to the screen bottom") Downtown's canal front-on, as the River Walk harbour: a surface band (a lit edge,
+        -- the quay's dark reflection, two rows of drifting ripples on the surface blue), under it the deep water in two
+        -- darker steps, no streaks
+        local yb, wdt = w.height, x1 - x0
+        lg.setColor(0.31, 0.47, 0.61); lg.rectangle("fill", x0, p.y0, wdt, 8)                 -- the surface band
+        lg.setColor(0.23, 0.37, 0.51); lg.rectangle("fill", x0, p.y0 + 8, wdt, 16)            -- deep
+        lg.setColor(0.19, 0.31, 0.44); lg.rectangle("fill", x0, p.y0 + 24, wdt, yb - p.y0 - 24)   -- deeper
+        lg.setColor(0.24, 0.34, 0.44); lg.rectangle("fill", x0, p.y0 + 1, wdt, 2)             -- the quay's reflection
+        lg.setColor(0.27, 0.42, 0.56); lg.rectangle("fill", x0, p.y0 + 7, wdt, 1)             -- the band's foot
+        local wo = math.floor(t * 5) % 24                                                      -- ripples, drifting
+        for x = math.floor(p.x0) - math.floor(p.x0) % 24 - 24, math.floor(p.x1), 24 do
+          local sx = math.floor(x + wo - camx)
+          lg.setColor(0.55, 0.71, 0.82); lg.rectangle("fill", sx, p.y0 + 4, 7, 1); lg.rectangle("fill", sx + 13, p.y0 + 6, 4, 1)
+          lg.setColor(0.25, 0.40, 0.54); lg.rectangle("fill", sx + 4, p.y0 + 5, 6, 1)
+        end
+        lg.setColor(0.70, 0.84, 0.93); lg.rectangle("fill", x0, p.y0, wdt, 1)                -- the lit top edge
+      end
+      if L.style == "never" then                                  -- (art/dt-audit-06nov) the waterline: the quay's
         lg.setColor(0.13, 0.25, 0.45)                             -- dark reflection under the edge, then broken
         lg.rectangle("fill", x0, p.y0, x1 - x0, 2)               -- light ripples drifting with the water
         lg.setColor(0.62, 0.80, 0.93)
@@ -1224,6 +1243,9 @@ function Sc.drawFarArt(L, camx, t, w, def)
   lg.setColor(1, 1, 1, 1)
 end
 
+local Q = { j = { 47, 43, 47 }, s = { 60, 56, 56 }, a = { 72, 66, 64 }, l = { 94, 87, 81 },
+            k1 = { 161, 158, 151 }, k2 = { 141, 136, 129 }, k3 = { 108, 103, 98 } }
+local function qc(c) lg.setColor(c[1] / 255, c[2] / 255, c[3] / 255) end
 -- the ground of an art level, painted once: the path / pavement strip on every walkable top (its back edge 12 px
 -- above Pepper's line), dark edges on the cut faces (the pond's banks); Downtown's river stairs as stone steps.
 function Sc.paintGroundArt(w, style, foot)
@@ -1242,11 +1264,23 @@ function Sc.paintGroundArt(w, style, foot)
       local stair = sl and style == "town"
       if stair then top = foot + math.floor((top - foot) / 4) * 4 end   -- the river stairs: 4 px steps
       lg.setColor(1, 1, 1, 1)
+      if stair and foot > 184 then                                -- (night/06nov-dt, audit item 5: "the kerb ends in a
+        -- diagonal stepped block") the tall Downtown's river stairs as granite steps: no cobbles or kerb sheared down
+        -- the slope, each 4 px step a block of the kerb's granite down to the world's bottom, its courses on the steps
+        local sl0 = w:slopeAt(x - 1) and (function() for _, mm in ipairs(columnRuns(w, x - 1, "first")) do return mm[1] end end)()
+        qc(Q.k3); lg.rectangle("fill", x, top, 1, w.height - top)
+        for yy = top + 4, w.height - 1, 4 do qc(Q.a); lg.rectangle("fill", x, yy, 1, 1) end
+        qc(Q.k1); lg.rectangle("fill", x, top, 1, 1); qc(Q.k2); lg.rectangle("fill", x, top + 1, 1, 2)
+        local prev = sl0 and foot + math.floor((sl0 - foot) / 4) * 4
+        if prev and prev ~= top then qc(Q.j); lg.rectangle("fill", x, math.min(prev, top), 1, math.abs(prev - top) + 1) end
+        lg.setColor(1, 1, 1, 1)
+      else
       clip(x, 0, 1, m[2])
       lg.draw(T.ground, T.groundQ[x % gw], x, top - 12)
       if top - 12 + gh < w.height then lg.draw(T.ground, T.groundQ[x % gw], x, top - 12 + gh) end
       clip()
-      if stair then                                               -- each step: a light granite nosing
+      end
+      if stair and foot <= 184 then                               -- each step: a light granite nosing
         lg.setColor(0.78, 0.75, 0.70); lg.rectangle("fill", x, top, 1, 1)
         lg.setColor(0.36, 0.34, 0.33); lg.rectangle("fill", x, top + 3, 1, 1)
       end
@@ -1277,9 +1311,6 @@ end
 -- up the end of the cobbles, lit on its top, the front kerb's corner stone), and the quay wall under it ends in
 -- quoins (alternate long and short corner blocks, 10 and 6 px, on the wall's 12 px courses), its arris dark. The
 -- colours are town_ground.png's kerb and quay greys (the Look's ground grade does the rest).
-local Q = { j = { 47, 43, 47 }, s = { 60, 56, 56 }, a = { 72, 66, 64 }, l = { 94, 87, 81 },
-            k1 = { 161, 158, 151 }, k2 = { 141, 136, 129 }, k3 = { 108, 103, 98 } }
-local function qc(c) lg.setColor(c[1] / 255, c[2] / 255, c[3] / 255) end
 function Sc.quayEnds(w, xa, xb, foot, solid)
   local KERB, QUAY = foot + 15, foot + 20                          -- the tile's rows 27 and 32 (top at foot - 12)
   local function wet(x)
@@ -2524,14 +2555,31 @@ function Sc.drawPropArt(p, camx, def, kicked)
         for _, r in ipairs(Sc.world.water or {}) do if p.x0 + w / 2 >= r.x0 and p.x0 + w / 2 < r.x1 then wet = true end end
         if not wet then foot = 184 + d end
       end
-      local boat = not tb and def.foot and foot > 184 + d and optImg("town_punt")   -- (art/dt-audit-06nov) over
-      if boat then foot = 184 + d + 15 end                        -- water: its pole stands in a moored boat, not the water
-      lg.setColor(INK); lg.rectangle("fill", px - 1, p.y1, 4, foot - p.y1)
-      lg.setColor(0.55, 0.57, 0.6); lg.rectangle("fill", px, p.y1, 2, foot - p.y1)
-      lg.setColor(0.72, 0.74, 0.77); lg.rectangle("fill", px, p.y1, 1, foot - p.y1)   -- its lit left edge
-      if boat then                                                -- the boat: its gunwale 2 px over the pole's foot,
-        local bw = boat:getWidth()                                -- its waterline 26 px under the street (in the
-        lg.setColor(1, 1, 1, 1); lg.draw(boat, px + 1 - math.floor(bw / 2), foot - 2)   -- canal, nearer than the far quay)
+      -- (night/06nov-dt, review round 1: the audit's 1.1 m boats were toys and read as a floor over deadly water)
+      -- over the flooded square the pole goes into the water: a dark wet band where it meets the surface, a ripple
+      -- ring, under the surface the pole and its heavy cast-iron foot seen through the water, one step darker
+      local wl
+      if not tb and def.foot and Sc.world then
+        for _, r in ipairs(Sc.world.water or {}) do
+          local wx = p.x0 + w / 2                                 -- (world x: px is on screen)
+          if wx >= r.x0 and wx < r.x1 then wl = math.min(wl or 1e9, r.y0) end
+        end
+      end
+      local top = wl and math.min(foot, wl) or foot
+      lg.setColor(INK); lg.rectangle("fill", px - 1, p.y1, 4, top - p.y1)
+      lg.setColor(0.55, 0.57, 0.6); lg.rectangle("fill", px, p.y1, 2, top - p.y1)
+      lg.setColor(0.72, 0.74, 0.77); lg.rectangle("fill", px, p.y1, 1, top - p.y1)   -- its lit left edge
+      if wl and foot > wl then
+        local bot = 240 + d
+        lg.setColor(0.17, 0.30, 0.44); lg.rectangle("fill", px - 1, wl, 4, bot - wl)        -- under the water
+        lg.setColor(0.27, 0.42, 0.56); lg.rectangle("fill", px, wl, 2, bot - wl)
+        lg.setColor(0.17, 0.30, 0.44); lg.rectangle("fill", px - 7, bot - 6, 16, 6)          -- its foot, a cast slab
+        lg.setColor(0.27, 0.42, 0.56); lg.rectangle("fill", px - 6, bot - 5, 14, 1)
+        lg.setColor(0.30, 0.31, 0.33); lg.rectangle("fill", px - 1, wl - 2, 4, 2)            -- the wet band
+        local k = math.floor((Sc.pondT or 0) * 3) % 2                                        -- the ripple ring
+        lg.setColor(0.78, 0.89, 0.96)
+        lg.rectangle("fill", px - 6 - k, wl + 1, 4, 1); lg.rectangle("fill", px + 4 + k, wl + 1, 4, 1)
+        lg.rectangle("fill", px - 3, wl + 3, 2, 1); lg.rectangle("fill", px + 3, wl + 3, 2, 1)
       end
       local sq = (p.squashT or 0) > 0 and 2 or 0                  -- a springy one dips as it launches her
       if T.parasols[w] then at(T.parasols[w], x - 1, p.y0 - 1 + sq)   -- (the box's own width, ink round it)
@@ -2607,21 +2655,36 @@ function Sc.drawPropArt(p, camx, def, kicked)
       if T.pedestal:getWidth() == w + 2 then at(T.pedestal, x - 1, p.y0 - 1) else at(T.pedestal, x, p.y0) end
     elseif n == "ARM" then return
     elseif n == "RIM" then
-      local bw = def.foot and optImg("town_basin_wall")                -- (night/06nov-dt) the basin's granite wall
-      if bw and Sc.world then                                          -- under the rim, on the water's side
-        local side
-        for _, r in ipairs(Sc.world.water or {}) do
-          if r.y0 >= p.y1 and r.x0 == p.x1 then side = 1 elseif r.y0 >= p.y1 and r.x1 == p.x0 then side = -1 end
-          if side then break end
-        end
-        lg.setColor(1, 1, 1, 1)
-        if side == 1 then lg.draw(bw, math.floor(p.x1 - camx) - bw:getWidth(), p.y1)
-        elseif side == -1 then lg.draw(bw, math.floor(p.x0 - camx) + bw:getWidth(), p.y1, 0, -1, 1) end
-      end
       at(T.rim, x - 1, p.y0 - 1)
     elseif n == "FOUNTAIN" then
       at(T.bowl, x - 1, p.y0 - 1)
+      local bs = def.foot and optImg("town_basin")                    -- (night/06nov-dt) the basin front-on: far coping,
+      local r0, r1                                                    -- the water band, the near kerb over the pit
+      for _, q in ipairs(def.props) do
+        if q.name == "RIM" and q.x1 <= p.x0 and (not r0 or q.x1 > r0.x1) then r0 = q end
+        if q.name == "RIM" and q.x0 >= p.x1 and (not r1 or q.x0 < r1.x0) then r1 = q end
+      end
+      if bs and r0 and r1 and r1.x0 - r0.x1 == bs:getWidth() then
+        lg.setColor(1, 1, 1, 1); lg.draw(bs, math.floor(r0.x1 - camx), def.foot - 12)
+        local t = Sc.pondT or 0                                       -- the band's ripples drift
+        lg.setColor(0.59, 0.73, 0.81)
+        for k = 0, 3 do
+          local sx = math.floor(r0.x1 - camx + ((k * 29 + t * 6) % (r1.x0 - r0.x1 - 6)))
+          lg.rectangle("fill", sx, def.foot - 5, 4, 1)
+        end
+        local tier = named(def, "TIER")                               -- the jets' splash rings on the band
+        if tier then
+          local k = math.floor(t * 10) % 2
+          lg.setColor(0.93, 0.96, 0.98)
+          for _, jx in ipairs({ tier.x0 - 5, tier.x1 + 4 }) do
+            local sx = math.floor(jx - camx)
+            lg.rectangle("fill", sx - 1, def.foot - 10, 4, 1)
+            lg.rectangle("fill", sx - 3 - k, def.foot - 9, 2, 1); lg.rectangle("fill", sx + 3 + k, def.foot - 9, 2, 1)
+          end
+        end
+      else
       lg.setColor(0.33, 0.47, 0.52, 0.45); lg.rectangle("fill", math.floor(x) + 8, 193 + d, w - 16, 47)
+      end
     elseif n == "KIOSK" then shadowUnder(p, camx); at(T.kiosk, x - 1, p.y0 - 1)
     elseif n == "SHELTER" then shadowUnder({ x0 = p.x0, x1 = p.x1, y1 = 184 + d }, camx); at(T.shelter, x, p.y0)
     elseif n == "RIVER" then at(T.sign, x + w / 2 - T.sign:getWidth() / 2, 175 + d - T.sign:getHeight())
@@ -2646,8 +2709,8 @@ function Sc.townJet()
     local im = optImg("town_jet")
     if im then
       local w, h = im:getDimensions()
-      JET = { im = im, q = {} }
-      for i = 0, math.floor(w / 6) - 1 do JET.q[i + 1] = lg.newQuad(i * 6, 0, 6, h, w, h) end
+      JET = { im = im, q = {}, fw = math.floor(w / 4) }             -- (night/06nov-dt: 4 frames of 10, was 6)
+      for i = 0, 3 do JET.q[i + 1] = lg.newQuad(i * JET.fw, 0, JET.fw, h, w, h) end
     end
   end
   return JET
@@ -2670,7 +2733,8 @@ function Sc.drawTerrainArt(def, camx, t)
         local q = jet.q[math.floor(t * 20) % #jet.q + 1]          -- 4 frames, the right one mirrored
         local y = tier.y0 + 3
         lg.setColor(1, 1, 1, 1)
-        lg.draw(jet.im, q, math.floor(tier.x0 - camx) - 7, y); lg.draw(jet.im, q, math.floor(tier.x1 - camx) + 7, y, 0, -1, 1)
+        local o = jet.fw == 6 and 7 or 10                         -- (the stream at the frame's x 5-6: x0 - 5 .. x0 - 4)
+        lg.draw(jet.im, q, math.floor(tier.x0 - camx) - o, y); lg.draw(jet.im, q, math.floor(tier.x1 - camx) + o, y, 0, -1, 1)
       elseif tier then                                            -- water falls from the top tier's rims to the basin
         for i = 0, 7 do
           local k = (t * 1.1 + i / 8) % 1

@@ -55,7 +55,7 @@ FRAMES = {
     "pepper": (60, 52), "girl": (66, 66), "cat": (48, 48), "goose": (34, 34), "gull": (26, 26),
     "park_keeper_cart": (82, 82), "park_keeper_winch": (80, 80), "rowboat": (70, 70), "mia_throw": (66, 66),
     "magpie": (32, 26),                                          # (6 Nov) perch, flick, wings up, level, down
-    "town_spring": (9, 10), "town_jet": (6, 88),                  # (art/dt-roofs-06nov, tools/build_dt_details.py)
+    "town_spring": (9, 10), "town_jet": (10, 72),                  # (art/dt-roofs-06nov, tools/build_dt_details.py)
     "tram_vintage_wheel": (31, 31),                                  # (6 Nov) 4 frames of the tram's wheel
 }
 ROLL = ("road_cyclist1_roll", "road_cyclist2_roll")              # 4 frames side by side (drawn: Rd.art().riders)
@@ -117,7 +117,7 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          "town_roof_loggia": (122, 26, 0, 0), "town_roof_gallery88": (90, 32, 0, 0), "town_roof_gallery72": (74, 32, 0, 0),
          "town_roof_flower_roof": (90, 14, 0, 0), "town_roof_ledge": (16, 9, 0, 0), "town_footbridge": (162, 52, 0, 0),
          "spire_riddarholmen": (36, 260, 0, 0), "town_balcony56": (58, 60, 0, 0), "town_balcony64": (66, 60, 0, 0),
-         "town_spring": (36, 10, 0, 0), "town_stopsign": (19, 101, 0, 0), "town_jet": (24, 88, 0, 0),
+         "town_spring": (36, 10, 0, 0), "town_stopsign": (19, 101, 0, 0),
          "town_tier": (50, 58, 0, 0), "town_bowl": (34, 82, 0, 0), "town_rim": (18, 18, 0, 0),
          # art/dt-highroad-06nov: the high road attached to its fronts (tools/build_highroad.py, arthooks.lua drawHighWall)
          "town_front_tall5": (88, 432, 0, 0), "town_front_tall6": (148, 432, 0, 0), "town_balcony_door": (38, 52, 0, 0),
@@ -126,7 +126,7 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          # night/06nov-dt: the facade lift (tools/build_dt_facades.py), the bridge's springers (tools/build_roof_kit.py),
          # the basin's wall (tools/build_dt_details.py)
          "town_front_tall1_a": (80, 432, 0, 0), "town_front_tall2_a": (88, 432, 0, 0), "town_front_tall3_a": (96, 432, 0, 0), "town_front_tall5_a": (88, 432, 0, 0), "town_front_tall6_a": (148, 432, 0, 0), "town_front_tall7_a": (148, 432, 0, 0), "town_front_tall1_b": (80, 432, 0, 0), "town_front_tall2_b": (88, 432, 0, 0), "town_front_tall3_b": (96, 432, 0, 0), "town_front_tall5_b": (88, 432, 0, 0), "town_front_tall6_b": (148, 432, 0, 0), "town_front_tall7_b": (148, 432, 0, 0), "town_front_tall1_c": (80, 432, 0, 0), "town_front_tall2_c": (88, 432, 0, 0), "town_front_tall3_c": (96, 432, 0, 0), "town_front_tall5_c": (88, 432, 0, 0), "town_front_tall6_c": (148, 432, 0, 0), "town_front_tall7_c": (148, 432, 0, 0), "town_front_tall1_d": (80, 432, 0, 0), "town_front_tall2_d": (88, 432, 0, 0), "town_front_tall3_d": (96, 432, 0, 0), "town_front_tall5_d": (88, 432, 0, 0), "town_front_tall6_d": (148, 432, 0, 0), "town_front_tall7_d": (148, 432, 0, 0), "town_front_tall1_e": (80, 432, 0, 0), "town_front_tall2_e": (88, 432, 0, 0), "town_front_tall3_e": (96, 432, 0, 0), "town_front_tall5_e": (88, 432, 0, 0), "town_front_tall6_e": (148, 432, 0, 0), "town_front_tall7_e": (148, 432, 0, 0), "town_front_tall1_f": (80, 432, 0, 0), "town_front_tall2_f": (88, 432, 0, 0), "town_front_tall3_f": (96, 432, 0, 0), "town_front_tall5_f": (88, 432, 0, 0), "town_front_tall6_f": (148, 432, 0, 0), "town_front_tall7_f": (148, 432, 0, 0), "town_drainpipe": (6, 432, 0, 0),
-         "town_bridge_springer": (14, 20, 0, 0), "town_basin_wall": (10, 56, 0, 0),
+         "town_bridge_springer": (14, 20, 0, 0), "town_basin": (112, 68, 0, 0), "town_jet": (40, 72, 0, 0),
          # art/dt-audit-06nov (tools/build_dt_audit.py): the quay wall's drain, the footbridge's piers, the parasols' boat,
          # the wall lantern's bracket
          "town_quaydrain": (20, 22, 0, 0), "town_bridge_pier": (14, 113, 0, 0), "town_punt": (52, 14, 0, 0),

@@ -236,16 +236,30 @@ def guild_steps():
     return cv
 
 def guild_pier():
-    """the CHIMNEY box as a stone pedestal: 18 x 46 (x0 - 1, y0 - 1), cap rows 1-7 (the perch), shaft rows 8-37 one
-    column in from the box each side, a sunk panel, base rows 38-44"""
+    """the CHIMNEY box as a stone urn on a pedestal (night/06nov-dt, review round 1: "the empty niche reads as a
+    chimney stub"): 18 x 46 (x0 - 1, y0 - 1). The urn's flat lid is the perch (rows 1-4, the box's full width: the
+    golden bone stands on it), a neck, a rim, a round body with a band, a short foot; under it the pedestal (a cap
+    moulding, a plain die, a base). Each row is drawn from its half width (symmetric), lit on the left, shaded right"""
     cv = DD.Cv(18, 46)
-    cv.rect(1, 1, 16, 7, "g2"); cv.rect(1, 1, 16, 1, "g1"); cv.rect(1, 6, 16, 6, "g3")         # the cap
-    cv.rect(2, 8, 15, 37, "g2"); cv.rect(2, 8, 3, 37, "g1"); cv.rect(14, 8, 15, 37, "g3")       # the shaft
-    cv.rect(2, 8, 15, 8, "g3")                                                                  # (under the cap)
-    cv.rect(5, 12, 12, 33, "g3"); cv.rect(5, 12, 12, 12, "g4"); cv.rect(5, 34, 12, 34, "g1")   # the sunk panel, its sill
-    cv.rect(1, 38, 16, 44, "g2"); cv.rect(1, 38, 16, 38, "g1"); cv.rect(1, 43, 16, 43, "g3")   # the base
-    cv.rect(1, 39, 1, 44, "g1")
+    rows = {}                                                             # row: half width (the box is 16: half 8)
+    for r in range(1, 5): rows[r] = 8                                     # the lid
+    for r in range(5, 8): rows[r] = 5                                     # the neck
+    for r in range(8, 10): rows[r] = 7                                    # the rim
+    for r, hw in zip(range(10, 23), (6, 7, 7, 8, 8, 8, 8, 8, 8, 7, 7, 6, 6)): rows[r] = hw   # the body
+    for r in range(23, 27): rows[r] = 4                                   # the foot
+    for r in range(27, 45): rows[r] = 8                                   # the pedestal
+    for r, hw in rows.items():
+        cv.rect(9 - hw, r, 8 + hw, r, "g2")
     cv.outline()
+    for r, hw in rows.items():                                            # light from the upper left, inside the ink
+        if hw >= 2:
+            for x, c in ((9 - hw + 1, "g1"), (8 + hw - 1, "g3")):
+                if cv.a[r, x] != "ink": cv.put(x, r, c)
+    cv.rect(2, 2, 15, 2, "g1"); cv.rect(5, 4, 12, 4, "g3")                # the lid's lit top and its shade
+    cv.rect(3, 9, 14, 9, "g3")                                            # under the rim
+    cv.rect(2, 16, 15, 16, "g3"); cv.rect(2, 15, 15, 15, "g1")            # the body's band
+    cv.rect(2, 28, 15, 28, "g1"); cv.rect(2, 30, 15, 30, "g3")            # the pedestal's cap moulding
+    cv.rect(2, 39, 15, 39, "g1"); cv.rect(2, 41, 15, 41, "g3")            # its base
     return cv
 
 def console():

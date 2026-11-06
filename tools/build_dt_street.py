@@ -267,6 +267,7 @@ def shelter():
         for dy, rr in enumerate(CREST):
             for dx, ch in enumerate(rr):
                 if ch == "i" and x0 + dx < W - 2: cv.put(x0 + dx, dy, "ii")
+    cv.rect(2, 0, W - 3, 0, "ii")                                        # (review round 1: a solid top rail, not dots)
     cv.rect(0, 5, W - 1, 5, "ii")
     cv.rect(0, 6, W - 1, 6, "il"); cv.rect(0, 7, W - 1, 8, "im"); cv.rect(0, 9, W - 1, 9, "ii")   # the canopy's front beam
     gy0, gy1 = 10, 21                                                    # the glass canopy
