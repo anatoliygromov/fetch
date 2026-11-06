@@ -26,6 +26,13 @@ LUM = np.array([0.299, 0.587, 0.114])
 # whose first row is in lo..hi; the same for columns; outline True for obstacles
 PLAN = {
     'park_hedge':       dict(ops=[('splice_rows', 5, 12, 48)], outline=True,
+                             # review round 1 (6 Nov): greener and busier than the park; its greens pulled toward olive
+                             # (hue 30-45 % of the way to 80 degrees, saturation x 0.62, the same values) so it sits with
+                             # the autumn lime and ash; the lit top a warm gold, not pale
+                             recolour={(16, 50, 39): (28, 48, 30), (23, 67, 44): (40, 65, 39), (33, 82, 47): (54, 80, 50),
+                                       (50, 99, 47): (75, 96, 65), (69, 116, 48): (91, 113, 72),
+                                       (111, 142, 44): (119, 138, 79), (149, 166, 41): (151, 161, 86),
+                                       (211, 203, 59): (209, 190, 80)},
                              why='77 rows to 72: the box is 53 solid rows over a 19 row crawl gap; 5 rows of leaf clumps out of the body'),
     'park_leaves':      dict(ops=[('splice_rows', 5, 5, 18)], outline=False, tol=90,
                              why='27 rows to 22: the heap is drawn over Pepper and must stay under her back (26 px)'),
@@ -40,6 +47,8 @@ PLAN = {
 
 # hand edits after the fit: (x, y, rgb or None for clear, reason); filled in after the 5x look
 HAND = {
+    'park_hedge': [(15, 45, 'nb', 'review round 1: a 2x2 orange leaf fragment left by the row splice, painted out with the leaf green'),
+                   (16, 45, 'nb', 'the same fragment'), (15, 46, 'nb', 'the same fragment'), (16, 46, 'nb', 'the same fragment')],
     'park_leaves_flat': [(27, 3, 'nb', 'a dark leaf speck inside the lit leaves (asset_qa noise)'),
                          (13, 5, 'nb', 'a dark leaf speck (asset_qa noise)'),
                          (36, 10, 'nb', 'a dark leaf speck (asset_qa noise)'),
@@ -140,6 +149,11 @@ def run(name):
         fix = edge & (np.abs(rgb.astype(int) - rim).sum(-1) > 0)
         rgb[fix] = rim
     log['outline_px'] = [[int(x), int(y)] for y, x in zip(*np.nonzero(fix))]
+    if P.get('recolour'):
+        src = rgb.copy(); n_re = 0
+        for a_, b_ in P['recolour'].items():
+            m = al & (src == np.array(a_, np.uint8)).all(-1); rgb[m] = b_; n_re += int(m.sum())
+        log['recolour'] = {'map': [[list(a_), list(b_)] for a_, b_ in P['recolour'].items()], 'pixels': n_re}
     for x, y, c, why in HAND.get(name, []):
         old = rgb[y, x].tolist() if al[y, x] else None
         if isinstance(c, str):                            # 'nb': the most common colour of its 8 neighbours
