@@ -1,5 +1,22 @@
 # FETCH! Status
 
+## Evening of 6 Nov: fixes from the owner's play of the 6 Nov preview (live session, 0 credits)
+
+**Owner, 19:06 to 19:13:** the cyclist rides behind the flower boxes; old speech panel; "boat is still ridiculously small"; "this asphalt transition is crazy", "the asphalt is moving weirdly", "why asphalt color differ here?". 19:10: "Go".
+
+**Cause of the first two:** his decisions of 24 Oct (`ui/hud-v8`, speech bubbles) and 25 Oct (`play/bikes-front`) sat on side branches. `prod/integrate-h` had the bubbles, but `prod/integrate`, `-b`, `-c` and every preview since were built without them. New check `tools/check_approved.py [BASE]` lists owner-marked commits missing from a branch; run it before every preview or integration (`docs/not_merged.txt` for what is left out on purpose).
+
+**Branches:**
+- `preview/06nov` = `preview/05nov-night` + `ui/hud-v8` + `play/bikes-front` + the road fix + the rowboat spec. Build: `2d game test/PREVIEW 6 Nov evening/FETCH_PREVIEW_06nov_fix.love`.
+- `prod/integrate-d` = `prod/integrate-c` + the same three fixes (no 5 Nov art, which still waits for the board).
+- Checks on `preview/06nov`: PEPPER UNCHANGED (4591), flow 125/125, Tiled PASS, BACKDROP OK, River Walk physics 55/55, curve T1-T4 PASS, check_approved ALL MERGED.
+
+**Road:** the road is painted only under the level promenade (y 184); under the two ramps and the lower quay a granite quay wall (`tools/make_quaywall.py`, level courses anchored in the world). Before, the asphalt there was a sheared copy at another scroll speed and shade.
+
+**Rowboat (spec only, nothing spent):** `art/gen/jobs/rw_rowboat.json` (hull and rower render, 4.0 m = 185 px, 24 credits) and `rw_rower.json` (the rower alone, Pixel Engine, 12 credits), then the rowing loop from the rower still (26). Preflight PASS. **Total 62 SpriteCook credits.** The harbour (water x 2192-2640) must grow by about 200 px to keep two boats and the jetty; the level after it shifts right (0 credits, level change).
+
+**Waiting for the owner:** (1) play the build; (2) yes to 62 credits for the rowboat; (3) merge `prod/integrate-d` into main?
+
 ## Night of 5 Nov: SpriteCook run (live session, owner asleep)
 
 **Owner, 21:45 and 21:47:** "we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible" and "Make sure you can execute over night without me needing to do stuff, I go sleep now". Read as: the yes on tonight's total, and his words to lift the 150 a day SpriteCook cap for tonight only. Every other rule stands: preflight on every job, 3 paid jobs per asset, 2 retries per family, gates 1 to 8, nothing reaches him but the board, nothing merged to main.
