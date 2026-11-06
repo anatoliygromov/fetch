@@ -64,10 +64,10 @@ SHOP = {"green": ((56, 88, 70), (84, 120, 94)), "oxblood": ((96, 44, 40), (128, 
 
 STYLES = {
     "a": dict(heads=("tri", "hood"), shutters=False, boxes=(1,), anchors=True, cornice="dentil", shop="green", sign="boot", curtain="lace", goods="loaves"),
-    "b": dict(heads=("seg", "seg"), shutters=False, boxes=(), anchors=False, cornice="double", shop="oxblood", sign="cup", curtain=None, goods="jars"),
-    "c": dict(heads=("hood", "hood"), shutters=True, boxes=(1,), anchors=False, cornice="plain", shop="blue", sign=None, curtain="lace", goods="books"),
+    "b": dict(heads=("seg", "seg"), shutters=False, boxes=(), anchors=False, cornice="double", shop="oxblood", sign="cup", curtain=None, goods="jars", frieze=True),
+    "c": dict(heads=("hood", "hood"), shutters=True, boxes=(1,), anchors=False, cornice="plain", shop="blue", sign=None, curtain="lace", goods="books", frieze=True),
     "d": dict(heads=("ear", "hood"), shutters=False, boxes=(), anchors=True, cornice="dentil", shop="ink", sign="key", curtain="drape", goods="books"),
-    "e": dict(heads=("hood", "hood"), shutters=False, boxes=(1, 2), anchors=True, cornice="double", shop="green", sign="fish", curtain="lace", goods="loaves"),
+    "e": dict(heads=("hood", "hood"), shutters=False, boxes=(1, 2), anchors=True, cornice="double", shop="green", sign="fish", curtain="lace", goods="loaves", frieze=True),
     "f": dict(heads=("tri", "tri"), shutters=False, boxes=(), anchors=True, cornice="plain", shop="oxblood", sign=None, curtain="drape", goods="jars"),
 }
 
@@ -277,6 +277,12 @@ def upper(w, xs, st):
     its course, a window on every axis in xs"""
     g = G(w, 280)
     course(g, 0, st["cornice"]); course(g, STOREY, st["cornice"])
+    if st.get("frieze"):                                              # (final review: rhythm on the top tier) a frieze
+        for y0 in (7, STOREY + 7):                                    # under each storey's course: a thin stone line,
+            g.rect(0, y0, w - 1, y0, "T"); g.rect(0, y0 + 3, w - 1, y0 + 3, "T")   # small lit blocks on a 6 px pitch
+            g.rect(0, y0 + 1, w - 1, y0 + 2, "S")                     # (in the plaster's shade: one band)
+            for x in range(2, w - 3, 6):
+                g.rect(x, y0 + 1, x + 1, y0 + 2, "L"); g.put(x + 1, y0 + 2, "V")
     for k, storey in ((0, 2), (1, 1)):
         head = st["heads"][0 if storey == 1 else 1]
         axs = []
@@ -369,6 +375,10 @@ def drainpipe():
     g.rect(0, 0, 0, FH - 11, "L"); g.rect(1, 0, 2, FH - 11, "T"); g.rect(3, 0, 3, FH - 11, "V"); g.rect(4, 0, 5, FH - 11, "S")
     for y in range(20, FH - 14, 46):
         g.rect(0, y, 4, y + 1, "V"); g.rect(0, y, 4, y, "T")
+    for y in (12, STOREY + 12):                                       # (final review) a hopper head under each storey's
+        g.rect(0, y, 5, y + 5, "T"); g.rect(0, y, 5, y, "L"); g.rect(0, y, 0, y + 5, "L")   # course: a lit box, its
+        g.rect(5, y + 1, 5, y + 5, "V"); g.rect(1, y + 5, 4, y + 5, "V")                    # shade, tapering to the
+        g.rect(1, y + 6, 4, y + 6, "T"); g.rect(4, y + 6, 4, y + 6, "V")                    # pipe
     g.rect(0, FH - 10, 5, FH - 7, "T"); g.rect(0, FH - 10, 5, FH - 10, "L"); g.rect(0, FH - 7, 5, FH - 7, "V")
     g.rect(0, FH - 10, 0, FH - 7, "L")
     return render(g.a, C)

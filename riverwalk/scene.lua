@@ -1264,6 +1264,8 @@ function Sc.townArt(style)
       return t
     end
     T.crates = byWidth("town_crate_front", { 28, 32, 36 })
+    T.crateFills = {}                                             -- (final review) pears, bread, a cloth: drawn once each
+    for _, f in ipairs({ "pears", "bread", "cloth" }) do T.crateFills[f] = byWidth("town_crate_front", { "28_" .. f, "32_" .. f, "36_" .. f }) end
     T.parasols = byWidth("town_parasol", { 40, 48, 64, 96 })
     T.tramshed = { [70] = img("town_tramshed70"), [96] = img("town_tramshed96") }   -- SpriteCook (tools/import_assets_v2.py)
     -- the two far layers sit further back than the back-edge decoration, each faded to its layer's haze (the
@@ -3233,7 +3235,12 @@ function Sc.drawPropArt(p, camx, def, kicked)
       shadowUnder({ x0 = p.x0, x1 = p.x1, y1 = y1 }, camx)
       local cr = T.crates[w]                                      -- (art/dt-props-06nov) the box's own width: 15 rows
       if cr then                                                  -- of crate, its ink shared with the crate above,
-        for i = 1, k do at(cr, x - 1, y1 - 16 * i - 5) end        -- the apples' tops 3 rows over its rim
+        local FILL = { false, "pears", false, "bread", false, false, "cloth" }   -- (final review: the crates repeat)
+        for i = 1, k do                                           -- the apples' tops 3 rows over its rim; some crates
+          local f = FILL[(math.floor(p.x0 / 16) * 3 + i * 5) % #FILL + 1]   -- hold pears or bread, or are empty
+          local v = f and T.crateFills and T.crateFills[f] and T.crateFills[f][w .. "_" .. f]   -- under a cloth
+          at(v or cr, x - 1, y1 - 16 * i - 5)
+        end
       else
         for i = 1, k do at(T.crate, x, y1 - 16 * i - 12) end
       end
@@ -3365,14 +3372,19 @@ function Sc.drawPropArt(p, camx, def, kicked)
           local sx = math.floor(r0.x1 - camx + ((k * 29 + t * 6) % (r1.x0 - r0.x1 - 6)))
           lg.rectangle("fill", sx, def.foot - 5, 4, 1)
         end
-        local tier = named(def, "TIER")                               -- the jets' splash rings on the band
-        if tier then
-          local k = math.floor(t * 10) % 2
-          lg.setColor(0.93, 0.96, 0.98)
+        local tier = named(def, "TIER")                               -- the jets' splashes on the band (final review:
+        if tier then                                                  -- a crown of drops over the water, a ring on it)
+          local k = math.floor(t * 8) % 2
+          local y = def.foot - 8
           for _, jx in ipairs({ tier.x0 - 5, tier.x1 + 4 }) do
             local sx = math.floor(jx - camx)
-            lg.rectangle("fill", sx - 1, def.foot - 10, 4, 1)
-            lg.rectangle("fill", sx - 3 - k, def.foot - 9, 2, 1); lg.rectangle("fill", sx + 3 + k, def.foot - 9, 2, 1)
+            lg.setColor(0.78, 0.88, 0.95)                             -- the ring on the band
+            lg.rectangle("fill", sx - 5 - k, y, 4, 1); lg.rectangle("fill", sx + 3 + k, y, 4, 1)
+            lg.rectangle("fill", sx - 2, y + 1, 6, 1)
+            lg.setColor(0.96, 0.98, 1.0)                              -- the crown and its drops
+            lg.rectangle("fill", sx - 1, y - 2, 4, 2)
+            lg.rectangle("fill", sx - 2 - k, y - 4, 1, 1); lg.rectangle("fill", sx + 3 + k, y - 4, 1, 1)
+            lg.rectangle("fill", sx - 3 - k, y - 6 + k, 1, 1); lg.rectangle("fill", sx + 4 + k, y - 6 + k, 1, 1)
           end
         end
       else

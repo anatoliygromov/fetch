@@ -542,15 +542,20 @@ def gate_step():
     W, H = 98, 37
     cv = Cv(W, H)
     cv.rect(0, 0, W - 1, H - 1, "ink")
-    for r in range(2):
-        y0 = 1 + r * 18; y1 = y0 + 16
-        cv.rect(1, y0, W - 2, y1, "tm")
-        cv.rect(1, y0, W - 2, y0, "tl")
-        cv.rect(1, y1, W - 2, y1, "tv")
-        off = 12 if r else 0
-        for x in range(1 + 24 - off if off else 25, W - 2, 24):     # block joints, lit edge right of each
-            cv.rect(x, y0 + 1, x, y1, "tv"); cv.rect(x + 1, y0 + 1, x + 1, y1 - 1, "tl")
-        if r == 0: cv.rect(1, y1 + 1, W - 2, y1 + 1, "ink")          # the bed joint between the courses
+    # (final review: "the flat gateway block") a coping over three courses of dressed blocks: the coping 4 rows (lit,
+    # two mid, a dark lip) over an ink bed joint, then courses of 10 rows, blocks 16 px offset by half, each block lit
+    # on its top and left, dark on its right and foot
+    cv.rect(1, 1, W - 2, 4, "tm"); cv.rect(1, 1, W - 2, 1, "tl"); cv.rect(1, 4, W - 2, 4, "tv")
+    cv.rect(1, 5, W - 2, 5, "ink")
+    for r, y0 in enumerate((6, 16, 26)):
+        y1 = min(H - 2, y0 + 9)
+        off = 8 if r % 2 else 0
+        xs = [1] + list(range(1 + 16 - off, W - 2, 16))
+        for i, bx0 in enumerate(xs):
+            bx1 = (xs[i + 1] - 1) if i + 1 < len(xs) else W - 2
+            cv.rect(bx0, y0, bx1, y1, "tm")
+            cv.rect(bx0, y0, bx1, y0, "tl"); cv.rect(bx0, y0, bx0, y1, "tl")
+            cv.rect(bx1, y0 + 1, bx1, y1, "tv"); cv.rect(bx0 + 1, y1, bx1, y1, "tv")
     cv.rect(1, 1, 1, H - 2, "tl")
     return cv
 
