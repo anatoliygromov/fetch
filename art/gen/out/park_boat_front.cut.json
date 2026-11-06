@@ -1,0 +1,40 @@
+{
+ "name": "park_boat_front",
+ "render": "art/gen/renders/cp_duckboat_a_grid4.png",
+ "variant": "a",
+ "window": [
+  100,
+  190,
+  175,
+  240
+ ],
+ "bbox_in_frame": [
+  107,
+  202,
+  164,
+  239
+ ],
+ "size": [
+  58,
+  38
+ ],
+ "target": [
+  54,
+  33
+ ],
+ "colours_in": 944,
+ "colours": 13,
+ "specks_dropped": 0,
+ "clean_changed": 12,
+ "outline": true,
+ "ink": [
+  13,
+  6,
+  13
+ ],
+ "edge_recoloured": 179,
+ "lone_pct": 0.89,
+ "fails": [
+  "size [58, 38] vs target [54, 33]"
+ ]
+}

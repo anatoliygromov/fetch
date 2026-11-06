@@ -1,0 +1,36 @@
+{
+ "name": "park_leaves",
+ "render": "art/gen/renders/cp_leaves_a_grid4.png",
+ "variant": "a",
+ "window": [
+  92,
+  200,
+  155,
+  240
+ ],
+ "bbox_in_frame": [
+  94,
+  213,
+  149,
+  239
+ ],
+ "size": [
+  56,
+  27
+ ],
+ "target": [
+  48,
+  22
+ ],
+ "colours_in": 1021,
+ "colours": 8,
+ "specks_dropped": 1,
+ "clean_changed": 24,
+ "outline": false,
+ "ink": null,
+ "edge_recoloured": 0,
+ "lone_pct": 5.0,
+ "fails": [
+  "size [56, 27] vs target [48, 22]"
+ ]
+}

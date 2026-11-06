@@ -1,0 +1,19 @@
+{
+ "name": "park_boat_front",
+ "cut": "art/source/park_boat_front/park_boat_front_cut.png",
+ "cut_size": [
+  58,
+  38
+ ],
+ "why": "as cut (58 x 38); its deck row is 20 (scene.lua Sc.drawMoverArt)",
+ "ops": [],
+ "outline_px": [],
+ "hand": [],
+ "clean_changed": 0,
+ "blotches_merged": [],
+ "size": [
+  58,
+  38
+ ],
+ "colours": 13
+}

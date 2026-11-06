@@ -112,7 +112,9 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          "town_facades": (806, 210, 0, 0), "town_roofs": (524, 254, 0, 0), "town_door": (140, 432, 0, 0),
          "town_tramshed96": (160, 161, 0, 0), "town_gatestep96": (98, 37, 0, 0), "town_house3": (52, 118, 0, 0),
          "town_bollard": (16, 54, 0, 0), "town_house1": (54, 118, 0, 0), "town_house2": (58, 126, 0, 0),
-         "town_awning64": (64, 18, 0, 0), "town_awning80": (80, 18, 0, 0), "town_table_front": (50, 26, 0, 0)}
+         "town_awning64": (64, 18, 0, 0), "town_awning80": (80, 18, 0, 0), "town_table_front": (50, 26, 0, 0),
+         # art/cp-built-06nov (tools/build_cp_built.py): each tier piece is its box plus its outline, or its posts' span
+         "cp_arbour_posts48x106": (60, 106, 0, 0), "cp_arbour_posts48x122": (60, 122, 0, 0), "cp_arbour_posts56x106": (68, 106, 0, 0), "cp_arbour_slat48": (50, 8, 0, 0), "cp_arbour_slat56": (58, 8, 0, 0), "cp_tower_deck56": (58, 8, 0, 0), "cp_tower_post4x106": (6, 106, 0, 0), "cp_tower_post4x72": (6, 72, 0, 0), "cp_walk1968_deck": (346, 8, 0, 0), "cp_walk1968_legs": (350, 122, 0, 0), "cp_walk1968_rail": (350, 61, 0, 0), "cp_walk704_deck": (242, 8, 0, 0), "cp_walk704_legs": (252, 106, 0, 0), "cp_walk704_rail": (252, 61, 0, 0), "park_gate": (120, 96, 0, 0), "park_swings": (84, 106, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",

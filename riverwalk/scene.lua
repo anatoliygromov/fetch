@@ -919,7 +919,7 @@ function Sc.townArt(style)
     end
     for _, n in ipairs({ "swings", "oak", "willow", "willow_tall", "winch" }) do T[n] = fadeImg("park_" .. n) end
     T.gate = fadeImg("park_gate", 0.28)                           -- (its own amount: dark ironwork, ladder darkest 80)
-    T.boat = img("park_boat_front")                               -- front-on (tools/make_front_view.py)
+    T.boat = img("park_boat_front")                               -- front-on (6 Nov: tools/cut_cp_props.py, 58 x 38)
     T.table = img("park_table_front")                             -- front-on (tools/make_table_front.py)
   else
     for _, n in ipairs({ "ground", "crate", "parasol", "table", "stall", "awning80", "awning64", "statue", "pedestal", "tram", "shelter", "kiosk", "shopsign", "rim", "bowl", "bollard", "tub", "tier" }) do T[n] = img("town_" .. n) end
@@ -1112,6 +1112,7 @@ function Sc.drawFarArt(L, camx, t, w, def)
     strip(T.facades, camx, 0.5, 178)                              -- 5 old town facades (faded)
   end
   vpop(on); on = vpush("world")                                   -- (the ponds are in the world)
+  Sc.pondPools, Sc.pondT = pools(w), t                             -- (a stepping stone stands in them: drawPropArt)
   -- the pond / basin: its far bank, then the water (rows of the river art, each moving on its own)
   Look.use("ground")
   local gw = T.ground:getWidth()
@@ -1435,7 +1436,8 @@ end
 -- The tier: a ledge (one-way or solid) whose bottom is 90 px or more above the path, and decoration whose top is
 -- 100 px or more above it. Its parts, by name (an unnamed ledge belongs to the named ledge over or under it, else
 -- to the named ledge before it in the map):
---   TREETOP WALK, ALDER WALK  a plank walk on timber legs down to the ground or the bed of the water under it
+--   TREETOP WALK, ALDER WALK  a plank walk: built, a rope bridge between pylons on dry ground (cp_built.lua); else
+--                             on timber legs down to the ground, none in the water
 --   ARBOUR                    the rose arbour's slats, each on two posts with a climbing rose
 --   PLAY TOWER                the play tower's decks (grey posts as the slide tower's)
 --   LOW BOUGH                 a thick bough to crawl under, bending up into the canopy
@@ -1651,8 +1653,41 @@ local function drawFork(p, t, ox)
   tipTwig(x1, y, 1); tipTwig(x0 - 1, y, -1)
 end
 
--- a plank walk: the deck (crisp), a rope hand-rail on posts behind Pepper
+-- (art/cp-built-06nov) the built art of the walks, the arbour and the play tower (tools/build_cp_built.py, 0
+-- credits): riverwalk/cp_built.lua lists, per box, the images drawn instead of the code drawings below (file, top left
+-- in the world, faded to the back haze or not). A box that is not in the list (it moved) or a missing file keeps the
+-- code drawing, so nothing Pepper stands on can lose its art.
+local CB, CBI = nil, {}
+local function built(p, part)
+  if CB == nil then CB = love.filesystem.getInfo("cp_built.lua") and require("cp_built") or false end
+  if not CB then return nil end
+  local e = CB[("%d,%d,%d,%d"):format(p.x0, p.y0, p.x1, p.y1)]
+  local f = e and e[part]
+  if not f then return nil end
+  local key = f[1] .. (f[4] and ("/" .. Look.key) or "")
+  if CBI[key] == nil then
+    local path = "art/scene/" .. f[1] .. ".png"
+    CBI[key] = love.filesystem.getInfo(path) and newImg(f[4] and Sc.fadeData(love.image.newImageData(path)) or path) or false
+  end
+  if not CBI[key] then return nil end
+  return CBI[key], f[2], f[3], e
+end
+Sc.built = built
+
+-- a plank walk: the deck (crisp), a rope hand-rail on posts behind Pepper. (art/cp-pond-06nov) The built walks
+-- are rope bridges: a pylon at each end on dry ground, a cable sagging between their tops, hangers to the deck
+-- (tools/build_cp_built.py); the pylons' legs are drawn here with the walk, unfaded and in front of the willows,
+-- so each pylon is one post from the ground to its cap. Nothing stands in the water.
 local function drawWalk(p, ox)
+  local ri, rx, ry = built(p, "rail")
+  local di, dx, dy_ = built(p, "deck")
+  if ri and di then
+    local li, lx_, ly = built(p, "legs")
+    lg.setColor(1, 1, 1, 1)
+    if li then lg.draw(li, lx_ - ox, ly) end
+    lg.draw(ri, rx - ox, ry); lg.draw(di, dx - ox, dy_)
+    return
+  end
   local x0, x1, y = p.x0 - ox, p.x1 - ox, p.y0
   local hgt = p.y1 - p.y0
   local w = x1 - x0
@@ -1686,6 +1721,7 @@ end
 -- decision 8 a, owner 26 Oct; they were INK outlined and unfaded, the darkest decoration in the level)
 local function drawWalkLegs(p, ox, foot, world)
   local floorY = world and world.height or (foot + 56)
+  if built(p, "legs") and built(p, "rail") and built(p, "deck") then return end   -- (built: drawn with the walk)
   local c1, c2 = fadeC({ 0.30, 0.24, 0.20 }), fadeC({ 0.42, 0.34, 0.27 })     -- timber, its lit left edge
   local c3 = { c1[1] * 0.78, c1[2] * 0.78, c1[3] * 0.78 }                    -- its shaded right edge
   local tie = fadeC({ 0.36, 0.29, 0.23 })
@@ -1693,7 +1729,9 @@ local function drawWalkLegs(p, ox, foot, world)
   for lx = p.x0 + 6, p.x1 - 10, 60 do
     local wet = false
     for _, r in ipairs(world and world.water or {}) do if lx >= r.x0 and lx < r.x1 then wet = true end end
-    local bottom = wet and floorY or foot
+    if wet then goto nextLeg end                                      -- (art/cp-pond-06nov) no leg in the water
+    do
+    local bottom = foot
     local x = lx - ox
     lg.setColor(c1); lg.rectangle("fill", x, p.y1, 4, bottom - p.y1)
     lg.setColor(c2); lg.rectangle("fill", x, p.y1, 1, bottom - p.y1)
@@ -1702,14 +1740,15 @@ local function drawWalkLegs(p, ox, foot, world)
       lg.setColor(tie); lg.rectangle("fill", x - 2, by, 8, 2)
       lg.setColor(tie3); lg.rectangle("fill", x - 2, by + 2, 8, 1)
     end
-    if wet then                                                       -- under the surface: the water's colour over it
-      lg.setColor(0.33, 0.47, 0.52, 0.55); lg.rectangle("fill", x - 3, foot + 24, 10, bottom - foot - 24)
     end
+    ::nextLeg::
   end
 end
 
 -- the rose arbour: a slat (crisp), its posts and roses (faded, behind)
 local function drawSlat(p, ox)
+  local si, sx, sy = built(p, "slat")
+  if si then lg.setColor(1, 1, 1, 1); lg.draw(si, sx - ox, sy); return end
   local x0, x1, y, hgt = p.x0 - ox, p.x1 - ox, p.y0, p.y1 - p.y0
   lg.setColor(INK); lg.rectangle("fill", x0 - 1, y - 1, x1 - x0 + 2, hgt + 2)
   lg.setColor(hex("e9e2d2")); lg.rectangle("fill", x0, y, x1 - x0, hgt)
@@ -1721,6 +1760,8 @@ local function drawSlat(p, ox)
   end
 end
 local function drawSlatPosts(p, ox, foot)
+  local pi_, px_, py = built(p, "posts")
+  if pi_ then lg.setColor(1, 1, 1, 1); lg.draw(pi_, px_ - ox, py); return end
   for _, px in ipairs({ p.x0 + 2, p.x1 - 7 }) do
     local x = px - ox
     lg.setColor(fadeC(hex("cfc6b3"))); lg.rectangle("fill", x, p.y1, 5, foot - p.y1)
@@ -1735,6 +1776,8 @@ end
 
 -- the play tower: a yellow deck (crisp), grey posts (crisp, as the slide tower's)
 local function drawDeck(p, ox)
+  local di, dx, dy_ = built(p, "deck")
+  if di then lg.setColor(1, 1, 1, 1); lg.draw(di, dx - ox, dy_); return end
   local x0, x1, y, hgt = p.x0 - ox, p.x1 - ox, p.y0, p.y1 - p.y0
   lg.setColor(INK); lg.rectangle("fill", x0 - 1, y - 1, x1 - x0 + 2, hgt + 2)
   lg.setColor(DECK[1]); lg.rectangle("fill", x0, y, x1 - x0, hgt)
@@ -1744,6 +1787,8 @@ end
 -- (art/placement) a post goes down to the path (foot), behind the slide tower's art: it stopped in the air at the
 -- cage's top; top: where it starts (its deck), default its box's top
 local function drawTowerPost(t, ox, foot, top)
+  local ti, tx, ty = built(t, "post")
+  if ti then lg.setColor(1, 1, 1, 1); lg.draw(ti, tx - ox, ty); return end
   local x, w = t.x0 - ox, t.x1 - t.x0
   local y0, y1 = top or t.y0, math.max(t.y1, foot or t.y1)
   lg.setColor(INK); lg.rectangle("fill", x - 1, y0, w + 2, y1 - y0)
@@ -1961,6 +2006,29 @@ local function drawTierProp(p, camx, def)
   return true
 end
 
+-- a stepping stone's reflection (art/cp-pond-06nov): under the waterline wy, a dark copy of the rock's lower
+-- outline, narrowing and breaking up row by row, each row swaying 1 px on its own (as the water's rows do). Flat
+-- colours of the pond's own deep water, no alpha, no dither. x, w: the rock's art (its outline included).
+local REFL = { hex("2f5568"), hex("3d6878") }
+function Sc.stoneReflection(x, wy, w, t)
+  for i = 0, 6 do
+    if i < 4 or i % 2 == 0 then
+      local inset = 1 + math.floor(i * 0.7) + (i == 0 and 0 or 1)
+      local sway = math.floor(math.sin(t * 2.1 + i * 1.3) * 1.2 + 0.5)
+      local c = i < 3 and REFL[1] or REFL[2]
+      lg.setColor(c)
+      if i >= 3 then                                                  -- the lower rows break into two dashes
+        local half = math.floor((w - 2 * inset) / 2)
+        lg.rectangle("fill", x + inset + sway, wy + i, half - 2, 1)
+        lg.rectangle("fill", x + inset + half + 1 + sway, wy + i, w - 2 * inset - half - 1, 1)
+      else
+        lg.rectangle("fill", x + inset + sway, wy + i, w - 2 * inset, 1)
+      end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+
 -- one prop of an art level. kicked: a leaf pile Pepper has run through.
 function Sc.drawPropArt(p, camx, def, kicked)
   local style = def.art
@@ -2010,11 +2078,23 @@ function Sc.drawPropArt(p, camx, def, kicked)
       lg.setColor(0.70, 0.50, 0.28); lg.rectangle("fill", sx + 4, sy + 1, sw - 8, 1)
       lg.setColor(1, 1, 1, 1)
     elseif n == "BENCH" then Sc.shadow(x + w / 2, 183 + d, w + 10, 5); at(A.bench, x - 3, 184 + d - A.bench:getHeight())
-    elseif n == "HEDGE" then Sc.shadow(x + w / 2, 183 + d, w + 4, 5); at(T.hedge, x, p.y0)
+    elseif n == "HEDGE" then Sc.shadow(x + w / 2, 183 + d, w + 4, 5); at(T.hedge, x + math.floor((w - T.hedge:getWidth()) / 2), p.y0)   -- (6 Nov: 66 px art, its outline 1 px outside the box each side)
     elseif n == "STONE" then
-      at(T.stone, x - 1, p.y0 - 1)
-      local water = 208 + d                                       -- under the surface: the pond's colour over it
-      lg.setColor(0.33, 0.47, 0.52, 0.55); lg.rectangle("fill", math.floor(x) - 1, water, T.stone:getWidth(), 240 + d - water)
+      -- (art/cp-pond-06nov, the owner: "this thing looks weird") a stepping stone is the top of a rock standing out
+      -- of the water: its art (26 x 21, tools/fix_cp_pond.py) ends at the waterline, its last row the pond's dark
+      -- edge row, cut there if the water is higher; under it only a dark reflection, wobbling. It filled its box
+      -- down to the bottom of the world under a see-through wash: a grey glass pillar. The box is unchanged.
+      local wy
+      for _, q in ipairs(Sc.pondPools or {}) do
+        if q.x0 < p.x1 and q.x1 > p.x0 and q.y0 > p.y0 and q.y0 < p.y1 then wy = q.y0 end
+      end
+      if wy then
+        local sw, sh = T.stone:getDimensions()
+        local rows = math.min(sh, wy - (p.y0 - 1))
+        if not T.stoneQ or T.stoneQ.rows ~= rows then T.stoneQ = { q = lg.newQuad(0, 0, sw, rows, sw, sh), rows = rows } end
+        lg.setColor(1, 1, 1, 1); lg.draw(T.stone, T.stoneQ.q, math.floor(x) - 1, p.y0 - 1)
+        Sc.stoneReflection(math.floor(x) - 1, wy, sw, Sc.pondT or 0)
+      else at(T.stone, x - 1, p.y0 - 1) end                         -- (on dry ground: the rock on its box, as before)
     elseif n == "BIN" then shadowUnder(p, camx); at(A.bin, x - 1, 184 + d - A.bin:getHeight())
     elseif n == "PICNIC TABLE" then shadowUnder(p, camx); at(T.table, x, p.y0)
     elseif n == "OAK" then if not Sc.oakHasArt(def) then at(T.oak, x + w / 2 - 94, 175 + d - T.oak:getHeight()) end
@@ -2203,11 +2283,20 @@ end
 function Sc.drawMoverArt(m, camx, style)
   local T = Sc.townArt(style)
   local im = T.boat
-  local x = math.floor(m.x0 - camx + 0.5) - 3
+  local iw = im:getWidth()
+  -- (6 Nov, cp_props_06nov) the duck boat art: its deck (the hull's top ink row) is row DECK, the hull's middle column
+  -- HC; the hull is centred on the mover's box both ways round. The old 54 x 33 art: deck 18, drawn 3 px left.
+  local DECK, HC = 20, 30
+  local cx = math.floor(m.x0 - camx + 0.5) + math.floor((m.x1 - m.x0) / 2)
+  local x = cx - HC
+  if iw == 54 then DECK, x = 18, math.floor(m.x0 - camx + 0.5) - 3 end
   lg.setColor(1, 1, 1, 1)
-  if m.dir and m.dir > 0 then lg.draw(im, x + im:getWidth(), m.y0 - 18, 0, -1, 1) else lg.draw(im, x, m.y0 - 18) end
+  if m.dir and m.dir > 0 then
+    if iw ~= 54 then x = cx - (iw - 1 - HC) end
+    lg.draw(im, x + iw, m.y0 - DECK, 0, -1, 1)
+  else lg.draw(im, x, m.y0 - DECK) end
   local d = dy()
-  lg.setColor(0.33, 0.47, 0.52, 0.5); lg.rectangle("fill", x, 209 + d, im:getWidth(), m.y0 - 18 + im:getHeight() - 209 - d)
+  lg.setColor(0.33, 0.47, 0.52, 0.5); lg.rectangle("fill", x, 209 + d, iw, m.y0 - DECK + im:getHeight() - 209 - d)
   lg.setColor(0.86, 0.94, 0.95, 0.8); lg.rectangle("fill", x + 2, 208 + d, im:getWidth() - 4, 1)   -- the ripple line
   lg.setColor(1, 1, 1, 1)
 end

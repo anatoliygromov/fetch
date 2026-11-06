@@ -94,13 +94,29 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-06 18:50,plan,dt_cargo_bike@1106-185044,dt_cargo_bike,dt_traffic_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:51,spent,dt_tram@1106-185043,,,,,36,spent,
 2026-11-06 18:51,spent,dt_cargo_bike@1106-185044,,,,,24,spent,
+2026-11-06 18:51,plan,cp_hedge@1106-185110,cp_hedge,cp_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:51,plan,cp_leaves@1106-185111,cp_leaves,cp_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:51,plan,cp_stone@1106-185111,cp_stone,cp_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:51,plan,cp_hollowlog@1106-185111,cp_hollowlog,cp_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:51,plan,cp_duckboat@1106-185112,cp_duckboat,cp_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:53,spent,cp_hedge@1106-185110,,,,,24,spent,
 2026-11-06 18:54,plan,dt_cargo_bike@1106-185430,dt_cargo_bike,dt_traffic_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),48,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:54,spent,dt_cargo_bike@1106-185430,,,,,48,spent,
+2026-11-06 18:54,plan,cp_hedge@1106-185442,cp_hedge,cp_props_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),48,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:55,plan,town_tub@1106-185500,town_tub,dt_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:55,spent,cp_hedge@1106-185442,,,,,48,spent,family retry 1: model NB 2.1 -> GPT 2.5 (NB drew the hedge 2x wide)
 2026-11-06 18:56,spent,town_tub@1106-185500,,,,,24,spent,
 2026-11-06 18:56,plan,town_tub@1106-185640,town_tub,dt_props_06nov,spritecook,"SpriteCook Pixel Engine Image (exact 16-128 px, no references)",12,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:56,plan,rw_birch@1106-185632,rw_birch,rw_props_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),48,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:56,plan,cp_leaves@1106-185611,cp_leaves,cp_props_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),48,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:56,plan,cp_rocklog@1106-185611,cp_rocklog,cp_props_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),48,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:56,plan,cp_duckboat@1106-185612,cp_duckboat,cp_props_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),48,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:57,spent,town_tub@1106-185640,,,,,12,spent,
 2026-11-06 18:57,spent,rw_birch@1106-185632,,,,,48,spent,
+2026-11-06 18:57,spent,cp_leaves@1106-185611,,,,,48,spent,
+2026-11-06 18:57,spent,cp_rocklog@1106-185611,,,,,48,spent,
+2026-11-06 18:57,spent,cp_duckboat@1106-185612,,,,,48,spent,
+2026-11-06 18:57,verdict,,cp_stone,,,,,rejected,"plan row cp_stone@1106-185111 not run: stone and log made as one job, cp_rocklog"
+2026-11-06 18:57,verdict,,cp_stone,,,,,pending,"correction: no job ran as cp_stone (0 credits); the NB plan rows cp_stone, cp_hollowlog, cp_leaves@1106-185111 and cp_duckboat@1106-185112 were superseded by GPT 2.5 jobs and never run"
 2026-11-06 18:58,plan,dt_cargo_bike_pedal@1106-185806,dt_cargo_bike_pedal,dt_traffic_06nov,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:58,spent,dt_cargo_bike_pedal@1106-185806,,,,,26,spent,

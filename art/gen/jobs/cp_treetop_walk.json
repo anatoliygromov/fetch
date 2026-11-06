@@ -1,0 +1,23 @@
+{
+ "name": "cp_treetop_walk",
+ "level": "citypark_tall",
+ "layer": "play",
+ "kind": "prop",
+ "real_height_m": 1.0,
+ "target_px": [
+  242,
+  8
+ ],
+ "tier": "C",
+ "family": "cp_built",
+ "method": "built by rule, tools/build_cp_built.py: deck (play, outlined), rope rail (decoration), legs (decoration, faded)",
+ "checks_px": {
+  "deck": "box 240 x 6 + outline",
+  "rail": "46 (1 m), posts at a 46 px pitch",
+  "legs": "6 px under every post"
+ },
+ "slot": {
+  "file": "riverwalk/art/scene/cp_walk704_deck.png",
+  "where": "TREETOP WALK x 704-944 y 216-222 (and cp_walk704_rail, cp_walk704_legs; riverwalk/cp_built.lua)"
+ }
+}

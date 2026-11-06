@@ -1,0 +1,18 @@
+{
+ "name": "cp_play_tower",
+ "family": "cp_built",
+ "tier": "C",
+ "steps": {
+  "spec": {
+   "time": "2026-11-06 19:00"
+  },
+  "built": {
+   "build": "tools/build_cp_built.py",
+   "time": "2026-11-06 19:00"
+  },
+  "ingame": {
+   "frame": "docs/review/06nov/cp_built/frames/play_tower.png",
+   "time": "2026-11-06 19:00"
+  }
+ }
+}

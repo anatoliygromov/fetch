@@ -1,0 +1,28 @@
+{
+ "name": "cp_rocklog",
+ "level": "citypark",
+ "kind": "obstacle",
+ "tier": "A",
+ "layer": "play",
+ "real_height_m": 1.2,
+ "target_px": [
+  104,
+  55
+ ],
+ "checks_px": {
+  "stone": "26x55, water row 21",
+  "log": "44x27, hollow at the left end"
+ },
+ "subject": "two park obstacles side by side, each seen exactly from the side. On the left: a big rounded granite stepping stone standing in a park pond, seen exactly from the side: smooth grey-pink granite with a rounded top, lit warm from the upper left so the top is bright, a few small green moss patches on its top, darker wet stone at and below the waterline. On the right: a hollow fallen tree trunk lying on a park path, seen exactly from the side: rough brown oak bark with long darker grain lines and a lit top edge, its left end cut flat showing a ring of light honey-coloured wood around a big dark hollow inside, its right end a rounded bark end",
+ "part_map": "Left: the grey upright rounded shape is the stone (exactly that size and shape, the top rounded), the dark grey lower part is the stone under the water (still draw the stone there, darker and wet), the thin blue line beside it only marks the water's surface: do not draw it. Right: the long grey rounded shape is the trunk's side (exactly that size), the light grey oval on the left is the cut end (a ring of light honey-coloured wood), the dark oval in it is the hollow inside the log.",
+ "size_sentence": "the stone is half as wide as the dog is long, its top above the waterline about as tall as the dog's legs; the log is a little shorter than the dog is long and about as tall as the dog's back, its dark hollow big enough for the dog to crawl into. Both are real objects at true size next to the dog.",
+ "extra": "Draw both as separate objects with magenta between them. The log's bark is a warm brown ramp like the approved park bench's wood is a green ramp: long grain lines, a lit top edge, no noise.",
+ "model": "sc_gpt25",
+ "variants": 2,
+ "references": 2,
+ "family": "cp_props_06nov",
+ "slot": {
+  "file": "riverwalk/art/scene/park_stone.png",
+  "where": "City Park tall: park_stone.png at the STONE boxes x 736, 792, 2056, 2136, 2216 (top y 332, water y 352, drawn at x - 1, y - 1); park_hollowlog.png at the hollow log piece x 1564 (top y 302, foot 328, scene.lua Sc.drawPieceArt at x - 1, y - 1)"
+ }
+}

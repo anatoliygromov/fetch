@@ -1,0 +1,40 @@
+{
+ "name": "park_hollowlog",
+ "render": "art/gen/renders/cp_rocklog_a_grid4.png",
+ "variant": "a",
+ "window": [
+  150,
+  195,
+  245,
+  240
+ ],
+ "bbox_in_frame": [
+  158,
+  207,
+  229,
+  240
+ ],
+ "size": [
+  72,
+  34
+ ],
+ "target": [
+  44,
+  27
+ ],
+ "colours_in": 1835,
+ "colours": 12,
+ "specks_dropped": 0,
+ "clean_changed": 57,
+ "outline": true,
+ "ink": [
+  28,
+  12,
+  19
+ ],
+ "edge_recoloured": 180,
+ "lone_pct": 1.77,
+ "fails": [
+  "size [72, 34] vs target [44, 27]"
+ ]
+}

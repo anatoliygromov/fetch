@@ -1,0 +1,210 @@
+{
+ "name": "park_stone",
+ "cut": "art/source/park_stone/park_stone_cut.png",
+ "cut_size": [
+  29,
+  56
+ ],
+ "why": "29 to 26 wide: the STONE box is 24 + its 1 px outline each side; the 56th row is below the world",
+ "ops": [
+  {
+   "splice_cols": {
+    "removed": [
+     16,
+     18
+    ],
+    "of_the_size_then": true
+   }
+  },
+  {
+   "crop_rows": [
+    0,
+    55
+   ]
+  }
+ ],
+ "outline_px": [
+  [
+   3,
+   54
+  ],
+  [
+   4,
+   54
+  ],
+  [
+   5,
+   54
+  ],
+  [
+   6,
+   54
+  ],
+  [
+   9,
+   54
+  ],
+  [
+   10,
+   54
+  ],
+  [
+   11,
+   54
+  ],
+  [
+   12,
+   54
+  ],
+  [
+   13,
+   54
+  ],
+  [
+   14,
+   54
+  ],
+  [
+   15,
+   54
+  ],
+  [
+   16,
+   54
+  ],
+  [
+   17,
+   54
+  ],
+  [
+   18,
+   54
+  ],
+  [
+   19,
+   54
+  ],
+  [
+   20,
+   54
+  ],
+  [
+   21,
+   54
+  ],
+  [
+   22,
+   54
+  ]
+ ],
+ "hand": [],
+ "clean_changed": 1,
+ "blotches_merged": [
+  [
+   22,
+   51,
+   2
+  ],
+  [
+   1,
+   12,
+   2
+  ],
+  [
+   14,
+   4,
+   2
+  ]
+ ],
+ "size": [
+  26,
+  55
+ ],
+ "colours": 12,
+ "pond": {
+  "date": "2026-11-06",
+  "branch": "art/cp-pond-06nov",
+  "source": "art/source/park_stone/park_stone_column.png",
+  "why": "the owner: \"this thing looks weird\" (a grey pillar in the pond). A stepping stone is the top of a rock standing out of the water: the art ends at the waterline, the box (24 x 52) is unchanged",
+  "ops": [
+   {
+    "crop_rows": [
+     0,
+     30
+    ]
+   },
+   {
+    "splice_rows": {
+     "removed": [
+      18,
+      27
+     ],
+     "of_the_size_then": true
+    }
+   },
+   {
+    "add_row": {
+     "at": 20,
+     "colour": "151116",
+     "why": "the waterline: the pond's dark edge row (y 351)"
+    }
+   }
+  ],
+  "hand": [
+   {
+    "x": 15,
+    "y": 3,
+    "from": "647930",
+    "to": "debca1",
+    "why": "a lone speck inside the rock face after the splice: its neighbours' colour"
+   },
+   {
+    "x": 17,
+    "y": 7,
+    "from": "647930",
+    "to": "debca1",
+    "why": "a lone speck inside the rock face after the splice: its neighbours' colour"
+   },
+   {
+    "x": 21,
+    "y": 12,
+    "from": "8f636c",
+    "to": "debca1",
+    "why": "a lone speck inside the rock face after the splice: its neighbours' colour"
+   },
+   {
+    "x": 3,
+    "y": 13,
+    "from": "647930",
+    "to": "cca093",
+    "why": "a lone speck inside the rock face after the splice: its neighbours' colour"
+   },
+   {
+    "x": 6,
+    "y": 16,
+    "from": "465623",
+    "to": "8f636c",
+    "why": "a lone speck inside the rock face after the splice: its neighbours' colour"
+   },
+   {
+    "x": 6,
+    "y": 17,
+    "from": "324025",
+    "to": "8f636c",
+    "why": "a lone speck inside the rock face after the splice: its neighbours' colour"
+   },
+   {
+    "x": 22,
+    "y": 18,
+    "from": "cca093",
+    "to": "bc8b8f",
+    "why": "a lone speck inside the rock face after the splice: its neighbours' colour"
+   }
+  ],
+  "size": [
+   26,
+   21
+  ],
+  "colours": 11
+ }
+}

@@ -156,6 +156,12 @@ add(["town_jet"], "dt", "back", group="Downtown")                  # scene.lua d
 # and its doorstep (the GATE's perch, play)
 add(["town_tramshed96"], "dt", "back", True, group="Downtown")
 add(["town_gatestep96"], "dt", "play", group="Downtown")
+# art/cp-built-06nov: the tall City Park"s walks, rose arbour and play tower built by tools/build_cp_built.py: the
+# decks, slats and tower posts are play pieces; the walks" rope rails decoration drawn unfaded with the decks; the
+# walk legs and the arbour posts decoration faded to the back haze (scene.lua built())
+add(["cp_arbour_slat48", "cp_arbour_slat56", "cp_tower_deck56", "cp_tower_post4x106", "cp_tower_post4x72", "cp_walk1968_deck", "cp_walk704_deck"], "cp", "play", group="City Park")
+add(["cp_walk1968_rail", "cp_walk704_rail", "cp_walk1968_legs", "cp_walk704_legs"], "cp", "back", group="City Park")   # (cp-pond: the pylons unfaded, one post)
+add(["cp_arbour_posts48x106", "cp_arbour_posts48x122", "cp_arbour_posts56x106"], "cp", "back", True, group="City Park")
 add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, group="Characters (never shaded)")
 add(["facades_square"], "dt", "mid", True, base=R8, group="Batch 1 (rejected)")
 add(["spire_riddarholmen"], "dt", "back", True, base=R8, group="Batch 1 (rejected)")     # arthooks.lua drawTownBack, own 45 %
