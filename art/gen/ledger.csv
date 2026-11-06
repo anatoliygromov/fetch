@@ -104,3 +104,11 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-06 18:57,spent,cp_duckboat@1106-185612,,,,,48,spent,
 2026-11-06 18:57,verdict,,cp_stone,,,,,rejected,"plan row cp_stone@1106-185111 not run: stone and log made as one job, cp_rocklog"
 2026-11-06 18:57,verdict,,cp_stone,,,,,pending,"correction: no job ran as cp_stone (0 credits); the NB plan rows cp_stone, cp_hollowlog, cp_leaves@1106-185111 and cp_duckboat@1106-185112 were superseded by GPT 2.5 jobs and never run"
+2026-11-06 18:51,plan,cp_magpie@1106-185137,cp_magpie,cp_critters,spritecook,"SpriteCook Pixel Engine Image (exact 16-128 px, no references)",12,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:51,plan,cp_magpie_fly@1106-185137,cp_magpie_fly,cp_critters,spritecook,"SpriteCook Pixel Engine Image (exact 16-128 px, no references)",12,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:51,plan,cp_duckboat@1106-185137,cp_duckboat,cp_critters,spritecook,"SpriteCook Pixel Engine Image (exact 16-128 px, no references)",12,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:51,spent,cp_magpie@1106-185137,,,,,12,spent,
+2026-11-06 18:52,spent,cp_magpie_fly@1106-185137,,,,,12,spent,
+2026-11-06 18:52,spent,cp_duckboat@1106-185137,,,,,12,spent,
+2026-11-06 18:54,plan,cp_magpie_flap@1106-185403,cp_magpie_flap,cp_critters,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:54,spent,cp_magpie_flap@1106-185403,,,,,26,spent,
