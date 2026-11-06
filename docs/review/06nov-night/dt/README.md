@@ -60,6 +60,10 @@ Cards: `round1/cards/` (basin, jets, urn, footbridge, shelter), frames `round1/f
 (`town_quoin.png`). There were no plaza houses at scroll 1.0 on the ends; what the review saw there is the mid row.
 `decision2_street/open_vs_closed_y<y>_x<x>.png`: open (left) against closed (right), colour and grey, 24 spots.
 
+**Fix round 3:** on the open squares the mid row stands 30 px up behind a square floor in the mid layer (a far kerb,
+setts, bollards at 23 px/m, `town_square_floor.png`), and the mid layer is one step lighter in its own haze (look
+shader k 0.30, the fade 0.25 kept): mid 183/139 against back 152/100.
+
 ## Open questions for the owner
 
 1. **Decision 2 (plaza houses):** true scale is the default here (2a). `sheets/decision2_old_vs_truescale_x*.png`

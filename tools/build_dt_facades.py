@@ -388,8 +388,35 @@ def quoin():
     g.rect(0, 0, 0, FH - 1, "V")                                      # the arris
     return render(g.a, C)
 
+SQ = dict(a=(200, 192, 178), b=(170, 162, 150), c=(140, 132, 124), s=(186, 176, 160), j=(146, 138, 128),
+          i=(112, 122, 134), l=(150, 160, 172))
+def square_floor():
+    """(fix round 3, review round 2: "the mid row's feet land on the pavement's far edge") the open square's floor on
+    the mid layer, at its 23 px/m: a 64 x 51 tile, drawn at the mid row's scroll (0.5) under its foot, 30 rows deep
+    (1.3 m of square seen front-on): the far kerb at the row's foot (a lit edge, the stone, a dark lip), the square's
+    light granite setts in 4 px courses, and a cast-iron bollard (0.9 m, 21 px) on the kerb every 64 px (2.8 m). No
+    outline, no ink: mid-layer values, faded as the row"""
+    W, Hh, TOP = 64, 51, 21
+    im = np.zeros((Hh, W, 4), np.uint8)
+    def px(x, y, k): im[y, x] = (*SQ[k], 255)
+    for y in range(TOP, Hh):
+        for x in range(W):
+            r = y - TOP
+            k = "a" if r == 0 else ("b" if r == 1 else ("c" if r == 2 else "s"))
+            if r >= 3 and (r - 3) % 4 == 3: k = "j"                        # the setts' bed joints
+            if r >= 3 and (r - 3) % 4 != 3 and (x + (8 if ((r - 3) // 4) % 2 else 0)) % 16 == 15: k = "j"   # head joints
+            px(x, y, k)
+    bx = 30                                                               # the bollard, 4 px, a domed cap
+    for y in range(TOP - 21, TOP):
+        for x in range(bx, bx + 4):
+            k = "l" if x == bx else "i"
+            if y == TOP - 21 and x in (bx, bx + 3): continue
+            px(x, y, k)
+    for x in range(bx - 1, bx + 5): px(x, TOP - 15, "l" if x == bx - 1 else "i")   # its collar
+    return im
+
 def build():
-    out = {"town_quoin": quoin()}
+    out = {"town_quoin": quoin(), "town_square_floor": square_floor()}
     for s in STYLES:
         for k in (1, 2, 3, 5, 6, 7):
             out[f"town_front_tall{k}_{s}"] = front(k, s)

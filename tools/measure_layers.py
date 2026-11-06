@@ -127,7 +127,7 @@ add(["park_hedge", "park_log", "park_hollowlog", "park_table_front", "park_stone
      "park_keeper_cart"], "cp", "play", group="City Park")
 add(["park_bush"], "cp", "front", group="City Park")
 add(["town_roofs"], "dt", "shore", True, group="Downtown")
-add(["town_facades"], "dt", "mid", True, group="Downtown")
+add(["town_facades", "town_square_floor"], "dt", "mid", True, group="Downtown")   # (fix round 3: the squares' floor)
 add(["town_door", "town_sign", "town_spout"], "dt", "back", True, group="Downtown")
 add(["town_house1", "town_house2", "town_house3"], "dt", "back", True, group="Downtown")   # art/fixes, decision 4
 add(["town_statue"], "dt", "play", group="Downtown")   # art/fixes: tagged play
