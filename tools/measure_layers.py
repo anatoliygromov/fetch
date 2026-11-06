@@ -144,6 +144,7 @@ add(["town_crates70", "town_breadboard", "town_crate_leg", "town_portal_top", "t
 # decks, slats and tower posts are play pieces; the walks" rope rails decoration drawn unfaded with the decks; the
 # walk legs and the arbour posts decoration faded to the back haze (scene.lua built())
 add(["cp_arbour_slat48", "cp_arbour_slat56", "cp_tower_deck56", "cp_tower_post4x106", "cp_tower_post4x72", "cp_walk1968_deck", "cp_walk704_deck"], "cp", "play", group="City Park")
+add(["cp_walk704_landing608", "cp_walk1968_landing1888", "cp_tower_post4x34", "cp_tower_post4x6"], "cp", "play", group="City Park")   # (art/cp-audit-06nov)
 add(["cp_walk1968_rail", "cp_walk704_rail", "cp_walk1968_legs", "cp_walk704_legs"], "cp", "back", group="City Park")   # (cp-pond: the pylons unfaded, one post)
 add(["cp_arbour_posts48x106", "cp_arbour_posts48x122", "cp_arbour_posts56x106"], "cp", "back", True, group="City Park")
 add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, group="Characters (never shaded)")

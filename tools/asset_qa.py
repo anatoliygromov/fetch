@@ -72,6 +72,9 @@ SHARED = {"skyline": ("rw", "cp", "dt"), "water": ("rw", "cp"), "bench": ("rw", 
           **{f"cloud{i}": ("rw", "cp", "dt") for i in range(1, 9)}}
 # pieces cut into tiles: their left and right columns are joins, not silhouette
 TILES = {"rail_bg_left", "rail_bg_unit", "rail_bg_end", "pavement", "road", "park_ground", "town_ground", "water"}
+# (art/cp-audit-06nov) pieces drawn joined to another of the same build on one side: that end column is a join, not
+# silhouette (a City Park walk's deck and its tree landing are one deck, no outline between them)
+JOINS = {"cp_walk704_deck": "left", "cp_walk1968_deck": "left", "cp_walk704_landing608": "right", "cp_walk1968_landing1888": "right"}
 # slots (docs/art_hooks_r8.md): width, height, tolerance on each (0 = exact). Batch 1 files are named differently
 # from their hooks: HOOK says which game file each one becomes
 SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_throw": (528, 66, 0, 0),
@@ -96,7 +99,11 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          "cp_arbour_posts48x106": (60, 106, 0, 0), "cp_arbour_posts48x122": (60, 122, 0, 0), "cp_arbour_posts56x106": (68, 106, 0, 0), "cp_arbour_slat48": (50, 8, 0, 0), "cp_arbour_slat56": (58, 8, 0, 0), "cp_tower_deck56": (58, 8, 0, 0), "cp_tower_post4x106": (6, 106, 0, 0), "cp_tower_post4x72": (6, 72, 0, 0), "cp_walk1968_deck": (346, 8, 0, 0), "cp_walk1968_legs": (350, 122, 0, 0), "cp_walk1968_rail": (350, 61, 0, 0), "cp_walk704_deck": (242, 8, 0, 0), "cp_walk704_legs": (252, 106, 0, 0), "cp_walk704_rail": (252, 61, 0, 0), "park_gate": (120, 96, 0, 0), "park_swings": (84, 106, 0, 0),
          # (6 Nov, art/cp-critters-06nov) the magpie (5 cells of 32 x 26, scene.lua Sc.magpie) and the 2 m duck boat
          # (92 x 60, deck row 41 on the DUCK BOAT mover's top, scene.lua Sc.drawMoverArt)
-         "magpie": (160, 26, 0, 0), "cp_duckboat": (92, 60, 0, 0)}
+         "magpie": (160, 26, 0, 0), "cp_duckboat": (92, 60, 0, 0),
+         # (art/cp-audit-06nov) the walks' tree landings (box + outline at the far end), the tower's second posts, the
+         # rebuilt climbing frame (posts 2712 and 2796, y 264-328, bars and step on their boxes)
+         "cp_walk704_landing608": (98, 8, 0, 0), "cp_walk1968_landing1888": (82, 8, 0, 0),
+         "cp_tower_post4x34": (6, 34, 0, 0), "cp_tower_post4x6": (6, 6, 0, 0), "park_frame": (90, 67, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",
@@ -250,7 +257,7 @@ def blotch_check(r, rgb255, a, strict=True):
     elif n:
         r.add("blotches", "warn", f"{n} blotch(es) of 2-24 px in a near colour", flagged)
 
-def outline_check(r, rgb255, a, need, cls, ox=0, oy=0, where="", tile=False):
+def outline_check(r, rgb255, a, need, cls, ox=0, oy=0, where="", tile=False, join=None):
     """the outline is a property of the file, measured on its own pixels (a load-time fade must not hide a gap).
     Not counted: the bottom row (ground contact), a tile's join columns. Front pieces: dark silhouette with a lit rim,
     no rule. Play pieces and characters: complete. Decoration: none (ladder); if one is drawn it must not be broken"""
@@ -259,6 +266,8 @@ def outline_check(r, rgb255, a, need, cls, ox=0, oy=0, where="", tile=False):
     rows = np.nonzero(a.any(1))[0]
     if len(rows): e[rows.max(), :] = False
     if tile: e[:, 0] = False; e[:, -1] = False
+    if join == "left": e[:, 0] = False
+    if join == "right": e[:, -1] = False
     if not e.any(): return None
     lum = rgb255 @ W601
     dark = e & (lum < 70)
@@ -549,7 +558,7 @@ def check(name, path, lvl, layer, fade, building=False, frames=None, levels=None
     else:
         body_checks(r, rgb255, a, strict=strict)
         if cls not in ("ground", "water"):
-            s = outline_check(r, rgb255, a, need, cls, tile=name in TILES)
+            s = outline_check(r, rgb255, a, need, cls, tile=name in TILES, join=JOINS.get(name))
             if s is not None: r.info["outline"] = round(s)
     if building: window_check(r, rgb255, a)
     return r
