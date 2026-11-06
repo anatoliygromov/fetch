@@ -79,3 +79,23 @@ VERDICT: PASS (all three)
 PASS (9/9): loggia, gallery88, flower_roof, ledge, footbridge, spire, stopsign, jet, tier, bowl, rim.
 FAIL: gallery72 (Shapes), balcony56 and balcony64 (Read), spring (Outline, Read).
 `pipeline.py done NAME review` was not run: none of these 15 has a pipeline status (not started, no art/gen/jobs spec), so it refuses.
+
+# Round 2 (re-check of the 5 fixed pieces, head 8f6b63d)
+Frames (own, look on, 1x and 3x, colour and grey): /tmp/claude-0/-home-claude/87159006-489b-566e-ae4a-e83d2f5ae5ab/scratchpad/r2/ (camera y 120 and 0 at x 1440, 1700, 1860, 2300; y 240 at x 640; s/ has x 780 and 2380 at y 240 and 120). Files at 5x beside bench, lamp_post, bin: r2/f_gal.png, f_bal.png, f_spr.png, f_spr16.png. asset_qa and check_backdrop: PASS / BACKDROP OK.
+
+## town_roof_gallery72 (74x32) and town_roof_gallery88 (90x32)
+4. Shapes: PASS. Pitch is 16 px and the end gaps now equal the inner gaps (row 6: 6 px at both ends and between every pair; row 13: 7 px swell gap; rows 10 and 20: 8 px at both ends), both files. Every vase whole, 4 and 5 identical. Other 8 items unchanged: PASS.
+VERDICT: PASS (both, 9/9)
+
+## town_balcony56 and town_balcony64 (58x60, 66x60)
+Better: it is now an open iron railing (3 px handrail, bottom rail, 4 posts, a ring per panel) and the house reads through it, a French balcony; not a jail window. Items 1 to 8: PASS.
+9. Read: FAIL. The bones still look caged. They sit in the railing plane, behind the bars: at camera y 120 x 2380 the two bones at 1x (about x56-68 and x84-98, y 197) have a post at x91 crossing the right bone's right end and a post at x50 touching the left bone's left end; in x1440 frame the left balcony's bone at 3x (395-440, 640) is cut by the centre post. Rail is also boxed in ink on all four sides, 46 px tall. A kid sees a bone locked behind bars.
+Fix ideas: draw the bones in front of the railing (or at the rail level above the handrail), or move the bones to the gaps between posts (posts at 8, 31, 54 of 58, gaps 20 px, bone 14 px), or lower the rail panel so the bones stand over it.
+VERDICT: FAIL (1 item, both files)
+
+## town_spring (36x10, 4 frames)
+3. Outline: PASS (every frame closes with its ink row, 16x crop r2/f_spr16.png). 9. Read: PASS. It is now a grey steel coil of flat bands at each awning post (frames s/x3__y240_x0780.png, x2380), no red tassel; reads as a spring clamp more than a round coil at 1x, but it is crisp, steel, and the squash frames differ. WARN: bands are flat slabs, at 9 px a zigzag is not possible; fine. Others PASS.
+VERDICT: PASS (9/9)
+
+# Round 2 summary
+PASS: gallery72, gallery88, town_spring. FAIL: balcony56, balcony64 (Read: bones behind bars).
