@@ -1,6 +1,6 @@
-# Deleted branches (archive)
+# Merged branches to delete (archive)
 
-Branches deleted on 7 Nov 2026 (owner's yes, 6 Nov 20:10) because every commit on them is in main (v0.7, 2c04160). Kept: main, round1, prod/*, ops/*, every branch of 6 Nov (names with 06nov) and anything not merged. To restore one: `git push origin <commit>:refs/heads/<name>`.
+These branches can be deleted (owner's yes, 6 Nov 20:10): every commit on them is in main (v0.7, 2c04160). The night session could not delete them: the session's git proxy refuses deleting branches it did not create. One command deletes them all from a Mac clone: `cut -d'`' -f2 docs/branches_archive.md | grep / | xargs -n 10 git push origin --delete`. Kept: main, round1, prod/*, ops/*, every branch of 6 Nov (names with 06nov) and anything not merged. To restore one: `git push origin <commit>:refs/heads/<name>`.
 
 | Branch | Last commit | Date | Subject |
 | --- | --- | --- | --- |
