@@ -1141,7 +1141,7 @@ end
 Sc.POND_RISE, Sc.BANK_R = 16, 16
 Sc.WINCH_DX = 8                                                   -- (the winch keeper: see WINCH)
 local BANK = { lip = hex("b5ad55"), lawn = hex("9e983f"), dry = hex("d09d68"), damp = hex("bd8354"), wet = hex("8a5a3a"),
-  foot = hex("5e4127"), st1 = hex("c9c2b4"), st2 = hex("a39b8e"), st3 = hex("7a736a"), sub = hex("3d5866"),
+  foot = hex("5e4127"), st1 = hex("c9c2b4"), st15 = hex("b3ac9f"), st2 = hex("a39b8e"), st3 = hex("7a736a"), sub = hex("3d5866"),
   subEdge = hex("4f6f7a"), rip = hex("d3f2fd"), lit = hex("ddae79") }
 local STONE_W, STONE_H = { 10, 7, 12, 8, 9, 11 }, { 4, 3, 5, 4, 3, 4 }
 -- the far bank's colour at row k (0 at the lawn's lip) of n rows, world column wx; nil: leave it (a stone)
@@ -1165,6 +1165,7 @@ local function bankStone(wx, k)
   if u < 0 or u >= sw or k >= sh then return nil end
   if (u == 0 or u == sw - 1) and (k == sh - 1 or k == 0) then return nil end   -- rounded corners
   if k == sh - 1 then return BANK.st1 end                         -- its lit top
+  if k == sh - 2 and k > 0 and u < sw - 1 then return BANK.st15 end   -- (round 1) the mid-light under it: the stepping stones' 4 shades
   if k == 0 or u == sw - 1 then return BANK.st3 end               -- the shaded underside and right side
   return BANK.st2
 end
@@ -1181,13 +1182,15 @@ function Sc.drawPondBank(p, camx, d, wbottom)
     if i < R then
       local u = 1 - (i + 0.5) / R
       foot = wt + math.floor(Sc.POND_RISE * (1 - math.sqrt(math.max(0, 1 - u * u))) + 0.5)
-      if i == 0 then foot = p.y0 end
+      -- (night 6 Nov, cp fix round 1: the shore's last column no longer drops straight to the box's top, a 1 px
+      -- vertical cut at the lawn's corner; the curve runs on to the end)
     end
     for y = yb, foot - 1 do
       local k = y - yb
       local kk = (foot > wt) and math.min(k, n - 4) or k            -- (at the ends the face runs on, damp, to the shore)
       local c = bankRow(kk, n, wx)
       if foot > wt and y >= foot - 3 then c = (y == foot - 1) and BANK.foot or (y == foot - 2) and BANK.wet or BANK.lit end
+      if i < 4 and y < foot - 3 and y > yb then c = BANK.lawn end   -- (round 1) the lawn's shoulder runs on round the corner
       if foot == wt then c = bankStone(wx, foot - 1 - y) or c end
       px(x, y, c)
     end
@@ -2833,7 +2836,7 @@ function Sc.drawPondShoulders(world, camx)
           if d < 3 then                                                -- the bank's face down to the shore
             for y = yf + 1, wt + 6 do
               local c = y < wt + 1 and LAWN or (y < wt + 3 and BANK.damp or (y < wt + 5 and BANK.wet or BANK.foot))
-              if d == 0 then c = (y < wt + 1) and DK or BANK.foot end
+              if d == 0 and y >= wt + 1 then c = BANK.foot end            -- (round 1: no dark outer column)
               px(x, y, c)
             end
           end

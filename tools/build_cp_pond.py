@@ -37,7 +37,7 @@ def hx(h): return (int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16), 255)
 REED = {'lit': hx('b5ad55'), 'mid': hx('8f8a3c'), 'dk': hx('66612c'), 'dry': hx('c9a865'), 'dryd': hx('a3824a')}
 RUSH = {'lit': hx('9c6238'), 'mid': hx('7a4a2a'), 'dk': hx('573520')}
 LILY = {'lit': hx('8fbf5a'), 'mid': hx('5f9445'), 'dk': hx('3f6b35'), 'w': hx('f6efe6'), 'p': hx('e79ab0')}
-STONE = {'lit': hx('c9c2b4'), 'mid': hx('a39b8e'), 'dk': hx('7a736a')}
+STONE = {'lit': hx('c9c2b4'), 'ml': hx('b3ac9f'), 'mid': hx('a39b8e'), 'dk': hx('7a736a')}   # the stepping stones' ramp (round 1: 4 shades)
 
 
 def canvas(w, h): return np.zeros((h, w, 4), np.uint8)
@@ -125,6 +125,7 @@ def stones():
                 if (top or bot) and (left or right): continue      # rounded corners
                 if top or (y == y0 + 1 and left and h > 3): c = STONE['lit']
                 elif bot or right: c = STONE['dk']
+                elif y == y0 + 1 or (left and y < H - 2): c = STONE['ml']   # (round 1) the mid-light under the lit top
                 else: c = STONE['mid']
                 put(a, x, y, c)
     A = canvas(W, H); stone(A, 0, 7, 6); stone(A, 6, 6, 4)
