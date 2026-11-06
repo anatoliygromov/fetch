@@ -51,3 +51,20 @@ Scale: about 28 px tall = 0.6 m, fine for a goose beside Pepper at 46 px/m.
 9. Read: PASS.
 
 VERDICT: FAIL (1 item: Shading, fly row and flecks). Not blocking at 1x; the maker kept it on triage.
+
+# Round 2
+
+Reviewer: same independent gate-8 reviewer, 6 Nov 2026, branch art/cp-critters-06nov at 9a043b8. Only the three round 1 findings re-checked. Own frames (citypark_tall, LOOK_SWEEP, a scratch copy of the game outside the repo, nothing changed in it): /tmp/claude-0/-home-claude/87159006-489b-566e-ae4a-e83d2f5ae5ab/scratchpad/rr2/out/ boat_col5.png, boat_grey5.png, boat_full3.png (camera 740,144), perch_col6.png, perch_grey6.png, perch_full3.png, feet10.png (camera 520,100, magpie reset to perch 3), goose_fly_col5.png, goose_fly_grey5.png, goose_f234_10.png (file at 5x and 10x). asset_qa: cp_duckboat PASS, goose WARN. check_backdrop OK.
+
+## cp_duckboat: Fit re-check
+8. Fit: PASS. The tint and ripple now follow the hull column by column; no pale box past the hull ends or below it (boat_col5.png, grey too). The water over the hull reads as water seen through the pond surface.
+VERDICT: PASS (all 9 items; owner questions from round 1 unchanged: scale 2.0 m, Pepper covering the duck's face at the front end).
+
+## Magpie perch 3 (map 672, 243)
+No longer against the lamp post, but it does not stand on anything yet. At screen about (150-153, 143) the feet are 3 px above the willow's edge with lavender sky under the left foot (feet10.png); the body hangs over the gap left of the crown and only the tail lies over the leaves (perch_col6.png, grey as well). It reads as hovering at the crown's edge, not as perched on leaves or a branch. Fix in the map, not the art: perch y +4 (247) and x +6 (678) so the feet sit inside the leaf mass.
+VERDICT: perch FAIL (minor, placement). The magpie art verdict stays PASS (owner question: scale).
+
+## goose.png fly row
+Frames 4, 5, 6, 7, 8 are clean shapes with one white, one grey, orange feet, no blotches (goose_fly_col5.png). Frame 3 (wings up) is fine except the beak: a black stub 3 px long runs past the orange tip at about (25-29, 10) of the cell (goose_f234_10.png), it reads as a dark spike. Frame 2 (take-off crouch) has the near wing hanging grey beside the neck at about (25-30, 8-18), reads like a second neck for a frame. Both are one frame long, fine at 1x. asset_qa still lists a 5 px foot move and a size jump in row 3, expected for flight.
+Fly row: PASS (minor: frame 3 beak stub, frame 2 hanging wing). Item 5 for the whole goose stays FAIL only on the walk row flecks (3.6 % lone pixels) that the maker kept on purpose.
+VERDICT: goose FAIL on item 5 (walk flecks, not blocking), fly row fixed.
