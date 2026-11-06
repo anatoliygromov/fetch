@@ -133,7 +133,7 @@ function Sc.art()
   local A = ARTS[Look.key]
   if A then return A end
   A = {}; ARTS[Look.key] = A
-  for _, n in ipairs({ "water", "skyline", "pavement", "road", "manhole", "drain" }) do A[n] = newImg("art/scene/" .. n .. ".png") end
+  for _, n in ipairs({ "water", "skyline", "pavement", "road", "manhole", "drain", "quaywall" }) do A[n] = newImg("art/scene/" .. n .. ".png") end
   A.waterQ = {}                                                   -- one quad per row: each row of the river moves on its own
   for y = 0, A.water:getHeight() - 1 do A.waterQ[y] = lg.newQuad(0, y, A.water:getWidth(), 1, A.water:getDimensions()) end
   -- decoration (pot, lamp posts, the houses and trees) is faded the back amount towards the level's back haze, so it
@@ -720,6 +720,13 @@ end
 -- the ground of the play layer, painted once (in chunks, Sc.CHUNK). Every walkable top at or below
 -- y 150 gets the pavement art, one column per pixel (it repeats every 320 px): its back edge is 12 px above the
 -- line Pepper walks on, then the kerb and the road. Higher terrain (the bridge pier) stays a greybox.
+-- (owner, 6 Nov) the road runs only under the level promenade (feet y 184, as the traffic's spans and look.lua's
+-- receding road rows); a ramp or the lower quay stands on the granite quay wall instead
+Sc.PROMENADE, Sc.QUAY_Y0, Sc.QUAY_JOINT = 184, 196, { 72 / 255, 82 / 255, 107 / 255 }
+local function columnTop(w, x)                                      -- the first walkable top at or under y 150, or nil
+  if x < 0 or x >= w.width then return nil end
+  for _, m in ipairs(columnRuns(w, x, "all")) do if m[1] >= 150 then return m[1] end end
+end
 function Sc.paintGround(w, props)
   local art = Sc.art()
   local pave = art.pavement
@@ -730,6 +737,10 @@ function Sc.paintGround(w, props)
   local rw, rh = road:getDimensions()
   local rq = {}
   for i = 0, rw - 1 do rq[i] = lg.newQuad(i, 0, 1, rh, rw, rh) end
+  local quay = art.quaywall                                         -- (owner, 6 Nov) under ramps and the lower quay
+  local qw, qh = quay:getDimensions()                               -- (tools/make_quaywall.py)
+  local wq = {}
+  for i = 0, qw - 1 do wq[i] = lg.newQuad(i, 0, 1, qh, qw, qh) end
   return chunked(w, function(xa, xb)                              -- (painted once per chunk: Sc.CHUNK)
   local high, flat = {}, {}
   for x = 0, w.width - 1 do
@@ -741,7 +752,16 @@ function Sc.paintGround(w, props)
           lg.setColor(1, 1, 1, 1)
           clip(x, 0, 1, m[2])
           lg.draw(pave, q[x % pw], x, m[1] - 12)
-          lg.draw(road, rq[x % rw], x, m[1] + 15)                   -- rows 27+ of the paving art are the road
+          if m[1] == Sc.PROMENADE then
+            lg.draw(road, rq[x % rw], x, m[1] + 15)                 -- rows 27+ of the paving art are the road
+          else                                                      -- (owner, 6 Nov) a ramp or the lower quay: no road
+            clip(x, m[1] + 15, 1, m[2] - m[1] - 15)                 -- under it (the road was a sheared copy), the granite
+            lg.draw(quay, wq[x % qw], x, Sc.QUAY_Y0)                -- quay wall, its courses level (anchored in the world)
+            local l, r = columnTop(w, x - 1), columnTop(w, x + 1)   -- where the level promenade (the road) starts beside
+            if l == Sc.PROMENADE or r == Sc.PROMENADE then          -- it: a clean head joint, the road beside it
+              lg.setColor(Sc.QUAY_JOINT); lg.rectangle("fill", x, m[1] + 15, 1, m[2] - m[1] - 15); lg.setColor(1, 1, 1, 1)
+            end
+          end
           clip()
         end
         if m[1] == 184 then flat[x] = true end
