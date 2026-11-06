@@ -1,0 +1,23 @@
+{
+ "name": "cp_arbour",
+ "level": "citypark_tall",
+ "layer": "play",
+ "kind": "prop",
+ "real_height_m": 2.3,
+ "target_px": [
+  58,
+  8
+ ],
+ "tier": "C",
+ "family": "cp_built",
+ "method": "built by rule, tools/build_cp_built.py: slats (play, outlined), posts with climbing roses and a swag (decoration, faded)",
+ "checks_px": {
+  "slat": "box + outline",
+  "post": "5 px",
+  "rose": "4 x 4, one sprite (mirrored)"
+ },
+ "slot": {
+  "file": "riverwalk/art/scene/cp_arbour_slat56.png",
+  "where": "ARBOUR x 2344-2400 y 216, slats 2448-2496 y 200 and 2544-2592 y 216 (cp_arbour_slat48, cp_arbour_posts*; riverwalk/cp_built.lua)"
+ }
+}
