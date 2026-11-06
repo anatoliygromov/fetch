@@ -175,7 +175,10 @@ def house(nb, hue, roof, ground, gable_h=0):
     while i < nb:                                                  # the ground floor
         k = ground[i]
         if k == "W": stamp_key(cv, WIN, bx[i] - 12, H - FLOOR0 + 12, S_)
-        elif k == "D": stamp_key(cv, DOOR, bx[i] - DOOR.shape[1] // 2, b - 3 - DOOR.shape[0], S_)
+        elif k == "D":
+            stamp_key(cv, DOOR, bx[i] - DOOR.shape[1] // 2, b - 3 - DOOR.shape[0], S_)
+            dx0 = bx[i] - DOOR.shape[1] // 2                       # (fix round 3 review: a dark threshold row under
+            cv.rect(dx0 + 1, b - 3, dx0 + DOOR.shape[1] - 2, b - 3, "sv")   # the door seats it on the square)
         elif k == "S":
             cx = (bx[i] + bx[i + 1]) // 2 if i + 1 < nb else bx[i]
             stamp_key(cv, SHOP, cx - SHOP.shape[1] // 2, b - 3 - SHOP.shape[0], S_); i += 1
