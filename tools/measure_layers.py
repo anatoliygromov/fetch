@@ -150,6 +150,9 @@ add(["cp_arbour_posts48x106", "cp_arbour_posts48x122", "cp_arbour_posts56x106"],
 # and its doorstep (the GATE's perch, play)
 add(["town_tramshed96"], "dt", "back", True, group="Downtown")
 add(["town_gatestep96"], "dt", "play", group="Downtown")
+# art/dt-props-06nov: one parasol canopy and one apple crate per box width
+add(["town_parasol40", "town_parasol48", "town_parasol64", "town_parasol96", "town_crate_front28", "town_crate_front32",
+     "town_crate_front36"], "dt", "play", group="Downtown")
 add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, group="Characters (never shaded)")
 # art/cp-critters-06nov: the magpie (drawn without the look, like every character) and the duck boat (a play mover)
 add(["magpie"], "cp", None, base=ART, group="Characters (never shaded)")

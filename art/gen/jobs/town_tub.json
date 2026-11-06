@@ -1,0 +1,31 @@
+{
+ "name": "town_tub",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "plant",
+ "real_height_m": 1.11,
+ "target_px": [
+  32,
+  51
+ ],
+ "checks_px": {
+  "tub": "32 x 28 (0.70 x 0.61 m) = the TUB box",
+  "shrub": "25 px across (0.55 m), 23 px over the rim (0.5 m)"
+ },
+ "subject": "a square wooden planter tub on a city square, front-on, its front made of warm orange-brown wooden planks with dark iron corner brackets, and in it a neatly clipped round green box shrub (a dense round ball of small leaves, lit from the upper left, a darker green on its lower right)",
+ "part_map": "the mid grey box at the bottom is the wooden tub (exactly that width and height, its top edge a flat rim), the lighter band at its top is the rim, the light grey round shape on top is the clipped round box shrub standing in the tub (exactly that size), its bottom hidden behind the rim.",
+ "size_sentence": "the tub is a little lower than the dog's back and a little wider than half the dog; the round shrub on it is about as wide as the dog's head and chest together. A real planter at true size next to the dog, not a toy.",
+ "model": "sc_pe",
+ "variants": 2,
+ "tier": "A",
+ "family": "dt_props_06nov",
+ "slot": {
+  "file": "riverwalk/art/scene/town_tub.png",
+  "where": "Downtown tall, TUB x 1408 and 2280 (solid 32 x 28, top y 396), the tub on the box, the shrub over it behind Pepper (scene.lua Sc.drawPropArt TUB)"
+ },
+ "retry": {
+  "n": 1,
+  "changed": "model: NB 2.1 1K drew the tub 78 px (a) and 59 px (b) wide for a 32 px box (2.4x and 1.8x, not integer) beside a true 1x Pepper; Pixel Engine Image draws at exactly 32 x 51",
+  "previous": "town_tub@1106-185500, renders art/gen/renders/town_tub_n6a.png, town_tub_n6b.png"
+ }
+}

@@ -1,0 +1,22 @@
+{
+ "name": "town_pedestal",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 0.89,
+ "target_px": [
+  50,
+  41
+ ],
+ "checks_px": {
+  "box": "48 x 40 (1.04 x 0.87 m)"
+ },
+ "tier": "C",
+ "family": "dt_props_06nov",
+ "method": "built from stamped parts, tools/build_dt_props.py",
+ "build": "tools/build_dt_props.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_pedestal.png",
+  "where": "Downtown tall, PEDESTAL x 1440 (solid 48 x 40, top y 384), at x0 - 1, y0 - 1 (scene.lua PEDESTAL)"
+ }
+}
