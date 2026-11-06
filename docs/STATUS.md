@@ -1,5 +1,21 @@
 # FETCH! Status
 
+## Night of 6 Nov (unattended run, 21:00 Stockholm): audit only
+
+0 credits, no image service call, nothing merged. Base: `ops/spritecook-05nov` (newest ops branch). No tracks started: another live session was pushing `night/06nov-*`, `art/*-06nov`, `preview/06nov-run` and `review/06nov-base` until 21:02, so I kept off those files.
+
+Audit of `prod/integrate-e` (7fe6c8f): PEPPER UNCHANGED (4591 steps), flow 125 of 125, Tiled PASSED, check_curve T1 to T4 PASS (order riverwalk,citypark_tall,downtown_tall,rooftops,soder,night). `tools/check_approved.py`: 3 owner-marked commits not in it: `240ffbe` (rowing boats true size, on `art/dt-audit-06nov`), `7632e8d` (rowing boat by parts, `night/06nov-rw`), `f444ee2` (hint bubbles, `preview/06nov-run`). Not run: BACKDROP, physics, QA.
+
+**Waiting for the owner:**
+1. Which of the two rowing boat builds (`240ffbe` or `7632e8d`) goes into the next integration?
+2. Take `f444ee2` (hint bubbles) into `prod/integrate-e`?
+
+**Problems:** the Tiled check first failed here only because apt numpy and Pillow clashed with the local Python; pip fixed it. Not a repo bug.
+
+**Next run, if he says nothing:** the same audit on the newest integration branch.
+
+---
+
 ## Night of 5 Nov: SpriteCook run (live session, owner asleep)
 
 **Owner, 21:45 and 21:47:** "we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible" and "Make sure you can execute over night without me needing to do stuff, I go sleep now". Read as: the yes on tonight's total, and his words to lift the 150 a day SpriteCook cap for tonight only. Every other rule stands: preflight on every job, 3 paid jobs per asset, 2 retries per family, gates 1 to 8, nothing reaches him but the board, nothing merged to main.
