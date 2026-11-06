@@ -59,7 +59,8 @@ end
 -- a rowing boat (a mover rowed to and fro, River Walk's harbour). night/06nov-rw: a 4.0 m eka at true scale, split
 -- into parts (tools/build_rw_rowboat.py): the hull BUILT by rule (art/scene/rw_rowboat.png, 185 x 62, bow left,
 -- row 0 = world y 176, the rail on row 36 = the mover's top y 212, the waterline row 48 = y 224) and the rower's
--- 6-frame loop (art/scene/rw_rower.png, frames 78 x 62 on hull x 106-183, he rows from the stern thwart so Pepper's
+-- loop (art/scene/rw_rower.png, 7 frames of 92 x 62 on hull x 106-197: 6 of the stroke, 7 at rest with the oar
+-- shipped along the hull; he rows from the stern thwart so Pepper's
 -- spot amidships stays clear of him): his torso, the oar built per frame on
 -- its rowlock, his near arm keyed by rule from shoulder to the fists on the handle. The mover's box is the hull's
 -- columns 25-178. He rows while the boat moves (pulling when it goes right, stern first, as he faces the bow; the
@@ -67,7 +68,7 @@ end
 -- over everything below the waterline, a moving ripple row along the hull, a wake behind it while it moves, and a
 -- splash where the blade goes in. Without the art: the old code-drawn boat.
 local boatImg, rowerImg, rowerQ, hullCol, oarCol
-local BOX0, FX0, FW, NF = 25, 106, 78, 6                          -- (fix round 1: the rower at the stern, hull x 106-183)
+local BOX0, FX0, FW, NF = 25, 106, 92, 7                          -- (the rower at the stern, hull x 106-197; frame 7: rest)
 local WROW = 48                                                    -- the waterline's row in the art (world y 224)
 local SPLASH = { [1] = 165, [4] = 131 }                            -- where the oar crosses the surface (hull x): catch, finish
 local function cols(data, x0, w)                                   -- per column: the first opaque row at or under the
@@ -99,10 +100,10 @@ function Sp.drawRowboat(m, cam, t)
     local top = m.y0 - 36
     if hx > 330 or hx + 185 < -40 then return end
     local moving = math.abs(m.dx or 0) > 0
-    local i = 5                                                     -- at rest: the blade lifted over the water
+    local i = 7                                                     -- at rest: the oar shipped along the hull
     if moving then
-      local k = math.floor(t * 7) % NF
-      i = (m.dir or 1) > 0 and 1 + k or NF - k                      -- going left: the loop backwards (backing water)
+      local k = math.floor(t * 7) % 6                               -- the stroke: frames 1-6
+      i = (m.dir or 1) > 0 and 1 + k or 6 - k                       -- going left: the loop backwards (backing water)
     end
     lg.setColor(1, 1, 1, 1)
     lg.draw(boatImg, hx, top)
@@ -223,6 +224,41 @@ function Sp.pontoonWater(m, cam, img)
     if b and top + b >= 224 then lg.rectangle("fill", ax + x, 224, 1, top + b - 224 + 1) end
   end
   lg.setColor(1, 1, 1, 1)
+end
+
+-- (night/06nov-rw, final review: "the ferry hull ends flat on the water surface with no ripple or wet band") a prop
+-- marked wet = true (River Walk's BOAT) takes the water's tint over its art below the surface (y 224), on its own
+-- columns, and a running ripple row along it, as the rowing boats do. Called by stage.lua after the play props.
+local wetCols = {}
+function Sp.drawWetProps(s, cam)
+  for _, pr in ipairs(s.def.props) do
+    if pr.wet and pr.art and pr.x1 - cam > -20 and pr.x0 - cam < 340 then
+      local cols = wetCols[pr.art]
+      if not cols then
+        cols = {}
+        local d = love.image.newImageData("art/scene/" .. pr.art .. ".png")
+        for x = 0, d:getWidth() - 1 do
+          local b
+          for y = 0, d:getHeight() - 1 do local _, _, _, a = d:getPixel(x, y); if a > 0 then b = y end end
+          cols[x] = b or false
+        end
+        cols.h = d:getHeight(); wetCols[pr.art] = cols
+      end
+      local ax, top = math.floor((pr.ax or pr.x0) - cam), (pr.ay or pr.y1) - cols.h
+      lg.setColor(22 / 255, 52 / 255, 125 / 255, 0.7)
+      for x, b in pairs(cols) do
+        if x ~= "h" and b and top + b >= 224 then lg.rectangle("fill", ax + x, 224, 1, top + b - 224 + 1) end
+      end
+      local ph = math.floor(love.timer.getTime() * 6)
+      for x, b in pairs(cols) do
+        if x ~= "h" and b and top + b >= 224 then
+          if ((x + ph) % 9) < 3 then lg.setColor(0.86, 0.94, 0.97, 0.9); lg.rectangle("fill", ax + x, 224, 1, 1) end
+          if ((x - ph + 4) % 13) < 2 then lg.setColor(0.86, 0.94, 0.97, 0.55); lg.rectangle("fill", ax + x, 225, 1, 1) end
+        end
+      end
+      lg.setColor(1, 1, 1, 1)
+    end
+  end
 end
 
 -- the rope a ferry runs on: a thin line just under its deck, from bank to bank (drawn behind the ferry); the River Walk pontoon is moored
@@ -390,39 +426,26 @@ end
 local jettyImg, jettyCol
 local function jetty(pc, cam)
   local x0, x1, y = math.floor(pc.x0 - cam), math.floor(pc.x1 - cam), pc.y0
-  if jettyImg == nil then                                          -- the art (SpriteCook, tools/import_assets_v2.py)
-    jettyImg = false
-    if love.filesystem.getInfo("art/scene/rw_jetty.png") then
-      -- (night/06nov-rw, base audit: "three piles run to the screen bottom over open water like a table leg") the
-      -- piles end on an ink row 11 px under the surface: here each pile runs on down past the bottom of the screen
-      -- (its row 32, plain wood, repeated from its foot), and the part under the surface takes the water's tint
-      -- and a ripple, as the rowing boats do. The png is unchanged.
-      local src = love.image.newImageData("art/scene/rw_jetty.png")
-      local w, h = src:getDimensions()
-      local d = love.image.newImageData(w, h + 6)
-      for yy = 0, h + 5 do
-        for xx = 0, w - 1 do
-          local sy = yy < h - 1 and yy or 32
-          local r, g, b, a = src:getPixel(xx, sy)
-          if yy >= h - 1 then local _, _, _, a0 = src:getPixel(xx, h - 1); if a0 == 0 then a = 0 end end
-          d:setPixel(xx, yy, r, g, b, a)
-        end
-      end
+  if jettyImg == nil then                                          -- the art (night/06nov-rw final review: BUILT by
+    jettyImg = false                                               -- tools/build_rw_jetty.py, a small landing stage:
+    if love.filesystem.getInfo("art/scene/rw_jetty.png") then      -- deck, bollard, piles, bracing, a ladder; its
+      local d = love.image.newImageData("art/scene/rw_jetty.png")  -- bottom row on world y 239)
       jettyImg = lg.newImage(d); jettyImg:setFilter("nearest", "nearest")
-      jettyCol = {}                                                -- per column: the rows under the surface
-      for xx = 0, w - 1 do
+      jettyCol = {}                                                -- per column: its first and last opaque rows
+      for xx = 0, d:getWidth() - 1 do
         local t0, t1
-        for yy = 0, h + 5 do local _, _, _, a = d:getPixel(xx, yy); if a > 0 then t0 = t0 or yy; t1 = yy end end
+        for yy = 0, d:getHeight() - 1 do local _, _, _, a = d:getPixel(xx, yy); if a > 0 then t0 = t0 or yy; t1 = yy end end
         jettyCol[xx] = t0 and { t0, t1 } or false
       end
     end
   end
   if jettyImg then
-    lg.setColor(1, 1, 1, 1); lg.draw(jettyImg, x0, y - 1)
-    local wr = 224 - (y - 1)                                       -- the surface's row in the art (world y 224)
+    local top = 240 - jettyImg:getHeight()                         -- (the deck's ink row is y - 1, as before)
+    lg.setColor(1, 1, 1, 1); lg.draw(jettyImg, x0, top)
+    local wr = 224 - top                                           -- the surface's row in the art (world y 224)
     lg.setColor(22 / 255, 52 / 255, 125 / 255, 0.7)
     for xx, c in pairs(jettyCol) do
-      if c and c[2] >= wr then lg.rectangle("fill", x0 + xx, y - 1 + math.max(wr, c[1]), 1, c[2] - math.max(wr, c[1]) + 1) end
+      if c and c[2] >= wr then lg.rectangle("fill", x0 + xx, top + math.max(wr, c[1]), 1, c[2] - math.max(wr, c[1]) + 1) end
     end
     local ph = math.floor(love.timer.getTime() * 6)                -- a ripple round each pile: dashes either side
     lg.setColor(0.86, 0.94, 0.97, 0.9)

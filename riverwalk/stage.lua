@@ -658,6 +658,7 @@ function St:draw(debug)
   for _, pr in ipairs(self.def.props) do
     if pr.layer == "play" and not pr.over then use((pr.kind == "decor" and not PLAYLOOK[pr.name]) and "back" or "play"); prop(pr, cam, C.prop) end
   end
+  use("play"); Sp.drawWetProps(self, cam)                          -- (night/06nov-rw) the ferry sits in the water
   use("play")
   Sp.drawRopes(self, cam)                                          -- the ropes the ferries run on
   for _, m in ipairs(self.movers) do

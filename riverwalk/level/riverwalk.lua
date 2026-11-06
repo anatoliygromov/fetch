@@ -91,7 +91,7 @@ L.props = {
   -- own lines by tools/build_ferry.py): one image; three hidden boxes give its deck (y 206), the saloon
   -- roof (y 184, 22 px up: a hop) and the wheelhouse roof (y 154, 30 px up: a held jump). The hull sits 9 px
   -- into the river.
-  { name = "BOAT",     kind = "solid",  layer = "play", x0 = FX + 2,   x1 = FX + 237, y0 = 206, y1 = 236, art = "ferry", ax = FX, ay = 233, noshadow = true },
+  { name = "BOAT",     kind = "solid",  layer = "play", x0 = FX + 2,   x1 = FX + 237, y0 = 206, y1 = 236, art = "ferry", ax = FX, ay = 233, noshadow = true, wet = true },   -- (wet: tinted under y 224, a ripple)
   { name = "SALOON",   kind = "solid",  layer = "play", x0 = FX + 60,  x1 = FX + 180, y0 = 184, y1 = 206, hidden = true },
   { name = "WHEELHOUSE", kind = "solid", layer = "play", x0 = FX + 97, x1 = FX + 145, y0 = 154, y1 = 184, hidden = true },
   -- the harbour (screens 8-9, 2112-2960), on the quay's level: open water x 2192-2848 (surface y 224; night/06nov-rw:

@@ -80,3 +80,19 @@ Arm with an elbow and a highlight row; the blade lifted on the return and at res
 the oar ash; the bow's seams as separate smooth curves; the rower at the stern, Pepper's spot clear; the road one
 step darker; the mooring pile wet; the concept PNGs committed. Frames: `frames/after_ride_boat1_right.png`,
 `after_jetty_boat1_back_left.png` (boat 1 rowing back left on its own), `after_ride_boat2_right.png`, the GIF.
+
+## 7 Final gate review (integration f merged in)
+
+- **Rest pose:** a 7th frame, the oar shipped along the hull: the loom from his fists over the rowlock, the blade
+  out past the transom and clear of the water, full length (phi 65, beta 2). The boats show it while they wait at
+  each end (it was the return pose, a 12 px stub). `frames/final_rest_oar_shipped.png`. The loop is 7 x 92 x 62.
+- **Jetty:** rebuilt by rule, `tools/build_rw_jetty.py --check` (48 x 51, bottom on the screen's foot): a plank deck
+  with a stringer and bolts, an iron bollard, timber piles with weed at the waterline, X bracing, an iron ladder
+  into the water; tinted and rippled under y 224 in code. asset_qa PASS, `cards/PASS_rw_jetty.png`,
+  `frames/final_jetty_x2400.png`.
+- **Ferry:** `wet = true` on the BOAT prop: setpieces.lua `Sp.drawWetProps` tints ferry.png's columns under y 224 and
+  runs a ripple row along it; ferry.png's pixels are unchanged. `frames/final_ferry_x1600.png`.
+- **Pier at x 1930-2070:** the owner-approved pier_v2. Its pixels are untouched; it stands on the stone arch and jambs
+  under its plinth (art/rw-ground-06nov), `frames/round2_pier_x1920.png`.
+- Checks after the merge: PEPPER UNCHANGED (3908 steps, lab 1401), River Walk --physics 55/55, City Park tall 97/97,
+  Downtown tall 102/102, Tiled PASSED, flow 125/125 (own save folder), backdrop OK, curve T1-T4 PASS.

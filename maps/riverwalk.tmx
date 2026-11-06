@@ -215,6 +215,7 @@
     <property name="noshadow" type="bool" value="true"/>
     <property name="relx.ax" type="int" value="-2"/>
     <property name="rely.ay" type="int" value="27"/>
+    <property name="wet" type="bool" value="true"/>
    </properties>
   </object>
   <object id="19" name="SALOON" type="props" x="1620" y="184" width="120" height="22">

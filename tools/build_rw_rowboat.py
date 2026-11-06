@@ -28,8 +28,9 @@ Design target: art/gen/concepts/rw_rowboat_concept_b.png (Artlist, reference onl
         to wrist (upper arm 9 px, forearm 15 px, a two-bone reach, the elbow always bent down) in the sleeve's own
         three colours and a highlight row. He sits on the stern thwart (rowlock hull x 150), so the deck amidships,
         where Pepper stands, is clear of him; everything of his is cut at the rail of its own column.
-  LOOP  6 frames keyed by rule (riverwalk/art/scene/rw_rower.png, 6 x 78 x 62 on hull x 106-183): catch, drive, drive,
-        finish, return, return (the blade tipped 7 degrees on the return: clear of the water). He leans 2 px forward at the catch and 1 px back at the finish; the fists sit on the handle in every
+  LOOP  6 frames keyed by rule (riverwalk/art/scene/rw_rower.png, 7 x 92 x 62 on hull x 106-197): catch, drive, drive,
+        finish, return, return (the blade tipped 7 degrees on the return: clear of the water), and frame 7, the rest
+        pose: the oar shipped along the hull, blade past the transom, clear of the water. He leans 2 px forward at the catch and 1 px back at the finish; the fists sit on the handle in every
         frame and the arm joins them to the shoulder.
 Lines (frame row = world y - 176, hull x = frame x): rail top amidships row 36 (world 212 = Pepper's deck, the
 mover's top), waterline row 48 (world 224), keel row 57. The water tint below row 48, the ripples, the wake and the
@@ -271,8 +272,11 @@ LOOP = [  # phi (fore-aft, + = blade aft/right), beta (tip: blade down), lean (p
     (-36, 24, 1),    # finish: hands at his chest, blade comes out
     (-12, 7, 0),     # return: hands low, blade lifted clear of the water (fix round 1: was 12, the blade sat on
     (20, 7, -1),     # return                                              the waterline and looked dragged)
-]
-FX0, FW = ROWLOCK[0] - 44, 78  # the loop frame on the hull: hull x 106-183, rows as the hull (world y 176-237)
+    (65, 2, 0),      # rest (frame 7, final review): the oar shipped along the hull, the loom from his fists over
+]                    # the rowlock, the blade out past the transom and clear of the water, full length (it was a
+                     # 12 px stub on the return pose: "a man holding a spoon", 28 % of the time)
+FX0, FW = ROWLOCK[0] - 44, 92  # the loop frame on the hull: hull x 106-197 (the shipped blade reaches past the
+                               # transom), rows as the hull (world y 176-237)
 
 
 def limb(mask, p0, p1, rad):
