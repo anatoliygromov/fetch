@@ -1,0 +1,14 @@
+{
+ "ground": 250,
+ "pepper_x": 4,
+ "trunk_x": [
+  142,
+  157
+ ],
+ "crown_x": [
+  50,
+  249
+ ],
+ "underside": 135,
+ "note": "crown runs out of the top edge"
+}

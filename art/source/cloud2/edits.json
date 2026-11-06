@@ -1,0 +1,80 @@
+{
+"name": "cloud2",
+"06nov": [
+{
+"x": 59,
+"y": 21,
+"from": [
+209,
+221,
+236
+],
+"to": [
+238,
+242,
+247
+],
+"why": "no dither: takes its four neighbours' colour"
+},
+{
+"x": 58,
+"y": 22,
+"from": [
+209,
+221,
+236
+],
+"to": [
+238,
+242,
+247
+],
+"why": "no dither: takes its four neighbours' colour"
+},
+{
+"x": 60,
+"y": 22,
+"from": [
+209,
+221,
+236
+],
+"to": [
+238,
+242,
+247
+],
+"why": "no dither: takes its four neighbours' colour"
+},
+{
+"x": 62,
+"y": 24,
+"from": [
+209,
+221,
+236
+],
+"to": [
+238,
+242,
+247
+],
+"why": "no dither: takes its four neighbours' colour"
+},
+{
+"x": 84,
+"y": 32,
+"from": [
+209,
+221,
+236
+],
+"to": [
+238,
+242,
+247
+],
+"why": "no dither: takes its four neighbours' colour"
+}
+]
+}

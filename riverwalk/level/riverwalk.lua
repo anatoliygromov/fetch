@@ -67,7 +67,7 @@ L.props = {
   -- 19 px to crawl in; a gold bone is inside. It ends 1 px left of her box at the start.
   { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 0,    x1 = 34,   y0 = 148, y1 = 165, hidden = true },
   -- promenade A
-  { name = "",         kind = "decor",  layer = "back", x0 = 520,  x1 = 621,  y0 = 74,  y1 = 174, art = "tree_far" },
+  { name = "",         kind = "decor",  layer = "back", x0 = 460,  x1 = 652,  y0 = -76, y1 = 174, art = "rw_birch" },   -- (6 Nov) true-scale birch, trunk where tree_far stood
   { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 401,  x1 = 503,  y0 = 152, y1 = 184, art = "flowerbox_front", ax = 400, ay = 184 },
   { name = "BIN",      kind = "solid",  layer = "play", x0 = 641,  x1 = 676,  y0 = 128, y1 = 184, art = "bin", ax = 640, ay = 184 },
   -- bike zone 1: three perches with clear pavement between them
@@ -95,7 +95,7 @@ L.props = {
   { name = "JETTY",    kind = "solid",  layer = "play", x0 = 2400, x1 = 2448, y0 = 196, y1 = 240, hidden = true },   -- drawn in code
   -- promenade B
   { name = "",         kind = "decor",  layer = "back", x0 = 2880, x1 = 3636, y0 = 124, y1 = 174, railing = true },   -- decorative railing by the water
-  { name = "",         kind = "decor",  layer = "back", x0 = 2978, x1 = 3079, y0 = 74,  y1 = 174, art = "tree_far" },
+  { name = "",         kind = "decor",  layer = "back", x0 = 2918, x1 = 3110, y0 = -76, y1 = 174, art = "rw_birch" },
   { name = "PLANTER",  kind = "solid",  layer = "play", x0 = 2930, x1 = 2974, y0 = 154, y1 = 184, art = "planter_sq" },
   -- bike zone 2
   { name = "POT",      kind = "decor",  layer = "play", x0 = 3188, x1 = 3205, y0 = 147, y1 = 174, art = "pot" },
