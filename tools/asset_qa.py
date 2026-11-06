@@ -122,7 +122,11 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          # art/dt-highroad-06nov: the high road attached to its fronts (tools/build_highroad.py, arthooks.lua drawHighWall)
          "town_front_tall5": (88, 432, 0, 0), "town_front_tall6": (148, 432, 0, 0), "town_balcony_door": (38, 52, 0, 0),
          "town_window_door": (52, 50, 0, 0), "town_window_rail": (44, 24, 0, 0), "town_pilaster": (14, 101, 0, 0),
-         "town_guild_steps": (122, 35, 0, 0), "town_guild_pier": (18, 46, 0, 0), "town_console": (8, 7, 0, 0)}
+         "town_guild_steps": (122, 35, 0, 0), "town_guild_pier": (18, 46, 0, 0), "town_console": (8, 7, 0, 0),
+         # art/dt-audit-06nov (tools/build_dt_audit.py): the quay wall's drain, the footbridge's piers, the parasols' boat,
+         # the wall lantern's bracket
+         "town_quaydrain": (20, 22, 0, 0), "town_bridge_pier": (14, 113, 0, 0), "town_punt": (52, 14, 0, 0),
+         "town_lantern_bracket": (18, 12, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",
@@ -139,7 +143,8 @@ FROZEN = {"pepper"}                                               # Pepper's fil
 # owner-approved exceptions (check ids that only warn for these)
 EXCEPT = {"cafe": {"colours"}, "gable": {"colours"}, "pavement": {"ladder"},
           "bone": {"outline"}, "bone_gold": {"outline"},                   # pickups: white, unoutlined by design
-          "lamp_post": {"decor-ink"}, "kiosk_kaffe": {"decor-ink"}, "kiosk_glass": {"decor-ink"}}   # the approved River Walk set
+          "lamp_post": {"decor-ink"}, "kiosk_kaffe": {"decor-ink"}, "kiosk_glass": {"decor-ink"},
+          "town_lantern_bracket": {"decor-ink"}}   # the approved River Walk set; (6 Nov) the lantern bracket in the lamp's iron
 
 
 # ------------------------------------------------------------------------------------------------ small tools

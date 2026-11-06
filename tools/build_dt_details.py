@@ -19,7 +19,7 @@ steel and copper ramps (tools/build_dt_street.py), its reds and greens.
   town_tier.png        play, outlined (scene.lua, the TIER: 50 x 58, drawn at x0 - 1, y0 - 1): the fountain's top
                        basin, a stone dish on a coursed column and a foot (the same silhouette as before).
   town_bowl.png        play, outlined (the FOUNTAIN: 34 x 82): the lower basin's dish on its coursed column.
-  town_rim.png         play, outlined (each RIM: 18 x 18): the pool's coping posts.
+  town_rim.png         play, outlined (each RIM: 18 x 18): the basin's corner bollard (art/dt-audit-06nov: it read as a brick cube).
   town_jet.png         decoration (scene.lua drawTerrainArt; no outline): the water falling from the top tier's lip to
                        the pool, 4 frames of 6 x 88 side by side (white dashes running down a 2 px stream that curls off
                        the lip, a splash at the bottom); the left stream as drawn, the right one mirrored. Its column 5
@@ -236,11 +236,16 @@ def bowl():
 
 
 def rim():
+    # (art/dt-audit-06nov) the audit: "lone grey brick cubes" by the fountain. Each RIM is the basin's corner bollard:
+    # one granite post, no joints, a chamfered cap stone (Pepper's flat top), a shadow under the cap, a round shaft
+    # (lit left, mid, shade right), a plinth on the pavement. Same box, same 18 x 18.
     cv = Cv(18, 18)
-    cv.rect(1, 0, 16, 17, "g2"); cv.rect(0, 1, 17, 16, "g2")
-    cv.rect(1, 1, 16, 1, "g1"); cv.rect(1, 2, 16, 4, "g2"); cv.rect(1, 5, 16, 5, "g3")    # the coping stone
-    cv.rect(1, 6, 1, 16, "g1"); cv.rect(16, 6, 16, 16, "g3"); cv.rect(8, 6, 8, 11, "g3")   # two blocks under it
-    cv.rect(1, 11, 16, 11, "g3"); cv.rect(4, 12, 4, 16, "g3"); cv.rect(12, 12, 12, 16, "g3")
+    cv.rect(1, 0, 16, 5, "g2"); cv.rect(0, 1, 17, 4, "g2")                           # the cap stone, chamfered
+    cv.rect(1, 1, 16, 1, "g1"); cv.rect(1, 4, 16, 4, "g3")
+    cv.rect(2, 5, 15, 5, "g4")                                                       # the shadow under the cap
+    cv.rect(3, 6, 14, 15, "g2")                                                      # the shaft, round
+    cv.rect(3, 6, 4, 15, "g1"); cv.rect(5, 6, 5, 15, "g2"); cv.rect(12, 6, 13, 15, "g3"); cv.rect(14, 6, 14, 15, "g4")
+    cv.rect(2, 16, 15, 17, "g3"); cv.rect(2, 16, 15, 16, "g2")                       # the plinth
     cv.outline()
     return cv
 
