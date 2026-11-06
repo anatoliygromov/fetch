@@ -118,7 +118,11 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          "cp_arbour_posts48x106": (60, 106, 0, 0), "cp_arbour_posts48x122": (60, 122, 0, 0), "cp_arbour_posts56x106": (68, 106, 0, 0), "cp_arbour_slat48": (50, 8, 0, 0), "cp_arbour_slat56": (58, 8, 0, 0), "cp_tower_deck56": (58, 8, 0, 0), "cp_tower_post4x106": (6, 106, 0, 0), "cp_tower_post4x72": (6, 72, 0, 0), "cp_walk1968_deck": (346, 8, 0, 0), "cp_walk1968_legs": (350, 122, 0, 0), "cp_walk1968_rail": (350, 61, 0, 0), "cp_walk704_deck": (242, 8, 0, 0), "cp_walk704_legs": (252, 106, 0, 0), "cp_walk704_rail": (252, 61, 0, 0), "park_gate": (120, 96, 0, 0), "park_swings": (84, 106, 0, 0),
          # (6 Nov, art/cp-critters-06nov) the magpie (5 cells of 32 x 26, scene.lua Sc.magpie) and the 2 m duck boat
          # (92 x 60, deck row 41 on the DUCK BOAT mover's top, scene.lua Sc.drawMoverArt)
-         "magpie": (160, 26, 0, 0), "cp_duckboat": (92, 60, 0, 0)}
+         "magpie": (160, 26, 0, 0), "cp_duckboat": (92, 60, 0, 0),
+         # art/dt-highroad-06nov: the high road attached to its fronts (tools/build_highroad.py, arthooks.lua drawHighWall)
+         "town_front_tall5": (88, 432, 0, 0), "town_front_tall6": (148, 432, 0, 0), "town_balcony_door": (38, 52, 0, 0),
+         "town_window_door": (52, 50, 0, 0), "town_window_rail": (44, 24, 0, 0), "town_pilaster": (14, 101, 0, 0),
+         "town_guild_steps": (122, 35, 0, 0), "town_guild_pier": (18, 46, 0, 0), "town_console": (8, 7, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",
@@ -128,7 +132,7 @@ HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_t
         "roof_awning56": "(no hook: the kit has no awning)"}
 BUILDINGS = {"town_house1", "town_house2", "town_house3", "town_facades", "town_row", "building", "cafe", "gable",
              "facades_square", "house_tall_a", "house_tall_b", "house_tall_c", "town_front_tall1", "town_front_tall2",
-             "town_front_tall3", "town_front_tall4", "town_door"}
+             "town_front_tall3", "town_front_tall4", "town_front_tall5", "town_front_tall6", "town_door"}
 ORGANIC = {"tree", "tree_far", "rw_birch", "tree_near", "park_tree1", "park_tree2", "park_oak", "park_willow", "park_willow_tall",
            "park_hedge", "park_bush", "park_leaves", "park_leaves_flat", "park_treeline", "skyline", "far_shore_bridge"}
 FROZEN = {"pepper"}                                               # Pepper's files are frozen: report only

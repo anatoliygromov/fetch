@@ -150,6 +150,11 @@ add(["town_parasol40", "town_parasol48", "town_parasol64", "town_parasol96", "to
 A.append(("Downtown", "spire_riddarholmen", ART + "scene/spire_riddarholmen.png", "dt", "shore", FADE["dt"]["shore"]))
 add(["town_roof_loggia", "town_roof_gallery88", "town_roof_gallery72", "town_roof_flower_roof", "town_roof_ledge",
      "town_footbridge", "town_balcony56", "town_balcony64", "town_spring"], "dt", "play", group="Downtown")
+# art/dt-highroad-06nov (tools/build_highroad.py): the fronts and the stamps on them faded as the fronts; the guild's
+# coping, its pedestal and the ledges' corbel on Pepper's line
+add(["town_front_tall5", "town_front_tall6", "town_balcony_door", "town_window_door", "town_window_rail", "town_pilaster"],
+    "dt", "back", True, group="Downtown")
+add(["town_guild_steps", "town_guild_pier", "town_console"], "dt", "play", group="Downtown")
 add(["town_stopsign"], "dt", "back", True, group="Downtown")        # arthooks.lua stopSign: H.img(.., true), the back fade
 add(["town_jet"], "dt", "back", group="Downtown")                  # scene.lua drawTerrainArt: decoration on her line, unfaded
 # art/dt-built-06nov: screen 10's courtyard gate at true scale (decoration, arthooks H.freeGate, faded as the fronts)
