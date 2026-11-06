@@ -155,6 +155,12 @@ add(["town_roof_loggia", "town_roof_gallery88", "town_roof_gallery72", "town_roo
 add(["town_front_tall5", "town_front_tall6", "town_balcony_door", "town_window_door", "town_window_rail", "town_pilaster"],
     "dt", "back", True, group="Downtown")
 add(["town_guild_steps", "town_guild_pier", "town_console"], "dt", "play", group="Downtown")
+# art/dt-audit-06nov (tools/build_dt_audit.py): the drain in the quay wall (ground), the footbridge's piers (back,
+# unfaded: drawn with the back props), the wall lantern's bracket (faded as the lamp), the parasols' boat (play, ink)
+add(["town_quaydrain"], "dt", "ground", group="Downtown")
+add(["town_bridge_pier"], "dt", "back", group="Downtown")
+add(["town_lantern_bracket"], "dt", "back", True, group="Downtown")
+add(["town_punt"], "dt", "play", group="Downtown")
 add(["town_stopsign"], "dt", "back", True, group="Downtown")        # arthooks.lua stopSign: H.img(.., true), the back fade
 add(["town_jet"], "dt", "back", group="Downtown")                  # scene.lua drawTerrainArt: decoration on her line, unfaded
 # art/dt-built-06nov: screen 10's courtyard gate at true scale (decoration, arthooks H.freeGate, faded as the fronts)

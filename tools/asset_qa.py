@@ -129,7 +129,11 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          # (art/cp-audit-06nov) the walks' tree landings (box + outline at the far end), the tower's second posts, the
          # rebuilt climbing frame (posts 2712 and 2796, y 264-328, bars and step on their boxes)
          "cp_walk704_landing608": (98, 8, 0, 0), "cp_walk1968_landing1888": (82, 8, 0, 0),
-         "cp_tower_post4x34": (6, 34, 0, 0), "cp_tower_post4x6": (6, 6, 0, 0), "park_frame": (90, 67, 0, 0)}
+         "cp_tower_post4x34": (6, 34, 0, 0), "cp_tower_post4x6": (6, 6, 0, 0), "park_frame": (90, 67, 0, 0),
+         # art/dt-audit-06nov (tools/build_dt_audit.py): the quay wall's drain, the footbridge's piers, the parasols' boat,
+         # the wall lantern's bracket
+         "town_quaydrain": (20, 22, 0, 0), "town_bridge_pier": (14, 113, 0, 0), "town_punt": (52, 14, 0, 0),
+         "town_lantern_bracket": (18, 12, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",
@@ -146,7 +150,8 @@ FROZEN = {"pepper"}                                               # Pepper's fil
 # owner-approved exceptions (check ids that only warn for these)
 EXCEPT = {"cafe": {"colours"}, "gable": {"colours"}, "pavement": {"ladder"},
           "bone": {"outline"}, "bone_gold": {"outline"},                   # pickups: white, unoutlined by design
-          "lamp_post": {"decor-ink"}, "kiosk_kaffe": {"decor-ink"}, "kiosk_glass": {"decor-ink"}}   # the approved River Walk set
+          "lamp_post": {"decor-ink"}, "kiosk_kaffe": {"decor-ink"}, "kiosk_glass": {"decor-ink"},
+          "town_lantern_bracket": {"decor-ink"}}   # the approved River Walk set; (6 Nov) the lantern bracket in the lamp's iron
 
 
 # ------------------------------------------------------------------------------------------------ small tools
