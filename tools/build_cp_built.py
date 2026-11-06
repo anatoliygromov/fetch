@@ -15,9 +15,10 @@ Pieces:
                    and 1.6 m high between them, the left leaf shut, the right one open (seen edge-on at its pier)
   park_swings      the swing set (decoration, back): a green steel frame 2.3 m high, legs splayed, two yellow seats
                    on chains, 0.45 m off the ground
-  cp_walk<x>_*     the plank walks TREETOP WALK (x 704) and ALDER WALK (x 1968): the deck (play, outlined, exactly
-                   the box plus its outline), the rope hand rail 1 m high on posts at an even pitch (decoration, behind
-                   Pepper), the legs under every post with knee braces and a tie (decoration, faded in the game)
+  cp_walk<x>_*     the plank walks TREETOP WALK (x 704) and ALDER WALK (x 1968), rope bridges (art/cp-pond-06nov):
+                   the deck (play, outlined, exactly the box plus its outline), a timber pylon at each end on dry
+                   ground with a rope cable sagging between their tops and a hanger to the deck at every plank joint
+                   (decoration, behind Pepper), the pylons' legs under the deck with knee braces (decoration, faded)
   cp_arbour_*      the rose arbour: each slat (play, outlined) and its two posts with a climbing rose and a swag of
                    roses under the slat (decoration, faded)
   cp_tower_*       the play tower: its yellow decks (play, outlined) and grey posts (outlined, as the slide's)
@@ -137,10 +138,10 @@ def pitch_for(w, post=4, lo=40, hi=48, want=44):
     return best[1:]
 
 
-def walk_deck(w, posts):
+def walk_deck(w, bolts):
     """the deck: box w x 6 plus its 1 px outline. Row 0 the planks' lit top edge (the thin cap), row 1 their ends
     (7 px plank, a 1 x 2 px joint, pitch 8 from the box's left), row 2 their shadow on the stringer, rows 3-5 the stringer
-    with a bolt (2 x 2) over every post and leg"""
+    with a bolt (2 x 2) at each x in bolts (box columns: every fourth hanger, and a pylon under the box)"""
     a = canvas(w + 2, 8)
     rect(a, 0, 0, w + 2, 8, INK)
     for x in range(w):
@@ -150,76 +151,130 @@ def walk_deck(w, posts):
         a[3, x + 1] = T_SHADE
         a[4, x + 1] = T_MID; a[5, x + 1] = T_MID
         a[6, x + 1] = T_DEEP
-    for px in posts:                                     # bolts: the post's middle
-        bx = px + 1 + 1
-        a[4, bx] = IRON_HI; a[4, bx + 1] = IRON_HI; a[5, bx] = IRON; a[5, bx + 1] = IRON
+    for bx in bolts:
+        bx += 1
+        if 1 <= bx < w:
+            a[4, bx] = IRON_HI; a[4, bx + 1] = IRON_HI; a[5, bx] = IRON; a[5, bx + 1] = IRON
     return a
 
 
 def rope_rows(a, x0, x1, ytop, sag_of, phase_of):
     """a 2 px rope from column x0 to x1-1, its top row at ytop + sag; the twist: a 3 px diagonal stamp, its phase
-    counted from each span's start so every span is the same pixels"""
+    counted from each span's start so every span is the same pixels. Where the rope drops a row from one column to
+    the next, the lower row of the column before is carried over, so the rope never breaks"""
+    prev = None
     for x in range(x0, x1):
         y = ytop + sag_of(x); d = phase_of(x) % 3
         a[y, x] = ROPE_SH if d == 0 else ROPE
         a[y + 1, x] = ROPE if d == 2 else ROPE_SH
+        if prev is not None and abs(y - prev) > 1:
+            for yy in range(min(y, prev) + 2, max(y, prev)):
+                a[yy, x if y > prev else x - 1] = ROPE_SH
+        prev = y
 
 
-def walk_rail(w, m, pitch, n):
-    """posts 4 px wide, 46 px (1 m) over the deck's top, rounded caps; a hand rope 3 px under the caps and a second
-    rope half way, each sagging 3 px between posts, tied over the posts' fronts. Image: box width, 46 rows, its
-    bottom row is the row over the deck's outline (y0 - 2)"""
-    H = 45
-    a = canvas(w, H)
-    posts = [m + i * pitch for i in range(n)]
-    for px in posts:
-        rect(a, px, 1, 4, H - 1, T_MID)
-        rect(a, px, 1, 1, H - 1, T_LIGHT); rect(a, px + 3, 1, 1, H - 1, T_RAILSH)
-        rect(a, px + 1, 0, 2, 1, T_LIGHT)                # the rounded cap
-    L = pitch - 4
+# (art/cp-pond-06nov) The walks are rope bridges. The owner looked at the tall pond: "this thing looks weird". The
+# legs ran from the high walkway straight down into the water every 46 px, in front of the willows and the bank,
+# like cage bars (and cross braces made it worse). No tree trunk stands under either walk, so each is now hung, the
+# way a child knows a rope bridge: a stout timber pylon at each end standing on dry ground (the bank or the path),
+# one rope cable from pylon top to pylon top sagging over the water, and a hanger from it to the deck at every
+# plank joint. Nothing stands in the water, nothing crosses the pond under the deck. The deck (what Pepper stands
+# on) is the same box, still straight: it does not move.
+PYLON, CAP = 6, 62                                     # a pylon's width; its top over the deck's top (1.35 m)
+DROP = 30                                              # the cable: from 3 px under the pylon tops down to 32 px over the deck
+
+
+def ground_top():
+    """per 8 px column of the map: the top of its terrain (None: no terrain), and the set of wet columns"""
+    t = open(LEVEL).read()
+    seg = t[t.index('type = "tilelayer"'):]
+    d = list(map(int, re.findall(r'\d+', re.search(r'data = \{(.*?)\}', seg, re.S).group(1))))
+    W = 360; H = len(d) // W
+    top = {}
+    for c in range(W):
+        for r in range(H):
+            if d[r * W + c] == 1: top[c] = r * 8; break
+    return top
+
+
+def ground_lamps():
+    """x of every lamp post standing on the path (the level's lamps on FOOT): a pylon keeps clear of them"""
+    t = open(LEVEL).read()
+    return [int(float(x)) for x, y in re.findall(r'type = "lamps",\s*shape = "\w+",\s*x = ([\d.-]+),\s*y = ([\d.-]+)', t)
+            if int(float(y)) == FOOT]
+
+
+def walk_pylons(p, water):
+    """the two pylons (x of their left column, world): at the walk's end over dry ground, under the box (2 px in);
+    where the end is over the water (or a lamp post stands there), just outside the box on the bank or the path"""
+    x0, x1 = p['x0'], p['x1']
+    top = ground_top(); lamps = ground_lamps()
+
+    def dry(a, b):
+        return (all(not any(r0 <= x < r1 for r0, r1 in water) and top.get(x // 8) for x in range(a, b))
+                and not any(a - 8 < lx_ < b + 8 for lx_ in lamps))
+    lx = x0 + 2 if dry(x0 + 2, x0 + 2 + PYLON) else x0 - PYLON
+    rx = x1 - PYLON - 2 if dry(x1 - PYLON - 2, x1 - 2) else x1
+    for x in (lx, rx):
+        assert dry(x, x + PYLON), f"a pylon of the walk at {x0} would stand in the water at x {x}"
+    return lx, rx, top[lx // 8], top[rx // 8]
+
+
+def walk_hangers(p, lx, rx):
+    """hangers at every other plank joint (box column 7 + 16 k) between the pylons, 4 px clear of each (at every
+    joint they stood as close as a harp's strings over the canopies)"""
+    return [x for x in range(p['x0'] + 7, p['x1'] - 1, 16) if lx + PYLON + 4 <= x < rx - 4]
+
+
+def walk_rail(p, lx, rx, hangers):
+    """the rail (decoration, behind Pepper, unfaded as the old rail's posts): each pylon's part over the deck, 6 px
+    with a lit left side, a shaded right side and a rounded cap; the cable (2 px, twisted) lashed under each cap and
+    sagging DROP px to the middle; a 1 px hanger from the cable to the deck at each plank joint. Image: from the left
+    pylon (or the box) to the right one, CAP + 1 rows, its bottom row the row over the deck's outline (y0 - 2)"""
+    ex0, ex1 = min(p['x0'], lx), max(p['x1'], rx + PYLON)
+    H = CAP - 1
+    a = canvas(ex1 - ex0, H)
+    for px in (lx - ex0, rx - ex0):
+        rect(a, px, 1, PYLON, H - 1, T_MID)               # the old rail posts' colours (kept over luma 80: back)
+        rect(a, px, 1, 1, H - 1, T_LIGHT); rect(a, px + PYLON - 1, 1, 1, H - 1, T_RAILSH)
+        rect(a, px + 1, 0, PYLON - 2, 1, T_LIGHT)         # the rounded cap
+    c0, c1 = lx + PYLON - ex0, rx - ex0                 # the cable's span: pylon to pylon
+    L = c1 - c0
+    ytop = 4
 
     def sag(x):
-        for px in posts:
-            if px <= x < px + 4: return 0
-        k = max(i for i, px in enumerate(posts) if px <= x)
-        d = x - (posts[k] + 4)
-        u = (min(d, L - 1 - d) + 0.5) / L
-        return int(round(3 * 4 * u * (1 - u) * 0.5 * 2)) if L > 0 else 0
-    sx0, sx1 = posts[0], posts[-1] + 4
-    for top in (3, 22):                                  # hand rope (1 m), lower rope (0.55 m)
-        rope_rows(a, sx0, sx1, top, sag, lambda x: x - (max(px for px in posts if px <= x) + 4) - (L % 3))
-        for px in posts:                                 # the lashing: a 4 x 4 whipping over the post's front
-            rect(a, px, top - 1, 4, 4, ROPE_SH)
-    return a, posts
+        u = (x - c0 + 0.5) / L
+        return int(round(DROP * 4 * u * (1 - u)))
+    for hx_ in hangers:                                  # hangers first: the cable over them
+        x = hx_ - ex0
+        rect(a, x, ytop + sag(x) + 2, 1, H - (ytop + sag(x) + 2), ROPE_SH)
+        rect(a, x, H - 2, 1, 2, ROPE)                    # the tie at the deck (a lighter knot)
+    rope_rows(a, c0, c1, ytop, sag, lambda x: x - c0)
+    for px in (lx - ex0, rx - ex0):                      # the lashing: a whipping round the pylon under its cap
+        rect(a, px, ytop - 1, PYLON, 4, ROPE_SH); rect(a, px, ytop, PYLON, 1, ROPE)
+    return a, ex0
 
 
-def walk_legs(p, posts, water):
-    """a leg (6 px, 0.13 m) under every rail post, from the deck down to the ground or into the water to the bed;
-    knee braces 1:1 up to the stringer; one tie across all legs, 40 px under the deck (above the bank)"""
-    x0, y1 = p['x0'], p['y1']
-    H = WORLD_H - y1
-    a = canvas(p['x1'] - x0, H)
-    legs = []
-    for px in posts:
-        lx = px - 1
-        cx = x0 + lx + 3
-        wet = any(r0 <= cx < r1 for r0, r1 in water)
-        bot = (WORLD_H if wet else FOOT) - y1
-        legs.append((lx, bot, wet))
-    for ty in (40,):                                     # the tie, behind the legs
-        if y1 + ty + 3 <= FOOT - 12:
-            l0, l1 = legs[0][0], legs[-1][0] + 6
-            rect(a, l0, ty, l1 - l0, 1, T_MID); rect(a, l0, ty + 1, l1 - l0, 1, T_DEEP); rect(a, l0, ty + 2, l1 - l0, 1, T_SHADE)
-    for lx, bot, wet in legs:
-        rect(a, lx, 0, 6, bot, T_DEEP)
-        rect(a, lx, 0, 1, bot, T_MID); rect(a, lx + 5, 0, 1, bot, T_SHADE)
-        for side in (-1, 1):                             # knee braces, 10 px each way, 2 px thick
+def walk_legs(p, lx, rx, glx, grx):
+    """each pylon's part under the deck, from the deck's bottom down to the ground it stands on (6 px, the same
+    timber and colours as its part over the deck, so each pylon reads as one post: not faded, drawn with the walk in
+    front of the willows), with a knee brace 1:1 up to the deck's stringer on the side the deck is (10 px, 2 px
+    thick). Nothing else: no legs in the water, no tie across. Image: the rail's width, from y1 to the pylons' feet"""
+    x0, x1, y1 = p['x0'], p['x1'], p['y1']
+    ex0, ex1 = min(x0, lx), max(x1, rx + PYLON)
+    H = max(glx, grx) - y1
+    a = canvas(ex1 - ex0, H)
+    for px, g in ((lx, glx), (rx, grx)):
+        X = px - ex0; bot = g - y1
+        rect(a, X, 0, PYLON, bot, T_MID)                  # the same timber as its part over the deck (unfaded)
+        rect(a, X, 0, 1, bot, T_LIGHT); rect(a, X + PYLON - 1, 0, 1, bot, T_RAILSH)
+        for side in (-1, 1):
+            if (side < 0 and px - 10 < x0) or (side > 0 and px + PYLON + 10 > x1): continue   # only under the deck
             for i in range(10):
-                bx = lx - 1 - i if side < 0 else lx + 6 + i
-                by = 10 - i
-                if 0 <= bx < a.shape[1]:
-                    put(a, bx, by, T_MID); put(a, bx, by + 1, T_SHADE)
-    return a, legs
+                bx = X - 1 - i if side < 0 else X + PYLON + i
+                put(a, bx, 10 - i, T_MID); put(a, bx, 11 - i, T_RAILSH)
+        rect(a, X - 1, bot - 2, PYLON + 2, 2, T_RAILSH)  # its foot: a sill on the ground
+    return a, ex0
 
 
 # ------------------------------------------------------------------------------------------------ the rose arbour
@@ -443,17 +498,19 @@ def main():
     named = [p for p in P if p['name'] in ('TREETOP WALK', 'ALDER WALK') and p['y1'] <= FOOT - 90]
     for p in named:
         w = p['x1'] - p['x0']
-        m, pitch, n = pitch_for(w)
-        rail, posts = walk_rail(w, m, pitch, n)
-        deck = walk_deck(w, posts)
-        legs, L = walk_legs(p, posts, water)
+        lx, rx, glx, grx = walk_pylons(p, water)
+        hangers = walk_hangers(p, lx, rx)
+        rail, ex0 = walk_rail(p, lx, rx, hangers)
+        bolts = [h - p['x0'] - 1 for h in hangers[3::4]] + [x + 2 - p['x0'] for x in (lx, rx) if p['x0'] <= x and x + PYLON <= p['x1']]
+        deck = walk_deck(w, bolts)
+        legs, _ = walk_legs(p, lx, rx, glx, grx)
         k = f"cp_walk{p['x0']}"
         save(k + '_deck', deck, k); save(k + '_rail', rail, k); save(k + '_legs', legs, k)
-        print(f"  {p['name']}: posts {n} at pitch {pitch} from +{m}; legs {[(lx + p['x0'], 'wet' if wet else 'dry') for lx, _, wet in L]}")
+        print(f"  {p['name']}: a rope bridge, pylons at x {lx} and {rx} (ground y {glx}, {grx}), {len(hangers)} hangers, "
+              f"span {rx - lx - PYLON} px; nothing in the water")
         entry(k, p, {'deck': (k + '_deck', p['x0'] - 1, p['y0'] - 1, False),
-                     'rail': (k + '_rail', p['x0'], p['y0'] - 1 - rail.shape[0], False),
-                     'legs': (k + '_legs', p['x0'], p['y1'], True),
-                     'wet': [(p['x0'] + lx, 6) for lx, _, wet in L if wet]})
+                     'rail': (k + '_rail', ex0, p['y0'] - 1 - rail.shape[0], False),
+                     'legs': (k + '_legs', ex0, p['y1'], False)})
     # the arbour's slats: the ARBOUR ledge and the unnamed ledges of the tier after it up to the PLAY TOWER
     tier = [p for p in P if p['kind'] in ('oneway', 'solid') and p['y1'] <= FOOT - 90 and p['layer'] != 'front']
     arb = next(p for p in tier if p['name'] == 'ARBOUR'); tow = next(p for p in tier if p['name'] == 'PLAY TOWER')

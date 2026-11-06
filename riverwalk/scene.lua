@@ -1378,7 +1378,8 @@ end
 -- The tier: a ledge (one-way or solid) whose bottom is 90 px or more above the path, and decoration whose top is
 -- 100 px or more above it. Its parts, by name (an unnamed ledge belongs to the named ledge over or under it, else
 -- to the named ledge before it in the map):
---   TREETOP WALK, ALDER WALK  a plank walk on timber legs down to the ground or the bed of the water under it
+--   TREETOP WALK, ALDER WALK  a plank walk: built, a rope bridge between pylons on dry ground (cp_built.lua); else
+--                             on timber legs down to the ground, none in the water
 --   ARBOUR                    the rose arbour's slats, each on two posts with a climbing rose
 --   PLAY TOWER                the play tower's decks (grey posts as the slide tower's)
 --   LOW BOUGH                 a thick bough to crawl under, bending up into the canopy
@@ -1615,12 +1616,18 @@ local function built(p, part)
 end
 Sc.built = built
 
--- a plank walk: the deck (crisp), a rope hand-rail on posts behind Pepper
+-- a plank walk: the deck (crisp), a rope hand-rail on posts behind Pepper. (art/cp-pond-06nov) The built walks
+-- are rope bridges: a pylon at each end on dry ground, a cable sagging between their tops, hangers to the deck
+-- (tools/build_cp_built.py); the pylons' legs are drawn here with the walk, unfaded and in front of the willows,
+-- so each pylon is one post from the ground to its cap. Nothing stands in the water.
 local function drawWalk(p, ox)
   local ri, rx, ry = built(p, "rail")
   local di, dx, dy_ = built(p, "deck")
   if ri and di then
-    lg.setColor(1, 1, 1, 1); lg.draw(ri, rx - ox, ry); lg.draw(di, dx - ox, dy_)
+    local li, lx_, ly = built(p, "legs")
+    lg.setColor(1, 1, 1, 1)
+    if li then lg.draw(li, lx_ - ox, ly) end
+    lg.draw(ri, rx - ox, ry); lg.draw(di, dx - ox, dy_)
     return
   end
   local x0, x1, y = p.x0 - ox, p.x1 - ox, p.y0
@@ -1656,13 +1663,7 @@ end
 -- decision 8 a, owner 26 Oct; they were INK outlined and unfaded, the darkest decoration in the level)
 local function drawWalkLegs(p, ox, foot, world)
   local floorY = world and world.height or (foot + 56)
-  local li, lx_, ly, e = built(p, "legs")
-  if li then
-    lg.setColor(1, 1, 1, 1); lg.draw(li, lx_ - ox, ly)
-    lg.setColor(0.33, 0.47, 0.52, 0.55)                               -- under the surface: the water's colour over it
-    for _, w in ipairs(e.wet or {}) do lg.rectangle("fill", w[1] - ox, foot + 24, w[2], floorY - foot - 24) end
-    return
-  end
+  if built(p, "legs") and built(p, "rail") and built(p, "deck") then return end   -- (built: drawn with the walk)
   local c1, c2 = fadeC({ 0.30, 0.24, 0.20 }), fadeC({ 0.42, 0.34, 0.27 })     -- timber, its lit left edge
   local c3 = { c1[1] * 0.78, c1[2] * 0.78, c1[3] * 0.78 }                    -- its shaded right edge
   local tie = fadeC({ 0.36, 0.29, 0.23 })
@@ -1670,7 +1671,9 @@ local function drawWalkLegs(p, ox, foot, world)
   for lx = p.x0 + 6, p.x1 - 10, 60 do
     local wet = false
     for _, r in ipairs(world and world.water or {}) do if lx >= r.x0 and lx < r.x1 then wet = true end end
-    local bottom = wet and floorY or foot
+    if wet then goto nextLeg end                                      -- (art/cp-pond-06nov) no leg in the water
+    do
+    local bottom = foot
     local x = lx - ox
     lg.setColor(c1); lg.rectangle("fill", x, p.y1, 4, bottom - p.y1)
     lg.setColor(c2); lg.rectangle("fill", x, p.y1, 1, bottom - p.y1)
@@ -1679,9 +1682,8 @@ local function drawWalkLegs(p, ox, foot, world)
       lg.setColor(tie); lg.rectangle("fill", x - 2, by, 8, 2)
       lg.setColor(tie3); lg.rectangle("fill", x - 2, by + 2, 8, 1)
     end
-    if wet then                                                       -- under the surface: the water's colour over it
-      lg.setColor(0.33, 0.47, 0.52, 0.55); lg.rectangle("fill", x - 3, foot + 24, 10, bottom - foot - 24)
     end
+    ::nextLeg::
   end
 end
 
