@@ -2133,20 +2133,42 @@ end
 -- a 2 m pedal boat at true scale (92 x 60, facing left), its gunwale (row 41, the ink) on the mover's top and the
 -- mover's box on its cols 8-87 (the tall City Park's DUCK BOAT is 80 px wide); mirrored about the box when it
 -- paddles right. The pond's surface is 7 px under the deck. Without the file: park_boat_front.png as before.
-local duckImg
+local duckImg, duckCol
 function Sc.drawMoverArt(m, camx, style)
   if duckImg == nil then
-    duckImg = love.filesystem.getInfo("art/scene/cp_duckboat.png") and newImg("art/scene/cp_duckboat.png") or false
+    duckImg = false
+    if love.filesystem.getInfo("art/scene/cp_duckboat.png") then
+      local data = love.image.newImageData("art/scene/cp_duckboat.png")
+      duckImg = newImg(data); duckCol = {}                        -- each column's opaque rows (top, bottom), for the
+      for c = 0, data:getWidth() - 1 do                           -- water tint and the ripple: the hull's own shape
+        local t, b
+        for r = 0, data:getHeight() - 1 do
+          local _, _, _, a = data:getPixel(c, r)
+          if a > 0 then t = t or r; b = r end
+        end
+        duckCol[c] = t and { t, b } or false
+      end
+    end
   end
   local w = math.floor(m.x1 - m.x0 + 0.5)
   if duckImg and style == "park" and w >= 78 then                      -- (the flat City Park's 48 px boat keeps its art)
     local x0 = math.floor(m.x0 - camx + 0.5)
     local top = m.y0 - 41
+    local flip = m.dir and m.dir > 0
     lg.setColor(1, 1, 1, 1)
-    if m.dir and m.dir > 0 then lg.draw(duckImg, x0 + w + 8, top, 0, -1, 1) else lg.draw(duckImg, x0 - 8, top) end
-    local d, ax = dy(), (m.dir and m.dir > 0) and x0 + w + 8 - 92 or x0 - 8
-    lg.setColor(0.33, 0.47, 0.52, 0.5); lg.rectangle("fill", ax, 209 + d, 92, top + 60 - 209 - d)   -- under the water
-    lg.setColor(0.86, 0.94, 0.95, 0.8); lg.rectangle("fill", ax + 6, 208 + d, 80, 1)              -- the ripple line
+    if flip then lg.draw(duckImg, x0 + w + 8, top, 0, -1, 1) else lg.draw(duckImg, x0 - 8, top) end
+    -- (fix round 1) the water over the hull below the surface, and the ripple along the hull at the surface, column by
+    -- column on the hull's own silhouette (a 92 px box stuck out past the hull's ends and read as glass)
+    local d, ax = dy(), flip and x0 + w + 8 - 92 or x0 - 8
+    local wr = 209 + d - top                                           -- the surface's row in the art
+    for c = 0, 91 do
+      local cr = duckCol[c]
+      if cr and cr[2] >= wr then
+        local sx = flip and ax + 91 - c or ax + c
+        lg.setColor(0.33, 0.47, 0.52, 0.5); lg.rectangle("fill", sx, top + math.max(wr, cr[1]), 1, cr[2] - math.max(wr, cr[1]) + 1)
+        if cr[1] < wr then lg.setColor(0.86, 0.94, 0.95, 0.8); lg.rectangle("fill", sx, top + wr - 1, 1, 1) end
+      end
+    end
     lg.setColor(1, 1, 1, 1)
     return
   end

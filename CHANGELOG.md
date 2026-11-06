@@ -9,6 +9,7 @@ Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 - **Goose:** triage only (asset_qa WARN, kept as is; the fly row's frames 2 and 4 are rough).
 - asset_qa: magpie WARN (the size jump from perched to wings up), cp_duckboat PASS; both in SLOTS and measure_layers. Cards, frames and the size sheet: `docs/review/06nov/cp_critters/`.
 - Credits: cp_magpie 12, cp_magpie_fly 12, cp_duckboat 12, cp_magpie_flap 26 (ledger plan and spent rows). Paid calls stopped on the producer's order after these four.
+- **Fix round 1 (independent review, 0 credits):** the water tint and ripple under the duck boat follow the hull's silhouette column by column (no glass box past its ends); magpie perch 3 moved from mid-pole on the lamp (656, 264) to the willow crown's top beside it (672, 243; a bark from the path still drops the ball onto the path); the goose's fly row fixed by hand (`tools/fix_goose_fly.py`, `art/source/goose/edits.json`): cell 4 := cell 5, cell 6 := cell 7, two blotches to their ring colour. Walk and hiss rows untouched.
 
 ## Branch `art/rw-water-05nov`: River Walk water family (5 Nov, SpriteCook 24 credits)
 - 5 Nov (art/rw-street-05nov): River Walk screen 12, the gable's door bay is now built as its own narrow front (tools/build_rw_gable.py build_bay(), corner lesene) instead of a pixel crop that cut a wall anchor and the next window's sills; brings in night/25oct-rw-street and night/30oct-gable-b (option B). 0 credits.

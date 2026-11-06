@@ -48,3 +48,23 @@ rough. Not a FAIL, so it is kept (brief: remake only on a fail).
 `--level citypark_tall --physics` 97/97, `--level citypark --physics` 85/85, `--level citypark_tall --auto` GOOD GIRL
 (the magpie drops the ball, 39.1 s), PEPPER UNCHANGED, flow 125/125 (with its own save folder; a first run on the
 shared save folder stuck in the level select), TILED CHECK PASSED (the map change re-exported), BACKDROP OK.
+
+# Round 2 (maker's fixes)
+Fix round 1 from art/gen/reviews/cp_critters.md, 0 credits.
+1. **Duck boat, fit (FAIL):** the water tint and the ripple under the boat now follow the hull's own silhouette
+   column by column (scene.lua `Sc.drawMoverArt`, each column's opaque rows read once from the png); no box sticks out
+   past the hull's ends or under it. `frame_duckboat.png` (new).
+2. **Magpie perch 3:** moved from mid-pole on the lamp (656, 264) to the top of the willow crown beside it (672, 243),
+   its feet on the leaves (maps/citypark_tall.tmx and the export). The plank walk above the lamp was tried first: a
+   bark from the path is out of range there (112 px up, the bark reaches 110), so --physics failed. On the willow a
+   bark from x 600 on the path still drops the ball onto the path (x 661). `frame_magpie_perch3.png`.
+   Flights: perch 2 to 3 is 272 px, 3 to 4 is 168 px.
+3. **Goose, fly row (FAIL):** `tools/fix_goose_fly.py`, by hand, every pixel in art/source/goose/edits.json (708),
+   source art/source/goose/goose.aseprite, the original kept as goose_before.png. Cell 4 (the squashed take-off
+   frame) is cell 5 (wings down), cell 6 (the lumpy wings-flat frame) is cell 7 (wings up): take-off open, up, down,
+   then the loop down, up, up, down. The two flagged fly-row blotches (cell 2, x 43-47 y 86-88; cell 3, x 84-85
+   y 76-79) are the colour all round them. The walk and hiss rows are untouched as asked, so asset_qa still WARNs
+   on their lone pixels (3.6 %) and 10 small blotches; the fly row's size jump from cell 3 to 4 is gone.
+
+Round 2 checks: `citypark_tall --physics` 97/97, `--auto` GOOD GIRL (39.1 s, the magpie caught), PEPPER UNCHANGED,
+flow 125/125 (own save folder), TILED CHECK PASSED, BACKDROP OK. asset_qa: magpie WARN, cp_duckboat PASS, goose WARN.
