@@ -1,0 +1,23 @@
+{
+ "name": "town_sign",
+ "level": "downtown",
+ "layer": "back",
+ "kind": "decoration",
+ "real_height_m": 2.3,
+ "target_px": [
+  28,
+  106
+ ],
+ "checks_px": {
+  "post": "106 px (2.3 m)",
+  "plate": "28 x 13 (0.61 x 0.28 m)"
+ },
+ "tier": "C",
+ "family": "dt_props_06nov",
+ "method": "built from stamped parts, tools/build_dt_props.py",
+ "build": "tools/build_dt_props.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_sign.png",
+  "where": "Downtown tall, RIVER x 3456 (decor), centred on the box, bottom on the back line y 415 (scene.lua RIVER, faded to the back haze)"
+ }
+}

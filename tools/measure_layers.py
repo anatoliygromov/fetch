@@ -140,6 +140,9 @@ add(["town_front_tall1", "town_front_tall2", "town_front_tall3", "town_front_tal
      "town_oriel_bay"],
     "dt", "back", True, group="Downtown")
 add(["town_crates70", "town_breadboard", "town_crate_leg", "town_portal_top", "town_oriel"], "dt", "play", group="Downtown")
+# art/dt-props-06nov: one parasol canopy and one apple crate per box width
+add(["town_parasol40", "town_parasol48", "town_parasol64", "town_parasol96", "town_crate_front28", "town_crate_front32",
+     "town_crate_front36"], "dt", "play", group="Downtown")
 add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, group="Characters (never shaded)")
 add(["facades_square"], "dt", "mid", True, base=R8, group="Batch 1 (rejected)")
 add(["spire_riddarholmen"], "dt", "back", True, base=R8, group="Batch 1 (rejected)")     # arthooks.lua drawTownBack, own 45 %

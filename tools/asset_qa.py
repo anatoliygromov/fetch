@@ -90,7 +90,14 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          "town_front_tall4": (148, 432, 0, 0), "town_shelter_tall": (140, 115, 0, 0), "town_gateway": (80, 138, 0, 0),
          "town_crates70": (71, 37, 0, 0), "town_breadboard": (74, 12, 0, 0), "town_crate_leg": (18, 37, 0, 0),
          "town_portal_top": (122, 50, 0, 0), "town_oriel": (18, 45, 0, 0), "town_oriel_bay": (58, 44, 0, 0),
-         "road_car2": (242, 102, 12, 8), "road_car3": (246, 93, 12, 8), "road_car5": (250, 89, 12, 8)}
+         "road_car2": (242, 102, 12, 8), "road_car3": (246, 93, 12, 8), "road_car5": (250, 89, 12, 8),
+         # art/dt-props-06nov (tools/build_dt_props.py, scene.lua Sc.drawPropArt): each piece is its box + its ink
+         "town_kiosk": (42, 37, 0, 0), "town_pedestal": (50, 41, 0, 0), "town_stall": (66, 43, 0, 0),
+         "town_tub": (32, 51, 0, 0), "town_sign": (28, 106, 0, 0), "town_parasol": (66, 14, 0, 0),
+         "town_parasol40": (42, 14, 0, 0), "town_parasol48": (50, 14, 0, 0), "town_parasol64": (66, 14, 0, 0),
+         "town_parasol96": (98, 14, 0, 0), "town_crate_front": (34, 21, 0, 0), "town_crate_front28": (30, 21, 0, 0),
+         "town_crate_front32": (34, 21, 0, 0), "town_crate_front36": (38, 21, 0, 0),
+         "town_shopsign": (47, 112, 0, 0)}                                  # (triage 6 Nov: kept as it is)
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",

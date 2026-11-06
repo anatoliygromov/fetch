@@ -1,0 +1,12 @@
+{
+ "name": "town_tub",
+ "render": "art/gen/renders/town_tub_r1a.png",
+ "pitch": 1,
+ "method": "1:1, no resampling (Pixel Engine Image at 32 x 51)",
+ "size": [
+  32,
+  51
+ ],
+ "colours": 11,
+ "fails": []
+}
