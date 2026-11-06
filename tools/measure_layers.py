@@ -131,7 +131,7 @@ add(["town_door", "town_sign", "town_spout"], "dt", "back", True, group="Downtow
 add(["town_house1", "town_house2", "town_house3"], "dt", "back", True, group="Downtown")   # art/fixes, decision 4
 add(["town_statue"], "dt", "play", group="Downtown")   # art/fixes: tagged play
 add(["town_ground"], "dt", "ground", group="Downtown")
-add(["town_tramshed70", "town_tramshed96", "town_crate_front", "town_parasol", "town_table_front", "town_stall", "town_awning80",
+add(["town_tramshed70", "town_crate_front", "town_parasol", "town_table_front", "town_stall", "town_awning80",
      "town_awning64", "town_pedestal", "town_shelter", "town_kiosk", "town_tub", "town_rim", "town_bowl", "town_tier",
      "town_shopsign"], "dt", "play", group="Downtown")
 add(["town_bollard"], "dt", "front", group="Downtown")
@@ -140,6 +140,10 @@ add(["town_front_tall1", "town_front_tall2", "town_front_tall3", "town_front_tal
      "town_oriel_bay"],
     "dt", "back", True, group="Downtown")
 add(["town_crates70", "town_breadboard", "town_crate_leg", "town_portal_top", "town_oriel"], "dt", "play", group="Downtown")
+# art/dt-built-06nov: screen 10's courtyard gate at true scale (decoration, arthooks H.freeGate, faded as the fronts)
+# and its doorstep (the GATE's perch, play)
+add(["town_tramshed96"], "dt", "back", True, group="Downtown")
+add(["town_gatestep96"], "dt", "play", group="Downtown")
 add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, group="Characters (never shaded)")
 add(["facades_square"], "dt", "mid", True, base=R8, group="Batch 1 (rejected)")
 add(["spire_riddarholmen"], "dt", "back", True, base=R8, group="Batch 1 (rejected)")     # arthooks.lua drawTownBack, own 45 %

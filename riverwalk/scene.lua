@@ -1348,6 +1348,8 @@ local gateQ = {}
 function Sc.courtyardGate(p, camx)
   local x, w, h = math.floor(p.x0 - camx), p.x1 - p.x0, p.y1 - p.y0
   local im = Sc.townArt("town").tramshed[w]                       -- the art (town_tramshed70 / 96): its cornice on
+  if im and im:getHeight() > 48 then im = nil end                 -- (6 Nov: town_tramshed96 is the true-scale gate of the
+                                                                  -- tall level, arthooks H.freeGate; here: the code gate)
   if im then                                                      -- the box's top; the old tram rails below the
     if not gateQ[im] then gateQ[im] = lg.newQuad(0, 0, w, math.min(h, im:getHeight()), im:getDimensions()) end   -- line are left out
     lg.setColor(1, 1, 1, 1); lg.draw(im, gateQ[im], x, p.y0); return

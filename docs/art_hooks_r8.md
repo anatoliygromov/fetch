@@ -108,3 +108,18 @@ Delete (or rename) its file: the placeholder or the old art comes back. The plac
 | `town_crate_leg.png` | 18 x 37 | two per SHELTER (play, outlined): at its box's x0 - 1 and x1 - 17, bottom on the street (y 424), before the cargo bikes |
 | `town_shelter_tall.png` | 140 x 115 | decoration: centred on the SHELTER box, bottom on y 414, drawn after the tram |
 | `town_gateway.png` | 80 x 138 | decoration: centred in the bay that holds the GATE's right end, bottom on y 414, drawn with the fronts |
+
+## Downtown redraws and fixes (art/dt-built-06nov, the board's calls of 25 Oct; 0 credits)
+
+Built from parts by `tools/build_dt_built.py` (`--check` proves each file), hand fixes by rule in
+`tools/fix_dt_06nov.py` (every changed pixel in `art/source/<name>/edits.json`). Sizes from metres:
+
+| File | Size | Where and how it is drawn |
+| --- | --- | --- |
+| `town_facades.png` | 806 x 210 | the old town row at its layer's true scale (23 px/m: ground floor 76, first floor 70, then a gable or roof); a strip at scroll 0.5, bottom on screen y 178, as before (scene.lua, unchanged) |
+| `town_roofs.png` | 524 x 254 | the far roofs at 13 px/m (storeys 39, windows 8 x 12), two church towers; a strip at scroll 0.25, bottom on y 160, as before |
+| `town_door.png` | 140 x 432 | the start door as Pepper's home: a house front at the level's left end (its left on x 0), the door 2.1 m (97 px), the street's upper storeys; bottom on y 414 (scene.lua DOOR, as before) |
+| `town_tramshed96.png` | 160 x 161 | screen 10's GATE (3072-3168, no house front there): the sample screen's gateway in a 3.5 m plastered courtyard wall, decoration, centred on the box, bottom on y 414 (arthooks.lua `H.freeGate`, `drawTownGateways`). The flat Downtown draws its old code gate for it (scene.lua `courtyardGate`) |
+| `town_gatestep96.png` | 98 x 37 | that GATE's solid box (96 x 36): the gateway's granite doorstep, play, outlined, at x0 - 1, y0 - 1 (`drawTownPerches`) |
+| `town_house3.png` | 52 x 118 | unchanged slot (the plaza house scale is the owner's open decision 2) |
+| `town_bollard.png` | 16 x 54 | 0.9 m at the front's 60 px/m; its top at screen y 221 as before (only the top 19 rows show) |
