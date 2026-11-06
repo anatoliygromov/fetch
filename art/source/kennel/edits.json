@@ -1,0 +1,4017 @@
+{
+"name": "kennel",
+"06nov_audit": [
+{
+"x": 1,
+"y": 6,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 6,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 6,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 6,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 6,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 6,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 7,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 7,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 7,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 7,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 7,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 7,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 8,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 8,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 8,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 8,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 8,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 8,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 9,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 9,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 9,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 9,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 9,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 9,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 10,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 10,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 10,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 10,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 10,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 10,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 11,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 11,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 11,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 11,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 11,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 11,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 12,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 12,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 12,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 12,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 12,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 12,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 13,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 13,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 13,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 13,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 13,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 13,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 14,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 14,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 14,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 14,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 14,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 14,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 15,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 15,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 15,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 15,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 15,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 15,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 16,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 16,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 16,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 4,
+"y": 16,
+"from": [
+18,
+18,
+26,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 5,
+"y": 16,
+"from": [
+18,
+18,
+26,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 6,
+"y": 16,
+"from": [
+18,
+18,
+26,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 7,
+"y": 16,
+"from": [
+18,
+18,
+26,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 26,
+"y": 16,
+"from": [
+18,
+18,
+26,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 27,
+"y": 16,
+"from": [
+18,
+18,
+26,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 28,
+"y": 16,
+"from": [
+18,
+18,
+26,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 29,
+"y": 16,
+"from": [
+18,
+18,
+26,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 16,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 16,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 16,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 17,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 17,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 17,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 4,
+"y": 17,
+"from": [
+18,
+18,
+26,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 5,
+"y": 17,
+"from": [
+18,
+18,
+26,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 6,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+18,
+18,
+26,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 7,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+18,
+18,
+26,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 8,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+18,
+18,
+26,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 9,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 10,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 11,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 12,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 13,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 14,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 15,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 16,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 17,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 18,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 19,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 20,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 21,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 22,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 23,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 24,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 25,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+18,
+18,
+26,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 26,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+18,
+18,
+26,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 27,
+"y": 17,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+18,
+18,
+26,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 28,
+"y": 17,
+"from": [
+18,
+18,
+26,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 29,
+"y": 17,
+"from": [
+18,
+18,
+26,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 17,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 17,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 17,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 18,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 18,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 18,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 4,
+"y": 18,
+"from": [
+18,
+18,
+26,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 5,
+"y": 18,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+18,
+18,
+26,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 6,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+18,
+18,
+26,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 9,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+30,
+26,
+30,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 10,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+30,
+26,
+30,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 11,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+30,
+26,
+30,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 12,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+30,
+26,
+30,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 13,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+30,
+26,
+30,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 14,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+30,
+26,
+30,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 15,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+30,
+26,
+30,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 16,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+30,
+26,
+30,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 17,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+30,
+26,
+30,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 18,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+30,
+26,
+30,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 19,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+30,
+26,
+30,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 20,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+30,
+26,
+30,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 21,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+30,
+26,
+30,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 22,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+30,
+26,
+30,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 23,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+30,
+26,
+30,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 24,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+30,
+26,
+30,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 27,
+"y": 18,
+"from": [
+44,
+38,
+42,
+255
+],
+"to": [
+18,
+18,
+26,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 28,
+"y": 18,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+18,
+18,
+26,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 29,
+"y": 18,
+"from": [
+18,
+18,
+26,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 18,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 18,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 18,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 19,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 19,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 19,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 5,
+"y": 19,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+18,
+18,
+26,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 6,
+"y": 19,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 27,
+"y": 19,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 28,
+"y": 19,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+18,
+18,
+26,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 19,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 19,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 19,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 20,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 20,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 20,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 5,
+"y": 20,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 28,
+"y": 20,
+"from": [
+30,
+26,
+30,
+255
+],
+"to": [
+44,
+38,
+42,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 20,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 20,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 20,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 21,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 21,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 21,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 21,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 21,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 21,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 22,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 22,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 22,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 22,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 22,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 22,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 23,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 23,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 23,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 23,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 23,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 23,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 24,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 24,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 24,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 24,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 24,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 24,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 25,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 25,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 25,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 25,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 25,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 25,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 26,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 26,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 26,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 26,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 26,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 26,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 27,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 27,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 27,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 27,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 27,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 27,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 28,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 28,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 28,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 28,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 28,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 28,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 29,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 29,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 29,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 29,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 29,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 29,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 30,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 30,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 30,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 30,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 30,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 30,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 31,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 31,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 31,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 31,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 31,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 31,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+192,
+80,
+58,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 32,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 32,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 32,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 32,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 32,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 32,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 33,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 33,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 33,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 33,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 33,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 33,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+116,
+40,
+31,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 1,
+"y": 34,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 2,
+"y": 34,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 3,
+"y": 34,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 30,
+"y": 34,
+"from": [
+201,
+196,
+184,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 31,
+"y": 34,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+},
+{
+"x": 32,
+"y": 34,
+"from": [
+239,
+236,
+228,
+255
+],
+"to": [
+158,
+58,
+43,
+255
+],
+"why": "white corner trim read as a halo; arched doorway"
+}
+]
+}
