@@ -1,0 +1,64 @@
+{
+ "name": "cp_boughs",
+ "render": "art/gen/renders/cp_boughs_a_raw.png",
+ "grid": "art/gen/renders/cp_boughs_a_grid4.png",
+ "cut_by": "tools/grid4_cut.py then tools/cut_cp_boughs.py  (1:1 on the render grid, no resampling)",
+ "palette": {
+  "leaf": [
+   [
+    130,
+    31,
+    47
+   ],
+   [
+    200,
+    39,
+    22
+   ],
+   [
+    235,
+    98,
+    17
+   ],
+   [
+    252,
+    163,
+    51
+   ],
+   [
+    252,
+    194,
+    114
+   ]
+  ],
+  "bark": [
+   [
+    59,
+    30,
+    31
+   ],
+   [
+    101,
+    45,
+    38
+   ],
+   [
+    136,
+    68,
+    38
+   ],
+   [
+    173,
+    87,
+    36
+   ],
+   [
+    231,
+    125,
+    34
+   ]
+  ]
+ },
+ "colours": 10,
+ "fails": []
+}

@@ -1,0 +1,31 @@
+{
+ "name": "cp_boughs",
+ "level": "citypark",
+ "layer": "back",
+ "kind": "plant",
+ "tier": "A",
+ "family": "cp_boughs_06nov",
+ "real_height_m": 10.52,
+ "target_px": [
+  403,
+  484
+ ],
+ "model": "sc_gpt25_2k",
+ "variants": 2,
+ "references": 2,
+ "checks_px": {
+  "ledge_body": 6,
+  "big_trunk": 32,
+  "small_trunks": [8, 10, 12],
+  "stump": [24, 28],
+  "nest": [30, 12]
+ },
+ "subject": "a parts sheet of one old autumn oak's separate pieces, every piece drawn alone on the magenta: long straight oak limbs and a bough lying across a short trunk top, each with a warm brown bark ramp, a flat lit top edge and a darker underside, fine bark lines along their length, ending in a thin twig that carries one small clump of autumn leaves; a thick low bough with a rounded free end rising into a big rounded mass of autumn leaves; a magpie's nest, a shallow bowl of woven dark brown twigs sitting in a little fork; a tall straight oak trunk with vertical bark ridges and a flared root foot; three thin young tree trunks; a sawn tree stump with a light cut top showing rings; and rows of single rounded leaf clumps of five sizes. Leaves are warm orange and amber with deep red undersides, lit from the upper left",
+ "part_map": "dark grey shapes are bark (limbs, bough, trunks, stump sides): keep their top edges exactly straight and level where they are straight, keep their exact thickness; light grey ovals are leaf clumps and leaf masses: fill each oval to its edge with one rounded clump of leaves; the mid grey bowl is the nest; the near-white strip is the stump's sawn top. The left ends of the long limbs are cut straight where they meet a trunk out of view. Every piece stays separate with magenta between them.",
+ "size_sentence": "the limbs are as thick as the dog's leg, the big trunk is about as wide as the dog's head is tall, the stump is about as tall as the dog's back, and each small leaf clump is about the size of the dog's head.",
+ "slot": {
+  "file": "riverwalk/art/scene/cp_bough_*.png (cut into parts: limb, fork, low bough, leaf clumps, nest, trunks, stump)",
+  "where": "City Park tall, the climbing tree parts drawn by scene.lua drawBranch, drawFork, tipTwig, drawLowBough, drawNest, drawTrunk and the STUMP; props BRANCH, BOUGH, LOW BOUGH, NEST BOUGH, TWIG, NEST, CROWN, STUMP and the unnamed oak ledges, screens 2 to 9"
+ },
+ "extra": "Image 2 is an approved tree from this game shown at 4 times the game's pixel size: draw the bark and the leaves exactly as it does, the bark a warm brown ramp of 4 shades with vertical or lengthwise ridges and an edge a darker brown, the leaves in clear clumps of 3 to 4 flat shades each, every clump with a lit top and a darker underside. No black and no near-black anywhere. The brightest leaf shade is a warm orange-gold, never light yellow or white."
+}

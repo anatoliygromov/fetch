@@ -1194,8 +1194,95 @@ end
 local BARK = { hex("7a5536"), hex("a3774c"), hex("523823") }
 local INK = { 29 / 255, 24 / 255, 22 / 255 }
 local LEAF = { hex("d9822b"), hex("b8551f"), hex("e2a53a") }
+-- (6 Nov, cp_boughs_06nov) the City Park climbing parts as art: one SpriteCook parts sheet of an old oak, cut 1:1 on
+-- its own grid (tools/cut_cp_boughs.py) and made into parts by rule (tools/build_cp_boughs.py; anchors in
+-- cp_boughs_data.lua). They are stamped over the SAME boxes: a limb's body top is the ledge's top row. The limbs, the
+-- low bough and the stump carry their 1 px ink (play pieces), leaves, nest and trunks none (decoration). Each drawing
+-- function below uses the art when its files are there and keeps its code drawing as the fallback.
+local CPB                                                          -- nil: not looked for; false: a file is missing
+local function cpb()
+  if CPB == nil then
+    CPB = false
+    local ok, D = pcall(require, "cp_boughs_data")
+    if not ok then return false end
+    local I = { D = D }
+    for _, n in ipairs({ "limb", "limbx", "low", "low_leaves", "clumps", "nest", "stump" }) do
+      if not love.filesystem.getInfo("art/scene/cp_bough_" .. n .. ".png") then return false end
+      I[n] = newImg("art/scene/cp_bough_" .. n .. ".png")
+    end
+    CPB = I
+  end
+  return CPB
+end
+local CPBQ = {}                                                    -- quads, by image and rectangle
+local function cpbQuad(im, x, y, w, h)
+  local k = tostring(im) .. x .. "," .. y .. "," .. w .. "," .. h
+  local q = CPBQ[k]
+  if not q then q = lg.newQuad(x, y, w, h, im:getDimensions()); CPBQ[k] = q end
+  return q
+end
+-- a limb over screen columns x0 .. x1-1, its body's top on row y, its tip at the tipSide end (1 right, -1 left: drawn
+-- mirrored; the twig and its clump run past the end). drop(x): how far column x sits lower (the dip into a trunk).
+-- Columns are whole columns of the art, in order; a span longer than the art repeats its middle.
+local function cpbLimb(A, thick, x0, x1, y, tipSide, drop, ox)
+  local n = thick and "limbx" or "limb"
+  local im, d = A[n], A.D[n]
+  local rep = d.tip - d.body0
+  local function col(x)
+    local c = tipSide > 0 and (d.bodyEnd - (x1 - x)) or (d.bodyEnd - 1 - (x - x0))
+    if c < d.body0 then c = d.body0 + (c - d.body0) % rep end
+    return c
+  end
+  local xs, xe = x0, x1 - 1
+  if tipSide > 0 then xe = x1 - 1 + (d.w - d.bodyEnd) else xs = x0 - (d.w - d.bodyEnd) end
+  lg.setColor(1, 1, 1, 1)
+  A.clumpsFaded = A.clumpsFaded or {}                               -- the loose clumps, faded as the back's decoration
+  local cl = A.clumpsFaded[Look.key]
+  if not cl then
+    cl = newImg(Sc.fadeData(love.image.newImageData("art/scene/cp_bough_clumps.png")))
+    A.clumpsFaded[Look.key] = cl
+  end
+  do                                                                -- the bark, in runs of whole columns
+    local src = im
+    local rs, rc, rd, rn = nil, nil, nil, 0
+    local function flush()
+      if not rs then return end
+      if tipSide > 0 then lg.draw(src, cpbQuad(src, rc, 0, rn, d.h), rs - ox, y - d.top + rd)
+      else lg.draw(src, cpbQuad(src, rc - rn + 1, 0, rn, d.h), rs - ox + rn, y - d.top + rd, 0, -1, 1) end
+    end
+    for x = xs, xe do
+      local c, dd = col(x), drop and drop(x) or 0
+      if rs and dd == rd and c == rc + (tipSide > 0 and rn or -rn) then rn = rn + 1
+      else flush(); rs, rc, rd, rn = x, c, dd, 1 end
+    end
+    flush()
+  end
+  if d.clump then                                                   -- a small leaf clump on the twig's end, one of three
+    local pick = ({ 2, 6, 3 })[1 + (math.floor(x0 / 8) + (tipSide > 0 and 1 or 0)) % 3]   -- (by place: no two alike in a row)
+    local r = A.D.clumps[pick]
+    local cx = tipSide > 0 and (x1 - d.bodyEnd + d.clump[1]) or (x0 + d.bodyEnd - 1 - d.clump[1])
+    local cy = y - d.top + d.clump[2]
+    local q = cpbQuad(cl, r[1], r[2], r[3], r[4])
+    if tipSide > 0 then lg.draw(cl, q, cx - math.floor(r[3] / 2) - ox, cy - math.floor(r[4] / 2))
+    else lg.draw(cl, q, cx + math.ceil(r[3] / 2) - ox, cy - math.floor(r[4] / 2), 0, -1, 1) end
+  end
+end
+
 local function drawBranch(p, trunk, camx)
   local side = ((p.x0 + p.x1) / 2 < (trunk.x0 + trunk.x1) / 2) and -1 or 1
+  local A = cpb()
+  if A then                                                         -- (6 Nov) the art: the box, then the dip to the trunk
+    local a, b = side > 0 and trunk.x1 - 3 or p.x1, side > 0 and p.x0 - 1 or trunk.x0 + 2
+    local n = b - a + 1
+    local function drop(x)
+      if x < a or x > b or n <= 6 then return 0 end
+      local d = side > 0 and (b - x) or (x - a)
+      return math.floor(6 * d / n + 0.5)
+    end
+    local x0, x1 = math.min(p.x0, a), math.max(p.x1, b + 1)
+    cpbLimb(A, trunk.art or trunk.x1 - trunk.x0 >= 24, x0, x1, p.y0, side, drop, math.floor(camx))
+    return
+  end
   local cols = {}                                                 -- x -> top, thickness
   local len = p.x1 - p.x0
   for x = p.x0, p.x1 - 1 do
@@ -1464,9 +1551,41 @@ local function trunkOf(TI, p)
 end
 
 -- a faded trunk from y top down to the path: bark lines, a lit left edge, a shaded right edge, roots that flare
+local CPBT = {}                                                    -- (6 Nov) the trunk art, faded as the back, per script
 local function drawTrunk(t, top, foot, ox, big)
   local x0, w = t.x0 - ox, t.x1 - t.x0
   local h = foot - top
+  local A = cpb()
+  if A then                                                         -- (6 Nov) the art: the trunk of the nearest width,
+    local best, bd                                                  -- its foot on the path, its top the trunk's own
+    for _, n in ipairs(big and { "trunk" } or { "trunk9", "trunk10" }) do  -- top rows again above it
+      local dd = A.D[n] and math.abs(A.D[n].tw - w)
+      if dd and (not bd or dd < bd) then best, bd = n, dd end
+    end
+    local key = best and (best .. "/" .. Look.key)
+    if best and CPBT[key] == nil then
+      local f = "art/scene/cp_bough_" .. best .. ".png"
+      CPBT[key] = love.filesystem.getInfo(f) and newImg(Sc.fadeData(love.image.newImageData(f))) or false
+    end
+    local im = best and CPBT[key]
+    if im then
+      local d = A.D[best]
+      local ix = math.floor(x0 + w / 2 - d.x0 - d.tw / 2)
+      lg.setColor(1, 1, 1, 1)
+      if h <= d.h then lg.draw(im, cpbQuad(im, 0, d.h - h, d.w, h), ix, top)
+      else
+        lg.draw(im, ix, foot - d.h)
+        local seg = math.min(64, d.h - 20)                          -- the upper rows (no foot), stacked above
+        local y = foot - d.h
+        while y > top do
+          local s = math.min(seg, y - top)
+          lg.draw(im, cpbQuad(im, 0, seg - s, d.w, s), ix, y - s)
+          y = y - s
+        end
+      end
+      return
+    end
+  end
   for y = top, foot - 1 do
     local fl = 0
     local e = foot - y
@@ -1576,6 +1695,15 @@ end
 -- a bough lying across its trunk: 6 px thick over the trunk, 4 at the tips, twigs at both tips; the trunk's top
 -- shows under it (it grows out of the trunk)
 local function drawFork(p, t, ox)
+  local A = cpb()
+  if A then                                                         -- (6 Nov) the art: two limbs from the trunk's middle
+    local tc = math.floor((t.x0 + t.x1) / 2)
+    tc = math.max(p.x0 + 8, math.min(p.x1 - 8, tc))
+    local thick = t.art or t.x1 - t.x0 >= 24
+    cpbLimb(A, thick, p.x0, tc, p.y0, -1, nil, ox)
+    cpbLimb(A, thick, tc, p.x1, p.y0, 1, nil, ox)
+    return
+  end
   local x0, x1, y = p.x0 - ox, p.x1 - ox, p.y0
   local tc = (t.x0 + t.x1) / 2 - ox
   local half = math.max(tc - x0, x1 - tc)
@@ -1698,6 +1826,16 @@ end
 local function drawLowBough(p, t, ox)
   local x0, x1, y0, y1 = p.x0 - ox, p.x1 - ox, p.y0, p.y1
   local side = t and ((t.x0 + t.x1) / 2 > (p.x0 + p.x1) / 2) and 1 or -1
+  local A = cpb()
+  if A then                                                         -- (6 Nov) the art: its level part is the box (32 x
+    local d = A.D.low                                               -- 16), rising into its leaf mass on the trunk's side
+    lg.setColor(1, 1, 1, 1)
+    for _, im in ipairs({ A.low, A.low_leaves }) do
+      if side > 0 then lg.draw(im, x0 - d.x0, y0 - d.top)
+      else lg.draw(im, x1 + d.x0, y0 - d.top, 0, -1, 1) end
+    end
+    return
+  end
   -- (art/placement) front-on, as a bough is seen from the side: over its box it lies level (the top Pepper stands
   -- on, the gap she crawls under), its free end rounded off; towards its trunk it bends up into the leaves, the
   -- underside curving up faster than the top, so it thins from 16 px to about 7 (was a slab rising 1 px a column,
@@ -1756,6 +1894,12 @@ end
 local function drawNest(p, ox)
   local x0, x1, y0, y1 = p.x0 - ox, p.x1 - ox, p.y0, p.y1
   local w = x1 - x0
+  local A = cpb()
+  if A then                                                         -- (6 Nov) the art: the bowl on its bough, centred
+    lg.setColor(1, 1, 1, 1)
+    lg.draw(A.nest, math.floor((x0 + x1) / 2 - A.D.nest.w / 2), y1 - A.D.nest.h)
+    return
+  end
   lg.setColor(INK)
   for x = x0 - 1, x1 do
     local u = (x - x0 + 0.5) / w * 2 - 1
@@ -1944,6 +2088,11 @@ function Sc.drawPropArt(p, camx, def, kicked)
     elseif n == "LOG" then shadowUnder(p, camx); at(T.log, x, p.y0 - 4)
     elseif n == "STUMP" then                                      -- a tree stump (r6/levels: the tall City Park's
       shadowUnder(p, camx)                                        -- practice ledge), drawn in code: bark, a cut top
+      local A = cpb()
+      if A then                                                   -- (6 Nov) the art: its body over the box, its cut top
+        at(A.stump, math.floor(x) - A.D.stump.body0, p.y0 - 1)   -- the box's top row, its ink on the path line
+        return
+      end
       local sx, sy, sw, sh = math.floor(x), p.y0, w, p.y1 - p.y0
       lg.setColor(INK); lg.rectangle("fill", sx - 1, sy - 1, sw + 2, sh + 1)
       lg.setColor(0.42, 0.26, 0.14); lg.rectangle("fill", sx, sy + 3, sw, sh - 3)

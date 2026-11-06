@@ -1,0 +1,203 @@
+{
+ "R1": {
+  "#821f2f": "#6b2e2f",
+  "#c82716": "#c63418",
+  "#eb6211": "#eb6819",
+  "#fca333": "#fa9a28",
+  "#fcc272": "#fa9a28",
+  "#3b1e1f": "#3e2421",
+  "#652d26": "#5f3326",
+  "#884426": "#8e4a26",
+  "#ad5724": "#ad5724",
+  "#e77d22": "#cb6b23"
+ },
+ "R2": {
+  "limb": {
+   "leaf_specks_to_bark_px": 38,
+   "loose_px_dropped": 2
+  },
+  "cp_bough_limb_bark_islands": 22,
+  "limbx": {
+   "leaf_specks_to_bark_px": 20,
+   "loose_px_dropped": 0
+  },
+  "cp_bough_limbx_bark_islands": 21,
+  "low": {
+   "leaf_specks_to_bark_px": 40,
+   "loose_px_dropped": 3
+  },
+  "cp_bough_low_bark_islands": 121,
+  "clump7": {
+   "leaf_specks_to_bark_px": 1,
+   "loose_px_dropped": 0
+  },
+  "clump11": {
+   "leaf_specks_to_bark_px": 0,
+   "loose_px_dropped": 0
+  },
+  "clump10": {
+   "leaf_specks_to_bark_px": 0,
+   "loose_px_dropped": 0
+  },
+  "clump9": {
+   "leaf_specks_to_bark_px": 0,
+   "loose_px_dropped": 0
+  },
+  "clump8": {
+   "leaf_specks_to_bark_px": 0,
+   "loose_px_dropped": 0
+  },
+  "clump15": {
+   "leaf_specks_to_bark_px": 0,
+   "loose_px_dropped": 0
+  },
+  "clump14": {
+   "leaf_specks_to_bark_px": 0,
+   "loose_px_dropped": 0
+  },
+  "clump13": {
+   "leaf_specks_to_bark_px": 0,
+   "loose_px_dropped": 0
+  },
+  "clump12": {
+   "leaf_specks_to_bark_px": 0,
+   "loose_px_dropped": 0
+  },
+  "nest": {
+   "leaf_specks_to_bark_px": 62,
+   "loose_px_dropped": 6
+  },
+  "nest2": {
+   "leaf_specks_to_bark_px": 0,
+   "loose_px_dropped": 1
+  },
+  "nest_round_px": 88,
+  "stump": {
+   "leaf_specks_to_bark_px": 21,
+   "loose_px_dropped": 0
+  },
+  "trunk": {
+   "leaf_specks_to_bark_px": 118,
+   "loose_px_dropped": 0
+  },
+  "trunk9": {
+   "leaf_specks_to_bark_px": 47,
+   "loose_px_dropped": 0
+  },
+  "trunk10": {
+   "leaf_specks_to_bark_px": 72,
+   "loose_px_dropped": 0
+  }
+ },
+ "R3": {
+  "limb": {
+   "columns_moved": 86,
+   "rows_dropped": 196,
+   "top_row": 25
+  },
+  "limbx": {
+   "columns_moved": 66,
+   "rows_dropped": 576,
+   "top_row": 27
+  }
+ },
+ "R4": {
+  "low": {
+   "columns_moved": 81,
+   "rows_dropped": 197,
+   "top_row": 50
+  },
+  "low_free_end_rounded": 6
+ },
+ "R5": {
+  "cp_bough_limb": 500,
+  "cp_bough_limbx": 665,
+  "cp_bough_low": 177,
+  "cp_bough_stump": 103
+ },
+ "R6": {
+  "stump_red_specks_to_ring": 1,
+  "stump_cut_top_kept_px": 80,
+  "stump_rows_cropped": 3
+ },
+ "R7": {
+  "cp_bough_limb": {
+   "lone": 14,
+   "blotches": 0
+  },
+  "cp_bough_limbx": {
+   "lone": 9,
+   "blotches": 0
+  },
+  "cp_bough_low": {
+   "lone": 22,
+   "blotches": 4
+  },
+  "cp_bough_low_leaves": {
+   "pinholes_px": 3
+  },
+  "clump7": {
+   "lone": 10,
+   "blotches": 1
+  },
+  "clump11": {
+   "lone": 1,
+   "blotches": 0
+  },
+  "clump10": {
+   "lone": 1,
+   "blotches": 0
+  },
+  "clump9": {
+   "lone": 2,
+   "blotches": 2
+  },
+  "clump8": {
+   "lone": 10,
+   "blotches": 1
+  },
+  "clump15": {
+   "lone": 3,
+   "blotches": 0
+  },
+  "clump14": {
+   "lone": 5,
+   "blotches": 0
+  },
+  "clump13": {
+   "lone": 6,
+   "blotches": 1
+  },
+  "clump12": {
+   "lone": 10,
+   "blotches": 0
+  },
+  "nest": {
+   "lone": 7,
+   "blotches": 0,
+   "specks_px": 0
+  },
+  "stump": {
+   "lone": 3,
+   "blotches": 2
+  },
+  "trunk": {
+   "lone": 74,
+   "blotches": 10
+  },
+  "trunk9": {
+   "lone": 18,
+   "blotches": 4
+  },
+  "trunk10": {
+   "lone": 14,
+   "blotches": 2
+  }
+ },
+ "R8": {
+  "nest": 91,
+  "trunk": 685,
+  "trunk9": 268,
+  "trunk10": 247
+ }
+}
