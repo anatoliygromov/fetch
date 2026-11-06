@@ -1,0 +1,28 @@
+{
+ "size": [
+  586,
+  188
+ ],
+ "body_x": 2,
+ "body_len": 584,
+ "door_front_centre": 60,
+ "wheels_x": [
+  90,
+  164,
+  424,
+  498
+ ],
+ "wheel_r": 15,
+ "wheel_centre_row": 172,
+ "windows": [
+  94,
+  146,
+  198,
+  250,
+  302,
+  354,
+  406,
+  458
+ ],
+ "window_w": 40
+}

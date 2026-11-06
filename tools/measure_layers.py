@@ -35,7 +35,7 @@ S = {
 # the load-time fade amounts per level and layer (look.lua Look.scripts[...].fade); layers not listed are not faded
 FADE = {"rw": dict(back=0.28), "cp": dict(shore=0.40, mid=0.38, back=0.20), "dt": dict(shore=0.70, mid=0.10, back=0.28)}
 # pieces with their own amount (scene.lua park gate and winch keeper, arthooks.lua tram and spire); the haze is the level's
-OWN = {"park_gate": 0.28, "park_keeper_winch": 0.35, "tram_vintage": 0.40, "spire_riddarholmen": 0.45}
+OWN = {"park_gate": 0.28, "park_keeper_winch": 0.35, "tram_vintage": 0.40, "tram_vintage_wheel": 0.40, "spire_riddarholmen": 0.45}
 OLD_HAZE = np.array([200, 210, 222]) / 255                        # the cool grey every fade went to before decision 3
 W = np.array([0.299, 0.587, 0.114])
 LEVELS = {"rw": "River Walk", "cp": "City Park", "dt": "Downtown"}
@@ -144,7 +144,10 @@ add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, gr
 add(["facades_square"], "dt", "mid", True, base=R8, group="Batch 1 (rejected)")
 add(["spire_riddarholmen"], "dt", "back", True, base=R8, group="Batch 1 (rejected)")     # arthooks.lua drawTownBack, own 45 %
 add(["house_tall_a", "house_tall_b", "house_tall_c"], "dt", "back", True, base=R8, group="Batch 1 (rejected)")
-add(["tram_vintage"], "dt", "back", True, base=R8, group="Batch 1 (rejected)")           # arthooks.lua TRAM_FADE, own 40 %
+if os.path.exists(ART + "scene/tram_vintage.png"):   # (6 Nov, art/dt-traffic-06nov) the true-scale tram, built; its wheel sheet
+    add(["tram_vintage", "tram_vintage_wheel"], "dt", "back", True, group="Downtown")    # arthooks.lua TRAM_FADE, own 40 %
+else:
+    add(["tram_vintage"], "dt", "back", True, base=R8, group="Batch 1 (rejected)")       # arthooks.lua TRAM_FADE, own 40 %
 add(["cyclist_a_84", "cyclist_b_84", "cyclist_a_92", "cyclist_b_92"], "rw", "play", base=R8, group="Batch 1 (rejected)")
 add(["cargobike", "roof_gable", "roof_chimney", "roof_loggia", "roof_gallery72", "roof_gallery88", "roof_dormer",
      "roof_ledge32", "roof_awning56", "footbridge"], "dt", "play", base=R8, group="Batch 1 (rejected)")

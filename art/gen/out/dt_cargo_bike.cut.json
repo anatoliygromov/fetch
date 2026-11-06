@@ -1,0 +1,27 @@
+{
+ "name": "dt_cargo_bike",
+ "size": [
+  116,
+  88
+ ],
+ "target": [
+  115,
+  85
+ ],
+ "grid_clean": 1.0,
+ "on_blockout": 0.938,
+ "covered": 1.0,
+ "stray": 0.0,
+ "colours_in": 3164,
+ "colours_cap": 24,
+ "colours_out": 22,
+ "fails": [],
+ "render": "art/gen/renders/dt_cargo_bike_g6a_g4.png",
+ "box": [
+  80,
+  112,
+  196,
+  200
+ ],
+ "cut_by": "tools/build_traffic.py cut (1x render, pitch 1, palette snap downtown.gpl, no resampling)"
+}

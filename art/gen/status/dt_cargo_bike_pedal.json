@@ -1,0 +1,20 @@
+{
+ "name": "dt_cargo_bike_pedal",
+ "family": "dt_traffic_06nov",
+ "tier": "A",
+ "steps": {
+  "spec": {
+   "time": "2026-11-06 19:10"
+  },
+  "blockout": {
+   "time": "2026-11-06 19:10"
+  },
+  "preflight": {
+   "time": "2026-11-06 19:10"
+  },
+  "probe": {
+   "render": "art/gen/renders/dt_cargo_bike_pedal_sheet.png",
+   "time": "2026-11-06 19:10"
+  }
+ }
+}

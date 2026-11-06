@@ -1,0 +1,40 @@
+{
+ "name": "dt_cargo_bike",
+ "level": "downtown",
+ "layer": "char",
+ "kind": "vehicle",
+ "real_height_m": 1.85,
+ "target_px": [
+  115,
+  85
+ ],
+ "checks_px": {
+  "front_wheel": 23,
+  "back_wheel": 31,
+  "box": [
+   44,
+   22
+  ],
+  "bars": 48,
+  "saddle": 42,
+  "head": 11
+ },
+ "subject": "a Danish-style long john cargo bicycle ridden to the LEFT by a friendly baker's delivery man of about 40: a long low dark green bike frame, a small front wheel at the very front, a wooden cargo box of warm honey-coloured planks between the front wheel and the handlebar, two round golden bread loaves and a baguette sticking out of the box, a big back wheel under the saddle; the man sits upright, white baker's jacket, dark grey trousers, black shoes, a red cycling helmet over short brown hair, one hand on the handlebar; round wheels with thin even silver spokes and black tyres",
+ "part_map": "the two dark grey rings are the wheels (the small front one at the left, the big back one at the right, exactly that size, thin even spokes), the thin grey lines are the bike frame, handlebar and saddle, the brown rectangle is the wooden cargo box and the two beige ovals are the loaves in it, the light grey figure is the rider (round head, upright torso, arm to the handlebar, leg down to the pedal), the white cap is the helmet.",
+ "size_sentence": "the rider's helmet top is about twice as high as the dog's head and the cargo box is about as long as the dog. He is a full-grown adult, not a child.",
+ "model": "sc_gpt25",
+ "variants": 2,
+ "tier": "A",
+ "family": "dt_traffic_06nov",
+ "slot": {
+  "file": "riverwalk/art/scene/cargo_bike.png",
+  "where": "Downtown (tall): the street hazard (arthooks.lua drawCargo, cargo zones at x 1930 and 3120), faces left, hit box the left 80 x 26 px; its pedal loop cargo_bike_pedal.png"
+ },
+ "references": 2,
+ "retry": {
+  "n": 1,
+  "family_retry": 1,
+  "changed": "model: NB 2.1 1K -> GPT 2.5 Sunburst 1K medium (follows the reference grid; the cut is tools/grid4_cut.py at pitch 4)",
+  "why": "probe 1 (24 credits): both variants drew the rider and bike 1.3 to 1.8x the blockout (rider 151 and 121 px for 85, bike 180 and 150 px for 115) on a 1:1 grid; variant a has the design we want"
+ }
+}

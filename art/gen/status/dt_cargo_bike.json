@@ -1,0 +1,31 @@
+{
+ "name": "dt_cargo_bike",
+ "family": "dt_traffic_06nov",
+ "tier": "A",
+ "steps": {
+  "spec": {
+   "time": "2026-11-06 18:50"
+  },
+  "blockout": {
+   "time": "2026-11-06 18:50"
+  },
+  "preflight": {
+   "time": "2026-11-06 18:50"
+  },
+  "probe": {
+   "render": "art/gen/renders/dt_cargo_bike_g6a_raw.png",
+   "time": "2026-11-06 19:10"
+  },
+  "cut": {
+   "time": "2026-11-06 19:10"
+  },
+  "ingame": {
+   "frame": "docs/review/06nov/dt_traffic_06nov/frame_street_a.png",
+   "time": "2026-11-06 19:10"
+  },
+  "polish": {
+   "aseprite": "art/source/dt_cargo_bike/cargo_bike.aseprite",
+   "time": "2026-11-06 19:10"
+  }
+ }
+}

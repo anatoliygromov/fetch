@@ -54,6 +54,7 @@ LADDER = {
 FRAMES = {
     "pepper": (60, 52), "girl": (66, 66), "cat": (48, 48), "goose": (34, 34), "gull": (26, 26),
     "park_keeper_cart": (82, 82), "park_keeper_winch": (80, 80), "rowboat": (70, 70), "mia_throw": (66, 66),
+    "tram_vintage_wheel": (31, 31),                                  # (6 Nov) 4 frames of the tram's wheel
 }
 ROLL = ("road_cyclist1_roll", "road_cyclist2_roll")              # 4 frames side by side (drawn: Rd.art().riders)
 # what the game never draws (loaded but unused, or replaced in the played level): not checked
@@ -78,7 +79,8 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          "roof_gable": (122, 80, 0, 20), "roof_loggia": (122, 48, 0, 12), "roof_gallery88": (90, 32, 0, 8),
          "roof_gallery72": (74, 32, 0, 8), "roof_chimney": (18, 46, 0, 0), "roof_dormer": (58, 36, 0, 9),
          "footbridge": (162, 52, 0, 13), "house_tall_a": (80, 240, 0, 0), "house_tall_b": (88, 240, 0, 0),
-         "house_tall_c": (96, 240, 0, 0), "tram_vintage": (300, 130, 30, 15),
+         "house_tall_c": (96, 240, 0, 0), "tram_vintage": (586, 188, 0, 0),     # (6 Nov) true scale, 12.7 m (was 300 x 130)
+         "tram_vintage_wheel": (124, 31, 0, 0), "cargo_bike": (116, 88, 0, 0), "cargo_bike_pedal": (928, 88, 0, 0),
          # (5 Nov, art/rw-traffic-05nov) the new riders at true scale: 1.85 m with the helmet at 46 px/m = 85 px, plus
          # the wheels' ground row; the cars at the near lane's 55 px/m (road.lua)
          "cyclist_adult1": (88, 87, 0, 0), "cyclist_adult2": (88, 87, 0, 0),         # (fix round 1: padded 2 px a side)
@@ -578,6 +580,12 @@ def registry():
             if os.path.exists(q):
                 out[n + "_pedal"] = dict(path=q, level="rw", layer=None, fade=0.0, group="River Walk", building=False,
                                          frames=Image.open(p).size, levels=None)
+    p = os.path.join(ART, "scene", "cargo_bike.png"); q = os.path.join(ART, "scene", "cargo_bike_pedal.png")
+    if os.path.exists(p) and "cargo_bike" not in out:              # (6 Nov) Downtown's cargo bike: char layer, pedal loop
+        out["cargo_bike"] = dict(path=p, level="dt", layer=None, fade=0.0, group="Downtown", building=False, frames=None, levels=None)
+        if os.path.exists(q):
+            out["cargo_bike_pedal"] = dict(path=q, level="dt", layer=None, fade=0.0, group="Downtown", building=False,
+                                           frames=Image.open(p).size, levels=None)
     for n in ROLL:
         p = os.path.join(ART, "scene", n + ".png")
         if os.path.exists(p) and n not in NOT_DRAWN:

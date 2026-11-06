@@ -1,0 +1,20 @@
+{
+ "name": "dt_tram",
+ "family": "dt_traffic_06nov",
+ "tier": "A",
+ "steps": {
+  "spec": {
+   "time": "2026-11-06 18:50"
+  },
+  "blockout": {
+   "time": "2026-11-06 18:50"
+  },
+  "preflight": {
+   "time": "2026-11-06 18:50"
+  },
+  "probe": {
+   "render": "art/gen/renders/dt_tram_n6a.png",
+   "time": "2026-11-06 19:10"
+  }
+ }
+}
