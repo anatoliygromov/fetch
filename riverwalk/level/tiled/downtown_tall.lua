@@ -1794,7 +1794,7 @@ return {
             ["layer"] = "back",
             ["fronts"] = "1",
             ["plaster"] = "cream",
-            ["style"] = "a",
+            ["style"] = "b",
             ["pipe"] = true,
           },
         },

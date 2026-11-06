@@ -795,7 +795,7 @@
     <property name="layer" value="back"/>
     <property name="fronts" value="1"/>
     <property name="plaster" value="cream"/>
-    <property name="style" value="a"/>
+    <property name="style" value="b"/>
     <property name="pipe" type="bool" value="true"/>
    </properties>
   </object>
