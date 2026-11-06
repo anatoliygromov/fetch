@@ -297,7 +297,10 @@ local function clump(r, kind, w, h)
   end
   for x = 0, w - 1 do                                              -- back light: the top pixel of each column
     for y = 0, h - 1 do
-      if solid(x, y) then put(x, y, (r(0, 1) < FG.warmK) and FG.warm or FG.rim); break end
+      if solid(x, y) then                                          -- (night/06nov-rw: a clipped hedge's even top takes
+        local warm = r(0, 1) < FG.warmK                           -- the plain rim; random warm pixels read as specks)
+        put(x, y, (warm and kind ~= "hedge") and FG.warm or FG.rim); break
+      end
     end
   end
   local im = lg.newImage(d); im:setFilter("nearest", "nearest")
@@ -400,7 +403,10 @@ local function leafClump(r, w, h)
   end
   for x = 0, w - 1 do                                               -- back light: the top pixel of each column
     for y = 0, h - 1 do
-      if solid(x, y) then put(x, y, (r(0, 1) < FG.warmK) and FG.warm or FG.rim); break end
+      if solid(x, y) then                                          -- (night/06nov-rw: a clipped hedge's even top takes
+        local warm = r(0, 1) < FG.warmK                           -- the plain rim; random warm pixels read as specks)
+        put(x, y, (warm and kind ~= "hedge") and FG.warm or FG.rim); break
+      end
     end
   end
   local im = lg.newImage(d); im:setFilter("nearest", "nearest")
