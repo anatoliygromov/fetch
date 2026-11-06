@@ -1703,9 +1703,24 @@ end
 -- a willow bough over its one-way box: 5 px thick in the middle, thinner at both ends, the trunk behind it; willow
 -- twigs hang from its ends (past the box, below its top)
 local WLEAF = { hex("c9a93c"), hex("a8892a"), hex("dcc35a") }
-local function drawBough(p, camx)
+local WTRUNK = {}
+local function drawBough(p, camx, crown, def)
   local ox = math.floor(camx)
   local x0, x1, y = p.x0 - ox, p.x1 - ox, p.y0
+  if crown and not (def and Sc.bigWillow(def)) then                  -- (night 6 Nov, cp fix round 1; review: "deck planks
+    -- floating in the willow crowns") the willow's own trunk (park_willow's columns 29-35, its colours as faded) drawn
+    -- up through the crown to the bough, so the bough sits on its tree instead of hanging in the leaves
+    if not WTRUNK[Look.key] then
+      WTRUNK[Look.key] = { Sc.fadeC(hex("665e48")), Sc.fadeC(hex("7a735e")), Sc.fadeC(hex("8a836c")) }
+    end
+    local W = WTRUNK[Look.key]
+    local cx = math.floor((crown.x0 + crown.x1) / 2 - ox)
+    local yb = 175 + dy() - 26                                        -- the trunk's top under the crown (art row ~58)
+    for xx = -3, 3 do
+      lg.setColor(xx == -3 and W[2] or (xx >= 2 and W[1] or W[3]))
+      lg.rectangle("fill", cx + xx, y + 2, 1, yb - y - 2)
+    end
+  end
   local len = x1 - x0
   lg.setColor(INK)
   for x = x0, x1 - 1 do
@@ -2630,7 +2645,7 @@ function Sc.drawPropArt(p, camx, def, kicked)
   if style == "town" and def.foot and (package.loaded.arthooks or require("arthooks")).townPiece(p, camx, def) then return end   -- the
   -- tall Downtown's roofs, fronts and spire (r8/levels: arthooks.lua, its art when it lands, else drawn in code)
   if not n or n == "" then
-    if style == "park" and underCrown(def, p) then drawBough(p, camx); return end
+    if style == "park" and underCrown(def, p) then drawBough(p, camx, underCrown(def, p), def); return end
     local o = owner(def, p)
     if p.kind == "decor" or not o then return end                 -- posts, legs, crowns: drawn with their set piece
     n = o.name
