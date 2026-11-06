@@ -444,6 +444,7 @@ return {
             ["noshadow"] = true,
             ["relx.ax"] = -2,
             ["rely.ay"] = 27,
+            ["wet"] = true,
           },
         },
         {
