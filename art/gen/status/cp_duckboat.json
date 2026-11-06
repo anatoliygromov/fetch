@@ -1,34 +1,31 @@
 {
  "name": "cp_duckboat",
- "family": "cp_props_06nov",
+ "family": "cp_critters",
  "tier": "A",
  "steps": {
   "spec": {
-   "time": "2026-11-06 19:15"
+   "time": "2026-11-06 18:51"
   },
   "blockout": {
-   "time": "2026-11-06 19:15"
+   "time": "2026-11-06 18:51"
   },
   "preflight": {
-   "time": "2026-11-06 19:15"
+   "time": "2026-11-06 18:51"
   },
   "probe": {
-   "render": "art/gen/renders/cp_duckboat_a_raw.png",
-   "time": "2026-11-06 19:15"
+   "render": "art/gen/renders/cp_duckboat_a.png",
+   "time": "2026-11-06 18:54"
   },
   "cut": {
    "time": "2026-11-06 19:15"
   },
   "ingame": {
-   "frame": "docs/review/06nov/cp_props_06nov/frames/sweep_citypark_y144_x0640.png",
+   "frame": "docs/review/06nov/cp_critters/frame_duckboat.png",
    "time": "2026-11-06 19:15"
   },
   "polish": {
-   "aseprite": "art/source/park_boat_front/park_boat_front.aseprite",
+   "aseprite": "art/source/cp_duckboat/cp_duckboat.aseprite",
    "time": "2026-11-06 19:15"
-  },
-  "review": {
-   "time": "2026-11-06 19:42"
   }
  }
 }

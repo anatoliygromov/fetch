@@ -1,0 +1,30 @@
+{
+ "name": "cp_magpie_flap",
+ "level": "citypark",
+ "layer": "char",
+ "kind": "animal",
+ "target_px": [
+  30,
+  22
+ ],
+ "owner_size": {
+  "px": 22,
+  "words": "not the owner's own pick: size B of the 6 Nov sheet (30 px beak to tail; 22 px tall with the wings raised), chosen by the art agent as the brief asks, closest to the owner's 25 Oct cat and gull. Run: owner 6 Nov 18:45 'All 3 levels now, up to 2,000'",
+  "sheet": "docs/review/06nov/cp_critters/magpie_sizes_4x.png"
+ },
+ "checks_px": {
+  "length": 30,
+  "height": 22
+ },
+ "subject": "the flight still cp_magpie_fly (SpriteCook asset 65c6a0f8, variant b) animated at 1x: a steady wingbeat loop, the wings beat from raised high above the back down below the belly and back up; body, head and long tail stay level, legs tucked",
+ "part_map": "the source is the finished 30 x 22 flight still; only the wings move.",
+ "size_sentence": "the magpie is a little longer than half the dog's length; a small bird next to a big dog.",
+ "model": "sc_anim",
+ "variants": 1,
+ "tier": "A",
+ "family": "cp_critters",
+ "slot": {
+  "file": "riverwalk/art/magpie.png",
+  "where": "City Park: the magpie's flap loop while it flies between perches (Sc.magpie, m.state fly); only the wings are taken from the animation, the body is the still's"
+ }
+}

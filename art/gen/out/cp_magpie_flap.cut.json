@@ -1,0 +1,11 @@
+{
+ "name": "cp_magpie_flap",
+ "size": [
+  30,
+  22
+ ],
+ "render": "art/gen/renders/cp_magpie_flap_sheet.png",
+ "cut_by": "Pixel Engine Image / pixel-engine-v1.5 output at game size: pitch 1, taken 1:1, nothing resampled; tools/build_magpie.py",
+ "colours": 9,
+ "fails": []
+}

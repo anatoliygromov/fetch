@@ -163,6 +163,9 @@ add(["cp_arbour_slat48", "cp_arbour_slat56", "cp_tower_deck56", "cp_tower_post4x
 add(["cp_walk1968_rail", "cp_walk704_rail", "cp_walk1968_legs", "cp_walk704_legs"], "cp", "back", group="City Park")   # (cp-pond: the pylons unfaded, one post)
 add(["cp_arbour_posts48x106", "cp_arbour_posts48x122", "cp_arbour_posts56x106"], "cp", "back", True, group="City Park")
 add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, group="Characters (never shaded)")
+# art/cp-critters-06nov: the magpie (drawn without the look, like every character) and the duck boat (a play mover)
+add(["magpie"], "cp", None, base=ART, group="Characters (never shaded)")
+add(["cp_duckboat"], "cp", "play", group="City Park")
 add(["facades_square"], "dt", "mid", True, base=R8, group="Batch 1 (rejected)")
 add(["spire_riddarholmen"], "dt", "back", True, base=R8, group="Batch 1 (rejected)")     # arthooks.lua drawTownBack, own 45 %
 add(["house_tall_a", "house_tall_b", "house_tall_c"], "dt", "back", True, base=R8, group="Batch 1 (rejected)")

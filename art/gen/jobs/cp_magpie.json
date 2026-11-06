@@ -1,0 +1,17 @@
+{
+ "name": "cp_magpie",
+ "level": "citypark",
+ "layer": "char",
+ "kind": "animal",
+ "target_px": [30, 18],
+ "owner_size": {"px": 18, "words": "not the owner's own pick: size B of the 6 Nov sheet (30 px beak to tail, 18 px tall), chosen by the art agent as the brief asks: closest to the owner's 25 Oct picks, cat 32 px sitting and gull 34 px span (about 32 px long). Run: owner 6 Nov 18:45 'All 3 levels now, up to 2,000'", "sheet": "docs/review/06nov/cp_critters/magpie_sizes_4x.png"},
+ "checks_px": {"length": 30, "height": 18, "beak_tip": [29, 4], "feet_row": 17},
+ "subject": "a cute Eurasian magpie perched, exact side view facing right, standing on two thin dark legs: glossy black head, breast and back, a bright white belly and a white shoulder patch, a long black tail sloping down behind with a blue-green sheen, black wings with a blue sheen, a small round black eye with a white glint, a short black beak",
+ "part_map": "the long grey wedge at the left is the tail, the dark oval the body, the dark round shape at the right the head, the small point at the far right the beak, the light ovals the white belly and shoulder patch, the two thin lines the legs.",
+ "size_sentence": "the magpie is a little longer than half the dog's length and about half as tall as the dog; a small bird next to a big dog.",
+ "model": "sc_pe",
+ "variants": 2,
+ "tier": "A",
+ "family": "cp_critters",
+ "slot": {"file": "riverwalk/art/magpie.png", "where": "City Park (tall and flat): the magpie with the girl's ball on its 12 perches (Tiled magpie.perches), drawn by scene.lua Sc.magpie at its feet (m.x, m.y); the ball at St:beak()"}
+}

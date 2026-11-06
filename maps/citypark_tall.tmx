@@ -758,14 +758,14 @@
   <object id="94" name="GOLDEN BONE" type="secrets" x="1756" y="140" width="32" height="12"/>
  </objectgroup>
  <objectgroup id="4" name="movers" color="#40c0ff" draworder="index">
-  <object id="95" name="DUCK BOAT" type="movers" x="824" y="346" width="48" height="6">
+  <object id="95" name="DUCK BOAT" type="movers" x="826" y="346" width="80" height="6">
    <properties>
-    <property name="relx.call" value="{ -224, 6 }"/>
+    <property name="relx.call" value="{ -226, 4 }"/>
     <property name="callSpeed" type="int" value="48"/>
     <property name="relx.from" type="int" value="0"/>
-    <property name="relx.rope" value="{ -8, 120 }"/>
+    <property name="relx.rope" value="{ -10, 118 }"/>
     <property name="speed" type="int" value="24"/>
-    <property name="relx.to" type="int" value="64"/>
+    <property name="relx.to" type="int" value="30"/>
    </properties>
   </object>
  </objectgroup>
@@ -1183,7 +1183,7 @@
   <object id="208" type="magpie.perches" x="400" y="282">
    <point/>
   </object>
-  <object id="209" type="magpie.perches" x="656" y="264">
+  <object id="209" type="magpie.perches" x="672" y="243">
    <point/>
   </object>
   <object id="210" type="magpie.perches" x="840" y="216">

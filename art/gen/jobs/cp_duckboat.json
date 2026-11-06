@@ -1,29 +1,17 @@
 {
  "name": "cp_duckboat",
  "level": "citypark",
- "kind": "vehicle",
- "tier": "A",
  "layer": "play",
- "real_height_m": 0.72,
- "target_px": [
-  54,
-  33
- ],
- "checks_px": {
-  "width": 54,
-  "height": 33,
-  "deck_row": 18,
-  "water_row": 25
- },
- "subject": "a cute little white pedal boat shaped like a duck, seen exactly from the side, facing left: a smooth white rounded hull with a flat top edge, an orange-red stripe along its side, a white duck neck and round head at the front with a small black eye and an orange beak, a short pointed white tail at the back; lit from the upper left",
- "part_map": "the light grey hull shape is the boat's body (exactly that size; its top edge is flat and straight), the red line is the stripe, the grey neck and round head at the left front are the duck's neck and head, the orange triangle is the beak, the black dot is the eye, the small triangle at the right is the tail. Show only the outside side of the boat, never its inside.",
- "size_sentence": "the boat is about as long as the dog, its deck as high as the dog's back is long, and the duck head a little taller than the dog's head. Drawn the size of the dog.",
- "slot": {
-  "file": "riverwalk/art/scene/park_boat_front.png",
-  "where": "City Park tall, screen 3, the DUCK BOAT mover at x 824 (deck y 346), scene.lua Sc.drawMoverArt at x - 3, y - 18, mirrored when it paddles right"
- },
- "model": "sc_gpt25",
+ "kind": "vehicle",
+ "real_height_m": 1.3,
+ "target_px": [92, 60],
+ "checks_px": {"length": 92, "deck_row": 47, "water_row": 54, "head_top_row": 0},
+ "subject": "a cute two-seat pedal boat shaped like a white duck, exact side view, the duck head at the left end facing left: a big round white duck head with a friendly black eye with a white glint and an orange beak on a tall curved neck at the front; a long low white hull with a flat top deck, a red stripe along the hull, a small blue seat back in the middle, a short upturned duck tail at the right end",
+ "part_map": "the long light grey shape at the bottom is the hull (its flat top is the deck the dog stands on), the darker band its stripe, the tall light shape at the left the neck and round head, the orange point the beak, the small dark grey block the seat back, the small point at the right the tail.",
+ "size_sentence": "the boat is nearly twice as long as the dog and the duck's head is a little higher than the dog's head when she stands on the deck.",
+ "model": "sc_pe",
  "variants": 2,
- "family": "cp_props_06nov",
- "references": 2
+ "tier": "A",
+ "family": "cp_critters",
+ "slot": {"file": "riverwalk/art/scene/park_boat_front.png", "where": "City Park tall, the pond (x 816-944): the DUCK BOAT mover (Tiled movers), deck = the mover's top y 346, drawn by scene.lua Sc.drawMoverArt"}
 }

@@ -1,0 +1,31 @@
+{
+ "name": "cp_magpie_flap",
+ "family": "cp_critters",
+ "tier": "A",
+ "steps": {
+  "spec": {
+   "time": "2026-11-06 18:54"
+  },
+  "blockout": {
+   "time": "2026-11-06 18:54"
+  },
+  "preflight": {
+   "time": "2026-11-06 18:54"
+  },
+  "probe": {
+   "render": "art/gen/renders/cp_magpie_flap_sheet.png",
+   "time": "2026-11-06 19:15"
+  },
+  "cut": {
+   "time": "2026-11-06 19:15"
+  },
+  "ingame": {
+   "frame": "docs/review/06nov/cp_critters/frame_magpie_fly.png",
+   "time": "2026-11-06 19:15"
+  },
+  "polish": {
+   "aseprite": "art/source/cp_magpie/magpie.aseprite",
+   "time": "2026-11-06 19:15"
+  }
+ }
+}
