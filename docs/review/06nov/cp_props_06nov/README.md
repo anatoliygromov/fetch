@@ -43,3 +43,15 @@ screen's bottom edge; asset_qa WARN noise and blotches). Both are unchanged.
 - Hedge: it is greener and busier than the park around it. The shady gap with the stems is 17 rows; the crawl box under it is 19 px, so the lowest leaves overlap it by 2 px.
 - Stones: pink granite. The wet band is about 7 px below the water line, under the pond tint.
 - Duck boat: 4 px longer and 5 px taller than before, still on the same mover box.
+
+## Fix round 1 (independent review, 6 Nov, 0 credits)
+- park_hedge, item 4: the 2x2 orange leaf fragment the row splice left at (15-16, 45-46) is painted out in the leaf
+  green (hand edits in edits.json). Its greens are pulled toward olive by one listed map (hue toward 80 degrees,
+  saturation x 0.62, the same values; the lit top a warm gold, not pale). Now it sits with the autumn lime and ash.
+  asset_qa WARN: lone 3.1 % and 4 small blotches, organic, warnings only. Card: cards/WARN_park_hedge.png.
+- park_bush, item 5: redrawn by rule on its own silhouette by `tools/fix_cp_bush.py`, not a clean pass. The shape is
+  kept. Four flat shades of its own colours: a rim on the top edge, a lit upper left with scalloped clumps, the shade,
+  and dark twigs and side edges. Every changed pixel is in `art/source/park_bush/edits.json`; the old file is
+  `park_bush_before.png`. asset_qa PASS. Card: cards/PASS_park_bush.png.
+- park_stone is not touched (another track redoes the pond stones).
+- Frames: frames/r1_x0420.png, frames/r1_x1800.png.
