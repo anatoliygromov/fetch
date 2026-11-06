@@ -1,0 +1,38 @@
+{
+ "name": "park_stone",
+ "render": "art/gen/renders/cp_rocklog_a_grid4.png",
+ "variant": "a",
+ "window": [
+  92,
+  170,
+  135,
+  240
+ ],
+ "bbox_in_frame": [
+  98,
+  184,
+  126,
+  239
+ ],
+ "size": [
+  29,
+  56
+ ],
+ "target": [
+  26,
+  55
+ ],
+ "colours_in": 1353,
+ "colours": 12,
+ "specks_dropped": 0,
+ "clean_changed": 14,
+ "outline": true,
+ "ink": [
+  21,
+  17,
+  22
+ ],
+ "edge_recoloured": 150,
+ "lone_pct": 1.41,
+ "fails": []
+}

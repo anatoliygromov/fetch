@@ -1,0 +1,237 @@
+{
+ "name": "park_hedge",
+ "cut": "art/source/park_hedge/park_hedge_cut.png",
+ "cut_size": [
+  66,
+  77
+ ],
+ "why": "77 rows to 72: the box is 53 solid rows over a 19 row crawl gap; 5 rows of leaf clumps out of the body",
+ "ops": [
+  {
+   "splice_rows": {
+    "removed": [
+     47,
+     51
+    ],
+    "of_the_size_then": true
+   }
+  }
+ ],
+ "outline_px": [],
+ "hand": [
+  {
+   "x": 15,
+   "y": 45,
+   "from": [
+    246,
+    182,
+    27
+   ],
+   "to": [
+    54,
+    80,
+    50
+   ],
+   "why": "review round 1: a 2x2 orange leaf fragment left by the row splice, painted out with the leaf green"
+  },
+  {
+   "x": 16,
+   "y": 45,
+   "from": [
+    246,
+    182,
+    27
+   ],
+   "to": [
+    54,
+    80,
+    50
+   ],
+   "why": "the same fragment"
+  },
+  {
+   "x": 15,
+   "y": 46,
+   "from": [
+    246,
+    182,
+    27
+   ],
+   "to": [
+    40,
+    65,
+    39
+   ],
+   "why": "the same fragment"
+  },
+  {
+   "x": 16,
+   "y": 46,
+   "from": [
+    246,
+    182,
+    27
+   ],
+   "to": [
+    40,
+    65,
+    39
+   ],
+   "why": "the same fragment"
+  }
+ ],
+ "clean_changed": 11,
+ "blotches_merged": [
+  [
+   32,
+   47,
+   3
+  ],
+  [
+   36,
+   47,
+   2
+  ],
+  [
+   62,
+   49,
+   2
+  ],
+  [
+   43,
+   54,
+   2
+  ],
+  [
+   49,
+   20,
+   14
+  ],
+  [
+   35,
+   23,
+   11
+  ],
+  [
+   34,
+   46,
+   2
+  ],
+  [
+   37,
+   51,
+   2
+  ],
+  [
+   22,
+   56,
+   4
+  ]
+ ],
+ "recolour": {
+  "map": [
+   [
+    [
+     16,
+     50,
+     39
+    ],
+    [
+     28,
+     48,
+     30
+    ]
+   ],
+   [
+    [
+     23,
+     67,
+     44
+    ],
+    [
+     40,
+     65,
+     39
+    ]
+   ],
+   [
+    [
+     33,
+     82,
+     47
+    ],
+    [
+     54,
+     80,
+     50
+    ]
+   ],
+   [
+    [
+     50,
+     99,
+     47
+    ],
+    [
+     75,
+     96,
+     65
+    ]
+   ],
+   [
+    [
+     69,
+     116,
+     48
+    ],
+    [
+     91,
+     113,
+     72
+    ]
+   ],
+   [
+    [
+     111,
+     142,
+     44
+    ],
+    [
+     119,
+     138,
+     79
+    ]
+   ],
+   [
+    [
+     149,
+     166,
+     41
+    ],
+    [
+     151,
+     161,
+     86
+    ]
+   ],
+   [
+    [
+     211,
+     203,
+     59
+    ],
+    [
+     209,
+     190,
+     80
+    ]
+   ]
+  ],
+  "pixels": 3358
+ },
+ "size": [
+  66,
+  72
+ ],
+ "colours": 16
+}
