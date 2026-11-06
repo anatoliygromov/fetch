@@ -56,59 +56,180 @@ function Sp.updateFerry(s, m, dt)
   m.dx = nx - m.x0; m.x1 = m.x1 + m.dx; m.x0 = nx
 end
 
--- a rowing boat (a mover rowed to and fro, River Walk's harbour): a wooden hull (crisp, outlined: Pepper stands on
--- it), its deck the mover's top (y0), and a rower pulling the oars as it moves. Art: art/scene/rowboat.png; without
--- it, the boat is drawn in code below.
-local boatImg, boatQ
+-- a rowing boat (a mover rowed to and fro, River Walk's harbour). night/06nov-rw: a 4.0 m eka at true scale, split
+-- into parts (tools/build_rw_rowboat.py): the hull BUILT by rule (art/scene/rw_rowboat.png, 185 x 62, bow left,
+-- row 0 = world y 176, the rail on row 36 = the mover's top y 212, the waterline row 48 = y 224) and the rower's
+-- 6-frame loop (art/scene/rw_rower.png, frames 78 x 62 on hull x 106-183, he rows from the stern thwart so Pepper's
+-- spot amidships stays clear of him): his torso, the oar built per frame on
+-- its rowlock, his near arm keyed by rule from shoulder to the fists on the handle. The mover's box is the hull's
+-- columns 25-178. He rows while the boat moves (pulling when it goes right, stern first, as he faces the bow; the
+-- loop backwards when it goes left), and rests with the blade lifted at each end. In code here: the water's tint
+-- over everything below the waterline, a moving ripple row along the hull, a wake behind it while it moves, and a
+-- splash where the blade goes in. Without the art: the old code-drawn boat.
+local boatImg, rowerImg, rowerQ, hullCol, oarCol
+local BOX0, FX0, FW, NF = 25, 106, 78, 6                          -- (fix round 1: the rower at the stern, hull x 106-183)
+local WROW = 48                                                    -- the waterline's row in the art (world y 224)
+local SPLASH = { [1] = 165, [4] = 131 }                            -- where the oar crosses the surface (hull x): catch, finish
+local function cols(data, x0, w)                                   -- per column: the first opaque row at or under the
+  local c = {}                                                     -- waterline and the last one (the submerged part)
+  for x = 0, w - 1 do
+    local t, bt
+    for r = WROW, data:getHeight() - 1 do
+      local _, _, _, a = data:getPixel(x0 + x, r)
+      if a > 0 then t = t or r; bt = r end
+    end
+    c[x] = t and { t, bt } or false
+  end
+  return c
+end
 function Sp.drawRowboat(m, cam, t)
-  local x0, x1, y = math.floor(m.x0 - cam + 0.5), math.floor(m.x1 - cam + 0.5), m.y0
-  if boatImg == nil then                                           -- the art (SpriteCook, tools/build_critters_art.py):
-    boatImg = false                                                -- 8 rowing frames of 70 x 70, hull x 4-64, deck row 55
-    if love.filesystem.getInfo("art/scene/rowboat.png") then
-      boatImg = lg.newImage("art/scene/rowboat.png"); boatImg:setFilter("nearest", "nearest"); boatQ = {}
-      for i = 1, 8 do boatQ[i] = lg.newQuad((i - 1) * 70, 0, 70, 70, boatImg:getDimensions()) end
+  if boatImg == nil then
+    boatImg = false
+    if love.filesystem.getInfo("art/scene/rw_rowboat.png") and love.filesystem.getInfo("art/scene/rw_rower.png") then
+      local hd, rd = love.image.newImageData("art/scene/rw_rowboat.png"), love.image.newImageData("art/scene/rw_rower.png")
+      boatImg, rowerImg = lg.newImage(hd), lg.newImage(rd)
+      boatImg:setFilter("nearest", "nearest"); rowerImg:setFilter("nearest", "nearest")
+      rowerQ, oarCol = {}, {}
+      for i = 1, NF do rowerQ[i] = lg.newQuad((i - 1) * FW, 0, FW, 62, rd:getDimensions()); oarCol[i] = cols(rd, (i - 1) * FW, FW) end
+      hullCol = cols(hd, 0, hd:getWidth())
     end
   end
-  if boatImg then                                                  -- he rows while it moves, rests at the ends. He
-    local i = math.abs(m.dx or 0) > 0 and 1 + math.floor(t * 8) % 8 or 1   -- sits at the front end (the way it goes),
-    local mid = math.floor((x0 + x1) / 2)                          -- so Pepper, boarding at the back, never hides him
+  if boatImg then
+    local hx = math.floor(m.x0 - cam + 0.5) - BOX0                  -- the hull's left (bow) column on screen
+    local top = m.y0 - 36
+    if hx > 330 or hx + 185 < -40 then return end
+    local moving = math.abs(m.dx or 0) > 0
+    local i = 5                                                     -- at rest: the blade lifted over the water
+    if moving then
+      local k = math.floor(t * 7) % NF
+      i = (m.dir or 1) > 0 and 1 + k or NF - k                      -- going left: the loop backwards (backing water)
+    end
     lg.setColor(1, 1, 1, 1)
-    if (m.dir or 1) < 0 then lg.draw(boatImg, boatQ[i], mid - 34, y - 55)
-    else lg.draw(boatImg, boatQ[i], mid + 34, y - 55, 0, -1, 1) end
+    lg.draw(boatImg, hx, top)
+    lg.draw(rowerImg, rowerQ[i], hx + FX0, top)
+    -- the water over the hull and the blade below the waterline, column by column on their own shapes
+    lg.setColor(22 / 255, 52 / 255, 125 / 255, 0.7)                -- (deeper than the surface blue: a wet hull reads darker)
+    for x = 0, 184 do
+      local c = hullCol[x]
+      if c then lg.rectangle("fill", hx + x, top + c[1], 1, c[2] - c[1] + 1) end
+    end
+    for x = 0, FW - 1 do                                            -- the blade: only where the hull is not (no double tint)
+      local c, h = oarCol[i][x], hullCol[FX0 + x]
+      if c then
+        local a1, a2 = c[1], c[2]
+        if h then
+          if a1 < h[1] then lg.rectangle("fill", hx + FX0 + x, top + a1, 1, math.min(a2, h[1] - 1) - a1 + 1) end
+          if a2 > h[2] then local b1 = math.max(a1, h[2] + 1); lg.rectangle("fill", hx + FX0 + x, top + b1, 1, a2 - b1 + 1) end
+        else lg.rectangle("fill", hx + FX0 + x, top + a1, 1, a2 - a1 + 1) end
+      end
+    end
+    -- the ripple where the hull meets the water: two rows of short white dashes that run along it
+    local wy = top + WROW
+    local ph = math.floor(t * 6)
+    for x = -3, 187 do
+      if ((x + ph) % 9) < 3 and (hullCol[math.max(0, math.min(184, x))] or x < 0 or x > 184) then
+        lg.setColor(0.86, 0.94, 0.97, 0.9); lg.rectangle("fill", hx + x, wy, 1, 1)
+      end
+      if ((x - ph + 4) % 13) < 2 and x > 2 and x < 182 then
+        lg.setColor(0.86, 0.94, 0.97, 0.55); lg.rectangle("fill", hx + x, wy + 1, 1, 1)
+      end
+    end
+    -- the wake: dashes trailing from the end it leaves, while it moves
+    if moving then
+      local back = (m.dir or 1) > 0 and -1 or 1                     -- the side it comes from
+      local x0 = back < 0 and hx - 2 or hx + 186
+      for k = 0, 5 do
+        local d = 3 + k * 5 + (ph % 5)
+        local len = 3 - math.floor(k / 2)
+        lg.setColor(0.86, 0.94, 0.97, 0.85 - k * 0.12)
+        lg.rectangle("fill", x0 + back * d - (back < 0 and len or 0), wy + (k % 2), len, 1)
+      end
+    end
+    -- the splash: drops thrown up where the blade goes in (the catch) and a few as it comes out (the finish)
+    local sx = SPLASH[i]
+    if sx and moving then
+      lg.setColor(0.93, 0.97, 1, 0.95)
+      local n = i == 1 and 1 or 0.6
+      for _, d in ipairs({ { -3, -2 }, { -1, -4 }, { 1, -3 }, { 3, -1 }, { 0, -1 }, { -2, -1 }, { 2, -5 } }) do
+        if n == 1 or d[2] > -4 then lg.rectangle("fill", hx + sx + d[1], wy + d[2], 1, 1) end
+      end
+    end
+    lg.setColor(1, 1, 1, 1)
     return
   end
+  local x0, x1, y = math.floor(m.x0 - cam + 0.5), math.floor(m.x1 - cam + 0.5), m.y0
   local INK = { 0.11, 0.10, 0.09 }
   lg.setColor(INK)                                                 -- the hull: deck line to the waterline, tapered
   lg.polygon("fill", x0 - 3, y - 1, x1 + 3, y - 1, x1 - 3, y + 11, x0 + 3, y + 11)
   lg.setColor(0.55, 0.33, 0.18); lg.polygon("fill", x0 - 1, y, x1 + 1, y, x1 - 4, y + 10, x0 + 4, y + 10)
   lg.setColor(0.72, 0.47, 0.27); lg.rectangle("fill", x0, y, x1 - x0, 2)              -- the gunwale, lit
-  lg.setColor(0.93, 0.93, 0.88); lg.rectangle("fill", x0 + 3, y + 4, x1 - x0 - 6, 1)  -- a painted stripe
-  local back = (m.dir or 1) > 0 and x0 + 6 or x1 - 12                                  -- the stern, where he sits
-  local pull = math.sin(t * 5) * (math.abs(m.dx or 0) > 0 and 1 or 0.2)
-  local lean = math.floor(pull + 0.5)                                                 -- he leans into each stroke
-  lg.setColor(INK); lg.rectangle("fill", back - 2 + lean, y - 13, 11, 13)             -- the rower: coat
-  lg.setColor(0.24, 0.42, 0.62); lg.rectangle("fill", back - 1 + lean, y - 12, 9, 12)
-  lg.setColor(0.33, 0.55, 0.78); lg.rectangle("fill", back - 1 + lean, y - 12, 9, 2)
-  lg.setColor(INK); lg.rectangle("fill", back - 1 + lean, y - 21, 9, 9)               -- head and cap
-  lg.setColor(0.93, 0.74, 0.60); lg.rectangle("fill", back + lean, y - 19, 7, 6)
-  lg.setColor(0.11, 0.10, 0.09); lg.rectangle("fill", back + 2 + lean, y - 17, 1, 1); lg.rectangle("fill", back + 5 + lean, y - 17, 1, 1)
-  lg.setColor(0.86, 0.25, 0.20); lg.rectangle("fill", back - 1 + lean, y - 21, 9, 3)  -- a red cap
-  lg.setColor(INK)                                                                    -- the oars, dipping in turn
-  local ox = back + 3 + lean
-  lg.setLineWidth(2)
-  lg.line(ox, y - 6, ox - 14 + pull * 6, y + 13 + pull * 2)
-  lg.line(ox + 1, y - 6, ox + 15 + pull * 6, y + 13 - pull * 2)
-  lg.setLineWidth(1)
-  lg.setColor(0.42, 0.29, 0.18)
-  lg.line(ox, y - 6, ox - 14 + pull * 6, y + 13 + pull * 2)
-  lg.line(ox + 1, y - 6, ox + 15 + pull * 6, y + 13 - pull * 2)
   lg.setColor(1, 1, 1, 1)
 end
 
--- the rope a ferry runs on: a thin line just under its deck, from bank to bank (drawn behind the ferry)
+-- (6 Nov audit) The River Walk pontoon's line ended at a post in open water. It is moored now: a line from the
+-- horn cleat on each end of its deck (pontoon.png, cleat horns at y0 - 4), one to a cleat on the quay's end, one to
+-- a timber pile in the river by the ferry's bow (the ferry's crew winch it). Decoration: no outline, edges a
+-- darker shade. Drawn behind the pontoon and Pepper.
+local MOOR = { line = { 0.20, 0.17, 0.14 }, iron = { 0.30, 0.33, 0.38 }, ironL = { 0.48, 0.51, 0.56 },
+               pile = { 0.50, 0.40, 0.30 }, pileD = { 0.40, 0.31, 0.24 }, pileL = { 0.62, 0.51, 0.39 } }
+local function hline(x0, y0, x1, y1, sag)                          -- a 1 px line, whole pixels, x0 < x1; sag: px
+  local n = math.max(1, x1 - x0)                                   -- it hangs at its middle (night/06nov-rw: was taut)
+  local py
+  for i = 0, n - 1 do
+    local t = (i + 0.5) / n
+    local y = math.floor(y0 + (y1 - y0) * t + (sag or 0) * 4 * t * (1 - t) + 0.5)
+    if py and math.abs(y - py) > 1 then lg.rectangle("fill", x0 + i, math.min(y, py) + 1, 1, math.abs(y - py) - 1) end   -- no gaps
+    lg.rectangle("fill", x0 + i, y, 1, 1); py = y
+  end
+end
+local function moored(m, cam)
+  local qx, px = math.floor(m.rope[1] - cam + 0.5), math.floor(m.rope[2] - cam + 0.5) - 7   -- the quay's end, the pile
+  local ax = math.floor(m.x0 - cam + 0.5) - 3                      -- the pontoon art's left (drawn at x0 - 3, y0 - 5)
+  local cy = m.y0 - 4                                              -- the cleats' horns
+  lg.setColor(MOOR.iron); lg.rectangle("fill", qx - 7, m.y0 - 3, 7, 1); lg.rectangle("fill", qx - 5, m.y0 - 2, 3, 2)
+  lg.setColor(MOOR.ironL); lg.rectangle("fill", qx - 7, m.y0 - 4, 7, 1)                    -- a horn cleat on the quay
+  lg.setColor(MOOR.pileD); lg.rectangle("fill", px, m.y0 - 3, 6, 240 - m.y0 + 3)          -- the pile, to the river bed
+  lg.setColor(MOOR.pile); lg.rectangle("fill", px + 1, m.y0 - 3, 4, 240 - m.y0 + 3)
+  lg.setColor(MOOR.pileL); lg.rectangle("fill", px + 1, m.y0 - 4, 4, 1); lg.rectangle("fill", px + 1, m.y0 - 3, 1, 240 - m.y0 + 3)
+  lg.setColor(22 / 255, 52 / 255, 125 / 255, 0.7); lg.rectangle("fill", px, 224, 6, 16)    -- (fix round 1) wet under the surface
+  lg.setColor(MOOR.line)
+  local span = m.rope[2] - m.rope[1] - 54                          -- (the longest the quay line gets)
+  local d1, d2 = ax + 4 - (qx - 1), px + 1 - (ax + 50)
+  hline(qx - 1, m.y0 - 4, ax + 4, cy, math.min(6, 2 + math.max(0, span - d1) / 24))   -- quay cleat to its left cleat:
+  hline(ax + 50, cy, px + 1, m.y0 - 1, math.min(6, 2 + math.max(0, span - d2) / 24))  -- it slackens as they come close
+  lg.rectangle("fill", px, m.y0 - 2, 6, 1); lg.rectangle("fill", px, m.y0, 6, 1)          -- the turns round the pile
+  lg.setColor(0.61, 0.79, 0.94)                                    -- a ripple where the floats meet the river (y 224)
+  for _, dx in ipairs({ 1, 2, 24, 25, 28, 29, 50, 51 }) do lg.rectangle("fill", ax + dx, m.y0 + 10, 1, 1) end
+  for _, dx in ipairs({ 0, 26, 27, 52 }) do lg.rectangle("fill", ax + dx, m.y0 + 11, 1, 1) end
+  for _, dx in ipairs({ -2, -1, 6, 7 }) do lg.rectangle("fill", px + dx, m.y0 + 10, 1, 1) end              -- and round the pile
+end
+
+-- (night/06nov-rw, base audit: "the pontoon with no waterline") the water's tint over the pontoon's floats below the
+-- surface (y 224), as on the rowing boats and the jetty; called by stage.lua right after it draws the pontoon
+local pontCol
+function Sp.pontoonWater(m, cam, img)
+  if not pontCol then
+    pontCol = {}
+    local d = love.image.newImageData("art/scene/pontoon.png")
+    for x = 0, d:getWidth() - 1 do
+      local b
+      for y = 0, d:getHeight() - 1 do local _, _, _, a = d:getPixel(x, y); if a > 0 then b = y end end
+      pontCol[x] = b
+    end
+  end
+  local ax, top = math.floor(m.x0 - cam + 0.5) - 3, m.y0 - 5
+  lg.setColor(22 / 255, 52 / 255, 125 / 255, 0.7)
+  for x, b in pairs(pontCol) do
+    if b and top + b >= 224 then lg.rectangle("fill", ax + x, 224, 1, top + b - 224 + 1) end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+
+-- the rope a ferry runs on: a thin line just under its deck, from bank to bank (drawn behind the ferry); the River Walk pontoon is moored
 function Sp.drawRopes(s, cam)
   for _, m in ipairs(s.movers) do
-    if m.rope then
+    if m.rope and m.name == "PONTOON" and not s.def.art then moored(m, cam)
+    elseif m.rope then
       local y = m.y0 + (m.rope.dy or 3)
       lg.setColor(0.18, 0.20, 0.25, 0.75); lg.rectangle("fill", math.floor(m.rope[1] - cam), y, m.rope[2] - m.rope[1], 1)
       lg.setColor(0.18, 0.20, 0.25, 1)
@@ -213,7 +334,7 @@ local function kennel(pc, cam)
   local foot = pc.foot or 184                                      -- (the path it stands on; tall levels set foot)
   local w = x1 - x
   local A = art()
-  if w == A.kennel:getWidth() and dt - y0 == 17 then lg.setColor(1, 1, 1, 1); lg.draw(A.kennel, math.floor(x), y0); return end
+  if w == A.kennel:getWidth() and A.kennel:getHeight() == foot - y0 then lg.setColor(1, 1, 1, 1); lg.draw(A.kennel, math.floor(x), y0); return end   -- (the art from its top down to the path)
   rect(INK, x, y0, w, foot - y0)                                    -- outline and body
   rect(WOOD, x + 1, y0 + 4, w - 2, foot - y0 - 5)
   for yy = y0 + 8, foot - 2, 5 do rect(WOOD_D, x + 1, yy, w - 2, 1) end -- planks
@@ -266,14 +387,56 @@ end
 
 -- a wooden jetty on piles (River Walk's harbour): a plank deck (its top is the box's top), crisp and outlined,
 -- standing on three dark piles down into the water
-local jettyImg
+local jettyImg, jettyCol
 local function jetty(pc, cam)
   local x0, x1, y = math.floor(pc.x0 - cam), math.floor(pc.x1 - cam), pc.y0
   if jettyImg == nil then                                          -- the art (SpriteCook, tools/import_assets_v2.py)
-    jettyImg = love.filesystem.getInfo("art/scene/rw_jetty.png") and lg.newImage("art/scene/rw_jetty.png") or false
-    if jettyImg then jettyImg:setFilter("nearest", "nearest") end
+    jettyImg = false
+    if love.filesystem.getInfo("art/scene/rw_jetty.png") then
+      -- (night/06nov-rw, base audit: "three piles run to the screen bottom over open water like a table leg") the
+      -- piles end on an ink row 11 px under the surface: here each pile runs on down past the bottom of the screen
+      -- (its row 32, plain wood, repeated from its foot), and the part under the surface takes the water's tint
+      -- and a ripple, as the rowing boats do. The png is unchanged.
+      local src = love.image.newImageData("art/scene/rw_jetty.png")
+      local w, h = src:getDimensions()
+      local d = love.image.newImageData(w, h + 6)
+      for yy = 0, h + 5 do
+        for xx = 0, w - 1 do
+          local sy = yy < h - 1 and yy or 32
+          local r, g, b, a = src:getPixel(xx, sy)
+          if yy >= h - 1 then local _, _, _, a0 = src:getPixel(xx, h - 1); if a0 == 0 then a = 0 end end
+          d:setPixel(xx, yy, r, g, b, a)
+        end
+      end
+      jettyImg = lg.newImage(d); jettyImg:setFilter("nearest", "nearest")
+      jettyCol = {}                                                -- per column: the rows under the surface
+      for xx = 0, w - 1 do
+        local t0, t1
+        for yy = 0, h + 5 do local _, _, _, a = d:getPixel(xx, yy); if a > 0 then t0 = t0 or yy; t1 = yy end end
+        jettyCol[xx] = t0 and { t0, t1 } or false
+      end
+    end
   end
-  if jettyImg then lg.setColor(1, 1, 1, 1); lg.draw(jettyImg, x0, y - 1); return end
+  if jettyImg then
+    lg.setColor(1, 1, 1, 1); lg.draw(jettyImg, x0, y - 1)
+    local wr = 224 - (y - 1)                                       -- the surface's row in the art (world y 224)
+    lg.setColor(22 / 255, 52 / 255, 125 / 255, 0.7)
+    for xx, c in pairs(jettyCol) do
+      if c and c[2] >= wr then lg.rectangle("fill", x0 + xx, y - 1 + math.max(wr, c[1]), 1, c[2] - math.max(wr, c[1]) + 1) end
+    end
+    local ph = math.floor(love.timer.getTime() * 6)                -- a ripple round each pile: dashes either side
+    lg.setColor(0.86, 0.94, 0.97, 0.9)
+    for xx, c in pairs(jettyCol) do
+      if c and c[1] <= wr and c[2] >= wr then
+        local l = not jettyCol[xx - 1] or jettyCol[xx - 1][2] < wr
+        local r = not jettyCol[xx + 1] or jettyCol[xx + 1][2] < wr
+        if l then lg.rectangle("fill", x0 + xx - 3 - ph % 2, 224, 2, 1) end
+        if r then lg.rectangle("fill", x0 + xx + 2 + ph % 2, 224, 2, 1) end
+      end
+    end
+    lg.setColor(1, 1, 1, 1)
+    return
+  end
   local INK = { 0.11, 0.10, 0.09 }
   for _, px in ipairs({ x0 + 3, math.floor((x0 + x1) / 2) - 3, x1 - 9 }) do     -- the piles
     lg.setColor(INK); lg.rectangle("fill", px - 1, y + 5, 8, 240 - y)

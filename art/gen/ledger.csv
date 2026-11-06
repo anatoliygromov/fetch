@@ -141,3 +141,5 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-06 20:27,spent,cp_pond_concept@1106-202522,,,,,320,spent,"Artlist concept, reference only"
 2026-11-06 20:27,verdict,,town_front_tall,,,,,reference,dt concepts: design targets
 2026-11-06 20:27,verdict,,cp_pond,,,,,reference,cp_pond concept: design target
+2026-11-06 20:30,plan,rw_rower@1106-203058,rw_rower,rw_harbour_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),48,planned,"SpriteCook up to 900 tonight (owner, 6 Nov 20:10)"
+2026-11-06 20:31,spent,rw_rower@1106-203058,,,,,64,spent,job db5f2e89; billed 64 not 48: 3 reference images (blockout + style card + concept crop) at 8 each per variant; preflight counted 2

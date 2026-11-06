@@ -1,63 +1,32 @@
 # Draws the road under the promenade (riverwalk/art/scene/road.png, 640 x 41, tiles left to right) and its
 # decals: a manhole cover (manhole.png) and a kerb drain (drain.png). Pixel art made here in code; nothing from
-# outside. The road replaces the flat rows 27-67 of pavement.png in the game (the paving and kerb rows 0-26 of
-# the user's pavement art are untouched); see Sc.paintGround.
-#   * colours: the pavement art's road colour (92, 101, 124) plus two darker and two lighter shades of it
-#   * grain: small clusters of light and dark stones, denser along the two worn tyre tracks of each lane
-#   * a darker gutter row along the kerb, a dashed centre line (worn, some pixels missing), a few hairline
-#     cracks and two darker repair patches
-#   * everything wraps at x = 640, so the strip tiles without a seam
+# outside. The road replaces the flat rows 27-67 of pavement.png in the game (the paving rows of the user's
+# pavement art are untouched; the granite kerb face over the road is drawn by scene.lua); see Sc.paintGround.
+# (art/rw-ground-06nov, owner 6 Nov: "these connections of asphalt really look weird") Clean asphalt by rule:
+#   * flat fills: one asphalt colour (a neutral grey: the look's grade adds its blue), a darker gutter strip along the kerb with a shadow row under it
+#   * aggregate: a few 2 px flecks, one shade lighter, on a fixed grid (every 80 px on 4 rows, rows offset)
+#   * the centre line: dashes all 64 px long on an even 160 px pitch, rows 20-21, one flat white, no worn pixels
+#   * no grain noise, no cracks, no repair patches; everything wraps at x = 640, so the strip tiles without a seam
+#   * rows 0-3 (the gutter, the drain's band 200-202) and 20-21 (the line) sit inside look.lua's road bands
 import os, numpy as np
 from PIL import Image
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, 'riverwalk', 'art', 'scene')
 W, H = 640, 41
-BASE = np.array([92, 101, 124]); D1 = np.array([82, 90, 112]); D2 = np.array([70, 77, 97])
-L1 = np.array([103, 111, 133]); L2 = np.array([121, 128, 148]); LINE = np.array([206, 208, 214]); LINE2 = np.array([170, 175, 186])
-rng = np.random.default_rng(3)
+BASE = np.array([74, 78, 86])                     # asphalt (night/06nov-rw fix round 1: one step darker, was 86, 91, 98)
+GUT = np.array([64, 68, 76])                      # the gutter strip by the kerb (rows 1-3)
+SHAD = np.array([50, 54, 60])                      # the kerb's shadow (row 0)
+FLECK = np.array([88, 92, 98])                  # aggregate, one shade lighter
+LINE = np.array([206, 208, 214])                   # the centre line
 img = np.tile(BASE, (H, W, 1)).astype(int)
-def put(y, x, c):
-    if 0 <= y < H: img[y, x % W] = c
-# gutter along the kerb, then a soft shadow row
-img[0, :] = D2; img[1, :] = D1
-# worn tyre tracks: two per lane (lanes are rows 2-19 and 22-40), slightly darker bands with denser grain
-tracks = [5, 14, 26, 35]
-for t in tracks:
-    for x in range(W):
-        if rng.random() < 0.55: put(t, x, D1)
-        if rng.random() < 0.25: put(t + 1, x, D1)
-# grain: clusters of 1-3 px, light and dark
-for _ in range(2400):
-    y, x = rng.integers(2, H), rng.integers(0, W)
-    near = min(abs(y - t) for t in tracks) <= 1
-    c = [L1, L2, D1, D2][rng.choice(4, p=[0.45, 0.12, 0.3, 0.13] if not near else [0.25, 0.05, 0.45, 0.25])]
-    put(y, x, c)
-    if rng.random() < 0.35: put(y, x + 1, c)
-    if rng.random() < 0.15: put(y + 1, x, c)
-# repair patches: darker rectangles with a 1 px seam
-for px, py, pw, ph in [(118, 24, 46, 11), (430, 4, 34, 9)]:
-    for y in range(py, py + ph):
-        for x in range(px, px + pw):
-            edge = y in (py, py + ph - 1) or x in (px, px + pw - 1)
-            if edge: put(y, x, D2)
-            elif rng.random() < 0.85: put(y, x, D1)
-            else: put(y, x, BASE)
-# hairline cracks: random walks of dark pixels
-for sx, sy, n in [(60, 30, 26), (270, 8, 18), (360, 33, 22), (560, 12, 30)]:
-    x, y = sx, sy
-    for _ in range(n):
-        put(y, x, D2)
-        x += 1
-        r = rng.random()
-        if r < 0.3: y += 1
-        elif r < 0.6: y -= 1
-        y = max(3, min(H - 2, y))
-# dashed centre line on rows 20-21: dashes 20 px, gaps 28 px (worn: a few pixels missing or greyer)
-for x in range(W):
-    if (x % 48) < 20:
-        for y in (20, 21):
-            r = rng.random()
-            img[y, x] = LINE if r < 0.82 else (LINE2 if r < 0.95 else img[y, x])
+img[0, :] = SHAD
+img[1:4, :] = GUT
+for row, off in ((8, 0), (14, 40), (27, 20), (36, 60)):   # flecks on a grid (clear of the line and the gutter)
+    for x in range(off, W, 80):
+        img[row, x] = FLECK; img[row, (x + 1) % W] = FLECK
+for x in range(W):                                 # dashes 64 px, pitch 160
+    if x % 160 < 64:
+        img[20, x] = LINE; img[21, x] = LINE
 Image.fromarray(img.astype(np.uint8)).save(os.path.join(OUT, 'road.png'))
 
 # manhole cover seen from a low angle: an ellipse 19 x 7, dark rim, iron grey with a cross-hatch

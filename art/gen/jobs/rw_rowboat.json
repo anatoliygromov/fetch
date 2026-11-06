@@ -6,7 +6,7 @@
  "real_height_m": 1.22,
  "target_px": [
   185,
-  56
+  62
  ],
  "checks_px": {
   "hull_x": [
@@ -26,10 +26,11 @@
  "size_sentence": "the boat is about three and a half dogs long, its side is about as high as the dog's legs above the water, and the seated man's head is a little higher than the dog's head. A real rowing boat and a grown man at true size next to the dog, not a toy and not a child.",
  "model": "sc_nb21",
  "variants": 2,
- "tier": "A",
+ "tier": "C",
  "family": "rw_water",
  "slot": {
-  "file": "riverwalk/art/scene/rowboat.png",
-  "where": "River Walk screens 8-9, the harbour: the two ROWBOAT movers (level/riverwalk.lua), drawn by Sp.drawRowboat (setpieces.lua); the hull is cut from this render, the rower comes from rw_rower and its rowing loop"
- }
+  "file": "riverwalk/art/scene/rw_rowboat.png",
+  "where": "River Walk screens 8-9, the harbour: the two ROWBOAT movers (level/riverwalk.lua, box on hull columns 25-178, deck y 212), drawn by Sp.drawRowboat (setpieces.lua) with the rower loop rw_rower.png"
+ },
+ "built_by": "tools/build_rw_rowboat.py (night/06nov-rw): the hull built by rule, not generated"
 }
