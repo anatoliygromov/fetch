@@ -1,5 +1,33 @@
 # FETCH! Status
 
+## Night of 6-7 Nov: the three levels brought to finished quality (live session, owner asleep)
+
+**Owner, 20:01 to 20:19:** a proper lift in assets and game design tonight, 3 levels ready with full visual QA by the morning; use Fable and several agents; repo should feel mature and up to date; coordinate with the other sessions; the "Game porting and launch plan" rowboat was terrible, make it work. Picks: SpriteCook up to 900, Artlist up to 3,000 for concepts, merge to main as v0.7 if every check and the independent review pass, prune merged branches with an archive list, repo stays public, this session owns the rowboat and the "FETCH level asset plan" session's work.
+
+**Method change (art):** hero pieces start from a concept painted into the real game frame (Artlist, design target only, preflighted as a concept job, ledger "reference"), then split: geometry BUILT by rule, only living parts from SpriteCook at game size with the concept as reference, mechanical motion keyed by rule, water and contact in code. Every track was checked by an independent Fable reviewer, then a fresh final-gate reviewer on the integration.
+
+**Branches:** `prod/integrate-f` (= `night/06nov-integrate-f`) holds everything below on top of `prod/integrate-e` (the 12 `art/*-06nov` branches of the afternoon session). Tracks: `night/06nov-rw`, `night/06nov-cp`, `night/06nov-dt`; `night/06nov-concepts` (preflight concept jobs, concepts), `night/06nov-repo` (README). Reviews: `review/06nov-base`, `-rw`, `-cp`, `-dt`, `-final`.
+
+**River Walk:** the rowing boat rebuilt (hull and oars built by rule, the grandpa rower from SpriteCook, a 7-frame loop by rule with a rest pose, the hull in the water with tint, ripples, wake, splashes; rower at the stern, Pepper amidships); harbour 208 px wider; kennel at true scale; jetty rebuilt as a landing stage; pontoon and ferry in the water; road one step darker; ground joins and audit fixes of the afternoon merged. Review: all screens PASS.
+**City Park (tall):** true-scale weeping willow; pond bank kit after the concept; trunk pillars are lime trees; fork ledges redrawn as limbs (method changed after two failed rounds); root flares; keeper face; goose fly row; solid playground. Review: all 27 screens PASS.
+**Downtown (tall):** 37 styled true-scale fronts built from parts; the high road attached (corbels, consoles, wall lanterns); green iron tram shelter; canal surface, poles in the flood, granite basin and stairs; open squares with a paved floor at both street ends so the spire stays (6a); `H.CLOSED_STREET` switches to a closed street. Review: all 33 screens PASS.
+**Also:** hint bubbles in the light design (`ui/hint-bubbles-06nov`, owner 6 Nov); README rewritten; `docs/not_merged.txt` lists the rejected rowboat 240ffbe.
+
+**Checks on prod/integrate-f:** PEPPER UNCHANGED (level trace re-recorded for the wider harbour, as for every River Walk change; lab trace 1401 steps identical), flow 125/125, Tiled PASSED, BACKDROP OK, check_approved ALL MERGED, physics on all six levels, autopilot GOOD GIRL, check_curve T1-T4 PASS.
+
+**Credits tonight:** SpriteCook 140 of 900 (cp_willow 76, rw_rower 64; balance 2,100), both in the game. Artlist 1,440 of 3,000 (four concept sets, reference). Ledger matches the accounts.
+
+**Board:** four new cards (River Walk, City Park, Downtown, gull and cat sizes).
+
+**Waiting for the owner (max 3):**
+1. The board: the three level cards (approve, fix or reject per piece) and their questions.
+2. Gull and cat size picks (size sheets on the board); decision 2 open or closed street.
+3. Your leaf front (decision 5) floats when the camera is up in the trees: keep, or tie to the ground?
+
+**Scheduled night run (21:00, `ops/night-06nov`):** audit only, 0 credits; its two questions (which rowboat, hint bubbles) are settled above.
+
+**Next if he says nothing:** the board fix rounds after his decisions; the animals after his size picks (credits per his yes).
+
 ## Evening of 6 Nov: fixes from the owner's play of the 6 Nov preview (live session, 0 credits)
 
 **Owner, 19:06 to 19:13:** the cyclist rides behind the flower boxes; old speech panel; "boat is still ridiculously small"; "this asphalt transition is crazy", "the asphalt is moving weirdly", "why asphalt color differ here?". 19:10: "Go".
