@@ -358,19 +358,26 @@ end
 -- her (her sprite's box, padded), a bone, the ball, Mia or the magpie drops down out of the way for as long as it is
 -- near (nothing is kept between frames, so a still frame always shows the same thing).
 Look.LEAF_H, Look.LEAF_FROM, Look.LEAF_TO, Look.LEAF_PAD = 22, 72, 112, 4
-local function leafClump(r, w, h)
+-- (art/cp-audit-06nov) the audit: "front black bushes end in vertical cuts". A leaf leaning out past the clump's
+-- ends was cut off by the image's edge, and the bank under the leaves started 3 rows high at each end: straight
+-- sides. The image now has LEAF_M px of room each side (drawn LEAF_M px further left), so every leaf is whole, and
+-- the bank tapers to nothing at each end: rounded ends.
+Look.LEAF_M = 8
+local function leafClump(r, w0, h)
   local FG = S().fg
+  local M = Look.LEAF_M
+  local w = w0 + 2 * M
   local d = love.image.newImageData(w, h)
   local function put(x, y, c) if x >= 0 and x < w and y >= 0 and y < h then d:setPixel(x, y, c[1], c[2], c[3], 1) end end
   local function solid(x, y) if x < 0 or x >= w or y < 0 or y >= h then return false end local _, _, _, a = d:getPixel(x, y); return a > 0 end
   local base = 8                                                    -- the bank under the leaves
-  for x = 0, w - 1 do
-    local e = math.min(x, w - 1 - x)
-    for y = math.floor(h - math.min(base, 3 + e / 2)), h - 1 do put(x, y, FG.dark) end
+  for x = M, M + w0 - 1 do
+    local e = math.min(x - M, M + w0 - 1 - x)
+    for y = math.floor(h - math.min(base, e / 2)), h - 1 do put(x, y, FG.dark) end
   end
-  for _ = 1, math.floor(w / 4) do                                   -- leaves: pointed ovals, mostly up, leaning out
+  for _ = 1, math.floor(w0 / 4) do                                  -- leaves: pointed ovals, mostly up, leaning out
     local len, wid = r(8, h - 2), r(3.4, 5.4)
-    local ox, oy = r(5, w - 6), h - 3
+    local ox, oy = M + r(5, w0 - 6), h - 3
     local a = r(-1.2, 1.2)                                          -- radians from straight up
     local dx, dy = math.sin(a), -math.cos(a)
     for i = 0, math.floor(len * 2) do
@@ -416,6 +423,12 @@ local function leafKeepOut(stage, cam, camY)
   if g and not g.hidden then add(g.x - 24, g.y - 70, g.x + 24, g.y + 4) end
   local m = stage.magpie
   if m and m.state ~= "gone" then add(m.x - 22, m.y - 24, m.x + 22, m.y + 8) end
+  -- (art/cp-audit-06nov) the audit: the leaves "swallow lamp bases and feet". Also kept clear: each lamp's base and
+  -- every ledge Pepper can stand on (its top and its thickness: her line), so nothing she uses is hidden
+  for _, l in ipairs(stage.lamps or {}) do add(l.x - 8, l.y - 24, l.x + 8, l.y + 2) end
+  for _, q in ipairs(stage.def.props or {}) do
+    if (q.kind == "oneway" or q.kind == "solid") and not q.hidden and q.layer ~= "front" then add(q.x0 - 2, q.y0 - 2, q.x1 + 2, q.y0 + 8) end
+  end
   return R
 end
 function Look.leaves(stage, cam, camY, camYMax)
@@ -433,13 +446,13 @@ function Look.leaves(stage, cam, camY, camYMax)
     if sx < 330 and sx + c.w > -10 then
       local need = 0                                                -- how far down this clump must go to clear everything
       for _, q in ipairs(keep) do
-        if q[2] < 240 and q[3] + Look.LEAF_PAD > sx and q[1] - Look.LEAF_PAD < sx + c.w and q[4] + Look.LEAF_PAD > top then
+        if q[2] < 240 and q[3] + Look.LEAF_PAD > sx - Look.LEAF_M and q[1] - Look.LEAF_PAD < sx + c.w + Look.LEAF_M and q[4] + Look.LEAF_PAD > top then
           need = math.max(need, q[4] + Look.LEAF_PAD - top)
         end
       end
       need = math.min(H + 2, math.ceil(need))
       local y = top + need
-      if y < 240 then lg.draw(c.img, sx, y) end
+      if y < 240 then lg.draw(c.img, sx - Look.LEAF_M, y) end
     end
   end
 end
