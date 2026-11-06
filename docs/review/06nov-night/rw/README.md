@@ -10,18 +10,22 @@ was "really terrible". Nothing of r2 is used. Design target: concept b (`art/gen
 
 | Part | How | File | Numbers |
 | --- | --- | --- | --- |
-| Hull | built by rule, `tools/build_rw_rowboat.py --check` | `riverwalk/art/scene/rw_rowboat.png` | 185 x 62 (4.0 m eka at 46 px/m); bow +12 px, transom +5 px; 2 px rail, white strake, 5 px clinker bands; 10 colours; asset_qa PASS |
+| Hull | built by rule, `tools/build_rw_rowboat.py --check` | `riverwalk/art/scene/rw_rowboat.png` | 185 x 62 (4.0 m eka at 46 px/m); bow +12 px in runs 1,1,2,2,2,3,3,4,5,6,8,11, transom +5 px; 2 px rail, white strake, a honey top plank and mahogany planks under it, each seam its own curve fanning into the stem; asset_qa PASS |
 | Rower | SpriteCook GPT 2.5, variant a, cut 1:1, arms re-keyed | `art/source/rw_rower/` | cut 40 x 46, cap top 2 px under Pepper's head on the deck; face 12 px; 19 colours |
-| Oar + loop | built per frame by rule | `riverwalk/art/scene/rw_rower.png` | 6 frames of 74 x 62: catch, drive, drive, finish, return, return; pivot on the rowlock, handle 16 px, blade end 48 px; lean -2/+1 px |
+| Oar + loop | built per frame by rule | `riverwalk/art/scene/rw_rower.png` | 6 frames of 78 x 62 on hull x 106-183: catch, drive, drive, finish, return, return; ash oar pivoting on the rowlock at hull x 150, handle 16 px, blade end 48 px, blade tipped 7 degrees on the return (clear of the water); lean -2/+1 px |
 | Water | code, `Sp.drawRowboat` | `riverwalk/setpieces.lua` | tint under y 224 on the hull's own columns, 2 ripple rows, a wake, splash at catch and finish |
 
-- The fists are stamped from the render on the oar handle in every frame; the near arm is two bones (12 + 12 px)
-  from his shoulder to the wrist in his own sleeve colours, so arm, hands and oar always connect.
+- The fists are stamped from the render on the oar handle in every frame; the near arm is two bones (9 + 15 px)
+  from his shoulder to the wrist, the elbow always bent down, in his own sleeve colours with a highlight row, so
+  arm, hands and oar always connect.
+- He rows from the stern thwart (fix round 1): Pepper's spot amidships stays clear of him. The deck box and the
+  route are unchanged; the autopilot rides at box + 60, walks to the stern to jump onto the jetty, and on boat 2
+  jumps over him onto the far quay.
 - He faces the bow, as in concept b. Pulling moves the boat right (towards the jetty and the far quay); going back
   left the loop plays backwards. At rest the blade is lifted.
 - The rower cut is SpriteCook's own pixel output. `grid_cut.py` on the raw 1024 render found only 67 % clean cells
   and dropped the fists (they reach past the blockout), so it was not used.
-- asset_qa: rw_rower WARN (3.1 % lone pixels, the eye, nose and beard; 0.5 % noise; the blade's lowest pixel moves,
+- asset_qa: rw_rower WARN (3.3 % lone pixels, the eye, nose and beard; 0.5 % noise; the blade's lowest pixel moves,
   as it should). Card: `cards/WARN_rw_rower.png`, its loop `cards/rw_rower_row1.gif`. Hull: `cards/PASS_rw_rowboat.png`.
 - In motion, from the autopilot's run: `frames/harbour_ride_autopilot.gif`.
 
@@ -48,18 +52,18 @@ in front of the rail, and the hull in front of her would cover her paws (not all
 | Pier at x 1920, navy band | already a stone arch on jambs (merged rw-ground) | `before_after_pier_*` |
 | Jetty piles like table legs (audit 2) | piles run on into the water, tinted, ripple round each | `frames/` harbour |
 | Kennel reads as a post box (audit 3) | rebuilt by rule 44 x 44, pitched roof, arched door, `tools/build_rw_kennel.py`; start x 62 | `before_after_kennel_*`, `cards/PASS_kennel.png` |
-| Pontoon: taut rope, no waterline (audit 4) | floats tinted under the surface, lines sag 2-6 px | `before_after_pontoon_*` |
-| Road band (audit 1) | already rebuilt by rw-ground (flat asphalt, flecks on a grid) | |
+| Pontoon: taut rope, no waterline (audit 4) | floats and the timber mooring pile tinted under the surface, lines sag 2-6 px | `before_after_pontoon_*` |
+| Road band (audit 1) | rebuilt by rw-ground; fix round 1: one palette step darker (asphalt 74, 78, 86; drawn median 88 to 74 on my measure), dashes and kerb kept | `before_after_road_*` |
 | Grit boxes (audit 5) | already a wooden chest with a lid and hasp (rw-audit) | |
 | Knocked ball on a boat | a knock's flight never lands on a mover now (stage.lua `St:ballLands`) | |
 
 ## 4 Checks (all on this branch)
 
-- `check_pepper.sh`: PEPPER UNCHANGED, 3877 steps (golden trace re-recorded twice: the harbour, then the kennel's
-  start; `check_pepper_lab.sh` 1401 lab steps identical, Pepper's files unchanged).
-- River Walk `--physics` 55/55; City Park tall 97/97; Downtown tall 102/102; autopilot GOOD GIRL in 54.4 s.
+- `check_pepper.sh`: PEPPER UNCHANGED, 3908 steps (golden trace re-recorded: the harbour, the kennel's start, the
+  autopilot's riding spot; `check_pepper_lab.sh` 1401 lab steps identical, Pepper's files unchanged).
+- River Walk `--physics` 55/55; City Park tall 97/97; Downtown tall 102/102; autopilot GOOD GIRL in 54.9 s.
 - `check_tiled.sh` PASSED; `check_backdrop.py` OK; `check_flow.sh` 125/125.
-- `check_curve.py` (6 levels, 10 seeds): T1-T4 PASS; River Walk kids 7.5, parents 10.1, Elsa 100 %, 0 % lost.
+- `check_curve.py` (6 levels, 10 seeds): T1-T4 PASS; River Walk kids 8.5, parents 10.9, Elsa 100 %, 0 % lost.
 - `measure_layers.py --ladder`: River Walk play median 117 (was 99, the honey hull), back 170. The "shore > back
   median" note is in the base already (the light house fronts).
 - The independent review (gate 8) is the producer's: `art/gen/reviews/` is left empty.
@@ -68,6 +72,11 @@ in front of the rail, and the hull in front of her would cover her paws (not all
 
 1. **Gull size** (`size_sheets/gull_sizes_4x.png`): span A 16, B 20 or C 24 px? (now 22 x 16).
 2. **Cat size** (`size_sheets/cat_sizes_4x.png`): sitting A 24, B 27, C 30 or D 34 px? (now 30; Pepper 38).
-3. The deck on the gunwale (y 212, section 1): OK, or should Pepper stand lower, inside the boat?
-4. The road (the traffic lane): the audit asked for a median of 40 like the front band. It is the ground layer under
-   the cars, so I left it as rw-ground made it. Darker?
+(Settled in review round 1: Pepper stays on the gunwale; the road one step darker, not to 40.)
+
+## 6 Fix round 1 (review 4384ff9)
+
+Arm with an elbow and a highlight row; the blade lifted on the return and at rest; the lower planks mahogany and
+the oar ash; the bow's seams as separate smooth curves; the rower at the stern, Pepper's spot clear; the road one
+step darker; the mooring pile wet; the concept PNGs committed. Frames: `frames/after_ride_boat1_right.png`,
+`after_jetty_boat1_back_left.png` (boat 1 rowing back left on its own), `after_ride_boat2_right.png`, the GIF.

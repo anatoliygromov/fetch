@@ -298,15 +298,18 @@ return function(mode, api)
       at(function(p) return p.x >= 2150 end, function() release() end, 9),
       ride(function(p, s) local b = s.movers[2]; return p.onGround and b.x0 <= 2220 and b.dir > 0 end, 14),
       at(function() return true end, function() jump("right") end), { wait = 1 / 60 }, { act = function() hold("right") end },
-      at(function(p, s) return p.x >= s.movers[2].x0 + 124 end, function() release() end, 4),       -- (to the stern)
+      at(function(p, s) return p.x >= s.movers[2].x0 + 60 end, function() release() end, 4),        -- (amidships, clear of the rower)
       ride(function(p, s) return p.ground == s.movers[2] and s.movers[2].x0 >= 2332 end, 14),
-      at(function() return true end, function() jump("right", "jump") end),
+      at(function() return true end, function() hold("right") end),                                  -- (towards the stern,
+      at(function(p) return p.x >= 2446 end, function() jump("right", "jump") end, 2),               -- then onto the jetty)
       at(function(p) return p.x >= 2508 end, function() release() end, 3),
       ride(function(p, s) local b = s.movers[3]; return p.onGround and p.y <= 197 and b.x0 <= 2572 and b.dir > 0 end, 14),
       at(function() return true end, function() hold("right") end),
-      at(function(p, s) return p.ground == s.movers[3] and p.x >= s.movers[3].x0 + 124 end, function() release() end, 4),
+      at(function(p, s) return p.ground == s.movers[3] and p.x >= s.movers[3].x0 + 60 end, function() release() end, 4),
       ride(function(p, s) return (p.ground == s.movers[3] and s.movers[3].x0 >= 2685) or (p.onGround and p.x > 2850 and p.y <= 217) end, 14),
       at(function() return true end, function() hold("right") end),
+      at(function(p) return p.x >= 2780 end, function() jump("right", "jump") end, 2),               -- (over the rower onto the quay)
+      at(function(p) return p.onGround and p.x > 2850 end, function() hold("right") end, 3),
       at(function(p) return p.x >= 3048 and p.y <= 185 end, function() hold("right") end, 9),           -- up the steps
       onto(3138, 154),                                                                               -- the planter
       -- bike zone 2: flower box, grit box, bin

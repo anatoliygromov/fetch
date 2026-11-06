@@ -59,16 +59,17 @@ end
 -- a rowing boat (a mover rowed to and fro, River Walk's harbour). night/06nov-rw: a 4.0 m eka at true scale, split
 -- into parts (tools/build_rw_rowboat.py): the hull BUILT by rule (art/scene/rw_rowboat.png, 185 x 62, bow left,
 -- row 0 = world y 176, the rail on row 36 = the mover's top y 212, the waterline row 48 = y 224) and the rower's
--- 6-frame loop (art/scene/rw_rower.png, frames 74 x 62 on hull x 62-135): his torso, the oar built per frame on
+-- 6-frame loop (art/scene/rw_rower.png, frames 78 x 62 on hull x 106-183, he rows from the stern thwart so Pepper's
+-- spot amidships stays clear of him): his torso, the oar built per frame on
 -- its rowlock, his near arm keyed by rule from shoulder to the fists on the handle. The mover's box is the hull's
 -- columns 25-178. He rows while the boat moves (pulling when it goes right, stern first, as he faces the bow; the
 -- loop backwards when it goes left), and rests with the blade lifted at each end. In code here: the water's tint
 -- over everything below the waterline, a moving ripple row along the hull, a wake behind it while it moves, and a
 -- splash where the blade goes in. Without the art: the old code-drawn boat.
 local boatImg, rowerImg, rowerQ, hullCol, oarCol
-local BOX0, FX0, FW, NF = 25, 62, 74, 6
+local BOX0, FX0, FW, NF = 25, 106, 78, 6                          -- (fix round 1: the rower at the stern, hull x 106-183)
 local WROW = 48                                                    -- the waterline's row in the art (world y 224)
-local SPLASH = { [1] = 112, [4] = 81 }                             -- where the oar crosses the surface (hull x): catch, finish
+local SPLASH = { [1] = 165, [4] = 131 }                            -- where the oar crosses the surface (hull x): catch, finish
 local function cols(data, x0, w)                                   -- per column: the first opaque row at or under the
   local c = {}                                                     -- waterline and the last one (the submerged part)
   for x = 0, w - 1 do
@@ -190,6 +191,7 @@ local function moored(m, cam)
   lg.setColor(MOOR.pileD); lg.rectangle("fill", px, m.y0 - 3, 6, 240 - m.y0 + 3)          -- the pile, to the river bed
   lg.setColor(MOOR.pile); lg.rectangle("fill", px + 1, m.y0 - 3, 4, 240 - m.y0 + 3)
   lg.setColor(MOOR.pileL); lg.rectangle("fill", px + 1, m.y0 - 4, 4, 1); lg.rectangle("fill", px + 1, m.y0 - 3, 1, 240 - m.y0 + 3)
+  lg.setColor(22 / 255, 52 / 255, 125 / 255, 0.7); lg.rectangle("fill", px, 224, 6, 16)    -- (fix round 1) wet under the surface
   lg.setColor(MOOR.line)
   local span = m.rope[2] - m.rope[1] - 54                          -- (the longest the quay line gets)
   local d1, d2 = ax + 4 - (qx - 1), px + 1 - (ax + 50)
