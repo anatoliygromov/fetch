@@ -171,6 +171,12 @@ add([f"town_front_tall{k}_{s}" for k in (1, 2, 3, 5, 6, 7) for s in "abcdef"] + 
 add(["town_bridge_springer", "town_parasol_pier"], "dt", "play", group="Downtown")
 add(["town_basin_wall", "town_quay32"], "dt", "ground", group="Downtown")
 add(["town_wall_lantern"], "dt", "back", True, group="Downtown")
+# art/dt-audit-06nov (tools/build_dt_audit.py): the drain in the quay wall (ground), the footbridge's piers (back,
+# unfaded: drawn with the back props), the wall lantern's bracket (faded as the lamp), the parasols' boat (play, ink)
+add(["town_quaydrain"], "dt", "ground", group="Downtown")
+add(["town_bridge_pier"], "dt", "back", group="Downtown")
+add(["town_lantern_bracket"], "dt", "back", True, group="Downtown")
+add(["town_punt"], "dt", "play", group="Downtown")
 add(["town_stopsign"], "dt", "back", True, group="Downtown")        # arthooks.lua stopSign: H.img(.., true), the back fade
 add(["town_jet"], "dt", "back", group="Downtown")                  # scene.lua drawTerrainArt: decoration on her line, unfaded
 add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, group="Characters (never shaded)")
