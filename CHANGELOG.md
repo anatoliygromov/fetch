@@ -2,6 +2,9 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `night/06nov-cp`: City Park (tall) to finished quality (night of 6-7 Nov, cp track)
+- **Willow blockout r1 (`art/gen/blockouts/cp_willow.py`):** the r0 shape was a keyhole (an egg with a straight-sided box hung under it) on a 6.5 m pole. Now a willow's outline: the dome's top runs out of the frame, from its widest row the curtain flares out to the full 7 m (322 px) at the bottom with a ragged hem of strand tips 55 px above the ground, and a short trunk forks at 2.6 m into three heavy limbs arching up. Same 512 frame, mask 322 x 506, same job (`art/gen/jobs/cp_willow.json`, 76 credits). Preflight --dry passes every gate but the SpriteCook daily cap (632 spent on 6 Nov, cap 150): it needs the owner's words or a new day.
+
 ## Branch `night/06nov-concepts`: concept art as design targets, preflighted (6 Nov night, owner: Artlist up to 3,000 for concepts)
 - **tools/preflight.py concept jobs** (`"purpose": "concept"`): Artlist may paint a design target, never game pixels. A concept job edits a real in-game frame (`base_frame`, 320x240 or a whole multiple) and names its asset, family and slot; forbidden look words, the Artlist daily cap (or the owner's words) and a ledger plan row are checked as for any job. Output in `art/gen/concepts/`, ledger verdict "reference".
 - Why: the 6 Nov rowboat went from a grey blockout straight to final pixels with no design in its scene, and the owner called it terrible. Hero pieces now start from a concept in context, then are split into built parts (geometry), drawn parts (characters, SpriteCook at game size with the concept as reference) and rule-keyed animation.
