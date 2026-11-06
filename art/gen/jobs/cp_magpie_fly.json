@@ -1,0 +1,17 @@
+{
+ "name": "cp_magpie_fly",
+ "level": "citypark",
+ "layer": "char",
+ "kind": "animal",
+ "target_px": [30, 22],
+ "owner_size": {"px": 22, "words": "not the owner's own pick: size B of the 6 Nov sheet (30 px beak to tail; 22 px tall with the wings raised), chosen by the art agent as the brief asks, closest to the owner's 25 Oct cat and gull. Run: owner 6 Nov 18:45 'All 3 levels now, up to 2,000'", "sheet": "docs/review/06nov/cp_critters/magpie_sizes_4x.png"},
+ "checks_px": {"length": 30, "height": 22},
+ "subject": "the same cute Eurasian magpie flying, exact side view facing right, wings raised high above its back, body level, the long tail straight out behind, legs tucked: glossy black head and breast, white belly, black wings with white primary feathers and a blue sheen, a long black tail with a blue-green sheen, a small round black eye with a white glint",
+ "part_map": "the grey wedge at the left is the tail, the dark oval the body, the dark round shape at the right the head with the beak, the raised dark shape the wing, the light oval the white belly.",
+ "size_sentence": "the magpie is a little longer than half the dog's length; a small bird next to a big dog.",
+ "model": "sc_pe",
+ "variants": 2,
+ "tier": "A",
+ "family": "cp_critters",
+ "slot": {"file": "riverwalk/art/magpie.png", "where": "City Park: the magpie's flap loop while it flies between perches (Sc.magpie, m.state fly); the ball at St:beak()"}
+}
