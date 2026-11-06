@@ -1,0 +1,26 @@
+{
+ "name": "rw_birch",
+ "size": [
+  192,
+  250
+ ],
+ "render": "art/gen/renders/rw_birch_a_raw.png (job cf848121, variant a, asset a9920bf8)",
+ "cut_by": "tools/grid4_cut.py (pitch 4, phase (3,0), 83 % clean cells) then tools/cut_cp_tree.py --leaf 6 --bark 5 --rim-lum 30 --mode 1 --green, tools/polish_cp_trees.py rw_birch, tools/fix_rw_props_06nov.py rw_birch",
+ "colours_in": 11,
+ "measures_px": {
+  "trunk_20px_up": 16,
+  "trunk_50px_up": 14,
+  "trunk_80px_up": 14,
+  "lowest_leaf_px_up": 95,
+  "crown_width": 192,
+  "size": [
+   192,
+   250
+  ],
+  "colours": 10,
+  "top_cut_by_frame": true
+ },
+ "lone_changed": 148,
+ "blotches_merged": 6,
+ "fails": []
+}

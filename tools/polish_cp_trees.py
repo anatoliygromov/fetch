@@ -34,6 +34,18 @@ for name in sys.argv[1:]:
             if abs(oc @ LUM - rgb[y, x] @ LUM) > 60:
                 edits.append({'x': x, 'y': y, 'from': rgb[y, x].tolist(), 'to': oc.tolist(), 'why': 'glint'})
     for e in edits: rgb[e['y'], e['x']] = e['to']
+    # (6 Nov, oak retry 2) fringe: a violet colour (blue over green by 15+, under 2 % of the art) is the magenta key
+    # mixed into an edge cell; it takes the colour most of its 8 neighbours have (never an average)
+    cols, cnt = np.unique(rgb[al], axis=0, return_counts=True)
+    for c, n in zip(cols, cnt):
+        if not (c[2] - c[1] >= 15 and n < 0.02 * al.sum()): continue
+        for y, x in zip(*np.nonzero(al & (rgb == c).all(-1))):
+            nb = [tuple(rgb[yy, xx]) for yy in range(max(0, y - 1), min(H, y + 2)) for xx in range(max(0, x - 1), min(W, x + 2))
+                  if al[yy, xx] and not (rgb[yy, xx] == c).all()]
+            if not nb: continue
+            t = max(set(nb), key=nb.count)
+            edits.append({'x': int(x), 'y': int(y), 'from': c.tolist(), 'to': list(map(int, t)), 'why': 'fringe'})
+            rgb[y, x] = t
     pa = np.pad(al, 1)
     n4 = pa[:-2, 1:-1].astype(int) + pa[2:, 1:-1] + pa[1:-1, :-2] + pa[1:-1, 2:]
     sp = al & (n4 <= 1); sp[H - 1, :] = False
@@ -51,5 +63,5 @@ for name in sys.argv[1:]:
     json.dump({'name': name, 'from': src, 'edits': edits}, open(f'art/source/{name}/edits.json', 'w'), indent=0)
     aseprite_io.write(f'art/source/{name}/{name}.aseprite', [out], layer=name)
     Image.fromarray(out, 'RGBA').save(f'riverwalk/art/scene/{name}.png')
-    k = {w: sum(1 for e in edits if e['why'] == w) for w in ('glint', 'spike', 'pinhole')}
+    k = {w: sum(1 for e in edits if e['why'] == w) for w in ('glint', 'fringe', 'spike', 'pinhole')}
     print(name, f'{W}x{H}', k, 'colours', len(np.unique(out[al][:, :3], axis=0)))

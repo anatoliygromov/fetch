@@ -1,0 +1,22 @@
+{
+ "name": "rw_birch",
+ "level": "riverwalk",
+ "layer": "back",
+ "kind": "plant",
+ "real_height_m": 5.43,
+ "target_px": [196, 250],
+ "checks_px": {"trunk_width": 16, "clear_trunk": 115, "crown_width": 196},
+ "subject": "a Swedish silver birch tree in summer, seen from the front: a slim straight white trunk with black horizontal marks and dark rough bark at its foot, thin dark limbs forking up into a tall crown of small fresh green leaves in loose drooping clumps, gaps between the clumps where thin dark twigs show, lit from the upper left so the clumps have a bright yellow-green top edge and a deep green underside",
+ "part_map": "the dark grey column is the trunk (exactly that width and height, it touches the ground line), the mid grey bars are the main limbs going up into the crown, the big light grey shape is the leafy crown: fill it to its edge with irregular leaf clumps on the outline, keep the underside at that height, and let the crown run out of the top edge of the image, cut by the frame like a big tree seen close up.",
+ "size_sentence": "the trunk is about as wide as the dog's head, and the lowest leaves hang about four dog heights above the ground. It is a tall tree, far taller than the image, so its top is not seen.",
+ "model": "sc_gpt25",
+ "variants": 2,
+ "references": 2,
+ "tier": "B",
+ "family": "rw_props_06nov",
+ "slot": {
+  "file": "riverwalk/art/scene/rw_birch.png",
+  "where": "River Walk screen 2 (x 520) and screen 10 (x 2978), behind the railing on the back line: replaces tree_far"
+ },
+ "extra": "Image 2 is a tree from this game, the street lime, shown at 4x: draw the birch's leaves as it does, in clear clumps of 3 to 4 flat shades each, every clump with a lit top and a darker underside. No black outline round the tree: its edges are a darker shade of its own colour."
+}

@@ -306,12 +306,14 @@
    "tree",
    "tree_near",
    "rw_home",
-   "rw_lime"
+   "rw_lime",
+   "rw_birch"
   ],
   "trees": [
    "tree",
    "tree_near",
-   "rw_lime"
+   "rw_lime",
+   "rw_birch"
   ],
   "name_hints": [
    "house",

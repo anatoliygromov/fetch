@@ -1,0 +1,544 @@
+[
+ {
+  "name": "rw_birch",
+  "verdict": "WARN",
+  "file": "riverwalk/art/scene/rw_birch.png",
+  "level": "rw",
+  "layer": "back",
+  "fade": 0.28,
+  "w": 192,
+  "h": 250,
+  "building": false,
+  "frames": null,
+  "group": "River Walk",
+  "info": {
+   "colours": 10,
+   "lone": 1.4,
+   "p10": 109,
+   "median": 151,
+   "p90": 204,
+   "noise": 0.1,
+   "blotches": 0,
+   "outline": 44
+  },
+  "checks": [
+   {
+    "id": "decor-ink",
+    "sev": "warn",
+    "msg": "decoration outlined like an obstacle: 44 % of its edge is dark",
+    "pixels": []
+   }
+  ]
+ },
+ {
+  "name": "gritbox_front",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/gritbox_front.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 88,
+  "h": 32,
+  "building": false,
+  "frames": null,
+  "group": "River Walk",
+  "info": {
+   "colours": 11,
+   "lone": 0.5,
+   "p10": 2,
+   "median": 69,
+   "p90": 99,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "cloud2",
+  "verdict": "WARN",
+  "file": "riverwalk/art/scene/cloud2.png",
+  "level": "rw",
+  "layer": "clouds",
+  "fade": 0.0,
+  "w": 117,
+  "h": 39,
+  "building": false,
+  "frames": null,
+  "group": "River Walk",
+  "info": {
+   "colours": 5,
+   "lone": 0.4,
+   "p10": 199,
+   "median": 248,
+   "p90": 253,
+   "noise": 0.0,
+   "blotches": 2,
+   "outline": 0
+  },
+  "checks": [
+   {
+    "id": "blotches",
+    "sev": "warn",
+    "msg": "2 blotch(es) of 2-24 px in a near colour (1.7 % of the art): dirty fill",
+    "pixels": [
+     [
+      28,
+      24
+     ],
+     [
+      29,
+      24
+     ],
+     [
+      30,
+      24
+     ],
+     [
+      31,
+      24
+     ],
+     [
+      27,
+      25
+     ],
+     [
+      28,
+      25
+     ],
+     [
+      29,
+      25
+     ],
+     [
+      30,
+      25
+     ],
+     [
+      31,
+      25
+     ],
+     [
+      32,
+      25
+     ],
+     [
+      26,
+      26
+     ],
+     [
+      27,
+      26
+     ],
+     [
+      28,
+      26
+     ],
+     [
+      32,
+      26
+     ],
+     [
+      33,
+      26
+     ],
+     [
+      25,
+      27
+     ],
+     [
+      26,
+      27
+     ],
+     [
+      34,
+      27
+     ],
+     [
+      24,
+      28
+     ],
+     [
+      25,
+      28
+     ],
+     [
+      74,
+      24
+     ],
+     [
+      75,
+      24
+     ],
+     [
+      76,
+      24
+     ],
+     [
+      77,
+      24
+     ],
+     [
+      78,
+      24
+     ],
+     [
+      72,
+      25
+     ],
+     [
+      73,
+      25
+     ],
+     [
+      74,
+      25
+     ],
+     [
+      75,
+      25
+     ],
+     [
+      76,
+      25
+     ],
+     [
+      77,
+      25
+     ],
+     [
+      78,
+      25
+     ],
+     [
+      79,
+      25
+     ],
+     [
+      80,
+      25
+     ],
+     [
+      71,
+      26
+     ],
+     [
+      72,
+      26
+     ],
+     [
+      79,
+      26
+     ],
+     [
+      80,
+      26
+     ],
+     [
+      81,
+      26
+     ],
+     [
+      81,
+      27
+     ],
+     [
+      82,
+      27
+     ],
+     [
+      82,
+      28
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "name": "cloud5",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/cloud5.png",
+  "level": "rw",
+  "layer": "clouds",
+  "fade": 0.0,
+  "w": 87,
+  "h": 32,
+  "building": false,
+  "frames": null,
+  "group": "River Walk",
+  "info": {
+   "colours": 5,
+   "lone": 1.0,
+   "p10": 199,
+   "median": 248,
+   "p90": 253,
+   "noise": 0.1,
+   "blotches": 0,
+   "outline": 0
+  },
+  "checks": []
+ },
+ {
+  "name": "kennel",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/kennel.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 34,
+  "h": 36,
+  "building": false,
+  "frames": null,
+  "group": "River Walk",
+  "info": {
+   "colours": 11,
+   "lone": 0.3,
+   "p10": 14,
+   "median": 24,
+   "p90": 242,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "pontoon",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/pontoon.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 54,
+  "h": 12,
+  "building": false,
+  "frames": null,
+  "group": "River Walk",
+  "info": {
+   "colours": 10,
+   "lone": 1.4,
+   "p10": 44,
+   "median": 78,
+   "p90": 131,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "rw_jetty",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/rw_jetty.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 48,
+  "h": 41,
+  "building": false,
+  "frames": null,
+  "group": "River Walk",
+  "info": {
+   "colours": 15,
+   "lone": 1.9,
+   "p10": 2,
+   "median": 46,
+   "p90": 67,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "pot",
+  "verdict": "WARN",
+  "file": "riverwalk/art/scene/pot.png",
+  "level": "rw",
+  "layer": "back",
+  "fade": 0.28,
+  "w": 17,
+  "h": 27,
+  "building": false,
+  "frames": null,
+  "group": "River Walk",
+  "info": {
+   "colours": 10,
+   "lone": 2.1,
+   "p10": 130,
+   "median": 146,
+   "p90": 163,
+   "noise": 0.9,
+   "blotches": 0,
+   "outline": 5
+  },
+  "checks": [
+   {
+    "id": "noise",
+    "sev": "warn",
+    "msg": "3 dirt pixels (0.9 %): single pixels a shade off the fill around them",
+    "pixels": [
+     [
+      7,
+      8
+     ],
+     [
+      6,
+      10
+     ],
+     [
+      10,
+      14
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "name": "cloud3",
+  "verdict": "WARN",
+  "file": "riverwalk/art/scene/cloud3.png",
+  "level": "rw",
+  "layer": "clouds",
+  "fade": 0.0,
+  "w": 115,
+  "h": 45,
+  "building": false,
+  "frames": null,
+  "group": "River Walk",
+  "info": {
+   "colours": 5,
+   "lone": 0.7,
+   "p10": 211,
+   "median": 238,
+   "p90": 253,
+   "noise": 0.3,
+   "blotches": 1,
+   "outline": 0
+  },
+  "checks": [
+   {
+    "id": "noise",
+    "sev": "warn",
+    "msg": "10 dirt pixels (0.3 %): single pixels a shade off the fill around them",
+    "pixels": [
+     [
+      47,
+      1
+     ],
+     [
+      40,
+      2
+     ],
+     [
+      49,
+      2
+     ],
+     [
+      37,
+      5
+     ],
+     [
+      34,
+      7
+     ],
+     [
+      59,
+      10
+     ],
+     [
+      79,
+      11
+     ],
+     [
+      77,
+      12
+     ],
+     [
+      21,
+      15
+     ],
+     [
+      17,
+      19
+     ]
+    ]
+   },
+   {
+    "id": "blotches",
+    "sev": "warn",
+    "msg": "1 blotch(es) of 2-24 px in a near colour (0.5 % of the art): dirty fill",
+    "pixels": [
+     [
+      22,
+      30
+     ],
+     [
+      23,
+      30
+     ],
+     [
+      24,
+      30
+     ],
+     [
+      25,
+      30
+     ],
+     [
+      21,
+      31
+     ],
+     [
+      22,
+      31
+     ],
+     [
+      23,
+      31
+     ],
+     [
+      24,
+      31
+     ],
+     [
+      25,
+      31
+     ],
+     [
+      26,
+      31
+     ],
+     [
+      20,
+      32
+     ],
+     [
+      21,
+      32
+     ],
+     [
+      22,
+      32
+     ],
+     [
+      23,
+      32
+     ],
+     [
+      20,
+      33
+     ],
+     [
+      21,
+      33
+     ],
+     [
+      20,
+      34
+     ]
+    ]
+   }
+  ]
+ }
+]
