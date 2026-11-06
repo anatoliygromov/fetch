@@ -72,3 +72,9 @@ Built pieces: `python3 -I tools/build_dt_props.py` (parts drawn once and stamped
 `frames_before/` (base dff15cf) and `frames_after/`: the street camera (y 240) at x 280, 560, 1060, 1260, 1880, 2200,
 2560, 2760, 3260 (`tools/dt_sample_frames.sh`). Not touched here: the tables, awnings, houses, door, gate and bollards
 (another track).
+
+## Size sheet
+
+`size_sheet.png` (`python3 -I tools/dt_props_size_sheet.py docs/review/06nov/dt_props/size_sheet.png`): every finished
+piece beside Pepper's real sprite (52 x 38) on one ground line, at 1x and at 4x, with a 1 m (46 px) bar. The parasol
+canopies stand on the ground line here; in the game they sit on their poles at the boxes' heights.
