@@ -1613,8 +1613,35 @@ local function drawFork(p, t, ox)
   tipTwig(x1, y, 1); tipTwig(x0 - 1, y, -1)
 end
 
+-- (art/cp-built-06nov) the built art of the walks, the arbour and the play tower (tools/build_cp_built.py, 0
+-- credits): riverwalk/cp_built.lua lists, per box, the images drawn instead of the code drawings below (file, top left
+-- in the world, faded to the back haze or not). A box that is not in the list (it moved) or a missing file keeps the
+-- code drawing, so nothing Pepper stands on can lose its art.
+local CB, CBI = nil, {}
+local function built(p, part)
+  if CB == nil then CB = love.filesystem.getInfo("cp_built.lua") and require("cp_built") or false end
+  if not CB then return nil end
+  local e = CB[("%d,%d,%d,%d"):format(p.x0, p.y0, p.x1, p.y1)]
+  local f = e and e[part]
+  if not f then return nil end
+  local key = f[1] .. (f[4] and ("/" .. Look.key) or "")
+  if CBI[key] == nil then
+    local path = "art/scene/" .. f[1] .. ".png"
+    CBI[key] = love.filesystem.getInfo(path) and newImg(f[4] and Sc.fadeData(love.image.newImageData(path)) or path) or false
+  end
+  if not CBI[key] then return nil end
+  return CBI[key], f[2], f[3], e
+end
+Sc.built = built
+
 -- a plank walk: the deck (crisp), a rope hand-rail on posts behind Pepper
 local function drawWalk(p, ox)
+  local ri, rx, ry = built(p, "rail")
+  local di, dx, dy_ = built(p, "deck")
+  if ri and di then
+    lg.setColor(1, 1, 1, 1); lg.draw(ri, rx - ox, ry); lg.draw(di, dx - ox, dy_)
+    return
+  end
   local x0, x1, y = p.x0 - ox, p.x1 - ox, p.y0
   local hgt = p.y1 - p.y0
   local w = x1 - x0
@@ -1648,6 +1675,13 @@ end
 -- decision 8 a, owner 26 Oct; they were INK outlined and unfaded, the darkest decoration in the level)
 local function drawWalkLegs(p, ox, foot, world)
   local floorY = world and world.height or (foot + 56)
+  local li, lx_, ly, e = built(p, "legs")
+  if li then
+    lg.setColor(1, 1, 1, 1); lg.draw(li, lx_ - ox, ly)
+    lg.setColor(0.33, 0.47, 0.52, 0.55)                               -- under the surface: the water's colour over it
+    for _, w in ipairs(e.wet or {}) do lg.rectangle("fill", w[1] - ox, foot + 24, w[2], floorY - foot - 24) end
+    return
+  end
   local c1, c2 = fadeC({ 0.30, 0.24, 0.20 }), fadeC({ 0.42, 0.34, 0.27 })     -- timber, its lit left edge
   local c3 = { c1[1] * 0.78, c1[2] * 0.78, c1[3] * 0.78 }                    -- its shaded right edge
   local tie = fadeC({ 0.36, 0.29, 0.23 })
@@ -1672,6 +1706,8 @@ end
 
 -- the rose arbour: a slat (crisp), its posts and roses (faded, behind)
 local function drawSlat(p, ox)
+  local si, sx, sy = built(p, "slat")
+  if si then lg.setColor(1, 1, 1, 1); lg.draw(si, sx - ox, sy); return end
   local x0, x1, y, hgt = p.x0 - ox, p.x1 - ox, p.y0, p.y1 - p.y0
   lg.setColor(INK); lg.rectangle("fill", x0 - 1, y - 1, x1 - x0 + 2, hgt + 2)
   lg.setColor(hex("e9e2d2")); lg.rectangle("fill", x0, y, x1 - x0, hgt)
@@ -1683,6 +1719,8 @@ local function drawSlat(p, ox)
   end
 end
 local function drawSlatPosts(p, ox, foot)
+  local pi_, px_, py = built(p, "posts")
+  if pi_ then lg.setColor(1, 1, 1, 1); lg.draw(pi_, px_ - ox, py); return end
   for _, px in ipairs({ p.x0 + 2, p.x1 - 7 }) do
     local x = px - ox
     lg.setColor(fadeC(hex("cfc6b3"))); lg.rectangle("fill", x, p.y1, 5, foot - p.y1)
@@ -1697,6 +1735,8 @@ end
 
 -- the play tower: a yellow deck (crisp), grey posts (crisp, as the slide tower's)
 local function drawDeck(p, ox)
+  local di, dx, dy_ = built(p, "deck")
+  if di then lg.setColor(1, 1, 1, 1); lg.draw(di, dx - ox, dy_); return end
   local x0, x1, y, hgt = p.x0 - ox, p.x1 - ox, p.y0, p.y1 - p.y0
   lg.setColor(INK); lg.rectangle("fill", x0 - 1, y - 1, x1 - x0 + 2, hgt + 2)
   lg.setColor(DECK[1]); lg.rectangle("fill", x0, y, x1 - x0, hgt)
@@ -1706,6 +1746,8 @@ end
 -- (art/placement) a post goes down to the path (foot), behind the slide tower's art: it stopped in the air at the
 -- cage's top; top: where it starts (its deck), default its box's top
 local function drawTowerPost(t, ox, foot, top)
+  local ti, tx, ty = built(t, "post")
+  if ti then lg.setColor(1, 1, 1, 1); lg.draw(ti, tx - ox, ty); return end
   local x, w = t.x0 - ox, t.x1 - t.x0
   local y0, y1 = top or t.y0, math.max(t.y1, foot or t.y1)
   lg.setColor(INK); lg.rectangle("fill", x - 1, y0, w + 2, y1 - y0)

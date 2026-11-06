@@ -1,0 +1,23 @@
+{
+ "name": "cp_alder_walk",
+ "level": "citypark_tall",
+ "layer": "play",
+ "kind": "prop",
+ "real_height_m": 1.0,
+ "target_px": [
+  346,
+  8
+ ],
+ "tier": "C",
+ "family": "cp_built",
+ "method": "built by rule, tools/build_cp_built.py: deck (play, outlined), rope rail (decoration), legs (decoration, faded)",
+ "checks_px": {
+  "deck": "box 344 x 6 + outline",
+  "rail": "46 (1 m), posts at a 42 px pitch",
+  "legs": "6 px under every post"
+ },
+ "slot": {
+  "file": "riverwalk/art/scene/cp_walk1968_deck.png",
+  "where": "ALDER WALK x 1968-2312 y 200-206 (and cp_walk1968_rail, cp_walk1968_legs; riverwalk/cp_built.lua)"
+ }
+}

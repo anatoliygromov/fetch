@@ -1,0 +1,23 @@
+{
+ "name": "park_swings",
+ "level": "citypark_tall",
+ "layer": "back",
+ "kind": "prop",
+ "real_height_m": 2.3,
+ "target_px": [
+  84,
+  106
+ ],
+ "tier": "C",
+ "family": "cp_built",
+ "method": "built by rule, tools/build_cp_built.py; triage: asset_qa WARN (noise, stray, blotches, pinholes) and a mottled rust render",
+ "checks_px": {
+  "beam top": 106,
+  "seat": "16 x 3, 21 px off the ground",
+  "legs": "4 px, splay 1 in 8"
+ },
+ "slot": {
+  "file": "riverwalk/art/scene/park_swings.png",
+  "where": "City Park tall SWINGS x 2804-2876, centred, bottom on the back props line"
+ }
+}

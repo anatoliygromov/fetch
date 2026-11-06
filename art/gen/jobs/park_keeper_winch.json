@@ -1,0 +1,18 @@
+{
+ "name": "park_keeper_winch",
+ "level": "citypark_tall",
+ "layer": "back",
+ "kind": "character",
+ "real_height_m": 1.7,
+ "target_px": [
+  640,
+  80
+ ],
+ "tier": "C",
+ "family": "cp_built",
+ "method": "hand fix by rule, tools/fix_cp_winch.py, edits in art/source/park_keeper_winch/edits.json; board fix (a colour lost in one frame)",
+ "slot": {
+  "file": "riverwalk/art/scene/park_keeper_winch.png",
+  "where": "City Park tall WINCH x 946-966, 8 frames of 80 x 80, mirrored, faded 35 %"
+ }
+}
