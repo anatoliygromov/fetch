@@ -1215,8 +1215,180 @@ end
 local BARK = { hex("7a5536"), hex("a3774c"), hex("523823") }
 local INK = { 29 / 255, 24 / 255, 22 / 255 }
 local LEAF = { hex("d9822b"), hex("b8551f"), hex("e2a53a") }
+-- (6 Nov, cp_boughs_06nov) the City Park climbing parts as art: one SpriteCook parts sheet of an old oak, cut 1:1 on
+-- its own grid (tools/cut_cp_boughs.py) and made into parts by rule (tools/build_cp_boughs.py; sizes in
+-- cp_boughs_data.lua). The limbs are whole columns of a straight bark strip laid along the SAME boxes: each column's
+-- top is the ledge's top row, its rows taken from the strip's top and bottom (8 at the trunk, one fewer every 16 px
+-- out, 4 at the tip), the 1 px ink round the play part, a rounded tip at a free end. Where a limb lies on its trunk
+-- it takes the trunk's own fade and no ink, so it grows out of the tree instead of lying in front of it. Trunks are
+-- the oak trunk art (33 px, true scale), faded as the back. Each drawing function keeps its code as the fallback.
+local CPB                                                          -- nil: not looked for; false: a file is missing
+local CPB_TI                                                       -- the tier being drawn (its trunks and ledges)
+local function cpb()
+  if CPB == nil then
+    CPB = false
+    local ok, D = pcall(require, "cp_boughs_data")
+    if not ok then return false end
+    local I = { D = D, fd = {} }
+    for _, n in ipairs({ "limb", "limbx", "low", "nest", "stump", "trunk" }) do
+      if not love.filesystem.getInfo("art/scene/cp_bough_" .. n .. ".png") then return false end
+      I[n] = newImg("art/scene/cp_bough_" .. n .. ".png")
+    end
+    CPB = I
+  end
+  return CPB
+end
+local function cpbFaded(A, n, k)                                   -- a part faded k of the way to the back's haze
+  local key = n .. "/" .. tostring(k) .. "/" .. Look.key
+  if not A.fd[key] then A.fd[key] = newImg(Sc.fadeData(love.image.newImageData("art/scene/cp_bough_" .. n .. ".png"), k)) end
+  return A.fd[key]
+end
+local CPBQ = {}                                                    -- quads, by image and rectangle
+local function cpbQuad(im, x, y, w, h)
+  local k = tostring(im) .. x .. "," .. y .. "," .. w .. "," .. h
+  local q = CPBQ[k]
+  if not q then q = lg.newQuad(x, y, w, h, im:getDimensions()); CPBQ[k] = q end
+  return q
+end
+-- the trunk t as drawn: its world x span and the fade of its bark (an art tree's own trunk and fade, else the oak
+-- trunk art at the back's fade); fake: no trunk at all
+local function cpbTrunkSpan(A, t)
+  if not t or t.fake then return nil end
+  local cx = (t.x0 + t.x1) / 2
+  for _, u in ipairs(CPB_TI and CPB_TI.trunks or {}) do
+    if u.hasArt and u.artW and math.abs((u.x0 + u.x1) / 2 - cx) < 4 then
+      local a = math.floor(u.artCx - u.artW / 2)
+      return a, a + u.artW, 0.28
+    end
+  end
+  local tw = A.D.trunk.tw
+  local a = math.floor(cx - tw / 2)
+  return a, a + tw, Sc.fadeK("back")
+end
+local function cpbCrossed(q)                                      -- a trunk runs through this ledge (a fork)
+  for _, t in ipairs(CPB_TI and CPB_TI.trunks or {}) do if t.x0 < q.x1 and t.x1 > q.x0 then return true end end
+end
+-- a tier branch at the same height that meets this one at its left (-1) or right (1) end: the two run on as one limb
+-- (a gap of up to 60 px only when the other is a branch reaching back to its trunk across it)
+local function cpbJoin(p, side)
+  for _, q in ipairs(CPB_TI and CPB_TI.ledges or {}) do
+    if q ~= p and q.y0 == p.y0 and CPB_TI.role[q] == "branch" then
+      local gap = side > 0 and (q.x0 - p.x1) or (p.x0 - q.x1)
+      if gap >= -2 and (gap <= 12 or (gap <= 60 and not cpbCrossed(q))) then return q end
+    end
+  end
+end
+-- one row less every 16 px away from the trunk (8 on it, 4 at least)
+local function cpbThick(x, ta, tb, R)
+  if not ta then return R end
+  local d = math.max(0, ta - x, x - (tb - 1))
+  return math.max(math.min(4, R), R - math.floor(d / 16))
+end
+-- columns { x, top, t, k (nil: in front, inked; else the fade of the trunk it lies on) } of strip n, whole columns
+-- in world order (a joined limb stays continuous), runs of equal columns as one quad
+local function cpbDraw(A, n, cols, ox)
+  local d = A.D[n]; local R, W = d.rows, d.w - 2
+  lg.setColor(INK)
+  for _, c in ipairs(cols) do if not c.k then lg.rectangle("fill", c.x - 1 - ox, c.top - 1, 3, c.t + 2) end end
+  lg.setColor(1, 1, 1, 1)
+  local i = 1
+  while i <= #cols do
+    local c = cols[i]
+    local j = i
+    local sc = 1 + c.x % W
+    while j < #cols do
+      local q = cols[j + 1]
+      if q.x ~= cols[j].x + 1 or q.top ~= c.top or q.t ~= c.t or q.k ~= c.k or 1 + q.x % W ~= sc + (j + 1 - i) then break end
+      j = j + 1
+    end
+    local wdt = j - i + 1
+    local im = c.k and cpbFaded(A, n, c.k) or A[n]
+    if c.t <= R then
+      local a = math.ceil(c.t / 2); local b = c.t - a
+      lg.draw(im, cpbQuad(im, sc, 1, wdt, a), c.x - ox, c.top)
+      if b > 0 then lg.draw(im, cpbQuad(im, sc, R + 1 - b, wdt, b), c.x - ox, c.top + a) end
+    else                                                            -- a crotch: the strip's top half, its lower middle
+      local h = math.floor(R / 2)                                   -- row stamped down, its bottom half
+      lg.draw(im, cpbQuad(im, sc, 1, wdt, h), c.x - ox, c.top)
+      for y = 0, c.t - R - 1 do lg.draw(im, cpbQuad(im, sc, h + 1, wdt, 1), c.x - ox, c.top + h + y) end
+      lg.draw(im, cpbQuad(im, sc, h + 1, wdt, R - h), c.x - ox, c.top + c.t - (R - h))
+    end
+    i = j + 1
+  end
+end
+-- a rounded free end past x (dir 1: to the right, -1: to the left), with a short twig rising out of it
+local function cpbTip(cols, x, top, dir, R)
+  if R > 8 then                                                     -- the low bough: its thick end rounded off
+    cols[#cols + 1] = { x = x + dir, top = top + 2, t = R - 4 }
+    cols[#cols + 1] = { x = x + 2 * dir, top = top + 5, t = R - 9 }
+  else
+    cols[#cols + 1] = { x = x + dir, top = top, t = 3 }
+    cols[#cols + 1] = { x = x + 2 * dir, top = top + 1, t = 2 }
+    for i = 1, 4 do cols[#cols + 1] = { x = x + (2 + i) * dir, top = top - i + 1, t = 1, twig = true } end
+  end
+end
+-- the limb thinning to its free end: 4 rows at the end, one more every 3 columns back (the underside curves up)
+local function cpbTaper(t, d) return math.min(t, 4 + math.floor(d / 3)) end
+-- the crotch under a limb where it leaves its trunk: the underside curves down into the trunk's edge
+local function cpbCrotch(x, ta, tb)
+  if not ta then return 0 end
+  local d = x < ta and (ta - 1 - x) or (x >= tb and (x - tb) or -1)
+  if d < 0 or d > 6 then return 0 end
+  return math.floor((7 - d) * (7 - d) / 6)
+end
+local function cpbSort(cols) table.sort(cols, function(a, b) return a.x < b.x end) end
+
 local function drawBranch(p, trunk, camx)
   local side = ((p.x0 + p.x1) / 2 < (trunk.x0 + trunk.x1) / 2) and -1 or 1
+  local A = cpb()
+  if A then                                                         -- (6 Nov) the art: the box, the dip to the trunk, the
+    local ox = math.floor(camx)                                     -- part on the trunk; a rounded tip at the free end
+    local n = (trunk.art or trunk.x1 - trunk.x0 >= 24) and "limbx" or "limb"
+    local ta, tb, k = cpbTrunkSpan(A, trunk)
+    local tc = math.floor((trunk.x0 + trunk.x1) / 2)
+    local cols = {}
+    -- from the box's trunk end to the trunk: an earlier limb at this height there (a fork's arm) is joined instead
+    local near = side > 0 and p.x0 or p.x1 - 1
+    local stop, flat = side > 0 and tc or tc, false
+    for _, q in ipairs(CPB_TI and CPB_TI.ledges or {}) do
+      if q ~= p and q.y0 == p.y0 and CPB_TI.role[q] == "branch" and ((side > 0 and q.x1 > tb - 1 and q.x1 <= p.x0 + 2) or (side < 0 and q.x0 < ta + 1 and q.x0 >= p.x1 - 2)) then
+        stop, flat = side > 0 and q.x1 or q.x0 - 1, true
+      end
+    end
+    local a, b = side > 0 and tb or p.x1, side > 0 and p.x0 - 1 or ta - 1      -- the dip, between trunk and box
+    local nn = b - a + 1
+    local function drop(x)
+      if flat or x < a or x > b or nn <= 6 then return 0 end
+      local d = side > 0 and (b - x) or (x - a)
+      return math.floor(6 * d / nn + 0.5)
+    end
+    local x0, x1 = side > 0 and stop or p.x0, side > 0 and p.x1 - 1 or stop
+    for x = x0, x1 do
+      local onTrunk = not flat and x >= ta and x < tb
+      local dd = onTrunk and drop(side > 0 and tb or ta - 1) or drop(x)
+      local t = cpbThick(x, ta, tb, 8)
+      local tipd = side > 0 and (p.x1 - 1 - x) or (x - p.x0)
+      if not cpbJoin(p, side) then t = cpbTaper(t, tipd) end
+      if not onTrunk and not flat then t = t + cpbCrotch(x, ta, tb) end
+      cols[#cols + 1] = { x = x, top = p.y0 + dd, t = t, k = onTrunk and k or nil }
+    end
+    if not cpbJoin(p, side) then cpbTip(cols, side > 0 and p.x1 - 1 or p.x0, p.y0, side, 8) end
+    cpbSort(cols)
+    cpbDraw(A, n, cols, ox)
+    -- an art tree's own pixels drawn again over the limb's end on it: the limb goes into its trunk or crown
+    for _, at_ in ipairs(CPB_TI and CPB_TI.arttrees or {}) do
+      if not flat and ta and math.abs(at_.cx - tc) < 4 and at_.art then
+        local im = at_.art.im
+        local qx, qy = math.max(0, ta - at_.x0), math.max(0, p.y0 - 4 - at_.y0)
+        local qw, qh = math.min(tb - ta, at_.art.w - qx), 22
+        if qw > 0 and qy + qh <= at_.art.h then
+          lg.setColor(1, 1, 1, 1)
+          lg.draw(im, cpbQuad(im, qx, qy, qw, qh), at_.x0 + qx - ox, at_.y0 + qy)
+        end
+      end
+    end
+    return
+  end
   local cols = {}                                                 -- x -> top, thickness
   local len = p.x1 - p.x0
   for x = p.x0, p.x1 - 1 do
@@ -1486,9 +1658,42 @@ local function trunkOf(TI, p)
 end
 
 -- a faded trunk from y top down to the path: bark lines, a lit left edge, a shaded right edge, roots that flare
+local CPBT = {}                                                    -- (6 Nov) the trunk art, faded as the back, per script
 local function drawTrunk(t, top, foot, ox, big)
   local x0, w = t.x0 - ox, t.x1 - t.x0
   local h = foot - top
+  local A = cpb()
+  if A then                                                         -- (6 Nov) the art: the trunk of the nearest width,
+    local best, bd                                                  -- its foot on the path, its top the trunk's own
+    for _, n in ipairs({ "trunk" }) do                              -- top rows again above it (round 2: every trunk the
+                                                                    -- oak trunk, 33 px, true scale for a park tree)
+      local dd = A.D[n] and math.abs(A.D[n].tw - w)
+      if dd and (not bd or dd < bd) then best, bd = n, dd end
+    end
+    local key = best and (best .. "/" .. Look.key)
+    if best and CPBT[key] == nil then
+      local f = "art/scene/cp_bough_" .. best .. ".png"
+      CPBT[key] = love.filesystem.getInfo(f) and newImg(Sc.fadeData(love.image.newImageData(f))) or false
+    end
+    local im = best and CPBT[key]
+    if im then
+      local d = A.D[best]
+      local ix = math.floor(x0 + w / 2 - d.x0 - d.tw / 2)
+      lg.setColor(1, 1, 1, 1)
+      if h <= d.h then lg.draw(im, cpbQuad(im, 0, d.h - h, d.w, h), ix, top)
+      else
+        lg.draw(im, ix, foot - d.h)
+        local seg = math.min(64, d.h - 20)                          -- the upper rows (no foot), stacked above
+        local y = foot - d.h
+        while y > top do
+          local s = math.min(seg, y - top)
+          lg.draw(im, cpbQuad(im, 0, seg - s, d.w, s), ix, y - s)
+          y = y - s
+        end
+      end
+      return
+    end
+  end
   for y = top, foot - 1 do
     local fl = 0
     local e = foot - y
@@ -1598,6 +1803,29 @@ end
 -- a bough lying across its trunk: 6 px thick over the trunk, 4 at the tips, twigs at both tips; the trunk's top
 -- shows under it (it grows out of the trunk)
 local function drawFork(p, t, ox)
+  local A = cpb()
+  if A then                                                         -- (6 Nov) the art: one limb across its trunk, on the
+    local ta, tb, k = cpbTrunkSpan(A, t)                            -- trunk in the trunk's fade, tapering to rounded tips
+    local n = (t.art or t.x1 - t.x0 >= 24) and "limbx" or "limb"
+    local cols = {}
+    for x = p.x0, p.x1 - 1 do
+      local tt = cpbThick(x, ta, tb, 8)
+      local jl, jr0 = cpbJoin(p, -1), cpbJoin(p, 1)
+      if not jl then tt = cpbTaper(tt, x - p.x0) end
+      if not jr0 then tt = cpbTaper(tt, p.x1 - 1 - x) end
+      local on = ta and x >= ta and x < tb
+      if not on then tt = tt + cpbCrotch(x, ta, tb) end
+      cols[#cols + 1] = { x = x, top = p.y0, t = tt, k = on and k or nil }
+    end
+    local jr = cpbJoin(p, 1)
+    if jr then                                                      -- runs on into the next limb: no tip, the gap filled
+      for x = p.x1, jr.x0 - 1 do cols[#cols + 1] = { x = x, top = p.y0, t = cpbThick(x, ta, tb, 8) } end
+    else cpbTip(cols, p.x1 - 1, p.y0, 1, 8) end
+    if not cpbJoin(p, -1) then cpbTip(cols, p.x0, p.y0, -1, 8) end
+    cpbSort(cols)
+    cpbDraw(A, n, cols, ox)
+    return
+  end
   local x0, x1, y = p.x0 - ox, p.x1 - ox, p.y0
   local tc = (t.x0 + t.x1) / 2 - ox
   local half = math.max(tc - x0, x1 - tc)
@@ -1763,6 +1991,24 @@ end
 local function drawLowBough(p, t, ox)
   local x0, x1, y0, y1 = p.x0 - ox, p.x1 - ox, p.y0, p.y1
   local side = t and ((t.x0 + t.x1) / 2 > (p.x0 + p.x1) / 2) and 1 or -1
+  local A = cpb()
+  if A then                                                         -- (6 Nov) the art: 16 rows over its box (32 x 16),
+    local ta, tb, k = cpbTrunkSpan(A, t)                            -- its free end rounded, then rising into its trunk
+    local cols = {}                                                 -- (round 2: level, an elbow over the whole trunk)
+    local far = ta and (side > 0 and tb - 1 or ta) or (side > 0 and p.x1 + 26 or p.x0 - 27)
+    local xa, xb = side > 0 and p.x0 or far, side > 0 and far or p.x1 - 1
+    for x = xa, xb do
+      local on = ta and x >= ta and x < tb
+      local tt = 16 + (on and 0 or math.floor(cpbCrotch(x, ta, tb) / 2))
+      local edge = side > 0 and (x - (tb - 1)) or (ta - x)           -- the elbow's outer corner rounded over the trunk
+      local top = p.y0 + ((on and edge > -3) and (3 + edge) or 0)
+      cols[#cols + 1] = { x = x, top = top, t = tt - (top - p.y0), k = on and k or nil }
+    end
+    cpbTip(cols, side > 0 and p.x0 or p.x1 - 1, p.y0, -side, 16)
+    cpbSort(cols)
+    cpbDraw(A, "low", cols, ox)
+    return
+  end
   -- (art/placement) front-on, as a bough is seen from the side: over its box it lies level (the top Pepper stands
   -- on, the gap she crawls under), its free end rounded off; towards its trunk it bends up into the leaves, the
   -- underside curving up faster than the top, so it thins from 16 px to about 7 (was a slab rising 1 px a column,
@@ -1821,6 +2067,12 @@ end
 local function drawNest(p, ox)
   local x0, x1, y0, y1 = p.x0 - ox, p.x1 - ox, p.y0, p.y1
   local w = x1 - x0
+  local A = cpb()
+  if A then                                                         -- (6 Nov) the art: the bowl on its bough, centred
+    lg.setColor(1, 1, 1, 1)
+    lg.draw(A.nest, math.floor((x0 + x1) / 2 - A.D.nest.w / 2), y1 - A.D.nest.h)
+    return
+  end
   lg.setColor(INK)
   for x = x0 - 1, x1 do
     local u = (x - x0 + 0.5) / w * 2 - 1
@@ -1862,7 +2114,7 @@ local function treeArtImg(n)
     for x = 0, w - 1 do local _, _, _, a = d:getPixel(x, y); if a > 0 then x0 = x0 or x; x1 = x end end
     rows[y] = x0 and { x0, x1 } or false
   end
-  local t = { im = newImg(Sc.fadeData(d, TREE_FADE)), w = w, h = h, rows = rows, cx = cnt > 0 and math.floor(sx / cnt + 0.5) or math.floor(w / 2) }
+  local t = { im = newImg(Sc.fadeData(d, TREE_FADE)), w = w, h = h, rows = rows, cx = cnt > 0 and math.floor(sx / cnt + 0.5) or math.floor(w / 2), tw = cnt }
   TA_IMG[key] = t
   return t
 end
@@ -1874,9 +2126,10 @@ local function treeArt(def, TI)
     if n and treeArtImg(n) then
       t.hasArt = true
       local a = treeArtImg(n)
+      t.artCx, t.artW = math.floor((t.x0 + t.x1) / 2), a.tw            -- (6 Nov) its drawn trunk, for the limbs on it
       local cx = math.floor((t.x0 + t.x1) / 2)
       TI.arttrees[#TI.arttrees + 1] = { name = n, cx = cx, x0 = cx - a.cx, x1 = cx - a.cx + a.w, oak = t.art,
-        y0 = TI.foot - 9 - a.h, rows = a.rows }
+        y0 = TI.foot - 9 - a.h, rows = a.rows, art = a }
     end
   end
   table.sort(TI.arttrees, function(a, b) return (a.oak and 1 or 0) < (b.oak and 1 or 0) end)   -- the oak in front
@@ -1950,6 +2203,7 @@ end
 -- a prop of the tier (drawPropArt): true if it is one (drawn here, or as decoration by Sc.drawTreetops)
 local function drawTierProp(p, camx, def)
   local TI = tier(def)
+  CPB_TI = TI or nil                                                -- (6 Nov) the climbing parts look up trunks and ledges
   local r = TI and TI.role[p]
   if not r then return false end
   local ox = math.floor(camx)
@@ -2032,6 +2286,11 @@ function Sc.drawPropArt(p, camx, def, kicked)
     elseif n == "LOG" then shadowUnder(p, camx); at(T.log, x, p.y0 - 4)
     elseif n == "STUMP" then                                      -- a tree stump (r6/levels: the tall City Park's
       shadowUnder(p, camx)                                        -- practice ledge), drawn in code: bark, a cut top
+      local A = cpb()
+      if A then                                                   -- (6 Nov) the art: its body over the box, its cut top
+        at(A.stump, math.floor(x) - A.D.stump.body0, p.y0 - 1)   -- the box's top row, its ink on the path line
+        return
+      end
       local sx, sy, sw, sh = math.floor(x), p.y0, w, p.y1 - p.y0
       lg.setColor(INK); lg.rectangle("fill", sx - 1, sy - 1, sw + 2, sh + 1)
       lg.setColor(0.42, 0.26, 0.14); lg.rectangle("fill", sx, sy + 3, sw, sh - 3)

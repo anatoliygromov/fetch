@@ -1,0 +1,31 @@
+{
+ "name": "cp_boughs",
+ "family": "cp_boughs_06nov",
+ "tier": "A",
+ "steps": {
+  "spec": {
+   "time": "2026-11-06 18:50"
+  },
+  "blockout": {
+   "time": "2026-11-06 18:50"
+  },
+  "preflight": {
+   "time": "2026-11-06 18:50"
+  },
+  "probe": {
+   "render": "art/gen/renders/cp_boughs_a_raw.png",
+   "time": "2026-11-06 18:52"
+  },
+  "cut": {
+   "time": "2026-11-06 19:16"
+  },
+  "ingame": {
+   "frame": "docs/review/06nov/cp_boughs/frames/after_y000_x2560_1x.png",
+   "time": "2026-11-06 19:16"
+  },
+  "polish": {
+   "aseprite": "art/source/cp_boughs/cp_bough_limb.aseprite",
+   "time": "2026-11-06 19:16"
+  }
+ }
+}

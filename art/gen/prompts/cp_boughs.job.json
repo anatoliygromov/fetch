@@ -1,0 +1,33 @@
+{
+ "name": "cp_boughs",
+ "model": "SpriteCook GPT 2.5 Sunburst 2K medium (follows the reference grid)",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/cp_boughs_blockout.png",
+  "art/gen/style_card_citypark.png"
+ ],
+ "prompt_file": "art/gen/prompts/cp_boughs.txt",
+ "k": null,
+ "frame": [
+  512,
+  512
+ ],
+ "credits": 60,
+ "tool": "spritecook",
+ "family": "cp_boughs_06nov",
+ "tier": "A",
+ "slot": {
+  "file": "riverwalk/art/scene/cp_bough_*.png (cut into parts: limb, fork, low bough, leaf clumps, nest, trunks, stump)",
+  "where": "City Park tall, the climbing tree parts drawn by scene.lua drawBranch, drawFork, tipTwig, drawLowBough, drawNest, drawTrunk and the STUMP; props BRANCH, BOUGH, LOW BOUGH, NEST BOUGH, TWIG, NEST, CROWN, STUMP and the unnamed oak ledges, screens 2 to 9"
+ },
+ "spritecook": {
+  "model": "gpt-image-2.5-sunburst",
+  "pixel": true,
+  "resolution": "2K",
+  "quality": "medium",
+  "width": 403,
+  "height": 484
+ },
+ "ledger_job": "cp_boughs@1106-185013"
+}

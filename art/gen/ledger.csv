@@ -1,19 +1,31 @@
 time,kind,job,asset,family,tool,model,credits,status,note
-2026-10-05 12:00,plan,al_proto_0305,al_proto_0305,history-artlist,artlist,history,13120,planned,backfill from claude/credit-audit-25oct.md
-2026-10-05 12:00,spent,al_proto_0305,,,,,13120,spent,"3-5 Oct prototypes: street-poc skylines, dog/cat sheets, 8 front-row buildings, layer edits; removed at v0.1"
-2026-10-05 12:00,verdict,,al_proto_0305,,,,,rejected,"3-5 Oct prototypes: street-poc skylines, dog/cat sheets, 8 front-row buildings, layer edits; removed at v0.1"
 2026-10-05 08:00,plan,al_title_painting,al_title_painting,history-artlist,artlist,history,480,planned,backfill from claude/credit-audit-25oct.md
 2026-10-05 08:00,spent,al_title_painting,,,,,480,spent,"source_title/title_original.png, regridded title on prod/integrate (estimate: one 4K render)"
 2026-10-05 08:00,verdict,,al_title_painting,,,,,in_game,"source_title/title_original.png, regridded title on prod/integrate (estimate: one 4K render)"
+2026-10-05 12:00,plan,al_proto_0305,al_proto_0305,history-artlist,artlist,history,13120,planned,backfill from claude/credit-audit-25oct.md
+2026-10-05 12:00,spent,al_proto_0305,,,,,13120,spent,"3-5 Oct prototypes: street-poc skylines, dog/cat sheets, 8 front-row buildings, layer edits; removed at v0.1"
+2026-10-05 12:00,verdict,,al_proto_0305,,,,,rejected,"3-5 Oct prototypes: street-poc skylines, dog/cat sheets, 8 front-row buildings, layer edits; removed at v0.1"
 2026-10-05 16:11,plan,al_title_videos,al_title_videos,history-artlist,artlist,history,6600,planned,backfill from claude/credit-audit-25oct.md
 2026-10-05 16:11,spent,al_title_videos,,,,,6600,spent,"3 image-to-video title animations, never used"
 2026-10-05 16:11,verdict,,al_title_videos,,,,,rejected,"3 image-to-video title animations, never used"
+2026-10-06 12:00,plan,sc_superseded,sc_superseded,history-spritecook,spritecook,history,1080,planned,backfill from claude/credit-audit-25oct.md
+2026-10-06 12:00,spent,sc_superseded,,,,,1080,spent,"estimate: replaced v1/v2 props, fences, unused clips, parallel waterfront session"
+2026-10-06 12:00,verdict,,sc_superseded,,,,,rejected,"estimate: replaced v1/v2 props, fences, unused clips, parallel waterfront session"
 2026-10-06 15:30,plan,al_portraits_ref,al_portraits_ref,history-artlist,artlist,history,640,planned,backfill from claude/credit-audit-25oct.md
 2026-10-06 15:30,spent,al_portraits_ref,,,,,640,spent,girl portrait used as SpriteCook reference
 2026-10-06 15:30,verdict,,al_portraits_ref,,,,,reference,girl portrait used as SpriteCook reference
 2026-10-06 15:30,plan,al_portraits_rest,al_portraits_rest,history-artlist,artlist,history,1280,planned,backfill from claude/credit-audit-25oct.md
 2026-10-06 15:30,spent,al_portraits_rest,,,,,1280,spent,Artlist portraits replaced by SpriteCook
 2026-10-06 15:30,verdict,,al_portraits_rest,,,,,rejected,Artlist portraits replaced by SpriteCook
+2026-10-06 16:00,plan,sc_portrait_dead_ends,sc_portrait_dead_ends,history-spritecook,spritecook,history,260,planned,backfill from claude/credit-audit-25oct.md
+2026-10-06 16:00,spent,sc_portrait_dead_ends,,,,,260,spent,portrait dead ends and the failed talk animation
+2026-10-06 16:00,verdict,,sc_portrait_dead_ends,,,,,rejected,portrait dead ends and the failed talk animation
+2026-10-18 12:00,plan,sc_in_game,sc_in_game,history-spritecook,spritecook,history,2320,planned,backfill from claude/credit-audit-25oct.md
+2026-10-18 12:00,spent,sc_in_game,,,,,2320,spent,"5-19 Oct: Pepper and Mia clips, portraits, River Walk, City Park, Downtown, cat, keepers, critters (estimate from shipped sources)"
+2026-10-18 12:00,verdict,,sc_in_game,,,,,in_game,"5-19 Oct: Pepper and Mia clips, portraits, River Walk, City Park, Downtown, cat, keepers, critters (estimate from shipped sources)"
+2026-10-23 05:10,plan,sc_batch1,sc_batch1,history-spritecook,spritecook,history,408,planned,backfill from claude/credit-audit-25oct.md
+2026-10-23 05:10,spent,sc_batch1,,,,,408,spent,"art batch 1, box-filtered, ""dirty, flushed"""
+2026-10-23 05:10,verdict,,sc_batch1,,,,,rejected,"art batch 1, box-filtered, ""dirty, flushed"""
 2026-10-23 16:30,plan,al_ui_kit,al_ui_kit,history-artlist,artlist,history,3240,planned,backfill from claude/credit-audit-25oct.md
 2026-10-23 16:30,spent,al_ui_kit,,,,,3240,spent,UI kit and HUD mockups; shipped UI redrawn on the grid
 2026-10-23 16:30,verdict,,al_ui_kit,,,,,reference,UI kit and HUD mockups; shipped UI redrawn on the grid
@@ -32,18 +44,6 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-10-25 12:22,plan,al_cyclist_probe,al_cyclist_probe,history-artlist,artlist,history,220,planned,backfill from claude/credit-audit-25oct.md
 2026-10-25 12:22,spent,al_cyclist_probe,,,,,220,spent,"blockout probe, NB2 + Pro; Pro pick failed the eye review"
 2026-10-25 12:22,verdict,,al_cyclist_probe,,,,,pending,"blockout probe, NB2 + Pro; Pro pick failed the eye review"
-2026-10-18 12:00,plan,sc_in_game,sc_in_game,history-spritecook,spritecook,history,2320,planned,backfill from claude/credit-audit-25oct.md
-2026-10-18 12:00,spent,sc_in_game,,,,,2320,spent,"5-19 Oct: Pepper and Mia clips, portraits, River Walk, City Park, Downtown, cat, keepers, critters (estimate from shipped sources)"
-2026-10-18 12:00,verdict,,sc_in_game,,,,,in_game,"5-19 Oct: Pepper and Mia clips, portraits, River Walk, City Park, Downtown, cat, keepers, critters (estimate from shipped sources)"
-2026-10-23 05:10,plan,sc_batch1,sc_batch1,history-spritecook,spritecook,history,408,planned,backfill from claude/credit-audit-25oct.md
-2026-10-23 05:10,spent,sc_batch1,,,,,408,spent,"art batch 1, box-filtered, ""dirty, flushed"""
-2026-10-23 05:10,verdict,,sc_batch1,,,,,rejected,"art batch 1, box-filtered, ""dirty, flushed"""
-2026-10-06 16:00,plan,sc_portrait_dead_ends,sc_portrait_dead_ends,history-spritecook,spritecook,history,260,planned,backfill from claude/credit-audit-25oct.md
-2026-10-06 16:00,spent,sc_portrait_dead_ends,,,,,260,spent,portrait dead ends and the failed talk animation
-2026-10-06 16:00,verdict,,sc_portrait_dead_ends,,,,,rejected,portrait dead ends and the failed talk animation
-2026-10-06 12:00,plan,sc_superseded,sc_superseded,history-spritecook,spritecook,history,1080,planned,backfill from claude/credit-audit-25oct.md
-2026-10-06 12:00,spent,sc_superseded,,,,,1080,spent,"estimate: replaced v1/v2 props, fences, unused clips, parallel waterfront session"
-2026-10-06 12:00,verdict,,sc_superseded,,,,,rejected,"estimate: replaced v1/v2 props, fences, unused clips, parallel waterfront session"
 2026-10-25 14:35,plan,rw_lime@1025-143524,rw_lime,rw_front_trees,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,
 2026-10-25 14:36,spent,rw_lime@1025-143524,,,,,24,spent,
 2026-10-25 14:38,plan,rw_lime@1025-143833,rw_lime,rw_front_trees,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,
@@ -52,32 +52,32 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-10-25 14:39,spent,rw_lime@1025-143833,,,,,24,spent,"retry 1: 256 frame, 2 variants"
 2026-11-05 21:55,plan,rw_cyclist_adult@1105-215536,rw_cyclist_adult,rw_traffic,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
 2026-11-05 21:56,spent,rw_cyclist_adult@1105-215536,,,,,24,spent,
+2026-11-05 21:56,plan,cp_lime@1105-215619,cp_lime,cp_sample,spritecook,"SpriteCook Nano Banana 2.1 2K, pixel on",36,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 21:57,spent,cp_lime@1105-215619,,,,,36,spent,
 2026-11-05 22:00,plan,rw_cyclist_adult2@1105-220037,rw_cyclist_adult2,rw_traffic,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
 2026-11-05 22:00,plan,rw_car1@1105-220041,rw_car1,rw_traffic,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
 2026-11-05 22:00,plan,rw_car4@1105-220041,rw_car4,rw_traffic,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
 2026-11-05 22:01,spent,rw_cyclist_adult2@1105-220037,,,,,24,spent,
 2026-11-05 22:01,spent,rw_car1@1105-220041,,,,,24,spent,
+2026-11-05 22:01,plan,cp_oak@1105-220152,cp_oak,cp_sample,spritecook,"SpriteCook Nano Banana 2.1 2K, pixel on",36,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 22:01,plan,cp_midtrees@1105-220153,cp_midtrees,cp_sample,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
 2026-11-05 22:02,spent,rw_car4@1105-220041,,,,,24,spent,
+2026-11-05 22:03,spent,cp_oak@1105-220152,,,,,36,spent,
+2026-11-05 22:03,spent,cp_midtrees@1105-220153,,,,,24,spent,
 2026-11-05 22:04,plan,rw_cyclist_adult_pedal@1105-2210,rw_cyclist_adult,rw_traffic,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"owner 5 Nov 21:45: go use it (pedal loop, 8 frames)"
 2026-11-05 22:04,plan,rw_cyclist_adult2_pedal@1105-2210,rw_cyclist_adult2,rw_traffic,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"owner 5 Nov 21:45: go use it (pedal loop, 8 frames)"
 2026-11-05 22:04,spent,rw_cyclist_adult_pedal@1105-2210,,,,,26,spent,
 2026-11-05 22:04,spent,rw_cyclist_adult2_pedal@1105-2210,,,,,26,spent,
+2026-11-05 22:04,plan,cp_oak@1105-220416,cp_oak,cp_sample,spritecook,"SpriteCook Nano Banana 2.1 2K, pixel on",36,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 22:05,spent,cp_oak@1105-220416,,,,,36,spent,
+2026-11-05 22:18,plan,rw_ferry@1105-221805,rw_ferry,rw_water,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
+2026-11-05 22:19,spent,rw_ferry@1105-221805,,,,,24,spent,
 2026-11-05 22:32,plan,rw_road_rider1@1105-223237,rw_road_rider1,rw_traffic,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45); fix round 1 (producer: 152 left of the track's 300)"
 2026-11-05 22:32,plan,rw_road_rider2@1105-223237,rw_road_rider2,rw_traffic,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45); fix round 1 (producer: 152 left of the track's 300)"
 2026-11-05 22:34,spent,rw_road_rider1@1105-223237,,,,,24,spent,fix round 1: lane rider
 2026-11-05 22:34,spent,rw_road_rider2@1105-223237,,,,,24,spent,fix round 1: lane rider
 2026-11-05 22:35,plan,rw_road_rider2@1105-223501,rw_road_rider2,rw_traffic,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45); fix round 1, retry 1 of the family: both variants came back on a 2-3 px grid (87 and 145 px canvases); the one input changed: style images, the style card only (no promenade rider still)"
 2026-11-05 22:35,spent,rw_road_rider2@1105-223501,,,,,24,spent,"fix round 1, family retry 1"
-2026-11-05 22:18,plan,rw_ferry@1105-221805,rw_ferry,rw_water,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
-2026-11-05 22:19,spent,rw_ferry@1105-221805,,,,,24,spent,
-2026-11-05 21:56,plan,cp_lime@1105-215619,cp_lime,cp_sample,spritecook,"SpriteCook Nano Banana 2.1 2K, pixel on",36,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
-2026-11-05 21:57,spent,cp_lime@1105-215619,,,,,36,spent,
-2026-11-05 22:01,plan,cp_oak@1105-220152,cp_oak,cp_sample,spritecook,"SpriteCook Nano Banana 2.1 2K, pixel on",36,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
-2026-11-05 22:01,plan,cp_midtrees@1105-220153,cp_midtrees,cp_sample,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
-2026-11-05 22:03,spent,cp_oak@1105-220152,,,,,36,spent,
-2026-11-05 22:03,spent,cp_midtrees@1105-220153,,,,,24,spent,
-2026-11-05 22:04,plan,cp_oak@1105-220416,cp_oak,cp_sample,spritecook,"SpriteCook Nano Banana 2.1 2K, pixel on",36,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
-2026-11-05 22:05,spent,cp_oak@1105-220416,,,,,36,spent,
 2026-11-05 22:40,plan,cp_lime@1105-224056,cp_lime,cp_sample,spritecook,SpriteCook GPT 2.5 Sunburst 2K medium (follows the reference grid),52,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
 2026-11-05 22:40,plan,cp_ash@1105-224057,cp_ash,cp_sample,spritecook,SpriteCook GPT 2.5 Sunburst 2K medium (follows the reference grid),52,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
 2026-11-05 22:42,spent,cp_lime@1105-224056,,,,,76,spent,
@@ -88,11 +88,13 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-05 23:03,plan,rw_car5@1105-230350,rw_car5,rw_traffic2,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
 2026-11-05 23:04,spent,rw_car3@1105-230350,,,,,24,spent,
 2026-11-05 23:04,spent,rw_car5@1105-230350,,,,,24,spent,
+2026-11-06 18:50,plan,cp_boughs@1106-185013,cp_boughs,cp_boughs_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 2K medium (follows the reference grid),60,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:51,plan,cp_hedge@1106-185110,cp_hedge,cp_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:51,plan,cp_leaves@1106-185111,cp_leaves,cp_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:51,plan,cp_stone@1106-185111,cp_stone,cp_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:51,plan,cp_hollowlog@1106-185111,cp_hollowlog,cp_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:51,plan,cp_duckboat@1106-185112,cp_duckboat,cp_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:52,spent,cp_boughs@1106-185013,,,,,60,spent,
 2026-11-06 18:53,spent,cp_hedge@1106-185110,,,,,24,spent,
 2026-11-06 18:54,plan,cp_hedge@1106-185442,cp_hedge,cp_props_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),48,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:55,spent,cp_hedge@1106-185442,,,,,48,spent,family retry 1: model NB 2.1 -> GPT 2.5 (NB drew the hedge 2x wide)
