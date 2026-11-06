@@ -47,6 +47,8 @@ return function(api)
       if os.getenv("LOOK_XS") then xs = {}; for v in os.getenv("LOOK_XS"):gmatch("%-?%d+") do xs[#xs + 1] = tonumber(v) end end
       if os.getenv("LOOK_YS") then tiers = {}; for v in os.getenv("LOOK_YS"):gmatch("%-?%d+") do tiers[#tiers + 1] = tonumber(v) end end
       s.bikes = {}; s.bikeT = 99
+      -- (night 6 Nov, cp) LOOK_MAGPIE=k: the magpie sits on its perch k with the ball (card frames of a perch)
+      if os.getenv("LOOK_MAGPIE") and s.def.magpie then s:resetMagpie(tonumber(os.getenv("LOOK_MAGPIE"))) end
       -- (6 Nov, cp_props_06nov) LOOK_KICK=1: every leaf pile drawn as Pepper leaves it after running through
       if os.getenv("LOOK_KICK") then for _, pr in ipairs(s.def.props) do if pr.leaves then s.kicked[pr] = true end end end
       for _, cy in ipairs(tiers) do

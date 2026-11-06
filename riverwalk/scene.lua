@@ -1277,6 +1277,7 @@ function Sc.townArt(style)
   local gw, gd = T.ground:getWidth(), { T.ground:getDimensions() }
   T.bankTop = lg.newQuad(0, 0, gw, style == "park" and 9 or 10, gd[1], gd[2])   -- the lawn / pavement's back edge
   T.bankEarth = lg.newQuad(0, 44, gw, 20, gd[1], gd[2])                        -- earth rows (the pond's far bank)
+  T.bankLawn = lg.newQuad(0, 0, gw, 7, gd[1], gd[2])                           -- the lawn only (a park pond's far side)
   TA[key] = T
   return T
 end
@@ -1406,6 +1407,147 @@ local function farOakImg(T)
   return T.farOak
 end
 
+-- (art/cp-audit-06nov) a park pond's banks, by rule (0 credits). The audit: "the pond reads as a dark pit": a 30 px
+-- band of the earth strata (the ground art's dark rows) over a strip of water, the path ending in a straight cut.
+-- Now the water comes up to a waterline 16 px over its box's top (POND_RISE: the far part of its surface, seen from
+-- the path, the water art's own lighter rows 4-19), under a short bank seen across the pond: the lawn, its lit lip,
+-- a sloping face of sunlit earth going damp and wet down to the water, a row of rounded granite stones along its
+-- foot. At each end the bank curves round to the path (BANK_R px), its wet foot following the shore, and under the
+-- surface the basin's side slopes in (1 px every 3 rows) as submerged earth. Flat colours: the ground art's earth
+-- ramp, the lawn, the stepping stones' granite; no outline (decoration). Nothing Pepper uses moves: the water box,
+-- the path and the stones' boxes are as they were (she still splashes at the box's top, 2 px under the old line).
+Sc.POND_RISE, Sc.BANK_R = 16, 16
+Sc.WINCH_DX = 8                                                   -- (the winch keeper: see WINCH)
+local BANK = { lip = hex("b5ad55"), lawn = hex("9e983f"), dry = hex("d09d68"), damp = hex("bd8354"), wet = hex("8a5a3a"),
+  foot = hex("5e4127"), st1 = hex("c9c2b4"), st15 = hex("b3ac9f"), st2 = hex("a39b8e"), st3 = hex("7a736a"), sub = hex("3d5866"),
+  subEdge = hex("4f6f7a"), rip = hex("d3f2fd"), lit = hex("ddae79") }
+local STONE_W, STONE_H = { 10, 7, 12, 8, 9, 11 }, { 4, 3, 5, 4, 3, 4 }
+-- the far bank's colour at row k (0 at the lawn's lip) of n rows, world column wx; nil: leave it (a stone)
+local function bankRow(k, n, wx)
+  if k == 0 then return BANK.lip end
+  if k <= 2 then return BANK.lawn end
+  if k == 3 then return (wx % 7 < 3) and BANK.lawn or BANK.dry end   -- grass hanging over the lip, a tuft every 7 px
+  if k == 4 then return (wx % 7 == 1) and BANK.lawn or BANK.dry end
+  if k >= n - 1 then return BANK.foot end
+  if k >= n - 3 then return BANK.wet end
+  if k >= math.floor(n / 2) + 1 then return BANK.damp end
+  return BANK.dry
+end
+-- the stones along the bank's foot: one every 29 px of the world, sizes from a fixed list; their bottom row on the
+-- foot row (the waterline). Returns the colour of world column wx at row k from the foot (0 = foot row), or nil
+local function bankStone(wx, k)
+  local i = math.floor(wx / 29)
+  local sw, sh = STONE_W[1 + i % #STONE_W], STONE_H[1 + (i * 5) % #STONE_H]
+  local c0 = i * 29 + (i * 13) % 11
+  local u = wx - c0
+  if u < 0 or u >= sw or k >= sh then return nil end
+  if (u == 0 or u == sw - 1) and (k == sh - 1 or k == 0) then return nil end   -- rounded corners
+  if k == sh - 1 then return BANK.st1 end                         -- its lit top
+  if k == sh - 2 and k > 0 and u < sw - 1 then return BANK.st15 end   -- (round 1) the mid-light under it: the stepping stones' 4 shades
+  if k == 0 or u == sw - 1 then return BANK.st3 end               -- the shaded underside and right side
+  return BANK.st2
+end
+function Sc.drawPondBank(p, camx, d, wbottom)
+  local x0, x1 = math.floor(p.x0 - camx), math.floor(p.x1 - camx)
+  local yb, wt = 179 + d, p.y0 - Sc.POND_RISE                    -- the lawn's lip; the waterline
+  local n = wt - yb
+  local R = Sc.BANK_R
+  local function px(x, y, c) lg.setColor(c); lg.rectangle("fill", x, y, 1, 1) end
+  for x = math.max(x0, -1), math.min(x1 - 1, 320) do
+    local wx = x + math.floor(camx)
+    local i = math.min(x - x0, x1 - 1 - x)                        -- columns from the nearer end of the pond
+    local foot = wt                                               -- where the bank meets the water in this column
+    if i < R then
+      local u = 1 - (i + 0.5) / R
+      foot = wt + math.floor(Sc.POND_RISE * (1 - math.sqrt(math.max(0, 1 - u * u))) + 0.5)
+      -- (night 6 Nov, cp fix round 1: the shore's last column no longer drops straight to the box's top, a 1 px
+      -- vertical cut at the lawn's corner; the curve runs on to the end)
+    end
+    for y = yb, foot - 1 do
+      local k = y - yb
+      local kk = (foot > wt) and math.min(k, n - 4) or k            -- (at the ends the face runs on, damp, to the shore)
+      local c = bankRow(kk, n, wx)
+      if foot > wt and y >= foot - 3 then c = (y == foot - 1) and BANK.foot or (y == foot - 2) and BANK.wet or BANK.lit end
+      if i < 4 and y < foot - 3 and y > yb then c = BANK.lawn end   -- (round 1) the lawn's shoulder runs on round the corner
+      if foot == wt then c = bankStone(wx, foot - 1 - y) or c end
+      px(x, y, c)
+    end
+    if i < R and foot < p.y0 then                                 -- the water's edge along the curved shore: a ripple
+      if (wx + math.floor(foot)) % 3 ~= 0 then px(x, foot, BANK.rip) end
+    elseif i >= R and (wx % 9 < 5) then px(x, wt, BANK.rip) end   -- (and along the far bank, in dashes)
+    local sw = math.floor((wbottom - p.y0) / 3) + 1               -- the basin's sloping side under the surface
+    if i < sw then
+      for y = p.y0 + 3 * i, wbottom - 1 do px(x, y, (y == p.y0 + 3 * i) and BANK.subEdge or BANK.sub) end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+
+-- (night 6 Nov, cp track; the design target art/gen/concepts/cp_pond_concept_a.png) the pond kit, built once by
+-- tools/build_cp_pond.py and stamped here at whole pixels: reeds and bulrushes at both ends of a park pond, rounded
+-- stones where its curved shore meets the water, a few small reeds on the far bank, lily pads on the surface. All
+-- decoration on Pepper's line, drawn with the water (before the stepping stones, the duck boat and Pepper), at fixed
+-- spots per pond in world x so nothing moves but the water. Without the files: nothing.
+local PK
+local function pondKit()
+  if PK == nil then
+    PK = false
+    local f = { reeds = "cp_reeds", lily = "cp_lily", stones = "cp_bankstones" }
+    local K = {}
+    for k, n in pairs(f) do
+      if not love.filesystem.getInfo("art/scene/" .. n .. ".png") then return false end
+      K[k] = newImg("art/scene/" .. n .. ".png")
+    end
+    local function cells(im, w) local q = {}; for i = 0, im:getWidth() / w - 1 do q[i + 1] = lg.newQuad(i * w, 0, w, im:getHeight(), im:getDimensions()) end; return q end
+    K.reedsQ, K.lilyQ, K.stonesQ = cells(K.reeds, 16), cells(K.lily, 10), cells(K.stones, 12)
+    PK = K
+  end
+  return PK
+end
+-- the shore's row in column i from the nearer end (as Sc.drawPondBank draws it)
+local function shoreAt(i, wt, y0)
+  local R = Sc.BANK_R
+  if i >= R then return wt end
+  if i <= 0 then return y0 end
+  local u = 1 - (i + 0.5) / R
+  return wt + math.floor(Sc.POND_RISE * (1 - math.sqrt(math.max(0, 1 - u * u))) + 0.5)
+end
+function Sc.drawPondKit(p, camx, props)
+  local K = pondKit()
+  if not K then return end
+  local ox = math.floor(camx)
+  local wt, w = p.y0 - Sc.POND_RISE, p.x1 - p.x0
+  local function clear(x0, x1)                                     -- not over a stepping stone's box
+    for _, q in ipairs(props or {}) do if q.name == "STONE" and q.x0 < x1 + 4 and q.x1 > x0 - 4 then return false end end
+    return true
+  end
+  local function at(im, q, x, y, flip)
+    lg.setColor(1, 1, 1, 1)
+    if flip then lg.draw(im, q, x - ox + 16, y, 0, -1, 1) else lg.draw(im, q, x - ox, y) end
+  end
+  -- lily pads: one every 52 px of the pond from 14 px in, on rows 3 to 9 under the waterline, off the stones
+  local k = 0
+  for x = p.x0 + 14, p.x1 - 24, 52 do
+    k = k + 1
+    local lx = x + (k * 17) % 13
+    if clear(lx, lx + 10) then lg.setColor(1, 1, 1, 1); lg.draw(K.lily, K.lilyQ[1 + k % 3], lx - ox, wt + 3 + (k * 5) % 7) end
+  end
+  -- small reeds on the far bank, at about a third and two thirds, standing on the waterline
+  for _, f in ipairs({ 0.31, 0.68 }) do
+    local rx = p.x0 + math.floor(w * f)
+    if clear(rx, rx + 16) then at(K.reeds, K.reedsQ[2], rx, wt - 33, rx % 2 == 0) end
+  end
+  -- both ends: stones on the curved shore, then a reed clump in the corner (the right end mirrored)
+  for _, e in ipairs({ { p.x0, 1 }, { p.x1, -1 } }) do
+    local sx = e[2] > 0 and e[1] + 9 or e[1] - 21                   -- (a stone cell is 12 px; its middle 6 px in)
+    at(K.stones, K.stonesQ[e[2] > 0 and 1 or 2], sx, shoreAt(math.abs(sx + 6 - e[1]), wt, p.y0) - 6)
+    local rx = e[2] > 0 and e[1] - 1 or e[1] - 15
+    at(K.reeds, K.reedsQ[2], rx + 7 * e[2], shoreAt(11, wt, p.y0) - 33, e[2] > 0)   -- (the small clump behind, turned)
+    at(K.reeds, K.reedsQ[1], rx, shoreAt(5, wt, p.y0) - 33, e[2] < 0)
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+
 -- layers 1 to 5 of an art level, and the water of its pond or fountain basin with the far bank behind it
 function Sc.drawFarArt(L, camx, t, w, def)
   local T, A = Sc.townArt(L.style), Sc.art()
@@ -1450,10 +1592,10 @@ function Sc.drawFarArt(L, camx, t, w, def)
     if x1 > -2 and x0 < 322 then
       lg.setScissor(math.max(0, x0), 0, math.max(0, math.min(320, x1) - math.max(0, x0)), 240)   -- (screen space)
       local ox = math.floor(camx) % gw
-      if L.style == "park" then                                   -- the lawn goes on behind, then an earth bank
-        for x = -ox - gw, 320, gw do
-          lg.draw(T.ground, T.bankTop, x, 172 + dy()); lg.draw(T.ground, T.bankEarth, x, 181 + dy()); lg.draw(T.ground, T.bankEarth, x, 201 + dy())
-        end
+      local wtop = p.y0                                           -- (the water's top row as drawn)
+      if L.style == "park" then                                   -- the lawn goes on behind, then the bank (art/cp-audit-06nov:
+        for x = -ox - gw, 320, gw do lg.draw(T.ground, T.bankLawn, x, 172 + dy()) end   -- was the earth strata: a pit)
+        wtop = p.y0 - Sc.POND_RISE
       else                                                        -- the pavement's back, then the basin's granite
         local d = dy()
         for x = -ox - gw, 320, gw do lg.draw(T.ground, T.bankTop, x, 172 + d) end
@@ -1462,17 +1604,18 @@ function Sc.drawFarArt(L, camx, t, w, def)
         lg.setColor(0.45, 0.42, 0.40)
         for x = x0 - (x0 % 18), x1, 18 do lg.rectangle("fill", x, 184 + d, 1, p.y0 - 184 - d) end
       end
-      lg.setColor(0.18, 0.2, 0.22); lg.rectangle("fill", x0, p.y0 - 1, x1 - x0, 1)   -- the water's edge
+      if L.style ~= "park" then lg.setColor(0.18, 0.2, 0.22); lg.rectangle("fill", x0, p.y0 - 1, x1 - x0, 1) end   -- the water's edge
       Look.use("water")
       local tint = L.style == "park" and { 0.80, 0.93, 0.86 } or { 0.92, 1, 1 }
       local ww, wh = A.water:getDimensions()
-      for y = p.y0, w.height - 1 do                               -- (down to the bottom of the world)
-        local row = math.min(wh - 1, 20 + (y - p.y0))
-        local depth = (y - p.y0) / 32
+      for y = wtop, w.height - 1 do                               -- (down to the bottom of the world)
+        local row = math.max(0, math.min(wh - 1, 20 + (y - p.y0)))
+        local depth = math.max(0, y - p.y0) / 32
         local o = math.floor(camx + math.sin(t * 1.3 + y * 0.55) * (0.6 + depth) + t * (1 + 2 * depth) + 0.5) % ww
         lg.setColor(tint)
         lg.draw(A.water, A.waterQ[row], -o, y); lg.draw(A.water, A.waterQ[row], ww - o, y)
       end
+      if L.style == "park" then Look.use("ground"); Sc.drawPondBank(p, camx, dy(), w.height); Sc.drawPondKit(p, camx, def and def.props) end
       lg.setScissor()
       Look.use("ground")
     end
@@ -1514,9 +1657,13 @@ function Sc.paintGroundArt(w, style, foot)
     for _, m in ipairs(cover[x] or {}) do if y >= m[1] and y < m[2] then return true end end
     return false
   end
+  local wetCol = {}                                               -- (art/cp-audit-06nov) a park pond's sides: no dark
+  if style == "park" then                                         -- cut, its bank curves round in front (Sc.drawPondBank)
+    for _, r in ipairs(w.water) do wetCol[r.x0 - 1] = true; wetCol[r.x1] = true end
+  end
   lg.setColor(0.16, 0.13, 0.11)                                   -- cut faces (the banks): a dark edge
   for x = xa, xb - 1 do                                           -- (the chunk's columns)
-    if not w:slopeAt(x) then
+    if not w:slopeAt(x) and not wetCol[x] then
       for _, m in ipairs(cover[x]) do
         for y = math.max(m[1], foot), m[2] - 1 do
           if (x > 0 and not solid(x - 1, y) and not w:slopeAt(x - 1)) or (x < w.width - 1 and not solid(x + 1, y) and not w:slopeAt(x + 1)) then
@@ -1571,13 +1718,28 @@ local function cpbQuad(im, x, y, w, h)
 end
 -- the trunk t as drawn: its world x span and the fade of its bark (an art tree's own trunk and fade, else the oak
 -- trunk art at the back's fade); fake: no trunk at all
-local function cpbTrunkSpan(A, t)
+-- (night 6 Nov, cp fix round 1) an art tree's trunk as drawn at row y (riverwalk/cp_tree_spans.lua, from
+-- tools/cp_trunk_spans.py): the trunk narrows upwards, and a limb that left the foot's width lay over sky
+local SPANS
+local function artSpan(u, y)
+  if SPANS == nil then local ok, D = pcall(require, "cp_tree_spans"); SPANS = ok and D or false end
+  local name = u.artName and u.artName:match("^([^@]+)")
+  local S = SPANS and name and SPANS[name]
+  if not S or not y then return nil end
+  local r = S[y - u.artY0] or S[y - u.artY0 + 1] or S[y - u.artY0 - 1]
+  if not r then return nil end
+  if u.artName:find("@flip") then return u.artX0 + S.w - 1 - r[2], u.artX0 + S.w - r[1] end
+  return u.artX0 + r[1], u.artX0 + r[2] + 1
+end
+local function cpbTrunkSpan(A, t, y)
   if not t or t.fake then return nil end
   local cx = (t.x0 + t.x1) / 2
   for _, u in ipairs(CPB_TI and CPB_TI.trunks or {}) do
     if u.hasArt and u.artW and math.abs((u.x0 + u.x1) / 2 - cx) < 4 then
+      local a0, b0 = artSpan(u, y)
+      if a0 then return a0, b0, 0.28, u end                         -- (round 2: the art trunk it is, 4th value)
       local a = math.floor(u.artCx - u.artW / 2)
-      return a, a + u.artW, 0.28
+      return a, a + u.artW, 0.28, u
     end
   end
   local tw = A.D.trunk.tw
@@ -1608,8 +1770,19 @@ end
 local function cpbDraw(A, n, cols, ox)
   local d = A.D[n]; local R, W = d.rows, d.w - 2
   lg.setColor(INK)
-  for _, c in ipairs(cols) do if not c.k then lg.rectangle("fill", c.x - 1 - ox, c.top - 1, 3, c.t + 2) end end
+  local sk = {}                                                     -- (round 2) the columns left out on an art trunk:
+  for _, c in ipairs(cols) do if c.skip then sk[c.x] = true end end -- no ink on the trunk's side of the limb's root
+  for _, c in ipairs(cols) do
+    if not c.k then
+      local l, r = sk[c.x - 1] and 0 or 1, sk[c.x + 1] and 0 or 1
+      lg.rectangle("fill", c.x - l - ox, c.top - 1, 1 + l + r, c.t + 2)
+    end
+  end
   lg.setColor(1, 1, 1, 1)
+  local keep = {}                                                   -- (round 2) never ledge art over an art tree's
+  for _, c in ipairs(cols) do if not c.skip then keep[#keep + 1] = c end end   -- trunk: those columns are left out (no
+  cols = keep                                                        -- bar through the bark); on a code trunk in the
+                                                                     -- canopy the root still runs on in its fade
   local i = 1
   while i <= #cols do
     local c = cols[i]
@@ -1656,6 +1829,34 @@ local function cpbCrotch(x, ta, tb)
   return math.floor((7 - d) * (7 - d) / 6)
 end
 local function cpbSort(cols) table.sort(cols, function(a, b) return a.x < b.x end) end
+-- (night 6 Nov, cp fix round 1; review cp_limes_pillars: "every crotch ledge reads as a canoe") a limb's profile from
+-- where it leaves its trunk (d = 0) to its free end (d = L): T rows at the trunk with a 2 px collar (2 rows more, its
+-- own darker band, drawn by cpbCollar), thinning to 3 rows at the tip, the underside curving up all the way (never a
+-- deep crotch under the box's end). T differs per limb so the two arms of a fork are not mirror images.
+local function cpbLimbT(d, L, T)
+  T = math.min(T, 3 + math.floor(L / 4))                            -- a short arm is a short, slimmer limb, not a wedge
+  local u = math.min(1, math.max(0, d / math.max(1, L)))
+  local t = math.floor(3 + (T - 3) * (1 - u ^ 1.6) + 0.5)          -- (round 1b: full for most of its length, then thinning)
+  if d < 2 then t = t + 2 end
+  return t
+end
+-- the forked tip past x (dir 1: right): 2 rows, then two 1 px twigs, one on the top row going on level, one
+-- dropping out of the underside (a small fork, no hook turned up)
+local function cpbTip2(cols, x, top, dir)
+  cols[#cols + 1] = { x = x + dir, top = top, t = 2 }
+  cols[#cols + 1] = { x = x + 2 * dir, top = top, t = 1, twig = true }
+  cols[#cols + 1] = { x = x + 3 * dir, top = top, t = 1, twig = true }
+  cols[#cols + 1] = { x = x + 2 * dir, top = top + 3, t = 1, twig = true }
+end
+-- the bark collar: the 2 columns where a limb leaves its trunk, a darker vertical band over the limb's lower rows
+-- (round 1b) the collar is the 2 px bulge itself (cpbLimbT: 2 rows more there) and one bark furrow across the limb
+-- 2 px out from the trunk, in the strip's own dark (a dark band at the root read as a bracket under a shelf)
+local COLLAR = hex("6b4329")
+local BANDC = { oak = hex("6c3628"), lime = hex("5f3326") }   -- (polish) the limbs' bark bands
+local function cpbCollar(x, top, t, ox, dir)
+  lg.setColor(COLLAR); lg.rectangle("fill", x + dir * 2 - ox, top + 2, 1, math.max(1, t - 4))
+  lg.setColor(1, 1, 1, 1)
+end
 
 local function drawBranch(p, trunk, camx)
   local side = ((p.x0 + p.x1) / 2 < (trunk.x0 + trunk.x1) / 2) and -1 or 1
@@ -1663,7 +1864,7 @@ local function drawBranch(p, trunk, camx)
   if A then                                                         -- (6 Nov) the art: the box, the dip to the trunk, the
     local ox = math.floor(camx)                                     -- part on the trunk; a rounded tip at the free end
     local n = (trunk.art or trunk.x1 - trunk.x0 >= 24) and "limbx" or "limb"
-    local ta, tb, k = cpbTrunkSpan(A, trunk)
+    local ta, tb, k, artT = cpbTrunkSpan(A, trunk, p.y0 + 4)
     local tc = math.floor((trunk.x0 + trunk.x1) / 2)
     local cols = {}
     -- from the box's trunk end to the trunk: an earlier limb at this height there (a fork's arm) is joined instead
@@ -1682,30 +1883,36 @@ local function drawBranch(p, trunk, camx)
       return math.floor(6 * d / nn + 0.5)
     end
     local x0, x1 = side > 0 and stop or p.x0, side > 0 and p.x1 - 1 or stop
+    local edge = ta and (side > 0 and tb or ta - 1)                 -- (round 1) the column where it leaves the trunk
+    local tipx = side > 0 and p.x1 - 1 or p.x0
+    local L = edge and math.abs(tipx - edge) or (p.x1 - p.x0)
+    local T = 8 + (p.x0 + p.y0) % 3                                 -- 8 to 10 rows at the trunk, per limb
+    local joined = cpbJoin(p, side)
     for x = x0, x1 do
       local onTrunk = not flat and x >= ta and x < tb
       local dd = onTrunk and drop(side > 0 and tb or ta - 1) or drop(x)
-      local t = cpbThick(x, ta, tb, 8)
-      local tipd = side > 0 and (p.x1 - 1 - x) or (x - p.x0)
-      if not cpbJoin(p, side) then t = cpbTaper(t, tipd) end
-      if not onTrunk and not flat then t = t + cpbCrotch(x, ta, tb) end
-      cols[#cols + 1] = { x = x, top = p.y0 + dd, t = t, k = onTrunk and k or nil }
+      local t
+      if onTrunk then t = T + 2                                      -- its root on the trunk (in the trunk's fade)
+      elseif joined or flat or not edge then t = cpbThick(x, ta, tb, 8)
+      else t = cpbLimbT(math.abs(x - edge), L, T) end
+      cols[#cols + 1] = { x = x, top = p.y0 + dd, t = t, k = onTrunk and k or nil, skip = onTrunk and artT ~= nil }
     end
-    if not cpbJoin(p, side) then cpbTip(cols, side > 0 and p.x1 - 1 or p.x0, p.y0, side, 8) end
+    if not joined then cpbTip2(cols, tipx, p.y0, side) end
     cpbSort(cols)
     cpbDraw(A, n, cols, ox)
-    -- an art tree's own pixels drawn again over the limb's end on it: the limb goes into its trunk or crown
-    for _, at_ in ipairs(CPB_TI and CPB_TI.arttrees or {}) do
-      if not flat and ta and math.abs(at_.cx - tc) < 4 and at_.art then
-        local im = at_.art.im
-        local qx, qy = math.max(0, ta - at_.x0), math.max(0, p.y0 - 4 - at_.y0)
-        local qw, qh = math.min(tb - ta, at_.art.w - qx), 22
-        if qw > 0 and qy + qh <= at_.art.h then
-          lg.setColor(1, 1, 1, 1)
-          lg.draw(im, cpbQuad(im, qx, qy, qw, qh), at_.x0 + qx - ox, at_.y0 + qy)
-        end
+    -- (night 6 Nov, cp polish; review c06cfb6: the oaks' long limbs read as flat boards) two broken bark bands along
+    -- the limb in the bark's dark (the old oak's own 6c3628, else the strip's 5f3326), a gap every 7 px
+    lg.setColor(artT and artT.artName == "cp_oak" and BANDC.oak or BANDC.lime)
+    for _, c in ipairs(cols) do
+      if not c.skip and not c.k and not c.twig and c.t >= 5 then
+        if c.x % 7 ~= 0 then lg.rectangle("fill", c.x - ox, c.top + math.floor(c.t / 3) + 1, 1, 1) end
+        if (c.x + 3) % 7 ~= 0 then lg.rectangle("fill", c.x - ox, c.top + math.floor(2 * c.t / 3) + 1, 1, 1) end
       end
     end
+    lg.setColor(1, 1, 1, 1)
+    if edge and not flat then cpbCollar(edge, p.y0 + drop(edge), T + 2, ox, side) end
+    -- (round 2) the art tree's own pixels were drawn again over the limb's end here, under the play look: a lighter
+    -- box on the trunk. The limb no longer reaches over an art tree's trunk (cpbDraw skips those columns), so it is gone.
     return
   end
   local cols = {}                                                 -- x -> top, thickness
@@ -1786,9 +1993,24 @@ end
 -- a willow bough over its one-way box: 5 px thick in the middle, thinner at both ends, the trunk behind it; willow
 -- twigs hang from its ends (past the box, below its top)
 local WLEAF = { hex("c9a93c"), hex("a8892a"), hex("dcc35a") }
-local function drawBough(p, camx)
+local WTRUNK = {}
+local function drawBough(p, camx, crown, def)
   local ox = math.floor(camx)
   local x0, x1, y = p.x0 - ox, p.x1 - ox, p.y0
+  if crown and not (def and Sc.bigWillow(def)) then                  -- (night 6 Nov, cp fix round 1; review: "deck planks
+    -- floating in the willow crowns") the willow's own trunk (park_willow's columns 29-35, its colours as faded) drawn
+    -- up through the crown to the bough, so the bough sits on its tree instead of hanging in the leaves
+    if not WTRUNK[Look.key] then
+      WTRUNK[Look.key] = { Sc.fadeC(hex("665e48")), Sc.fadeC(hex("7a735e")), Sc.fadeC(hex("8a836c")) }
+    end
+    local W = WTRUNK[Look.key]
+    local cx = math.floor((crown.x0 + crown.x1) / 2 - ox)
+    local yb = 175 + dy() - 26                                        -- the trunk's top under the crown (art row ~58)
+    for xx = -3, 3 do
+      lg.setColor(xx == -3 and W[2] or (xx >= 2 and W[1] or W[3]))
+      lg.rectangle("fill", cx + xx, y + 2, 1, yb - y - 2)
+    end
+  end
   local len = x1 - x0
   lg.setColor(INK)
   for x = x0, x1 - 1 do
@@ -2169,28 +2391,130 @@ local function tipTwig(tx, y, side)
 end
 -- a bough lying across its trunk: 6 px thick over the trunk, 4 at the tips, twigs at both tips; the trunk's top
 -- shows under it (it grows out of the trunk)
+-- (night 6 Nov, cp fix round 2: two failed rounds on the forks, so a new method; review e62a282) a stand-on limb drawn
+-- pixel by pixel, never over the trunk: from the trunk's edge at its row (cp_tree_spans) out to its free end. Thick
+-- at a bark collar on the trunk (7 rows, 8 in the collar's 2 columns), 2 to 3 rows at the free end and a 1 px twig;
+-- its top curves down by 2 px towards the end and the underside follows; two broken bark bands run along it; the
+-- tree's own bark ramp (the lime's, or the old oak's); a 1 px ink outline except where it meets the trunk.
+local LIMBR = { lime = { hex("cb6b23"), hex("8e4a26"), hex("5f3326"), hex("3e2421"), hex("ad5724") },
+                oak = { hex("f47815"), hex("9e4b21"), hex("6c3628"), hex("412c2b"), hex("9e4b21") } }   -- lit, mid, band, shade, second
+local function limbCols(e, dir, L, y0, T0)
+  local cols = {}
+  for d = 0, L - 1 do
+    local u = L > 1 and d / (L - 1) or 0
+    local t = math.floor(T0 - (T0 - 2.5) * u + 0.5)
+    if d < 2 then t = t + 1 end                                     -- the collar
+    cols[#cols + 1] = { x = e + dir * d, top = y0 + math.floor(2 * u * u + 0.5), t = math.max(2, t), d = d }
+  end
+  local last = cols[#cols]
+  for i = 1, 2 do cols[#cols + 1] = { x = last.x + dir * i, top = last.top + (i == 2 and 1 or 0), t = 1, d = L - 1 + i, twig = true } end
+  return cols
+end
+local function stubCols(e, dir, K, y0)                              -- the stub on the other side: short, tapering 6 to 3,
+  local cols = {}                                                   -- its end rounded (no square cut)
+  for d = 0, K - 1 do
+    local u = K > 1 and d / (K - 1) or 0
+    local t = math.floor(6 - 3 * u + 0.5)
+    local top = y0
+    if d == K - 1 then top, t = y0 + 1, math.max(2, t - 1) end
+    cols[#cols + 1] = { x = e + dir * d, top = top, t = t, d = d }
+  end
+  return cols
+end
+local function drawLimbCols(cols, R, ox)
+  lg.setColor(INK)                                                  -- the outline: above, below, and round the free end
+  for i, c in ipairs(cols) do
+    lg.rectangle("fill", c.x - ox, c.top - 1, 1, 1); lg.rectangle("fill", c.x - ox, c.top + c.t, 1, 1)
+    local nx = cols[i + 1]
+    if not nx or nx.x == c.x then                                   -- the end column: its outer side
+      local dir = (#cols > 1 and cols[2].x < cols[1].x) and -1 or 1
+      lg.rectangle("fill", c.x + dir - ox, c.top - 1, 1, c.t + 2)
+    elseif nx.top ~= c.top or nx.t ~= c.t then                       -- steps between columns: close them
+      local a0, b0 = math.min(c.top, nx.top), math.max(c.top + c.t, nx.top + nx.t)
+      for y = a0 - 1, b0 do
+        local inC = y >= c.top and y < c.top + c.t
+        local inN = y >= nx.top and y < nx.top + nx.t
+        if inC ~= inN then lg.rectangle("fill", (inC and nx.x or c.x) - ox, y, 1, 1) end
+      end
+    end
+  end
+  for _, c in ipairs(cols) do
+    for k = 0, c.t - 1 do
+      local col
+      if c.twig then col = R[2]
+      elseif k == 0 then col = R[1]                                  -- the lit top, the stand-on edge
+      elseif k == c.t - 1 then col = R[4]                            -- the shaded underside
+      elseif k == 1 then col = R[5]                                  -- the second lit row
+      else
+        local band = (k == math.floor(c.t / 3) + 1 or k == math.floor(2 * c.t / 3) + 1) and (c.x % 7 ~= 0)
+        col = band and R[3] or R[2]                                  -- the body, two broken bark bands along it
+        if c.d < 2 and k >= c.t / 2 then col = R[3] end              -- the collar's lower half
+      end
+      lg.setColor(col); lg.rectangle("fill", c.x - ox, c.top + k, 1, 1)
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+-- a fork (a ledge its trunk crosses): its trunk's span at the ledge's row; on the landing side (the longer overhang,
+-- the left on a tie) one limb, 24 px or more (past the box's end where the box is shorter, there thin and dropping),
+-- on the other side a knot as long as the box reaches there. Both overhangs 24 px or more: a limb each side.
+local function drawForkLimbs(p, t, ox, ta, tb)
+  local name = t.artName and t.artName:match("^([^@]+)")
+  local R = (name == "cp_oak") and LIMBR.oak or LIMBR.lime
+  local oL, oR = ta - p.x0, p.x1 - tb
+  -- (night 6 Nov, cp polish; review c06cfb6) a 2 px bark saddle along the box's top over the trunk, in the tree's own
+  -- browns (its lit row, then its mid; no ink, no dark line), where she stands across the crotch
+  for x = math.max(ta, p.x0), math.min(tb, p.x1) - 1 do
+    lg.setColor(Sc.fadeC(R[1], 0.28)); lg.rectangle("fill", x - ox, p.y0, 1, 1)   -- (as the trunk is drawn: faded)
+    lg.setColor(Sc.fadeC(R[5], 0.28)); lg.rectangle("fill", x - ox, p.y0 + 1, 1, 1)
+  end
+  lg.setColor(1, 1, 1, 1)
+  local cols = {}
+  local function add(cs) for _, c in ipairs(cs) do cols[#cols + 1] = c end end
+  if oL >= 24 and oR >= 24 then
+    drawLimbCols(limbCols(ta - 1, -1, oL, p.y0, 7), R, ox); drawLimbCols(limbCols(tb, 1, oR, p.y0, 7), R, ox)
+    return
+  end
+  local left = oL >= oR
+  local o, k = left and oL or oR, left and oR or oL
+  local L = math.max(o, math.min(24, o + 16))
+  drawLimbCols(limbCols(left and ta - 1 or tb, left and -1 or 1, L, p.y0, 7), R, ox)
+  if k > 0 then drawLimbCols(stubCols(left and tb or ta - 1, left and 1 or -1, math.max(4, k), p.y0), R, ox) end
+end
 local function drawFork(p, t, ox)
   local A = cpb()
   if A then                                                         -- (6 Nov) the art: one limb across its trunk, on the
-    local ta, tb, k = cpbTrunkSpan(A, t)                            -- trunk in the trunk's fade, tapering to rounded tips
-    local n = (t.art or t.x1 - t.x0 >= 24) and "limbx" or "limb"
-    local cols = {}
-    for x = p.x0, p.x1 - 1 do
-      local tt = cpbThick(x, ta, tb, 8)
-      local jl, jr0 = cpbJoin(p, -1), cpbJoin(p, 1)
-      if not jl then tt = cpbTaper(tt, x - p.x0) end
-      if not jr0 then tt = cpbTaper(tt, p.x1 - 1 - x) end
-      local on = ta and x >= ta and x < tb
-      if not on then tt = tt + cpbCrotch(x, ta, tb) end
-      cols[#cols + 1] = { x = x, top = p.y0, t = tt, k = on and k or nil }
+    local ta, tb, k, artT = cpbTrunkSpan(A, t, p.y0 + 4)            -- trunk in the trunk's fade, tapering to rounded tips
+    if artT and ta > p.x0 - 2 and tb < p.x1 + 2 and not cpbJoin(p, -1) and not cpbJoin(p, 1) then
+      return drawForkLimbs(p, artT or t, ox, ta, tb)                 -- (round 2: the new method)
     end
-    local jr = cpbJoin(p, 1)
+    local n = (t.art or t.x1 - t.x0 >= 24) and "limbx" or "limb"
+    -- (night 6 Nov, cp fix round 1; review: "a lens deck with dark upturned tips at both ends") two limbs leaving the
+    -- trunk, not one deck through it: over the trunk only a 2-row ridge (the crotch's top, in the trunk's fade, where
+    -- she stands), each arm thick at its collar and thinning to a forked tip; the left arm 9 rows, the right 8 (or the
+    -- other way round, by the box), so the fork is not mirrored
+    local cols = {}
+    local jl, jr = cpbJoin(p, -1), cpbJoin(p, 1)
+    local TL, TR = 8 + (p.x0 % 2), 9 - (p.x0 % 2)
+    for x = p.x0, p.x1 - 1 do
+      local on = ta and x >= ta and x < tb
+      local tt
+      if not ta then tt = cpbThick(x, ta, tb, 8)
+      elseif on then tt = 2                                       -- (round 1b) a ridge: the lit stand-on row and its shade
+      elseif x < ta then tt = jl and cpbThick(x, ta, tb, 8) or cpbLimbT(ta - 1 - x, ta - 1 - p.x0, TL)
+      else tt = jr and cpbThick(x, ta, tb, 8) or cpbLimbT(x - tb, p.x1 - 1 - tb, TR) end
+      cols[#cols + 1] = { x = x, top = p.y0, t = tt, k = on and k or nil, skip = on and artT ~= nil }
+    end
     if jr then                                                      -- runs on into the next limb: no tip, the gap filled
       for x = p.x1, jr.x0 - 1 do cols[#cols + 1] = { x = x, top = p.y0, t = cpbThick(x, ta, tb, 8) } end
-    else cpbTip(cols, p.x1 - 1, p.y0, 1, 8) end
-    if not cpbJoin(p, -1) then cpbTip(cols, p.x0, p.y0, -1, 8) end
+    elseif not (tb and p.x1 - 1 < tb) then cpbTip2(cols, p.x1 - 1, p.y0, 1) end   -- (no tip on an end that lies on the trunk)
+    if not jl and not (ta and p.x0 >= ta) then cpbTip2(cols, p.x0, p.y0, -1) end
     cpbSort(cols)
     cpbDraw(A, n, cols, ox)
+    if ta then
+      if ta > p.x0 and not jl then cpbCollar(ta - 1, p.y0, TL + 2, ox, -1) end
+      if tb < p.x1 and not jr then cpbCollar(tb, p.y0, TR + 2, ox, 1) end
+    end
     return
   end
   local x0, x1, y = p.x0 - ox, p.x1 - ox, p.y0
@@ -2334,7 +2658,14 @@ end
 -- the play tower: a yellow deck (crisp), grey posts (crisp, as the slide tower's)
 local function drawDeck(p, ox)
   local di, dx, dy_ = built(p, "deck")
-  if di then lg.setColor(1, 1, 1, 1); lg.draw(di, dx - ox, dy_); return end
+  if di then
+    lg.setColor(1, 1, 1, 1)
+    for _, part in ipairs({ "support", "support2" }) do               -- (art/cp-audit-06nov) the post under its free end
+      local si, sx, sy = built(p, part)
+      if si then lg.draw(si, sx - ox, sy) end
+    end
+    lg.draw(di, dx - ox, dy_); return
+  end
   local x0, x1, y, hgt = p.x0 - ox, p.x1 - ox, p.y0, p.y1 - p.y0
   lg.setColor(INK); lg.rectangle("fill", x0 - 1, y - 1, x1 - x0 + 2, hgt + 2)
   lg.setColor(DECK[1]); lg.rectangle("fill", x0, y, x1 - x0, hgt)
@@ -2464,15 +2795,26 @@ end
 -- per tree, trunk and one leaf mass whose top is above the world (tools/cut_cp_tree.py). Keyed by the trunk's x in the
 -- tall City Park (OAK: the old oak). Its trunk is not drawn in code, the canopy boxes inside its crown are skipped, and
 -- the art stands on the back props' line (the path - 9, as the old oak's art did), faded as back decoration.
-local TREE_ART = { [1528] = "cp_lime", [1916] = "cp_ash", OAK = "cp_oak" }
+local TREE_ART = { [1528] = "cp_lime", [1916] = "cp_ash", OAK = "cp_oak",
+  -- (night 6 Nov, cp) the three LIMES trunks at 1004, 1112, 1216 were flat-topped pillars under their ledges, their
+  -- crowns a low band: tables. Now lime trees whose crowns run out of the top of the screen, as the lime at 1528;
+  -- the middle one mirrored ("@flip": the same art flipped whole, no new pixels) so the row is not a stamp
+  -- (and the fourth pillar at 1420, the audit's "same grey as the mid crowns": the lime's darker bark, mirrored)
+  [1004] = "cp_lime", [1112] = "cp_lime@flip", [1216] = "cp_lime", [1420] = "cp_lime@flip" }
 local TREE_FADE = 0.28           -- their own amount, as the gate's: the bark's darkest 10 % then sits at the back layer's 80
 local TA_IMG = {}
 local function treeArtImg(n)
   local key = n .. "/" .. Look.key
   if TA_IMG[key] ~= nil then return TA_IMG[key] end
-  if not love.filesystem.getInfo("art/scene/" .. n .. ".png") then TA_IMG[key] = false; return false end
-  local d = love.image.newImageData("art/scene/" .. n .. ".png")
+  local file, flip = n:match("^([^@]+)(@?f?l?i?p?)$")
+  flip = flip == "@flip"
+  if not love.filesystem.getInfo("art/scene/" .. file .. ".png") then TA_IMG[key] = false; return false end
+  local d = love.image.newImageData("art/scene/" .. file .. ".png")
   local w, h = d:getDimensions()
+  if flip then                                                       -- mirrored whole, pixel for pixel
+    local s = d; d = love.image.newImageData(w, h)
+    for y = 0, h - 1 do for x = 0, w - 1 do d:setPixel(w - 1 - x, y, s:getPixel(x, y)) end end
+  end
   local sx, cnt = 0, 0                                               -- the trunk's centre: 30 px above its foot
   for x = 0, w - 1 do local _, _, _, a = d:getPixel(x, h - 31); if a > 0 then sx = sx + x; cnt = cnt + 1 end end
   local rows = {}                                                    -- each row's opaque x extent (the old canopies' test)
@@ -2495,12 +2837,28 @@ local function treeArt(def, TI)
       local a = treeArtImg(n)
       t.artCx, t.artW = math.floor((t.x0 + t.x1) / 2), a.tw            -- (6 Nov) its drawn trunk, for the limbs on it
       local cx = math.floor((t.x0 + t.x1) / 2)
+      t.artName, t.artX0, t.artY0 = n, cx - a.cx, TI.foot - 9 - a.h     -- (round 1) for its trunk's width per row
       TI.arttrees[#TI.arttrees + 1] = { name = n, cx = cx, x0 = cx - a.cx, x1 = cx - a.cx + a.w, oak = t.art,
         y0 = TI.foot - 9 - a.h, rows = a.rows, art = a }
     end
   end
   table.sort(TI.arttrees, function(a, b) return (a.oak and 1 or 0) < (b.oak and 1 or 0) end)   -- the oak in front
   return TI.arttrees
+end
+-- (night 6 Nov, cp track) the tall City Park's weeping willow (art/scene/cp_willow.png, SpriteCook GPT 2.5 2K cut 1:1,
+-- 10 m crown, true scale): one tree centred on the WILLOWS crown, its trunk's foot on the back props' line (the path - 10,
+-- as the old willows), faded as the other art trees. It replaces the three 1.8-2 m willows (park_willow, _tall).
+-- nil on the flat City Park or without the file.
+function Sc.bigWillow(def)
+  if def._bigWillow ~= nil then return def._bigWillow or nil end
+  def._bigWillow = false
+  local wl = def.foot and def.art == "park" and named(def, "WILLOWS")
+  local a = wl and treeArtImg("cp_willow")
+  if a then
+    local cx = math.floor((wl.x0 + wl.x1) / 2)
+    def._bigWillow = { art = a, x0 = cx - a.cx, x1 = cx - a.cx + a.w, y0 = def.foot - 9 - a.h }
+  end
+  return def._bigWillow or nil
 end
 function Sc.oakHasArt(def)
   local TI = def.foot and tier(def)
@@ -2538,6 +2896,10 @@ function Sc.drawTreetops(def, camx, world)
     for _, c in ipairs(TI.canopies) do if c.x0 <= t.x1 and c.x1 >= t.x0 and c.y1 <= t.y0 + 60 then return c end end
   end
   local AT = treeArt(def, TI)
+  local wl = Sc.bigWillow(def)                                       -- (night 6 Nov, cp) the pond's weeping willow at
+  if wl and wl.x1 - ox > -10 and wl.x0 - ox < 330 then               -- true scale, behind every other tree of the tier
+    lg.setColor(1, 1, 1, 1); lg.draw(wl.art.im, wl.x0 - ox, wl.y0)
+  end
   for _, t in ipairs(TI.trunks) do                                   -- trunks
     if not t.art and not t.hasArt and t.x1 - ox > -20 and t.x0 - ox < 340 then
       local c = canopyOver(t)
@@ -2551,6 +2913,23 @@ function Sc.drawTreetops(def, camx, world)
     CANOPY_SKIP = AT                                                 -- (review 5 Nov: no old crown overlaps a new one)
     if not inside and c.x1 - ox > -120 and c.x0 - ox < 440 then drawCanopy(c, ox, T) end
     CANOPY_SKIP = nil
+  end
+  for p, r in pairs(TI.role) do                                      -- (night 6 Nov, cp) the low bough's trunk again, from
+    if r == "lowbough" and p.x1 - ox > -60 and p.x0 - ox < 380 then  -- under the bough down, over the canopy that hid it:
+      local t = trunkOf(TI, p)                                        -- the bough grows out of a trunk seen to the ground,
+      if t and not t.art and not t.hasArt then
+        drawTrunk(t, p.y0 - 24, foot, ox, t.x1 - t.x0 >= 24)         -- (it runs on 24 px over the bough, and the canopy's
+        local sx0, sy0 = lg.transformPoint(t.x0 - ox - 20, 0)          -- leaves are laid again over that top, so the trunk
+        local sx1, sy1 = lg.transformPoint(t.x1 - ox + 20, p.y0 - 10)  -- goes up into the crown and the bough branches off)
+        if sy1 > 0 and sx1 > 0 and sx0 < 320 then
+          lg.setScissor(math.max(0, math.floor(sx0)), 0, math.max(1, math.floor(sx1 - math.max(0, sx0))), math.floor(sy1))
+          for _, c in ipairs(TI.canopies) do
+            if c.x0 <= t.x1 and c.x1 >= t.x0 and c.y1 >= p.y0 - 30 then CANOPY_SKIP = AT; drawCanopy(c, ox, T); CANOPY_SKIP = nil end
+          end
+          lg.setScissor()
+        end
+      end
+    end
   end
   lg.setColor(1, 1, 1, 1)
   for _, a in ipairs(AT) do                                          -- the art trees, over the canopies
@@ -2579,6 +2958,9 @@ local function drawTierProp(p, camx, def)
   elseif r == "slat" then drawSlat(p, ox)
   elseif r == "deck" then drawDeck(p, ox)
   elseif r == "lowbough" then drawLowBough(p, (trunkOf(TI, p)), ox)
+  elseif r == "branch" and built(p, "landing") then                -- (art/cp-audit-06nov) a walk's landing in its
+    local li, lx, ly = built(p, "landing")                          -- tree: one deck with the walk (cp_built.lua)
+    lg.setColor(1, 1, 1, 1); lg.draw(li, lx - ox, ly)
   elseif r == "branch" then
     local t = trunkOf(TI, p)
     if t and t.x0 < p.x1 and t.x1 > p.x0 then drawFork(p, t, ox)
@@ -2612,6 +2994,22 @@ function Sc.stoneReflection(x, wy, w, t)
   lg.setColor(1, 1, 1, 1)
 end
 
+-- (art/cp-audit-06nov) the ripple ring where a stepping stone stands in the water: the ring's two ends out past the
+-- rock's sides on the waterline row (wy - 1, behind it the rock hides the far half), its near half a light line along
+-- the row under the rock (wy), broken in two places that drift 1 px with the water. The water art's lightest colour.
+function Sc.stoneRipple(x, wy, w, t)
+  local s = math.floor(math.sin(t * 1.7) * 1.2 + 0.5)
+  lg.setColor(BANK.rip)
+  lg.rectangle("fill", x - 4 + s, wy - 1, 3, 1); lg.rectangle("fill", x + w + 1 + s, wy - 1, 3, 1)
+  local a, b = x + 3 + s, x + w - 4 + s                            -- the near half: three dashes
+  local third = math.floor((b - a) / 3)
+  lg.rectangle("fill", x - 2 + s, wy, a - (x - 2 + s), 1)
+  lg.rectangle("fill", a + 2, wy, third - 2, 1)
+  lg.rectangle("fill", a + third + 2, wy, b - (a + third + 2), 1)
+  lg.rectangle("fill", b + 2, wy, (x + w + 2 + s) - (b + 2), 1)
+  lg.setColor(1, 1, 1, 1)
+end
+
 -- one prop of an art level. kicked: a leaf pile Pepper has run through.
 function Sc.drawPropArt(p, camx, def, kicked)
   local style = def.art
@@ -2630,7 +3028,7 @@ function Sc.drawPropArt(p, camx, def, kicked)
   if style == "town" and def.foot and (package.loaded.arthooks or require("arthooks")).townPiece(p, camx, def) then return end   -- the
   -- tall Downtown's roofs, fronts and spire (r8/levels: arthooks.lua, its art when it lands, else drawn in code)
   if not n or n == "" then
-    if style == "park" and underCrown(def, p) then drawBough(p, camx); return end
+    if style == "park" and underCrown(def, p) then drawBough(p, camx, underCrown(def, p), def); return end
     local o = owner(def, p)
     if p.kind == "decor" or not o then return end                 -- posts, legs, crowns: drawn with their set piece
     n = o.name
@@ -2681,7 +3079,8 @@ function Sc.drawPropArt(p, camx, def, kicked)
         local rows = math.min(sh, wy - (p.y0 - 1))
         if not T.stoneQ or T.stoneQ.rows ~= rows then T.stoneQ = { q = lg.newQuad(0, 0, sw, rows, sw, sh), rows = rows } end
         lg.setColor(1, 1, 1, 1); lg.draw(T.stone, T.stoneQ.q, math.floor(x) - 1, p.y0 - 1)
-        Sc.stoneReflection(math.floor(x) - 1, wy, sw, Sc.pondT or 0)
+        Sc.stoneReflection(math.floor(x) - 1, wy + 1, sw, Sc.pondT or 0)
+        Sc.stoneRipple(math.floor(x) - 1, wy, sw, Sc.pondT or 0)
       else at(T.stone, x - 1, p.y0 - 1) end                         -- (on dry ground: the rock on its box, as before)
     elseif n == "BIN" then shadowUnder(p, camx); at(A.bin, x - 1, 184 + d - A.bin:getHeight())
     elseif n == "PICNIC TABLE" then shadowUnder(p, camx); at(T.table, x, p.y0)
@@ -2691,7 +3090,7 @@ function Sc.drawPropArt(p, camx, def, kicked)
       if n == "FRAME" then at(T.frame, x - 1, 119 + d) end            -- (the slide: Sc.drawTerrainArt, over the path)
     elseif n == "SWINGS" then at(T.swings, x + w / 2 - T.swings:getWidth() / 2, 175 + d - T.swings:getHeight())
     elseif n == "WILLOWS" then                                    -- all three willows (decoration, base y 174)
-      for i, c in ipairs(willowCrowns(def)) do
+      for i, c in ipairs(Sc.bigWillow(def) and {} or willowCrowns(def)) do   -- (the tall level's big willow: Sc.drawTreetops)
         local im = c.y1 < 120 + d and T.willow_tall or T.willow
         local cx = math.floor((c.x0 + c.x1) / 2 - camx)
         lg.setColor(1, 1, 1, 1)
@@ -2704,8 +3103,12 @@ function Sc.drawPropArt(p, camx, def, kicked)
                                                                   -- decoration on the back layer: faded 35 %, art/fixes)
         for i = 1, 8 do T.keeperWinchQ[i] = lg.newQuad((i - 1) * 80, 0, 80, 80, T.keeperWinch:getDimensions()) end
       end
+      -- (art/cp-audit-06nov) the audit: "he grips a barrow that is not there, a tan blob cut behind the bridge post".
+      -- The winch's left post and half its drum stood behind the treetop walk's right pylon (x 944-950): what showed
+      -- was a pale drum end and the crank, with no frame. Drawn WINCH_DX px to the right, the whole winch (both posts,
+      -- the drum, the crank he turns) stands clear beside the pylon, his back foot still clear of the lamp at 1028.
       lg.setColor(1, 1, 1, 1)
-      lg.draw(T.keeperWinch, T.keeperWinchQ[Sc.winchFrame or 1], math.floor(x + w / 2), 174 + d, 0, -1, 1, 60, 79)
+      lg.draw(T.keeperWinch, T.keeperWinchQ[Sc.winchFrame or 1], math.floor(x + w / 2) + Sc.WINCH_DX, 174 + d, 0, -1, 1, 60, 79)
     else Sc.drawProp(p, camx, C.prop) end
   else
     if n == "DOOR" then at(T.door, x, 175 + d - T.door:getHeight())
@@ -2806,8 +3209,77 @@ function Sc.townJet()
   return JET
 end
 -- terrain set pieces drawn over the path (after the ground): City Park's slide, Downtown's fountain spout and jets
+-- (night 6 Nov, cp track; concept a) the path's end at a park pond: a grassy shoulder instead of a sawn cut. The
+-- path band (its rows from the back edge + 1 to its front edge) ends 4 px before the water in a rounded corner, and
+-- the corner is the lawn (its lit lip along the curve); the bank's face under it, the last 3 columns, is grass down
+-- to the shore's damp and wet earth, the outer column a shade darker (no ink: decoration). Pepper's edge and the
+-- boxes are unchanged (she walks on to the edge on the grass); drawn after the ground, before her.
+function Sc.drawPondShoulders(world, camx)
+  local ox = math.floor(camx)
+  local yt, yf = Sc.FOOT - 3, Sc.FOOT + 16                         -- the path band's first and last rows (ground rows 9-28)
+  local LIP, LAWN, DK = BANK.lip, BANK.lawn, hex("7d7834")
+  local function px(x, y, c) lg.setColor(c); lg.rectangle("fill", x - ox, y, 1, 1) end
+  for _, p in ipairs(pools(world)) do
+    if p.x1 - ox > -16 and p.x0 - ox < 336 then
+      local wt = p.y0 - Sc.POND_RISE
+      for _, e in ipairs({ { p.x0 - 1, -1 }, { p.x1, 1 } }) do      -- the solid column next to the water, then outwards
+        for d = 0, 12 do
+          local x = e[1] + e[2] * d
+          local top = yt                                              -- the grass's top row in this column
+          if d > 4 then top = yf - math.floor((yf - yt) * math.sqrt(math.max(0, 1 - ((d - 4) / 8) ^ 2)) + 0.5) end
+          if top <= yf then
+            for y = top, yf do px(x, y, y == top and LIP or LAWN) end
+            if (x % 3 == 0) and top > yt then px(x, top - 1, LAWN) end   -- a tuft over the curve
+          end
+          if d < 3 then                                                -- the bank's face down to the shore
+            for y = yf + 1, wt + 6 do
+              local c = y < wt + 1 and LAWN or (y < wt + 3 and BANK.damp or (y < wt + 5 and BANK.wet or BANK.foot))
+              if d == 0 and y >= wt + 1 then c = BANK.foot end            -- (round 1: no dark outer column)
+              px(x, y, c)
+            end
+          end
+        end
+      end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+-- (night 6 Nov, cp fix round 1; review: "the feet look sawn off at the lawn") the art trees' feet, after the ground:
+-- the lawn strip (the path's back edge) is painted over their last rows, so the trunk ended in a cut on the lawn's top.
+-- Their last 3 rows are drawn again over the lawn, roots spread 1 to 3 px past the foot each side, and 2 dark base
+-- rows (the bark's darkest, as faded, and a lighter one) sit in the lawn under them.
+local FOOTC = {}
+function Sc.drawTreeFeet(def, camx)
+  local TI = def.foot and tier(def)
+  if not TI then return end
+  if not FOOTC[Look.key] then FOOTC[Look.key] = { Sc.fadeC(hex("3b2620"), TREE_FADE), Sc.fadeC(hex("5a3a2a"), TREE_FADE), Sc.fadeC(hex("7a5236"), TREE_FADE) } end
+  local FC, ox, foot = FOOTC[Look.key], math.floor(camx), TI.foot
+  for _, a in ipairs(treeArt(def, TI)) do
+    local im = treeArtImg(a.name)
+    local r                                                           -- the foot's widest of its last 4 rows
+    for y = im and im.h - 4 or 0, im and im.h - 1 or -1 do
+      local q = im.rows[y]
+      if q and (not r or q[2] - q[1] > r[2] - r[1]) then r = q end
+    end
+    if r and a.x1 - ox > -10 and a.x0 - ox < 330 then
+      local yb = foot - 10                                            -- the art's last row
+      lg.setColor(1, 1, 1, 1)
+      lg.draw(im.im, cpbQuad(im.im, 0, im.h - 3, im.w, 3), a.x0 - ox, yb - 2)
+      local x0, x1 = a.x0 + r[1] - ox, a.x0 + r[2] - ox
+      for k = 1, 3 do
+        lg.setColor(k == 3 and FC[2] or FC[3])
+        lg.rectangle("fill", x0 - k, yb - 3 + k, k, 1); lg.rectangle("fill", x1 + 1, yb - 3 + k, k, 1)
+      end
+      lg.setColor(FC[1]); lg.rectangle("fill", x0 - 3, yb + 1, x1 - x0 + 7, 1)
+      lg.setColor(FC[2]); lg.rectangle("fill", x0 - 1, yb + 2, x1 - x0 + 3, 1)
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
 function Sc.drawTerrainArt(def, camx, t)
   local T = Sc.townArt(def.art)
+  if def.art == "park" and Sc.world then Sc.drawPondShoulders(Sc.world, camx) end
+  if def.art == "park" then Sc.drawTreeFeet(def, camx) end
   if def.art == "park" then
     local s = named(def, "SLIDE")
     if s and s.x1 - camx > -40 and s.x0 - camx < 360 then at(T.slide, s.x0 - camx - 1, s.y0 - 1) end

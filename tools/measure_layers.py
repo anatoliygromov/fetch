@@ -145,6 +145,7 @@ add(["town_crates70", "town_breadboard", "town_crate_leg", "town_portal_top", "t
 # decks, slats and tower posts are play pieces; the walks" rope rails decoration drawn unfaded with the decks; the
 # walk legs and the arbour posts decoration faded to the back haze (scene.lua built())
 add(["cp_arbour_slat48", "cp_arbour_slat56", "cp_tower_deck56", "cp_tower_post4x106", "cp_tower_post4x72", "cp_walk1968_deck", "cp_walk704_deck"], "cp", "play", group="City Park")
+add(["cp_walk704_landing608", "cp_walk1968_landing1888", "cp_tower_post4x34", "cp_tower_post4x6"], "cp", "play", group="City Park")   # (art/cp-audit-06nov)
 add(["cp_walk1968_rail", "cp_walk704_rail", "cp_walk1968_legs", "cp_walk704_legs"], "cp", "back", group="City Park")   # (cp-pond: the pylons unfaded, one post)
 add(["cp_arbour_posts48x106", "cp_arbour_posts48x122", "cp_arbour_posts56x106"], "cp", "back", True, group="City Park")
 # art/dt-built-06nov: screen 10's courtyard gate at true scale (decoration, arthooks H.freeGate, faded as the fronts)
@@ -166,6 +167,11 @@ add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, gr
 # art/cp-critters-06nov: the magpie (drawn without the look, like every character) and the duck boat (a play mover)
 add(["magpie"], "cp", None, base=ART, group="Characters (never shaded)")
 add(["cp_duckboat"], "cp", "play", group="City Park")
+# (night 6 Nov, cp) the true-scale art trees of the tall City Park, drawn at scene.lua's TREE_FADE (0.28, their own
+# amount): the willow (new), the limes (1004, 1112 mirrored, 1216, 1528), the ash and the old oak
+add(["cp_reeds", "cp_lily", "cp_bankstones"], "cp", "ground", group="City Park")   # (night 6 Nov) the pond kit, drawn with the bank under the ground look
+for _n in ("cp_willow", "cp_lime", "cp_ash", "cp_oak"):
+    A.append(("City Park", _n, ART + "scene/" + _n + ".png", "cp", "back", 0.28))
 add(["facades_square"], "dt", "mid", True, base=R8, group="Batch 1 (rejected)")
 add(["spire_riddarholmen"], "dt", "back", True, base=R8, group="Batch 1 (rejected)")     # arthooks.lua drawTownBack, own 45 %
 add(["house_tall_a", "house_tall_b", "house_tall_c"], "dt", "back", True, base=R8, group="Batch 1 (rejected)")

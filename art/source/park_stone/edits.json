@@ -206,5 +206,25 @@
    21
   ],
   "colours": 11
+ },
+ "audit": {
+  "why": "audit 6 Nov: the pink stones read as eggs or hams, not stones. A warm grey granite ramp, one colour to one, same lightness order; moss and ink kept; box and shape unchanged",
+  "colour_map": {
+   "debca1": "c9c2b4",
+   "cca093": "b3ac9f",
+   "bc8b8f": "a39b8e",
+   "8f636c": "7a736a",
+   "585b71": "5d5953",
+   "3b3e47": "403d3a"
+  },
+  "pixels": 326,
+  "date": "2026-11-06",
+  "branch": "art/cp-audit-06nov",
+  "source": "art/source/park_stone/park_stone_pre_audit.png",
+  "size": [
+   26,
+   21
+  ],
+  "colours": 11
  }
 }

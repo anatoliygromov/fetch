@@ -1,0 +1,18 @@
+{
+ "name": "cp_reeds",
+ "level": "citypark_tall",
+ "layer": "play",
+ "kind": "prop",
+ "real_height_m": 0.7,
+ "target_px": [
+  32,
+  34
+ ],
+ "tier": "C",
+ "family": "cp_pond_06nov",
+ "method": "built by rule, tools/build_cp_pond.py (two reed clumps with bulrushes, 16 x 34 cells); decoration, no outline; design target art/gen/concepts/cp_pond_concept_a.png",
+ "slot": {
+  "file": "riverwalk/art/scene/cp_reeds.png",
+  "where": "both ends of every park pond (tall x 704/944, creek x 2000/2296; flat City Park too), small ones on the far banks: scene.lua Sc.drawPondKit"
+ }
+}

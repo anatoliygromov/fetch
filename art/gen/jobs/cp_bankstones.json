@@ -1,0 +1,18 @@
+{
+ "name": "cp_bankstones",
+ "level": "citypark_tall",
+ "layer": "play",
+ "kind": "prop",
+ "real_height_m": 0.15,
+ "target_px": [
+  24,
+  7
+ ],
+ "tier": "C",
+ "family": "cp_pond_06nov",
+ "method": "built by rule, tools/build_cp_pond.py (rounded granite bank stones, 12 x 7 cells); decoration, no outline; design target art/gen/concepts/cp_pond_concept_a.png",
+ "slot": {
+  "file": "riverwalk/art/scene/cp_bankstones.png",
+  "where": "one at each end of a pond on the curved shore: scene.lua Sc.drawPondKit"
+ }
+}

@@ -154,3 +154,13 @@ what it drew before (the code fallback stays).
 | `kennel.png` | 44 x 44 | the KENNEL piece (setpieces.lua kennel()), built by `tools/build_rw_kennel.py`: top-left at (x0, y0) = (0, 140), bottom row on the path (y 183); the doorway's crown on row 25 (y 165). Outlined. Its collision: the ridge cap x 16-28 from y 140 and the eaves x 0-44 from y 158 |
 | `rw_jetty.png` (unchanged) | 48 x 41 | the jetty: in code its piles run on to the bottom of the screen and take the water's tint and a ripple at y 224 |
 | `pontoon.png` (unchanged) | 54 x 19 | in code its floats take the water's tint under y 224 (`Sp.pontoonWater`); its mooring lines sag |
+
+## City Park (tall), night 6 Nov (cp track)
+
+| File | Size | Where and how it is drawn |
+| --- | --- | --- |
+| `cp_willow.png` | 474 x 508 (10 m crown, kept at this size: review round 1, 6-7 Nov night) | the tall level's weeping willow (scene.lua `Sc.bigWillow`, drawn first in `Sc.drawTreetops`): its trunk's centre (30 px over its foot) on the WILLOWS crown's middle (x 804), its last row on the back props line (`def.foot - 10`), faded 0.28 (`TREE_FADE`); the old park_willow / park_willow_tall are not drawn on that level |
+| `cp_lime.png` (reused) | 371 x 509 | now also the LIMES trunks at x 1004, 1216 and, mirrored whole (`cp_lime@flip`), 1112 and 1420 (scene.lua TREE_ART) |
+| `cp_reeds.png` | 32 x 34 (2 cells of 16 x 34) | `Sc.drawPondKit`, with each park pond's water: both cells in each corner (base on the curved shore's row), cell 2 on the far bank at a third and two thirds when clear of a stepping stone; base row = the cell's last row |
+| `cp_lily.png` | 30 x 4 (3 cells of 10 x 4) | `Sc.drawPondKit`: one every 52 px from 14 px in, rows 3 to 9 under the waterline (`p.y0 - Sc.POND_RISE`), off the stepping stones |
+| `cp_bankstones.png` | 24 x 7 (2 cells of 12 x 7) | `Sc.drawPondKit`: one per pond end, 9 px in, bottom row on the shore |

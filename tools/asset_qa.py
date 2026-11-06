@@ -76,6 +76,9 @@ SHARED = {"skyline": ("rw", "cp", "dt"), "water": ("rw", "cp"), "bench": ("rw", 
           **{f"cloud{i}": ("rw", "cp", "dt") for i in range(1, 9)}}
 # pieces cut into tiles: their left and right columns are joins, not silhouette
 TILES = {"rail_bg_left", "rail_bg_unit", "rail_bg_end", "pavement", "road", "park_ground", "town_ground", "water"}
+# (art/cp-audit-06nov) pieces drawn joined to another of the same build on one side: that end column is a join, not
+# silhouette (a City Park walk's deck and its tree landing are one deck, no outline between them)
+JOINS = {"cp_walk704_deck": "left", "cp_walk1968_deck": "left", "cp_walk704_landing608": "right", "cp_walk1968_landing1888": "right"}
 # slots (docs/art_hooks_r8.md): width, height, tolerance on each (0 = exact). Batch 1 files are named differently
 # from their hooks: HOOK says which game file each one becomes
 SLOTS = {"rw_rowboat": (185, 62, 0, 0), "rw_rower": (468, 62, 0, 0), "kennel": (44, 44, 0, 0),   # (night/06nov-rw) 4.0 m eka; 6 x 78 x 62 loop; true-scale kennel
@@ -121,7 +124,15 @@ SLOTS = {"rw_rowboat": (185, 62, 0, 0), "rw_rower": (468, 62, 0, 0), "kennel": (
          "town_roof_flower_roof": (90, 14, 0, 0), "town_roof_ledge": (16, 9, 0, 0), "town_footbridge": (162, 52, 0, 0),
          "spire_riddarholmen": (36, 260, 0, 0), "town_balcony56": (58, 60, 0, 0), "town_balcony64": (66, 60, 0, 0),
          "town_spring": (36, 10, 0, 0), "town_stopsign": (19, 101, 0, 0), "town_jet": (24, 88, 0, 0),
-         "town_tier": (50, 58, 0, 0), "town_bowl": (34, 82, 0, 0), "town_rim": (18, 18, 0, 0)}
+         "town_tier": (50, 58, 0, 0), "town_bowl": (34, 82, 0, 0), "town_rim": (18, 18, 0, 0),
+         # (art/cp-audit-06nov) the walks' tree landings (box + outline at the far end), the tower's second posts, the
+         # rebuilt climbing frame (posts 2712 and 2796, y 264-328, bars and step on their boxes)
+         "cp_walk704_landing608": (98, 8, 0, 0), "cp_walk1968_landing1888": (82, 8, 0, 0),
+         "cp_tower_post4x34": (6, 34, 0, 0), "cp_tower_post4x6": (6, 6, 0, 0), "park_frame": (90, 67, 0, 0),
+         # (night 6 Nov, cp) the pond's weeping willow (scene.lua Sc.bigWillow), 10 m crown cut by the top of the frame
+         "cp_willow": (474, 508, 0, 0),
+         # (night 6 Nov, cp) the pond kit, tools/build_cp_pond.py (scene.lua Sc.drawPondKit): whole sheets of cells
+         "cp_reeds": (32, 34, 0, 0), "cp_lily": (30, 4, 0, 0), "cp_bankstones": (24, 7, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",
@@ -132,7 +143,7 @@ HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_t
 BUILDINGS = {"town_house1", "town_house2", "town_house3", "town_facades", "town_row", "building", "cafe", "gable",
              "facades_square", "house_tall_a", "house_tall_b", "house_tall_c", "town_front_tall1", "town_front_tall2",
              "town_front_tall3", "town_front_tall4", "town_door"}
-ORGANIC = {"tree", "tree_far", "rw_birch", "tree_near", "park_tree1", "park_tree2", "park_oak", "park_willow", "park_willow_tall",
+ORGANIC = {"tree", "tree_far", "rw_birch", "cp_willow", "cp_reeds", "tree_near", "park_tree1", "park_tree2", "park_oak", "park_willow", "park_willow_tall",
            "park_hedge", "park_bush", "park_leaves", "park_leaves_flat", "park_treeline", "skyline", "far_shore_bridge"}
 FROZEN = {"pepper"}                                               # Pepper's files are frozen: report only
 # owner-approved exceptions (check ids that only warn for these)
@@ -275,7 +286,7 @@ def blotch_check(r, rgb255, a, strict=True):
     elif n:
         r.add("blotches", "warn", f"{n} blotch(es) of 2-24 px in a near colour", flagged)
 
-def outline_check(r, rgb255, a, need, cls, ox=0, oy=0, where="", tile=False):
+def outline_check(r, rgb255, a, need, cls, ox=0, oy=0, where="", tile=False, join=None):
     """the outline is a property of the file, measured on its own pixels (a load-time fade must not hide a gap).
     Not counted: the bottom row (ground contact), a tile's join columns. Front pieces: dark silhouette with a lit rim,
     no rule. Play pieces and characters: complete. Decoration: none (ladder); if one is drawn it must not be broken"""
@@ -284,6 +295,8 @@ def outline_check(r, rgb255, a, need, cls, ox=0, oy=0, where="", tile=False):
     rows = np.nonzero(a.any(1))[0]
     if len(rows): e[rows.max(), :] = False
     if tile: e[:, 0] = False; e[:, -1] = False
+    if join == "left": e[:, 0] = False
+    if join == "right": e[:, -1] = False
     if not e.any(): return None
     lum = rgb255 @ W601
     dark = e & (lum < 70)
@@ -574,7 +587,7 @@ def check(name, path, lvl, layer, fade, building=False, frames=None, levels=None
     else:
         body_checks(r, rgb255, a, strict=strict)
         if cls not in ("ground", "water"):
-            s = outline_check(r, rgb255, a, need, cls, tile=name in TILES)
+            s = outline_check(r, rgb255, a, need, cls, tile=name in TILES, join=JOINS.get(name))
             if s is not None: r.info["outline"] = round(s)
     if building: window_check(r, rgb255, a)
     return r

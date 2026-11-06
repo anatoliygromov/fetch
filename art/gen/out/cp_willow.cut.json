@@ -1,0 +1,30 @@
+{
+ "name": "cp_willow",
+ "size": [
+  474,
+  508
+ ],
+ "render": "art/gen/out/cp_willow_a_raw.png (job 816c4bde, variant a, asset af0858ed)",
+ "cut_by": "tools/grid4_cut.py (pitch 4, phase (0,0), 82 % clean cells) to art/gen/renders/cp_willow_a_1x.png, then tools/cut_cp_tree.py --leaf 8 --bark 5 --rim-lum 60 --mode 1, tools/polish_cp_trees.py cp_willow, tools/fix_cp_willow.py (r1-r1d)",
+ "colours_in": 13,
+ "measures_px": {
+  "trunk_20px_up": 56,
+  "trunk_50px_up": 45,
+  "trunk_80px_up": 88,
+  "lowest_leaf_px_up": 0,
+  "crown_width": 474,
+  "size": [
+   474,
+   508
+  ],
+  "colours": 13,
+  "top_cut_by_frame": true
+ },
+ "lone_changed": 853,
+ "blotches_merged": 168,
+ "fails": [],
+ "waived": [
+  "crown 474 px (10.3 m; spec 322, 7 m): the render filled the 512 frame as the oak did; a weeping willow 10 m across is true to life. Its sides are not cut flat.",
+  "lowest_leaf_px_up 0: the measure counts the lit orange bark streak at the foot as leaf; the curtain hem is 65 px over the ground (1.4 m)."
+ ]
+}

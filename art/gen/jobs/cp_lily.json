@@ -1,0 +1,18 @@
+{
+ "name": "cp_lily",
+ "level": "citypark_tall",
+ "layer": "play",
+ "kind": "prop",
+ "real_height_m": 0.05,
+ "target_px": [
+  30,
+  4
+ ],
+ "tier": "C",
+ "family": "cp_pond_06nov",
+ "method": "built by rule, tools/build_cp_pond.py (three lily pads, 10 x 4 cells, one with a water lily); decoration, no outline; design target art/gen/concepts/cp_pond_concept_a.png",
+ "slot": {
+  "file": "riverwalk/art/scene/cp_lily.png",
+  "where": "on the ponds' surface every 52 px, off the stepping stones: scene.lua Sc.drawPondKit"
+ }
+}
