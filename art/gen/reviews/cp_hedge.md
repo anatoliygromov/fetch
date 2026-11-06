@@ -22,3 +22,18 @@ Seams (art/source/park_hedge/edits.json: cut 77 rows, rows 47-51 removed, seam a
 Crawl in game (checked, tests_look copy with the down and right keys forced, Pepper crawling in from x 532 and 548, y 328): Pepper passes under, no visible clash. Her back (top at screen y about 166) is drawn over the 1 to 2 lowest leaf rows (leaves run to file row 54, the box ends at row 53), so she overlaps the leaves, never cut by them. She is black on the dark gap shade, but her silhouette, pink bandana and the bright leaf litter keep her readable. PASS.
 
 VERDICT: FAIL (1 item, shapes, a one-spot hand fix)
+
+
+# Round 2
+
+Reviewer: independent gate-8 art reviewer (Claude, did not make this asset), 6 Nov 2026. Head 33d1a06.
+
+asset_qa: WARN (lone 3.1 %, 4 small blotches, organic leaf texture; same numbers as round 1). check_backdrop: OK.
+Own frames (tall City Park, camera x 440 and 420, y 144): art/gen/reviews/cp_props_06nov_frames/r2_hedge_x440_3x.png, r2_hedge_x440_grey2x.png, r2_x420_3x.png, r2_files_5x_beside_bench_bin_lamp.png.
+
+Round 1 FAIL (item 4): fixed. Pixels (15-16, 45-46) are now leaf green #365032 / #284127, a normal leaf cell, no orange. The four remaining orange leaves are whole 5x5 to 7x6 leaf shapes.
+Round 1 note (greener and busier): fixed enough. Greens are olive with a warm gold lit top, they sit with the autumn lime and ash and the orange trees behind at 1x and 3x. In grey it is the darkest, most textured block but reads as a play-layer obstacle like the bench. Scale unchanged (1.43 m x 1.57 m at 46 px/m).
+
+1 Scale PASS. 2 Layer PASS. 3 Outline PASS. 4 Shapes PASS. 5 Shading PASS (ramp, upper-left light, texture is leaf shapes). 6 Palette PASS. 7 View PASS. 8 Fit PASS. 9 Read PASS.
+
+VERDICT: PASS
