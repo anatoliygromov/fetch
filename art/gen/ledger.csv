@@ -92,6 +92,7 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-06 18:39,spent,cp_oak@1106-183840,,,,,76,spent,
 2026-11-06 18:50,plan,dt_tram@1106-185043,dt_tram,dt_traffic_06nov,spritecook,"SpriteCook Nano Banana 2.1 2K, pixel on",36,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:50,plan,dt_cargo_bike@1106-185044,dt_cargo_bike,dt_traffic_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:50,plan,cp_boughs@1106-185013,cp_boughs,cp_boughs_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 2K medium (follows the reference grid),60,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:51,spent,dt_tram@1106-185043,,,,,36,spent,
 2026-11-06 18:51,spent,dt_cargo_bike@1106-185044,,,,,24,spent,
 2026-11-06 18:51,plan,cp_hedge@1106-185110,cp_hedge,cp_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
@@ -105,6 +106,7 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-06 18:51,spent,cp_magpie@1106-185137,,,,,12,spent,
 2026-11-06 18:52,spent,cp_magpie_fly@1106-185137,,,,,12,spent,
 2026-11-06 18:52,spent,cp_duckboat@1106-185137,,,,,12,spent,
+2026-11-06 18:52,spent,cp_boughs@1106-185013,,,,,60,spent,
 2026-11-06 18:53,spent,cp_hedge@1106-185110,,,,,24,spent,
 2026-11-06 18:54,plan,dt_cargo_bike@1106-185430,dt_cargo_bike,dt_traffic_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),48,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
 2026-11-06 18:54,spent,dt_cargo_bike@1106-185430,,,,,48,spent,
