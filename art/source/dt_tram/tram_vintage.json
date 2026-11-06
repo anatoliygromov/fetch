@@ -1,16 +1,16 @@
 {
  "size": [
-  570,
+  586,
   188
  ],
  "body_x": 2,
- "body_len": 568,
+ "body_len": 584,
  "door_front_centre": 60,
  "wheels_x": [
   90,
   164,
-  408,
-  482
+  424,
+  498
  ],
  "wheel_r": 15,
  "wheel_centre_row": 172,

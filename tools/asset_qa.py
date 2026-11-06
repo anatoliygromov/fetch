@@ -79,7 +79,7 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          "roof_gable": (122, 80, 0, 20), "roof_loggia": (122, 48, 0, 12), "roof_gallery88": (90, 32, 0, 8),
          "roof_gallery72": (74, 32, 0, 8), "roof_chimney": (18, 46, 0, 0), "roof_dormer": (58, 36, 0, 9),
          "footbridge": (162, 52, 0, 13), "house_tall_a": (80, 240, 0, 0), "house_tall_b": (88, 240, 0, 0),
-         "house_tall_c": (96, 240, 0, 0), "tram_vintage": (570, 188, 0, 0),     # (6 Nov) true scale, 12.35 m (was 300 x 130)
+         "house_tall_c": (96, 240, 0, 0), "tram_vintage": (586, 188, 0, 0),     # (6 Nov) true scale, 12.7 m (was 300 x 130)
          "tram_vintage_wheel": (124, 31, 0, 0), "cargo_bike": (116, 88, 0, 0), "cargo_bike_pedal": (928, 88, 0, 0),
          # (5 Nov, art/rw-traffic-05nov) the new riders at true scale: 1.85 m with the helmet at 46 px/m = 85 px, plus
          # the wheels' ground row; the cars at the near lane's 55 px/m (road.lua)

@@ -146,13 +146,13 @@ end
 -- it never touches Pepper and is drawn behind everything on her line.
 H.TRAM_W, H.TRAM_H = 300, 130
 H.TRAM_FADE = 0.4                                                   -- (the far lane: further back than the props' 0.28)
--- (6 Nov, art/dt-traffic-06nov) the true-scale tram art: tram_vintage.png 570 x 188 (12.35 m body, 3.3 m to the
+-- (6 Nov, art/dt-traffic-06nov) the true-scale tram art: tram_vintage.png 586 x 188 (12.7 m body, 3.3 m to the
 -- clerestory at 46 px/m, the trolley pole above), its front door's middle 60 px from its left edge; its wheels are
 -- tram_vintage_wheel.png (4 frames of 31 x 31, turned a frame per TRAM_WHEEL_PX ridden) at these centres, drawn
 -- behind the body. Without the art: the code tram above (300 x 130, its door 24 px in). H.tramDims() gives the
 -- width and door the lane uses, so the stop puts the door at the sign either way.
 H.TRAM_DOOR = 24
-H.TRAM_ART = { door = 60, wheels = { 90, 164, 408, 482 }, wheelY = 16 }
+H.TRAM_ART = { door = 60, wheels = { 90, 164, 424, 498 }, wheelY = 16 }
 H.TRAM_WHEEL_PX = 3
 function H.tramDims()
   local im = H.img("scene/tram_vintage", H.TRAM_FADE)

@@ -125,18 +125,19 @@ if __name__ == '__main__' and sys.argv[1] == 'cargo_polish':
 # (wheelbase 1.6 m = 74 px), the trolley pole trailing up to the right. Back layer: no outline, edges a darker shade.
 # The wheels are their own sheet (tram_vintage_wheel.png, 4 frames turned 11.25 degrees each: 8 spokes, so the loop
 # closes), drawn behind the body where the image is clear; the body never moves.
-TC = dict(
-    blue_l=(98, 140, 178), blue=(68, 104, 136), blue_d=(46, 74, 102),
-    cream_l=(252, 243, 216), cream=(241, 227, 193), cream_d=(206, 188, 150),
-    roof_l=(116, 116, 128), roof=(82, 82, 94), roof_d=(56, 56, 64), under=(74, 74, 86), wheel_d=(36, 36, 42),
-    glass=(54, 62, 80), glass_r=(98, 110, 134), steel=(140, 142, 152), lamp=(255, 226, 140),
-    skin=(238, 190, 152), skin_d=(196, 144, 110), navy=(40, 50, 92), gold=(228, 186, 70))
-X0, LB = 2, 568                       # the body's left edge (2 px room for the headlamp) and length
+TC = dict(                            # fix round 1 (review 6 Nov): cream and blue brought under the back layer's top
+    blue_l=(76, 112, 148), blue=(56, 88, 120), blue_d=(40, 64, 92),        # (on screen after the 40 % fade and the
+    cream_l=(137, 129, 110), cream=(127, 120, 102), cream_d=(110, 104, 88),  # look: cream 172, its lit edge 177,
+    roof_l=(116, 116, 128), roof=(82, 82, 94), roof_d=(56, 56, 64), under=(74, 74, 86), wheel_d=(36, 36, 42),  # blue 150)
+    glass=(54, 62, 80), glass_r=(98, 110, 134), steel=(118, 120, 130), lamp=(232, 200, 120),
+    skin=(184, 140, 110), skin_d=(150, 110, 84), navy=(40, 50, 92), gold=(196, 160, 64))
+X0, LB = 2, 584                       # the body's left edge (2 px room for the headlamp) and length (fix round 1: 568 -> 584,
+                                      # the rear platform longer so its end stops behind the canal-side house)
 TW, TH = X0 + LB, 188                 # image size; the bottom row is the rail line - 1 (the wheels' lowest row)
 WIN = [92 + i * 52 for i in range(8)]                  # passenger windows (left x, from the body's left)
 BOGIES = (125, LB - 125)
 WHEELS = [X0 + b + d for b in BOGIES for d in (-37, 37)]   # wheel centres x in the image; centre row TH - 16
-DOOR_F, DOOR_R = (42, 74), (LB - 55, LB - 23)
+DOOR_F, DOOR_R = (42, 74), (513, 545)
 DRIVER = [".....NNNNNNNNN......",
           "....NNNNNNNNNNN.....",
           "....NNNNNNGNNNNN....",
@@ -216,7 +217,7 @@ def tram():
 
     for wx in WIN: window(wx, 40)
     window(4, 33, toplight=False)                                                 # the cab window
-    window(LB - 17, 13, toplight=False)                                           # the rear end window
+    window(551, LB - 555, toplight=False)                                          # the rear end window (the back cab)
     # the driver in the cab, facing left (cap, face, shoulders); the window sill hides the rest
     pal = {'N': 'navy', 'G': 'gold', 'U': 'under', 'S': 'skin', 's': 'skin_d', 'H': 'roof_d', 'C': 'cream_l'}
     for r, row in enumerate(DRIVER):
@@ -332,3 +333,92 @@ def cargo_pedal():
 
 if __name__ == '__main__' and sys.argv[1] == 'cargo_pedal':
     cargo_pedal()
+
+
+def _knee(H, P, L1, L2):
+    """the knee of a two-part leg from hip H to foot P, bent forward (to the left: he rides left)"""
+    dx, dy = P[0] - H[0], P[1] - H[1]; d = min(np.hypot(dx, dy), L1 + L2 - 0.01)
+    a = (L1 * L1 - L2 * L2 + d * d) / (2 * d); h = np.sqrt(max(0.0, L1 * L1 - a * a))
+    mx, my = H[0] + a * dx / d, H[1] + a * dy / d
+    k1 = (mx - h * dy / d, my + h * dx / d); k2 = (mx + h * dy / d, my - h * dx / d)
+    return k1 if k1[0] < k2[0] else k2
+
+
+def cargo_legs():
+    """Fix round 1 (review 6 Nov): the legs of the pedal loop drawn by rule over the pixel-engine loop's bike. In the leg
+    region (x 70-92, y 49-86) everything is drawn again each frame: the back wheel's part (rule, turned as before), the
+    far leg one shade darker, the frame tubes (seat tube, chain stay, the long beam, the chainring), the crank and the
+    near leg. One trouser ramp of three shades, thigh 7 px and shin 5 px in every frame, the crank turned 45 degrees a
+    frame (anticlockwise on screen: he rides left), the knee always ahead of the stem's ink (x >= 71)."""
+    from PIL import ImageDraw
+    raw = np.array(Image.open(f'{S}/{N}_pedal_raw.png').convert('RGBA'))
+    st = np.array(Image.open(f'{S}/{N}_pol.png').convert('RGBA')); H_, W = st.shape[:2]; nf = raw.shape[1] // W
+    INK, TL, TM, TD = (2, 2, 2), (92, 102, 118), (64, 74, 86), (50, 56, 68)
+    SHOE, DG, GR, G1, G2 = (28, 28, 28), (55, 55, 55), (91, 91, 91), (96, 146, 84), (70, 112, 66)
+    HIP, C, CR = (88, 51), (85, 75), 5
+    x0, y0, x1, y1 = 70, 49, 92, 86
+    cent = json.load(open(f'{S}/edits_build.json'))['centres']; bcx, bcy, bR = cent[1]
+    frames = []
+    for f in range(nf):
+        rf = raw[:, f * W:(f + 1) * W]
+        fr = st.copy()                                            # the still everywhere, but the turned wheels
+        YY, XX = np.mgrid[0:H_, 0:W]
+        for cx, cy, R_ in cent:
+            disc = np.hypot(XX - cx, YY - cy) < R_ + 0.5
+            fr[disc] = rf[disc]
+        fr[y0:y1 + 1, x0:x1 + 1] = 0
+        lay = Image.new('RGBA', (W, H_), (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+        # the back wheel's part in the region, by rule, turned as the rest of the loop (build_traffic.pedal)
+        wc = dict(ink=INK, tyre=INK, rim=GR, spoke=DG, hub=GR)
+        for (x, y), c in bt.wheel_px(bcx, bcy, bR, 8, 22.5 * f, wc).items():
+            if 0 <= x < W and 0 <= y < H_: lay.putpixel((x, y), (*c, 255))
+        def stroke(pts, w, col, ink=True):
+            if ink: d.line(pts, fill=(*INK, 255), width=w + 2, joint='curve')
+            d.line(pts, fill=(*col, 255), width=w, joint='curve')
+        ang = np.radians(90 - 45 * f)
+        pn = (C[0] + CR * np.cos(ang), C[1] + CR * np.sin(ang)); pf = (C[0] - CR * np.cos(ang), C[1] - CR * np.sin(ang))
+        def leg(P, col, lit):
+            K = _knee(HIP, P, 16, 15); K = (max(K[0], 73.0), K[1])
+            d.line([HIP, K], fill=(*INK, 255), width=8); d.line([K, P], fill=(*INK, 255), width=7)
+            d.ellipse([K[0] - 4, K[1] - 4, K[0] + 3, K[1] + 3], fill=(*INK, 255))
+            d.line([HIP, K], fill=(*col, 255), width=6); d.line([K, P], fill=(*col, 255), width=5)
+            d.ellipse([K[0] - 3, K[1] - 3, K[0] + 2, K[1] + 2], fill=(*col, 255))
+            if lit:                                               # the lit upper edge of the thigh (sun upper left)
+                n = int(np.hypot(K[0] - HIP[0], K[1] - HIP[1]))
+                for i in range(n + 1):
+                    t = i / n; x = HIP[0] + (K[0] - HIP[0]) * t; y = HIP[1] + (K[1] - HIP[1]) * t - 3
+                    lay.putpixel((int(round(x)), int(round(y))), (*col_l, 255)) if False else None
+            # the shoe: toe forward (left), sole on the pedal
+            sx, sy = int(round(P[0])), int(round(P[1]))
+            d.rectangle([sx - 5, sy - 3, sx + 3, sy + 1], fill=(*INK, 255)); d.rectangle([sx - 4, sy - 2, sx + 2, sy], fill=(*SHOE, 255))
+            d.line([(sx - 4, sy - 2), (sx - 1, sy - 2)], fill=(*DG, 255))
+            return K
+        leg(pf, TD, False)                                        # the far leg, behind the frame
+        stroke([HIP, C], 2, G1)                                   # seat tube
+        stroke([C, (bcx, bcy)], 2, G1)                            # chain stay
+        stroke([(68, 78), C], 2, G1)                              # the long beam to the bottom bracket
+        stroke([(HIP[0] + 2, HIP[1] + 1), (95, 59)], 2, G2)       # seat stay
+        d.ellipse([C[0] - 4, C[1] - 4, C[0] + 4, C[1] + 4], fill=(*INK, 255)); d.ellipse([C[0] - 3, C[1] - 3, C[0] + 3, C[1] + 3], fill=(*DG, 255))
+        d.line([C, pn], fill=(*INK, 255), width=2)                # the near crank
+        K = leg(pn, TM, True)
+        # one lit row along the near thigh's top edge
+        n = int(np.hypot(K[0] - HIP[0], K[1] - HIP[1]))
+        for i in range(1, n):
+            t = i / n; x = int(round(HIP[0] + (K[0] - HIP[0]) * t)); y = int(round(HIP[1] + (K[1] - HIP[1]) * t)) - 2
+            if lay.getpixel((x, y))[:3] == TM: lay.putpixel((x, y), (*TL, 255))
+        d.ellipse([HIP[0] - 5, HIP[1] - 4, HIP[0] + 5, HIP[1] + 4], fill=(*INK, 255))          # the seat of his trousers
+        d.ellipse([HIP[0] - 4, HIP[1] - 3, HIP[0] + 4, HIP[1] + 3], fill=(*TM, 255))
+        L = np.array(lay)
+        reg = np.zeros((H_, W), bool); reg[y0:y1 + 1, x0:x1 + 1] = True
+        m = reg & (L[..., 3] > 0)
+        fr[m] = L[m]
+        frames.append(fr)
+    sheet = np.concatenate(frames, 1)
+    r0 = np.array(Image.open(f'{S}/{N}_pedal.png').convert('RGBA'))
+    Image.fromarray(sheet).save(f'{S}/{N}_pedal.png')
+    ed = _edits(r0, sheet, 'fix round 1: legs, tubes and the back wheel part drawn by rule in the leg region')
+    json.dump(ed, open(f'{S}/edits_legs.json', 'w')); print('legs', len(ed), 'px')
+
+
+if __name__ == '__main__' and sys.argv[1] == 'cargo_legs':
+    cargo_legs()
