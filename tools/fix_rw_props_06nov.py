@@ -5,7 +5,8 @@ with tools/aseprite_io.py and the slot png is saved. Existing art is fixed by ha
 (BIBLE 3); every rule below names the exact pixels or colours it touches.
 
   rw_birch       (new cut) a 3 px near-twin of the leaf highlight (#c3e336 beside #c8dd3c) joins it; then the
-                 highlight #c8dd3c (luma 196, 212 on screen) one step down to #b6d434 (185)
+                 highlight #c8dd3c (luma 196, 212 on screen) one step down to #b6d434 (185), then (review) to
+                 #9ac22a (165)
   gritbox_front  no text in art: the "SAND" letters (#bcc8ba, rows 17-21) take the plank fill #335437 and the
                  plate gap in the lower board line (row 22, x 35-55) takes that line's shade #294830
   cloud2, cloud5 no dithering in sprites: a pixel whose four neighbours share one other colour takes that colour
@@ -60,6 +61,11 @@ if 'rw_birch' in done:
     a = load('rw_birch'); ed = []
     swap(a, (200, 221, 60), (182, 212, 52), everywhere(a), 'ladder: highlight luma 196 -> 185', ed)
     save('rw_birch', a, ed, '06nov_r2')
+    # round 3 (gate 8 review, art/gen/reviews/rw_birch.md): #b6d434 still showed at 204 on screen, over the far
+    # city (p99 194); one more step down to #9ac22a (luma 165, about 190 on screen), between it and the mid shade #83b826 (152)
+    a = load('rw_birch'); ed = []
+    swap(a, (182, 212, 52), (154, 194, 42), everywhere(a), 'ladder: highlight luma 185 -> 165 (review round 1)', ed)
+    save('rw_birch', a, ed, '06nov_r3')
 if 'gritbox_front' in done:
     a = load('gritbox_front'); ed = []
     swap(a, (188, 200, 186), (51, 84, 55), box(a, 30, 17, 60, 21), 'no text: the SAND letters take the plank fill', ed)

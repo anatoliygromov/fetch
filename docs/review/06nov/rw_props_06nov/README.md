@@ -21,8 +21,8 @@ A Swedish silver birch at true scale: trunk 14-16 px (0.35 m), lowest leaves 95 
 above the screen (y -76). Pepper in the blockout and in the cut: 52 x 38 (1:1). Level: the two tree_far props now
 draw rw_birch with the trunk where tree_far's trunk stood (x 460 and 2918, y0 -76); scene.lua loads it with the
 back fade; rules.json lists it as a tree for check_backdrop. Hand rules in `tools/fix_rw_props_06nov.py` (every
-pixel in `art/source/rw_birch/edits.json`): a 3 px near-twin colour merged; the leaf highlight one step down (on
-screen 212 -> about 200), so its tops sit closer to the approved lime. On screen: p10 109, median 151, p90 204.
+pixel in `art/source/rw_birch/edits.json`): a 3 px near-twin colour merged; the leaf highlight two steps down (#c8dd3c -> #b6d434 -> #9ac22a, review round 1:
+highlight on screen 212 -> 204 -> 190, under the far city's p99 194). Highlight 9 % of the art.
 My eye at 5x: clumps with lit tops, a white trunk with a grey shade side and black marks; as crisp as the lime.
 
 ## Files
