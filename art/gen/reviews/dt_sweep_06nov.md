@@ -99,3 +99,23 @@ Recommendation: 3 if the owner will take alleys; else 1 and 2 together.
 | 2880, 3200 | FAIL: row at street depth; canal, poles, stairs PASS | FAIL | FAIL |
 
 With LOOK_CLOSED=1 every screen passes the scale and float checks; the spire is hidden on all of them.
+
+# Round 3 (reviewer, 6-7 Nov night): fix round 3 (e8b1164), the square floor
+
+Re-rendered x 0, 320, 640, 960, 2240, 2560, 2880, 3200 (and the middle three as a control) at y 240, 120, 0 with
+the default flag, 2x colour and grey; `town_square_floor.png` at 5x tiled three times beside the bench;
+`asset_qa --layer mid --level dt`: PASS.
+
+| Item | Result | Evidence |
+| --- | --- | --- |
+| strip crisp | PASS | 64 x 51, flat setts in two shades on straight courses, a far kerb row, 3 px bollards with caps, 21 px (0.9 m at 23 px/m); tiles without a seam |
+| still-screen read, x 0-960 | PASS | the row stands on a lit paved square behind a kerb and a bollard row, its feet 30 px above the pavement; roofs are off the street screen; the corner house (true scale) reads as near, the row as across the square |
+| still-screen read, x 2240, 2560 | PASS | the square shows between the front's quoin and the bridge pier and behind the far quay; the row no longer touches the street |
+| still-screen read, x 2880, 3200 | PASS | square behind the arch house, the shelter and Mia; the row across it |
+| layer ladder (grey) | PASS | the row and square are now one clear step lighter than the fronts; play row darkest |
+| nothing else changed | PASS | x 1280, 1600, 1920 at all three tiers: 0 pixels differ from the round 2 render |
+
+Round 2's open-square FAIL is closed. No screen fails. Two nits for later, not blockers: the square floor also
+shows above the far quay behind the canal at x 2560-3056 (right in kind, a square on the far bank, but it meets
+the quay coping with no edge row); the row's doors have no step down to the square (one 1 px darker row under each
+door would seat them).
