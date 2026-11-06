@@ -1,0 +1,21 @@
+{
+ "name": "rw_rowboat",
+ "size": [
+  185,
+  62
+ ],
+ "target": [
+  185,
+  56
+ ],
+ "grid_clean": 1.0,
+ "on_blockout": 0.99,
+ "covered": 1.0,
+ "stray": 0.0011,
+ "colours_in": 3743,
+ "colours_cap": 20,
+ "fails": [
+  "size 185x62 vs 185x56",
+  "49 palette colours used, cap 20: simplify in Aseprite"
+ ]
+}

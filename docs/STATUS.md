@@ -13,7 +13,7 @@
 
 **Road:** the road is painted only under the level promenade (y 184); under the two ramps and the lower quay a granite quay wall (`tools/make_quaywall.py`, level courses anchored in the world). Before, the asphalt there was a sheared copy at another scroll speed and shade.
 
-**Rowboat (spec only, nothing spent):** `art/gen/jobs/rw_rowboat.json` (hull and rower render, 4.0 m = 185 px, 24 credits) and `rw_rower.json` (the rower alone, Pixel Engine, 12 credits), then the rowing loop from the rower still (26). Preflight PASS. **Total 62 SpriteCook credits.** The harbour (water x 2192-2640) must grow by about 200 px to keep two boats and the jetty; the level after it shifts right (0 credits, level change).
+**Rowboat (done, 6 Nov 19:37 to 20:10):** owner's yes ("use credits"), then "rerender this asset in spritecook, it's really low quality". In the game: round 2, GPT 2.5 2K (`rw_rowboat_r2`), 239 px boat (1.29x the 4 m spec, kept for quality), rower animated on his own; the harbour 352 px wider. SpriteCook 162 credits in all (round 1 76, round 2 86), ledger matches. Build: `PREVIEW 6 Nov evening/FETCH_PREVIEW_06nov_boats.love`. Not on the board yet.
 
 **Waiting for the owner:** (1) play the build; (2) yes to 62 credits for the rowboat; (3) merge `prod/integrate-d` into main?
 
