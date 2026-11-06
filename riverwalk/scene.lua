@@ -1202,6 +1202,71 @@ function Sc.drawPondBank(p, camx, d, wbottom)
   lg.setColor(1, 1, 1, 1)
 end
 
+-- (night 6 Nov, cp track; the design target art/gen/concepts/cp_pond_concept_a.png) the pond kit, built once by
+-- tools/build_cp_pond.py and stamped here at whole pixels: reeds and bulrushes at both ends of a park pond, rounded
+-- stones where its curved shore meets the water, a few small reeds on the far bank, lily pads on the surface. All
+-- decoration on Pepper's line, drawn with the water (before the stepping stones, the duck boat and Pepper), at fixed
+-- spots per pond in world x so nothing moves but the water. Without the files: nothing.
+local PK
+local function pondKit()
+  if PK == nil then
+    PK = false
+    local f = { reeds = "cp_reeds", lily = "cp_lily", stones = "cp_bankstones" }
+    local K = {}
+    for k, n in pairs(f) do
+      if not love.filesystem.getInfo("art/scene/" .. n .. ".png") then return false end
+      K[k] = newImg("art/scene/" .. n .. ".png")
+    end
+    local function cells(im, w) local q = {}; for i = 0, im:getWidth() / w - 1 do q[i + 1] = lg.newQuad(i * w, 0, w, im:getHeight(), im:getDimensions()) end; return q end
+    K.reedsQ, K.lilyQ, K.stonesQ = cells(K.reeds, 16), cells(K.lily, 10), cells(K.stones, 12)
+    PK = K
+  end
+  return PK
+end
+-- the shore's row in column i from the nearer end (as Sc.drawPondBank draws it)
+local function shoreAt(i, wt, y0)
+  local R = Sc.BANK_R
+  if i >= R then return wt end
+  if i <= 0 then return y0 end
+  local u = 1 - (i + 0.5) / R
+  return wt + math.floor(Sc.POND_RISE * (1 - math.sqrt(math.max(0, 1 - u * u))) + 0.5)
+end
+function Sc.drawPondKit(p, camx, props)
+  local K = pondKit()
+  if not K then return end
+  local ox = math.floor(camx)
+  local wt, w = p.y0 - Sc.POND_RISE, p.x1 - p.x0
+  local function clear(x0, x1)                                     -- not over a stepping stone's box
+    for _, q in ipairs(props or {}) do if q.name == "STONE" and q.x0 < x1 + 4 and q.x1 > x0 - 4 then return false end end
+    return true
+  end
+  local function at(im, q, x, y, flip)
+    lg.setColor(1, 1, 1, 1)
+    if flip then lg.draw(im, q, x - ox + 16, y, 0, -1, 1) else lg.draw(im, q, x - ox, y) end
+  end
+  -- lily pads: one every 52 px of the pond from 14 px in, on rows 3 to 9 under the waterline, off the stones
+  local k = 0
+  for x = p.x0 + 14, p.x1 - 24, 52 do
+    k = k + 1
+    local lx = x + (k * 17) % 13
+    if clear(lx, lx + 10) then lg.setColor(1, 1, 1, 1); lg.draw(K.lily, K.lilyQ[1 + k % 3], lx - ox, wt + 3 + (k * 5) % 7) end
+  end
+  -- small reeds on the far bank, at about a third and two thirds, standing on the waterline
+  for _, f in ipairs({ 0.31, 0.68 }) do
+    local rx = p.x0 + math.floor(w * f)
+    if clear(rx, rx + 16) then at(K.reeds, K.reedsQ[2], rx, wt - 33, rx % 2 == 0) end
+  end
+  -- both ends: stones on the curved shore, then a reed clump in the corner (the right end mirrored)
+  for _, e in ipairs({ { p.x0, 1 }, { p.x1, -1 } }) do
+    local sx = e[2] > 0 and e[1] + 9 or e[1] - 21                   -- (a stone cell is 12 px; its middle 6 px in)
+    at(K.stones, K.stonesQ[e[2] > 0 and 1 or 2], sx, shoreAt(math.abs(sx + 6 - e[1]), wt, p.y0) - 6)
+    local rx = e[2] > 0 and e[1] - 1 or e[1] - 15
+    at(K.reeds, K.reedsQ[2], rx + 7 * e[2], shoreAt(11, wt, p.y0) - 33, e[2] > 0)   -- (the small clump behind, turned)
+    at(K.reeds, K.reedsQ[1], rx, shoreAt(5, wt, p.y0) - 33, e[2] < 0)
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+
 -- layers 1 to 5 of an art level, and the water of its pond or fountain basin with the far bank behind it
 function Sc.drawFarArt(L, camx, t, w, def)
   local T, A = Sc.townArt(L.style), Sc.art()
@@ -1269,7 +1334,7 @@ function Sc.drawFarArt(L, camx, t, w, def)
         lg.setColor(tint)
         lg.draw(A.water, A.waterQ[row], -o, y); lg.draw(A.water, A.waterQ[row], ww - o, y)
       end
-      if L.style == "park" then Look.use("ground"); Sc.drawPondBank(p, camx, dy(), w.height) end
+      if L.style == "park" then Look.use("ground"); Sc.drawPondBank(p, camx, dy(), w.height); Sc.drawPondKit(p, camx, def and def.props) end
       lg.setScissor()
       Look.use("ground")
     end
