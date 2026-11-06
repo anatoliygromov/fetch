@@ -206,3 +206,46 @@ Pepper rides standing, keeps her spot, steps off onto the jetty top (y 196) clea
 | Downtown tall | Yes | all 33 screens pass; the remaining items are polish |
 
 No regression from the merge. Nothing was fixed by me.
+
+# Round 2 (reviewer, 6-7 Nov night)
+
+Re-rendered after the makers' fixes: River Walk at origin/night/06nov-rw e133677 (x 1600, 1920, 2240, 2560 and
+the ride, 45 frames at 0.2 s), City Park at origin/night/06nov-cp 51434a1 (x 2560 at y 144, 24, 0), Downtown at
+origin/night/06nov-dt 5c5cf2d (x 1600, 2560, 2880 at y 240; x 1280, 1600, 1920, 2240, 2560, 2880 at y 0). Same
+strictness as round 1.
+
+## River Walk
+
+| Item | Verdict | Evidence |
+| --- | --- | --- |
+| Rower's rest pose (frame 7) | PASS | at both rest stops (ride frames 16-19 and 40-43) the oar lies shipped along the gunwale from his fists aft, the blade out past the transom and clear of the water; no stub. In the stroke the recovery frame (blade lifted at the gunwale) still shows for 1/7 s per stroke; it reads as the blade coming up, not a defect |
+| Jetty (rw_jetty, world x ~2500-2545) | PASS | planked deck, bollard, ladder on the front pile, X brace, weed at the waterline, piles tinted below the surface; reads as a landing stage. Still narrow (1 m), fine for a hop |
+| Ferry (x 1600) | PASS | the hull below the waterline is tinted and a ripple row runs along it; it sits in the water like the rowing boats |
+| Pier (pier_v2, frozen) | not scored | nothing around it is code-wrong: the three bones under the arch, the lamp, the bin and the quay pavement draw as before |
+| Ride in motion | PASS | as round 1: oar through the gunwale into the water, elbow, wake, wet hull; stable frames |
+
+River Walk: ready for the owner to look at. Yes.
+
+## City Park tall
+
+| Item | Verdict | Evidence |
+| --- | --- | --- |
+| Playground (y 144, x 2560) | PASS | a solid slide tower with a red cabin, rung ladder, a 7 px chute with rails and a run-out; swings with 3 px seats; the tower and swing posts solid beside the bench and bin; a child can name the slide at 1x |
+| Cause A | confirmed, owner question | what I called floating front bushes are `Look.leaves` (look.lua 5b): the owner's leaf front from decision 5 (26 Oct), a bank of dark leaf clumps along the screen bottom while the camera is up in the trees, sliding off as it comes down. The round 1 screens flagged "cause A" show exactly that bank (y 0 x 2560 again here; gone at y 24 x 2560, where the camera is lower). Not a defect of tonight's work; whether a leaf bank should hang in front of mid-trunk is the owner's call |
+
+City Park tall: ready for the owner to look at. Yes, with the leaf front as one question.
+
+## Downtown tall
+
+Diff against the round 1 frames: only the named spots changed (y 0 rows 0-141 for the friezes and hopper heads;
+y 240 boxes at the crates, the fountain basin and the gateway step). Nothing else moved: no regression.
+
+| Item | Verdict | Evidence |
+| --- | --- | --- |
+| Fountain splashes (x 1600, y 240) | PASS | a 3 px white crown and a ring where each jet lands on the basin water; crisp, one shade |
+| Gateway block town_gatestep96 (x 2880, y 240) | PASS | a light coping band over three courses of inked blocks; reads as a granite step |
+| Crates (x 2560, x 1280) | PASS | pears, bread, apples and one empty crate under a red-white cloth in the stacks; the repetition is gone |
+| Friezes and hopper heads (y 0, x 1280-2560) | PASS | a one-shade dentil row under each storey course and a hopper head on each drainpipe; stamped, identical per storey |
+| Calmer or busier | calmer | the frieze is a single shade and 1 px tall, the crates' fills break the red block of apples, the splashes are tiny; nothing adds contrast or noise, the wall-only screens get a rhythm line without getting busy |
+
+Downtown tall: ready for the owner to look at. Yes.
