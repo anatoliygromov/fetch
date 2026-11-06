@@ -253,13 +253,13 @@
   "group": "Downtown",
   "info": {
    "colours": 11,
-   "lone": 0.9,
+   "lone": 0.4,
    "p10": 6,
    "median": 119,
    "p90": 150,
    "noise": 0.0,
    "blotches": 0,
-   "outline": 99
+   "outline": 100
   },
   "checks": []
  },

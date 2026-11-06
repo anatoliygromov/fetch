@@ -2018,7 +2018,15 @@ function Sc.drawPropArt(p, camx, def, kicked)
       local sq = (p.squashT or 0) > 0 and 2 or 0                  -- a springy one dips as it launches her
       if T.parasols[w] then at(T.parasols[w], x - 1, p.y0 - 1 + sq)   -- (the box's own width, ink round it)
       else at(T.parasol, x, p.y0 - 1 + sq) end
-      if p.bounce then Sc.spring(px + 1, p.y1 + sq, 10 - sq) end
+      if p.bounce then                                            -- (review 6 Nov: the red coil block read as a
+        local sx, sy = px + 1, p.y0 + 12 + sq                     -- box on the pole) a steel coil spring wound round
+        local sh = math.min(10 - sq, foot - sy)                   -- the pole under the canopy's valance: ink, steel
+        lg.setColor(INK); lg.rectangle("fill", sx - 3, sy, 7, sh) -- turns lit on their top
+        for yy = sy + 1, sy + sh - 2, 3 do
+          lg.setColor(0.62, 0.65, 0.70); lg.rectangle("fill", sx - 2, yy, 5, 2)
+          lg.setColor(0.86, 0.88, 0.91); lg.rectangle("fill", sx - 2, yy, 5, 1)
+        end
+      end
     elseif n == "SIGN" then at(T.shopsign, x - 1, p.y0 - 6)
     elseif n == "STALL" then shadowUnder(p, camx); at(T.stall, x - 1, p.y0 - 15)
     elseif n == "AWNING" then

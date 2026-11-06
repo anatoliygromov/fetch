@@ -78,3 +78,18 @@ Built pieces: `python3 -I tools/build_dt_props.py` (parts drawn once and stamped
 `size_sheet.png` (`python3 -I tools/dt_props_size_sheet.py docs/review/06nov/dt_props/size_sheet.png`): every finished
 piece beside Pepper's real sprite (52 x 38) on one ground line, at 1x and at 4x, with a 1 m (46 px) bar. The parasol
 canopies stand on the ground line here; in the game they sit on their poles at the boxes' heights.
+
+## Fix round 1 (independent review, 6 Nov; 0 credits)
+
+- **town_tub (items 3, 5):** the shrub's leaf flecks (5.4 % lone in the shrub) are repainted by rule inside the cut's
+  own silhouette: leaf lobes, each with a lit cap on its upper left, the body mid green, the lobes on the ball's lower
+  right a tone darker; the cut's three greens only. Lone pixels in the shrub 0.8 % (4 of 501). The outline is closed
+  (every transparent 4-neighbour of the shrub is ink; the gap was at (13, 1)). `art/source/town_tub/build_tub.py`,
+  edits.json, .aseprite.
+- **town_shopsign (item 9):** the two dashed rings are gone; one pretzel 19 x 13 drawn by rule on the plate (two lobes,
+  the arms crossing, the ends on the loop, three holes), the sign's gold with a 1 px darker gold edge on its lower and
+  right sides. 123 pixels, no new colours. `art/source/town_shopsign/fix_pretzel.py`, edits.json, .aseprite.
+- **Parasol pole (code):** the red coil block of a springy parasol (`Sc.spring`, shared with the awnings) is replaced
+  for parasols only by a steel coil spring wound round the pole under the valance (5 px turns lit on top, ink ends).
+  The awnings keep `Sc.spring`.
+- Frames, cards and the size sheet are regenerated.

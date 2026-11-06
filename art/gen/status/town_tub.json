@@ -22,6 +22,10 @@
   "ingame": {
    "frame": "docs/review/06nov/dt_props/frames_after/sweep_downtown_y240_x1260.png",
    "time": "2026-11-06 19:04"
+  },
+  "polish": {
+   "aseprite": "art/source/town_tub/town_tub.aseprite",
+   "time": "2026-11-06 19:32"
   }
  }
 }
