@@ -145,3 +145,6 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-06 20:29,spent,cp_willow@1106-202745,,,,,76,spent,"job 816c4bde, owner: SpriteCook up to 900 tonight"
 2026-11-06 20:30,plan,rw_rower@1106-203058,rw_rower,rw_harbour_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),48,planned,"SpriteCook up to 900 tonight (owner, 6 Nov 20:10)"
 2026-11-06 20:31,spent,rw_rower@1106-203058,,,,,64,spent,job db5f2e89; billed 64 not 48: 3 reference images (blockout + style card + concept crop) at 8 each per variant; preflight counted 2
+2026-11-06 22:35,verdict,,town_shelter_tall,,,,,reference,dt_street_concept: design target
+2026-11-06 22:35,verdict,,cp_willow,,,,,in_game,"riverwalk/art/scene/cp_willow.png, Sc.bigWillow, review PASS (night 6-7 Nov)"
+2026-11-06 22:35,verdict,,rw_rower,,,,,in_game,"rw_rower.png 6 frames, Sp.drawRowboat, review PASS round 2 (night 6-7 Nov)"
