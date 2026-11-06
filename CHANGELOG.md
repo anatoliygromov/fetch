@@ -9,6 +9,7 @@ Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 - Fountain triage: tier, bowl and rim were lighter than the walls behind them and the bowl and rim speckled; redrawn in coursed granite with the same silhouettes. The jets (single translucent drops) replaced by town_jet.
 - asset_qa and measure_layers list the in-game names (SLOTS, FRAMES; the spire at the shore's 0.70). Cards: docs/review/06nov/dt_roofs/.
 - Fix round 1 (review 11 of 15 PASS): both galleries on a 16 px pitch with equal 6 px gaps at the ends; the balconies an open railing (handrail, bottom rail, posts, one iron ring per panel; 60 rows); the coil a grey steel spring, closed in every frame. All 15 pieces in the pipeline (family dt_roofs), the 10 unchanged PASS pieces marked review.
+- Fix round 2: the balconies' railings drawn in the back pass (bones, Pepper and Mia in front); the middle posts stop at a mid rail so no upright crosses a bone.
 
 ## Branch `art/rw-water-05nov`: River Walk water family (5 Nov, SpriteCook 24 credits)
 - 5 Nov (art/rw-street-05nov): River Walk screen 12, the gable's door bay is now built as its own narrow front (tools/build_rw_gable.py build_bay(), corner lesene) instead of a pixel crop that cut a wall anchor and the next window's sills; brings in night/25oct-rw-street and night/30oct-gable-b (option B). 0 credits.

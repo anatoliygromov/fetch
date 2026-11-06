@@ -113,14 +113,21 @@ def balcony(bw):
     P = (span - 12) // 3
     assert 3 * P + 12 == span, bw
     posts = [xa + i * (P + 3) for i in range(4)]
+    # (review round 2: the bones float in the railing's lower part, rows 33-43 at 1x with their bob, so nothing upright
+    # crosses them there): the middle posts and the rings' bars stop at a mid rail (rows 29-32); below it only the
+    # two end posts run down to the bottom rail (rows 42-45)
+    mid = 29
     cv.rect(xa, 0, xa + span - 1, 4, "s3"); cv.rect(xa + 1, 1, xa + span - 2, 1, "s1"); cv.rect(xa + 1, 2, xa + span - 2, 3, "s2")   # handrail
+    cv.rect(xa, mid, xa + span - 1, mid + 3, "s3"); cv.rect(xa + 1, mid + 1, xa + span - 2, mid + 1, "s2")   # mid rail
     cv.rect(xa, s - 4, xa + span - 1, s - 1, "s3"); cv.rect(xa + 1, s - 3, xa + span - 2, s - 3, "s2")   # bottom rail
-    for x in posts: cv.rect(x, 0, x + 2, s - 1, "s3"); cv.rect(x + 1, 1, x + 1, s - 2, "s2")
-    ry = (5 + s - 5) // 2 - 6                                             # the ring centred between the rails
+    for i, x in enumerate(posts):
+        y1 = s - 1 if i in (0, len(posts) - 1) else mid + 3
+        cv.rect(x, 0, x + 2, y1, "s3"); cv.rect(x + 1, 1, x + 1, y1 - 1, "s2")
+    ry = 5 + (mid - 5 - 12) // 2                                          # the ring centred between handrail and mid rail
     for x in posts[:-1]:
         cx = x + 3 + P // 2                                               # the panel's middle (2 columns for an even panel)
         cv.keyed(RING12, {"a": "s2", "b": "s3"}, cx - 6, ry)
-        cv.rect(cx - 1, 5, cx, ry, "s3"); cv.rect(cx - 1, ry + 11, cx, s - 5, "s3")   # held above and below
+        cv.rect(cx - 1, 5, cx, ry, "s3"); cv.rect(cx - 1, ry + 11, cx, mid, "s3")   # held above and below
     cv.rect(0, s, W - 1, s + SLAB - 1, "g2"); cv.rect(1, s + 1, W - 2, s + 1, "g1"); cv.rect(1, s + SLAB - 2, W - 2, s + SLAB - 2, "g3")
     for cx in (5, W - 13):                                                # two corbels, 8 wide
         cv.keyed(CORBEL, STONE, cx, s + SLAB)

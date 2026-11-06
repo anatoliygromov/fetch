@@ -47,3 +47,11 @@ its top row).
 Pipeline: all 15 specs in `art/gen/jobs/` (family dt_roofs, tier C), spec, built and ingame done; review done for the 10
 unchanged PASS pieces (the reviewer's sections split into `art/gen/reviews/NAME.md`, text unchanged, one item per line).
 Waiting for review: gallery88, gallery72, balcony56, balcony64, spring.
+
+## Fix round 2 (review round 2: galleries and spring PASS; balconies FAIL on item 9, bones caged)
+
+The railing (rows 0-45) is drawn in the back pass (`Sc.drawBalconyRails`, stage.lua after the back props), so the
+bones, Pepper and Mia are always in front of it; the slab and corbels stay on her line (drawBalcony). The middle
+posts and the rings' bars stop at a mid rail (rows 29-32); below it only the end posts run to the bottom rail, so the
+bones (rows 33-43 at 1x with their bob) float in a clear band at every balcony (x 1580, 1684, 1868, 2436, 2460, 1360).
+No bone or box moved. Frames: `frames_r2/` (y 120, x 1440, 1500, 1640, 2380, 1180, colour and grey).

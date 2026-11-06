@@ -1310,14 +1310,39 @@ local function optImg(n)
   end
   return OPT[n]
 end
+local BQ = {}
+local function balconyQ(im, rail)                                        -- the railing rows, or the slab and corbels
+  local k = tostring(im) .. (rail and "r" or "s")
+  if not BQ[k] then
+    local iw, ih = im:getDimensions()
+    BQ[k] = rail and lg.newQuad(0, 0, iw, Sc.BALCONY_RAIL, iw, ih) or lg.newQuad(0, Sc.BALCONY_RAIL, iw, ih - Sc.BALCONY_RAIL, iw, ih)
+  end
+  return BQ[k]
+end
+-- the balconies' railings with art, behind everything on her line (stage.lua, the back pass); the code fallback draws
+-- its railing with the slab (drawBalcony)
+function Sc.drawBalconyRails(def, camx)
+  local ox = math.floor(camx)
+  for _, p in ipairs(def.props) do
+    if p.name == "BALCONY" and p.layer == "play" and p.x1 - ox > -10 and p.x0 - ox < 330 then
+      local im = optImg("town_balcony" .. (p.x1 - p.x0))
+      if im then lg.setColor(1, 1, 1, 1); lg.draw(im, balconyQ(im, true), p.x0 - ox - 1, p.y0 - 1 - Sc.BALCONY_RAIL) end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
 local function drawBalcony(p, camx)
   local ox = math.floor(camx)
   local x0, x1, y = p.x0 - ox, p.x1 - ox, p.y0
   local w = x1 - x0
   -- (art/dt-roofs-06nov) town_balcony<w>.png (tools/build_dt_details.py): w + 2 wide, its slab's ink row (row
   -- BALCONY_RAIL) on the box's top - 1, so its top row is the box's top - 1 - BALCONY_RAIL
+  -- (review round 2) only the slab and corbels here, on her line; the railing (rows 0 .. BALCONY_RAIL - 1) is drawn in
+  -- the back pass (Sc.drawBalconyRails), so the bones, Pepper and Mia are always in front of it
   local im = optImg("town_balcony" .. w)
-  if im then lg.setColor(1, 1, 1, 1); lg.draw(im, x0 - 1, y - 1 - Sc.BALCONY_RAIL); return end
+  if im then
+    lg.setColor(1, 1, 1, 1); lg.draw(im, balconyQ(im, false), x0 - 1, y - 1); return
+  end
   -- the railing (behind Pepper): 1 m high = BALCONY_RAIL px (46 at 46 px a metre; was 9; layer plan decision 6b, 26 Oct).
   -- Open work, so what is behind it shows: a top rail, a mid rail, balusters (1 px dark edge each side) every 6 px
   local hh = Sc.BALCONY_RAIL
