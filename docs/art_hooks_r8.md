@@ -109,7 +109,6 @@ Delete (or rename) its file: the placeholder or the old art comes back. The plac
 | `town_shelter_tall.png` | 140 x 115 | decoration: centred on the SHELTER box, bottom on y 414, drawn after the tram |
 | `town_gateway.png` | 80 x 138 | decoration: centred in the bay that holds the GATE's right end, bottom on y 414, drawn with the fronts |
 
-<<<<<<< HEAD
 ## Downtown redraws and fixes (art/dt-built-06nov, the board's calls of 25 Oct; 0 credits)
 
 Built from parts by `tools/build_dt_built.py` (`--check` proves each file), hand fixes by rule in
@@ -124,7 +123,7 @@ Built from parts by `tools/build_dt_built.py` (`--check` proves each file), hand
 | `town_gatestep96.png` | 98 x 37 | that GATE's solid box (96 x 36): the gateway's granite doorstep, play, outlined, at x0 - 1, y0 - 1 (`drawTownPerches`) |
 | `town_house3.png` | 52 x 118 | unchanged slot (the plaza house scale is the owner's open decision 2) |
 | `town_bollard.png` | 16 x 54 | 0.9 m at the front's 60 px/m; its top at screen y 221 as before (only the top 19 rows show) |
-=======
+
 ## Downtown roof kit, spire and code-drawn pieces rebuilt (art/dt-roofs-06nov, 0 credits)
 
 Built from parts drawn once, in the sample screen's ramps and ink (every colour from `art/palettes/downtown.gpl`):
@@ -145,4 +144,3 @@ what it drew before (the code fallback stays).
 | `town_stopsign.png` | 19 x 101 | the tram stop sign (arthooks.lua stopSign), faded as back decoration: column 9 on the stop's x + 1, bottom on the rail line |
 | `town_jet.png` | 24 x 88 | the fountain's water (scene.lua drawTerrainArt): 4 frames 6 x 88 at 20 fps; left at the TIER's x0 - 7, the right one mirrored at x1 + 7, top at the TIER's top + 3 |
 | `town_tier.png`, `town_bowl.png`, `town_rim.png` | 50 x 58, 34 x 82, 18 x 18 | as before, redrawn in the sample's granite |
->>>>>>> origin/art/dt-roofs-06nov
