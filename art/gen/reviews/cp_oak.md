@@ -49,3 +49,19 @@ Scale is an owner question: trunk 55 at 50 up, 61 at 40, 98 at 20 (old oak spec 
 9. Read: PASS.
 
 VERDICT: FAIL (1 items)
+
+# Round 4 (f7ae041, retry 2: GPT 2.5 render cut 1:1 on a 4 px grid, 506x511, 10 colours; reviewer did not make it)
+
+Own frames: LOOK_SWEEP citypark_tall, camera x 1480, 1600, 1720 at y 24 and 144 (colour 1x, 3x, grey 1x), in /tmp/review_cp/r4_oak/ (sweep_citypark_y{024,144}_x{1480,1600,1720}.png, scale2x.png = Pepper beside the trunk base, cmp3.png = oak, cp_lime, rw_lime crowns at 3x, c_crown.png and c_foot.png at 5x). asset_qa (--file, back, cp, fade 0.28): PASS, 0 WARN. check_backdrop: BACKDROP OK. Rec.601 luma.
+
+1. Scale: PASS (owner question). Assumed real size: old park oak, trunk 1.2 to 2 m through, lowest leaves 3 to 4 m. Trunk 100 px at ground (root flare, 2.2 m), 75 at 39 up (1.6 m), 63 at 59, 57 at 99, 50 at 149 (1.1 m); plan spec 46, so +11 px (+24 %) at 100 up, +4 at 149 up. Pepper (sprite 38 px tall, 52 long) is 0.7 of the trunk width at 59 up; in the frames the trunk is clearly a giant beside her, not a post. Crown 506 px wide (11 m; spec 470), 511 tall, top cut by the frame (row 0: 453 px opaque), lowest leaves about 150 px (3.3 m) up. Slot 506x511 matches. Wider than spec on purpose, as the lime: the owner should say if he wants it slimmer.
+2. Layer: PASS. Brightest leaf #f68a21 raw luma 158; on screen the oak highlight is about 177 (frame colours (255,161,53)), under the tree line 181 and the far city 190. Back p10 119, median 141 (orange pixels in all 6 frames). The darkest, #412c2b, is luma 50 raw. The 209-luma orange pixels in the frames are sky and path, not the oak.
+3. Outline: PASS. No ink ring: darkest #412c2b (luma 50) is bark furrow shade; leaf clumps are rimmed by their own #813032 maroon. File edge 5x crops (130-380, 360-511) and (100-300, 0-160) show no dark line round the trunk or limbs.
+4. Shapes: PASS. One connected piece (no floating fragments, no specks), no sky hole under 30 px, x=0 edge 9 px and x=505 edge 4 px (not flat cuts). Trunk and root flare symmetric enough, roots end on the grass in the frame (y144). Limbs run into the crown, none loose. Leaf edges are stepped in 2-4 px chevrons (the 4 px grid cut), same as the passed cp_lime.
+5. Shading: PASS. Clumps in a clean ramp (#f68a21, #f47815/#f26513, #d43918, #813032) with a lit top and darker underside, no 3-tone mottling; lone pixels 0.67 % (rw_lime 1.6 %), 4 px parity bias none (P(eq right) 0.545 even x, 0.555 odd x). Bark: warm 3-step ramp in vertical furrows, light from the upper left. WARN: the bark's lit stripe (#f47815, 1027 px, 4-6 px wide, file (200-235,360-500)) is the leaf orange, a bright continuous seam down the trunk; it reads as sunlit bark at 1x, a little neon at 5x. Leaf shapes are bigger and flatter than rw_lime's single leaves (cmp3.png).
+6. Palette: PASS. 10 colours, no alpha, no black; darks warm brown, not violet.
+7. View: PASS. Front-on, trunk and limbs from the side, no tops.
+8. Fit: PASS at 1x (same family as cp_lime and cp_ash in the x 1480 frames: the lime trunk and the oak read as one set). At 3x it is chunkier and flatter than rw_lime/bench/lamp (WARN), the same WARN the passed lime carries. Ledges and bones stay clear on the leaves (frames y24 x1720, y144 x1480); Pepper reads dark against the orange.
+9. Read: PASS. A giant friendly autumn oak, reads at 1x in colour and grey (fg frame y144 x1600).
+
+VERDICT: PASS (9 of 9; owner question on trunk width)
