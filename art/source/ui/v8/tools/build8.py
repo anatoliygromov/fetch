@@ -13,7 +13,7 @@ ROOT = os.path.normpath(os.path.join(UI, '..', '..', '..'))
 sys.path.insert(0, os.path.join(HERE, '..', 'font')); sys.path.insert(0, HERE)
 import style8 as S8, icons8, menu8, screens8
 OUT = os.path.join(ROOT, 'riverwalk', 'art', 'ui')
-ATLASES = {7: ['cream', 'gold', 'dim'], 13: ['gold', 'cream', 'dim', 'ink'], 17: ['ink', 'gold']}
+ATLASES = {7: ['cream', 'gold', 'dim', 'speak'], 13: ['gold', 'cream', 'dim', 'ink'], 17: ['ink', 'gold']}
 
 def atlases():
     lua = ['-- made by art/source/ui/v8/tools/build8.py: the v8 font metrics (one family, three sizes). Do not edit.',
