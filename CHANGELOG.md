@@ -2,6 +2,20 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `art/dt-audit-06nov`: Downtown (tall) audit fixes (6 Nov, 0 credits)
+- From origin/preview/06nov-run with origin/art/dt-highroad-06nov merged (conflicts in CHANGELOG, art_hooks_r8 and asset_qa SLOTS: both sides kept).
+- **Tram:** it was a pale ghost because `H.TRAM_FADE` faded it 40 % to the back haze (150 on screen, the far city's value). Now 10 %: opaque, median 106, under the far city and the fronts.
+- **Quay wall:** town_ground.png's rows 32-67 rebuilt as flat granite courses (tools/build_dt_audit.py); the cobbles and kerb are kept.
+- **Canal ends:** the kerb turns the corner, the quay wall ends in quoins, the far quay has a coursed face, the water a waterline (scene.lua `Sc.quayEnds`, the town pools).
+- **Tram stop:** the sign is drawn in front of the shelter, and the glass reflection is left out round its pole (a draw-time copy; the shelter file is unchanged).
+- **Ledges and lamps:** the flower ledge gets end corbels and iron hangers; the two high lamps are wall lanterns on a bracket (the approved lamp's lantern), on the wall between windows. Checkpoints unchanged.
+- **Water:** the parasols over the flooded square stand in moored boats (town_punt); the crate stack at x 2624 stops at the street.
+- **Domes:** the front bollards' tops in the quay wall are gone; drain arches with a grate instead (town_quaydrain).
+- **Cubes:** the fountain's RIM pieces are granite corner bollards (town_rim, tools/build_dt_details.py).
+- **Footbridge:** granite piers from the arch's feet down to the quays (town_bridge_pier).
+- **Stalls:** street awnings get a counter; the awning at x 872 gets its missing post.
+- No box or bone moved. Frames before and after, colour and grey, 3x: `docs/review/06nov/dt_audit/`. Checks: PEPPER UNCHANGED, flow 125/125, check_tiled PASSED, check_backdrop OK, downtown_tall `--physics` 102/102, `--auto` GOOD GIRL, downtown `--physics` 81/81.
+
 ## Branch `preview/06nov-run`: tonight's families in one preview (6 Nov, integration, 0 credits)
 - Merged with `--no-ff`: tools/scale-gate-06nov, art/cp-oak-06nov, art/dt-traffic-06nov, art/dt-props-06nov, art/dt-roofs-06nov, art/dt-built-06nov, art/rw-props-06nov, art/cp-pond-06nov (with art/cp-built-06nov), art/cp-props-06nov, art/cp-critters-06nov, then the other session's preview/06nov (the owner's 6 Nov fixes and the rowing boats, which carry owner decisions). This branch is preview/06nov-run: preview/06nov belongs to that other session. Not merged: art/cp-boughs-06nov (failed two reviews), art/cp-backtrees-06nov.
 - Ledger: every row from every branch, de-duplicated, new rows in time order. The two cp_boughs rows (60 credits, spent on the account) come from art/cp-boughs-06nov though its art is not merged. SpriteCook spent since 18:38: 632 (cp_oak 76 + 556).

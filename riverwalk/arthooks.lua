@@ -145,7 +145,12 @@ end
 -- drives off to the left; it is gone once it is wholly off screen. Trams run every `every` seconds. Pure scenery:
 -- it never touches Pepper and is drawn behind everything on her line.
 H.TRAM_W, H.TRAM_H = 300, 130
-H.TRAM_FADE = 0.4                                                   -- (the far lane: further back than the props' 0.28)
+-- (art/dt-audit-06nov) the audit: "the tram is a pale see-through ghost", lighter than everything in front of it. Faded
+-- 40 % to Downtown's back haze (efe6da) and then the back grade, its blue went to 150 on screen, at the far city's
+-- value, so the facades' warm plaster read through it and the street in front looked darker. It is a hazard Pepper
+-- must read: 10 % now, on the back look like the shelter and the fronts' darks, opaque (binary alpha, as always):
+-- 10th percentile 88, median 106 on screen, under the far city (145) and the fronts (about 170).
+H.TRAM_FADE = 0.10
 -- (6 Nov, art/dt-traffic-06nov) the true-scale tram art: tram_vintage.png 586 x 188 (12.7 m body, 3.3 m to the
 -- clerestory at 46 px/m, the trolley pole above), its front door's middle 60 px from its left edge; its wheels are
 -- tram_vintage_wheel.png (4 frames of 31 x 31, turned a frame per TRAM_WHEEL_PX ridden) at these centres, drawn
@@ -256,7 +261,9 @@ function H.drawTrams(s, cam)
         lg.draw(im, L0, l.y1 - im:getHeight())
       else tramCode(x, l.y1, c.x, c) end
     end
-    if l.stop - cam > -20 and l.stop - cam < 340 then stopSign(math.floor(l.stop - cam), l.y1) end   -- (in front of it)
+    -- (in front of it; art/dt-audit-06nov: the tall Downtown draws it after the shelter, H.drawTownStops, so the
+    -- shelter's glass reflections no longer cross the roundel: it read as a "no trams" sign)
+    if not s.stopAfterShelter and l.stop - cam > -20 and l.stop - cam < 340 then stopSign(math.floor(l.stop - cam), l.y1) end
   end
   lg.setColor(1, 1, 1, 1)
 end
@@ -386,6 +393,22 @@ end
 -- (art/dt-highroad-06nov) a ledge of the high road is carried by the wall: the balcony's corbel (town_console.png,
 -- tools/build_highroad.py) under both its ends, its top row on the slab's ink row (the box's top + 4)
 H.CONSOLE_IN = 2
+-- (art/dt-audit-06nov) the audit: "floating shelves". The flower ledge's slab gets a granite corbel under each end
+-- (the 4 px gaps outside its end boxes) and an iron hanger in each 3 px gap between its window boxes, so the slab and
+-- its boxes are carried by the wall. ix, iy: the art's top-left (town_roof_flower_roof.png, 90 x 14), iw its width.
+local GRANITE = { { 135 / 255, 130 / 255, 120 / 255 }, { 110 / 255, 103 / 255, 95 / 255 }, { 77 / 255, 72 / 255, 68 / 255 } }
+local STEEL = { { 88 / 255, 100 / 255, 112 / 255 }, { 64 / 255, 74 / 255, 86 / 255 } }
+function H.flowerBrackets(ix, iy, iw)
+  for _, cx in ipairs({ ix, ix + iw - 4 }) do                          -- the end corbels, stepped in 1 px a side
+    rect(INK, cx, iy + 6, 4, 2); rect(GRANITE[1], cx + 1, iy + 6, 1, 1); rect(GRANITE[2], cx + 2, iy + 6, 1, 1)
+    rect(GRANITE[2], cx + 1, iy + 7, 2, 1)
+    rect(INK, cx + 1, iy + 8, 2, 3); rect(GRANITE[3], cx + 1, iy + 8, 1, 2)
+  end
+  for gx = ix + 18, ix + iw - 21, 17 do                                 -- the iron hangers between the boxes
+    rect(INK, gx, iy + 6, 3, 8); rect(STEEL[1], gx + 1, iy + 6, 1, 6); rect(STEEL[2], gx + 1, iy + 12, 1, 1)
+  end
+  lg.setColor(1, 1, 1, 1)
+end
 function H.consoles(p, x)
   local im = H.FIRST_FLOOR and H.img("scene/town_console")
   if not im then return end
@@ -439,7 +462,11 @@ function H.townPiece(p, camx, def)
       threeSlice(H.img("scene/town_roof_ledge"), x, p.y0, w); H.consoles(p, x); return true   -- under it: a ledge)
     elseif n ~= "" then
       local im = H.img("scene/town_roof_" .. slug(n) .. w) or H.img("scene/town_roof_" .. slug(n))
-      if im then drawImgOn(im, p, x, p.y0 - 1, H.STONE_TINT[n]); return true end   -- (a draw-time tint: the art file is not changed)
+      if im then
+        drawImgOn(im, p, x, p.y0 - 1, H.STONE_TINT[n])                         -- (a draw-time tint: the art file is not changed)
+        if n == "FLOWER ROOF" then H.flowerBrackets(math.floor(x + w / 2 - im:getWidth() / 2), p.y0 - 1, im:getWidth()) end
+        return true
+      end
     else
       local im = H.img("scene/town_roof_ledge")
       if im then threeSlice(im, x, p.y0, w); H.consoles(p, x); return true end
@@ -751,6 +778,26 @@ function H.drawTownBays(def, cam)
     end
   end
 end
+-- (art/dt-audit-06nov) the audit: the glass's pale diagonal reflection ran through the tram roundel, so the sign read
+-- as "no trams". A copy of the shelter (the file is not changed) without the reflection pixels (its one stroke
+-- colour, 150 166 174) in the columns round the sign's pole (col - 16 .. col + 10), faded as decoImg does.
+local clearCache = {}
+function H.shelterClear(col)
+  local key = col .. "#" .. Look.key
+  if clearCache[key] == nil then
+    clearCache[key] = false
+    local path = "art/scene/town_shelter_tall.png"
+    if love.filesystem.getInfo(path) then
+      local d = love.image.newImageData(path)
+      d:mapPixel(function(x, y, r, g, b, a)
+        if a > 0 and x >= col - 16 and x <= col + 10 and math.floor(r * 255 + 0.5) == 150 and math.floor(g * 255 + 0.5) == 166 and math.floor(b * 255 + 0.5) == 174 then return 0, 0, 0, 0 end
+        return r, g, b, a
+      end)
+      local im = lg.newImage(Sc.fadeData(d)); im:setFilter("nearest", "nearest"); clearCache[key] = im
+    end
+  end
+  return clearCache[key]
+end
 -- (decision 4a) the tram stop shelter at true scale, 2.5 m (115 px): decoration on the back line, faded; drawn after
 -- the tram (stage.lua), which stops behind it.
 function H.drawTownStops(s, cam)
@@ -758,12 +805,24 @@ function H.drawTownStops(s, cam)
   if not (tallTown(def) and H.FIRST_FLOOR) then return end
   local sh = decoImg("town_shelter_tall")
   if not sh then return end
+  s.stopAfterShelter = true                                         -- (H.drawTrams leaves the stop sign to us)
   for _, p in ipairs(def.props) do
     if p.name == "SHELTER" and p.layer == "play" and p.x1 - cam > -100 and p.x0 - cam < 420 then
+      local left = math.floor((p.x0 + p.x1) / 2 - sh:getWidth() / 2)
+      local im = sh
+      for _, tl in ipairs(s.trams or {}) do                          -- a stop sign over its glass: that glass
+        local col = tl.lane.stop + 1 - left                          -- pane's reflection kept off the roundel
+        if col > 0 and col < sh:getWidth() then im = H.shelterClear(col) or sh end
+      end
       lg.setColor(1, 1, 1, 1)
-      lg.draw(sh, math.floor((p.x0 + p.x1) / 2 - sh:getWidth() / 2 - cam), def.foot - H.BACK_LINE - sh:getHeight())
+      lg.draw(im, left - math.floor(cam), def.foot - H.BACK_LINE - sh:getHeight())
     end
   end
+  for _, tl in ipairs(s.trams or {}) do                              -- the stop sign, in front of the shelter's glass
+    local l = tl.lane
+    if l.stop - cam > -20 and l.stop - cam < 340 then stopSign(math.floor(l.stop - cam), l.y1) end
+  end
+  lg.setColor(1, 1, 1, 1)
 end
 -- (decision 4a, review round 1) the perches of the hiding places, play pieces with their 1 px outline, drawn before
 -- the cargo bikes (stage.lua) so the rider passes in front of them, never cut at the waist: the GATE's crates
@@ -994,6 +1053,93 @@ function H.drawHighWall(def, cam)
   end
   lg.setBlendMode("alpha"); lg.setColor(1, 1, 1, 1)
   if Look.on then Look.use("back") end
+end
+
+-- ===================================================================================================================
+-- (art/dt-audit-06nov) the tall Downtown's audit fixes drawn here (tools/build_dt_audit.py builds their art)
+-- the quay wall's drain arches (town_quaydrain.png, 20 x 22, decoration): one under each front-layer prop of the
+-- level, where a bollard's top showed in the quay wall as a black dome. Its bottom 2 px over the world's bottom
+-- (the quay's lowest course), centred on the prop; only on a stretch of quay (never over water). Drawn with the
+-- ground, after it (stage.lua).
+function H.drawQuayDrains(s, cam)
+  local def = s.def
+  if not tallTown(def) then return end
+  local im = H.img("scene/town_quaydrain")
+  if not im then return end
+  local w = s.world
+  lg.setColor(1, 1, 1, 1)
+  for _, p in ipairs(def.props) do
+    if p.layer == "front" and p.x1 - cam > -30 and p.x0 - cam < 350 then
+      local cx = math.floor((p.x0 + p.x1) / 2)
+      local x0, x1 = cx - 10, cx + 10
+      local dry = true
+      for _, r in ipairs(w.water or {}) do if x1 > r.x0 and x0 < r.x1 then dry = false end end
+      if dry then lg.draw(im, x0 - math.floor(cam), w.height - 2 - im:getHeight()) end
+    end
+  end
+end
+-- the footbridge's abutments (town_bridge_pier.png, 14 px wide, decoration, unfaded: part of the bridge): a granite
+-- pier under each foot of the arch, from the foot (the art's last row, the box's top - 1 - H.BRIDGE_RAIL + 52) down
+-- to the quay (the street, def.foot), so the arch springs from the quays. Drawn in the back pass (behind the crates).
+function H.drawBridgePiers(s, cam)
+  local def = s.def
+  if not (tallTown(def) and H.FIRST_FLOOR) then return end
+  local pier, br = H.img("scene/town_bridge_pier"), H.img("scene/town_footbridge")
+  if not (pier and br) then return end
+  for _, p in ipairs(def.props) do
+    if p.name == "FOOTBRIDGE" and p.x1 - cam > -40 and p.x0 - cam < 360 then
+      local bx = math.floor(p.x0 + (p.x1 - p.x0) / 2 - br:getWidth() / 2)     -- the bridge art's left (drawImgOn)
+      local foot = p.y0 - 1 - H.BRIDGE_RAIL + br:getHeight()                 -- the row under the arch's feet
+      local ph = def.foot - foot
+      local q = lg.newQuad(0, pier:getHeight() - ph, pier:getWidth(), ph, pier:getDimensions())
+      if ph > pier:getHeight() then q = nil end
+      lg.setColor(1, 1, 1, 1)
+      for _, fx in ipairs({ bx + 1, bx + br:getWidth() - 2 }) do             -- centred on each foot (3 px wide)
+        local x = fx - math.floor(pier:getWidth() / 2) - math.floor(cam)
+        if q then lg.draw(pier, q, x, foot) else lg.draw(pier, x, def.foot - pier:getHeight()) end
+      end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+-- a lamp on a ledge of the high road (a checkpoint): no lamp post standing on the ledge but a wall lantern, the
+-- approved lamp's lantern (rows 0-26 of lamp_post.png or the lit lamp, not changed) hanging from an iron bracket on
+-- the wall (town_lantern_bracket.png, 18 x 12, its hook at columns 14-15 over the lantern's finial, columns 6-7).
+-- Its bottom 44 px over the ledge (Pepper passes under it). Returns the lantern's left and top (for its light).
+H.LANTERN_ROWS, H.LANTERN_UP = 27, 44
+-- the lantern hangs on the wall pier between two windows: the house front's bay edge nearest the lamp (a bay is one
+-- window column, centred), so it never covers a window; the lamp itself (the checkpoint) does not move
+local lanternXs = setmetatable({}, { __mode = "k" })
+function H.lanternX(def, x)
+  lanternXs[def] = lanternXs[def] or {}
+  local c = lanternXs[def]
+  if c[x] == nil then
+    c[x] = x
+    local best
+    for _, q in ipairs(def.props) do
+      if isFront(q) and x >= q.x0 and x < q.x1 then
+        for _, b in ipairs(bays(q, nil, def)) do
+          for _, e in ipairs({ b[2], b[2] + b[3] }) do if not best or math.abs(e - x) < math.abs(best - x) then best = e end end
+        end
+      end
+    end
+    if best then c[x] = best end
+  end
+  return c[x]
+end
+function H.wallLantern(im, lx, ly, def, cam)
+  local br = H.img("scene/town_lantern_bracket", true)              -- (faded as the lamp: back decoration)
+  if not br then return nil end
+  if def then lx = H.lanternX(def, lx + cam) - cam end
+  H.lanternQ = H.lanternQ or {}
+  local q = H.lanternQ[im]
+  if not q then q = lg.newQuad(0, 0, im:getWidth(), H.LANTERN_ROWS, im:getDimensions()); H.lanternQ[im] = q end
+  local left = math.floor(lx - im:getWidth() / 2)
+  local top = ly - H.LANTERN_UP - H.LANTERN_ROWS
+  lg.setColor(1, 1, 1, 1)
+  lg.draw(br, left + 6 - 14, top - 6)
+  lg.draw(im, q, left, top)
+  return left, top
 end
 
 return H
