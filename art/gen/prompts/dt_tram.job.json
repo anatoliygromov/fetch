@@ -1,0 +1,32 @@
+{
+ "name": "dt_tram",
+ "model": "SpriteCook Nano Banana 2.1 2K, pixel on",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/dt_tram_blockout.png",
+  "art/gen/style_card_riverwalk.png"
+ ],
+ "prompt_file": "art/gen/prompts/dt_tram.txt",
+ "k": null,
+ "frame": [
+  512,
+  512
+ ],
+ "credits": 36,
+ "tool": "spritecook",
+ "family": "dt_traffic_06nov",
+ "tier": "A",
+ "slot": {
+  "file": "riverwalk/art/scene/tram_vintage.png",
+  "where": "Downtown (tall): the back lane's vintage tram (arthooks.lua drawTrams, L.trams at x 1700 and 3020, rails y 414), faces left, centred on the tram's x, faded 40 %"
+ },
+ "spritecook": {
+  "model": "gemini-nano-banana-2.1",
+  "pixel": true,
+  "resolution": "2K",
+  "width": 500,
+  "height": 152
+ },
+ "ledger_job": "dt_tram@1106-185043"
+}

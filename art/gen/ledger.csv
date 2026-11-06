@@ -88,3 +88,11 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-05 23:03,plan,rw_car5@1105-230350,rw_car5,rw_traffic2,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
 2026-11-05 23:04,spent,rw_car3@1105-230350,,,,,24,spent,
 2026-11-05 23:04,spent,rw_car5@1105-230350,,,,,24,spent,
+2026-11-06 18:50,plan,dt_tram@1106-185043,dt_tram,dt_traffic_06nov,spritecook,"SpriteCook Nano Banana 2.1 2K, pixel on",36,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:50,plan,dt_cargo_bike@1106-185044,dt_cargo_bike,dt_traffic_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:51,spent,dt_tram@1106-185043,,,,,36,spent,
+2026-11-06 18:51,spent,dt_cargo_bike@1106-185044,,,,,24,spent,
+2026-11-06 18:54,plan,dt_cargo_bike@1106-185430,dt_cargo_bike,dt_traffic_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),48,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:54,spent,dt_cargo_bike@1106-185430,,,,,48,spent,
+2026-11-06 18:58,plan,dt_cargo_bike_pedal@1106-185806,dt_cargo_bike_pedal,dt_traffic_06nov,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:58,spent,dt_cargo_bike_pedal@1106-185806,,,,,26,spent,

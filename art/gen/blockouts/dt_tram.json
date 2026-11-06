@@ -1,0 +1,20 @@
+{
+ "ground": 500,
+ "pepper_x": 4,
+ "pepper_ground": 120,
+ "bogies": [
+  125,
+  386
+ ],
+ "wheel_d": 31,
+ "windows": [
+  92,
+  144,
+  196,
+  248,
+  300,
+  352,
+  404
+ ],
+ "window_w": 40
+}
