@@ -759,7 +759,8 @@ local function columnTop(w, x)                                      -- the first
   if x < 0 or x >= w.width then return nil end
   for _, m in ipairs(columnRuns(w, x, "all")) do if m[1] >= 150 then return m[1] end end
 end
-function Sc.paintGround(w, props)
+function Sc.paintGround(w, props, def)
+  if def and def.ground == "quay" then return Sc.paintQuay(w, props, def) end
   local art = Sc.art()
   local pave = art.pavement
   local pw, ph = pave:getDimensions()
@@ -830,6 +831,242 @@ function Sc.paintGround(w, props)
     end
   end
   end)
+end
+
+-- (art/rw-ground-06nov) River Walk's ground by rule (def.ground = "quay"), owner 6 Nov: "these connections of
+-- asphalt really look weird, this is still the first level even". Every column of terrain is one of three kinds:
+--   road: the promenade (top y 184, the traffic's stretches): the approved paving (pavement.png rows 0-21: the
+--         slabs and the light kerb top), a granite kerb face (5 rows, joints under the kerb top's joints, every
+--         16 px), then the asphalt (road.png, tools/make_road.py: flat fills)
+--   quay: the lower quay by the water (top y 216): the same paving and granite coping, then the quay wall: granite
+--         blocks in courses on one world grid (bed joints every 16 px from y 231, blocks 40 px, every other course
+--         offset 20), so the walls of the ramps and both quays line up. A quay that ends at the water ends in a
+--         coping stone running to the water's edge (a light strip) and a quoined corner.
+--   ramp: the slopes (the terrain's own diagonal, unchanged): a clean 45 degree band of slabs in the paving's own
+--         colours (courses parallel to the slope, flat fills), a coping stone along the slope (the kerb's colours,
+--         no joints) and the quay wall's courses under it.
+-- Where the road ends (the top of a ramp) its kerb turns the corner and runs down to the screen's bottom (a light
+-- strip with a rounded inside corner); those few pixels are drawn again after look.lua's road (Sc.drawRoadEnds).
+-- Nothing here changes where Pepper stands: only the drawing.
+local function rgb(r, g, b) return { r / 255, g / 255, b / 255 } end
+local Q = {
+  top1 = rgb(229, 221, 218), top2 = rgb(216, 209, 206), tj = rgb(179, 174, 174),   -- the kerb top (pavement rows 20-21)
+  -- granite (kerb face, coping face, wall). The look's grade pushes mid and dark greys to violet (the ground is
+  -- graded twice: painted under the back layer's grade, drawn under the ground's), so these are a shade green-warm
+  -- in the file to show as warm grey granite on screen (about 186/160/140 the face, 138 the wall)
+  kf1 = rgb(165, 170, 171), kf2 = rgb(142, 146, 141), kf3 = rgb(124, 127, 116), kj = rgb(105, 109, 92),
+  sh = rgb(72, 77, 56), w = rgb(122, 125, 114), wh = rgb(135, 138, 130), wj = rgb(92, 97, 77), we = rgb(103, 107, 91),
+  pb = rgb(157, 160, 173), pj = rgb(168, 170, 182),                                -- the paving's back edge and joints
+  ps = { rgb(196, 192, 195), rgb(207, 200, 198), rgb(184, 183, 190) },             -- its slabs (pavement.png's colours)
+}
+local COURSE, COURSE0, BLOCK = 16, 231, 40
+-- the granite wall's colour at (x, y); d = distance to a corner at the water (0 = the corner's column) or nil
+local function wallColour(x, y, d)
+  local k = math.floor((y - COURSE0) / COURSE)
+  local r = y - COURSE0 - k * COURSE
+  if r == 0 then return Q.wj end
+  if d and d == 0 then return Q.we end
+  local head
+  if d and d < 30 then head = d == ((k % 2 == 0) and 13 or 25)                     -- quoins: long and short in turn
+  else head = (x - (k % 2) * (BLOCK / 2)) % BLOCK == 0 end
+  if head then return Q.wj end
+  return r == 1 and Q.wh or Q.w
+end
+-- the road's end: its kerb turns the corner towards us (8 columns; dir 1: the road is on the left, -1: on the right).
+-- Rows from the kerb top's first row (t + 8); returns a colour or nil (leave what is there)
+local function cornerColour(c, row)
+  -- c: 0 .. 7 from the road's side; row: 0 = t + 8 (the kerb top), 2 = the face's first row, 7 = the road's first
+  if c >= 5 then if row >= 2 then return c == 7 and Q.top2 or Q.top1 end return nil end
+  if c == 4 then
+    if row == 2 then return Q.top1 elseif row <= 7 then return Q.kf2 elseif row >= 8 then return Q.kf3 end
+    return nil
+  end
+  if c == 3 then
+    if row == 2 then return Q.kf1 elseif row >= 3 and row <= 6 then return Q.kf2 elseif row == 7 or row == 8 then return Q.kf3 end
+    return nil
+  end
+  return nil
+end
+Sc.roadEnds = {}
+function Sc.paintQuay(w, props, def)
+  local art = Sc.art()
+  local pave = art.pavement
+  local pw, ph = pave:getDimensions()
+  local q = {}
+  for i = 0, pw - 1 do q[i] = lg.newQuad(i, 0, 1, 22, pw, ph) end                -- the paving rows 0-21 only
+  local road = art.road
+  local rw, rh = road:getDimensions()
+  local rq = {}
+  for i = 0, rw - 1 do rq[i] = lg.newQuad(i, 0, 1, rh, rw, rh) end
+  -- one pass over the level: each column's top (its first run at or below y 150), kind and distances to ends
+  local W = w.width
+  local top, kind = {}, {}
+  for x = 0, W - 1 do
+    local merged = columnRuns(w, x, "all")
+    for _, m in ipairs(merged) do if m[1] >= 150 then top[x] = m[1]; break end end
+    if top[x] then
+      if w:slopeAt(x) then kind[x] = "ramp"
+      elseif merged[1][1] == 184 then kind[x] = "road"
+      else kind[x] = "quay" end
+    end
+  end
+  local dR, dL = {}, {}                                             -- distance to a quay's end at the water
+  local n = nil
+  for x = W - 1, 0, -1 do
+    if not top[x] then n = nil elseif kind[x] == "quay" then n = (n == nil and (x + 1 < W) and not top[x + 1]) and 0 or (n and n + 1); dR[x] = n else n = nil end
+  end
+  n = nil
+  for x = 0, W - 1 do
+    if not top[x] then n = nil elseif kind[x] == "quay" then n = (n == nil and x > 0 and not top[x - 1]) and 0 or (n and n + 1); dL[x] = n else n = nil end
+  end
+  -- the road's ends next to a ramp: { x of the corner's first column, dir }
+  local ends = {}
+  for x = 1, W - 1 do
+    if kind[x - 1] == "road" and kind[x] == "ramp" then ends[#ends + 1] = { x0 = x - 8, dir = 1 } end
+    if kind[x - 1] == "ramp" and kind[x] == "road" then ends[#ends + 1] = { x0 = x, dir = -1 } end
+  end
+  local function cornerAt(x)                                         -- (corner column c from the road's side, or nil)
+    for _, e in ipairs(ends) do
+      if x >= e.x0 and x < e.x0 + 8 then return e.dir == 1 and (x - e.x0) or (7 - (x - e.x0)) end
+    end
+  end
+  local under = {}                                                  -- the columns under the bridge (its shadow)
+  for _, ps in ipairs(def.passages or {}) do for x = ps.vx0 or ps.x0, (ps.vx1 or ps.x1) - 1 do under[x] = true end end
+  local SHADE = { { 7, 0.62 }, { 14, 0.74 }, { 22, 0.86 } }           -- the bridge's shadow: three flat bands, back to front
+  local function px(c, x, y) lg.setColor(c); lg.rectangle("fill", x, y, 1, 1) end
+  local function run(c, x, y0, y1) if y1 > y0 then lg.setColor(c); lg.rectangle("fill", x, y0, 1, y1 - y0) end end
+  local function column(x, bottom)
+    local t, k = top[x], kind[x]
+    local first = kind[x - 1] ~= "ramp" and k == "ramp"
+    local last = kind[x + 1] ~= "ramp" and k == "ramp"
+    -- 1 the paving (rows 0-21 from t - 12)
+    if k == "ramp" then
+      for r = 0, 19 do
+        local c
+        if first or last then c = Q.pj
+        elseif r == 0 then c = Q.pb
+        elseif r % 5 == 0 then c = Q.pj
+        else
+          local cr = math.floor(r / 5)
+          local u = x + cr * 6
+          if u % 12 == 0 then c = Q.pj else c = Q.ps[(math.floor(u / 12) * 7 + cr * 3) % 3 + 1] end
+        end
+        px(c, x, t - 12 + r)
+      end
+      px((first or last) and Q.tj or Q.top1, x, t + 8); px((first or last) and Q.tj or Q.top2, x, t + 9)
+    else
+      if under[x] then
+        local r0 = 0
+        for _, b in ipairs(SHADE) do
+          clip(x, t - 12 + r0, 1, b[1] - r0)
+          lg.setColor(b[2], b[2], b[2] * 1.06, 1); lg.draw(pave, q[x % pw], x, t - 12)
+          r0 = b[1]
+        end
+        clip()
+      else
+        lg.setColor(1, 1, 1, 1); lg.draw(pave, q[x % pw], x, t - 12)
+      end
+      local d = dR[x] or dL[x]
+      if d and d <= 3 then                                           -- the coping stone along the water's edge
+        local c = (d == 3) and Q.pj or (d == 0 and Q.top2 or Q.top1)
+        run(c, x, t - 12, t + 10)
+      end
+    end
+    -- 2 the granite kerb / coping face (rows t + 10 .. t + 14)
+    local joint = k ~= "ramp" and (x % 16 == 0) or (k == "ramp" and (first or last))
+    local edge = (dR[x] == 0 or dL[x] == 0)
+    for r = 0, 4 do
+      local c = (r == 0) and Q.kf1 or (r == 4 and Q.kf3 or Q.kf2)
+      if joint or edge then c = (r == 0 and edge) and Q.kf2 or Q.kj end
+      px(c, x, t + 10 + r)
+    end
+    -- 3 under it: the asphalt, or the quay wall
+    if k == "road" then
+      lg.setColor(1, 1, 1, 1)
+      clip(x, t + 15, 1, bottom - t - 15); lg.draw(road, rq[x % rw], x, t + 15); clip()
+    else
+      local d = dR[x] or dL[x]
+      px(Q.sh, x, t + 15)
+      for y = t + 16, bottom - 1 do px(wallColour(x, y, d), x, y) end
+    end
+    -- 4 the road's end: the kerb turns the corner
+    local c = cornerAt(x)
+    if c then for row = 0, bottom - (t + 8) - 1 do local col = cornerColour(c, row); if col then px(col, x, t + 8 + row) end end end
+  end
+  local g = chunked(w, function(xa, xb)
+    for x = xa, xb - 1 do
+      if top[x] then
+        local bottom
+        for _, m in ipairs(columnRuns(w, x, "all")) do if m[1] == top[x] then bottom = m[2] end end
+        column(x, bottom)
+      end
+    end
+    for x = xa, xb - 1 do                                           -- greybox terrain above y 150 (none is drawn
+      for _, m in ipairs(columnRuns(w, x, "all")) do                 -- here: the bridge pier's art covers it)
+        if m[1] < 150 then
+          local cov = false
+          for _, p in ipairs(props or {}) do if p.covers and x >= p.x0 and x < p.x1 then cov = true end end
+          if not cov then lg.setColor(C.ground); lg.rectangle("fill", x, m[1], 1, m[2] - m[1]); lg.setColor(C.groundEdge); lg.rectangle("fill", x, m[1], 1, 1) end
+        end
+      end
+    end
+    -- manhole covers and kerb drains, where the road is flat and at least 12 px from its ends
+    lg.setColor(1, 1, 1, 1)
+    local function flatRun(x0, x1) for x = x0 - 12, x1 + 12 do if kind[x] ~= "road" then return false end end return true end
+    local x, k = 150, 0
+    while x < W - 30 do
+      k = k + 1
+      if flatRun(x - 2, x + 22) then lg.draw(art.manhole, x, 199 + ((k % 2 == 0) and 4 or 27)) end
+      x = x + 260 + (k * 97) % 160
+    end
+    x, k = 60, 0
+    while x < W - 20 do
+      k = k + 1
+      if flatRun(x - 2, x + 14) then lg.draw(art.drain, x, 200) end
+      x = x + 180 + (k * 53) % 90
+    end
+  end)
+  -- the decals for look.lua's road (the same spots)
+  Sc.decals = {}
+  local function flatRun(x0, x1) for x = x0 - 12, x1 + 12 do if kind[x] ~= "road" then return false end end return true end
+  local x, k = 150, 0
+  while x < W - 30 do
+    k = k + 1
+    if flatRun(x - 2, x + 22) then Sc.decals[#Sc.decals + 1] = { im = art.manhole, x = x, y = 199 + ((k % 2 == 0) and 4 or 27) } end
+    x = x + 260 + (k * 97) % 160
+  end
+  x, k = 60, 0
+  while x < W - 20 do
+    k = k + 1
+    if flatRun(x - 2, x + 14) then Sc.decals[#Sc.decals + 1] = { im = art.drain, x = x, y = 200 } end
+    x = x + 180 + (k * 53) % 90
+  end
+  -- the road ends' corners again, as small canvases drawn over look.lua's road (painted here, as the chunks are)
+  Sc.roadEnds = {}
+  for _, e in ipairs(ends) do
+    local t = top[e.x0] or 184
+    local y0, bottom = t + 8, (w.height or 240)
+    local cv = lg.newCanvas(8, bottom - y0)
+    cv:setFilter("nearest", "nearest")
+    lg.push("all"); lg.setCanvas(cv); lg.clear(0, 0, 0, 0); lg.origin()
+    for i = 0, 7 do
+      local c = e.dir == 1 and i or (7 - i)
+      for row = 0, bottom - y0 - 1 do
+        local col = cornerColour(c, row)
+        if col and row >= 7 then lg.setColor(col); lg.rectangle("fill", i, row, 1, 1) end
+      end
+    end
+    lg.pop()
+    Sc.roadEnds[#Sc.roadEnds + 1] = { cv = cv, x = e.x0, y = y0 }
+  end
+  return g
+end
+-- the road ends' corner pieces over look.lua's road (stage.lua, right after Look.road)
+function Sc.drawRoadEnds(cam)
+  lg.setColor(1, 1, 1, 1)
+  for _, e in ipairs(Sc.roadEnds or {}) do
+    if e.x - cam > -10 and e.x - cam < 330 then lg.draw(e.cv, e.x - cam, e.y) end
+  end
 end
 
 -- Obstacles stand on the line Pepper walks on, so they read as in her way.
@@ -908,7 +1145,47 @@ end
 -- a low passage under the bridge: its back wall (dark, a little lighter low down) is drawn before the ground, so
 -- the pavement runs into it; then the pavement inside is shaded. Ends fade with a checker dither.
 local PASS1, PASS2 = { 21 / 255, 20 / 255, 31 / 255 }, { 38 / 255, 40 / 255, 56 / 255 }
+-- (art/rw-ground-06nov) p.arch: the underpass of a stone bridge seen end on (River Walk's bridge, under the
+-- approved pier art): a shallow segmental arch (rise 6 px) with a granite ring, spandrels and jambs in the
+-- pier's own stone, the vault inside in flat shaded bands of the same stone (darkest under the crown) with its
+-- courses, no navy hole. Its shadow on the paving is painted with the ground (Sc.paintQuay: three flat bands).
+local ARCH = { lit = rgb(201, 180, 177), joint = rgb(166, 146, 146), shade = rgb(128, 112, 117), dark = rgb(97, 83, 88),
+               ring = rgb(219, 199, 195), ringJ = rgb(158, 138, 140),
+               vault = { rgb(52, 44, 52), rgb(66, 55, 62), rgb(80, 67, 73) }, vaultJ = rgb(58, 48, 56) }
+local function archBack(p, camx)
+  local X0, X1 = p.vx0 or p.x0, p.vx1 or p.x1                     -- (drawn under the art's plinth)
+  if X1 - camx < -2 or X0 - camx > 322 then return end
+  local J, R = 6, 6                                               -- jamb width, the arch's rise
+  local a, b = X0 + J, X1 - J                                     -- the opening between the jambs (world x)
+  for wx = X0, X1 - 1 do
+    local sx = wx - camx
+    if sx >= -1 and sx <= 321 then
+      for y = p.y0, p.y1 - 1 do
+        local c
+        if wx < a or wx >= b then                                  -- the jambs: lit stone, a joint every 6 rows
+          local inner = (wx == a - 1) or (wx == b)
+          c = inner and ARCH.shade or (((y - p.y0) % 6 == 5) and ARCH.joint or ARCH.lit)
+        else
+          local u = (wx - a + 0.5) / (b - a) * 2 - 1
+          local yt = p.y0 + math.floor(R * u * u + 0.5)            -- the opening's top (the arch's intrados)
+          if y < yt - 2 then c = ARCH.lit                          -- spandrel
+          elseif y < yt then                                      -- the ring: voussoirs, a joint every 8 px
+            c = ((wx - a) % 8 == 0) and ARCH.ringJ or ARCH.ring
+          else
+            local dpt = y - yt                                     -- inside the vault: bands, darkest under the arch
+            c = ARCH.vault[math.min(3, 1 + math.floor(dpt / 3))]
+            local k = math.floor((y - p.y0) / 5)
+            if dpt >= 3 and ((y - p.y0) % 5 == 4 or (wx + (k % 2) * 9) % 18 == 0) then c = ARCH.vaultJ end
+          end
+        end
+        lg.setColor(c); lg.rectangle("fill", sx, y, 1, 1)
+      end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
 function Sc.passageBack(p, camx)
+  if p.arch then return archBack(p, camx) end
   local x0, x1 = math.floor(p.x0 - camx), math.floor(p.x1 - camx)
   if x1 < -2 or x0 > 322 then return end
   lg.setColor(PASS1); lg.rectangle("fill", x0, p.y0, x1 - x0, p.y1 - p.y0)
@@ -917,6 +1194,7 @@ function Sc.passageBack(p, camx)
   lg.setColor(1, 1, 1, 1)
 end
 function Sc.passageFront(p, camx)
+  if p.arch then return end                                         -- (its shadow is in the painted ground)
   local x0, x1 = math.floor(p.x0 - camx), math.floor(p.x1 - camx)
   if x1 < -2 or x0 > 322 then return end
   lg.setColor(PASS1[1], PASS1[2], PASS1[3], 0.45); lg.rectangle("fill", x0 + 2, p.y1 - 12, x1 - x0 - 4, 14)
