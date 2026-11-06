@@ -1,0 +1,23 @@
+{
+ "name": "rw_rowboat_concept",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/concepts/base/rw_harbour_x2240.png"
+ ],
+ "prompt_file": "art/gen/prompts/rw_rowboat_concept.txt",
+ "tool": "artlist",
+ "family": "rw_harbour_06nov",
+ "asset": "rw_rowboat",
+ "slot": {
+  "file": "riverwalk/art/scene/rw_rowboat.png",
+  "where": "River Walk harbour, water x 2192-2840, the two rowboats Pepper rides"
+ },
+ "credits": 480,
+ "ledger_job": "rw_rowboat_concept@1106-202149"
+}

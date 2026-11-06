@@ -18,7 +18,12 @@ A job is refused unless every rule in art/gen/rules.json holds:
     (tools/ledger.py). Over a cap needs the owner's words: --owner-ok "what he said".
 On a pass it WRITES the prompt (the fixed art-direction block, the level's light, the layer's outline and colour cap
 are put in by this script, not by hand) and the upload images, and prints one line for the owner with the credits.
-Exit code 1 on any failure."""
+Exit code 1 on any failure.
+Concept jobs ("purpose": "concept", night/06nov-concepts): Artlist may paint a DESIGN TARGET, never game pixels. A concept
+job edits a real in-game frame (base_frame: a 320x240 png from --lookshots, or a whole multiple of it) to show how a
+piece should look in its scene. Checked: the base frame is an in-game frame, the asset and family are named, the slot
+the piece will fill, no forbidden look words, the Artlist daily cap (or the owner's words), a ledger plan row. The
+output goes to art/gen/concepts/ and is marked "reference" in the ledger; it is never cut into the game."""
 import sys, json, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import ledger
@@ -153,13 +158,58 @@ def check(path):
     return job
 
 
+def check_concept(path):
+    J = json.load(open(path)); n = J['name']; bad = []
+    model = R['models'].get(J.get('model', 'nbpro_1k'))
+    if not model or model['tool'] != 'artlist': bad.append("a concept job uses an Artlist model (nbpro_1k, nbpro_2k, nb2)")
+    for f in ('asset', 'family', 'subject', 'base_frame'):
+        if not J.get(f): bad.append(f"'{f}' missing")
+    sl = J.get('slot') or {}
+    if not sl.get('file') or not sl.get('where'): bad.append("slot missing: the game file and spot the concept designs")
+    bf = J.get('base_frame')
+    if bf:
+        if not os.path.exists(bf): bad.append(f"base frame {bf} missing (an in-game frame from --lookshots)")
+        else:
+            w, h = Image.open(bf).size
+            if w % 320 or h % 240 or w // 320 != h // 240: bad.append(f"base frame {w}x{h} is not a 320x240 game frame or a whole multiple")
+    words = ' '.join(str(J.get(f, '')) for f in ('subject', 'extra')).lower()
+    hit = [w for w in R['forbidden_words'] if w in words]
+    if hit: bad.append(f"forbidden look words in the job text: {', '.join(hit)}")
+    cost = 0
+    if model:
+        cost = model['credits'] * J.get('variants', 1)
+        cap = R['caps']; spent = ledger.today('artlist') + PLANNED.get('artlist', 0)
+        if spent + cost > cap['daily_credits']['artlist'] and not OWNER_OK:
+            bad.append(f"artlist today {spent} + {cost} > daily cap {cap['daily_credits']['artlist']}: --owner-ok")
+    if bad:
+        print(f"PREFLIGHT FAIL {n} (concept):"); [print('  -', x) for x in bad]; return None
+    lev = R['levels'].get(J.get('level'), {})
+    prompt = (f"Image 1 is a frame from a 320x240 pixel-art side-scrolling game. Keep the whole frame exactly as it is "
+              f"(the black dog, the ground, the backdrop, every other object, the framing). Change ONLY this: {J['subject']}. "
+              f"{R['art_direction'].split(' Image 2 ')[0]}. {R['art_direction'].split('do not copy them or add them. ')[-1]} {lev.get('light', '')}. Keep the pixel size of the frame: every new pixel the same size "
+              f"as the dog's pixels. No text, no logos." + (f"\n{J['extra']}" if J.get('extra') else ''))
+    open(f'art/gen/prompts/{n}.txt', 'w').write(prompt)
+    import datetime as _dt
+    job = {'name': n, 'purpose': 'concept', 'model': model['name'], 'modelId': model['artlist']['modelId'],
+           'settings': model['artlist'].get('settings'), 'inputs': [bf], 'prompt_file': f'art/gen/prompts/{n}.txt',
+           'tool': 'artlist', 'family': J['family'], 'asset': J['asset'], 'slot': sl, 'credits': cost,
+           'ledger_job': f"{n}@{_dt.datetime.now().strftime('%m%d-%H%M%S')}"}
+    json.dump(job, open(f'art/gen/prompts/{n}.job.json', 'w'), indent=1)
+    PLANNED['artlist'] = PLANNED.get('artlist', 0) + cost
+    if WRITE:
+        ledger.add(kind='plan', job=job['ledger_job'], asset=J['asset'], family=J['family'], tool='artlist',
+                   model=model['name'], credits=cost, status='planned', note=('concept (reference only). ' + OWNER_OK).strip())
+    print(f"PREFLIGHT PASS {n} (concept, reference only): {model['name']}, base {bf}, {cost} credits, ledger job {job['ledger_job']}")
+    return job
+
+
 OWNER_OK = sys.argv[sys.argv.index('--owner-ok') + 1] if '--owner-ok' in sys.argv else ''
 WRITE = '--dry' not in sys.argv
 PLANNED = {}
 
 if __name__ == '__main__':
     args = [a for i, a in enumerate(sys.argv[1:], 1) if a not in ('--dry', '--owner-ok') and sys.argv[i - 1] != '--owner-ok']
-    jobs = [check(p) for p in args]
+    jobs = [check_concept(p) if json.load(open(p)).get('purpose') == 'concept' else check(p) for p in args]
     ok = [j for j in jobs if j]
     print(f"\n{'Rulebook check passed' if len(ok) == len(jobs) else 'BLOCKED'}: {len(ok)}/{len(jobs)} jobs, "
           f"{sum(j['credits'] for j in ok)} credits")

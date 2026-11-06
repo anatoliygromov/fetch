@@ -2,6 +2,11 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `night/06nov-concepts`: concept art as design targets, preflighted (6 Nov night, owner: Artlist up to 3,000 for concepts)
+- **tools/preflight.py concept jobs** (`"purpose": "concept"`): Artlist may paint a design target, never game pixels. A concept job edits a real in-game frame (`base_frame`, 320x240 or a whole multiple) and names its asset, family and slot; forbidden look words, the Artlist daily cap (or the owner's words) and a ledger plan row are checked as for any job. Output in `art/gen/concepts/`, ledger verdict "reference".
+- Why: the 6 Nov rowboat went from a grey blockout straight to final pixels with no design in its scene, and the owner called it terrible. Hero pieces now start from a concept in context, then are split into built parts (geometry), drawn parts (characters, SpriteCook at game size with the concept as reference) and rule-keyed animation.
+- Base frames: `art/gen/concepts/base/` (River Walk harbour x 2240, Downtown high road y 120 x 1280, Downtown street y 240 x 1920, City Park pond y 144 x 640).
+
 ## Branch `preview/06nov`: the owner's fixes from the 6 Nov preview (6 Nov, 0 credits)
 - **Merged `ui/hud-v8` (owner, 24 Oct):** speech bubbles (the speaker in a corner, a snug cream bubble with a tail), portraits as busts, the flat-step sky. It was in build h (`prod/integrate-h`) only; no later integration took it in, so the 6 Nov preview showed the old gold talk panel. Conflicts resolved as on `prod/integrate-h` (main.lua: HUD only while playing, with T_avoid; flow.lua: the bubble story card; uifont_data.lua and font7_speak.png rebuilt by build8.py, identical to h; the other UI pngs build8.py rewrote are pixel-identical and were left as they were).
 - **Merged `play/bikes-front` (owner, 25 Oct):** bikes ride in front of the obstacles and Pepper. It was never integrated. The tall Downtown's crate perches (`AH.drawTownPerches`, 5 Nov) stay where they were drawn.
