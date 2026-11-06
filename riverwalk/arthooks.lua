@@ -293,6 +293,19 @@ local function isFront(p)
   return p.kind == "decor" and p.layer == "back" and (p.name == "" or p.name == nil or p.name == "BAKERY" or p.name == "GUILD HOUSE")
     and p.x1 - p.x0 >= 48 and p.y1 - p.y0 >= 100
 end
+H.PLAZA_FRONTS = true   -- (decision 2a, the owner's call; art/dt-highroad-06nov) true: the plaza balconies stand on the
+                        -- big fronts' own ground floor (doors 2.1 m; a plain wall bay, town_front_tall5, where a door
+                        -- or gate would be behind a balcony; a French window behind each balcony). false: the old
+                        -- quarter-scale plaza houses (town_house1-3) stand behind them, as on art/dt-roofs-06nov.
+local FEATURE = { [1] = 26, [2] = 32, [3] = 35 }                    -- a bay's door, shop or gate: half its width
+local function plazaBalconies(def)                                   -- the balconies on the street's houses (not high)
+  local out = {}
+  for _, q in ipairs(def.props) do
+    if q.name == "BALCONY" and q.layer == "play" and q.y0 > (def.foot or 424) - 120 then out[#out + 1] = q end
+  end
+  return out
+end
+local function guildArt() return H.FIRST_FLOOR and love.filesystem.getInfo("art/scene/town_front_tall6.png") ~= nil end
 local KIT = { LOGGIA = true, GALLERY = true, CHIMNEY = true, DORMER = true, ["FLOWER ROOF"] = true, ["GUILD ROOF"] = true, FOOTBRIDGE = true }
 
 -- the guild house's stepped gable: GUILD ROOF and the unnamed ledges that follow it edge to edge
@@ -370,6 +383,15 @@ local function threeSlice(im, x, y, w)
   end
   lg.draw(im, q[3], x + w - 3, y - 1)
 end
+-- (art/dt-highroad-06nov) a ledge of the high road is carried by the wall: the balcony's corbel (town_console.png,
+-- tools/build_highroad.py) under both its ends, its top row on the slab's ink row (the box's top + 4)
+H.CONSOLE_IN = 2
+function H.consoles(p, x)
+  local im = H.FIRST_FLOOR and H.img("scene/town_console")
+  if not im then return end
+  lg.setColor(1, 1, 1, 1)
+  for _, cx in ipairs({ x + H.CONSOLE_IN, x + (p.x1 - p.x0) - H.CONSOLE_IN - im:getWidth() }) do lg.draw(im, math.floor(cx), p.y0 + 4) end
+end
 -- a high road piece or a back piece of the tall Downtown (from Sc.drawPropArt): true when it is drawn (or drawn
 -- elsewhere: the fronts and the spire, H.drawTownBack)
 function H.townPiece(p, camx, def)
@@ -384,13 +406,19 @@ function H.townPiece(p, camx, def)
     if p.name == "GATE" and not H.gatewayX(def, p) and H.freeGate(p) then return true end   -- (6 Nov: screen 10's gate)
     if p.name == "SHELTER" and H.img("scene/town_breadboard") then return true end
   end
+  if p.name == "HOUSE" and H.PLAZA_FRONTS and H.FIRST_FLOOR then             -- (decision 2a) the old plaza house is
+    for _, q in ipairs(plazaBalconies(def)) do                                -- not drawn under a balcony: the big
+      if q.x1 > p.x0 and q.x0 < p.x1 then return true end                     -- front's own ground floor is there
+    end
+  end
   if p.layer ~= "play" or p.kind == "decor" or not high(def, p) then return false end
   local x = math.floor(p.x0 - camx)
   local n = p.name or ""
   local g = gable(def)
   if g and g.set[p] then                                               -- the stepped gable: drawn once, with its first step
     if p ~= g[1] then return true end
-    local im = H.FIRST_FLOOR and H.img("scene/town_portal_top") or H.img("scene/town_roof_gable")   -- (decision 1a:
+    local im = H.FIRST_FLOOR and (guildArt() and H.img("scene/town_guild_steps") or H.img("scene/town_portal_top")) or H.img("scene/town_roof_gable")
+    -- (art/dt-highroad-06nov: the stone coping of the guild house's granite ground floor, town_front_tall6; else 1a:
     -- the stepped gable becomes the guild house's portal top, its steps where they were; tools/build_dt_street.py)
     if im then lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(g.x0 - camx) - 1, g.top - 1); return true end
     for q in pairs(g.set) do local qx = math.floor(q.x0 - camx); rect(INK, qx - 1, q.y0 - 1, q.x1 - q.x0 + 2, 10); brickFace(qx, q.y0 + 2, q.x1 - q.x0, 7); rect(STONE, qx, q.y0, q.x1 - q.x0, 2) end
@@ -401,18 +429,20 @@ function H.townPiece(p, camx, def)
     if n == "FOOTBRIDGE" then
       local im = H.img("scene/town_footbridge")
       if im then drawImgOn(im, p, x, p.y0 - 1 - H.BRIDGE_RAIL); return true end
+    elseif n == "CHIMNEY" and guildArt() and H.img("scene/town_guild_pier") then   -- (art/dt-highroad-06nov: a stone
+      drawImgOn(H.img("scene/town_guild_pier"), p, x, p.y0 - 1); return true         -- pedestal on the steps' landing)
     elseif n == "CHIMNEY" and H.FIRST_FLOOR and H.img("scene/town_oriel") then   -- (decision 1a: the chimney becomes
       drawImgOn(H.img("scene/town_oriel"), p, x, p.y0 - 1); return true          -- the roof of the guild house's bay
                                                                                -- window, H.drawTownBays; its flat top
                                                                                -- the perch with the golden bone)
     elseif n == "DORMER" and H.FIRST_FLOOR and H.img("scene/town_roof_ledge") then   -- (review round 1: no window
-      threeSlice(H.img("scene/town_roof_ledge"), x, p.y0, w); return true             -- under it for a hood: a ledge)
+      threeSlice(H.img("scene/town_roof_ledge"), x, p.y0, w); H.consoles(p, x); return true   -- under it: a ledge)
     elseif n ~= "" then
       local im = H.img("scene/town_roof_" .. slug(n) .. w) or H.img("scene/town_roof_" .. slug(n))
       if im then drawImgOn(im, p, x, p.y0 - 1, H.STONE_TINT[n]); return true end   -- (a draw-time tint: the art file is not changed)
     else
       local im = H.img("scene/town_roof_ledge")
-      if im then threeSlice(im, x, p.y0, w); return true end
+      if im then threeSlice(im, x, p.y0, w); H.consoles(p, x); return true end
     end
     kitCode(p, x, def); return true
   end
@@ -472,11 +502,11 @@ H.PLASTER = {
 }
 H.PLASTER_ORDER = { "yellow", "red", "cream", "ochre", "stone" }
 local COPING = { { 222 / 255, 214 / 255, 198 / 255 }, { 176 / 255, 166 / 255, 152 / 255 }, { 116 / 255, 108 / 255, 102 / 255 } }
-local function frontImg(k, plaster)
-  local key = k .. plaster .. "#" .. Look.key
+local function plasterImg(name, plaster)                            -- art/scene/<name>.png, plaster swapped, faded
+  local key = name .. plaster .. "#" .. Look.key
   if frontCache[key] == nil then
     frontCache[key] = false
-    local path = "art/scene/town_front_tall" .. k .. ".png"
+    local path = "art/scene/" .. name .. ".png"
     if love.filesystem.getInfo(path) then
       local d = love.image.newImageData(path)
       local to = H.PLASTER[plaster] or SRC
@@ -496,16 +526,33 @@ local function frontImg(k, plaster)
   end
   return frontCache[key]
 end
-local function bays(p, W)                                            -- { { front, x, w }, ... } for a box
+local function frontImg(k, plaster) return plasterImg("town_front_tall" .. k, plaster) end
+local function bays(p, W, def)                                            -- { { front, x, w }, ... } for a box
   local list = {}
   W = W or p.x1 - p.x0
   if p.fronts then for k in tostring(p.fronts):gmatch("%d") do list[#list + 1] = tonumber(k) end end
-  if H.FIRST_FLOOR and p.name == "GUILD HOUSE" then list = { 4 } end   -- (its own 148 px front, round 1)
+  if def and H.FIRST_FLOOR and #list > 1 and love.filesystem.getInfo("art/scene/town_pilaster.png") then
+    for _, q in ipairs(def.props) do                                  -- (art/dt-highroad-06nov) a house under the
+      if q.name == "LOGGIA" and q.layer == "play" and q.x0 >= p.x0 and q.x1 <= p.x0 + W then list = { list[1] } end
+    end                                                               -- LOGGIA is one bay: its gate centred under the
+  end                                                                 -- loggia, the portal (H.drawHighWall)
+  if H.FIRST_FLOOR and p.name == "GUILD HOUSE" then list = { guildArt() and 6 or 4 } end   -- (its own 148 px front;
+  -- art/dt-highroad-06nov: town_front_tall6, the stepped line is its granite ground floor's top)
   local n = #list > 0 and #list or math.max(1, math.floor(W / 88 + 0.5))
   local base, extra, x, out = math.floor(W / n), W - math.floor(W / n) * n, p.x0, {}
   for b = 1, n do
     local bw = base + (b <= extra and 1 or 0)
     out[b] = { list[b], x, bw }; x = x + bw
+  end
+  -- (decision 2a) no door, shop or gate behind a plaza balcony: that bay is the plain wall (town_front_tall5)
+  if def and H.PLAZA_FRONTS and H.FIRST_FLOOR and love.filesystem.getInfo("art/scene/town_front_tall5.png") then
+    for _, b in ipairs(out) do
+      local hw = FEATURE[b[1] or 0]
+      if hw then
+        local c = b[2] + b[3] / 2
+        for _, q in ipairs(plazaBalconies(def)) do if q.x1 > c - hw and q.x0 < c + hw then b[1] = 5 end end
+      end
+    end
   end
   return out
 end
@@ -583,7 +630,7 @@ function H.drawTownBack(s, cam)
         if p.x1 - cam > -20 and p.x0 - cam < 330 then
           local full = not cutAtTop(p)
           local top, px1 = p.y0, (full and nextX[p]) or p.x1
-          for bi, b in ipairs(bays(p, px1 - p.x0)) do
+          for bi, b in ipairs(bays(p, px1 - p.x0, def)) do
             local f = frontImg(b[1] or ((nb + bi) % 3 + 1), plaster) or frontImg(1, plaster)
             drawBay(f, math.floor(b[2] - cam), b[3], p.y0, p.y1, full)
             if full then top = math.min(top, p.y1 - f.h) end
@@ -601,6 +648,7 @@ function H.drawTownBack(s, cam)
     end
     H.drawTownGateways(def, cam)
     H.drawTownBays(def, cam)
+    H.drawHighWall(def, cam)
     lg.setColor(1, 1, 1, 1)
     return
   end
@@ -655,7 +703,7 @@ function H.gatewayX(def, p)                              -- the gateway's centre
       local ex = p.x1 - 1
       for _, q in ipairs(def.props) do
         if isFront(q) and not cutAtTop(q) and ex >= q.x0 and ex < q.x1 then
-          for _, b in ipairs(bays(q)) do if ex >= b[2] and ex < b[2] + b[3] then c[p] = b[2] + b[3] / 2 end end
+          for _, b in ipairs(bays(q, nil, def)) do if ex >= b[2] and ex < b[2] + b[3] then c[p] = b[2] + b[3] / 2 end end
         end
       end
     end
@@ -694,7 +742,7 @@ end
 -- perch (town_oriel.png, townPiece), centred on the box, its bottom on the box's bottom (the portal top's crown); drawn
 -- with the fronts, faded as they are. tools/build_dt_street.py town_oriel_bay.png.
 function H.drawTownBays(def, cam)
-  if not (tallTown(def) and H.FIRST_FLOOR) then return end
+  if not (tallTown(def) and H.FIRST_FLOOR) or guildArt() then return end
   local im = decoImg("town_oriel_bay")
   if not im then return end
   for _, p in ipairs(def.props) do
@@ -748,6 +796,204 @@ function H.drawTownPerches(s, cam)
     end
   end
   lg.setColor(1, 1, 1, 1)
+end
+
+
+-- ===================================================================================================================
+-- (art/dt-highroad-06nov) the high road attached to its house fronts. The owner on the roofs frames (6 Nov): "this
+-- looks weird": the true-scale fronts (decision 1a) run past the top of the screen and the high road's pieces hung in
+-- the middle of their walls. Drawn on the fronts here (decoration, faded, after the fronts, before the back props),
+-- each from its file (tools/build_highroad.py), nothing drawn when it is not there:
+--   the galleries' string course: the fronts' own course (granite lit, three mid, a dark lip) under the balustrades'
+--     plinth (the box's top + 31), along the whole front of every house a gallery stands on (on the guild house only
+--     under the gallery), so the balustrade stands on the facade
+--   the loggia's pilasters (town_pilaster.png): from its foot (top + 25) to the plinth, 3 px in from its ends, so the
+--     loggia is the entablature of the carriage gate's portal
+--   a first-floor balcony's door (town_window_door.png): the upper window over it carried down to its slab
+--   a plaza balcony's French window (town_balcony_door.png, decision 2a only): under the string course's line (the
+--     front's foot - 119), cut at the slab; the guild house has its two in its own front (town_front_tall6)
+--   cast shadows: every piece of the high road and every balcony throws its own silhouette 2 px right and 3 px down
+--     on the wall (light from the upper left), multiplied so the wall's plaster turns exactly into its own shade (the
+--     front's S over W, through the look) and a cornice or window under it a step darker
+H.SHADOW_DX, H.SHADOW_DY = 2, 3
+local frontList = setmetatable({}, { __mode = "k" })
+local function frontsOf(def)                                         -- the fronts in order, their plaster and right end
+  if frontList[def] then return frontList[def] end
+  local out, nb = {}, 0
+  for _, p in ipairs(def.props) do
+    if isFront(p) then
+      nb = nb + 1
+      local x1 = p.x1
+      if not cutAtTop(p) then
+        for _, q in ipairs(def.props) do if q ~= p and isFront(q) and q.x0 > p.x1 and q.x0 - p.x1 <= 8 then x1 = q.x0 end end
+      end
+      out[#out + 1] = { p = p, plaster = p.plaster or H.PLASTER_ORDER[(nb - 1) % #H.PLASTER_ORDER + 1], x1 = x1 }
+    end
+  end
+  frontList[def] = out; return out
+end
+local function frontAt(def, x)
+  for _, f in ipairs(frontsOf(def)) do if x >= f.p.x0 and x < f.x1 and not cutAtTop(f.p) then return f end end
+end
+local function grade(c)                                              -- the look's back shader (look.lua SRC) on the CPU
+  if not Look.on then return c end
+  local sc = Look.scripts and Look.scripts[Look.key]
+  local q = sc and sc.layers and (sc.layers.back or sc.layers.play)
+  if not q then return c end
+  local r, g, b = c[1], c[2], c[3]
+  local L = 0.299 * r + 0.587 * g + 0.114 * b
+  r, g, b = L + (r - L) * q.sat, L + (g - L) * q.sat, L + (b - L) * q.sat
+  local w, k = q.warm * L * L, q.cool * (1 - L) * (1 - L)
+  r, g, b = r + w * 0.080 - k * 0.030, g + w * 0.032 - k * 0.045, b - w * 0.048 + k * 0.085
+  r, g, b = r + (q.haze[1] - r) * q.k, g + (q.haze[2] - g) * q.k, b + (q.haze[3] - b) * q.k
+  local function cl(v) return math.max(0, math.min(1, v)) end
+  return { cl(r), cl(g), cl(b) }
+end
+local STONE_SHADE = { { 110, 103, 95 }, { 77, 72, 68 } }             -- granite: its stone and shade (the fronts' T, V)
+local function shadeRatio(plaster)                                   -- what turns the wall into its shade on screen
+  local pl = plaster == "granite" and STONE_SHADE or H.PLASTER[plaster] or SRC
+  local w = grade(Sc.fadeC({ pl[1][1] / 255, pl[1][2] / 255, pl[1][3] / 255 }))
+  local s = grade(Sc.fadeC({ pl[2][1] / 255, pl[2][2] / 255, pl[2][3] / 255 }))
+  return { math.min(1, s[1] / math.max(w[1], 1e-3)), math.min(1, s[2] / math.max(w[2], 1e-3)), math.min(1, s[3] / math.max(w[3], 1e-3)) }
+end
+local maskCache = {}
+local function shadowMask(name, plaster)                             -- the art's silhouette in the shade ratio, white round it
+  local key = name .. "#" .. plaster .. "#" .. Look.key .. tostring(Look.on)
+  if maskCache[key] == nil then
+    maskCache[key] = false
+    local path = "art/scene/" .. name .. ".png"
+    if love.filesystem.getInfo(path) then
+      local r = shadeRatio(plaster)
+      local d = love.image.newImageData(path)
+      d:mapPixel(function(x, y, cr, cg, cb, a) if a > 0 then return r[1], r[2], r[3], 1 end return 1, 1, 1, 1 end)
+      local im = lg.newImage(d); im:setFilter("nearest", "nearest"); maskCache[key] = im
+    end
+  end
+  return maskCache[key]
+end
+local oldForget = H.forget
+H.forget = function() oldForget(); maskCache = {} end
+local function course(x0, x1, y)                                     -- the fronts' string course (5 rows), faded
+  local L, T, V = faded({ 135 / 255, 130 / 255, 120 / 255 }), faded({ 110 / 255, 103 / 255, 95 / 255 }), faded({ 77 / 255, 72 / 255, 68 / 255 })
+  rect(L, x0, y, x1 - x0, 1); rect(T, x0, y + 1, x1 - x0, 3); rect(V, x0, y + 4, x1 - x0, 1)
+end
+local function upperWindowX(def, f, cx)                              -- the centre of the upper window over x in front f
+  for _, b in ipairs(bays(f.p, f.x1 - f.p.x0, def)) do
+    if cx >= b[2] and cx < b[2] + b[3] and b[1] and b[1] ~= 4 and b[1] ~= 6 then
+      local im = frontImg(b[1], f.plaster)
+      if not im then return nil end
+      local fw = im.w
+      if b[3] <= fw then return b[2] + math.floor(fw / 2) - math.floor((fw - b[3]) / 2) end
+      return b[2] + math.floor((b[3] - fw) / 2) + math.floor(fw / 2)
+    end
+  end
+end
+local function drawPart(im, x, y, rows)                              -- an image's top rows (all of it when rows is nil)
+  local iw, ih = im:getDimensions()
+  rows = math.min(ih, rows or ih)
+  if rows <= 0 then return end
+  lg.setColor(1, 1, 1, 1); lg.draw(im, lg.newQuad(0, 0, iw, rows, iw, ih), math.floor(x), math.floor(y))
+end
+function H.drawHighWall(def, cam)
+  if not (tallTown(def) and H.FIRST_FLOOR) then return end
+  local shadows = {}                                                 -- { name, x, y, plaster } or { rect = {x, y, w, h}, plaster }
+  local function onScreen(x0, x1) return x1 - cam > -60 and x0 - cam < 380 end
+  -- the galleries' string course: one band per house front, merged
+  local segs = {}
+  for _, g in ipairs(def.props) do
+    if g.name == "GALLERY" and g.layer == "play" and high(def, g) then
+      for _, f in ipairs(frontsOf(def)) do
+        if not cutAtTop(f.p) and f.p.x0 < g.x1 and f.x1 > g.x0 then
+          if f.p.name == "GUILD HOUSE" then segs[#segs + 1] = { math.max(g.x0, f.p.x0), math.min(g.x1, f.x1), g.y0 + 31, f.plaster }
+          else segs[#segs + 1] = { f.p.x0, f.x1, g.y0 + 31, f.plaster } end
+        end
+      end
+    end
+  end
+  table.sort(segs, function(a, b) return a[1] < b[1] end)
+  local merged = {}
+  for _, sg in ipairs(segs) do
+    local m = merged[#merged]
+    if m and sg[1] <= m[2] and sg[3] == m[3] then m[2] = math.max(m[2], sg[2]) else merged[#merged + 1] = { sg[1], sg[2], sg[3], sg[4] } end
+  end
+  for _, m in ipairs(merged) do
+    if onScreen(m[1], m[2]) then
+      course(m[1] - cam, m[2] - cam, m[3])
+      shadows[#shadows + 1] = { rect = { m[1] - cam, m[3] + 5, m[2] - m[1], 2 }, plaster = m[4] }
+    end
+  end
+  for _, p in ipairs(def.props) do
+    local cx = (p.x0 + p.x1) / 2
+    if p.layer == "play" and p.kind ~= "decor" and onScreen(p.x0, p.x1) then
+      local f = frontAt(def, cx)
+      local n, x = p.name or "", math.floor(p.x0 - cam)
+      if p.name == "LOGGIA" and high(def, p) and f then                    -- the portal's pilasters
+        local im = plasterImg("town_pilaster", f.plaster)
+        if im then
+          for _, px in ipairs({ p.x0 + 3, p.x1 - 3 - 12 }) do drawPart(im.im, px - cam, p.y0 + 25, f.p.y1 - 8 - (p.y0 + 25)) end
+        end
+      end
+      if n == "BALCONY" and f then
+        local im = H.img("scene/town_balcony" .. (p.x1 - p.x0))
+        if high(def, p) then                                               -- a first-floor balcony: its door
+          local wcx = upperWindowX(def, f, cx)
+          local wd = plasterImg("town_window_door", f.plaster)
+          local y = f.p.y1 - 192
+          if wcx and wd and math.abs(wcx - cx) <= 8 then drawPart(wd.im, wcx - 25 - cam, y, p.y0 - y) end
+          if im then shadows[#shadows + 1] = { "town_balcony" .. (p.x1 - p.x0), x - 1, p.y0 - 1 - Sc.BALCONY_RAIL, f.plaster } end
+        elseif H.PLAZA_FRONTS then                                         -- a plaza balcony (decision 2a): its window
+          local bd = plasterImg("town_balcony_door", f.plaster)
+          if bd and not (f.p.name == "GUILD HOUSE" and guildArt()) then
+            local bx = math.max(f.p.x0 + 1, math.min(math.floor(cx - 18), f.x1 - 3 - bd.w))
+            local y = f.p.y1 - 119
+            drawPart(bd.im, bx - cam, y, p.y0 + 2 - y)
+          end
+          if im then shadows[#shadows + 1] = { "town_balcony" .. (p.x1 - p.x0), x - 1, p.y0 - 1 - Sc.BALCONY_RAIL, f.plaster } end
+        end
+      elseif high(def, p) and f then
+        local w = p.x1 - p.x0
+        local g = gable(def)
+        if g and g.set[p] then
+          if p == g[1] and guildArt() then shadows[#shadows + 1] = { "town_guild_steps", math.floor(g.x0 - cam) - 1, g.top - 1, "granite" } end
+        elseif n == "CHIMNEY" and guildArt() then shadows[#shadows + 1] = { "town_guild_pier", x - 1, p.y0 - 1, f.plaster }
+        elseif n == "LOGGIA" then shadows[#shadows + 1] = { "town_roof_loggia", x + math.floor(w / 2) - 61, p.y0 - 1, f.plaster }
+        elseif n == "GALLERY" then shadows[#shadows + 1] = { "town_roof_gallery" .. w, x - 1, p.y0 - 1, f.plaster }
+        elseif n == "FLOWER ROOF" then shadows[#shadows + 1] = { "town_roof_flower_roof", x - 1, p.y0 - 1, f.plaster }
+        elseif n == "AWNING" then                                          -- (scene.lua: centred, its top row y0 - 1)
+          local an = w >= 72 and "town_awning80" or "town_awning64"
+          local aim = H.img("scene/" .. an)
+          if aim then shadows[#shadows + 1] = { an, x + math.floor(w / 2 - aim:getWidth() / 2), p.y0 - 1, f.plaster } end
+        elseif n == "" or n == "DORMER" then                               -- a ledge: its slab and its two corbels
+          local wcx = upperWindowX(def, f, cx)                             -- (under a first-floor window: a French
+          local wd, wr = plasterImg("town_window_door", f.plaster), plasterImg("town_window_rail", f.plaster)   -- balcony)
+          local y = f.p.y1 - 192
+          if wcx and wd and wr and math.abs(wcx - cx) <= 8 and p.y0 > y + wr.h then
+            drawPart(wd.im, wcx - 25 - cam, y, p.y0 - 1 - y)
+            drawPart(wr.im, wcx - 22 - cam, p.y0 - 1 - wr.h)
+          end
+          shadows[#shadows + 1] = { rect = { x - 1, p.y0 - 1, w + 2, 6 }, plaster = f.plaster }
+          for _, c in ipairs({ x + H.CONSOLE_IN, x + w - H.CONSOLE_IN - 8 }) do
+            shadows[#shadows + 1] = { rect = { c, p.y0 + 4, 8, 3 }, plaster = f.plaster }
+            shadows[#shadows + 1] = { rect = { c + 2, p.y0 + 7, 4, 3 }, plaster = f.plaster }
+          end
+        end
+      end
+    end
+  end
+  -- the shadows, multiplied (no look shader: the ratio already went through it)
+  lg.setShader(); lg.setBlendMode("multiply", "premultiplied")
+  for _, sh in ipairs(shadows) do
+    if sh.rect then
+      local r = shadeRatio(sh.plaster)
+      lg.setColor(r[1], r[2], r[3], 1)
+      lg.rectangle("fill", math.floor(sh.rect[1] + H.SHADOW_DX), math.floor(sh.rect[2] + H.SHADOW_DY), sh.rect[3], sh.rect[4])
+    else
+      local m = shadowMask(sh[1], sh[4])
+      if m then lg.setColor(1, 1, 1, 1); lg.draw(m, math.floor(sh[2] + H.SHADOW_DX), math.floor(sh[3] + H.SHADOW_DY)) end
+    end
+  end
+  lg.setBlendMode("alpha"); lg.setColor(1, 1, 1, 1)
+  if Look.on then Look.use("back") end
 end
 
 return H
