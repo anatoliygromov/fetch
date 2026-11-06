@@ -1,3 +1,6 @@
+## Branch `tools/scale-gate-06nov`: the scale gate (6 Nov, 0 credits)
+- **tools/scale_gate.py** (owner 6 Nov 19:12, "wrong scale"): every paid render is measured before any cut, retry or further job. Pepper must be 52x38 within 2 px; the subject must be within 10 % of the blockout mask. Tested on all 6 Nov renders: the four Nano Banana 2.1 renders fail (cargo bike off grid, hedge 3.4x, tub 2.4x, tram half grid); the GPT 2.5 renders that were used pass (oak 1.08x, cargo bike 1.01x, hedge 1.03x).
+- **preflight.py** refuses Nano Banana 2.1 for blockout jobs (rules.json `no_blockout_models`); the default model is now GPT 2.5 Sunburst. docs/art_learnings.md has the rejection line.
 # Changelog
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.

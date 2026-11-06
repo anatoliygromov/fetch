@@ -54,6 +54,8 @@ def check(path):
     if not model: bad.append(f"model '{J.get('model')}' not in rules")
     elif not R['tools'][model['tool']]['pixels']:
         bad.append(f"{model['name']} is {model['tool']}: {R['tools'][model['tool']]['use']}. Use a SpriteCook model")
+    if model and J.get('model', R['default_model']) in R.get('no_blockout_models', []):   # (owner 6 Nov 19:12: wrong scale)
+        bad.append(f"{model['name']} ignores the blockout's sizes (6 Nov: 1.3x to 4x too big): use sc_gpt25 / sc_gpt25_2k, or sc_pe for 16-128 px")
     if J.get('tier') not in ('A', 'B'): bad.append("tier must be A or B (tier C is built in code or from parts, never generated)")
     if not J.get('family'): bad.append("family missing (assets are made 4 to 6 at a time, docs/WORKFLOW.md)")
     sl = J.get('slot') or {}

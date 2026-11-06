@@ -180,7 +180,7 @@
    "_note": "5 Nov round 3 (City Park lime and ash): the method change after two failed review rounds; a 512 frame at 4 px per art px"
   }
  },
- "default_model": "sc_nb21",
+ "default_model": "sc_gpt25",
  "forbidden_words": [
   "haze",
   "hazy",
@@ -324,5 +324,10 @@
    "tree_far"
   ],
   "max_top_y": -1
- }
+ },
+ "no_blockout_models": [
+  "sc_nb21",
+  "sc_nb21_2k"
+ ],
+ "_no_blockout_models": "(owner 6 Nov 19:12, 'wrong scale') Nano Banana 2.1 ignores the blockout's sizes: 6 Nov the cargo bike, tub and hedge came back 1.3x to 4x too big, the tram on a half grid. Blockout jobs use GPT 2.5 Sunburst (follows the grid) or Pixel Engine Image (exact size, 16-128 px). Every render passes tools/scale_gate.py before any cut, retry or further job."
 }
