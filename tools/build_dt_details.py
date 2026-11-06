@@ -40,6 +40,7 @@ OUT = os.path.join(ROOT, "riverwalk", "art", "scene")
 
 C = {
     "ink": (18, 18, 26),
+    "w1": (84, 104, 122), "w2": (66, 84, 104), "w3": (50, 64, 84),             # granite under water (night/06nov-dt)
     "g1": (135, 130, 120), "g2": (110, 103, 95), "g3": (77, 72, 68), "g4": (58, 50, 56),                     # granite
     "s1": (132, 146, 156), "s2": (88, 100, 112), "s3": (64, 74, 86), "s4": (46, 54, 64),                     # steel
     "r1": (247, 134, 113), "r2": (206, 53, 49), "r3": (125, 28, 36),                                         # spring red
@@ -279,8 +280,58 @@ def basin_wall():
     return cv
 
 
+def wall_lantern():
+    """(night/06nov-dt; audit: "a street lamp stands on the GALLERY balcony") a high road checkpoint's lantern on the
+    wall: the approved street lamp's head (lamp_post.png rows 0-28, cut 1:1, untouched; its glass rows 12-23 light up
+    as the lamp's do) on a built iron bracket in the lamp's own iron: an arm under it to a wall plate, a stay"""
+    lp = np.array(Image.open(os.path.join(OUT, "lamp_post.png")).convert("RGBA"))
+    W, H = 24, 42
+    im = np.zeros((H, W, 4), np.uint8)
+    im[0:29, 10:24] = lp[0:29, 0:14]
+    lit, mid, dark = (88, 109, 134, 255), (53, 69, 95, 255), (15, 21, 40, 255)
+    im[29, 1:21] = mid; im[30, 1:21] = lit; im[31, 1:21] = mid                 # the arm (mid edges, lit core)
+    im[30, 1] = mid; im[30, 20] = mid
+    im[24:42, 0] = mid; im[24:42, 1] = lit; im[24:42, 2] = mid                  # the wall plate
+    im[24, 0:3] = mid; im[41, 0:3] = mid
+    for i in range(12):                                                         # the stay, from the plate up to the arm
+        x, y = 3 + i, 40 - (i * 8) // 11
+        im[y, x] = mid
+    return im
+
+
+def parasol_pier():
+    """(night/06nov-dt; audit: "parasols grow out of the flooded square: 1 px poles from water with no base") a granite
+    mooring pier under a parasol standing in the water, 12 x 60: a coped cap 5 rows over the waterline (outlined: it is
+    the obstacle's foot), its shaft on under the water in the stone's wet, darker shades (no outline under water)"""
+    cv = Cv(12, 60)
+    cv.rect(1, 1, 10, 6, "g2"); cv.rect(1, 1, 10, 1, "g1"); cv.rect(1, 1, 1, 6, "g1"); cv.rect(10, 2, 10, 6, "g3")
+    cv.rect(1, 4, 10, 4, "g3")                                                  # the cap's joint
+    cv.rect(1, 7, 10, 59, "w2")                                                 # (the shaft under the water)
+    cv.outline()
+    cv.rect(2, 2, 9, 2, "g1"); cv.rect(2, 2, 2, 3, "g1")                       # lit inside the ink
+    cv.rect(2, 7, 2, 58, "w1"); cv.rect(9, 7, 9, 58, "w3")
+    for y in range(15, 59, 8): cv.rect(2, y, 9, y, "w3")
+    cv.rect(1, 6, 10, 6, "ink")                                                 # the cap's foot at the waterline
+    return cv
+
+
+def quay(w=32):
+    """(night/06nov-dt; audit: "the crate tower sinks 56 px below the street") the canal's granite quay wall under a
+    crate stack whose box runs below the street (CRATES x 2624, y 360-480): w x 56, the basin wall's ashlar (8 px
+    courses, 16 px blocks offset by half), its wet face on the left to the canal. Ground: no outline"""
+    W, H = w, 56
+    cv = Cv(W, H)
+    cv.rect(0, 0, W - 1, H - 1, "g2")
+    for y in range(0, H, 8):
+        cv.rect(0, y, W - 1, y, "g1"); cv.rect(0, y + 7, W - 1, y + 7, "g3")
+        for jx in range(4 + (8 if (y // 8) % 2 else 0), W, 16): cv.rect(jx, y + 1, jx, y + 6, "g3")
+    cv.rect(0, 0, 0, H - 1, "g4"); cv.rect(1, 0, 2, H - 1, "g3")                 # the wet face, its joint
+    cv.rect(W - 1, 0, W - 1, H - 1, "g3")
+    return cv
+
+
 def build():
-    return {"town_basin_wall": basin_wall(), "town_balcony56": balcony(56), "town_balcony64": balcony(64), "town_spring": spring(),
+    return {"town_quay32": quay(32), "town_parasol_pier": parasol_pier(), "town_wall_lantern": wall_lantern(), "town_basin_wall": basin_wall(), "town_balcony56": balcony(56), "town_balcony64": balcony(64), "town_spring": spring(),
             "town_stopsign": stopsign(), "town_tier": tier(), "town_bowl": bowl(), "town_rim": rim(), "town_jet": jet()}
 
 
@@ -291,7 +342,7 @@ if __name__ == "__main__":
     bad = 0; ims = {}
     for n, cv in build().items():
         if o.names and n not in o.names: continue
-        im = cv.png(); ims[n] = im; p = os.path.join(OUT, n + ".png")
+        im = cv if isinstance(cv, np.ndarray) else cv.png(); ims[n] = im; p = os.path.join(OUT, n + ".png")
         ncol = len({tuple(c) for c in im[im[..., 3] > 0][:, :3].tolist()})
         if o.check:
             ok = os.path.exists(p) and np.array_equal(np.array(Image.open(p).convert("RGBA")), im)

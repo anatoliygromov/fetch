@@ -101,13 +101,10 @@ def surround(g, x0, y0, ears=False):
     g.rect(x0 - 3, y0 - 3, x1 + 3, y0 - 3, "L"); g.rect(x0 - 3, y0 - 3, x0 - 3, y1, "L")
     g.rect(x1 + 3, y0 - 2, x1 + 3, y1, "V")
     g.rect(x1 + 4, y0 - 3, x1 + 5, y1 + 6, "S")
-    if ears:
-        for sx0, sx1 in ((x0 - 6, x0 - 4), (x1 + 4, x1 + 6)):
-            g.rect(sx0, y0 - 3, sx1, y0 + 6, "T")
-            g.rect(sx0, y0 - 3, sx1, y0 - 3, "L")
-        g.rect(x0 - 6, y0 - 3, x0 - 6, y0 + 6, "L"); g.rect(x0 - 6, y0 + 7, x0 - 4, y0 + 7, "V")
-        g.rect(x1 + 6, y0 - 2, x1 + 6, y0 + 6, "V"); g.rect(x1 + 4, y0 + 7, x1 + 6, y0 + 7, "V")
-        g.rect(x1 + 7, y0 - 3, x1 + 8, y0 + 9, "S")
+    if ears:                                                          # (2 px ears: lit on the left, shade right)
+        g.rect(x0 - 5, y0 - 3, x0 - 4, y0 + 6, "L"); g.rect(x0 - 5, y0 + 7, x0 - 4, y0 + 7, "V")
+        g.rect(x1 + 4, y0 - 3, x1 + 5, y0 + 6, "V"); g.rect(x1 + 4, y0 - 3, x1 + 5, y0 - 3, "L")
+        g.rect(x1 + 6, y0 - 3, x1 + 7, y0 + 9, "S"); g.rect(x1 + 4, y0 + 7, x1 + 7, y0 + 9, "S")   # (one shadow)
         keystone(g, (x0 + x1 + 1) // 2, y0 - 6)
 
 def keystone(g, cx, ytop):
@@ -144,12 +141,7 @@ def head_tri(g, x0, y0):
         top = base - min(10, d // 2)
         if top + 2 <= base - 1: g.put(x, top + 2, "V" if x > cx else "T")
     g.rect(l, base, r, base, "V")
-    for x in range(int(cx) + 1, r + 3):                                # cast shadow right of the rake
-        d = r - x
-        top = base - min(10, max(0, d) // 2) + 1
-        if x > r: top = base - 2
-        for y in range(top, base + 1):
-            if g.a[y, x] == "W": g.put(x, y, "S")
+
 
 def head_seg(g, x0, y0):
     """a segmental stone arch over the window: a ring 4 px thick, rising 8 px, voussoir joints, a keystone"""
@@ -274,11 +266,17 @@ def upper(w, xs, st):
     course(g, 0, st["cornice"]); course(g, STOREY, st["cornice"])
     for k, storey in ((0, 2), (1, 1)):
         head = st["heads"][0 if storey == 1 else 1]
+        axs = []
         for cx in xs:
             window(g, cx, k * STOREY + 26, head, st, storey)
-            if st["anchors"]:
-                for ax in (cx - ANCHOR_DX - 4, cx + ANCHOR_DX - 1):
-                    if 1 <= ax and ax + 6 <= w - 1: g.stamp(ANCHOR, ax, k * STOREY + 10)
+            axs += [cx - ANCHOR_DX - 4, cx + ANCHOR_DX - 1]
+        if st["anchors"]:                                             # (two axes: one anchor between them)
+            axs.sort(); out = []
+            for ax in axs:
+                if out and ax - out[-1] < 12: out[-1] = (out[-1] + ax) // 2
+                else: out.append(ax)
+            for ax in out:
+                if 1 <= ax and ax + 6 <= w - 1: g.stamp([r_.replace("I", "V") for r_ in ANCHOR], ax, k * STOREY + 10)
     return g.a
 
 def ground(k, w, st):
@@ -289,7 +287,15 @@ def ground(k, w, st):
     g = G(w, a.shape[0]); g.a = a
     g.rect(0, 0, w - 1, 7, "W"); course(g, 0, st["cornice"])
     if k == 1 and st["sign"]: hanging_sign(g, w // 2, 13, st["sign"])
+    if k == 3: gate_step(g)
     return g.a
+
+def gate_step(g):
+    """the carriage gate's threshold step runs on under its lowest jamb blocks (a 2 px stub of the jamb under it read as
+    a window to asset_qa's window check)"""
+    r = TF.PLINTH - 1 - TF.CORNICE
+    for x in range(g.w):
+        if g.a[r, x] in "TV" and g.a[r - 1, x] in "LTV": g.a[r, x] = "L"
 
 def colours(st):
     c = dict(C)
@@ -312,6 +318,12 @@ def front(k, s):
         w = 148
         gate = TF.front_gate(w).role[TF.CORNICE:].copy()
         g = G(w, gate.shape[0]); g.a = gate; g.rect(0, 0, w - 1, 7, "W"); course(g, 0, st["cornice"])
+        pl = TF.PLINTH - TF.CORNICE                                    # the plinth's joints symmetric about the gate,
+        for y in range(pl + 1, g.h - 1):                               # clear of its threshold (a 4 px gap there read
+            for x in range(w):                                         # as a window to asset_qa)
+                if g.a[y, x] == "V": g.a[y, x] = "T"
+        for x in (2, 26, 122, 146): g.rect(x, pl + 1, x, g.h - 2, "V")
+        gate_step(g)
         return render(np.vstack([upper(w, [40, 108], st), g.a]), colours(st))
     w = TF.WIDTHS.get(k, 88)
     return render(np.vstack([upper(w, [w // 2], st), ground(k, w, st)]), colours(st))

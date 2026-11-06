@@ -122,7 +122,12 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          # art/dt-highroad-06nov: the high road attached to its fronts (tools/build_highroad.py, arthooks.lua drawHighWall)
          "town_front_tall5": (88, 432, 0, 0), "town_front_tall6": (148, 432, 0, 0), "town_balcony_door": (38, 52, 0, 0),
          "town_window_door": (52, 50, 0, 0), "town_window_rail": (44, 24, 0, 0), "town_pilaster": (14, 101, 0, 0),
-         "town_guild_steps": (122, 35, 0, 0), "town_guild_pier": (18, 46, 0, 0), "town_console": (8, 7, 0, 0)}
+         "town_guild_steps": (122, 35, 0, 0), "town_guild_pier": (18, 46, 0, 0), "town_console": (8, 7, 0, 0),
+         # night/06nov-dt: the facade lift (tools/build_dt_facades.py), the bridge's springers (tools/build_roof_kit.py),
+         # the basin's wall (tools/build_dt_details.py)
+         "town_front_tall1_a": (80, 432, 0, 0), "town_front_tall2_a": (88, 432, 0, 0), "town_front_tall3_a": (96, 432, 0, 0), "town_front_tall5_a": (88, 432, 0, 0), "town_front_tall6_a": (148, 432, 0, 0), "town_front_tall7_a": (148, 432, 0, 0), "town_front_tall1_b": (80, 432, 0, 0), "town_front_tall2_b": (88, 432, 0, 0), "town_front_tall3_b": (96, 432, 0, 0), "town_front_tall5_b": (88, 432, 0, 0), "town_front_tall6_b": (148, 432, 0, 0), "town_front_tall7_b": (148, 432, 0, 0), "town_front_tall1_c": (80, 432, 0, 0), "town_front_tall2_c": (88, 432, 0, 0), "town_front_tall3_c": (96, 432, 0, 0), "town_front_tall5_c": (88, 432, 0, 0), "town_front_tall6_c": (148, 432, 0, 0), "town_front_tall7_c": (148, 432, 0, 0), "town_front_tall1_d": (80, 432, 0, 0), "town_front_tall2_d": (88, 432, 0, 0), "town_front_tall3_d": (96, 432, 0, 0), "town_front_tall5_d": (88, 432, 0, 0), "town_front_tall6_d": (148, 432, 0, 0), "town_front_tall7_d": (148, 432, 0, 0), "town_front_tall1_e": (80, 432, 0, 0), "town_front_tall2_e": (88, 432, 0, 0), "town_front_tall3_e": (96, 432, 0, 0), "town_front_tall5_e": (88, 432, 0, 0), "town_front_tall6_e": (148, 432, 0, 0), "town_front_tall7_e": (148, 432, 0, 0), "town_front_tall1_f": (80, 432, 0, 0), "town_front_tall2_f": (88, 432, 0, 0), "town_front_tall3_f": (96, 432, 0, 0), "town_front_tall5_f": (88, 432, 0, 0), "town_front_tall6_f": (148, 432, 0, 0), "town_front_tall7_f": (148, 432, 0, 0), "town_drainpipe": (6, 432, 0, 0),
+         "town_bridge_springer": (14, 20, 0, 0), "town_basin_wall": (10, 56, 0, 0),
+         "town_wall_lantern": (24, 42, 0, 0), "town_parasol_pier": (12, 60, 0, 0), "town_quay32": (32, 56, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",
@@ -133,13 +138,15 @@ HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_t
 BUILDINGS = {"town_house1", "town_house2", "town_house3", "town_facades", "town_row", "building", "cafe", "gable",
              "facades_square", "house_tall_a", "house_tall_b", "house_tall_c", "town_front_tall1", "town_front_tall2",
              "town_front_tall3", "town_front_tall4", "town_front_tall5", "town_front_tall6", "town_door"}
+BUILDINGS |= {f"town_front_tall{k}_{s}" for k in (1, 2, 3, 5, 6, 7) for s in "abcdef"}   # (night/06nov-dt)
 ORGANIC = {"tree", "tree_far", "rw_birch", "tree_near", "park_tree1", "park_tree2", "park_oak", "park_willow", "park_willow_tall",
            "park_hedge", "park_bush", "park_leaves", "park_leaves_flat", "park_treeline", "skyline", "far_shore_bridge"}
 FROZEN = {"pepper"}                                               # Pepper's files are frozen: report only
 # owner-approved exceptions (check ids that only warn for these)
 EXCEPT = {"cafe": {"colours"}, "gable": {"colours"}, "pavement": {"ladder"},
           "bone": {"outline"}, "bone_gold": {"outline"},                   # pickups: white, unoutlined by design
-          "lamp_post": {"decor-ink"}, "kiosk_kaffe": {"decor-ink"}, "kiosk_glass": {"decor-ink"}}   # the approved River Walk set
+          "lamp_post": {"decor-ink"}, "town_wall_lantern": {"decor-ink"},   # (night/06nov-dt: the lamp's head on a bracket)
+          "kiosk_kaffe": {"decor-ink"}, "kiosk_glass": {"decor-ink"}}   # the approved River Walk set
 
 
 # ------------------------------------------------------------------------------------------------ small tools

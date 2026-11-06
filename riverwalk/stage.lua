@@ -624,7 +624,8 @@ function St:draw(debug)
   lg.setColor(1, 1, 1, 1)
   for _, l in ipairs(self.lamps) do                                -- lamp posts; a passed checkpoint lights up
     local x = l.x - cam
-    if x > -20 and x < 340 then
+    if x > -60 and x < 380 and AH.wallLantern(self, l, cam) then    -- (night/06nov-dt: a lantern on the wall)
+    elseif x > -20 and x < 340 then
       local im = l.lit and art.lamp_lit or art.lamp_post
       local lx, top = math.floor(x - im:getWidth() / 2), l.y - (highLamp(l) and -1 or Sc.EDGE) - im:getHeight()
       if highLamp(l) then                                          -- (its whole foot on the ledge: Downtown's lamp at

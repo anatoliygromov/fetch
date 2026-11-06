@@ -43,7 +43,7 @@ C = dict(
     bl=(178, 124, 60), bm=(150, 94, 42), bd=(112, 64, 28),              # bread crust
     sl=(132, 146, 156), sm=(88, 100, 112), ss=(64, 74, 86), sd=(46, 54, 64),   # steel (dark, so it reads faded)
     gb=(150, 166, 174),                                                # the glass's reflection band
-    ii=(40, 66, 54), im=(58, 94, 76), il=(92, 130, 106),                # the shelter's green cast iron (night/06nov-dt)
+    ii=(56, 84, 70), im=(72, 110, 90), il=(104, 144, 118),                # the shelter's green cast iron (night/06nov-dt)
     ga=(132, 162, 170), gw=(176, 200, 206),                            # its glass canopy, the glint
     pc=(113, 108, 94), pk=(104, 63, 74),                               # the poster's card (150 on screen), pink icing
     tl=(135, 130, 120), tm=(110, 103, 95), tv=(77, 72, 68),             # granite (the fronts' L, T, V)

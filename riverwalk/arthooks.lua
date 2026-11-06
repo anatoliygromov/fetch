@@ -428,7 +428,18 @@ function H.townPiece(p, camx, def)
     local w = p.x1 - p.x0
     if n == "FOOTBRIDGE" then
       local im = H.img("scene/town_footbridge")
-      if im then drawImgOn(im, p, x, p.y0 - 1 - H.BRIDGE_RAIL); return true end
+      if im then
+        -- (night/06nov-dt) the arch's feet on granite springers on the two house corners, under its iron plates
+        local sp = H.img("scene/town_bridge_springer")
+        if sp then
+          local bx = math.floor(x + w / 2 - im:getWidth() / 2)          -- (the art's left, as drawImgOn)
+          local fy = math.floor(p.y0 - 1 - H.BRIDGE_RAIL) + 42           -- (art row 42: the plate's foot less 2)
+          lg.setColor(1, 1, 1, 1)
+          lg.draw(sp, bx + 3 - sp:getWidth(), fy)
+          lg.draw(sp, bx + im:getWidth() - 3 + sp:getWidth(), fy, 0, -1, 1)
+        end
+        drawImgOn(im, p, x, p.y0 - 1 - H.BRIDGE_RAIL); return true
+      end
     elseif n == "CHIMNEY" and guildArt() and H.img("scene/town_guild_pier") then   -- (art/dt-highroad-06nov: a stone
       drawImgOn(H.img("scene/town_guild_pier"), p, x, p.y0 - 1); return true         -- pedestal on the steps' landing)
     elseif n == "CHIMNEY" and H.FIRST_FLOOR and H.img("scene/town_oriel") then   -- (decision 1a: the chimney becomes
@@ -1010,6 +1021,62 @@ function H.drawHighWall(def, cam)
   end
   lg.setBlendMode("alpha"); lg.setColor(1, 1, 1, 1)
   if Look.on then Look.use("back") end
+end
+
+-- (night/06nov-dt; audit 6 Nov: "a street lamp stands on the GALLERY balcony") a checkpoint lamp on the tall
+-- Downtown's high road is a lantern on an iron bracket on the house wall (tools/build_dt_details.py
+-- town_wall_lantern.png: the approved lamp's head, cut 1:1, on a built bracket), clear of the house's windows; lit as
+-- the lamps are (its glass rows 12-23 warm, the rest faded). The checkpoint itself (l.x, l.y) is unchanged.
+local lantern = {}
+local function lanternImg(lit)
+  local key = (lit and "lit" or "off") .. "#" .. Look.key
+  if lantern[key] == nil then
+    lantern[key] = false
+    if love.filesystem.getInfo("art/scene/town_wall_lantern.png") then
+      local d = love.image.newImageData("art/scene/town_wall_lantern.png")
+      if lit then
+        local hz, fk = Sc.haze("back"), Sc.fadeK("back")
+        local function is(r, g, b, R, G, B) return math.abs(r * 255 - R) < 1 and math.abs(g * 255 - G) < 1 and math.abs(b * 255 - B) < 1 end
+        d:mapPixel(function(x, y, r, g, b, a)
+          if y >= 12 and y <= 23 and a > 0 then
+            if is(r, g, b, 187, 211, 233) then return 250 / 255, 214 / 255, 120 / 255, a
+            elseif is(r, g, b, 88, 109, 134) then return 201 / 255, 150 / 255, 72 / 255, a end
+          end
+          return r + (hz[1] - r) * fk, g + (hz[2] - g) * fk, b + (hz[3] - b) * fk, a
+        end)
+      else Sc.fadeData(d) end
+      local im = lg.newImage(d); im:setFilter("nearest", "nearest"); lantern[key] = im
+    end
+  end
+  return lantern[key]
+end
+H.LANTERN_UP = 36                                        -- the bracket's arm this far over the floor (0.8 m)
+function H.wallLantern(s, l, cam)                        -- true when drawn (a high lamp of the tall Downtown)
+  local def = s.def
+  if not (tallTown(def) and H.FIRST_FLOOR and l.y < def.foot - 120) then return false end
+  local im = lanternImg(l.lit)
+  if not im then return false end
+  local f = frontAt(def, l.x)
+  local axes = {}
+  if f then for _, b in ipairs(bays(f.p, f.x1 - f.p.x0, def)) do axes[#axes + 1] = b[2] + math.floor(b[3] / 2) end end
+  local best
+  for d = 0, 40 do
+    for _, cx in ipairs({ l.x - d, l.x + d }) do
+      local ok = true
+      for _, ax in ipairs(axes) do if math.abs(cx - ax) < 33 then ok = false end end
+      if ok and not best then best = cx end
+    end
+  end
+  local cx = best or l.x
+  local near = math.huge
+  for _, ax in ipairs(axes) do if math.abs(ax - cx) < math.abs(near) then near = ax - cx end end
+  local flip = near < 0                                    -- (the wall plate away from the nearest window)
+  local top = l.y - H.LANTERN_UP - 31
+  lg.setColor(1, 1, 1, 1)
+  if flip then lg.draw(im, math.floor(cx - cam) - 6 + im:getWidth(), top, 0, -1, 1)
+  else lg.draw(im, math.floor(cx - cam) - 17, top) end
+  if l.lit then Sc.lampLight(math.floor(cx - cam), top + 17, s.t - (l.litAt or -9), s.t) end
+  return true
 end
 
 return H

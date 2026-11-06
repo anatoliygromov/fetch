@@ -165,6 +165,12 @@ add(["town_roof_loggia", "town_roof_gallery88", "town_roof_gallery72", "town_roo
 add(["town_front_tall5", "town_front_tall6", "town_balcony_door", "town_window_door", "town_window_rail", "town_pilaster"],
     "dt", "back", True, group="Downtown")
 add(["town_guild_steps", "town_guild_pier", "town_console"], "dt", "play", group="Downtown")
+# night/06nov-dt: the styled fronts and the downpipe faded as the fronts; the bridge's springers on Pepper's line; the
+# basin's wall is ground (drawn unfaded, the ground's face)
+add([f"town_front_tall{k}_{s}" for k in (1, 2, 3, 5, 6, 7) for s in "abcdef"] + ["town_drainpipe"], "dt", "back", True, group="Downtown")
+add(["town_bridge_springer", "town_parasol_pier"], "dt", "play", group="Downtown")
+add(["town_basin_wall", "town_quay32"], "dt", "ground", group="Downtown")
+add(["town_wall_lantern"], "dt", "back", True, group="Downtown")
 add(["town_stopsign"], "dt", "back", True, group="Downtown")        # arthooks.lua stopSign: H.img(.., true), the back fade
 add(["town_jet"], "dt", "back", group="Downtown")                  # scene.lua drawTerrainArt: decoration on her line, unfaded
 add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, group="Characters (never shaded)")

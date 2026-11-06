@@ -2432,6 +2432,11 @@ function Sc.drawPropArt(p, camx, def, kicked)
   else
     if n == "DOOR" then at(T.door, x, 175 + d - T.door:getHeight())
     elseif n == "CRATES" then                                     -- a stack of apple crates, 16 px each
+      local qy = def.foot and p.y1 > def.foot and optImg("town_quay" .. w)   -- (night/06nov-dt) a box that runs
+      if qy then                                                  -- below the street: the crates stand on the street,
+        lg.setColor(1, 1, 1, 1); lg.draw(qy, math.floor(x), def.foot)       -- the canal's quay wall under them
+        p = { x0 = p.x0, x1 = p.x1, y0 = p.y0, y1 = def.foot }
+      end
       local k = math.max(1, math.floor((p.y1 - p.y0) / 16 + 0.5))
       shadowUnder(p, camx)
       local cr = T.crates[w]                                      -- (art/dt-props-06nov) the box's own width: 15 rows
@@ -2446,14 +2451,23 @@ function Sc.drawPropArt(p, camx, def, kicked)
       for _, q in ipairs(def.props) do if q.name == "TABLE" and q.x0 >= p.x0 and q.x1 <= p.x1 then tb = q end end
       local px = math.floor(x + w / 2) - 1
       local foot = tb and tb.y0 or 240 + d                        -- (no table: a pole standing in the water)
+      local pier                                                  -- (night/06nov-dt) in the water: on a granite pier
       if not tb and Sc.world then                                 -- (art/dt-props-06nov) on the pavement it stands on
         local wet = false                                         -- the street, it does not run through it
-        for _, r in ipairs(Sc.world.water or {}) do if p.x0 + w / 2 >= r.x0 and p.x0 + w / 2 < r.x1 then wet = true end end
-        if not wet then foot = 184 + d end
+        for _, r in ipairs(Sc.world.water or {}) do
+          if p.x0 + w / 2 >= r.x0 and p.x0 + w / 2 < r.x1 then wet = true; pier = math.min(pier or 1e9, r.y0) end
+        end
+        if not wet then foot = 184 + d; pier = nil end
+        if pier and def.foot and optImg("town_parasol_pier") then foot = pier - 5 else pier = nil end
       end
       lg.setColor(INK); lg.rectangle("fill", px - 1, p.y1, 4, foot - p.y1)
       lg.setColor(0.55, 0.57, 0.6); lg.rectangle("fill", px, p.y1, 2, foot - p.y1)
       lg.setColor(0.72, 0.74, 0.77); lg.rectangle("fill", px, p.y1, 1, foot - p.y1)   -- its lit left edge
+      if pier then                                                -- the pier, and a ripple ring at its waterline
+        lg.setColor(1, 1, 1, 1); lg.draw(optImg("town_parasol_pier"), px - 5, pier - 6)
+        lg.setColor(0.80, 0.90, 0.96); lg.rectangle("fill", px - 10, pier + 1, 4, 1); lg.rectangle("fill", px + 8, pier + 1, 4, 1)
+        lg.rectangle("fill", px - 7, pier + 3, 2, 1); lg.rectangle("fill", px + 7, pier + 3, 2, 1)
+      end
       local sq = (p.squashT or 0) > 0 and 2 or 0                  -- a springy one dips as it launches her
       if T.parasols[w] then at(T.parasols[w], x - 1, p.y0 - 1 + sq)   -- (the box's own width, ink round it)
       else at(T.parasol, x, p.y0 - 1 + sq) end
