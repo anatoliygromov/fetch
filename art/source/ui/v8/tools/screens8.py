@@ -220,6 +220,43 @@ def tails():
             if tuple(l[y, x, :3]) == GOLD['dark'] and l[y, x, 3]: l[y, x, :3] = GOLD['light']
     return d, u, l, r
 
+
+# ---- (owner 24 Oct: "more like a speech bubble, this looks like a painting frame") the speech bubble for talk lines
+# and hints: a 9-slice (corners 6 x 6), round pixel corners, ink outline, a cream fill with a light top row and a soft
+# lower shade, one colour family, no gold. Its tails point at the speaker (talk) or at Pepper (hints).
+def speech(N=13, R=4):
+    """N x N, the round corners of a radius-R pixel circle (symmetric on both axes): ink outline, cream fill, the top
+    inner row lit, the bottom two inner rows and the right inner column in the soft shade"""
+    m = np.zeros((N, N), bool)
+    for y in range(N):
+        for x in range(N):
+            cx = min(max(x, R), N - 1 - R); cy = min(max(y, R), N - 1 - R)
+            m[y, x] = (x - cx) ** 2 + (y - cy) ** 2 <= (R + 0.35) ** 2
+    edge = m & ~ndimage.binary_erosion(m, structure=CROSS, border_value=0)
+    body = m & ~edge
+    img = np.zeros((N, N, 4), np.uint8)
+    put(img, edge, INK); put(img, body, CREAM)
+    top = body & ~np.roll(body, 1, 0); put(img, top, CREAM_HI)                      # the lit top inner row
+    bot1 = body & ~np.roll(body, -1, 0); bot2 = body & ~np.roll(body & ~bot1, -1, 0) & ~bot1
+    put(img, bot1 | bot2, CREAM_LO)
+    return img
+
+def stails(W=8, H=6):
+    """the comic tail pointing right (r) or left (l): its base column lies over the bubble's side outline (cream there,
+    so the outline opens); a flat top edge and a lower edge slanting up to the point, ink outside, cream inside.
+    (d, u: the old symmetric tails, kept for nothing; returned for the build's names)"""
+    m = np.zeros((H, W), bool)
+    for x in range(W):
+        h = int(round((H - 1) * (1 - x / (W - 1)))) + 1          # the column's height, H at the base down to 1 at the point
+        m[:h, x] = True
+    img = np.zeros((H, W, 4), np.uint8)
+    edge = m & ~ndimage.binary_erosion(m, structure=CROSS, border_value=0)
+    edge[:, 0] = False; edge[0, 0] = True; edge[H - 1, 0] = True     # the base stays open (cream) except its two ends
+    put(img, m, CREAM); put(img, edge, INK)
+    r = img; l = img[:, ::-1].copy()
+    d = np.transpose(img, (1, 0, 2)).copy(); u = d[::-1].copy()
+    return d, u, l, r
+
 def ball(D=13):
     disc, edge, rim, face, lit, ci = I7.disc_parts(D); img = np.zeros((D, D, 4), np.uint8)
     inner = disc & ~edge
@@ -448,6 +485,9 @@ def build(out):
     save('bubble', bubble(), sh=False)
     d, u, l, r = tails()
     save('tail_d', d, sh=False); save('tail_u', u, sh=False); save('tail_l', l, sh=False); save('tail_r', r, sh=False)
+    save('speech', speech(), sh=False)
+    sd, su, sl, sr = stails()
+    save('stail_d', sd, sh=False); save('stail_u', su, sh=False); save('stail_l', sl, sh=False); save('stail_r', sr, sh=False)
     save('ball', ball())
     rw, mw = ribbon(176, 19, arch=0); save('ribbon_wide', rw); meta['ribbon_wide_body'] = mw     # FETCH FRENZY! (review fix 5: 176, the words well clear of its ends)
     for k, (w, h, el) in PICTURES.items(): save('pic_' + k, picture2(w, h, el))

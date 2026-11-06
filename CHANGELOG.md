@@ -118,6 +118,26 @@ Built on `prod/integrate` with `art/preflight` merged. Tools and docs only; no g
 
 ## Branch `ui/panel-hud`: no HUD row under the cards (24 Oct)
 - **Drawing only (main.lua, bonus.lua, flow.lua):** while a centred card is up over the game (level intro, story, pause and QUIT?, controls from the pause, GAME OVER, GOOD GIRL! tally, FETCH FRENZY intro and result) the HUD row is not drawn at all; the warm dim and the controls strip stay. The pause already shows the bones found, the tally the level's points. The ending card moved 4 px down and a card dropping in never rises above the 4 px top margin, so no ribbon or frame is cut by the screen's top. Talk panel and hint bubbles unchanged. Checks: layout_qa_menus.py checks no HUD piece outside a card's panel and the 4 px top margin; layout_qa8.py checks no HUD row under a card (instead of filtering it out). Sheet: out/panel_hud_before_after.png (not committed).
+## The sky without dotted rows (24 Oct, owner)
+The owner asked what the dotted bar across the sky was: the 2 x 2 checker rows joining two sky bands. Each band is now
+split into 4 flat steps towards the next band's colour (look.lua, Look.SKY_STEPS), every level and the tall skies; no
+dither.
+
+## Speech bubbles (24 Oct, owner)
+The owner: the talk panel looked like a painting frame; speech bubbles with little white space and smaller letters.
+Talk lines and the story card are now comic speech bubbles: Mia (or Pepper) stands in a bottom corner, her shoulders
+cut by the screen's edge, and a snug cream bubble (art/ui/speech, round corners, ink outline) floats beside her face
+with a tail at her mouth (art/ui/stail_l, stail_r); the words in the small font in plain dark letters (new style
+`speak`, 7 px). When Pepper is in her corner she stands in the other corner (mirrored); when Pepper is beside her the
+bubble goes over her head, the tail pointing down. The story bubble keeps above the controls strip; the HUD groups
+under a speaker step aside. The control hints keep their dark bubbles (a different meaning: a game tip). Flow test
+"talk: Pepper low on the quay" now checks that the bubble and Mia miss Pepper (was: the panel goes to the top).
+
+## Portraits as busts, no frames (24 Oct, owner)
+The owner: Mia was cropped in the UI and he did not like the frame around Mia and the dog. The talk panel and the
+story card now draw each portrait as a cut-out bust at 1x, its whole head and hood, with a 1 px light rim, standing on
+the panel's end with its shoulders tucked behind the panel; no frame. No HUD under the story card between levels
+(Mia's head rose into it). Checks: PEPPER UNCHANGED, check_flow 125 of 125.
 
 ## Branch `ui/hud-v8` step 3: every remaining screen in the kit (24 Oct)
 Follows docs/ui_design.md. Drawing only: logic, inputs and saves as they were unless a line says otherwise. Frames:

@@ -211,10 +211,13 @@ return function(api)
       add({ act = function() tp(1600, 216 + dy) end }, wait(0.1))
     end
     if name == "riverwalk" then
-      -- low on the quay the bottom panel would cover Pepper: it moves to the top
-      add({ act = function() tp(1340, 216) end }, wait(0.4), check("talk: Pepper low on the quay: the panel goes to the top", function()
+      -- (owner 24 Oct: speech bubbles) low on the quay: the bubble and the speaker never cover Pepper (beside her in
+      -- a corner, the other corner, or the bubble over the speaker's head)
+      add({ act = function() tp(1340, 216) end }, wait(0.4), check("talk: Pepper low on the quay: the bubble and Mia miss her", function()
         local L = T.placed(api.stage()); local x0, y0, x1, y1 = T.pepperRect(api.stage())
-        return L and L.by < 100 and not (L.x0 < x1 and L.x1 > x0 and L.y0 < y1 and L.y1 > y0), L and ("panel y %d-%d, Pepper y %d-%d"):format(L.y0, L.y1, y0, y1) or "no panel" end),
+        local clear = L ~= nil
+        for _, r in ipairs(L and L.rects or {}) do if r[1] < x1 and r[3] > x0 and r[2] < y1 and r[4] > y0 then clear = false end end
+        return clear, L and ("bubble y %d-%d, Pepper y %d-%d"):format(L.rects[1][2], L.rects[1][4], y0, y1) or "no bubble" end),
         shot("u10_top"))
     end
     add({ act = function() local s = api.stage(); s.lives, s.hearts, s.score = 2, 1, s.score + 1200

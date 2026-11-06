@@ -390,6 +390,14 @@ local function drawTuning()                                       -- (dev, Tab) 
   U.say(7, "dim", "- + CHANGE", x + 4, y + h - 11)
 end
 
+-- while playing, the HUD groups under Pepper or under a speaker in her corner step aside
+function T_avoid()
+  local list = { { Talk.pepperRect(stage) } }
+  local L = Talk.placed(stage)
+  if L and L.corner then list[#list + 1] = L.rects[2] end
+  return list
+end
+
 function love.draw()
   love.graphics.setCanvas(canvas); love.graphics.clear(0, 0, 0)
   local screen = (state == "title" and function() Title.draw(t, titleLeaving) end)
@@ -412,10 +420,10 @@ function love.draw()
   -- the HUD (hud.lua): while playing, a group Pepper is up under steps aside (ui/hud-v8: per group, not the whole HUD).
   -- Only while playing (ui/panel-hud, 24 Oct): under a centred card (intro, pause, GAME OVER, tally, story) the HUD
   -- row is not drawn at all, so the card's ribbon and frame never cut through its numbers; the pause shows the bones
-  -- found and the tally the level's points in the card itself.
+  -- found and the tally the level's points in the card itself. (ui/hud-v8: the speech bubble steps aside too, T_avoid)
   if state == "play" then
     U.status({ lives = st.lives, hearts = st.hearts, bones = st.bones, total = st.total, time = st.time, score = st.score, hard = stage.hard },
-      { Talk.pepperRect(stage) })
+      T_avoid())
   end
   if state == "intro" then
     Flow.drawIntro(def, t, { Talk.pepperRect(stage) })            -- (ui step 3) the gold card, the story, A GO
