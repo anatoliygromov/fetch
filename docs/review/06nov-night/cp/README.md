@@ -61,3 +61,9 @@ Frames: `round1/<spot>_r0_r1_colour.png` and `_grey.png` (round 0 left, round 1 
 
 Checks after round 1: PEPPER UNCHANGED, flow 125/125, TILED PASSED, BACKDROP OK, spans and pond kit --check OK, physics citypark_tall 97/97, citypark 85/85, riverwalk 55/55, downtown_tall 102/102, check_curve T1-T4 PASS, City Park ladder light to dark.
 Owner questions 1-3 above were settled by the review (willow 10 m kept, highlight kept, perch 3 on the hedge). Question 4 is answered by this round.
+
+## Fix round 2 (review e62a282, 0 credits): the forks by a new method
+
+Two rounds failed on the forks, so the method changed (BIBLE): no ledge art over an art tree's trunk at all, and each fork on an art tree drawn pixel by pixel as one tapered limb on the landing side plus a stub on the other (scene.lua `drawForkLimbs`). Frames: `round2/<spot>_r1_r2_colour.png` / `_grey.png` (round 1 left, round 2 right, x 960/1280/1600/2560 at y 0/24/144) and the 10x crops `round2/*_10x.png`.
+
+Forks the boxes make impossible as asked: the five lime forks (x 976-1040, 1088-1144, 1192-1248, 1400-1456, 1504-1560) reach only 8 to 15 px past their trunks on each side. Their 24 px limb runs 9 to 16 px past the box's end (there 2-3 rows thick and dropping 1-2 px), and the stub is as long as the box reaches on its side (8 to 15 px, not 4-6) so no part of the hit box is bare. The old oak's CROWN (55 and 66 px each side) has a limb each side.
