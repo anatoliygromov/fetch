@@ -500,6 +500,53 @@ def build_swings():
     return a
 
 
+# ------------------------------------------------------------------------------------- the climbing frame and its step
+FB, FB_D, FB_L = hx('3f7fb6'), hx('2c5a85'), hx('7fb4dd')   # the old frame's blue pipe (tools/make_town_art.py)
+
+
+def build_frame():
+    """(art/cp-audit-06nov) park_frame.png, 90 x 67, drawn at (FRAME x0 - 1, 119 + dy): image x = world x - 2711, y =
+    world y - 263 in the tall level (the flat one: 119). The audit: "a blue crate beside Pepper's nose with no purpose;
+    the blue frame bars read as a cage". What they are: the STEP prop (2716-2732, top 316, solid, hidden: drawn by this
+    image) is the first step up onto the climbing frame; the frame is two posts with two bars Pepper stands on (FRAME
+    2712-2784 at y 304, the bar 2724-2800 at 280), and 6 vertical rungs hung between the bars under a top rail closed
+    the whole frame into a box of bars. Built by rule, the same boxes on the same pixels:
+      posts 4 px pipes (lit left, shaded right) from y 264 to the path, each with a ball cap; no top rail
+      the two bars as before (4 px pipes), each held at its free end by one strut to the other bar; no rungs
+      a ladder up the left: 2 px rungs between the left post and the upper bar's strut, every 8 px
+      the step: a yellow tread (the play tower's yellow) on two short blue legs, open under it: a step, not a crate
+    1 px ink outline (an obstacle)."""
+    W, H = 90, 67
+    a = canvas(W, H)
+
+    def vpipe(x, y0, y1):
+        rect(a, x, y0, 4, y1 - y0, FB); rect(a, x, y0, 1, y1 - y0, FB_L); rect(a, x + 3, y0, 1, y1 - y0, FB_D)
+
+    def hpipe(x0, x1, y, h=4):
+        rect(a, x0, y, x1 - x0, h, FB); rect(a, x0, y, x1 - x0, 1, FB_L); rect(a, x0, y + h - 1, x1 - x0, 1, FB_D)
+    vpipe(1, 3, 66); vpipe(85, 3, 66)                     # the posts, to the path (y 328 = row 65)
+    for x in (1, 85):                                     # ball caps (6 x 3 over the post's 4)
+        rect(a, x, 1, 4, 1, FB_L); rect(a, x - 1, 2, 6, 1, FB); put(a, x, 2, FB_L)
+    vpipe(13, 21, 41)                                     # the upper bar's strut, down to the lower bar
+    vpipe(69, 21, 41)                                     # the lower bar's strut, up to the upper bar
+    for y in (26, 34):                                    # the ladder's rungs (left post to the strut)
+        hpipe(5, 13, y, 2)
+    hpipe(5, 13, 48, 2)                                   # and one between the lower bar and the step
+    hpipe(13, 89, 17)                                     # the upper bar (box 2724-2800, y 280)
+    hpipe(1, 73, 41)                                      # the lower bar, FRAME (box 2712-2784, y 304)
+    rect(a, 5, 53, 16, 1, Y_LT); rect(a, 5, 54, 16, 2, Y_MID); rect(a, 5, 56, 16, 1, Y_SH)   # the step's tread (box 2716-2732, top 316)
+    for x in (6, 17):                                     # its legs, open under it
+        rect(a, x, 57, 3, 9, FB); put(a, x, 57, FB_D); rect(a, x, 58, 1, 8, FB_L)
+    al = a[..., 3] > 0                                    # the 1 px ink outline round everything
+    out = a.copy()
+    for y in range(H):
+        for x in range(W):
+            if al[y, x]: continue
+            if any(0 <= y + dy < H and 0 <= x + dx < W and al[y + dy, x + dx] for dy, dx in ((-1, 0), (1, 0), (0, -1), (0, 1))):
+                out[y, x] = INK
+    return out
+
+
 # ------------------------------------------------------------------------------------------------------- main
 def main():
     P = props(); water = water_runs()
@@ -511,6 +558,10 @@ def main():
 
     save('park_gate', build_gate())
     save('park_swings', build_swings())
+    os.makedirs(os.path.join(SRC, 'park_frame'), exist_ok=True)
+    old = os.path.join(SRC, 'park_frame', 'park_frame_old.png')
+    if not os.path.exists(old): Image.open(os.path.join(SCENE, 'park_frame.png')).save(old)
+    save('park_frame', build_frame())
     named = [p for p in P if p['name'] in ('TREETOP WALK', 'ALDER WALK') and p['y1'] <= FOOT - 90]
     for p in named:
         w = p['x1'] - p['x0']
