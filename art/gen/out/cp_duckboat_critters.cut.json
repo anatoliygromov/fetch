@@ -1,0 +1,17 @@
+{
+ "name": "cp_duckboat",
+ "size": [
+  92,
+  60
+ ],
+ "render": "art/gen/renders/cp_duckboat_a.png",
+ "cut_by": "Pixel Engine Image output at game size: pitch 1, taken 1:1, nothing resampled; tools/build_duckboat.py",
+ "measures_px": {
+  "length": 91,
+  "deck_row": 41,
+  "head_top_row": 0,
+  "water_row": 48
+ },
+ "colours": 19,
+ "fails": []
+}

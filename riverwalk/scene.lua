@@ -999,6 +999,7 @@ function Sc.townArt(style)
   local gw, gd = T.ground:getWidth(), { T.ground:getDimensions() }
   T.bankTop = lg.newQuad(0, 0, gw, style == "park" and 9 or 10, gd[1], gd[2])   -- the lawn / pavement's back edge
   T.bankEarth = lg.newQuad(0, 44, gw, 20, gd[1], gd[2])                        -- earth rows (the pond's far bank)
+  T.bankLawn = lg.newQuad(0, 0, gw, 7, gd[1], gd[2])                           -- the lawn only (a park pond's far side)
   TA[key] = T
   return T
 end
@@ -1128,6 +1129,79 @@ local function farOakImg(T)
   return T.farOak
 end
 
+-- (art/cp-audit-06nov) a park pond's banks, by rule (0 credits). The audit: "the pond reads as a dark pit": a 30 px
+-- band of the earth strata (the ground art's dark rows) over a strip of water, the path ending in a straight cut.
+-- Now the water comes up to a waterline 16 px over its box's top (POND_RISE: the far part of its surface, seen from
+-- the path, the water art's own lighter rows 4-19), under a short bank seen across the pond: the lawn, its lit lip,
+-- a sloping face of sunlit earth going damp and wet down to the water, a row of rounded granite stones along its
+-- foot. At each end the bank curves round to the path (BANK_R px), its wet foot following the shore, and under the
+-- surface the basin's side slopes in (1 px every 3 rows) as submerged earth. Flat colours: the ground art's earth
+-- ramp, the lawn, the stepping stones' granite; no outline (decoration). Nothing Pepper uses moves: the water box,
+-- the path and the stones' boxes are as they were (she still splashes at the box's top, 2 px under the old line).
+Sc.POND_RISE, Sc.BANK_R = 16, 16
+Sc.WINCH_DX = 8                                                   -- (the winch keeper: see WINCH)
+local BANK = { lip = hex("b5ad55"), lawn = hex("9e983f"), dry = hex("d09d68"), damp = hex("bd8354"), wet = hex("8a5a3a"),
+  foot = hex("5e4127"), st1 = hex("c9c2b4"), st2 = hex("a39b8e"), st3 = hex("7a736a"), sub = hex("3d5866"),
+  subEdge = hex("4f6f7a"), rip = hex("d3f2fd"), lit = hex("ddae79") }
+local STONE_W, STONE_H = { 10, 7, 12, 8, 9, 11 }, { 4, 3, 5, 4, 3, 4 }
+-- the far bank's colour at row k (0 at the lawn's lip) of n rows, world column wx; nil: leave it (a stone)
+local function bankRow(k, n, wx)
+  if k == 0 then return BANK.lip end
+  if k <= 2 then return BANK.lawn end
+  if k == 3 then return (wx % 7 < 3) and BANK.lawn or BANK.dry end   -- grass hanging over the lip, a tuft every 7 px
+  if k == 4 then return (wx % 7 == 1) and BANK.lawn or BANK.dry end
+  if k >= n - 1 then return BANK.foot end
+  if k >= n - 3 then return BANK.wet end
+  if k >= math.floor(n / 2) + 1 then return BANK.damp end
+  return BANK.dry
+end
+-- the stones along the bank's foot: one every 29 px of the world, sizes from a fixed list; their bottom row on the
+-- foot row (the waterline). Returns the colour of world column wx at row k from the foot (0 = foot row), or nil
+local function bankStone(wx, k)
+  local i = math.floor(wx / 29)
+  local sw, sh = STONE_W[1 + i % #STONE_W], STONE_H[1 + (i * 5) % #STONE_H]
+  local c0 = i * 29 + (i * 13) % 11
+  local u = wx - c0
+  if u < 0 or u >= sw or k >= sh then return nil end
+  if (u == 0 or u == sw - 1) and (k == sh - 1 or k == 0) then return nil end   -- rounded corners
+  if k == sh - 1 then return BANK.st1 end                         -- its lit top
+  if k == 0 or u == sw - 1 then return BANK.st3 end               -- the shaded underside and right side
+  return BANK.st2
+end
+function Sc.drawPondBank(p, camx, d, wbottom)
+  local x0, x1 = math.floor(p.x0 - camx), math.floor(p.x1 - camx)
+  local yb, wt = 179 + d, p.y0 - Sc.POND_RISE                    -- the lawn's lip; the waterline
+  local n = wt - yb
+  local R = Sc.BANK_R
+  local function px(x, y, c) lg.setColor(c); lg.rectangle("fill", x, y, 1, 1) end
+  for x = math.max(x0, -1), math.min(x1 - 1, 320) do
+    local wx = x + math.floor(camx)
+    local i = math.min(x - x0, x1 - 1 - x)                        -- columns from the nearer end of the pond
+    local foot = wt                                               -- where the bank meets the water in this column
+    if i < R then
+      local u = 1 - (i + 0.5) / R
+      foot = wt + math.floor(Sc.POND_RISE * (1 - math.sqrt(math.max(0, 1 - u * u))) + 0.5)
+      if i == 0 then foot = p.y0 end
+    end
+    for y = yb, foot - 1 do
+      local k = y - yb
+      local kk = (foot > wt) and math.min(k, n - 4) or k            -- (at the ends the face runs on, damp, to the shore)
+      local c = bankRow(kk, n, wx)
+      if foot > wt and y >= foot - 3 then c = (y == foot - 1) and BANK.foot or (y == foot - 2) and BANK.wet or BANK.lit end
+      if foot == wt then c = bankStone(wx, foot - 1 - y) or c end
+      px(x, y, c)
+    end
+    if i < R and foot < p.y0 then                                 -- the water's edge along the curved shore: a ripple
+      if (wx + math.floor(foot)) % 3 ~= 0 then px(x, foot, BANK.rip) end
+    elseif i >= R and (wx % 9 < 5) then px(x, wt, BANK.rip) end   -- (and along the far bank, in dashes)
+    local sw = math.floor((wbottom - p.y0) / 3) + 1               -- the basin's sloping side under the surface
+    if i < sw then
+      for y = p.y0 + 3 * i, wbottom - 1 do px(x, y, (y == p.y0 + 3 * i) and BANK.subEdge or BANK.sub) end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+
 -- layers 1 to 5 of an art level, and the water of its pond or fountain basin with the far bank behind it
 function Sc.drawFarArt(L, camx, t, w, def)
   local T, A = Sc.townArt(L.style), Sc.art()
@@ -1172,10 +1246,10 @@ function Sc.drawFarArt(L, camx, t, w, def)
     if x1 > -2 and x0 < 322 then
       lg.setScissor(math.max(0, x0), 0, math.max(0, math.min(320, x1) - math.max(0, x0)), 240)   -- (screen space)
       local ox = math.floor(camx) % gw
-      if L.style == "park" then                                   -- the lawn goes on behind, then an earth bank
-        for x = -ox - gw, 320, gw do
-          lg.draw(T.ground, T.bankTop, x, 172 + dy()); lg.draw(T.ground, T.bankEarth, x, 181 + dy()); lg.draw(T.ground, T.bankEarth, x, 201 + dy())
-        end
+      local wtop = p.y0                                           -- (the water's top row as drawn)
+      if L.style == "park" then                                   -- the lawn goes on behind, then the bank (art/cp-audit-06nov:
+        for x = -ox - gw, 320, gw do lg.draw(T.ground, T.bankLawn, x, 172 + dy()) end   -- was the earth strata: a pit)
+        wtop = p.y0 - Sc.POND_RISE
       else                                                        -- the pavement's back, then the basin's granite
         local d = dy()
         for x = -ox - gw, 320, gw do lg.draw(T.ground, T.bankTop, x, 172 + d) end
@@ -1184,17 +1258,18 @@ function Sc.drawFarArt(L, camx, t, w, def)
         lg.setColor(0.45, 0.42, 0.40)
         for x = x0 - (x0 % 18), x1, 18 do lg.rectangle("fill", x, 184 + d, 1, p.y0 - 184 - d) end
       end
-      lg.setColor(0.18, 0.2, 0.22); lg.rectangle("fill", x0, p.y0 - 1, x1 - x0, 1)   -- the water's edge
+      if L.style ~= "park" then lg.setColor(0.18, 0.2, 0.22); lg.rectangle("fill", x0, p.y0 - 1, x1 - x0, 1) end   -- the water's edge
       Look.use("water")
       local tint = L.style == "park" and { 0.80, 0.93, 0.86 } or { 0.92, 1, 1 }
       local ww, wh = A.water:getDimensions()
-      for y = p.y0, w.height - 1 do                               -- (down to the bottom of the world)
-        local row = math.min(wh - 1, 20 + (y - p.y0))
-        local depth = (y - p.y0) / 32
+      for y = wtop, w.height - 1 do                               -- (down to the bottom of the world)
+        local row = math.max(0, math.min(wh - 1, 20 + (y - p.y0)))
+        local depth = math.max(0, y - p.y0) / 32
         local o = math.floor(camx + math.sin(t * 1.3 + y * 0.55) * (0.6 + depth) + t * (1 + 2 * depth) + 0.5) % ww
         lg.setColor(tint)
         lg.draw(A.water, A.waterQ[row], -o, y); lg.draw(A.water, A.waterQ[row], ww - o, y)
       end
+      if L.style == "park" then Look.use("ground"); Sc.drawPondBank(p, camx, dy(), w.height) end
       lg.setScissor()
       Look.use("ground")
     end
@@ -1236,9 +1311,13 @@ function Sc.paintGroundArt(w, style, foot)
     for _, m in ipairs(cover[x] or {}) do if y >= m[1] and y < m[2] then return true end end
     return false
   end
+  local wetCol = {}                                               -- (art/cp-audit-06nov) a park pond's sides: no dark
+  if style == "park" then                                         -- cut, its bank curves round in front (Sc.drawPondBank)
+    for _, r in ipairs(w.water) do wetCol[r.x0 - 1] = true; wetCol[r.x1] = true end
+  end
   lg.setColor(0.16, 0.13, 0.11)                                   -- cut faces (the banks): a dark edge
   for x = xa, xb - 1 do                                           -- (the chunk's columns)
-    if not w:slopeAt(x) then
+    if not w:slopeAt(x) and not wetCol[x] then
       for _, m in ipairs(cover[x]) do
         for y = math.max(m[1], foot), m[2] - 1 do
           if (x > 0 and not solid(x - 1, y) and not w:slopeAt(x - 1)) or (x < w.width - 1 and not solid(x + 1, y) and not w:slopeAt(x + 1)) then
@@ -2056,7 +2135,14 @@ end
 -- the play tower: a yellow deck (crisp), grey posts (crisp, as the slide tower's)
 local function drawDeck(p, ox)
   local di, dx, dy_ = built(p, "deck")
-  if di then lg.setColor(1, 1, 1, 1); lg.draw(di, dx - ox, dy_); return end
+  if di then
+    lg.setColor(1, 1, 1, 1)
+    for _, part in ipairs({ "support", "support2" }) do               -- (art/cp-audit-06nov) the post under its free end
+      local si, sx, sy = built(p, part)
+      if si then lg.draw(si, sx - ox, sy) end
+    end
+    lg.draw(di, dx - ox, dy_); return
+  end
   local x0, x1, y, hgt = p.x0 - ox, p.x1 - ox, p.y0, p.y1 - p.y0
   lg.setColor(INK); lg.rectangle("fill", x0 - 1, y - 1, x1 - x0 + 2, hgt + 2)
   lg.setColor(DECK[1]); lg.rectangle("fill", x0, y, x1 - x0, hgt)
@@ -2301,6 +2387,9 @@ local function drawTierProp(p, camx, def)
   elseif r == "slat" then drawSlat(p, ox)
   elseif r == "deck" then drawDeck(p, ox)
   elseif r == "lowbough" then drawLowBough(p, (trunkOf(TI, p)), ox)
+  elseif r == "branch" and built(p, "landing") then                -- (art/cp-audit-06nov) a walk's landing in its
+    local li, lx, ly = built(p, "landing")                          -- tree: one deck with the walk (cp_built.lua)
+    lg.setColor(1, 1, 1, 1); lg.draw(li, lx - ox, ly)
   elseif r == "branch" then
     local t = trunkOf(TI, p)
     if t and t.x0 < p.x1 and t.x1 > p.x0 then drawFork(p, t, ox)
@@ -2331,6 +2420,22 @@ function Sc.stoneReflection(x, wy, w, t)
       end
     end
   end
+  lg.setColor(1, 1, 1, 1)
+end
+
+-- (art/cp-audit-06nov) the ripple ring where a stepping stone stands in the water: the ring's two ends out past the
+-- rock's sides on the waterline row (wy - 1, behind it the rock hides the far half), its near half a light line along
+-- the row under the rock (wy), broken in two places that drift 1 px with the water. The water art's lightest colour.
+function Sc.stoneRipple(x, wy, w, t)
+  local s = math.floor(math.sin(t * 1.7) * 1.2 + 0.5)
+  lg.setColor(BANK.rip)
+  lg.rectangle("fill", x - 4 + s, wy - 1, 3, 1); lg.rectangle("fill", x + w + 1 + s, wy - 1, 3, 1)
+  local a, b = x + 3 + s, x + w - 4 + s                            -- the near half: three dashes
+  local third = math.floor((b - a) / 3)
+  lg.rectangle("fill", x - 2 + s, wy, a - (x - 2 + s), 1)
+  lg.rectangle("fill", a + 2, wy, third - 2, 1)
+  lg.rectangle("fill", a + third + 2, wy, b - (a + third + 2), 1)
+  lg.rectangle("fill", b + 2, wy, (x + w + 2 + s) - (b + 2), 1)
   lg.setColor(1, 1, 1, 1)
 end
 
@@ -2403,7 +2508,8 @@ function Sc.drawPropArt(p, camx, def, kicked)
         local rows = math.min(sh, wy - (p.y0 - 1))
         if not T.stoneQ or T.stoneQ.rows ~= rows then T.stoneQ = { q = lg.newQuad(0, 0, sw, rows, sw, sh), rows = rows } end
         lg.setColor(1, 1, 1, 1); lg.draw(T.stone, T.stoneQ.q, math.floor(x) - 1, p.y0 - 1)
-        Sc.stoneReflection(math.floor(x) - 1, wy, sw, Sc.pondT or 0)
+        Sc.stoneReflection(math.floor(x) - 1, wy + 1, sw, Sc.pondT or 0)
+        Sc.stoneRipple(math.floor(x) - 1, wy, sw, Sc.pondT or 0)
       else at(T.stone, x - 1, p.y0 - 1) end                         -- (on dry ground: the rock on its box, as before)
     elseif n == "BIN" then shadowUnder(p, camx); at(A.bin, x - 1, 184 + d - A.bin:getHeight())
     elseif n == "PICNIC TABLE" then shadowUnder(p, camx); at(T.table, x, p.y0)
@@ -2426,8 +2532,12 @@ function Sc.drawPropArt(p, camx, def, kicked)
                                                                   -- decoration on the back layer: faded 35 %, art/fixes)
         for i = 1, 8 do T.keeperWinchQ[i] = lg.newQuad((i - 1) * 80, 0, 80, 80, T.keeperWinch:getDimensions()) end
       end
+      -- (art/cp-audit-06nov) the audit: "he grips a barrow that is not there, a tan blob cut behind the bridge post".
+      -- The winch's left post and half its drum stood behind the treetop walk's right pylon (x 944-950): what showed
+      -- was a pale drum end and the crank, with no frame. Drawn WINCH_DX px to the right, the whole winch (both posts,
+      -- the drum, the crank he turns) stands clear beside the pylon, his back foot still clear of the lamp at 1028.
       lg.setColor(1, 1, 1, 1)
-      lg.draw(T.keeperWinch, T.keeperWinchQ[Sc.winchFrame or 1], math.floor(x + w / 2), 174 + d, 0, -1, 1, 60, 79)
+      lg.draw(T.keeperWinch, T.keeperWinchQ[Sc.winchFrame or 1], math.floor(x + w / 2) + Sc.WINCH_DX, 174 + d, 0, -1, 1, 60, 79)
     else Sc.drawProp(p, camx, C.prop) end
   else
     if n == "DOOR" then at(T.door, x, 175 + d - T.door:getHeight())

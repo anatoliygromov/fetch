@@ -2,13 +2,15 @@
 -- plank walks, rose arbour and play tower, per box. scene.lua draws an image only when the prop's box
 -- is still this box (else its code drawing). file, x, y (world, top left), faded (to the back haze)
 return {
+  ["608,216,704,222"] = { landing = { "cp_walk704_landing608", 607, 215, false } },
   ["704,216,944,222"] = { deck = { "cp_walk704_deck", 703, 215, false }, rail = { "cp_walk704_rail", 698, 154, false }, legs = { "cp_walk704_legs", 698, 222, false } },
+  ["1888,200,1968,206"] = { landing = { "cp_walk1968_landing1888", 1887, 199, false } },
   ["1968,200,2312,206"] = { deck = { "cp_walk1968_deck", 1967, 199, false }, rail = { "cp_walk1968_rail", 1968, 138, false }, legs = { "cp_walk1968_legs", 1968, 206, false } },
   ["2344,216,2400,222"] = { slat = { "cp_arbour_slat56", 2343, 215, false }, posts = { "cp_arbour_posts56x106", 2338, 222, true } },
   ["2448,200,2496,206"] = { slat = { "cp_arbour_slat48", 2447, 199, false }, posts = { "cp_arbour_posts48x122", 2442, 206, true } },
   ["2544,216,2592,222"] = { slat = { "cp_arbour_slat48", 2543, 215, false }, posts = { "cp_arbour_posts48x106", 2538, 222, true } },
-  ["2616,216,2672,222"] = { deck = { "cp_tower_deck56", 2615, 215, false } },
-  ["2600,256,2656,262"] = { deck = { "cp_tower_deck56", 2599, 255, false } },
+  ["2616,216,2672,222"] = { deck = { "cp_tower_deck56", 2615, 215, false }, support = { "cp_tower_post4x34", 2619, 222, false } },
+  ["2600,256,2656,262"] = { deck = { "cp_tower_deck56", 2599, 255, false }, support = { "cp_tower_post4x6", 2647, 262, false } },
   ["2604,222,2608,296"] = { post = { "cp_tower_post4x72", 2603, 256, false } },
   ["2664,222,2668,296"] = { post = { "cp_tower_post4x106", 2663, 222, false } },
 }
