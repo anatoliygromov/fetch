@@ -625,12 +625,43 @@ local MAGPIE = {
 local MCOL = { k = { 18 / 255, 18 / 255, 26 / 255 }, d = { 44 / 255, 46 / 255, 58 / 255 }, b = { 38 / 255, 62 / 255, 128 / 255 },
   u = { 58 / 255, 96 / 255, 168 / 255 }, g = { 40 / 255, 108 / 255, 96 / 255 }, w = { 242 / 255, 244 / 255, 247 / 255 },
   s = { 176 / 255, 184 / 255, 198 / 255 }, y = { 30 / 255, 30 / 255, 34 / 255 }, l = { 78 / 255, 78 / 255, 86 / 255 } }
+-- (6 Nov, art/cp-critters-06nov) the art: art/magpie.png (tools/build_magpie.py; SpriteCook Pixel Engine at 1x),
+-- 5 cells of 32 x 26: perch, tail flick, wings up, level, down. 30 px beak to tail (size B of
+-- docs/review/06nov/cp_critters/magpie_sizes_4x.png), drawn facing right; the feet are at cell (20, 25), the beak tip
+-- at cell (29, 10) perched and (29, 13) flying (St:beak). Flying it loops up, level, down, level. Without the file:
+-- the code magpie below.
+local magImg, magQ
+local function magpieArt()
+  if magImg == nil then
+    magImg = false
+    if love.filesystem.getInfo("art/magpie.png") then
+      magImg = lg.newImage("art/magpie.png"); magImg:setFilter("nearest", "nearest"); magQ = {}
+      for i = 1, 5 do magQ[i] = lg.newQuad((i - 1) * 32, 0, 32, 26, magImg:getDimensions()) end
+    end
+  end
+  return magImg
+end
+Sc.MAGPIE_FLAP = { 3, 4, 5, 4 }
+-- the ball's bottom-centre point at the beak (St:beak): its top row on the beak, its near edge on the beak tip
+function Sc.magpieBeak(m)
+  if not magpieArt() then return m.x + m.dir * 11, m.y - (m.state == "fly" and 5 or 8) end
+  return m.x + (m.dir > 0 and 12 or -11), m.y - (m.state == "fly" and 6 or 9)
+end
 function Sc.magpie(m, camx, t)
   local x, y = math.floor(m.x - camx + 0.5), math.floor(m.y + 0.5)
   if x < -40 or x > 360 then return end
+  local flick = math.floor(t * 0.8) % 3 == 0 and (t * 0.8) % 1 < 0.25
+  if magpieArt() then
+    local i = m.state == "fly" and Sc.MAGPIE_FLAP[1 + math.floor(t * 12) % 4] or (flick and 2 or 1)
+    lg.setColor(1, 1, 1, 1)
+    if m.dir > 0 then lg.draw(magImg, magQ[i], x - 20, y - 25) else lg.draw(magImg, magQ[i], x + 21, y - 25, 0, -1, 1) end
+    if m.heard and t - m.heard < 0.8 then lg.setColor(C.label); F.print("?", x - 2, y - 30, 1) end
+    lg.setColor(1, 1, 1, 1)
+    return
+  end
   local pose
   if m.state == "fly" then pose = (math.floor(t * 12) % 2 == 0) and MAGPIE.up or MAGPIE.down
-  else pose = (math.floor(t * 0.8) % 3 == 0 and (t * 0.8) % 1 < 0.25) and MAGPIE.flick or MAGPIE.perch end
+  else pose = flick and MAGPIE.flick or MAGPIE.perch end
   for row, line in ipairs(pose) do
     for col = 1, #line do
       local c = MCOL[line:sub(col, col)]
@@ -2098,7 +2129,27 @@ function Sc.drawPieceArt(pc, camx, def)
 end
 
 -- the duck boat (a mover): the duck faces the way it paddles; its hull sits in the pond
+-- (6 Nov, art/cp-critters-06nov) art/scene/cp_duckboat.png (tools/build_duckboat.py; SpriteCook Pixel Engine at 1x):
+-- a 2 m pedal boat at true scale (92 x 60, facing left), its gunwale (row 41, the ink) on the mover's top and the
+-- mover's box on its cols 8-87 (the tall City Park's DUCK BOAT is 80 px wide); mirrored about the box when it
+-- paddles right. The pond's surface is 7 px under the deck. Without the file: park_boat_front.png as before.
+local duckImg
 function Sc.drawMoverArt(m, camx, style)
+  if duckImg == nil then
+    duckImg = love.filesystem.getInfo("art/scene/cp_duckboat.png") and newImg("art/scene/cp_duckboat.png") or false
+  end
+  local w = math.floor(m.x1 - m.x0 + 0.5)
+  if duckImg and style == "park" and w >= 78 then                      -- (the flat City Park's 48 px boat keeps its art)
+    local x0 = math.floor(m.x0 - camx + 0.5)
+    local top = m.y0 - 41
+    lg.setColor(1, 1, 1, 1)
+    if m.dir and m.dir > 0 then lg.draw(duckImg, x0 + w + 8, top, 0, -1, 1) else lg.draw(duckImg, x0 - 8, top) end
+    local d, ax = dy(), (m.dir and m.dir > 0) and x0 + w + 8 - 92 or x0 - 8
+    lg.setColor(0.33, 0.47, 0.52, 0.5); lg.rectangle("fill", ax, 209 + d, 92, top + 60 - 209 - d)   -- under the water
+    lg.setColor(0.86, 0.94, 0.95, 0.8); lg.rectangle("fill", ax + 6, 208 + d, 80, 1)              -- the ripple line
+    lg.setColor(1, 1, 1, 1)
+    return
+  end
   local T = Sc.townArt(style)
   local im = T.boat
   local x = math.floor(m.x0 - camx + 0.5) - 3

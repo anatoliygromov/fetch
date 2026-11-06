@@ -141,6 +141,9 @@ add(["town_front_tall1", "town_front_tall2", "town_front_tall3", "town_front_tal
     "dt", "back", True, group="Downtown")
 add(["town_crates70", "town_breadboard", "town_crate_leg", "town_portal_top", "town_oriel"], "dt", "play", group="Downtown")
 add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, group="Characters (never shaded)")
+# art/cp-critters-06nov: the magpie (drawn without the look, like every character) and the duck boat (a play mover)
+add(["magpie"], "cp", None, base=ART, group="Characters (never shaded)")
+add(["cp_duckboat"], "cp", "play", group="City Park")
 add(["facades_square"], "dt", "mid", True, base=R8, group="Batch 1 (rejected)")
 add(["spire_riddarholmen"], "dt", "back", True, base=R8, group="Batch 1 (rejected)")     # arthooks.lua drawTownBack, own 45 %
 add(["house_tall_a", "house_tall_b", "house_tall_c"], "dt", "back", True, base=R8, group="Batch 1 (rejected)")

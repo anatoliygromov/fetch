@@ -54,6 +54,7 @@ LADDER = {
 FRAMES = {
     "pepper": (60, 52), "girl": (66, 66), "cat": (48, 48), "goose": (34, 34), "gull": (26, 26),
     "park_keeper_cart": (82, 82), "park_keeper_winch": (80, 80), "rowboat": (70, 70), "mia_throw": (66, 66),
+    "magpie": (32, 26),                                          # (6 Nov) perch, flick, wings up, level, down
 }
 ROLL = ("road_cyclist1_roll", "road_cyclist2_roll")              # 4 frames side by side (drawn: Rd.art().riders)
 # what the game never draws (loaded but unused, or replaced in the played level): not checked
@@ -90,7 +91,10 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          "town_front_tall4": (148, 432, 0, 0), "town_shelter_tall": (140, 115, 0, 0), "town_gateway": (80, 138, 0, 0),
          "town_crates70": (71, 37, 0, 0), "town_breadboard": (74, 12, 0, 0), "town_crate_leg": (18, 37, 0, 0),
          "town_portal_top": (122, 50, 0, 0), "town_oriel": (18, 45, 0, 0), "town_oriel_bay": (58, 44, 0, 0),
-         "road_car2": (242, 102, 12, 8), "road_car3": (246, 93, 12, 8), "road_car5": (250, 89, 12, 8)}
+         "road_car2": (242, 102, 12, 8), "road_car3": (246, 93, 12, 8), "road_car5": (250, 89, 12, 8),
+         # (6 Nov, art/cp-critters-06nov) the magpie (5 cells of 32 x 26, scene.lua Sc.magpie) and the 2 m duck boat
+         # (92 x 60, deck row 41 on the DUCK BOAT mover's top, scene.lua Sc.drawMoverArt)
+         "magpie": (160, 26, 0, 0), "cp_duckboat": (92, 60, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",
