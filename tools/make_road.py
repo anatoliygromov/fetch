@@ -13,10 +13,10 @@ from PIL import Image
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, 'riverwalk', 'art', 'scene')
 W, H = 640, 41
-BASE = np.array([86, 91, 98])                     # asphalt
-GUT = np.array([76, 80, 88])                      # the gutter strip by the kerb (rows 1-3)
-SHAD = np.array([60, 64, 70])                      # the kerb's shadow (row 0)
-FLECK = np.array([100, 104, 110])                  # aggregate, one shade lighter
+BASE = np.array([74, 78, 86])                     # asphalt (night/06nov-rw fix round 1: one step darker, was 86, 91, 98)
+GUT = np.array([64, 68, 76])                      # the gutter strip by the kerb (rows 1-3)
+SHAD = np.array([50, 54, 60])                      # the kerb's shadow (row 0)
+FLECK = np.array([88, 92, 98])                  # aggregate, one shade lighter
 LINE = np.array([206, 208, 214])                   # the centre line
 img = np.tile(BASE, (H, W, 1)).astype(int)
 img[0, :] = SHAD

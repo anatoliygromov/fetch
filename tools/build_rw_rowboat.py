@@ -9,10 +9,12 @@ the hull one flat orange slab with no planks; no waterline).
 Design target: art/gen/concepts/rw_rowboat_concept_b.png (Artlist, reference only, never cut). Parts:
   HULL  BUILT by rule (riverwalk/art/scene/rw_rowboat.png): a 4.0 m Stockholm eka at 46 px/m = 185 px, seen exactly
         from the side, bow LEFT (the stem rises 12 px), a small square transom RIGHT (rises 5 px). Clinker planks are
-        clean bands that follow the sheer, each 5 px: lit top edge, two mid rows, a shade row, a dark lap; a white
-        top strake under a dark gunwale rail; a brass rowlock on the rail. One 1 px ink outline (Pepper stands on
+        clean bands that follow the sheer, each 5 px: lit top edge, two mid rows, a shade row, a dark lap (the top
+        plank honey, the ones under it red-brown mahogany as in concept b); a white top strake under a dark gunwale
+        rail; a brass rowlock on the rail at hull x 150. The bow's sheer rises from runs that only shorten towards
+        the stem (1, 1, 2, 2, 2, 3, 3, 4, 5, 6, 8, 11). One 1 px ink outline (Pepper stands on
         it). Colours from art/palettes/riverwalk.gpl ramps (honey wood, white paint, brass).
-  OARS  BUILT per frame by rule: a straight pole (2 px core, lit over shade, ink outline) with a flat blade, pivoting
+  OARS  BUILT per frame by rule: a straight grey-brown ash pole (lit over shade, ink outline) with a flat blade, pivoting
         on the rowlock: the oar is a line through the pivot, handle 16 px inboard, blade end 48 px outboard (as seen
         from the side), swept fore and aft (phi) and tipped (beta) so the blade is buried on the drive and lifted on
         the return.
@@ -23,9 +25,11 @@ Design target: art/gen/concepts/rw_rowboat_concept_b.png (Artlist, reference onl
         render's arms and fists taken off (left of his chest line), the chest refilled with the jumper's own
         vertical ribs, his legs below the gunwale dropped (the hull hides them). The fists are stamped back from
         the render (one 9 x 10 piece) on the oar handle in every frame; the near arm is drawn by rule from shoulder
-        to wrist (upper arm 13 px, forearm 14 px, a two-bone reach) in the sleeve's own four colours.
-  LOOP  6 frames keyed by rule (riverwalk/art/scene/rw_rower.png, 6 x 64 x 62): catch, drive, drive, finish, return,
-        return. He leans 2 px forward at the catch and 1 px back at the finish; the fists sit on the handle in every
+        to wrist (upper arm 9 px, forearm 15 px, a two-bone reach, the elbow always bent down) in the sleeve's own
+        three colours and a highlight row. He sits on the stern thwart (rowlock hull x 150), so the deck amidships,
+        where Pepper stands, is clear of him; everything of his is cut at the rail of its own column.
+  LOOP  6 frames keyed by rule (riverwalk/art/scene/rw_rower.png, 6 x 78 x 62 on hull x 106-183): catch, drive, drive,
+        finish, return, return (the blade tipped 7 degrees on the return: clear of the water). He leans 2 px forward at the catch and 1 px back at the finish; the fists sit on the handle in every
         frame and the arm joins them to the shoulder.
 Lines (frame row = world y - 176, hull x = frame x): rail top amidships row 36 (world 212 = Pepper's deck, the
 mover's top), waterline row 48 (world 224), keel row 57. The water tint below row 48, the ripples, the wake and the
@@ -43,21 +47,34 @@ RAIL_L, RAIL = hexc('#805032'), hexc('#583626')                          # gunwa
 WHITE, WHITE_S = hexc('#f0ece0'), hexc('#d2cec0')                        # the white top strake, its lower edge
 W_L, W_M, W_S, W_LAP = hexc('#eebc68'), hexc('#d49a54'), hexc('#a87046'), hexc('#805032')   # varnished honey planks
 BRASS_L, BRASS = hexc('#f4cc69'), hexc('#bf6d36')                       # the rowlock
-OAR_L, OAR_S = hexc('#eebc68'), hexc('#a87046')                          # the oar: lit over shade
+OAR_L, OAR_S = hexc('#b49c7c'), hexc('#927e66')                          # the oar: grey-brown ash, lit over shade (fix 1:
+# it was the hull's honey and read only by its edge where it crossed the planks)
+# (fix round 1) the strakes under the top one one step towards concept b's red-brown mahogany: lit, mid, shade, lap
+M_L, M_M, M_S, M_LAP = hexc('#d49a54'), hexc('#bf6d36'), hexc('#805032'), hexc('#583626')
 
 W, H = 185, 62                       # hull image (frame rows: world y - 176)
 Y0 = 176
 RAIL_Y, WATER_Y, KEEL_Y = 212, 224, 233
-ROWLOCK = (98, 211)                  # the oar's pivot (world y), on the rail
 BOW_RISE, STERN_RISE = 12, 5
-FLAT = (62, 128)                     # the sheer is level (y 212) between these columns
+# (fix round 1) the bow's sheer from runs that only shorten towards the stem (1 px rises; the old power curve gave
+# runs of 2, 2, 3, 2, 3, 4, 3, 4: stair steps): one run per 1 px of rise, from the stem's top (y 200) aft
+BOW_RUNS = (1, 1, 2, 2, 2, 3, 3, 4, 5, 6, 8, 11)
+FLAT = (sum(BOW_RUNS), 128)          # the sheer is level (y 212) between these columns
 
 
 def sheer(x):
     """World y of the top of the gunwale at column x: level amidships, a smooth rise to the bow and the transom."""
-    if x < FLAT[0]: t = (FLAT[0] - x) / FLAT[0]; return RAIL_Y - round(BOW_RISE * t ** 2.2)
+    if x < FLAT[0]:
+        acc = 0
+        for i, n in enumerate(BOW_RUNS):
+            acc += n
+            if x < acc: return RAIL_Y - BOW_RISE + i
     if x > FLAT[1]: t = (x - FLAT[1]) / (W - 1 - FLAT[1]); return RAIL_Y - round(STERN_RISE * t ** 2.0)
     return RAIL_Y
+
+
+ROWLOCK = (150, sheer(150) - 1)       # (fix round 1) the oar's pivot on the rail, near the stern: he rows from the
+                                     # stern thwart, so Pepper's spot amidships stays clear of him
 
 
 def stem_x(y):
@@ -71,6 +88,30 @@ def keel(x):
     """World y of the bottom: flat, rising a little to the transom's foot (world y 227)."""
     if x <= 150: return KEEL_Y
     t = (x - 150) / (W - 1 - 150); return KEEL_Y - round(6 * t ** 1.6)
+
+
+def rise(x):
+    """The sheer's rise above the deck at column x, continuous (linear inside each run), for the plank seams."""
+    if x < FLAT[0]:
+        acc = 0
+        for i, n in enumerate(BOW_RUNS):
+            if x < acc + n: return BOW_RISE - i - (x - acc) / n
+            acc += n
+    if x > FLAT[1]: return STERN_RISE * ((x - FLAT[1]) / (W - 1 - FLAT[1])) ** 2.0
+    return 0.0
+
+
+SEAM_G = (1.0, 0.85, 0.7, 0.55, 0.42, 0.3, 0.2)   # how much of the sheer's rise each seam follows, top to bottom
+
+
+def plank_at(x, y):
+    """(fix round 1) the plank under world y at column x: seam b sits 6 + 5 b px under the deck amidships and rises
+    SEAM_G[b] of the sheer's rise towards the ends, so the planks fan into the stem and no two seams step in the
+    same column (the old bands, all parallel to the sheer, climbed the bow in aligned 1 px terraces)."""
+    seams = [sheer(x) + 6] + [RAIL_Y + 6 + 5 * b - round(rise(x) * SEAM_G[b]) for b in range(1, len(SEAM_G))]
+    for b in range(len(seams) - 1):
+        if seams[b] <= y < seams[b + 1]: return b, y - seams[b], seams[b + 1] - seams[b]
+    return len(seams) - 1, y - seams[-1], 5
 
 
 def hull():
@@ -87,9 +128,10 @@ def hull():
             if not inside[y - Y0, x]: continue
             if r <= 2: c = (INK, RAIL_L, RAIL)[r]                     # the gunwale rail under the outline: lit, dark
             elif r <= 5: c = WHITE if r < 5 else WHITE_S              # the white top strake
-            else:
-                k = (r - 6) % 5                                       # clinker planks, 5 px each
-                c = (W_L, W_M, W_M, W_S, W_LAP)[k]
+            else:                                                     # clinker planks: each seam its own curve
+                b, k, h = plank_at(x, y)
+                c = (W_L, W_M, W_M, W_S, W_LAP) if b == 0 else (M_L, M_M, M_M, M_S, M_LAP)   # honey top strake, mahogany
+                c = c[0] if k == 0 else c[4] if k == h - 1 else c[3] if k == h - 2 else c[1]
             a[y - Y0, x] = c
     # the stem post at the bow: a 2 px darker band along the front edge, lit on its inner side
     for y in range(sheer(0), KEEL_Y + 1):
@@ -128,9 +170,10 @@ def box():
 
 # ---- the rower --------------------------------------------------------------------------------------------------
 RENDER, CROP = 'art/gen/out/rw_rower_a.png', (104, 137, 144, 183)    # his 40 x 46 on the render's own grid
-RX0 = 89                     # the rower sprite's x on the hull (his chest at hull x 110, his back at 128)
+RX0 = ROWLOCK[0] - 9         # the rower sprite's x on the hull (fix round 1: at the stern, chest at hull x 162, back at 180)
 SRC = 'art/source/rw_rower'
 ARM_L = ((63, 92, 136), (55, 73, 120), (42, 64, 107))  # the sleeve: lit, mid, shade (his own jumper's colours)
+ARM_HL = (92, 124, 170)      # (fix round 1) one highlight row along the top of each bone
 
 
 def rower_cut():
@@ -226,10 +269,10 @@ LOOP = [  # phi (fore-aft, + = blade aft/right), beta (tip: blade down), lean (p
     (15, 31, -1),    # drive
     (-12, 31, 0),    # drive
     (-36, 24, 1),    # finish: hands at his chest, blade comes out
-    (-12, 12, 0),    # return: hands low, blade lifted over the water
-    (20, 12, -1),    # return
+    (-12, 7, 0),     # return: hands low, blade lifted clear of the water (fix round 1: was 12, the blade sat on
+    (20, 7, -1),     # return                                              the waterline and looked dragged)
 ]
-FX0, FW = 62, 74             # the loop frame on the hull: hull x 62-135, rows as the hull (world y 176-237)
+FX0, FW = ROWLOCK[0] - 44, 78  # the loop frame on the hull: hull x 106-183, rows as the hull (world y 176-237)
 
 
 def limb(mask, p0, p1, rad):
@@ -246,9 +289,11 @@ def frame(torso, fists, phi, beta, lean):
     f = np.zeros((H, FW, 4), np.uint8)
     put = lambda wx, wy, c: f.__setitem__((wy - Y0, wx - FX0), c) if 0 <= wy - Y0 < H and 0 <= wx - FX0 < FW else None
     # 1 the torso, leaning
-    for y in range(37):
-        for x in range(40):
-            if torso[y, x, 3]: put(RX0 + x + lean, Y0 + y, torso[y, x])
+    for y in range(37):                                               # (fix round 1: cut at the rail of its own column,
+        for x in range(40):                                           # which rises towards the transom)
+            hxx = RX0 + x + lean
+            if torso[y, x, 3] and Y0 + y < sheer(hxx): put(hxx, Y0 + y, torso[y, x])
+            elif torso[y, x, 3] and Y0 + y == sheer(hxx): put(hxx, Y0 + y, INK)
     # 2 the oar: a 1 px pole and a flat blade, lit over shade, one ink outline round both
     (hx, hy), _, (bx, by), (ux, uy) = oar_pose(phi, beta)
     core = np.zeros((H, FW), np.uint8)                                # 1 lit, 2 shade
@@ -263,8 +308,8 @@ def frame(torso, fists, phi, beta, lean):
     for y in range(H):
         for x in range(FW):
             wx, wy = x + FX0 + 0.5, y + Y0 + 0.5
-            s = ((wx - 98) * ux + (wy - 211) * uy) / u2                # along the oar from the pivot (48 = blade end)
-            d = (wx - 98) * nx + (wy - 211) * ny                       # across it, + = up
+            s = ((wx - ROWLOCK[0]) * ux + (wy - ROWLOCK[1]) * uy) / u2  # along the oar from the pivot (48 = blade end)
+            d = (wx - ROWLOCK[0]) * nx + (wy - ROWLOCK[1]) * ny          # across it, + = up
             if 35 <= s <= 48 and abs(d) <= 2.4 - max(0.0, (s - 46.0) * 0.8): core[y, x] = 1 if d > 0.3 else 2
     oarm = core > 0
     for y in range(H):
@@ -277,8 +322,9 @@ def frame(torso, fists, phi, beta, lean):
     # 3 the near arm, shoulder to wrist (two bones), in his sleeve's colours, outlined
     gx, gy = round(hx) + 1, round(hy)                                 # the grip: the near fist's middle on the handle
     wx, wy = gx + 5, gy                                               # his wrist, the fists' right side
-    sx, sy = RX0 + 28 + lean, Y0 + 24                                 # his shoulder
-    L1, L2 = 12, 12
+    sx, sy = RX0 + 26 + lean, Y0 + 24                                 # his shoulder
+    L1, L2 = 9, 15                                                    # (fix round 1: 12 + 12 reached straight: a stick;
+                                                                      # 9 keeps the elbow inside his back at the finish)
     d = max(1e-6, math.hypot(wx - sx, wy - sy)); dd = min(d, L1 + L2 - 0.01)
     a1 = math.acos(max(-1, min(1, (L1 * L1 + dd * dd - L2 * L2) / (2 * L1 * dd))))
     base = math.atan2(wy - sy, wx - sx)
@@ -289,26 +335,29 @@ def frame(torso, fists, phi, beta, lean):
     arm = am | fm
     for y in range(H):
         for x in range(FW):
-            if not arm[y, x] or y + Y0 >= RAIL_Y: continue
+            if not arm[y, x] or y + Y0 >= sheer(x + FX0): continue
             px, py = x + FX0 + 0.5, y + Y0 + 0.5
             (p0, p1, r) = ((sx, sy), (ex, ey), 2.8) if am[y, x] else ((ex, ey), (wx, wy), 2.2)
             vx, vy = p1[0] - p0[0], p1[1] - p0[1]; L = math.hypot(vx, vy) or 1
             nxx, nyy = -vy / L, vx / L
             if nyy > 0: nxx, nyy = -nxx, -nyy                           # the normal pointing up
             dist = (px - p0[0]) * nxx + (py - p0[1]) * nyy              # + = toward the top side (lit)
-            f[y, x] = ARM_L[0] + (255,) if dist > 0.2 else (ARM_L[1] + (255,) if dist > -1.2 else ARM_L[2] + (255,))
+            f[y, x] = (ARM_HL + (255,) if dist > 1.4 else ARM_L[0] + (255,) if dist > 0.2 else
+                       ARM_L[1] + (255,) if dist > -1.2 else ARM_L[2] + (255,))
     for y in range(H):
         for x in range(FW):
-            if arm[y, x] or y + Y0 >= RAIL_Y or (x + FX0 - sx) ** 2 + (y + Y0 - sy) ** 2 < 9: continue
+            if arm[y, x] or y + Y0 >= sheer(x + FX0) or (x + FX0 - sx) ** 2 + (y + Y0 - sy) ** 2 < 9: continue
             if any(0 <= y + dy < H and 0 <= x + dx < FW and arm[y + dy, x + dx] for dy, dx in ((-1, 0), (1, 0), (0, -1), (0, 1))):
                 f[y, x] = INK
     for x in range(FW):                                               # the arm's cut at the rail: ink on the rail's row
-        if arm[RAIL_Y - Y0 - 1, x] and f[RAIL_Y - Y0, x, 3] == 0: f[RAIL_Y - Y0, x] = INK
+        r = sheer(x + FX0) - Y0
+        if arm[r - 1, x] and f[r, x, 3] == 0: f[r, x] = INK
     # 4 the fists on the handle (stamped from the render)
     for y in range(11):
         for x in range(10):
-            if fists[y, x, 3] and gy - 4 + y < RAIL_Y: put(gx - 4 + x, gy - 4 + y, fists[y, x])
-            elif fists[y, x, 3] and gy - 4 + y == RAIL_Y: put(gx - 4 + x, RAIL_Y, INK)          # (cut at the rail)
+            rail = sheer(gx - 4 + x)
+            if fists[y, x, 3] and gy - 4 + y < rail: put(gx - 4 + x, gy - 4 + y, fists[y, x])
+            elif fists[y, x, 3] and gy - 4 + y == rail: put(gx - 4 + x, rail, INK)              # (cut at the rail)
     return f, (bx, by), (hx, hy)
 
 
