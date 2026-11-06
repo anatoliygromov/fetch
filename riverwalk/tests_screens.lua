@@ -60,7 +60,7 @@ return function(api)
     { act = function() api.talk.reset(); say("GOOD GIRL, PEPPER!") end, wait = 0.03 }, shot("talk_rise"), { wait = 0.5 }, shot("talk_short"),
     { act = function() api.talk.reset(); say("THE BALL IS ON THE BOAT!") end, wait = 0.5 }, shot("talk_long"),
     { act = function() api.talk.reset(); tp(1340, 216); say("OOPS! GET THE BALL!") end, wait = 0.5 }, shot("talk_top"),
-    { act = function() api.talk.reset(); tp(2400, 184); say("THE SEAGULL DROPPED THE BALL!") end, wait = 0.5 }, shot("talk_longest"),
+    { act = function() api.talk.reset(); tp(2568, 184); say("THE SEAGULL DROPPED THE BALL!") end, wait = 0.5 }, shot("talk_longest"),
     { act = function() local st = api.stage(); st.msg = nil; api.talk.reset() end, wait = 0.1 },
     -- the hint bubbles (River Walk's tutorial zones) and the nudges, the gamepad's glyphs then the keyboard's
     { act = function() I.last = "pad"; tp(230, 184) end, wait = 0.03 }, shot("hint_rise"), { wait = 0.4 }, shot("hint_hop"),

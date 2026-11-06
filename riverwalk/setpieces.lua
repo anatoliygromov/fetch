@@ -60,7 +60,35 @@ end
 -- it), its deck the mover's top (y0), and a rower pulling the oars as it moves. Art: art/scene/rowboat.png; without
 -- it, the boat is drawn in code below.
 local boatImg, boatQ
+-- (owner, 6 Nov: "boat is still ridiculously small", then "really low quality": re-rendered) River Walk's harbour boats
+-- (239 px boxes): the hull still (art/scene/rowboat_hull.png, 239 x 77, deck row 40 on the box's top, bow on the left)
+-- and the rower's 8-frame loop over it (rowboat_rower.png, RW x 77 frames at x RX), tools/build_rowboat.py. Rowers face
+-- the stern, so the bow leads: the art is flipped when the boat rows right. He rows while it moves and rests at the
+-- ends. Smaller boxes (Night Harbour's 56 px boats) keep the old 70 x 70 art below.
+local bigHull, bigRower, bigQ = nil, nil, nil
+local HW, RW, RX = 239, 102, 44                                  -- hull width, rower frame width, rower x on the hull
+local function drawBigRowboat(m, cam, t)
+  if bigHull == nil then
+    bigHull = false
+    if love.filesystem.getInfo("art/scene/rowboat_hull.png") then
+      bigHull = lg.newImage("art/scene/rowboat_hull.png"); bigHull:setFilter("nearest", "nearest")
+      bigRower = lg.newImage("art/scene/rowboat_rower.png"); bigRower:setFilter("nearest", "nearest"); bigQ = {}
+      for i = 1, 8 do bigQ[i] = lg.newQuad((i - 1) * RW, 0, RW, 77, bigRower:getDimensions()) end
+    end
+  end
+  if not bigHull then return false end
+  local x0, y = math.floor(m.x0 - cam + 0.5), math.floor(m.y0 + 0.5) - 40
+  local i = math.abs(m.dx or 0) > 0 and 1 + math.floor(t * 8) % 8 or 1
+  lg.setColor(1, 1, 1, 1)
+  if (m.dir or 1) < 0 then
+    lg.draw(bigHull, x0, y); lg.draw(bigRower, bigQ[i], x0 + RX, y)
+  else                                                             -- rowing right: mirrored, the bow on the right
+    lg.draw(bigHull, x0 + HW, y, 0, -1, 1); lg.draw(bigRower, bigQ[i], x0 + HW - RX, y, 0, -1, 1)
+  end
+  return true
+end
 function Sp.drawRowboat(m, cam, t)
+  if m.x1 - m.x0 >= 150 and drawBigRowboat(m, cam, t) then return end
   local x0, x1, y = math.floor(m.x0 - cam + 0.5), math.floor(m.x1 - cam + 0.5), m.y0
   if boatImg == nil then                                           -- the art (SpriteCook, tools/build_critters_art.py):
     boatImg = false                                                -- 8 rowing frames of 70 x 70, hull x 4-64, deck row 55

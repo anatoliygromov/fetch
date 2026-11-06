@@ -1,0 +1,41 @@
+{
+ "name": "rw_rowboat_r2",
+ "level": "riverwalk",
+ "layer": "play",
+ "kind": "vehicle",
+ "real_height_m": 1.22,
+ "target_px": [
+  185,
+  56
+ ],
+ "checks_px": {
+  "hull_x": [
+   0,
+   184
+  ],
+  "hull_len": 184,
+  "gunwale_row": 31,
+  "deck_row": 35,
+  "waterline_row": 47,
+  "keel_row": 55,
+  "rower_head_px": 11,
+  "rower_head_top_row": 1
+ },
+ "subject": "a classic Stockholm wooden rowing boat (a 4 m clinker-built eka) seen exactly from the side: a varnished golden-brown wooden hull with overlapping planks, a white painted upper strake, a dark gunwale rail, the sheer rising gently to a pointed bow on the left and a narrow transom stern on the right; an adult man in a navy coat and a flat cap sits on the middle thwart facing the stern, rowing, the near oar from his hands down into the water",
+ "part_map": "the long dark grey shape is the hull (exactly that length, its top edge the gunwale, rising a little at both ends), the light grey lines are the gunwale rail and one plank line, the round skin-coloured shape is the rower's head (exactly that size), the blue shape his coat and arms, the thin tan line the oar ending in its blade at the bottom left.",
+ "size_sentence": "the boat is about three and a half dogs long, its side is about as high as the dog's legs above the water, and the seated man's head is a little higher than the dog's head. A real rowing boat and a grown man at true size next to the dog, not a toy and not a child.",
+ "model": "sc_gpt25_2k",
+ "variants": 2,
+ "tier": "A",
+ "family": "rw_water",
+ "slot": {
+  "file": "riverwalk/art/scene/rowboat.png",
+  "where": "River Walk screens 8-9, the harbour: the two ROWBOAT movers (level/riverwalk.lua), drawn by Sp.drawRowboat (setpieces.lua); the hull is cut from this render, the rower comes from rw_rower and its rowing loop"
+ },
+ "references": 2,
+ "extra": "Image 2 shows approved sprites from this game at its pixel size. Draw the boat as carefully as they are drawn: every plank of the clinker hull a clean horizontal band with a lit top edge and a darker lower edge, each band in a 3 to 4 shade warm wood ramp, the plank seams straight and even; the white upper strake a clean band; the man's face, cap, coat folds and hands clearly drawn with few large shapes. No speckles, no grain noise, no stray pixels.",
+ "retry": {
+  "n": 1,
+  "why": "owner 6 Nov 19:53: \"rerender this asset in spritecook, it's really low quality\" (round 1: NB 2.1 1K pixel, render rw_rowboat_n6a)"
+ }
+}

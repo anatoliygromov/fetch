@@ -88,3 +88,11 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-05 23:03,plan,rw_car5@1105-230350,rw_car5,rw_traffic2,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
 2026-11-05 23:04,spent,rw_car3@1105-230350,,,,,24,spent,
 2026-11-05 23:04,spent,rw_car5@1105-230350,,,,,24,spent,
+2026-11-06 19:38,plan,rw_rowboat@1106-193831,rw_rowboat,rw_water,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"do the build pls and I want to play it, use credits (owner, 6 Nov 19:37, on the 62 credit rowboat total)"
+2026-11-06 19:38,plan,rw_rower@1106-193831,rw_rower,rw_water,spritecook,"SpriteCook Pixel Engine Image (exact 16-128 px, no references)",12,planned,"do the build pls and I want to play it, use credits (owner, 6 Nov 19:37, on the 62 credit rowboat total)"
+2026-11-06 19:39,spent,rw_rowboat@1106-193831,,,,,24,spent,
+2026-11-06 19:41,spent,rw_rowboat_anim@1106-1941,rw_rowboat_anim,rw_water,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,spent,"do the build pls and I want to play it, use credits (owner, 6 Nov 19:37, on the 62 credit rowboat total); rower cut from the hull render, rw_rower job not run (12 saved)"
+2026-11-06 19:47,spent,rw_rower_anim@1106-1945,rw_rower_anim,rw_water,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,spent,"do the build pls and I want to play it, use credits (owner, 6 Nov 19:37); second loop: the whole-boat loop redrew the hull (52-72 % of its pixels), so only the rower is animated (14 over the 62 quote)"
+2026-11-06 19:53,plan,rw_rowboat_r2@1106-195352,rw_rowboat_r2,rw_water,spritecook,SpriteCook GPT 2.5 Sunburst 2K medium (follows the reference grid),60,planned,"I think you need to rerender this asset in spritecook, it's really low quality (owner, 6 Nov 19:53)"
+2026-11-06 19:55,spent,rw_rowboat_r2@1106-195352,,,,,60,spent,
+2026-11-06 20:00,spent,rw_rower_r2_anim@1106-1957,rw_rower_r2_anim,rw_water,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,spent,"I think you need to rerender this asset in spritecook, it's really low quality (owner, 6 Nov 19:53): the rower of the round 2 render"
