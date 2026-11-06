@@ -48,3 +48,19 @@ decor-ink warnings are the bark ramp's own dark shade on the shaded edges, as cp
 ## Checks (this branch)
 See the CHANGELOG entry: check_pepper, check_flow, check_tiled, check_backdrop, `--physics` 97/97, `--auto`, `--test`,
 `--qa` on citypark_tall.
+
+## Round 2 (review round 1 FAIL, 0 credits)
+Frames: `round2/frames/sweep_citypark_y{144,110,070,024,000}_x*.png` (the reviewer's camera heights, x every 280),
+cards in `cards/` (remade). The round 1 frames above are kept for the record.
+- Limbs are straight bark strips (`cp_bough_limb`, `cp_bough_limbx`, `cp_bough_low`, no twigs, no cut ends in the files)
+  composed in scene.lua column by column: 8 rows at the trunk, one fewer every 16 px out, the underside curving up over
+  the last columns to a rounded tip with a short twig; a crotch where the underside curves down into the trunk's edge.
+  Where a limb lies on its trunk it takes the trunk's fade and no ink; a branch on an art tree (oak, lime, ash) goes in
+  under the tree's own pixels. Two limbs meeting at one height (the lime's) run on as one.
+- Trunks: every code trunk is the oak trunk art, 33 px (0.7 m), at the back fade; the 9-10 px poles are gone.
+- Low bough: level over its box, rounded free end, an elbow over the whole trunk at its other end (no rise into air).
+- Leaves: no tip clumps and no separate leaf mass (files removed); the limbs live inside the existing crowns.
+- Nest: lone pixels 2.4 % (PASS).
+asset_qa: limb, limbx, low, stump, nest PASS; trunk WARN decor-ink 47 % (as cp_lime).
+Open: where a fork crosses an art tree (CROWN on the old oak, ASH, the lime) the crossing is a faded band, kept so
+Pepper's ledge stays visible; the low bough's part over its trunk reads as a pale block.

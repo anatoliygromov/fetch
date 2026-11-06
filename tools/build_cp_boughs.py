@@ -283,48 +283,38 @@ def split_save(name, c, m, lf, outline, leaves=True):
 
 
 D = {}
-# --- limbs (R3): body top straight; the twig and its clump past the tip
+def strip_out(name, c, m, lf, top, R, skip0, tag):
+    """R3 round 2: the straight body only, as a texture strip for scene.lua: the longest run of columns whose R rows
+    from the top are all bark with nothing above them (no twig, no cut end: the first skip0 columns go), cleaned,
+    inked all round. scene.lua takes whole columns of it (rows from its top and its bottom: the taper)"""
+    bark = m & ~lf
+    H, W = m.shape
+    ok = [x for x in range(skip0, W) if bark[top:top + R, x].all() and not m[:top, x].any()]
+    runs, cur = [], []
+    for x in ok:
+        if cur and x != cur[-1] + 1: runs.append(cur); cur = []
+        cur.append(x)
+    if cur: runs.append(cur)
+    run = max(runs, key=len)
+    sc, sm = c[top:top + R, run[0]:run[-1] + 1].copy(), np.ones((R, len(run)), bool)
+    sc = clean(sc, sm, name)
+    ci, mi, nk = ink(sc, sm)
+    save(name, ci, mi)
+    EDITS['R3'][tag + '_strip'] = {'columns': [int(run[0]), int(run[-1])], 'rows': [int(top), int(top + R - 1)], 'ink_px': nk}
+    return {'w': int(mi.shape[1]), 'h': int(mi.shape[0]), 'rows': R}
+
+
+# --- limbs (R3): body top straight, 8 rows; the straight body as a strip (scene.lua tapers and tips it)
 for nm, i, mid, bmax in (('limb', PART['limb'], 87, 8), ('limbx', PART['limbx'], 42, 8)):
     c, m, lf, (ox, oy) = crop(i)
     c, m, lf = r2_clean(c, m, lf, nm)
     c, m, lf, top = reseat(c, m, lf, 0, m.shape[1] - 1, mid - oy, bmax, 4, nm)
-    bark = m & ~lf
-    # body columns: the run through the top row is at least 5 deep
-    W = m.shape[1]; body = [x for x in range(W) if bark[top:top + 5, x].all()]
-    body_end = max(x for x in body if x < W - 5 and all(xx in body for xx in range(min(body), x + 1)))
-    mb, ml = split_save(f'cp_bough_{nm}', c, m, lf, True, leaves=False)   # its tip clump: the loose clumps (scene.lua)
-    ly, lx = np.nonzero(ml)
-    tb = mb.copy(); tb[:, :body_end + 2] = False                       # the twig past the tip: its far top end
-    ty_, tx_ = np.nonzero(tb & (np.arange(mb.shape[0])[:, None] < top))
-    far = np.argmax(tx_ - ty_)
-    D[nm] = {'w': int(mb.shape[1]), 'h': int(mb.shape[0]), 'top': int(top + 1), 'body0': 1, 'bodyEnd': int(body_end + 1),
-             'tip': int(body_end + 1 - 24), 'clump': [int(tx_[far]) + 3, int(ty_[far]) - 3],
-             'clumpBig': [int(lx.mean()), int(ly.mean())] if len(lx) else None}
-# --- the low bough (R4): level part 16 rows, the free end on the left
+    D[nm] = strip_out(f'cp_bough_{nm}', c, m, lf, top, 8, 3, nm)
+# --- the low bough (R4): its level part, 16 rows, as a strip (the sawn face on the left left out)
 c, m, lf, (ox, oy) = crop(PART['low'])
 c, m, lf = r2_clean(c, m, lf, 'low')
 c, m, lf, top = reseat(c, m, lf, 0, 32, 236 - oy, 16, 9, 'low', rows=16, up=14)
-bark = m & ~lf
-x0 = int(np.nonzero(bark.any(0))[0].min())
-for (yy, xx) in ((top, x0), (top + 15, x0), (top, x0 + 1), (top + 15, x0 + 1), (top + 1, x0), (top + 14, x0)):
-    if m[yy, xx] and not lf[yy, xx]: m[yy, xx] = False                # round the cut free end
-EDITS['R4']['low_free_end_rounded'] = 6
-mb, ml = split_save('cp_bough_low', c, m, lf, True)
-D['low'] = {'w': int(mb.shape[1]), 'h': int(mb.shape[0]), 'top': int(top + 1), 'x0': x0 + 1}
-# --- loose clumps (decoration, one sheet in a row, 2 px apart)
-cl_imgs = []
-for i in clumps:
-    c, m, lf, _ = crop(i)
-    c, m, lf = r2_clean(c, m, lf, f'clump{i}')
-    c = clean(c, m, f'clump{i}')
-    cl_imgs.append((c, m))
-Wc = sum(cm[1].shape[1] + 2 for cm in cl_imgs); Hc = max(cm[1].shape[0] for cm in cl_imgs)
-SC = np.zeros((Hc, Wc, 3), int); SM = np.zeros((Hc, Wc), bool); rects = []; x = 0
-for c, m in cl_imgs:
-    h, w = m.shape; y = Hc - h
-    SC[y:y + h, x:x + w][m] = c[m]; SM[y:y + h, x:x + w] |= m; rects.append([x, y, w, h]); x += w + 2
-save('cp_bough_clumps', SC, SM)
-D['clumps'] = rects
+D['low'] = strip_out('cp_bough_low', c, m, lf, top, 16, 5, 'low')
 # --- nest (decoration): the bowl above its little branch, no outline
 c, m, lf, (ox, oy) = crop(PART['nest'])
 c, m, lf = r2_clean(c, m, lf, 'nest', wood=True)
@@ -339,6 +329,34 @@ cxn, cyn = (Wn - 1) / 2, 4
 out_ = (yy_ > cyn) & (((xx_ - cxn) / (Wn / 2 - 1)) ** 2 + ((yy_ - cyn) / (Hn - cyn)) ** 2 > 1)
 EDITS['R2']['nest_round_px'] = int((m2 & out_).sum()); m2 &= ~out_
 c2 = rim(c2, m2, 'nest'); c2 = clean(c2, m2, 'nest'); m2 = despeck(m2, 'nest')
+for _ in range(3):                                                    # round 2: loose twig dots (lone pixels under 3 %)
+    nb_ = ndimage.convolve(m2.astype(int), np.ones((3, 3), int), mode='constant') - m2
+    lone_ = m2 & (nb_ <= 2); m2 &= ~lone_
+    EDITS['R7'].setdefault('nest_round2', 0); EDITS['R7']['nest_round2'] += int(lone_.sum())
+c2 = clean(c2, m2, 'nest_r2'); m2 = despeck(m2, 'nest_r2')
+def lone_share(c, m):
+    key = (c[..., 0] << 16) | (c[..., 1] << 8) | c[..., 2]
+    H_, W_ = m.shape; lone = np.zeros_like(m)
+    for y in range(H_):
+        for x in range(W_):
+            if not m[y, x]: continue
+            same = False
+            for dy in (-1, 0, 1):
+                for dx in (-1, 0, 1):
+                    yy, xx = y + dy, x + dx
+                    if (dy or dx) and 0 <= yy < H_ and 0 <= xx < W_ and m[yy, xx] and key[yy, xx] == key[y, x]: same = True
+            lone[y, x] = not same
+    return lone, key
+n_r3 = 0
+for _ in range(6):                                                    # round 2: lone colour pixels take the commonest
+    lone_, key_ = lone_share(c2, m2)                                  # colour around them until under 3 % (asset_qa)
+    if lone_.sum() / m2.sum() < 0.025: break
+    for y, x in zip(*np.nonzero(lone_)):
+        nb = [int(key_[yy, xx]) for yy in range(max(0, y - 1), min(m2.shape[0], y + 2)) for xx in range(max(0, x - 1), min(m2.shape[1], x + 2))
+              if (yy, xx) != (y, x) and m2[yy, xx]]
+        if nb:
+            v = max(set(nb), key=nb.count); c2[y, x] = ((v >> 16) & 255, (v >> 8) & 255, v & 255); n_r3 += 1
+EDITS['R7']['nest_lone_to_neighbour'] = n_r3
 yy, xx = np.nonzero(m2)
 c2, m2 = c2[yy.min():yy.max() + 1, xx.min():xx.max() + 1], m2[yy.min():yy.max() + 1, xx.min():xx.max() + 1]
 save('cp_bough_nest', c2, m2)
@@ -363,7 +381,7 @@ save('cp_bough_stump', cs, ms)
 cols = np.nonzero(m[8])[0]
 D['stump'] = {'w': int(ms.shape[1]), 'h': int(ms.shape[0]), 'body0': int(cols.min() + 1), 'bodyW': int(cols.max() - cols.min() + 1)}
 # --- trunks (decoration, faded by the game as the back layer)
-for nm in ('trunk', 'trunk9', 'trunk10'):
+for nm in ('trunk',):
     c, m, lf, _ = crop(PART[nm])
     c, m, lf = r2_clean(c, m, lf, nm, wood=True)
     yy, xx = np.nonzero(m)

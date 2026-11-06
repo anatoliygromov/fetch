@@ -16,52 +16,13 @@
    "leaf_specks_to_bark_px": 38,
    "loose_px_dropped": 2
   },
-  "cp_bough_limb_bark_islands": 22,
   "limbx": {
    "leaf_specks_to_bark_px": 20,
    "loose_px_dropped": 0
   },
-  "cp_bough_limbx_bark_islands": 21,
   "low": {
    "leaf_specks_to_bark_px": 40,
    "loose_px_dropped": 3
-  },
-  "cp_bough_low_bark_islands": 121,
-  "clump7": {
-   "leaf_specks_to_bark_px": 1,
-   "loose_px_dropped": 0
-  },
-  "clump11": {
-   "leaf_specks_to_bark_px": 0,
-   "loose_px_dropped": 0
-  },
-  "clump10": {
-   "leaf_specks_to_bark_px": 0,
-   "loose_px_dropped": 0
-  },
-  "clump9": {
-   "leaf_specks_to_bark_px": 0,
-   "loose_px_dropped": 0
-  },
-  "clump8": {
-   "leaf_specks_to_bark_px": 0,
-   "loose_px_dropped": 0
-  },
-  "clump15": {
-   "leaf_specks_to_bark_px": 0,
-   "loose_px_dropped": 0
-  },
-  "clump14": {
-   "leaf_specks_to_bark_px": 0,
-   "loose_px_dropped": 0
-  },
-  "clump13": {
-   "leaf_specks_to_bark_px": 0,
-   "loose_px_dropped": 0
-  },
-  "clump12": {
-   "leaf_specks_to_bark_px": 0,
-   "loose_px_dropped": 0
   },
   "nest": {
    "leaf_specks_to_bark_px": 62,
@@ -79,14 +40,6 @@
   "trunk": {
    "leaf_specks_to_bark_px": 118,
    "loose_px_dropped": 0
-  },
-  "trunk9": {
-   "leaf_specks_to_bark_px": 47,
-   "loose_px_dropped": 0
-  },
-  "trunk10": {
-   "leaf_specks_to_bark_px": 72,
-   "loose_px_dropped": 0
   }
  },
  "R3": {
@@ -95,10 +48,43 @@
    "rows_dropped": 196,
    "top_row": 25
   },
+  "limb_strip": {
+   "columns": [
+    3,
+    182
+   ],
+   "rows": [
+    25,
+    32
+   ],
+   "ink_px": 376
+  },
   "limbx": {
    "columns_moved": 66,
    "rows_dropped": 576,
    "top_row": 27
+  },
+  "limbx_strip": {
+   "columns": [
+    3,
+    267
+   ],
+   "rows": [
+    27,
+    34
+   ],
+   "ink_px": 546
+  },
+  "low_strip": {
+   "columns": [
+    5,
+    31
+   ],
+   "rows": [
+    50,
+    65
+   ],
+   "ink_px": 86
   }
  },
  "R4": {
@@ -106,13 +92,9 @@
    "columns_moved": 81,
    "rows_dropped": 197,
    "top_row": 50
-  },
-  "low_free_end_rounded": 6
+  }
  },
  "R5": {
-  "cp_bough_limb": 500,
-  "cp_bough_limbx": 665,
-  "cp_bough_low": 177,
   "cp_bough_stump": 103
  },
  "R6": {
@@ -122,61 +104,29 @@
  },
  "R7": {
   "cp_bough_limb": {
-   "lone": 14,
+   "lone": 10,
    "blotches": 0
   },
   "cp_bough_limbx": {
-   "lone": 9,
+   "lone": 6,
    "blotches": 0
   },
   "cp_bough_low": {
-   "lone": 22,
-   "blotches": 4
-  },
-  "cp_bough_low_leaves": {
-   "pinholes_px": 3
-  },
-  "clump7": {
-   "lone": 10,
-   "blotches": 1
-  },
-  "clump11": {
-   "lone": 1,
-   "blotches": 0
-  },
-  "clump10": {
-   "lone": 1,
-   "blotches": 0
-  },
-  "clump9": {
-   "lone": 2,
-   "blotches": 2
-  },
-  "clump8": {
-   "lone": 10,
-   "blotches": 1
-  },
-  "clump15": {
-   "lone": 3,
-   "blotches": 0
-  },
-  "clump14": {
-   "lone": 5,
-   "blotches": 0
-  },
-  "clump13": {
-   "lone": 6,
-   "blotches": 1
-  },
-  "clump12": {
-   "lone": 10,
-   "blotches": 0
+   "lone": 4,
+   "blotches": 5
   },
   "nest": {
    "lone": 7,
    "blotches": 0,
    "specks_px": 0
   },
+  "nest_round2": 11,
+  "nest_r2": {
+   "lone": 0,
+   "blotches": 0,
+   "specks_px": 0
+  },
+  "nest_lone_to_neighbour": 18,
   "stump": {
    "lone": 3,
    "blotches": 2
@@ -184,20 +134,10 @@
   "trunk": {
    "lone": 74,
    "blotches": 10
-  },
-  "trunk9": {
-   "lone": 18,
-   "blotches": 4
-  },
-  "trunk10": {
-   "lone": 14,
-   "blotches": 2
   }
  },
  "R8": {
   "nest": 91,
-  "trunk": 685,
-  "trunk9": 268,
-  "trunk10": 247
+  "trunk": 685
  }
 }
