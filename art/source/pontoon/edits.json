@@ -1,0 +1,6 @@
+{
+"name": "pontoon",
+"06nov_audit": {
+"rule": "built by tools/fix_rw_audit_06nov.py pontoon(): 54 x 19 (was 54 x 12), timber deck on floats in the water, horn cleats; drawn at the mover y0 - 5 (was - 2)"
+}
+}

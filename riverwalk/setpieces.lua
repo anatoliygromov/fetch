@@ -105,10 +105,43 @@ function Sp.drawRowboat(m, cam, t)
   lg.setColor(1, 1, 1, 1)
 end
 
--- the rope a ferry runs on: a thin line just under its deck, from bank to bank (drawn behind the ferry)
+-- (6 Nov audit) The River Walk pontoon's line ended at a post in open water. It is moored now: a line from the
+-- horn cleat on each end of its deck (pontoon.png, cleat horns at y0 - 4), one to a cleat on the quay's end, one to
+-- a timber pile in the river by the ferry's bow (the ferry's crew winch it). Decoration: no outline, edges a
+-- darker shade. Drawn behind the pontoon and Pepper.
+local MOOR = { line = { 0.20, 0.17, 0.14 }, iron = { 0.30, 0.33, 0.38 }, ironL = { 0.48, 0.51, 0.56 },
+               pile = { 0.50, 0.40, 0.30 }, pileD = { 0.40, 0.31, 0.24 }, pileL = { 0.62, 0.51, 0.39 } }
+local function hline(x0, y0, x1, y1)                               -- a 1 px line, whole pixels, x0 < x1
+  local n = math.max(1, x1 - x0)
+  for i = 0, n - 1 do
+    local y = math.floor(y0 + (y1 - y0) * (i + 0.5) / n + 0.5)
+    lg.rectangle("fill", x0 + i, y, 1, 1)
+  end
+end
+local function moored(m, cam)
+  local qx, px = math.floor(m.rope[1] - cam + 0.5), math.floor(m.rope[2] - cam + 0.5) - 7   -- the quay's end, the pile
+  local ax = math.floor(m.x0 - cam + 0.5) - 3                      -- the pontoon art's left (drawn at x0 - 3, y0 - 5)
+  local cy = m.y0 - 4                                              -- the cleats' horns
+  lg.setColor(MOOR.iron); lg.rectangle("fill", qx - 7, m.y0 - 3, 7, 1); lg.rectangle("fill", qx - 5, m.y0 - 2, 3, 2)
+  lg.setColor(MOOR.ironL); lg.rectangle("fill", qx - 7, m.y0 - 4, 7, 1)                    -- a horn cleat on the quay
+  lg.setColor(MOOR.pileD); lg.rectangle("fill", px, m.y0 - 3, 6, 240 - m.y0 + 3)          -- the pile, to the river bed
+  lg.setColor(MOOR.pile); lg.rectangle("fill", px + 1, m.y0 - 3, 4, 240 - m.y0 + 3)
+  lg.setColor(MOOR.pileL); lg.rectangle("fill", px + 1, m.y0 - 4, 4, 1); lg.rectangle("fill", px + 1, m.y0 - 3, 1, 240 - m.y0 + 3)
+  lg.setColor(MOOR.line)
+  hline(qx - 1, m.y0 - 4, ax + 4, cy)                              -- quay cleat to the pontoon's left cleat
+  hline(ax + 50, cy, px + 1, m.y0 - 1)                             -- its right cleat to the pile
+  lg.rectangle("fill", px, m.y0 - 2, 6, 1); lg.rectangle("fill", px, m.y0, 6, 1)          -- the turns round the pile
+  lg.setColor(0.61, 0.79, 0.94)                                    -- a ripple where the floats meet the river (y 224)
+  for _, dx in ipairs({ 1, 2, 24, 25, 28, 29, 50, 51 }) do lg.rectangle("fill", ax + dx, m.y0 + 10, 1, 1) end
+  for _, dx in ipairs({ 0, 26, 27, 52 }) do lg.rectangle("fill", ax + dx, m.y0 + 11, 1, 1) end
+  for _, dx in ipairs({ -2, -1, 6, 7 }) do lg.rectangle("fill", px + dx, m.y0 + 10, 1, 1) end              -- and round the pile
+end
+
+-- the rope a ferry runs on: a thin line just under its deck, from bank to bank (drawn behind the ferry); the River Walk pontoon is moored
 function Sp.drawRopes(s, cam)
   for _, m in ipairs(s.movers) do
-    if m.rope then
+    if m.rope and m.name == "PONTOON" and not s.def.art then moored(m, cam)
+    elseif m.rope then
       local y = m.y0 + (m.rope.dy or 3)
       lg.setColor(0.18, 0.20, 0.25, 0.75); lg.rectangle("fill", math.floor(m.rope[1] - cam), y, m.rope[2] - m.rope[1], 1)
       lg.setColor(0.18, 0.20, 0.25, 1)
