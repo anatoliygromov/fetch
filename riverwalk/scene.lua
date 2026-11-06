@@ -2054,6 +2054,9 @@ local function drawTierProp(p, camx, def)
   elseif r == "slat" then drawSlat(p, ox)
   elseif r == "deck" then drawDeck(p, ox)
   elseif r == "lowbough" then drawLowBough(p, (trunkOf(TI, p)), ox)
+  elseif r == "branch" and built(p, "landing") then                -- (art/cp-audit-06nov) a walk's landing in its
+    local li, lx, ly = built(p, "landing")                          -- tree: one deck with the walk (cp_built.lua)
+    lg.setColor(1, 1, 1, 1); lg.draw(li, lx - ox, ly)
   elseif r == "branch" then
     local t = trunkOf(TI, p)
     if t and t.x0 < p.x1 and t.x1 > p.x0 then drawFork(p, t, ox)
