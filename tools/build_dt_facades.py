@@ -405,7 +405,9 @@ def square_floor():
             k = "a" if r == 0 else ("b" if r == 1 else ("c" if r == 2 else "s"))
             if r >= 3 and (r - 3) % 4 == 3: k = "j"                        # the setts' bed joints
             if r >= 3 and (r - 3) % 4 != 3 and (x + (8 if ((r - 3) // 4) % 2 else 0)) % 16 == 15: k = "j"   # head joints
-            px(x, y, k)
+            if y == Hh - 3: k = "a"                                        # (round 3 review) the near edge: a lit
+            if y >= Hh - 2: k = "c"                                        # row and a dark lip where the floor meets
+            px(x, y, k)                                                    # the far quay behind the canal
     bx = 30                                                               # the bollard, 4 px, a domed cap
     for y in range(TOP - 21, TOP):
         for x in range(bx, bx + 4):
