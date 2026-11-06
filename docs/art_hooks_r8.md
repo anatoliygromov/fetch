@@ -144,3 +144,13 @@ what it drew before (the code fallback stays).
 | `town_stopsign.png` | 19 x 101 | the tram stop sign (arthooks.lua stopSign), faded as back decoration: column 9 on the stop's x + 1, bottom on the rail line |
 | `town_jet.png` | 24 x 88 | the fountain's water (scene.lua drawTerrainArt): 4 frames 6 x 88 at 20 fps; left at the TIER's x0 - 7, the right one mirrored at x1 + 7, top at the TIER's top + 3 |
 | `town_tier.png`, `town_bowl.png`, `town_rim.png` | 50 x 58, 34 x 82, 18 x 18 | as before, redrawn in the sample's granite |
+
+## City Park (tall), night 6 Nov (cp track)
+
+| File | Size | Where and how it is drawn |
+| --- | --- | --- |
+| `cp_willow.png` | 474 x 508 | the tall level's weeping willow (scene.lua `Sc.bigWillow`, drawn first in `Sc.drawTreetops`): its trunk's centre (30 px over its foot) on the WILLOWS crown's middle (x 804), its last row on the back props line (`def.foot - 10`), faded 0.28 (`TREE_FADE`); the old park_willow / park_willow_tall are not drawn on that level |
+| `cp_lime.png` (reused) | 371 x 509 | now also the LIMES trunks at x 1004, 1216 and, mirrored whole (`cp_lime@flip`), 1112 and 1420 (scene.lua TREE_ART) |
+| `cp_reeds.png` | 32 x 34 (2 cells of 16 x 34) | `Sc.drawPondKit`, with each park pond's water: both cells in each corner (base on the curved shore's row), cell 2 on the far bank at a third and two thirds when clear of a stepping stone; base row = the cell's last row |
+| `cp_lily.png` | 30 x 4 (3 cells of 10 x 4) | `Sc.drawPondKit`: one every 52 px from 14 px in, rows 3 to 9 under the waterline (`p.y0 - Sc.POND_RISE`), off the stepping stones |
+| `cp_bankstones.png` | 24 x 7 (2 cells of 12 x 7) | `Sc.drawPondKit`: one per pond end, 9 px in, bottom row on the shore |
