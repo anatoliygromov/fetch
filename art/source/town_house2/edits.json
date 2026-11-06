@@ -1,0 +1,1520 @@
+{
+"asset": "town_house2",
+"source": "art/source/town_house2/town_house2_before.png",
+"tool": "tools/fix_dt_06nov.py",
+"changed": 216,
+"edits": [
+{
+"x": 26,
+"y": 0,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 27,
+"y": 0,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 28,
+"y": 0,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 29,
+"y": 0,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 30,
+"y": 0,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 31,
+"y": 0,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 24,
+"y": 1,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 25,
+"y": 1,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 32,
+"y": 1,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 33,
+"y": 1,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 23,
+"y": 2,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 34,
+"y": 2,
+"was": "151c28",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 22,
+"y": 3,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 35,
+"y": 3,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 21,
+"y": 4,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 36,
+"y": 4,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 20,
+"y": 5,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 37,
+"y": 5,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 20,
+"y": 6,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 37,
+"y": 6,
+"was": "151c28",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 20,
+"y": 7,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 37,
+"y": 7,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 19,
+"y": 8,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 38,
+"y": 8,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 19,
+"y": 9,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 38,
+"y": 9,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 17,
+"y": 10,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 18,
+"y": 10,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 39,
+"y": 10,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 40,
+"y": 10,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 16,
+"y": 11,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 41,
+"y": 11,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 16,
+"y": 12,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 41,
+"y": 12,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 16,
+"y": 13,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 41,
+"y": 13,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 16,
+"y": 14,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 41,
+"y": 14,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 16,
+"y": 15,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 41,
+"y": 15,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 16,
+"y": 16,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 41,
+"y": 16,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 16,
+"y": 17,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 41,
+"y": 17,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 15,
+"y": 18,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 42,
+"y": 18,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 15,
+"y": 19,
+"was": "151c28",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 42,
+"y": 19,
+"was": "151c28",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 14,
+"y": 20,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 43,
+"y": 20,
+"was": "151c28",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 12,
+"y": 21,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 13,
+"y": 21,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 44,
+"y": 21,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 45,
+"y": 21,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 11,
+"y": 22,
+"was": "151c28",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 46,
+"y": 22,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 9,
+"y": 23,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 10,
+"y": 23,
+"was": "151c28",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 47,
+"y": 23,
+"was": "151c28",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 48,
+"y": 23,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 8,
+"y": 24,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 49,
+"y": 24,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 7,
+"y": 25,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 50,
+"y": 25,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 7,
+"y": 26,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 50,
+"y": 26,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 6,
+"y": 27,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 51,
+"y": 27,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 6,
+"y": 28,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 51,
+"y": 28,
+"was": "151c28",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 5,
+"y": 29,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 52,
+"y": 29,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 5,
+"y": 30,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 52,
+"y": 30,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 5,
+"y": 31,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 52,
+"y": 31,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 5,
+"y": 32,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 52,
+"y": 32,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 5,
+"y": 33,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 52,
+"y": 33,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 5,
+"y": 34,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 52,
+"y": 34,
+"was": "151c28",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 4,
+"y": 35,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 53,
+"y": 35,
+"was": "151c28",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 3,
+"y": 36,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 54,
+"y": 36,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 2,
+"y": 37,
+"was": "282b36",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 55,
+"y": 37,
+"was": "282b36",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 1,
+"y": 38,
+"was": "282b36",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 56,
+"y": 38,
+"was": "282b36",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 56,
+"y": 39,
+"was": "282b36",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 56,
+"y": 40,
+"was": "282b36",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 56,
+"y": 41,
+"was": "282b36",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 0,
+"y": 43,
+"was": "020100",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 57,
+"y": 43,
+"was": "151c28",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 1,
+"y": 44,
+"was": "282b36",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 56,
+"y": 44,
+"was": "282b36",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 56,
+"y": 45,
+"was": "282b36",
+"now": "854733",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 56,
+"y": 46,
+"was": "282b36",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 56,
+"y": 47,
+"was": "282b36",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 56,
+"y": 48,
+"was": "282b36",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 56,
+"y": 49,
+"was": "282b36",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 56,
+"y": 50,
+"was": "282b36",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 56,
+"y": 51,
+"was": "282b36",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 56,
+"y": 52,
+"was": "282b36",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 56,
+"y": 53,
+"was": "282b36",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 56,
+"y": 124,
+"was": "282b36",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 1,
+"y": 125,
+"was": "282b36",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 3,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 4,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 5,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 6,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 7,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 8,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 9,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 10,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 11,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 12,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 13,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 14,
+"y": 125,
+"was": "020100",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 15,
+"y": 125,
+"was": "020100",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 16,
+"y": 125,
+"was": "020100",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 17,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 18,
+"y": 125,
+"was": "020100",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 19,
+"y": 125,
+"was": "020100",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 20,
+"y": 125,
+"was": "020100",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 21,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 23,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 24,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 25,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 26,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 27,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 28,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 29,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 30,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 31,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 32,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 33,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 34,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 36,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 37,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 38,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 39,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 40,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 41,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 42,
+"y": 125,
+"was": "020100",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 43,
+"y": 125,
+"was": "020100",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 44,
+"y": 125,
+"was": "020100",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 45,
+"y": 125,
+"was": "020100",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 46,
+"y": 125,
+"was": "020100",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 47,
+"y": 125,
+"was": "020100",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 48,
+"y": 125,
+"was": "020100",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 49,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 50,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 51,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 52,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 53,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 54,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 55,
+"y": 125,
+"was": "020100",
+"now": "5a3a33",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 56,
+"y": 125,
+"was": "282b36",
+"now": "5d5957",
+"rule": "silhouette outline -> the darker shade of the material it edges"
+},
+{
+"x": 1,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 2,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 3,
+"y": 42,
+"was": "151c28",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 4,
+"y": 42,
+"was": "151c28",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 5,
+"y": 42,
+"was": "151c28",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 6,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 7,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 8,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 9,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 10,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 11,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 12,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 13,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 14,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 15,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 16,
+"y": 42,
+"was": "151c28",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 17,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 18,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 19,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 20,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 21,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 22,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 23,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 24,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 25,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 26,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 27,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 28,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 29,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 30,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 31,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 32,
+"y": 42,
+"was": "151c28",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 33,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 34,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 35,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 36,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 37,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 38,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 39,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 40,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 41,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 42,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 43,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 44,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 45,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 46,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 47,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 48,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 49,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 50,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 51,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 52,
+"y": 42,
+"was": "151c28",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 53,
+"y": 42,
+"was": "151c28",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 54,
+"y": 42,
+"was": "151c28",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 55,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+},
+{
+"x": 56,
+"y": 42,
+"was": "020100",
+"now": "5a3a33",
+"rule": "the cornice's black lip -> the plaster's darkest shade"
+}
+]
+}
