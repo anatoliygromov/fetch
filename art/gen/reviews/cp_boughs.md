@@ -99,7 +99,7 @@ No piece got `pipeline.py done`: the family asset cp_boughs has 9 PASS only for 
 # Round 2
 Reviewer: same independent reviewer, 6 Nov 2026, head 2e2663b. Own frames: whole high road at camera y 144, 110, 70, 24, 0
 (x every 280 plus 1960), montages and 3-5x crops in art/gen/reviews/cp_boughs_frames/r2/ (m_144, m_110, m_070, m_024,
-m_000, low.png, forks.png, longlimb.png). asset_qa PASS for limb, limbx, low, nest, stump; check_backdrop OK.
+m_000, low.png, forks.png, longlimb.png). asset_qa by name finds 0 assets (not registered, so not re-run); maker reports PASS; check_backdrop OK.
 
 Fixed since round 1: orange tufts and clumps gone, saw-cut ends gone, trunks are 33 px oak trunks.
 
