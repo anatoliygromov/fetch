@@ -4,7 +4,7 @@ The rules everyone follows. Only rules the owner stated or approved, each with i
 
 ## 1 Pillars
 
-- **Pepper is the star.** A girl, a black Labrador (owner, 5 Oct). Nothing may cover her (owner, 6 Oct).
+- **Pepper is the star.** A girl, a black Labrador (owner, 5 Oct). Nothing may cover her (owner, 6 Oct), except passing bikes, which ride in front of the obstacles and of her (owner, 25 Oct).
 - **The 1994 Lion King on the Mega Drive is the bar:** layers, graphics, gameplay (owner, 12 Oct). Art "as good as in Lion King", very crisp (owner, 23 Oct).
 - **Cute for a 7 year old,** his daughter (owner, 23 Oct).
 - **Stockholm,** after the owner's reference photos (owner, 6 Oct).
