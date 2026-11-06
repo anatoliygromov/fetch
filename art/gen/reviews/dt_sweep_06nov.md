@@ -56,3 +56,46 @@ they vanish in grey.
 3. Basin: a front-on granite kerb at street level with a thin water band behind it; jets 2 px with a splash.
 4. Footbridge rib 3 px (dark, mid, light) so the arch reads as iron at 1x.
 5. Guild pier: an urn or lion on it, or drop it. Then the kerb end at x 3497.
+
+# Round 2 (reviewer, 6-7 Nov night): fix rounds 1 and 2 (fab6b50)
+
+Re-rendered all 33 screens with the default flag (H.CLOSED_STREET false), the same 33 with LOOK_CLOSED=1, and two
+pairs 20 px apart (camera x 400/420 and 3000/3020 at y 240) to measure scroll.
+
+## Scroll, measured
+Block-wise best shift between the pairs (20 x 20 blocks, rows 0-200): the small-house row at x 0-1100 and
+x 2816-3520 shifts 10 px for 20 px of camera on every block of the row (roofs, storeys, doors): scroll 0.5, the
+mid layer. The street, kerb, props and the true-scale fronts shift 20 (scroll 1.0). Round 1's line "quarter-scale
+town_house1-3 on the back layer at scroll 1.0" was wrong; the maker is right: it is the mid-layer town row at
+scroll 0.5 (23 px/m, a 45 px door is 2 m there). The doll houses of decision 2a stood only on the plaza and are
+gone. Correction noted here and in round 1's file.
+
+## Do the open squares read as distance across a square?
+No. At the street tier (y 240) the row's feet land on the pavement's far edge with nothing between: no square
+floor, no far kerb, no mid-scale thing standing on the square. Its values sit only one small step lighter than
+the true-scale fronts (mid 171 median against back 152). The parallax tells the depth only while the camera
+moves; on a still screen a 7 year old sees small houses standing on the pavement beside a door twice their
+height. x 0-960 and x 2880-3200 at every tier, and the right edge of x 2240 and x 2560, still read as doll houses
+at street depth. The quoins fix the seams, not the depth.
+
+## What would fix it with the spire kept (decision 6a)
+1. A square floor: a flat paving band in the mid layer's own value (2 shades, no texture), 24-32 px tall, from
+   the pavement's back edge to the row's feet, the row raised to stand on its far edge; a far kerb line and a
+   bollard or lamp row at 23 px/m along it. That is what Lion King does: the mid layer never touches the play
+   floor.
+2. One palette step lighter for the row (the mid ladder row: darkest 105, contrast 85), so it sits a clear step
+   behind the fronts in greyscale.
+3. Or: H.CLOSED_STREET on with two or three alleys or carriage arches of 60-100 px cut in it where the square,
+   the row and the spire show through. The LOOK_CLOSED=1 render reads as a real street at every tier (no scale
+   break, walls past the top); the spire is lost, which 6a forbids. Alleys keep both.
+Recommendation: 3 if the owner will take alleys; else 1 and 2 together.
+
+## Screens still failing (default flag)
+| cam x | y 240 | y 120 | y 0 |
+| --- | --- | --- | --- |
+| 0, 320, 640, 960 | FAIL: row at street depth | FAIL | FAIL |
+| 1280, 1600, 1920 | PASS (basin, urn, lanterns, shelter all closed) | PASS | PASS |
+| 2240, 2560 | FAIL: row at street depth at the right edge; bridge, canal, crates PASS | FAIL (right edge) | FAIL (right edge) |
+| 2880, 3200 | FAIL: row at street depth; canal, poles, stairs PASS | FAIL | FAIL |
+
+With LOOK_CLOSED=1 every screen passes the scale and float checks; the spire is hidden on all of them.

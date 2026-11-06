@@ -33,3 +33,13 @@ fronts that run off the top, the one scale break the level has just got rid of. 
 parapet; it only needs the plinth fix above.
 
 Verdict: PASS for the family except the guild pier (FAIL, fix above) and the bridge rib (thicken).
+
+# Round 2 (reviewer, 6-7 Nov night): after fix round 1 (fab6b50)
+
+| Item | Result | Evidence |
+| --- | --- | --- |
+| footbridge rib | PASS | 3 px (dark, mid, light) from both springers; reads as an iron arch at 1x (x 2240-2560, y 240 and y 120) |
+| guild plinth | PASS | carries a stone urn in 3 shades; reads as an urn on a pedestal on the coping (x 1600 y 120 at 4x) |
+| quoins (town_quoin, 10 x 432) | PASS | dressed stone flanks where a front meets a square (x 140, 1180, 2480, 2640, 2816); the seam reads as a house end, not a cut. asset_qa PASS |
+
+Round 1 FAILs on this family are closed.

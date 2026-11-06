@@ -62,3 +62,7 @@ File `riverwalk/art/scene/town_shelter_tall.png` 140 x 115 (tools/build_dt_stree
 
 Verdict: PASS. One nit for a later pass: the iron cresting along the canopy top is a 1 px on/off row that at 1x
 reads as a dotted line; a 2 px scallop would read as cresting.
+
+# Round 5 (reviewer, 6-7 Nov night): after fix round 1 (fab6b50)
+Cresting: a solid 1 px rail with a scallop row above it, reads as cresting at 1x (x 3200 y 240 at 4x). PASS.
+asset_qa PASS. Closed.

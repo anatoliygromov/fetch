@@ -37,8 +37,8 @@ Verdict: PASS, the 37 fronts, drainpipe, tall7 and town_door are finished pieces
 
 Two notes, not defects of the files:
 1. The fronts are only on screen at x 1100-2740. Everywhere else the street still stands in front of the
-   quarter-scale `town_house1-3` (58 x 126 px, door about 20 px, a house the width of the bench) on the same
-   back layer at the same scroll. See `dt_sweep_06nov.md`.
+   small-house row. Round 1 called it `town_house1-3` on the back layer at scroll 1.0; measured in round 2 it is
+   the mid-layer town row at scroll 0.5 (correction, see `dt_sweep_06nov.md` round 2).
 2. Six styles: the differences are in the window heads, cornices, curtains and shop colours. On the sweep they
    read as one street, not as six kinds of house, because every style shares the same storey grid and plaster
    ramps. Keep six. What would calm it is fewer plaster colours per screen (two neighbours in the same pink at

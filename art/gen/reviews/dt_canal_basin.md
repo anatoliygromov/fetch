@@ -35,3 +35,19 @@ this branch, not a night change, but it is the one noisy fill on the street.
 3. Basin: a front-on granite kerb (20-24 px tall, the posts' stone) across the pit at street level, the water a
    6-8 px band just below its top, the deep water hidden. Jets 2 px wide (white over light blue) with a splash
    ring where they land.
+
+# Round 2 (reviewer, 6-7 Nov night): after fix round 1 (fab6b50)
+
+Looked at x 1600 and x 2560-3056, y 240, at 4x; `asset_qa town_basin.png --layer back`: ladder 74 (the kerb's
+shadow row; it stands on the play row, run it as play). Nothing else flagged.
+
+| Item | Result | Evidence |
+| --- | --- | --- |
+| canal waterline | PASS | 8 px surface band with a lit edge and ripple rows, quay reflection, deep water in two darker steps; reads as water front-on |
+| parasol poles in the flood | PASS | wet band and ripple ring at the surface, the pole under water one step darker and blue-tinted, an iron foot on the bottom: they stand in the canal |
+| punts removed | PASS | agreed: a floor over water that costs a heart is a trap for a child; the poles now explain themselves |
+| basin (town_basin) | PASS | far coping, water band, near granite kerb front-on on the quay courses; the column stands in the water |
+| jets | PASS | 2 px white over light blue, splash rings where they land |
+| river stairs x 3497 | PASS | granite steps down from the kerb, straight treads |
+
+Round 1 FAILs on this family are closed.
