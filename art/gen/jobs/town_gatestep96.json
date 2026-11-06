@@ -1,0 +1,23 @@
+{
+ "name": "town_gatestep96",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "prop",
+ "real_height_m": 0.8,
+ "target_px": [
+  98,
+  37
+ ],
+ "checks_px": {
+  "step": "96 x 36 box + outline (0.8 m)",
+  "course": "17 px, blocks 24 px"
+ },
+ "tier": "C",
+ "family": "dt_built_06nov",
+ "method": "built from stamped parts, tools/build_dt_built.py",
+ "build": "tools/build_dt_built.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_gatestep96.png",
+  "where": "Downtown tall, the GATE x 3072-3168 (solid perch 96 x 36): at x0 - 1, y0 - 1 (arthooks.lua drawTownPerches)"
+ }
+}

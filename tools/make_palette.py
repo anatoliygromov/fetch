@@ -43,10 +43,19 @@ APPROVED = {
         'keep': ['pepper.png', 'ball.png', 'scene/town_front_tall1.png', 'scene/town_front_tall2.png',
                  'scene/town_front_tall4.png', 'scene/town_shelter_tall.png', 'scene/town_gateway.png',
                  'scene/town_crates70.png', 'scene/town_portal_top.png', 'scene/town_oriel.png',
-                 'scene/town_oriel_bay.png'],
+                 'scene/town_oriel_bay.png',
+                 # v2 (6 Nov, art/dt-built-06nov): the board's Downtown redraws and hand fixes kept whole as their ramps
+                 # (the old town row's four plasters, the far roofs, the home's door and flowers, the courtyard gate,
+                 # the plaza houses at the back value, the bollard's iron, one red and cream for the awnings, the
+                 # table's blue and steel); same terms: approved only with the owner's approve on the board.
+                 # Run with N = kept + 24 (v1's 24 from the pool): python3 tools/make_palette.py downtown 154
+                 'scene/town_facades.png', 'scene/town_roofs.png', 'scene/town_door.png', 'scene/town_tramshed96.png',
+                 'scene/town_gatestep96.png', 'scene/town_house1.png', 'scene/town_house2.png', 'scene/town_house3.png',
+                 'scene/town_bollard.png', 'scene/town_awning64.png', 'scene/town_awning80.png',
+                 'scene/town_table_front.png'],
         'pool': ['girl.png', 'scene/bench.png', 'scene/bin.png', 'scene/lamp_post.png', 'scene/town_crate_front.png',
                  'scene/town_tub.png', 'scene/town_rim.png', 'scene/town_bowl.png', 'scene/town_shopsign.png',
-                 'scene/town_tier.png', 'scene/town_table_front.png', 'scene/town_awning64.png', 'scene/town_awning80.png'],
+                 'scene/town_tier.png'],
     },
 }
 

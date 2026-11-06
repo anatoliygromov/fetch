@@ -1,0 +1,23 @@
+{
+ "name": "town_tramshed96",
+ "level": "downtown",
+ "layer": "back",
+ "kind": "building",
+ "real_height_m": 3.5,
+ "target_px": [
+  160,
+  161
+ ],
+ "checks_px": {
+  "wall": "161 (3.5 m)",
+  "gateway": "80 x 138 (3.0 m, build_dt_street.gateway)"
+ },
+ "tier": "C",
+ "family": "dt_built_06nov",
+ "method": "built from stamped parts, tools/build_dt_built.py",
+ "build": "tools/build_dt_built.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_tramshed96.png",
+  "where": "Downtown tall, the GATE x 3072-3168 (no house front there): centred on the box, bottom on y 414 (arthooks.lua H.freeGate, drawTownGateways)"
+ }
+}
