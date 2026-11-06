@@ -31,7 +31,7 @@ No box Pepper stands on moved. The map changes are box properties (`style`, `pip
   light to dark (the fronts stay at the back layer's values).
 - Shelter, drainpipe, basin wall, springer, home: PASS.
 - Checks: PEPPER UNCHANGED; flow 125/125; check_tiled PASSED; check_backdrop OK; `--physics` downtown_tall 102/102,
-  riverwalk 55/55, citypark_tall 97/97; check_curve T1-T4 PASS.
+  riverwalk 55/55, citypark_tall 97/97; check_curve T1-T4 PASS. After fix round 1: the same, plus downtown (flat) 81/81 and `--auto` GOOD GIRL; check_flow needs its own XDG_DATA_HOME when tracks run it at once (shared saves gave 4 false FAILs).
 
 ## Where to look
 
@@ -39,6 +39,24 @@ No box Pepper stands on moved. The map changes are box properties (`style`, `pip
 - `before/` and `after/`: the full sweeps (LOOK_STEP=320, tiers y 0, 120, 240).
 - `cards/`: one card per piece (5x beside bench, bin and lamp, in-game frame colour and grey, slot).
 - `frames/`: the cards' in-game frames.
+
+## Fix round 1 (independent review on `review/06nov-dt`, 0 credits)
+
+| Review item | What is there now |
+| --- | --- |
+| 1 Small houses beside the true-scale fronts (x 0-1100, 2740-3520) | they were the mid row (scroll 0.5) showing between the fronts. 22 new decoration front boxes fill x 140-1180, the canal gap 2480-2640 and x 2816-3520 with the styled fronts (two or three plasters per screen); the screen 10 courtyard gate stays free in front of its house (`nogate`). Every Downtown screen is now true-scale fronts |
+| 2 Toy boats under the parasols | removed. A boat or a pontoon would draw a floor over water that costs a heart, so for a 7-year-old the poles go into the flood instead: a wet band, a ripple ring, and under the surface the pole and its cast-iron foot one step darker |
+| 3 Canal a flat slab | front-on water: an 8 px surface band (lit edge, the quay's reflection, drifting ripples), the deep water in two darker steps, no streaks |
+| 4 Basin a pit | `town_basin.png`: far coping, an 8 px water band, the near granite kerb, the quay's courses below; the column stands in the water behind the kerb. Jets 2 px with splash rings |
+| 5 Rib, pier, cresting | the bridge rib 3 px; the guild pedestal is an urn (its lid the golden bone's perch); a solid rail on the shelter's cresting |
+| 6 Kerb end x 3497 | the river stairs are granite steps, no sheared cobbles |
+
+Cards: `round1/cards/` (basin, jets, urn, footbridge, shelter), frames `round1/frames/`. `town_jet`, `town_guild_pier` and
+`town_footbridge` belong to the dt_roofs and dt_highroad families and need their gate 8 again.
+
+**A new decision for the owner (part of decision 2):** with fronts along the whole street, the sky, the far city and
+Riddarholmen's spire (decision 6a: on screen on all 11 screens) are no longer seen anywhere in the tall Downtown.
+Leave a gap (over the canal, or a low courtyard wall) so the spire shows, or keep the street closed.
 
 ## Open questions for the owner
 
@@ -49,8 +67,7 @@ No box Pepper stands on moved. The map changes are box properties (`style`, `pip
    guild house keeps the high road branch's granite ground floor with the steps as its coping. Say if you want the
    gable anyway.
 3. **The house styles:** six styles, picked per house in the map. Keep, or fewer and calmer?
-4. **The house after the canal (x 2640):** it stood alone as a narrow tower; it now has a neighbour (x 2736-2816, a
-   shop). Keep the pair, or one house?
+4. **The far sky and the spire:** see fix round 1 above.
 
-Not done: the low-priority kerb end at the level's right edge (audit item 5). Review gate 8 (independent reviewer) is
+Review gate 8 (independent reviewer) is
 for the producer; `art/gen/reviews/town_shelter_tall.md` is the old shelter's and needs a new review.
