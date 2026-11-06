@@ -1,0 +1,27 @@
+{
+ "name": "rw_rower",
+ "level": "riverwalk",
+ "layer": "play",
+ "kind": "character",
+ "real_height_m": 1.13,
+ "target_px": [
+  63,
+  52
+ ],
+ "checks_px": {
+  "head_px": 11,
+  "seat_row": 33,
+  "waterline_row": 47
+ },
+ "subject": "an adult man in a navy coat and a dark flat cap, seated, seen exactly from the side facing right, rowing: both hands on the oar handles in front of his chest, the near oar running down to the left into the water, its blade under the surface",
+ "part_map": "the round skin-coloured shape is his head with the dark cap on top, the blue shape his coat and arms reaching right to the handles, the dark box his thighs, the thin tan line the oar down to its blade at the bottom left.",
+ "size_sentence": "seated, his head is a little higher than the dog's head; a grown man, not a child.",
+ "model": "sc_pe",
+ "variants": 2,
+ "tier": "A",
+ "family": "rw_water",
+ "slot": {
+  "file": "riverwalk/art/scene/rower.png",
+  "where": "River Walk screens 8-9: over each ROWBOAT hull at its middle thwart (Sp.drawRowboat), animated by the rowing loop (sc_anim, 8 frames, 26 credits, after this still)"
+ }
+}
