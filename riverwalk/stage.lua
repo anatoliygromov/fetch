@@ -585,6 +585,7 @@ function St:draw(debug)
   AH.drawTrams(self, cam)                                          -- the back lane's tram and its stop sign (faded)
   if style then AH.drawTownStops(self, cam) end                    -- the tall Downtown: the shelters, in front of the tram
   for _, pr in ipairs(self.def.props) do if pr.layer == "back" then prop(pr, cam, C.back) end end
+  if style then Sc.drawBalconyRails(self.def, cam) end              -- (art/dt-roofs-06nov) the balconies' railings
   if style then Sc.drawSpout(self.def, cam) end
   Sp.drawBack(self, cam)                                           -- code-drawn decoration (kiosks)
   Rf.drawBack(self, cam, self.t)                                   -- steam columns (behind Pepper)

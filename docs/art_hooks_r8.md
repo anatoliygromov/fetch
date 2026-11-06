@@ -109,6 +109,7 @@ Delete (or rename) its file: the placeholder or the old art comes back. The plac
 | `town_shelter_tall.png` | 140 x 115 | decoration: centred on the SHELTER box, bottom on y 414, drawn after the tram |
 | `town_gateway.png` | 80 x 138 | decoration: centred in the bay that holds the GATE's right end, bottom on y 414, drawn with the fronts |
 
+<<<<<<< HEAD
 ## Downtown redraws and fixes (art/dt-built-06nov, the board's calls of 25 Oct; 0 credits)
 
 Built from parts by `tools/build_dt_built.py` (`--check` proves each file), hand fixes by rule in
@@ -123,3 +124,25 @@ Built from parts by `tools/build_dt_built.py` (`--check` proves each file), hand
 | `town_gatestep96.png` | 98 x 37 | that GATE's solid box (96 x 36): the gateway's granite doorstep, play, outlined, at x0 - 1, y0 - 1 (`drawTownPerches`) |
 | `town_house3.png` | 52 x 118 | unchanged slot (the plaza house scale is the owner's open decision 2) |
 | `town_bollard.png` | 16 x 54 | 0.9 m at the front's 60 px/m; its top at screen y 221 as before (only the top 19 rows show) |
+=======
+## Downtown roof kit, spire and code-drawn pieces rebuilt (art/dt-roofs-06nov, 0 credits)
+
+Built from parts drawn once, in the sample screen's ramps and ink (every colour from `art/palettes/downtown.gpl`):
+`tools/build_roof_kit.py` (the roof kit), `tools/build_spire.py`, `tools/build_dt_details.py` (the rest). Each script's
+`--check` proves the file is what it builds. Sources: `art/source/dt_roofs/*.aseprite`. Without a file the game draws
+what it drew before (the code fallback stays).
+
+| File | Size | Where and how it is drawn |
+| --- | --- | --- |
+| `town_roof_loggia.png` | 122 x 26 | as before (LOGGIA); granite about 103 on screen, so `H.STONE_TINT` is empty now |
+| `town_roof_gallery88.png`, `town_roof_gallery72.png` | 90 x 32, 74 x 32 | as before; vase balusters (8 x 20, drawn once) on a 10 px pitch; no tint |
+| `town_roof_flower_roof.png` | 90 x 14 | as before |
+| `town_roof_ledge.png` | 16 x 9 | as before, a 3-slice: one modillion per 8 px middle tile |
+| `town_footbridge.png` | 162 x 52 | as before |
+| `spire_riddarholmen.png` | 36 x 260 | as before (far, the shore haze at the shore's 0.70); a silhouette in 8 colours |
+| `town_balcony56.png`, `town_balcony64.png` | 58 x 60, 66 x 60 | a BALCONY w wide (scene.lua drawBalcony): at x0 - 1, y0 - 1 - `Sc.BALCONY_RAIL` (46); the slab's ink row is row 46; an open railing (fix round 1) |
+| `town_spring.png` | 36 x 10 | the coil (scene.lua `Sc.spring`): 4 frames 9 x 10 for h = 7, 8, 9, 10; rows 0 .. h - 1 of frame h - 7 at x - 4, y |
+| `town_stopsign.png` | 19 x 101 | the tram stop sign (arthooks.lua stopSign), faded as back decoration: column 9 on the stop's x + 1, bottom on the rail line |
+| `town_jet.png` | 24 x 88 | the fountain's water (scene.lua drawTerrainArt): 4 frames 6 x 88 at 20 fps; left at the TIER's x0 - 7, the right one mirrored at x1 + 7, top at the TIER's top + 3 |
+| `town_tier.png`, `town_bowl.png`, `town_rim.png` | 50 x 58, 34 x 82, 18 x 18 | as before, redrawn in the sample's granite |
+>>>>>>> origin/art/dt-roofs-06nov
