@@ -18,3 +18,18 @@ Scale numbers (houses 1 to 3, owner decision 2a): house1 54x118 px = 1.2x2.6 m a
 9. Read: PASS Reads as a house, a doll house beside Pepper (Scale).
 
 VERDICT: FAIL (2 items: outline dots, wall mottle)
+
+# Round 2
+
+Frames: the game would not render under the machine load (love sweep never wrote a frame in 4 tries), so the in-game check is a composite at 1x, 3x colour and 3x grey beside Pepper (cell 0,0,60,52), /tmp/claude-0/-home-claude/87159006-489b-566e-ae4a-e83d2f5ae5ab/scratchpad/r2/comp1x.png, comp3x.png, comp3x_grey.png, plus the file at 5x beside bench and lamp /tmp/claude-0/-home-claude/87159006-489b-566e-ae4a-e83d2f5ae5ab/scratchpad/r2/town_house1_5x.png; the maker's frames_after (docs/review/06nov/dt_built/frames_after) were looked at only as a cross-check. asset_qa and check_backdrop: PASS.
+1. Scale: PASS Owner question unchanged (54x118 px = 1.2x2.6 m at 46 px/m, door a quarter of true).
+2. Layer: PASS Unchanged, at the fronts' value.
+3. Outline: PASS Darkest pixel luma 41 (38,41,49); no black on the roof slopes (dotted line gone), the feet or the jambs.
+5. Shading: PASS Wall is one flat colour (117,121,108), 7 colours in all, no grain at 5x; lone pixels 103 (1.9 %), nearly all the stepped roof diagonal.
+4. Shapes: PASS Gable straight, storeys even.
+6. Palette: PASS 7 colours, all in downtown.gpl v2.
+7. View: PASS Front-on, cap gable.
+8. Fit: PASS Crisp beside bench and lamp at 5x; no dots.
+9. Read: PASS Reads as a house.
+
+VERDICT: PASS (9 of 9)

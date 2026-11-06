@@ -1,0 +1,21 @@
+{
+ "name": "town_bridge_springer",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 0.43,
+ "target_px": [
+  14,
+  20
+ ],
+ "tier": "C",
+ "family": "dt_night_06nov",
+ "method": "built from parts drawn once, stamped on integer grids, tools/build_roof_kit.py",
+ "build": "tools/build_roof_kit.py",
+ "frame": "docs/review/06nov-night/dt/frames/sweep_downtown_y170_x2400.png",
+ "slot": {
+  "file": "riverwalk/art/scene/town_bridge_springer.png",
+  "where": "Downtown tall, FOOTBRIDGE: on the two house corners under the arch feet (art row 42)"
+ },
+ "concept": "art/gen/concepts/dt_highroad_concept_a.png (design only)"
+}

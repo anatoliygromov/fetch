@@ -281,9 +281,9 @@ def footbridge():
         cv.rect(x, 0, x + 3, 11, "s3"); cv.rect(x + 1, 1, x + 1, 11, "s2")
     # the arch: a 3 px iron band from the walls (row 46) up to the deck's underside at the middle
     def arch_y(x): return 20 + 26 * (2 * (x + 0.5) / W - 1) ** 2
-    for x in range(0, W):
-        y = int(round(arch_y(x)))
-        cv.rect(x, y, x, y + 3, "s3"); cv.put(x, y + 1, "s2")
+    for x in range(0, W):                                             # (night/06nov-dt, review round 1: a 3 px rib
+        y = int(round(arch_y(x)))                                     # inside its ink, it read as a wire)
+        cv.rect(x, y, x, y + 4, "s3"); cv.put(x, y + 1, "s2"); cv.put(x, y + 2, "s2")
     for x in range(12, W - 8, 16):                                    # hangers between the arch and the deck
         for hx in (x, W - 1 - x):
             y = int(round(arch_y(hx)))
@@ -292,7 +292,21 @@ def footbridge():
     cv.outline("ink")
     return cv
 
-PIECES = {"town_roof_ledge": ledge, "town_roof_chimney": chimney, "town_roof_gable": gable,
+def springer():
+    """(night/06nov-dt: "the footbridge hangs with no support") the arch's granite springer on the house corner, 14 x
+    20: a moulded slab (the arch's iron plate stands on it), a body corbelled in two steps down to a 6 px tongue in
+    the wall, lit top and left, shade right; outlined (part of the bridge). The left one as drawn, the right mirrored"""
+    cv = Cv(14, 20)
+    cv.rect(1, 1, 12, 4, "g2"); cv.rect(1, 1, 12, 1, "g1"); cv.rect(1, 4, 12, 4, "g3")           # the slab
+    cv.rect(3, 5, 12, 9, "g2"); cv.rect(3, 5, 3, 9, "g1"); cv.rect(3, 9, 12, 9, "g3")             # first step
+    cv.rect(5, 10, 12, 14, "g2"); cv.rect(5, 10, 5, 14, "g1"); cv.rect(5, 14, 12, 14, "g3")       # second step
+    cv.rect(7, 15, 12, 18, "g2"); cv.rect(12, 5, 12, 18, "g3")                                    # the tongue
+    cv.outline("ink")
+    cv.rect(2, 2, 11, 2, "g1"); cv.rect(4, 6, 4, 8, "g1"); cv.rect(6, 11, 6, 13, "g1"); cv.rect(8, 16, 8, 17, "g1")   # lit
+    cv.rect(11, 6, 11, 17, "g3")
+    return cv
+
+PIECES = {"town_roof_ledge": ledge, "town_bridge_springer": springer, "town_roof_chimney": chimney, "town_roof_gable": gable,
           "town_roof_gallery88": lambda: gallery(90), "town_roof_gallery72": lambda: gallery(74),
           "town_roof_loggia": loggia, "town_roof_dormer": dormer, "town_roof_flower_roof": flower_roof,
           "town_footbridge": footbridge}

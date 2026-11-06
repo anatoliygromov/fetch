@@ -38,3 +38,27 @@ Changed: poster card and glint colours (1,317 px).
 9. Read: PASS - a shelter; the poster no longer pulls the eye.
 
 VERDICT: PASS
+
+# Round 4 (reviewer, 6-7 Nov night): the green iron shelter
+
+File `riverwalk/art/scene/town_shelter_tall.png` 140 x 115 (tools/build_dt_street.py, branch night/06nov-dt
+2852d9c). Looked at 5x beside bench, bin and lamp; in game at x 1920 and x 3200, y 240, at 4x.
+`asset_qa.py --layer back --level dt`: PASS.
+
+| Item | Result | Evidence |
+| --- | --- | --- |
+| Scale | PASS | 115 px = 2.5 m, the canopy over Pepper's head with room; the bench inside the size of the approved bench |
+| Layer | PASS | faded as back decoration; the crate table and Pepper in front are darker |
+| Outline | PASS | none; iron edged in its own darker green |
+| Shapes | PASS | posts straight, spandrel arches even quarter rounds, six equal glass panes |
+| Shading | PASS | flat green ramp, glass in two shades with one diagonal highlight per pane |
+| Palette | PASS | level palette, neutral darks |
+| View | PASS | front-on, thin canopy cap |
+| Fit | PASS | as crisp as the lamp post beside it |
+| Read | PASS | a tram stop with a bench and a poster, at 1x |
+| Floats | PASS | posts on stepped feet on the kerb; poster panel between the post and the bench |
+| Consistency | PASS | `dt_street_concept_a.png`: green iron, glass canopy, poster, tram sign |
+| Owner test | PASS | not small, not wire; crisp |
+
+Verdict: PASS. One nit for a later pass: the iron cresting along the canopy top is a 1 px on/off row that at 1x
+reads as a dotted line; a 2 px scallop would read as cresting.

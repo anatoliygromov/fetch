@@ -18,3 +18,11 @@ Piece is 3.5 m at 46 px/m (161 px). Opening 56 px wide x 122 px high = 1.2 x 2.6
 9. Read: PASS Reads as a courtyard gate. Small note: the beige panel with a window and a green base inside the dark arch (x 68-92, y 117-160) reads as a little booth or lit hut, not as a courtyard beyond.
 
 VERDICT: PASS
+
+# Round 2
+
+Frames: composite only (game would not render under load): /tmp/claude-0/-home-claude/87159006-489b-566e-ae4a-e83d2f5ae5ab/scratchpad/r2/comp3x.png, comp3x_grey.png, file at 4x /tmp/claude-0/-home-claude/87159006-489b-566e-ae4a-e83d2f5ae5ab/scratchpad/r2/tram_4x.png. asset_qa and check_backdrop: PASS.
+9. Read: PASS The arch is now a dark way (42,36,42) with a lit courtyard (sand, green hedge) at its far end; no booth or hut. In grey the passage is clearly darker than the wall and the end is the lightest thing. Note: the lit part is a small arched window inside the dark, so it reads as a long tunnel; fine.
+All other items unchanged: PASS.
+
+VERDICT: PASS

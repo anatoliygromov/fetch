@@ -127,7 +127,7 @@ add(["park_hedge", "park_log", "park_hollowlog", "park_table_front", "park_stone
      "park_keeper_cart"], "cp", "play", group="City Park")
 add(["park_bush"], "cp", "front", group="City Park")
 add(["town_roofs"], "dt", "shore", True, group="Downtown")
-add(["town_facades"], "dt", "mid", True, group="Downtown")
+add(["town_facades", "town_square_floor"], "dt", "mid", True, group="Downtown")   # (fix round 3: the squares' floor)
 add(["town_door", "town_sign", "town_spout"], "dt", "back", True, group="Downtown")
 add(["town_house1", "town_house2", "town_house3"], "dt", "back", True, group="Downtown")   # art/fixes, decision 4
 add(["town_statue"], "dt", "play", group="Downtown")   # art/fixes: tagged play
@@ -161,6 +161,22 @@ add(["town_parasol40", "town_parasol48", "town_parasol64", "town_parasol96", "to
 A.append(("Downtown", "spire_riddarholmen", ART + "scene/spire_riddarholmen.png", "dt", "shore", FADE["dt"]["shore"]))
 add(["town_roof_loggia", "town_roof_gallery88", "town_roof_gallery72", "town_roof_flower_roof", "town_roof_ledge",
      "town_footbridge", "town_balcony56", "town_balcony64", "town_spring"], "dt", "play", group="Downtown")
+# art/dt-highroad-06nov (tools/build_highroad.py): the fronts and the stamps on them faded as the fronts; the guild's
+# coping, its pedestal and the ledges' corbel on Pepper's line
+add(["town_front_tall5", "town_front_tall6", "town_balcony_door", "town_window_door", "town_window_rail", "town_pilaster"],
+    "dt", "back", True, group="Downtown")
+add(["town_guild_steps", "town_guild_pier", "town_console"], "dt", "play", group="Downtown")
+# night/06nov-dt: the styled fronts and the downpipe faded as the fronts; the bridge's springers on Pepper's line; the
+# basin's wall is ground (drawn unfaded, the ground's face)
+add([f"town_front_tall{k}_{s}" for k in (1, 2, 3, 5, 6, 7) for s in "abcdef"] + ["town_drainpipe", "town_quoin"], "dt", "back", True, group="Downtown")
+add(["town_bridge_springer"], "dt", "play", group="Downtown")
+add(["town_basin"], "dt", "ground", group="Downtown")
+# art/dt-audit-06nov (tools/build_dt_audit.py): the drain in the quay wall (ground), the footbridge's piers (back,
+# unfaded: drawn with the back props), the wall lantern's bracket (faded as the lamp), the parasols' boat (play, ink)
+add(["town_quaydrain"], "dt", "ground", group="Downtown")
+add(["town_bridge_pier"], "dt", "back", group="Downtown")
+add(["town_lantern_bracket"], "dt", "back", True, group="Downtown")
+add(["town_punt"], "dt", "play", group="Downtown")
 add(["town_stopsign"], "dt", "back", True, group="Downtown")        # arthooks.lua stopSign: H.img(.., true), the back fade
 add(["town_jet"], "dt", "back", group="Downtown")                  # scene.lua drawTerrainArt: decoration on her line, unfaded
 add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, group="Characters (never shaded)")

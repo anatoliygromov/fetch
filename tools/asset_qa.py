@@ -56,7 +56,7 @@ FRAMES = {
     "park_keeper_cart": (82, 82), "park_keeper_winch": (80, 80), "rowboat": (70, 70), "mia_throw": (66, 66),
     "rw_rower": (78, 62),                                        # (night/06nov-rw) the rowing loop, 6 frames (setpieces.lua)
     "magpie": (32, 26),                                          # (6 Nov) perch, flick, wings up, level, down
-    "town_spring": (9, 10), "town_jet": (6, 88),                  # (art/dt-roofs-06nov, tools/build_dt_details.py)
+    "town_spring": (9, 10), "town_jet": (10, 72),                  # (art/dt-roofs-06nov, tools/build_dt_details.py)
     "tram_vintage_wheel": (31, 31),                                  # (6 Nov) 4 frames of the tram's wheel
 }
 ROLL = ("road_cyclist1_roll", "road_cyclist2_roll")              # 4 frames side by side (drawn: Rd.art().riders)
@@ -132,7 +132,21 @@ SLOTS = {"rw_rowboat": (185, 62, 0, 0), "rw_rower": (468, 62, 0, 0), "kennel": (
          # (night 6 Nov, cp) the pond's weeping willow (scene.lua Sc.bigWillow), 10 m crown cut by the top of the frame
          "cp_willow": (474, 508, 0, 0),
          # (night 6 Nov, cp) the pond kit, tools/build_cp_pond.py (scene.lua Sc.drawPondKit): whole sheets of cells
-         "cp_reeds": (32, 34, 0, 0), "cp_lily": (30, 4, 0, 0), "cp_bankstones": (24, 7, 0, 0)}
+         "cp_reeds": (32, 34, 0, 0), "cp_lily": (30, 4, 0, 0), "cp_bankstones": (24, 7, 0, 0),
+         "town_spring": (36, 10, 0, 0), "town_stopsign": (19, 101, 0, 0),
+         "town_tier": (50, 58, 0, 0), "town_bowl": (34, 82, 0, 0), "town_rim": (18, 18, 0, 0),
+         # art/dt-highroad-06nov: the high road attached to its fronts (tools/build_highroad.py, arthooks.lua drawHighWall)
+         "town_front_tall5": (88, 432, 0, 0), "town_front_tall6": (148, 432, 0, 0), "town_balcony_door": (38, 52, 0, 0),
+         "town_window_door": (52, 50, 0, 0), "town_window_rail": (44, 24, 0, 0), "town_pilaster": (14, 101, 0, 0),
+         "town_guild_steps": (122, 35, 0, 0), "town_guild_pier": (18, 46, 0, 0), "town_console": (8, 7, 0, 0),
+         # night/06nov-dt: the facade lift (tools/build_dt_facades.py), the bridge's springers (tools/build_roof_kit.py),
+         # the basin's wall (tools/build_dt_details.py)
+         "town_front_tall1_a": (80, 432, 0, 0), "town_front_tall2_a": (88, 432, 0, 0), "town_front_tall3_a": (96, 432, 0, 0), "town_front_tall5_a": (88, 432, 0, 0), "town_front_tall6_a": (148, 432, 0, 0), "town_front_tall7_a": (148, 432, 0, 0), "town_front_tall1_b": (80, 432, 0, 0), "town_front_tall2_b": (88, 432, 0, 0), "town_front_tall3_b": (96, 432, 0, 0), "town_front_tall5_b": (88, 432, 0, 0), "town_front_tall6_b": (148, 432, 0, 0), "town_front_tall7_b": (148, 432, 0, 0), "town_front_tall1_c": (80, 432, 0, 0), "town_front_tall2_c": (88, 432, 0, 0), "town_front_tall3_c": (96, 432, 0, 0), "town_front_tall5_c": (88, 432, 0, 0), "town_front_tall6_c": (148, 432, 0, 0), "town_front_tall7_c": (148, 432, 0, 0), "town_front_tall1_d": (80, 432, 0, 0), "town_front_tall2_d": (88, 432, 0, 0), "town_front_tall3_d": (96, 432, 0, 0), "town_front_tall5_d": (88, 432, 0, 0), "town_front_tall6_d": (148, 432, 0, 0), "town_front_tall7_d": (148, 432, 0, 0), "town_front_tall1_e": (80, 432, 0, 0), "town_front_tall2_e": (88, 432, 0, 0), "town_front_tall3_e": (96, 432, 0, 0), "town_front_tall5_e": (88, 432, 0, 0), "town_front_tall6_e": (148, 432, 0, 0), "town_front_tall7_e": (148, 432, 0, 0), "town_front_tall1_f": (80, 432, 0, 0), "town_front_tall2_f": (88, 432, 0, 0), "town_front_tall3_f": (96, 432, 0, 0), "town_front_tall5_f": (88, 432, 0, 0), "town_front_tall6_f": (148, 432, 0, 0), "town_front_tall7_f": (148, 432, 0, 0), "town_drainpipe": (6, 432, 0, 0),
+         "town_bridge_springer": (14, 20, 0, 0), "town_basin": (112, 68, 0, 0), "town_jet": (40, 72, 0, 0), "town_quoin": (10, 432, 0, 0), "town_square_floor": (64, 51, 0, 0),
+         # art/dt-audit-06nov (tools/build_dt_audit.py): the quay wall's drain, the footbridge's piers, the parasols' boat,
+         # the wall lantern's bracket
+         "town_quaydrain": (20, 22, 0, 0), "town_bridge_pier": (14, 113, 0, 0), "town_punt": (52, 14, 0, 0),
+         "town_lantern_bracket": (18, 12, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",
@@ -144,12 +158,17 @@ BUILDINGS = {"town_house1", "town_house2", "town_house3", "town_facades", "town_
              "facades_square", "house_tall_a", "house_tall_b", "house_tall_c", "town_front_tall1", "town_front_tall2",
              "town_front_tall3", "town_front_tall4", "town_door"}
 ORGANIC = {"tree", "tree_far", "rw_birch", "cp_willow", "cp_reeds", "tree_near", "park_tree1", "park_tree2", "park_oak", "park_willow", "park_willow_tall",
+             "town_front_tall3", "town_front_tall4", "town_front_tall5", "town_front_tall6", "town_door"}
+BUILDINGS |= {f"town_front_tall{k}_{s}" for k in (1, 2, 3, 5, 6, 7) for s in "abcdef"}   # (night/06nov-dt)
+ORGANIC = {"tree", "tree_far", "rw_birch", "tree_near", "park_tree1", "park_tree2", "park_oak", "park_willow", "park_willow_tall",
            "park_hedge", "park_bush", "park_leaves", "park_leaves_flat", "park_treeline", "skyline", "far_shore_bridge"}
 FROZEN = {"pepper"}                                               # Pepper's files are frozen: report only
 # owner-approved exceptions (check ids that only warn for these)
 EXCEPT = {"cafe": {"colours"}, "gable": {"colours"}, "pavement": {"ladder"},
           "bone": {"outline"}, "bone_gold": {"outline"},                   # pickups: white, unoutlined by design
-          "lamp_post": {"decor-ink"}, "kiosk_kaffe": {"decor-ink"}, "kiosk_glass": {"decor-ink"}}   # the approved River Walk set
+          "lamp_post": {"decor-ink"},
+          "kiosk_kaffe": {"decor-ink"}, "kiosk_glass": {"decor-ink"},
+          "town_lantern_bracket": {"decor-ink"}}   # the approved River Walk set; (6 Nov) the lantern bracket in the lamp's iron
 
 
 # ------------------------------------------------------------------------------------------------ small tools
