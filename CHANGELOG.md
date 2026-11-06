@@ -2,12 +2,13 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
-## Branch `preview/06nov` (late): tonight's families in one preview (6 Nov, integration, 0 credits)
-- Merged with `--no-ff`: tools/scale-gate-06nov, art/cp-oak-06nov, art/dt-traffic-06nov, art/dt-props-06nov, art/dt-roofs-06nov, art/dt-built-06nov, art/rw-props-06nov, art/cp-pond-06nov (with art/cp-built-06nov), art/cp-props-06nov, art/cp-critters-06nov, then the remote preview/06nov (the owner's 6 Nov fixes) so the push is a fast-forward. Not merged: art/cp-boughs-06nov (failed two reviews), art/cp-backtrees-06nov.
+## Branch `preview/06nov-run`: tonight's families in one preview (6 Nov, integration, 0 credits)
+- Merged with `--no-ff`: tools/scale-gate-06nov, art/cp-oak-06nov, art/dt-traffic-06nov, art/dt-props-06nov, art/dt-roofs-06nov, art/dt-built-06nov, art/rw-props-06nov, art/cp-pond-06nov (with art/cp-built-06nov), art/cp-props-06nov, art/cp-critters-06nov, then the other session's preview/06nov (the owner's 6 Nov fixes and the rowing boats, which carry owner decisions). This branch is preview/06nov-run: preview/06nov belongs to that other session. Not merged: art/cp-boughs-06nov (failed two reviews), art/cp-backtrees-06nov.
 - Ledger: every row from every branch, de-duplicated, new rows in time order. The two cp_boughs rows (60 credits, spent on the account) come from art/cp-boughs-06nov though its art is not merged. SpriteCook spent since 18:38: 632 (cp_oak 76 + 556).
 - The duck boat: cp-critters' map (80 px DUCK BOAT mover at x 826, the magpie perch) and its cp_duckboat.png are kept, with its art/gen/*/cp_duckboat.* job files (cp-props' job of the same name is on its branch). park_boat_front.png is then unused on the tall City Park; the flat City Park's 48 px boat still draws it.
 - park_stone.png is cp-pond's 26 x 21 stone (cp-props' newer commits do not touch it).
 - The remote preview/06nov moved on (the rowing boats, the harbour 352 px wider): merged again. River Walk's second birch moves with it (the old tree_far at x 2978 is at 3330 now, so the birch is x 3270-3462). Ledger since 6 Nov: 794 SpriteCook credits (632 + the rowing boats' 162).
+- River Walk rechecked after that merge: PEPPER UNCHANGED (4745 steps, its new trace), check_tiled PASSED, check_backdrop OK, `--physics` 55/55, `--auto` GOOD GIRL, `--qa` 7844 runs 0 problems, flow 125/125.
 - Checks (pass 1): PEPPER UNCHANGED (4591 steps); flow 125/125; check_tiled PASSED (River Walk NOTE: the two birches, a map change on purpose); check_backdrop OK; `--physics` riverwalk 55/55, citypark_tall 97/97, downtown_tall 102/102, citypark 85/85, downtown 81/81, rooftops 139/139, soder 29/29, night 40/40; `--auto` GOOD GIRL on all three; `--qa` 7897 runs, 0 problems; asset_qa --all 160 assets, 4 FAIL (building, cafe, gable, rail_bg_left: all old; base had 6, town_bollard and park_leaves_flat now pass); check_curve the same as base (T1-T4 PASS).
 - Sweep frames and contact sheets: `docs/review/06nov/preview/`.
 ## Branch `tools/scale-gate-06nov`: the scale gate (6 Nov, 0 credits)
