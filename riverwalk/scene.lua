@@ -993,6 +993,8 @@ function Sc.townArt(style)
     -- (r8/levels: art/scene/town_row.png, the row of old town houses across the square with volume, replaces
     -- town_facades.png when it is there: the same layer, a strip that repeats, standing on y 178)
     T.facades = fadeImg(love.filesystem.getInfo("art/scene/town_row.png") and "town_row" or "town_facades", nil, "mid")
+    -- (night/06nov-dt, fix round 3) the open squares' floor on the mid layer (tools/build_dt_facades.py)
+    T.squareFloor = love.filesystem.getInfo("art/scene/town_square_floor.png") and fadeImg("town_square_floor", nil, "mid") or nil
     T.roofs = fadeImg("town_roofs", nil, "shore")
   end
   T.groundQ = colQuads(T.ground)
@@ -1040,6 +1042,7 @@ local function skyAndClouds(L, camx, t)
 end
 
 -- a strip that repeats sideways, scrolled at factor f, bottom at y
+Sc.SQUARE_DEPTH = 30                                            -- (fix round 3) the square's floor under the mid row
 local function strip(im, camx, f, y)
   local w = im:getWidth()
   local ox = math.floor(camx * f) % w
@@ -1160,7 +1163,16 @@ function Sc.drawFarArt(L, camx, t, w, def)
     -- the tall Downtown's landmark, Riddarholmen's spire, behind the old town row on this layer)
     vpop(on); on = vpush("mid")
     Look.use("mid")
+    -- (night/06nov-dt, fix round 3, review round 2: "the mid row's feet land on the pavement's far edge") in the tall
+    -- Downtown the row stands across an open square: its foot 30 px up, the square's floor (a far kerb, setts,
+    -- bollards at 23 px/m) under it at the same scroll, down to the pavement's far edge, so the row never touches
+    -- the play floor
+    if def and def.foot and T.squareFloor then
+      strip(T.facades, camx, 0.5, 178 - Sc.SQUARE_DEPTH)
+      strip(T.squareFloor, camx, 0.5, 178 - Sc.SQUARE_DEPTH + T.squareFloor:getHeight() - 21)
+    else
     strip(T.facades, camx, 0.5, 178)                              -- 5 old town facades (faded)
+    end
   end
   vpop(on); on = vpush("world")                                   -- (the ponds are in the world)
   Sc.pondPools, Sc.pondT = pools(w), t                             -- (a stepping stone stands in them: drawPropArt)
