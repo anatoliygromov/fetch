@@ -1,0 +1,1 @@
+# Branches or commits left out of builds on purpose (tools/check_approved.py). One per line: name or short hash, then # why.

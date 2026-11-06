@@ -1,10 +1,10 @@
-## Branch `tools/scale-gate-06nov`: the scale gate (6 Nov, 0 credits)
-- **tools/scale_gate.py** (owner 6 Nov 19:12, "wrong scale"): every paid render is measured before any cut, retry or further job. Pepper must be 52x38 within 2 px; the subject must be within 10 % of the blockout mask. Tested on all 6 Nov renders: the four Nano Banana 2.1 renders fail (cargo bike off grid, hedge 3.4x, tub 2.4x, tram half grid); the GPT 2.5 renders that were used pass (oak 1.08x, cargo bike 1.01x, hedge 1.03x).
-- **preflight.py** refuses Nano Banana 2.1 for blockout jobs (rules.json `no_blockout_models`); the default model is now GPT 2.5 Sunburst. docs/art_learnings.md has the rejection line.
 # Changelog
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `tools/scale-gate-06nov`: the scale gate (6 Nov, 0 credits)
+- **tools/scale_gate.py** (owner 6 Nov 19:12, "wrong scale"): every paid render is measured before any cut, retry or further job. Pepper must be 52x38 within 2 px; the subject must be within 10 % of the blockout mask. Tested on all 6 Nov renders: the four Nano Banana 2.1 renders fail (cargo bike off grid, hedge 3.4x, tub 2.4x, tram half grid); the GPT 2.5 renders that were used pass (oak 1.08x, cargo bike 1.01x, hedge 1.03x).
+- **preflight.py** refuses Nano Banana 2.1 for blockout jobs (rules.json `no_blockout_models`); the default model is now GPT 2.5 Sunburst. docs/art_learnings.md has the rejection line.
 ## Branch `art/cp-oak-06nov`: the City Park old oak, retry 2 (6 Nov, SpriteCook 76 credits, job 55457888)
 - **cp_oak.png (506 x 511, was 388 x 343):** the oak remade on the lime's method (GPT 2.5 Sunburst 2K, rw_lime and cp_lime 4x as style), variant a, cut 1:1 on the render's 4 px grid (`tools/grid4_cut.py`), `tools/cut_cp_tree.py --leaf 8 --bark 5 --rim-lum 60 --mode 1`, `tools/polish_cp_trees.py` (new rule `fringe`: violet magenta-fringe pixels take their neighbours' colour), then `tools/fix_cp_oak_r4.py` (highlight to the lime's #f68a21, bark darks 4 to 2, leaf reds off the trunk, blotches merged; every pixel in `art/source/cp_oak/edits.json`). 10 colours, asset_qa PASS at fade 0.28. The leaf clumps come from the render, so the round 3 patchwork is gone. Trunk 52-68 px (spec 46): owner question. Old round kept in `art/source/cp_oak/r1_nb21/`. Card and frames: `docs/review/06nov/cp_oak/`. No code change: scene.lua centres the art on its trunk.
 ## Branch `art/dt-traffic-06nov`: Downtown traffic, the vintage tram and the cargo bike at true scale (6 Nov, SpriteCook 134 credits)
@@ -72,6 +72,11 @@ Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 - asset_qa: magpie WARN (the size jump from perched to wings up), cp_duckboat PASS; both in SLOTS and measure_layers. Cards, frames and the size sheet: `docs/review/06nov/cp_critters/`.
 - Credits: cp_magpie 12, cp_magpie_fly 12, cp_duckboat 12, cp_magpie_flap 26 (ledger plan and spent rows). Paid calls stopped on the producer's order after these four.
 - **Fix round 1 (independent review, 0 credits):** the water tint and ripple under the duck boat follow the hull's silhouette column by column (no glass box past its ends); magpie perch 3 moved from mid-pole on the lamp (656, 264) to the willow crown's top beside it (672, 243; a bark from the path still drops the ball onto the path); the goose's fly row fixed by hand (`tools/fix_goose_fly.py`, `art/source/goose/edits.json`): cell 4 := cell 5, cell 6 := cell 7, two blotches to their ring colour. Walk and hiss rows untouched.
+## Branch `preview/06nov`: the owner's fixes from the 6 Nov preview (6 Nov, 0 credits)
+- **Merged `ui/hud-v8` (owner, 24 Oct):** speech bubbles (the speaker in a corner, a snug cream bubble with a tail), portraits as busts, the flat-step sky. It was in build h (`prod/integrate-h`) only; no later integration took it in, so the 6 Nov preview showed the old gold talk panel. Conflicts resolved as on `prod/integrate-h` (main.lua: HUD only while playing, with T_avoid; flow.lua: the bubble story card; uifont_data.lua and font7_speak.png rebuilt by build8.py, identical to h; the other UI pngs build8.py rewrote are pixel-identical and were left as they were).
+- **Merged `play/bikes-front` (owner, 25 Oct):** bikes ride in front of the obstacles and Pepper. It was never integrated. The tall Downtown's crate perches (`AH.drawTownPerches`, 5 Nov) stay where they were drawn.
+- **River Walk road (owner, 6 Nov: "this asphalt transition is crazy", "the asphalt is moving weirdly", "why asphalt color differ here?"):** `Sc.paintGround` painted the road under every walkable column at the column's own height, so on the two ramps (x 1280-1312, 2792-2824) the asphalt and its centre line were sheared, and under the lower quay a strip of road showed. look.lua's receding road rows cover only the level promenade, so next to it the sheared copy scrolled at another speed and showed another shade. Now the road is painted only where the walk is the level promenade (y 184, `Sc.PROMENADE`); under a ramp or the lower quay the ground below the kerb is a granite quay wall (`art/scene/quaywall.png`, 320 x 48, built by rule in `tools/make_quaywall.py`, the road's blue-grey family), anchored at world y 196 so its courses stay level and the slope only cuts them; a head joint where it meets the road. Pepper, collision and the traffic spans are unchanged.
+- **New check `tools/check_approved.py [BASE]`:** lists every commit marked "(owner," on any remote branch whose change is not in BASE; `docs/not_merged.txt` for what is left out on purpose. Run it before building a preview or an integration.
 
 ## Branch `art/rw-water-05nov`: River Walk water family (5 Nov, SpriteCook 24 credits)
 - 5 Nov (art/rw-street-05nov): River Walk screen 12, the gable's door bay is now built as its own narrow front (tools/build_rw_gable.py build_bay(), corner lesene) instead of a pixel crop that cut a wall anchor and the next window's sills; brings in night/25oct-rw-street and night/30oct-gable-b (option B). 0 credits.
@@ -202,6 +207,12 @@ Built on `prod/integrate` with `art/preflight` merged. Tools and docs only; no g
 - **docs/BIBLE.md** (sections 4, 7, 8, 9), **docs/STATUS.md**, **docs/art_learnings.md** (with the rejection log),
   docs/art_ledger.md points to the new ledger.
 - Checks: PEPPER UNCHANGED (4591 steps), flow 125 of 125.
+## Branch `play/bikes-front`: bikes ride in front of the obstacles and Pepper (25 Oct)
+Owner, 25 Oct: "bikes need to go in front of obstacles and Pepper". stage.lua draws River Walk's cyclists and
+Downtown's cargo bikes after Pepper (play look), before the near-lane road traffic and the front frame. Until now
+(r5/bugs) they rode behind the obstacles. A rider passing under a perched Pepper now covers her for about half a
+second: this replaces "nothing may cover Pepper" for passing bikes. Checks: PEPPER UNCHANGED (4591 steps), flow
+125/125, River Walk physics 54/54.
 
 ## Branch `art/title-props`: the title's thin built objects redrawn by rule (25 Oct)
 - **Props (art/source/title/tools/props.py, bg_noplate_320.png; the old layer kept in regrid/pre_props/):** sampling the painting broke thin man-made objects, so each is drawn once on the game grid from positions, widths and colours measured on the painting, palette colours only: the left lamp (finial, roof with its shade face, mid face and a 2 px lit band down the right edge as an even staircase to the brim's lit end, tan lip, two glass panes with a 1 px mullion and a frame tapering in even 4-row steps, glow orange / amber / cream, rim, collar, neck, ring, a straight post x 31..35 with ONE unbroken highlight column, moulding, base and plinth round Pepper's outline); the far quay lamp at the same design a third the size (two yellow panes with mullion and frame, 2 px post); the bench (three slats with lit top edges, end frame, seat, cross bar, cast legs); the bin (lid, four even slats, base ring); both big railing posts identical (6 px shaft with one highlight column, cap lit on the right); straight 1 px masts on the left boat (with even rigging and boom), the small boat and the boat at x 256 (with its hull). Old lamp pixels take the colour round them nearest the painting there; the sky by the left post is cleaned of specks. Rebuild: `python3 art/source/title/tools/props.py` then `build_title_regrid.py`.
@@ -229,6 +240,26 @@ Built on `prod/integrate` with `art/preflight` merged. Tools and docs only; no g
 
 ## Branch `ui/panel-hud`: no HUD row under the cards (24 Oct)
 - **Drawing only (main.lua, bonus.lua, flow.lua):** while a centred card is up over the game (level intro, story, pause and QUIT?, controls from the pause, GAME OVER, GOOD GIRL! tally, FETCH FRENZY intro and result) the HUD row is not drawn at all; the warm dim and the controls strip stay. The pause already shows the bones found, the tally the level's points. The ending card moved 4 px down and a card dropping in never rises above the 4 px top margin, so no ribbon or frame is cut by the screen's top. Talk panel and hint bubbles unchanged. Checks: layout_qa_menus.py checks no HUD piece outside a card's panel and the 4 px top margin; layout_qa8.py checks no HUD row under a card (instead of filtering it out). Sheet: out/panel_hud_before_after.png (not committed).
+## The sky without dotted rows (24 Oct, owner)
+The owner asked what the dotted bar across the sky was: the 2 x 2 checker rows joining two sky bands. Each band is now
+split into 4 flat steps towards the next band's colour (look.lua, Look.SKY_STEPS), every level and the tall skies; no
+dither.
+
+## Speech bubbles (24 Oct, owner)
+The owner: the talk panel looked like a painting frame; speech bubbles with little white space and smaller letters.
+Talk lines and the story card are now comic speech bubbles: Mia (or Pepper) stands in a bottom corner, her shoulders
+cut by the screen's edge, and a snug cream bubble (art/ui/speech, round corners, ink outline) floats beside her face
+with a tail at her mouth (art/ui/stail_l, stail_r); the words in the small font in plain dark letters (new style
+`speak`, 7 px). When Pepper is in her corner she stands in the other corner (mirrored); when Pepper is beside her the
+bubble goes over her head, the tail pointing down. The story bubble keeps above the controls strip; the HUD groups
+under a speaker step aside. The control hints keep their dark bubbles (a different meaning: a game tip). Flow test
+"talk: Pepper low on the quay" now checks that the bubble and Mia miss Pepper (was: the panel goes to the top).
+
+## Portraits as busts, no frames (24 Oct, owner)
+The owner: Mia was cropped in the UI and he did not like the frame around Mia and the dog. The talk panel and the
+story card now draw each portrait as a cut-out bust at 1x, its whole head and hood, with a 1 px light rim, standing on
+the panel's end with its shoulders tucked behind the panel; no frame. No HUD under the story card between levels
+(Mia's head rose into it). Checks: PEPPER UNCHANGED, check_flow 125 of 125.
 
 ## Branch `ui/hud-v8` step 3: every remaining screen in the kit (24 Oct)
 Follows docs/ui_design.md. Drawing only: logic, inputs and saves as they were unless a line says otherwise. Frames:
