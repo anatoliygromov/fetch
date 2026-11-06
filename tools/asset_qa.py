@@ -54,6 +54,7 @@ LADDER = {
 FRAMES = {
     "pepper": (60, 52), "girl": (66, 66), "cat": (48, 48), "goose": (34, 34), "gull": (26, 26),
     "park_keeper_cart": (82, 82), "park_keeper_winch": (80, 80), "rowboat": (70, 70), "mia_throw": (66, 66),
+    "rw_rower": (74, 62),                                        # (night/06nov-rw) the rowing loop, 6 frames (setpieces.lua)
     "magpie": (32, 26),                                          # (6 Nov) perch, flick, wings up, level, down
     "town_spring": (9, 10), "town_jet": (6, 88),                  # (art/dt-roofs-06nov, tools/build_dt_details.py)
     "tram_vintage_wheel": (31, 31),                                  # (6 Nov) 4 frames of the tram's wheel
@@ -61,11 +62,12 @@ FRAMES = {
 ROLL = ("road_cyclist1_roll", "road_cyclist2_roll")              # 4 frames side by side (drawn: Rd.art().riders)
 # what the game never draws (loaded but unused, or replaced in the played level): not checked
 NOT_DRAWN = {"cyclist1", "cyclist2", "cyclist1_roll", "cyclist2_roll", "town_spout",
+             "rowboat",                       # (night/06nov-rw) replaced by rw_rowboat (hull) and rw_rower (the loop)
              # (5 Nov) road.lua draws cyclist_adult1-2 and their pedal loops when they are there: the old riders are unused
              "road_cyclist1", "road_cyclist2", "road_cyclist1_roll", "road_cyclist2_roll"}
 # measure_layers' layer is the prop's map layer; the look the game draws it with can differ (stage.lua: decoration on
 # Pepper's line takes the back look)
-LAYER_FIX = {"pier": "back",
+LAYER_FIX = {"pier": "back", "rw_rower": "char",                 # (night/06nov-rw) the rower: a character (24 colours)
              # (5 Nov) the road's near lane (55 px/m, road.lua), drawn with the play look
              "road_car1": "lane", "road_car2": "lane", "road_car3": "lane", "road_car4": "lane", "road_car5": "lane"}
 # art drawn in more than one level: the ladder is checked under each level's look
@@ -76,7 +78,8 @@ SHARED = {"skyline": ("rw", "cp", "dt"), "water": ("rw", "cp"), "bench": ("rw", 
 TILES = {"rail_bg_left", "rail_bg_unit", "rail_bg_end", "pavement", "road", "park_ground", "town_ground", "water"}
 # slots (docs/art_hooks_r8.md): width, height, tolerance on each (0 = exact). Batch 1 files are named differently
 # from their hooks: HOOK says which game file each one becomes
-SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_throw": (528, 66, 0, 0),
+SLOTS = {"rw_rowboat": (185, 62, 0, 0), "rw_rower": (444, 62, 0, 0),     # (night/06nov-rw) 4.0 m eka; 6 x 74 x 62 loop
+         "cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_throw": (528, 66, 0, 0),
          "cyclist_a_84": (76, 76, 8, 8), "cyclist_b_84": (76, 76, 8, 8), "cyclist_a_92": (76, 76, 8, 8), "cyclist_b_92": (76, 76, 8, 8),
          "roof_gable": (122, 80, 0, 20), "roof_loggia": (122, 48, 0, 12), "roof_gallery88": (90, 32, 0, 8),
          "roof_gallery72": (74, 32, 0, 8), "roof_chimney": (18, 46, 0, 0), "roof_dormer": (58, 36, 0, 9),
@@ -589,7 +592,7 @@ def registry():
         out[n] = dict(path=p, level=lvl, layer=LAYER_FIX.get(n, layer), fade=fade, group=g, building=n in BUILDINGS,
                       frames=FRAMES.get(n), levels=SHARED.get(n))
     # pieces measure_layers does not list (animated sheets, cyclists' wheels, small props)
-    extra = [("park_keeper_cart", "cp", "play", 0.0), ("rowboat", "rw", "play", 0.0), ("park_leaves_flat", "cp", "play", 0.0),
+    extra = [("park_keeper_cart", "cp", "play", 0.0), ("park_leaves_flat", "cp", "play", 0.0),
              ("bone", "rw", None, 0.0), ("bone_gold", "rw", None, 0.0)]
     for n, lvl, layer, fade in extra:
         p = os.path.join(ART, "scene", n + ".png")

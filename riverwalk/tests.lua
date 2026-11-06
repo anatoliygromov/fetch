@@ -79,7 +79,7 @@ return function(mode, api)
       { during = 0.75, each = function(p) if not p.onGround then airT = airT + 1 / 60 end end },
       { act = function(p) release(); report("stairs down stay on the ground", airT < 0.05 and math.abs(p.y - 216) < 1, ("air %.2f s, y %.0f"):format(airT, p.y)) end },
       -- 7 stairs up
-      { act = function() tp(2767, 216); airT = 0; hold("right") end },
+      { act = function() tp(2975, 216); airT = 0; hold("right") end },
       { during = 0.8, each = function(p) if not p.onGround then airT = airT + 1 / 60 end end },
       { act = function(p) release(); report("stairs up stay on the ground", airT < 0.05 and math.abs(p.y - 184) < 1, ("air %.2f s, y %.0f"):format(airT, p.y)) end },
       -- 8 the grit box in bike zone 1: it stops a walk, a held jump lands on top (above the bikes)
@@ -88,7 +88,7 @@ return function(mode, api)
       { act = function(p) release(); report("grit box: a held jump lands on top", math.abs(p.y - 152) < 1 and p.onGround, ("x %.0f y %.0f"):format(p.x, p.y)) end },
       -- 8b the flower box in bike zone 2: it stops a walk, a held jump lands on top, high enough to be safe from
       --    a bike riding under her
-      { act = function() tp(3054, 184); hold("right") end }, { during = 1.0 },
+      { act = function() tp(3262, 184); hold("right") end }, { during = 1.0 },
       { act = function(p) hold("right", "jump"); love.keypressed("space") end }, { during = 0.5 },
       { cond = function(p) return p.onGround end, act = function() release() end, limit = 2 },
       { act = function(p) local s = api.stage(); s.bikes = { { x = p.x + 90, y = 184, warn = 0, zone = s.def.bikes[2] } }; s.bikeT = 99 end },
@@ -104,8 +104,8 @@ return function(mode, api)
       { during = 2.5 },
       { act = function() local s = api.stage(); report("falling in the river costs a heart", s.hearts == 2, ("hearts %d"):format(s.hearts)) end },
       -- 11 bike zone 2: the planter is a step up to the bin (a tapped hop and a scramble each)
-      { act = function() tp(3346, 184); hold("right") end }, { during = 0.6 },
-      { act = function(p) report("planter step: stops a walk", p.x < 3356 and near(p.y, 184), ("x %.0f"):format(p.x)); jump("right", "jump") end },
+      { act = function() tp(3554, 184); hold("right") end }, { during = 0.6 },
+      { act = function(p) report("planter step: stops a walk", p.x < 3564 and near(p.y, 184), ("x %.0f"):format(p.x)); jump("right", "jump") end },
       { wait = 1 / 60 }, { act = function() hold("right") end },
       { cond = function(p) return p.onGround and p.mode == "normal" and p.y < 183 end, act = function() release() end, limit = 2 },
       { act = function(p) report("planter step: a tapped hop and a scramble", near(p.y, 154), ("x %.0f y %.0f"):format(p.x, p.y)); hold("right") end },
@@ -146,25 +146,25 @@ return function(mode, api)
           report("hard mode: 1 heart, bikes 25% faster", h.hearts == 1 and Sp.speed(h, h.def.bikes[1]) == h.def.bikes[1].speed * 1.25,
             ("hearts %d, speed %.2f"):format(h.hearts, Sp.speed(h, h.def.bikes[1]))) end },
       -- 16 the harbour: the rowing boats carry Pepper and rest at each end; the gulls
-      { act = function() local s = api.stage(); local b = s.movers[2]; b.x0, b.x1, b.dir, b.waitT = 2200, 2256, 1, 0; tp(2228, 219)
+      { act = function() local s = api.stage(); local b = s.movers[2]; b.x0, b.x1, b.dir, b.waitT = 2222, 2376, 1, 0; tp(2340, 212)
           for _, k in ipairs(s.critters) do k.state, k.timer = "circle", 99 end end },                  -- (the gulls wait)
       { wait = 2.0 },
       { act = function(p) local s = api.stage(); local b = s.movers[2]
-          report("harbour: a rowing boat carries Pepper", p.ground == b and p.x > 2270 and near(p.y, 219), ("x %.0f, boat x %.0f"):format(p.x, b.x0)) end },
+          report("harbour: a rowing boat carries Pepper", p.ground == b and p.x > 2380 and near(p.y, 212), ("x %.0f, boat x %.0f"):format(p.x, b.x0)) end },
       { cond = function(p, s) return s.movers[2].waitT and s.movers[2].waitT > 0 end, act = function(p, s) minY = s.movers[2].x0 end, limit = 6 },
       { wait = 1.2 },
       { act = function(p, s) local b = api.stage().movers[2]
-          report("harbour: a boat rests at the end of its row", near(b.x0, minY) and near(minY, 2340), ("x %.0f"):format(b.x0)) end },
+          report("harbour: a boat rests at the end of its row", near(b.x0, minY) and near(minY, 2334), ("x %.0f"):format(b.x0)) end },
       { act = function() jump("right", "jump") end }, { during = 0.2 }, landed(),
-      { act = function(p) release(); report("harbour: a jump from the boat onto the jetty", near(p.y, 196) and p.x > 2387, ("x %.0f y %.0f"):format(p.x, p.y)) end },
+      { act = function(p) release(); report("harbour: a jump from the boat onto the jetty", near(p.y, 196) and p.x > 2483, ("x %.0f y %.0f"):format(p.x, p.y)) end },
       { act = function() local s = api.stage(); s.hearts = 3; hearts = 3; local k = s.critters[1]
-          k.state, k.t, k.x, k.y, k.tx, k.ty = "warn", 0, 2424, 36, 2424, 196; tp(2424, 196) end }, { during = 2.2 },
+          k.state, k.t, k.x, k.y, k.tx, k.ty = "warn", 0, 2520, 36, 2520, 196; tp(2520, 196) end }, { during = 2.2 },
       { act = function(p) local s = api.stage(); report("gull: its swoop hits a standing Pepper", s.hearts == hearts - 1, ("hearts %d"):format(s.hearts)) end },
       { act = function() local s = api.stage(); s.hearts = 3; hearts = 3; local k = s.critters[1]; s.pepper.invuln = 0
-          k.state, k.t, k.x, k.y, k.tx, k.ty = "warn", 0, 2424, 36, 2424, 196; tp(2424, 196); hold("down") end }, { during = 2.2 },
+          k.state, k.t, k.x, k.y, k.tx, k.ty = "warn", 0, 2520, 36, 2520, 196; tp(2520, 196); hold("down") end }, { during = 2.2 },
       { act = function(p) release(); local s = api.stage(); report("gull: crawling ducks under it", s.hearts == hearts, ("hearts %d"):format(s.hearts)) end },
       { act = function() local s = api.stage(); local k = s.critters[1]; s.pepper.barkT = 0
-          k.state, k.t, k.x, k.y, k.tx, k.ty = "warn", 0, 2424, 36, 2424, 196; tp(2424, 196) end }, { wait = 0.1 },
+          k.state, k.t, k.x, k.y, k.tx, k.ty = "warn", 0, 2520, 36, 2520, 196; tp(2520, 196) end }, { wait = 0.1 },
       { act = function() love.keypressed("z") end }, { wait = 0.2 },
       { act = function() local k = api.stage().critters[1]; report("gull: a bark while it squawks scares it off", k.state == "away", k.state) end },
       { act = function() local s = api.stage(); local z1, z2 = s.def.bikes[1], s.def.bikes[2]
@@ -296,23 +296,23 @@ return function(mode, api)
       -- the harbour: wait on the quay for the first rowing boat, hop on, ride it to the jetty, jump onto the
       -- jetty, wait there for the second boat, step down onto it, ride it to the far quay; duck under the gull
       at(function(p) return p.x >= 2150 end, function() release() end, 9),
-      ride(function(p, s) local b = s.movers[2]; return p.onGround and b.x0 <= 2198 and b.dir > 0 end, 14),
+      ride(function(p, s) local b = s.movers[2]; return p.onGround and b.x0 <= 2220 and b.dir > 0 end, 14),
       at(function() return true end, function() jump("right") end), { wait = 1 / 60 }, { act = function() hold("right") end },
-      at(function(p, s) return p.x >= s.movers[2].x0 + 16 end, function() release() end, 2),
-      ride(function(p, s) return p.ground == s.movers[2] and s.movers[2].x0 >= 2338 end, 14),
+      at(function(p, s) return p.x >= s.movers[2].x0 + 124 end, function() release() end, 4),       -- (to the stern)
+      ride(function(p, s) return p.ground == s.movers[2] and s.movers[2].x0 >= 2332 end, 14),
       at(function() return true end, function() jump("right", "jump") end),
-      at(function(p) return p.x >= 2412 end, function() release() end, 3),
-      ride(function(p, s) local b = s.movers[3]; return p.onGround and p.y <= 197 and b.x0 <= 2458 and b.dir > 0 end, 14),
+      at(function(p) return p.x >= 2508 end, function() release() end, 3),
+      ride(function(p, s) local b = s.movers[3]; return p.onGround and p.y <= 197 and b.x0 <= 2572 and b.dir > 0 end, 14),
       at(function() return true end, function() hold("right") end),
-      at(function(p, s) return p.ground == s.movers[3] and p.x >= s.movers[3].x0 + 20 end, function() release() end, 3),
-      ride(function(p, s) return (p.ground == s.movers[3] and s.movers[3].x0 >= 2578) or (p.onGround and p.x > 2610 and p.y <= 217) end, 14),
+      at(function(p, s) return p.ground == s.movers[3] and p.x >= s.movers[3].x0 + 124 end, function() release() end, 4),
+      ride(function(p, s) return (p.ground == s.movers[3] and s.movers[3].x0 >= 2685) or (p.onGround and p.x > 2850 and p.y <= 217) end, 14),
       at(function() return true end, function() hold("right") end),
-      at(function(p) return p.x >= 2840 and p.y <= 185 end, function() hold("right") end, 9),           -- up the steps
-      onto(2930, 154),                                                                               -- the planter
+      at(function(p) return p.x >= 3048 and p.y <= 185 end, function() hold("right") end, 9),           -- up the steps
+      onto(3138, 154),                                                                               -- the planter
       -- bike zone 2: flower box, grit box, bin
-      onto(3081, 152), onto(3240, 152, 3183), onto(3416, 128, 3326),                -- (a held jump from the grit box clears the planter step)
-      onto(3548, 156),                                                                               -- the last bench
-      at(function(p) return p.x >= 3740 and p.onGround end, function() release() end, 9),
+      onto(3289, 152), onto(3448, 152, 3391), onto(3624, 128, 3534),                -- (a held jump from the grit box clears the planter step)
+      onto(3756, 156),                                                                               -- the last bench
+      at(function(p) return p.x >= 3948 and p.onGround end, function() release() end, 9),
       { wait = 0.3 }, { act = function() love.keypressed("x") end },
       { wait = 9 }, { act = function(p, s)
           local st = s:stats()
@@ -326,14 +326,14 @@ return function(mode, api)
       { wait = 0.6 }, shot("00_intro"), { act = function() love.keypressed("space") end }, { wait = 0.3 } }
     -- one shot per screen (camera on the screen's left edge), Pepper standing on open ground in it
     local spots = { { 40, 184 }, { 480, 152 }, { 760, 184 }, { 1074, 184 }, { 1350, 216 },
-                    { 1680, 154 }, { 2110, 216 }, { 2420, 196 }, { 2700, 216 }, { 3010, 184 }, { 3300, 152 }, { 3720, 184 } }
+                    { 1680, 154 }, { 2110, 216 }, { 2520, 196 }, { 2908, 216 }, { 3218, 184 }, { 3508, 152 }, { 3928, 184 } }
     for i, sp in ipairs(spots) do
       steps[#steps + 1] = { act = function() tp(sp[1], sp[2]) end }
       steps[#steps + 1] = { wait = 0.6 }
       steps[#steps + 1] = shot(("%02d_screen%d"):format(i, i), (i - 1) * 320)
     end
     steps[#steps + 1] = { act = function() love.keypressed("g") end }; steps[#steps + 1] = { wait = 0.1 }
-    steps[#steps + 1] = shot("11_debug_screen12", 3520)
+    steps[#steps + 1] = shot("11_debug_screen12", 3728)
     steps[#steps + 1] = { act = function() tp(1680, 154) end }; steps[#steps + 1] = { wait = 0.3 }
     steps[#steps + 1] = shot("12_debug_screen6", 1600)
     steps[#steps + 1] = { act = function() love.keypressed("g"); love.keypressed("tab") end }; steps[#steps + 1] = { wait = 0.1 }
@@ -349,7 +349,7 @@ return function(mode, api)
           { act = function() local s = api.stage(); tp(860, 184); s.bikes = { Sp.spawn(s, s.def.bikes[1]) } end },
           { wait = 0.3 }, shot("16_bike_warning", 700),
           { act = function() tp(1330, 216) end }, { wait = 2.2 }, shot("17_pontoon_at_quay", 1230),
-          { act = function() tp(3394, 154) end }, { wait = 0.4 }, shot("18_planter_step", 3220) })
+          { act = function() tp(3602, 154) end }, { wait = 0.4 }, shot("18_planter_step", 3428) })
     -- the near lane's traffic, at its perspective size: cars and cyclists put on the road for the shots
     local function traffic(list)
       local s = api.stage(); local Rd = require("road"); local A = Rd.art()
@@ -371,8 +371,8 @@ return function(mode, api)
           { act = function() traffic({ { "car", 1, 10, true }, { "rider", 1, 250, false } }) end }, { wait = 0.05 }, shot("19_traffic_home", 0),
           { act = function() tp(700, 184) end }, { wait = 0.3 },
           { act = function() traffic({ { "car", 2, 690, true }, { "car", 3, 450, true } }) end }, { wait = 0.05 }, shot("20_traffic_bin", 520),
-          { act = function() tp(2952, 154) end }, { wait = 0.3 },
-          { act = function() traffic({ { "car", 4, 2830, true }, { "rider", 2, 3020, false } }) end }, { wait = 0.05 }, shot("21_traffic_planter", 2760),
+          { act = function() tp(3160, 154) end }, { wait = 0.3 },
+          { act = function() traffic({ { "car", 4, 3038, true }, { "rider", 2, 3228, false } }) end }, { wait = 0.05 }, shot("21_traffic_planter", 2968),
           { act = function() tp(140, 184); api.stage().pepper.face = 1; hold("down") end }, { wait = 0.4 },
           { act = function() traffic({ { "car", 5, 60, true } }) end }, { wait = 0.05 }, shot("22_traffic_crawl", 0),
           { act = function() release() end },

@@ -237,8 +237,11 @@ function St:ballLands(x, y, vx, vy)
     local ny = y + vy * dt
     local nx = math.max(14, math.min(w.width - 14, x + vx * dt))
     if w:solidIn(nx - 3, nx + 3, y - 6, y - 1) then vx = 0 else x = nx end
-    local f = w:floor(x - 3, x + 3, x, y - 0.5, ny, y)
-    if f then return not w:inWater(x, f) and not w:solidIn(x - 2, x + 2, f - 5, f - 1) and f < w.height - 4 end
+    local f, on = w:floor(x - 3, x + 3, x, y - 0.5, ny, y)
+    if f then                                                     -- (night/06nov-rw) not on a boat or a lift: they
+      for _, m in ipairs(self.movers) do if on == m then return false end end   -- move on (the harbour's 185 px boats
+      return not w:inWater(x, f) and not w:solidIn(x - 2, x + 2, f - 5, f - 1) and f < w.height - 4   -- caught a ball
+    end                                                           -- knocked off the jetty and rowed it away)
     y = ny
     if w:inWater(x, y) or y > w.height then return false end
   end
