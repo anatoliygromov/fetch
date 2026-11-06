@@ -1,0 +1,5 @@
+{"name": "cp_pond_concept", "purpose": "concept", "asset": "cp_pond", "family": "cp_pond_06nov", "level": "citypark",
+ "model": "nbpro_1k", "variants": 2, "base_frame": "art/gen/concepts/base/cp_pond_y144_x0640.png",
+ "slot": {"file": "scene.lua pond bank (built)", "where": "City Park tall, the duck pond, camera y 144 x 640"},
+ "subject": "turn the hard rectangular hole in the ground into a natural park duck pond: the path ends in a soft grassy earth bank that slopes down to the water on both sides, tufts of reeds and bulrushes at the edges, a few rounded stones at the water's edge, the water surface with a lit top edge and gentle ripples, lily pads; the two pink stepping stones become rounded grey granite stepping stones with a little moss sitting in the water. The duck pedal boat, the willows and the rope bridge stay as they are",
+ "extra": "Bright golden autumn afternoon colours, full local colour and crisp edges, the same flat-shaded pixel style as the dog. Keep the dog, the bridge, the duck boat, the willows and the framing exactly as they are."}
