@@ -10,7 +10,7 @@
   470,
   506
  ],
- "model": "sc_nb21_2k",
+ "model": "sc_gpt25_2k",
  "variants": 2,
  "checks_px": {
   "trunk_width": 46,
@@ -25,8 +25,10 @@
   "where": "City Park tall, screen 6, the old oak (OAK, x 1724): replaces park_oak and the canopy boxes 24 and 53 in the tall level only"
  },
  "retry": {
-  "n": 1,
-  "changed": "blockout trunk 46 -> 29 px (and its limbs to match)",
-  "why": "probe (variant a, 512 grid, Pepper 52 px) drew the trunk 72-78 px at 1-1.2 m up, 1.6x the 46 px spec; variant b came back on a 249 px grid (half scale)"
- }
+  "n": 2,
+  "changed": "the method only: model sc_gpt25_2k (GPT 2.5 Sunburst, follows the reference grid) with rw_lime and cp_lime as style references, same blockout",
+  "why": "3 review rounds and a re-cut on the NB 2.1 render still FAIL on leaf patchwork (art/gen/reviews/cp_oak.md); the lime passed with this method"
+ },
+ "references": 3,
+ "extra": "Images 2 and 3 are trees from this game, a street lime and a park lime, shown at the game's pixel size: draw the oak's leaves as they do, in clear clumps of 3 to 4 flat shades each, every clump with a lit top and a darker underside; the bark a warm brown ramp whose edge is a darker brown. No black and no near-black anywhere. The brightest leaf shade is a warm orange-gold, never light yellow or white."
 }

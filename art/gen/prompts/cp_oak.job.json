@@ -1,6 +1,6 @@
 {
  "name": "cp_oak",
- "model": "SpriteCook Nano Banana 2.1 2K, pixel on",
+ "model": "SpriteCook GPT 2.5 Sunburst 2K medium (follows the reference grid)",
  "modelId": null,
  "settings": null,
  "inputs": [
@@ -13,7 +13,7 @@
   512,
   512
  ],
- "credits": 36,
+ "credits": 76,
  "tool": "spritecook",
  "family": "cp_sample",
  "tier": "B",
@@ -22,11 +22,12 @@
   "where": "City Park tall, screen 6, the old oak (OAK, x 1724): replaces park_oak and the canopy boxes 24 and 53 in the tall level only"
  },
  "spritecook": {
-  "model": "gemini-nano-banana-2.1",
+  "model": "gpt-image-2.5-sunburst",
   "pixel": true,
   "resolution": "2K",
+  "quality": "medium",
   "width": 470,
   "height": 506
  },
- "ledger_job": "cp_oak@1105-220416"
+ "ledger_job": "cp_oak@1106-183840"
 }
