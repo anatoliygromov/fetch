@@ -147,6 +147,11 @@ add(["town_crates70", "town_breadboard", "town_crate_leg", "town_portal_top", "t
 A.append(("Downtown", "spire_riddarholmen", ART + "scene/spire_riddarholmen.png", "dt", "shore", FADE["dt"]["shore"]))
 add(["town_roof_loggia", "town_roof_gallery88", "town_roof_gallery72", "town_roof_flower_roof", "town_roof_ledge",
      "town_footbridge", "town_balcony56", "town_balcony64", "town_spring"], "dt", "play", group="Downtown")
+# art/dt-highroad-06nov (tools/build_highroad.py): the fronts and the stamps on them faded as the fronts; the guild's
+# coping, its pedestal and the ledges' corbel on Pepper's line
+add(["town_front_tall5", "town_front_tall6", "town_balcony_door", "town_window_door", "town_window_rail", "town_pilaster"],
+    "dt", "back", True, group="Downtown")
+add(["town_guild_steps", "town_guild_pier", "town_console"], "dt", "play", group="Downtown")
 add(["town_stopsign"], "dt", "back", True, group="Downtown")        # arthooks.lua stopSign: H.img(.., true), the back fade
 add(["town_jet"], "dt", "back", group="Downtown")                  # scene.lua drawTerrainArt: decoration on her line, unfaded
 add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, group="Characters (never shaded)")

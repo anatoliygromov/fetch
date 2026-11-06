@@ -129,3 +129,22 @@ what it drew before (the code fallback stays).
 | `town_stopsign.png` | 19 x 101 | the tram stop sign (arthooks.lua stopSign), faded as back decoration: column 9 on the stop's x + 1, bottom on the rail line |
 | `town_jet.png` | 24 x 88 | the fountain's water (scene.lua drawTerrainArt): 4 frames 6 x 88 at 20 fps; left at the TIER's x0 - 7, the right one mirrored at x1 + 7, top at the TIER's top + 3 |
 | `town_tier.png`, `town_bowl.png`, `town_rim.png` | 50 x 58, 34 x 82, 18 x 18 | as before, redrawn in the sample's granite |
+
+## Downtown high road attached to its fronts (art/dt-highroad-06nov, 0 credits)
+
+Built by `tools/build_highroad.py` (`--check`) from the 5 Nov fronts' parts and the roof kit's ink and granite.
+Drawn by `arthooks.lua` (`townPiece`, `H.drawHighWall` after the fronts). No box moves. Without a file the game draws
+what it drew before. One flag: `H.PLAZA_FRONTS` (decision 2a; `false` brings back the plaza houses).
+
+| File | Size | Where and how it is drawn |
+| --- | --- | --- |
+| `town_front_tall6.png` | 148 x 432 | the GUILD HOUSE's front (instead of front 4): granite ground floor, its top on the steps' line, a 2.1 m door at x 1632, French windows at x 1580 and 1674 |
+| `town_front_tall5.png` | 88 x 432 | a plain bay (no door, shop or gate): with `H.PLAZA_FRONTS`, any bay whose door, shop or gate a plaza BALCONY would cross |
+| `town_guild_steps.png` | 122 x 35 | the stepped coping on GUILD ROOF and its steps: at the steps' x0 - 1, top - 1 (instead of town_portal_top) |
+| `town_guild_pier.png` | 18 x 46 | the CHIMNEY box as a stone pedestal: at x0 - 1, y0 - 1 (instead of town_oriel; no town_oriel_bay) |
+| `town_console.png` | 8 x 7 | under both ends of every ledge (unnamed, DORMER): at x + 2 and x + w - 10, y0 + 4 (its ink row on the slab's) |
+| `town_window_door.png` | 52 x 50 | decoration: the first-floor window carried down to a high BALCONY or a ledge under it (window within 8 px): at the window's x - 25, front foot - 192, cut at the slab |
+| `town_window_rail.png` | 44 x 24 | decoration: a French balcony's flush railing over a ledge: at the window's x - 22, its foot on the ledge's top - 1 |
+| `town_balcony_door.png` | 38 x 52 | decoration (`H.PLAZA_FRONTS`): behind a plaza BALCONY, centred on it inside its house, top at the front's foot - 119, cut at the slab |
+| `town_pilaster.png` | 14 x 101 | decoration: two per LOGGIA, 3 px in from its ends, from its top + 25 to the plinth; the house under a LOGGIA is one bay (its gate centred) |
+| (code) | | the galleries' string course: the fronts' course (5 rows) at a GALLERY's top + 31 along the whole front of each house it stands on; cast shadows of every high road piece and balcony, 2 px right and 3 down, multiplied so the wall's W turns into its S |
