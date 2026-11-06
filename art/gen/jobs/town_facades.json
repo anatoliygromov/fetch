@@ -1,0 +1,25 @@
+{
+ "name": "town_facades",
+ "level": "downtown",
+ "layer": "mid",
+ "kind": "building",
+ "real_height_m": 12.0,
+ "target_px": [
+  806,
+  210
+ ],
+ "checks_px": {
+  "storey": "70 (3.0 m at 23 px/m)",
+  "ground_floor": "76 (3.3 m)",
+  "window": "22 x 34 glass and bars (1.0 x 1.5 m)",
+  "door": "23 x 46 (1.0 x 2.0 m)"
+ },
+ "tier": "C",
+ "family": "dt_built_06nov",
+ "method": "built from stamped parts, tools/build_dt_built.py",
+ "build": "tools/build_dt_built.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_facades.png",
+  "where": "Downtown (both), the old town row across the square: a strip repeating at scroll 0.5, bottom on screen y 178 (scene.lua Sc.drawFarArt, faded to the mid haze)"
+ }
+}

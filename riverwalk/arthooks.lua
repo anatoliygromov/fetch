@@ -381,6 +381,7 @@ function H.townPiece(p, camx, def)
   -- A GATE with no house front to hold its gateway (screen 10) keeps the old gate piece.
   if H.FIRST_FLOOR and p.layer == "play" then
     if p.name == "GATE" and H.gatewayX(def, p) and H.img("scene/town_crates" .. (p.x1 - p.x0)) then return true end
+    if p.name == "GATE" and not H.gatewayX(def, p) and H.freeGate(p) then return true end   -- (6 Nov: screen 10's gate)
     if p.name == "SHELTER" and H.img("scene/town_breadboard") then return true end
   end
   if p.layer ~= "play" or p.kind == "decor" or not high(def, p) then return false end
@@ -661,14 +662,28 @@ function H.gatewayX(def, p)                              -- the gateway's centre
   end
   return c[p] or nil
 end
+-- (art/dt-built-06nov, the board's redraw of town_tramshed96, "look at the size in the scene") a GATE with no house
+-- front to hold a gateway (screen 10, x 3072-3168) gets the courtyard gate at true scale: the same gateway (3 m) in a
+-- stretch of plastered courtyard wall 3.5 m high (town_tramshed96.png, 160 x 161, decoration, faded as the fronts),
+-- centred on the box, standing on the back line; its solid box, her perch, is the gateway's granite doorstep
+-- (town_gatestep<w>.png, play, outlined, at x0 - 1, y0 - 1, drawn with the other perches). tools/build_dt_built.py.
+function H.freeGate(p)
+  local w = p.x1 - p.x0
+  local im = decoImg("town_tramshed" .. w)
+  if im and im:getHeight() > 100 and H.img("scene/town_gatestep" .. w) then return im end
+  return nil
+end
 function H.drawTownGateways(def, cam)
   if not (tallTown(def) and H.FIRST_FLOOR) then return end
   local im = decoImg("town_gateway")
-  if not im then return end
   for _, p in ipairs(def.props) do
     if p.name == "GATE" and p.layer == "play" then
       local cx = H.gatewayX(def, p)
-      if cx then
+      local free = not cx and H.freeGate(p)
+      if free then
+        local x = math.floor((p.x0 + p.x1) / 2 - free:getWidth() / 2 - cam)
+        if x < 330 and x + free:getWidth() > -10 then lg.setColor(1, 1, 1, 1); lg.draw(free, x, def.foot - H.BACK_LINE - free:getHeight()) end
+      elseif cx and im then
         local x = math.floor(cx - im:getWidth() / 2 - cam)
         if x < 330 and x + im:getWidth() > -10 then lg.setColor(1, 1, 1, 1); lg.draw(im, x, def.foot - H.BACK_LINE - im:getHeight()) end
       end
@@ -713,8 +728,9 @@ function H.drawTownPerches(s, cam)
   local board, leg = H.img("scene/town_breadboard"), H.img("scene/town_crate_leg")
   for _, p in ipairs(def.props) do
     if p.layer == "play" and p.x1 - cam > -20 and p.x0 - cam < 340 then
-      if p.name == "GATE" and H.gatewayX(def, p) then
-        local im = H.img("scene/town_crates" .. (p.x1 - p.x0))
+      if p.name == "GATE" then
+        local im = H.gatewayX(def, p) and H.img("scene/town_crates" .. (p.x1 - p.x0))
+          or (H.freeGate(p) and H.img("scene/town_gatestep" .. (p.x1 - p.x0)))   -- (6 Nov: the free gate's doorstep)
         if im then
           Sc.shadow((p.x0 + p.x1) / 2 - cam, p.y1 - 1, p.x1 - p.x0 + 4)
           lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(p.x0 - cam) - 1, p.y0 - 1)

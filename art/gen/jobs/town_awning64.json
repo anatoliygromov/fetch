@@ -1,0 +1,23 @@
+{
+ "name": "town_awning64",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "prop",
+ "real_height_m": 0.4,
+ "target_px": [
+  64,
+  18
+ ],
+ "checks_px": {
+  "stripe": "8",
+  "tongue": "8 x 4"
+ },
+ "tier": "C",
+ "family": "dt_built_06nov",
+ "method": "hand fix by rule, tools/fix_dt_06nov.py",
+ "build": "tools/fix_dt_06nov.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_awning64.png",
+  "where": "Downtown, AWNING boxes narrower than 72 (x 872, 1008, 1232, 2496): centred, top at y0 - 1 (scene.lua AWNING)"
+ }
+}

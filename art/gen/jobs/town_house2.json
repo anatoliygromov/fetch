@@ -1,0 +1,22 @@
+{
+ "name": "town_house2",
+ "level": "downtown",
+ "layer": "back",
+ "kind": "building",
+ "real_height_m": 2.7,
+ "target_px": [
+  58,
+  126
+ ],
+ "checks_px": {
+  "edits": "art/source/town_house2/edits.json"
+ },
+ "tier": "C",
+ "family": "dt_built_06nov",
+ "method": "hand fix by rule, tools/fix_dt_06nov.py",
+ "build": "tools/fix_dt_06nov.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_house2.png",
+  "where": "Downtown, the second HOUSE (x 1644), bottom on y 414 (scene.lua HOUSE)"
+ }
+}

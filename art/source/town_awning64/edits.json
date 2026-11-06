@@ -1,0 +1,5104 @@
+{
+"asset": "town_awning64",
+"source": "art/source/town_awning64/town_awning64_before.png",
+"tool": "tools/fix_dt_06nov.py",
+"changed": 728,
+"edits": [
+{
+"x": 3,
+"y": 12,
+"was": "7a352e",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 4,
+"y": 13,
+"was": "e9ddc7",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 5,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 6,
+"y": 6,
+"was": "7a352e",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 6,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 6,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 7,
+"y": 4,
+"was": "060201",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 7,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 7,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 7,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 7,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 7,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 8,
+"y": 4,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 8,
+"y": 5,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 8,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 9,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 10,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 11,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 11,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 11,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 12,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 12,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 12,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 12,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 12,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 12,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 13,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 13,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 13,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 13,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 13,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 13,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 13,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 13,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 14,
+"y": 4,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 14,
+"y": 5,
+"was": "9d2e34",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 14,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 14,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 14,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 14,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 14,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 14,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 14,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 14,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 15,
+"y": 4,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 15,
+"y": 5,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 15,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 15,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 15,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 15,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 15,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 15,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 15,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 16,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 17,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 17,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 17,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 17,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 17,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 18,
+"y": 4,
+"was": "7a352e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 18,
+"y": 5,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 18,
+"y": 6,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 18,
+"y": 7,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 18,
+"y": 8,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 18,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 18,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 18,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 18,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 18,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 19,
+"y": 4,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 19,
+"y": 5,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 19,
+"y": 6,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 19,
+"y": 7,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 19,
+"y": 8,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 19,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 19,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 19,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 19,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 19,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 20,
+"y": 4,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 20,
+"y": 5,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 20,
+"y": 6,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 20,
+"y": 7,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 20,
+"y": 8,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 20,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 20,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 20,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 20,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 20,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 21,
+"y": 4,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 21,
+"y": 5,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 21,
+"y": 6,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 21,
+"y": 7,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 21,
+"y": 8,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 21,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 21,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 21,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 21,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 21,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 22,
+"y": 4,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 22,
+"y": 5,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 22,
+"y": 6,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 22,
+"y": 7,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 22,
+"y": 8,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 22,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 22,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 22,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 22,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 23,
+"y": 4,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 23,
+"y": 5,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 23,
+"y": 6,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 24,
+"y": 4,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 24,
+"y": 5,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 24,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 24,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 24,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 24,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 24,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 24,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 24,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 24,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 25,
+"y": 4,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 25,
+"y": 5,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 25,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 25,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 25,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 25,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 25,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 25,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 25,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 25,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 26,
+"y": 4,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 26,
+"y": 5,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 26,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 26,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 26,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 26,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 26,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 26,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 26,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 26,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 27,
+"y": 4,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 27,
+"y": 5,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 27,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 27,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 27,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 27,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 27,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 27,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 27,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 27,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 28,
+"y": 4,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 28,
+"y": 5,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 28,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 28,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 28,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 28,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 28,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 28,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 28,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 28,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 29,
+"y": 4,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 29,
+"y": 5,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 29,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 29,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 29,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 29,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 29,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 29,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 29,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 29,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 30,
+"y": 4,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 30,
+"y": 5,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 30,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 30,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 30,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 30,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 30,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 30,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 30,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 30,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 31,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 31,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 31,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 31,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 31,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 32,
+"y": 4,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 32,
+"y": 5,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 32,
+"y": 6,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 32,
+"y": 7,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 32,
+"y": 8,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 32,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 32,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 32,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 32,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 33,
+"y": 4,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 33,
+"y": 5,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 33,
+"y": 6,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 33,
+"y": 7,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 33,
+"y": 8,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 33,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 33,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 33,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 33,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 33,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 34,
+"y": 4,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 34,
+"y": 5,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 34,
+"y": 6,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 34,
+"y": 7,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 34,
+"y": 8,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 34,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 34,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 34,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 34,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 34,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 35,
+"y": 4,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 35,
+"y": 5,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 35,
+"y": 6,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 35,
+"y": 7,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 35,
+"y": 8,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 35,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 35,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 35,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 35,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 35,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 36,
+"y": 4,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 36,
+"y": 5,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 36,
+"y": 6,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 36,
+"y": 7,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 36,
+"y": 8,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 36,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 36,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 36,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 36,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 36,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 37,
+"y": 4,
+"was": "7a352e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 37,
+"y": 5,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 37,
+"y": 6,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 37,
+"y": 7,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 37,
+"y": 8,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 37,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 37,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 37,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 37,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 37,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 38,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 38,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 38,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 38,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 38,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 39,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 40,
+"y": 4,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 40,
+"y": 5,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 40,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 40,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 40,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 40,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 40,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 40,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 40,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 41,
+"y": 4,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 41,
+"y": 5,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 41,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 41,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 41,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 41,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 41,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 41,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 41,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 41,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 42,
+"y": 4,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 42,
+"y": 5,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 42,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 42,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 42,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 42,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 42,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 42,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 42,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 42,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 43,
+"y": 4,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 43,
+"y": 5,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 43,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 43,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 43,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 43,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 43,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 43,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 43,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 43,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 44,
+"y": 4,
+"was": "7a352e",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 44,
+"y": 5,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 44,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 44,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 44,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 44,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 44,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 44,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 44,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 44,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 45,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 45,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 45,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 45,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 45,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 45,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 45,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 45,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 46,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 46,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 46,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 46,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 47,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 48,
+"y": 4,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 48,
+"y": 5,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 48,
+"y": 6,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 48,
+"y": 7,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 48,
+"y": 8,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 48,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 48,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 48,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 48,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 49,
+"y": 4,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 49,
+"y": 5,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 49,
+"y": 6,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 49,
+"y": 7,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 49,
+"y": 8,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 49,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 49,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 49,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 49,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 49,
+"y": 13,
+"was": "e9ddc7",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 50,
+"y": 4,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 50,
+"y": 5,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 50,
+"y": 6,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 50,
+"y": 7,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 50,
+"y": 8,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 50,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 50,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 50,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 50,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 50,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 51,
+"y": 4,
+"was": "7a352e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 51,
+"y": 5,
+"was": "9d2e34",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 51,
+"y": 6,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 51,
+"y": 7,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 51,
+"y": 8,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 51,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 51,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 51,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 51,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 51,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 52,
+"y": 9,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 52,
+"y": 10,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 52,
+"y": 11,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 52,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 52,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 53,
+"y": 12,
+"was": "e9ddc7",
+"now": "ca463c",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 53,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 54,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 55,
+"y": 13,
+"was": "bcac9e",
+"now": "9d2e34",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 56,
+"y": 4,
+"was": "060201",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 56,
+"y": 5,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 56,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 56,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 56,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 56,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 56,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 56,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 56,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 56,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 57,
+"y": 6,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 57,
+"y": 7,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 57,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 57,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 57,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 57,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 57,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 57,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 58,
+"y": 8,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 58,
+"y": 9,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 58,
+"y": 10,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 58,
+"y": 11,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 58,
+"y": 12,
+"was": "ca463c",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 58,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 59,
+"y": 10,
+"was": "9d2e34",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 59,
+"y": 11,
+"was": "9d2e34",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 59,
+"y": 12,
+"was": "9d2e34",
+"now": "e9ddc7",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 59,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 60,
+"y": 13,
+"was": "9d2e34",
+"now": "bcac9e",
+"rule": "stripes 8 px, red and cream in turn; row 4 the shadow under the rail, row 13 the hem"
+},
+{
+"x": 0,
+"y": 14,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 1,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 2,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 3,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 4,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 5,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 6,
+"y": 14,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 7,
+"y": 14,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 8,
+"y": 14,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 9,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 10,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 11,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 12,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 13,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 14,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 15,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 16,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 17,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 18,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 19,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 20,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 21,
+"y": 14,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 22,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 23,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 24,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 25,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 26,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 27,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 28,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 29,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 30,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 31,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 32,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 33,
+"y": 14,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 34,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 35,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 36,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 37,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 38,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 39,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 40,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 41,
+"y": 14,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 42,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 43,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 44,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 45,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 46,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 47,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 48,
+"y": 14,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 49,
+"y": 14,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 50,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 51,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 52,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 53,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 54,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 55,
+"y": 14,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 56,
+"y": 14,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 57,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 58,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 59,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 60,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 61,
+"y": 14,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 62,
+"y": 14,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 63,
+"y": 14,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 1,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 2,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 3,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 4,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 5,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 6,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 9,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 10,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 11,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 12,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 13,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 14,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 15,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 16,
+"y": 15,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 17,
+"y": 15,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 18,
+"y": 15,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 19,
+"y": 15,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 20,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 22,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 23,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 24,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 25,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 26,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 27,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 28,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 29,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 30,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 31,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 32,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 34,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 35,
+"y": 15,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 36,
+"y": 15,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 37,
+"y": 15,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 38,
+"y": 15,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 39,
+"y": 15,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 40,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 42,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 43,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 44,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 45,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 46,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 47,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 49,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 50,
+"y": 15,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 51,
+"y": 15,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 52,
+"y": 15,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 53,
+"y": 15,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 54,
+"y": 15,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 55,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 57,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 58,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 59,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 60,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 61,
+"y": 15,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 62,
+"y": 15,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 2,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 3,
+"y": 16,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 4,
+"y": 16,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 5,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 10,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 11,
+"y": 16,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 12,
+"y": 16,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 13,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 16,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 17,
+"y": 16,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 18,
+"y": 16,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 19,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 23,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 24,
+"y": 16,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 25,
+"y": 16,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 26,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 28,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 29,
+"y": 16,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 30,
+"y": 16,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 31,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 35,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 36,
+"y": 16,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 37,
+"y": 16,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 38,
+"y": 16,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 39,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 43,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 44,
+"y": 16,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 45,
+"y": 16,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 46,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 50,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 51,
+"y": 16,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 52,
+"y": 16,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 53,
+"y": 16,
+"was": "bcac9e",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 54,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 58,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 59,
+"y": 16,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 60,
+"y": 16,
+"was": "9d2e34",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 61,
+"y": 16,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 3,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 4,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 11,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 12,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 17,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 18,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 24,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 25,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 26,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 29,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 30,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 36,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 37,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 38,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 44,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 45,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 51,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 52,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 53,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 59,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 60,
+"y": 17,
+"was": "060201",
+"now": "transparent",
+"rule": "valance redrawn"
+},
+{
+"x": 0,
+"y": 14,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 1,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 2,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 3,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 4,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 5,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 6,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 7,
+"y": 14,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 1,
+"y": 15,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 2,
+"y": 15,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 3,
+"y": 15,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 4,
+"y": 15,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 5,
+"y": 15,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 6,
+"y": 15,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 2,
+"y": 16,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 3,
+"y": 16,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 4,
+"y": 16,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 5,
+"y": 16,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 3,
+"y": 17,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 4,
+"y": 17,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 8,
+"y": 14,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 9,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 10,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 11,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 12,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 13,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 14,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 15,
+"y": 14,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 9,
+"y": 15,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 10,
+"y": 15,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 11,
+"y": 15,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 12,
+"y": 15,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 13,
+"y": 15,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 14,
+"y": 15,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 10,
+"y": 16,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 11,
+"y": 16,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 12,
+"y": 16,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 13,
+"y": 16,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 11,
+"y": 17,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 12,
+"y": 17,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 16,
+"y": 14,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 17,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 18,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 19,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 20,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 21,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 22,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 23,
+"y": 14,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 17,
+"y": 15,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 18,
+"y": 15,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 19,
+"y": 15,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 20,
+"y": 15,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 21,
+"y": 15,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 22,
+"y": 15,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 18,
+"y": 16,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 19,
+"y": 16,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 20,
+"y": 16,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 21,
+"y": 16,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 19,
+"y": 17,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 20,
+"y": 17,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 24,
+"y": 14,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 25,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 26,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 27,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 28,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 29,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 30,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 31,
+"y": 14,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 25,
+"y": 15,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 26,
+"y": 15,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 27,
+"y": 15,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 28,
+"y": 15,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 29,
+"y": 15,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 30,
+"y": 15,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 26,
+"y": 16,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 27,
+"y": 16,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 28,
+"y": 16,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 29,
+"y": 16,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 27,
+"y": 17,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 28,
+"y": 17,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 32,
+"y": 14,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 33,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 34,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 35,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 36,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 37,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 38,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 39,
+"y": 14,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 33,
+"y": 15,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 34,
+"y": 15,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 35,
+"y": 15,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 36,
+"y": 15,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 37,
+"y": 15,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 38,
+"y": 15,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 34,
+"y": 16,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 35,
+"y": 16,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 36,
+"y": 16,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 37,
+"y": 16,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 35,
+"y": 17,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 36,
+"y": 17,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 40,
+"y": 14,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 41,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 42,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 43,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 44,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 45,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 46,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 47,
+"y": 14,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 41,
+"y": 15,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 42,
+"y": 15,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 43,
+"y": 15,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 44,
+"y": 15,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 45,
+"y": 15,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 46,
+"y": 15,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 42,
+"y": 16,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 43,
+"y": 16,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 44,
+"y": 16,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 45,
+"y": 16,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 43,
+"y": 17,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 44,
+"y": 17,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 48,
+"y": 14,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 49,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 50,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 51,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 52,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 53,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 54,
+"y": 14,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 55,
+"y": 14,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 49,
+"y": 15,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 50,
+"y": 15,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 51,
+"y": 15,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 52,
+"y": 15,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 53,
+"y": 15,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 54,
+"y": 15,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 50,
+"y": 16,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 51,
+"y": 16,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 52,
+"y": 16,
+"was": "transparent",
+"now": "9d2e34",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 53,
+"y": 16,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 51,
+"y": 17,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 52,
+"y": 17,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 56,
+"y": 14,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 57,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 58,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 59,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 60,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 61,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 62,
+"y": 14,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 63,
+"y": 14,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 57,
+"y": 15,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 58,
+"y": 15,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 59,
+"y": 15,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 60,
+"y": 15,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 61,
+"y": 15,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 62,
+"y": 15,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 58,
+"y": 16,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 59,
+"y": 16,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 60,
+"y": 16,
+"was": "transparent",
+"now": "bcac9e",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 61,
+"y": 16,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 59,
+"y": 17,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+},
+{
+"x": 60,
+"y": 17,
+"was": "transparent",
+"now": "060201",
+"rule": "one tongue per stripe, the same part stamped"
+}
+]
+}

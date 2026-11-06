@@ -1,0 +1,22 @@
+{
+ "name": "town_house1",
+ "level": "downtown",
+ "layer": "back",
+ "kind": "building",
+ "real_height_m": 2.6,
+ "target_px": [
+  54,
+  118
+ ],
+ "checks_px": {
+  "edits": "art/source/town_house1/edits.json"
+ },
+ "tier": "C",
+ "family": "dt_built_06nov",
+ "method": "hand fix by rule, tools/fix_dt_06nov.py",
+ "build": "tools/fix_dt_06nov.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_house1.png",
+  "where": "Downtown, the first and fourth HOUSE (x 1536, 2404), bottom on y 414 (scene.lua HOUSE)"
+ }
+}

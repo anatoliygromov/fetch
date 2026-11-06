@@ -1,0 +1,23 @@
+{
+ "name": "town_table_front",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "prop",
+ "real_height_m": 0.57,
+ "target_px": [
+  50,
+  26
+ ],
+ "checks_px": {
+  "top": "4 rows",
+  "legs": "5 wide, ink both sides"
+ },
+ "tier": "C",
+ "family": "dt_built_06nov",
+ "method": "hand fix by rule, tools/fix_dt_06nov.py",
+ "build": "tools/fix_dt_06nov.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_table_front.png",
+  "where": "Downtown, the cafe TABLEs (x 368, 480, 2344): at x0 - 1, y0 (scene.lua TABLE)"
+ }
+}

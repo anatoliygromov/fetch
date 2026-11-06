@@ -132,7 +132,7 @@ add(["town_door", "town_sign", "town_spout"], "dt", "back", True, group="Downtow
 add(["town_house1", "town_house2", "town_house3"], "dt", "back", True, group="Downtown")   # art/fixes, decision 4
 add(["town_statue"], "dt", "play", group="Downtown")   # art/fixes: tagged play
 add(["town_ground"], "dt", "ground", group="Downtown")
-add(["town_tramshed70", "town_tramshed96", "town_crate_front", "town_parasol", "town_table_front", "town_stall", "town_awning80",
+add(["town_tramshed70", "town_crate_front", "town_parasol", "town_table_front", "town_stall", "town_awning80",
      "town_awning64", "town_pedestal", "town_shelter", "town_kiosk", "town_tub", "town_rim", "town_bowl", "town_tier",
      "town_shopsign"], "dt", "play", group="Downtown")
 add(["town_bollard"], "dt", "front", group="Downtown")
@@ -152,6 +152,10 @@ add(["town_roof_loggia", "town_roof_gallery88", "town_roof_gallery72", "town_roo
      "town_footbridge", "town_balcony56", "town_balcony64", "town_spring"], "dt", "play", group="Downtown")
 add(["town_stopsign"], "dt", "back", True, group="Downtown")        # arthooks.lua stopSign: H.img(.., true), the back fade
 add(["town_jet"], "dt", "back", group="Downtown")                  # scene.lua drawTerrainArt: decoration on her line, unfaded
+# art/dt-built-06nov: screen 10's courtyard gate at true scale (decoration, arthooks H.freeGate, faded as the fronts)
+# and its doorstep (the GATE's perch, play)
+add(["town_tramshed96"], "dt", "back", True, group="Downtown")
+add(["town_gatestep96"], "dt", "play", group="Downtown")
 add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, group="Characters (never shaded)")
 add(["facades_square"], "dt", "mid", True, base=R8, group="Batch 1 (rejected)")
 add(["spire_riddarholmen"], "dt", "back", True, base=R8, group="Batch 1 (rejected)")     # arthooks.lua drawTownBack, own 45 %
