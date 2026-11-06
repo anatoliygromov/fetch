@@ -1,0 +1,31 @@
+{
+ "name": "rw_rower",
+ "family": "rw_harbour_06nov",
+ "tier": "A",
+ "steps": {
+  "spec": {
+   "time": "2026-11-06 21:10"
+  },
+  "blockout": {
+   "time": "2026-11-06 21:10"
+  },
+  "preflight": {
+   "time": "2026-11-06 21:10"
+  },
+  "probe": {
+   "render": "art/gen/out/rw_rower_a.png",
+   "time": "2026-11-06 21:10"
+  },
+  "cut": {
+   "time": "2026-11-06 21:10"
+  },
+  "ingame": {
+   "frame": "docs/review/06nov-night/rw/frames/after_boat1_pepper_aboard.png",
+   "time": "2026-11-06 21:10"
+  },
+  "polish": {
+   "aseprite": "art/source/rw_rower/rw_rower.aseprite",
+   "time": "2026-11-06 21:10"
+  }
+ }
+}

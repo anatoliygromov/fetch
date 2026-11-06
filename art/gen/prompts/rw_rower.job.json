@@ -13,7 +13,7 @@
   256,
   256
  ],
- "credits": 48,
+ "credits": 64,
  "tool": "spritecook",
  "family": "rw_harbour_06nov",
  "tier": "A",
@@ -29,5 +29,5 @@
   "width": 31,
   "height": 43
  },
- "ledger_job": "rw_rower@1106-203058"
+ "ledger_job": "rw_rower@1106-211028"
 }

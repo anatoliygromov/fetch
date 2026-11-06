@@ -1,0 +1,18 @@
+{
+ "name": "kennel",
+ "level": "riverwalk",
+ "layer": "play",
+ "kind": "prop",
+ "tier": "C",
+ "family": "rw_built_06nov",
+ "target_px": [
+  44,
+  44
+ ],
+ "real_height_m": 0.95,
+ "built_by": "tools/build_rw_kennel.py (night/06nov-rw)",
+ "slot": {
+  "file": "riverwalk/art/scene/kennel.png",
+  "where": "River Walk screen 1, x 0-44 by the house: the KENNEL piece (setpieces.lua kennel()), solid down to its doorway (y 165)"
+ }
+}

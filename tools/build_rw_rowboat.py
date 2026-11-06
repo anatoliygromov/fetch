@@ -355,6 +355,13 @@ if __name__ == '__main__':
     bad = save(check)
     if not check:
         json.dump(edits, open(SRC + '/edits.json', 'w'))
+        cl = FILES[SRC + '/clean.png']
+        json.dump({'name': 'rw_rower', 'size': [int(cl.shape[1]), int(cl.shape[0])], 'render': RENDER,
+                   'cut_by': "SpriteCook's pixel output on its own grid, taken 1:1 (crop %s), nothing resampled; tools/build_rw_rowboat.py" % list(CROP),
+                   'measures_px': {'cap_top_row': 0, 'face_rows': [8, 19], 'face_px': 12, 'head_with_cap_px': 21, 'gunwale_row': 36,
+                                   'fists_on_handle': 'stamped on the oar handle in every frame (by construction)'},
+                   'colours': len({tuple(v) for v in cl.reshape(-1, 4) if v[3]}), 'fails': []},
+                  open('art/gen/out/rw_rower.cut.json', 'w'), indent=1)
         aseprite_io.write(SRC + '/rw_rower.aseprite', [FILES['riverwalk/art/scene/rw_rower.png'][:, i * FW:(i + 1) * FW] for i in range(len(LOOP))], ms=110)
         aseprite_io.write('art/source/rw_rowboat/rw_rowboat.aseprite', [FILES['riverwalk/art/scene/rw_rowboat.png']])
     b0, b1 = box()
