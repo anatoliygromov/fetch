@@ -262,8 +262,25 @@ def jet():
     return cv
 
 
+def basin_wall():
+    """(night/06nov-dt: "the water is a hard rectangle") the fountain basin's granite wall under a RIM, on the
+    water's side: 10 x 56 (y 424-479), the rim's ashlar carried down in 8 px courses (blocks offset by half), lit on
+    its left, its wet face to the water a darker stone with a dark joint; the left wall as drawn, the right mirrored.
+    Ground, not a perch: no outline"""
+    W, H = 10, 56
+    cv = Cv(W, H)
+    cv.rect(0, 0, W - 1, H - 1, "g2")
+    for y in range(0, H, 8):
+        cv.rect(0, y, W - 1, y, "g1"); cv.rect(0, y + 7, W - 1, y + 7, "g3")
+        jx = 4 if (y // 8) % 2 == 0 else 7
+        cv.rect(jx, y + 1, jx, y + 6, "g3")
+    cv.rect(0, 0, 0, H - 1, "g1")
+    cv.rect(W - 3, 0, W - 2, H - 1, "g3"); cv.rect(W - 1, 0, W - 1, H - 1, "g4")   # the wet face, its joint to the water
+    return cv
+
+
 def build():
-    return {"town_balcony56": balcony(56), "town_balcony64": balcony(64), "town_spring": spring(),
+    return {"town_basin_wall": basin_wall(), "town_balcony56": balcony(56), "town_balcony64": balcony(64), "town_spring": spring(),
             "town_stopsign": stopsign(), "town_tier": tier(), "town_bowl": bowl(), "town_rim": rim(), "town_jet": jet()}
 
 

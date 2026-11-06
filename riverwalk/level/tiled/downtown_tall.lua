@@ -1692,6 +1692,7 @@ return {
             ["label"] = "top",
             ["fronts"] = "2,1",
             ["plaster"] = "yellow",
+            ["style"] = "a",
           },
         },
         {
@@ -1711,6 +1712,8 @@ return {
             ["layer"] = "back",
             ["fronts"] = "1",
             ["plaster"] = "red",
+            ["style"] = "d",
+            ["pipe"] = true,
           },
         },
         {
@@ -1730,6 +1733,8 @@ return {
             ["layer"] = "back",
             ["fronts"] = "3,2",
             ["plaster"] = "cream",
+            ["style"] = "e",
+            ["pipe"] = true,
           },
         },
         {
@@ -1749,6 +1754,7 @@ return {
             ["label"] = "top",
             ["fronts"] = "3,1",
             ["plaster"] = "ochre",
+            ["style"] = "c",
           },
         },
         {
@@ -1768,6 +1774,7 @@ return {
             ["layer"] = "back",
             ["fronts"] = "2",
             ["plaster"] = "yellow",
+            ["style"] = "f",
           },
         },
         {
@@ -1787,6 +1794,8 @@ return {
             ["layer"] = "back",
             ["fronts"] = "1",
             ["plaster"] = "cream",
+            ["style"] = "a",
+            ["pipe"] = true,
           },
         },
         {
@@ -1806,6 +1815,7 @@ return {
             ["layer"] = "back",
             ["fronts"] = "3",
             ["plaster"] = "red",
+            ["style"] = "d",
           },
         },
         {
@@ -1825,6 +1835,8 @@ return {
             ["layer"] = "back",
             ["fronts"] = "1",
             ["plaster"] = "stone",
+            ["style"] = "e",
+            ["pipe"] = true,
           },
         },
         {
@@ -1844,6 +1856,8 @@ return {
             ["layer"] = "back",
             ["fronts"] = "1,2,1",
             ["plaster"] = "red",
+            ["style"] = "b",
+            ["pipe"] = true,
           },
         },
         {
@@ -1863,6 +1877,7 @@ return {
             ["layer"] = "back",
             ["fronts"] = "2",
             ["plaster"] = "ochre",
+            ["style"] = "c",
           },
         },
         {
@@ -1882,6 +1897,7 @@ return {
             ["layer"] = "back",
             ["fronts"] = "3",
             ["plaster"] = "yellow",
+            ["style"] = "b",
           },
         },
         {
@@ -1901,6 +1917,7 @@ return {
             ["layer"] = "back",
             ["fronts"] = "1",
             ["plaster"] = "red",
+            ["style"] = "a",
           },
         },
         {

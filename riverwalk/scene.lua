@@ -2493,7 +2493,19 @@ function Sc.drawPropArt(p, camx, def, kicked)
       shadowUnder(p, camx)                                        -- ink, at x0 - 1, y0 - 1; the old one was the box)
       if T.pedestal:getWidth() == w + 2 then at(T.pedestal, x - 1, p.y0 - 1) else at(T.pedestal, x, p.y0) end
     elseif n == "ARM" then return
-    elseif n == "RIM" then at(T.rim, x - 1, p.y0 - 1)
+    elseif n == "RIM" then
+      local bw = def.foot and optImg("town_basin_wall")                -- (night/06nov-dt) the basin's granite wall
+      if bw and Sc.world then                                          -- under the rim, on the water's side
+        local side
+        for _, r in ipairs(Sc.world.water or {}) do
+          if r.y0 >= p.y1 and r.x0 == p.x1 then side = 1 elseif r.y0 >= p.y1 and r.x1 == p.x0 then side = -1 end
+          if side then break end
+        end
+        lg.setColor(1, 1, 1, 1)
+        if side == 1 then lg.draw(bw, math.floor(p.x1 - camx) - bw:getWidth(), p.y1)
+        elseif side == -1 then lg.draw(bw, math.floor(p.x0 - camx) + bw:getWidth(), p.y1, 0, -1, 1) end
+      end
+      at(T.rim, x - 1, p.y0 - 1)
     elseif n == "FOUNTAIN" then
       at(T.bowl, x - 1, p.y0 - 1)
       lg.setColor(0.33, 0.47, 0.52, 0.45); lg.rectangle("fill", math.floor(x) + 8, 193 + d, w - 16, 47)

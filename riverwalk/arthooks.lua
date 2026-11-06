@@ -526,14 +526,26 @@ local function plasterImg(name, plaster)                            -- art/scene
   end
   return frontCache[key]
 end
-local function frontImg(k, plaster) return plasterImg("town_front_tall" .. k, plaster) end
+-- (night/06nov-dt, the facade lift) a box's `style` (a .. f, tools/build_dt_facades.py) picks its storeys' windows,
+-- cornices, shutters, window boxes, anchors, shop paint and door sign; without the styled file the 5 Nov front is drawn
+H.STYLED = true
+local function frontImg(k, plaster, style)
+  if H.STYLED and style then
+    local im = love.filesystem.getInfo("art/scene/town_front_tall" .. k .. "_" .. style .. ".png") and plasterImg("town_front_tall" .. k .. "_" .. style, plaster)
+    if im then return im end
+  end
+  return plasterImg("town_front_tall" .. k, plaster)
+end
 local function bays(p, W, def)                                            -- { { front, x, w }, ... } for a box
   local list = {}
   W = W or p.x1 - p.x0
   if p.fronts then for k in tostring(p.fronts):gmatch("%d") do list[#list + 1] = tonumber(k) end end
   if def and H.FIRST_FLOOR and #list > 1 and love.filesystem.getInfo("art/scene/town_pilaster.png") then
     for _, q in ipairs(def.props) do                                  -- (art/dt-highroad-06nov) a house under the
-      if q.name == "LOGGIA" and q.layer == "play" and q.x0 >= p.x0 and q.x1 <= p.x0 + W then list = { list[1] } end
+      if q.name == "LOGGIA" and q.layer == "play" and q.x0 >= p.x0 and q.x1 <= p.x0 + W then
+        -- (night/06nov-dt) the portal's house as one 148 px bay with two window axes (town_front_tall7_<style>)
+        list = { (H.STYLED and p.style and love.filesystem.getInfo("art/scene/town_front_tall7_" .. p.style .. ".png")) and 7 or list[1] }
+      end
     end                                                               -- LOGGIA is one bay: its gate centred under the
   end                                                                 -- loggia, the portal (H.drawHighWall)
   if H.FIRST_FLOOR and p.name == "GUILD HOUSE" then list = { guildArt() and 6 or 4 } end   -- (its own 148 px front;
@@ -603,6 +615,18 @@ function H.drawFarSpire(def, camx, worldW)
   end
 end
 
+local decoCache = {}
+local function decoImg(n)
+  local key = n .. "#" .. Look.key
+  if decoCache[key] == nil then
+    decoCache[key] = false
+    local path = "art/scene/" .. n .. ".png"
+    if love.filesystem.getInfo(path) then
+      local im = lg.newImage(Sc.fadeData(love.image.newImageData(path))); im:setFilter("nearest", "nearest"); decoCache[key] = im
+    end
+  end
+  return decoCache[key]
+end
 function H.drawTownBack(s, cam)
   local def = s.def
   if not tallTown(def) then return end
@@ -631,13 +655,17 @@ function H.drawTownBack(s, cam)
           local full = not cutAtTop(p)
           local top, px1 = p.y0, (full and nextX[p]) or p.x1
           for bi, b in ipairs(bays(p, px1 - p.x0, def)) do
-            local f = frontImg(b[1] or ((nb + bi) % 3 + 1), plaster) or frontImg(1, plaster)
+            local f = frontImg(b[1] or ((nb + bi) % 3 + 1), plaster, p.style) or frontImg(1, plaster)
             drawBay(f, math.floor(b[2] - cam), b[3], p.y0, p.y1, full)
             if full then top = math.min(top, p.y1 - f.h) end
           end
           local x0, x1 = math.floor(p.x0 - cam), math.floor(px1 - cam)
           local sh = Sc.fadeC({ H.PLASTER[plaster][2][1] / 255 * 0.86, H.PLASTER[plaster][2][2] / 255 * 0.86, H.PLASTER[plaster][2][3] / 255 * 0.86 })
           rect(sh, x1 - 2, top, 2, p.y1 - top)                         -- the building's right edge in shade
+          if full and p.pipe and H.STYLED then                           -- (night/06nov-dt) a downpipe at its right edge
+            local dp = decoImg("town_drainpipe")
+            if dp then lg.setColor(1, 1, 1, 1); lg.draw(dp, x1 - 8, p.y1 - dp:getHeight()) end
+          end
           if not full then
             rect(faded(COPING[1]), x0 - 1, p.y0, x1 - x0 + 2, 1)       -- the coping on the cut
             rect(faded(COPING[2]), x0 - 1, p.y0 + 1, x1 - x0 + 2, 2)
@@ -680,18 +708,6 @@ end
 -- house's ground floor, centred in the house (the bay) whose front holds the GATE's right end, the bike's way out;
 -- decoration on the back line (y 414), faded as the fronts, drawn with them (the tram passes in front). No house
 -- front there (screen 10): no gateway, and the GATE keeps its old piece (townPiece). tools/build_dt_street.py.
-local decoCache = {}
-local function decoImg(n)
-  local key = n .. "#" .. Look.key
-  if decoCache[key] == nil then
-    decoCache[key] = false
-    local path = "art/scene/" .. n .. ".png"
-    if love.filesystem.getInfo(path) then
-      local im = lg.newImage(Sc.fadeData(love.image.newImageData(path))); im:setFilter("nearest", "nearest"); decoCache[key] = im
-    end
-  end
-  return decoCache[key]
-end
 H.BACK_LINE = 10                                         -- the back line: 10 px behind her street (def.foot - 10)
 local gwCache = setmetatable({}, { __mode = "k" })
 function H.gatewayX(def, p)                              -- the gateway's centre x for a GATE, or nil
@@ -879,8 +895,8 @@ local function course(x0, x1, y)                                     -- the fron
 end
 local function upperWindowX(def, f, cx)                              -- the centre of the upper window over x in front f
   for _, b in ipairs(bays(f.p, f.x1 - f.p.x0, def)) do
-    if cx >= b[2] and cx < b[2] + b[3] and b[1] and b[1] ~= 4 and b[1] ~= 6 then
-      local im = frontImg(b[1], f.plaster)
+    if cx >= b[2] and cx < b[2] + b[3] and b[1] and b[1] ~= 4 and b[1] ~= 6 and b[1] ~= 7 then
+      local im = frontImg(b[1], f.plaster, f.p.style)
       if not im then return nil end
       local fw = im.w
       if b[3] <= fw then return b[2] + math.floor(fw / 2) - math.floor((fw - b[3]) / 2) end
