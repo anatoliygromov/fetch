@@ -144,3 +144,13 @@ what it drew before (the code fallback stays).
 | `town_stopsign.png` | 19 x 101 | the tram stop sign (arthooks.lua stopSign), faded as back decoration: column 9 on the stop's x + 1, bottom on the rail line |
 | `town_jet.png` | 24 x 88 | the fountain's water (scene.lua drawTerrainArt): 4 frames 6 x 88 at 20 fps; left at the TIER's x0 - 7, the right one mirrored at x1 + 7, top at the TIER's top + 3 |
 | `town_tier.png`, `town_bowl.png`, `town_rim.png` | 50 x 58, 34 x 82, 18 x 18 | as before, redrawn in the sample's granite |
+
+## River Walk harbour and kennel, built by parts (night/06nov-rw, SpriteCook 64 for the rower)
+
+| File | Size | Where and how it is drawn |
+| --- | --- | --- |
+| `rw_rowboat.png` | 185 x 62 | the ROWBOAT hull (setpieces.lua `Sp.drawRowboat`), built by `tools/build_rw_rowboat.py`: bow left; its left column at the mover's x0 - 25, its top row at the mover's y0 - 36 (row 36 = the rail = Pepper's deck, y 212; row 48 = the waterline, y 224). Outlined (an obstacle). The water's tint under row 48 is drawn in code |
+| `rw_rower.png` | 444 x 62 (6 frames of 74 x 62) | the rower, the oar and his near arm, drawn over the hull at hull x 62, same top; frame k while the boat moves right (7 fps), backwards while it moves left, frame 5 at rest. Nothing below row 36 except the oar (it is outboard) |
+| `kennel.png` | 44 x 44 | the KENNEL piece (setpieces.lua kennel()), built by `tools/build_rw_kennel.py`: top-left at (x0, y0) = (0, 140), bottom row on the path (y 183); the doorway's crown on row 25 (y 165). Outlined. Its collision: the ridge cap x 16-28 from y 140 and the eaves x 0-44 from y 158 |
+| `rw_jetty.png` (unchanged) | 48 x 41 | the jetty: in code its piles run on to the bottom of the screen and take the water's tint and a ripple at y 224 |
+| `pontoon.png` (unchanged) | 54 x 19 | in code its floats take the water's tint under y 224 (`Sp.pontoonWater`); its mooring lines sag |
