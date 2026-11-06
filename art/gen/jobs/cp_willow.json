@@ -1,0 +1,22 @@
+{
+ "name": "cp_willow",
+ "level": "citypark",
+ "layer": "back",
+ "kind": "plant",
+ "real_height_m": 11.0,
+ "target_px": [322, 506],
+ "checks_px": {"trunk_width": 28, "lowest_strands_up": 55, "crown_width": 322},
+ "subject": "a big old weeping willow tree in golden autumn by a pond, seen from the front: a short thick grey-brown trunk with rough bark, heavy limbs arching up and out, and from them long curtains of thin hanging twigs with narrow willow leaves falling almost to the ground in soft vertical strands, butter yellow and golden with olive-green inner strands, gaps between the curtains where dark limbs show, lit from the upper left so the outer strands have a bright golden edge and the inner ones a deep olive shade",
+ "part_map": "the dark grey column is the trunk (exactly that width and height, it touches the ground line, its foot flares a little), the mid grey bars are the main limbs arching up into the crown, the big light grey shape is the crown with its hanging curtain: fill it to its edge with long hanging strands of leaves, keep the bottom of the curtain at that height, and let the crown run out of the top edge of the image, cut by the frame like a big tree seen close up.",
+ "size_sentence": "the trunk is about as wide as the dog is long from nose to chest, and the hanging strands stop about one dog height above the ground. It is a big old willow, far taller than the image, so its top is not seen.",
+ "model": "sc_gpt25_2k",
+ "variants": 2,
+ "references": 3,
+ "tier": "B",
+ "family": "cp_backtrees_06nov",
+ "slot": {
+  "file": "riverwalk/art/scene/cp_willow.png",
+  "where": "City Park tall, screen 3: one willow centred on the WILLOWS crown (x 804) replaces park_willow and park_willow_tall at x 700, 804 and 908 (tall level only)"
+ },
+ "extra": "Images 2 and 3 are trees from this game, a street lime and a park lime, shown at the game's pixel size: draw the willow's leaves as they do, in clear strands of 3 to 4 flat shades each, every strand with a lit side and a darker side; the bark a grey-brown ramp whose edge is a darker shade. No black and no near-black anywhere. The brightest leaf shade is a warm golden yellow, never white."
+}

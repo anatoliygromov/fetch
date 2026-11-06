@@ -1,0 +1,14 @@
+{
+ "ground": 506,
+ "pepper_x": 4,
+ "trunk_x": [
+  291,
+  308
+ ],
+ "crown_x": [
+  139,
+  460
+ ],
+ "hang": 451,
+ "note": "crown runs out of the top edge; the curtain hangs to 55 px above the ground"
+}
