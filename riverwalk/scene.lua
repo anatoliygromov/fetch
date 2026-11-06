@@ -2047,7 +2047,10 @@ local function drawFork(p, t, ox)
       if not jl then tt = cpbTaper(tt, x - p.x0) end
       if not jr0 then tt = cpbTaper(tt, p.x1 - 1 - x) end
       local on = ta and x >= ta and x < tb
-      if not on then tt = tt + cpbCrotch(x, ta, tb) end
+      -- (night 6 Nov, cp) no crotch on a stub: where the limb ends within 16 px of the trunk's edge the crotch's deep
+      -- underside met the tip and the two read as a bracket hooked down under a shelf (the LIMES forks: tables)
+      local stub = ta and ((x < ta and ta - p.x0 < 16) or (x >= tb and p.x1 - tb < 16))
+      if not on and not stub then tt = tt + cpbCrotch(x, ta, tb) end
       cols[#cols + 1] = { x = x, top = p.y0, t = tt, k = on and k or nil }
     end
     local jr = cpbJoin(p, 1)
