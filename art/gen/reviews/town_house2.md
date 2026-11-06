@@ -18,3 +18,11 @@ Scale numbers (houses 1 to 3, owner decision 2a): house1 54x118 px = 1.2x2.6 m a
 9. Read: PASS Reads as a house, a doll house beside Pepper (Scale).
 
 VERDICT: FAIL (2 items: outline dots, stray pixel)
+
+# Round 2
+
+Frames: composite only (game would not render under load, see town_house1 Round 2): /tmp/claude-0/-home-claude/87159006-489b-566e-ae4a-e83d2f5ae5ab/scratchpad/r2/comp3x.png, /tmp/claude-0/-home-claude/87159006-489b-566e-ae4a-e83d2f5ae5ab/scratchpad/r2/town_house2_5x.png, attic crop at 12x /tmp/claude-0/-home-claude/87159006-489b-566e-ae4a-e83d2f5ae5ab/scratchpad/r2/h2_attic.png. asset_qa and check_backdrop: PASS.
+Near-black: PASS, none left (darkest (40,43,54), luma 44; 9 colours).
+5. Shading: FAIL The attic pane is still wrong. Pixels (26,18), (26,19), (26,20) are brown (134,98,79 = 86624f) inside the white frame, where the other panes have the grey shade strip (185,189,172) down the left side; the strip at (26,15)-(26,17) is right, then breaks. Reads as a chip in the window at 3x. Fix: set those three pixels to (185,189,172), and (26,21) to the same (it is white now).
+
+VERDICT: FAIL (1 item, 3 pixels)
