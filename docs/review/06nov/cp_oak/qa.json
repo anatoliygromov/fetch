@@ -1,0 +1,25 @@
+[
+ {
+  "name": "cp_oak",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/cp_oak.png",
+  "level": "cp",
+  "layer": "back",
+  "fade": 0.28,
+  "w": 506,
+  "h": 511,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 10,
+   "lone": 0.3,
+   "p10": 119,
+   "median": 141,
+   "p90": 177,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 27
+  },
+  "checks": []
+ }
+]
