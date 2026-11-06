@@ -30,5 +30,9 @@
  "cp_magpie_flap_job": "2a256d23-f954-434c-befa-4ad5e7c648c1",
  "rw_birch_blockout": "0a065150-74f2-46b7-8ef5-666cc67b7fbc",
  "rw_birch_a": "a9920bf8-8628-42e2-a883-ba577e1a9509",
- "rw_birch_b": "bedc7051-2338-4ae4-93e7-6c65561e127d"
+ "rw_birch_b": "bedc7051-2338-4ae4-93e7-6c65561e127d",
+ "cp_willow_blockout": "3db62c0a-f8e4-4cfe-a86b-2620e4305bc6",
+ "cp_willow_job": "816c4bde-2aab-40a7-926e-113096445f5d",
+ "cp_willow_a": "af0858ed-d91c-4c3c-a478-74668f6218dd",
+ "cp_willow_b": "f004bb6c-d43b-4629-a0fe-ab665d0e7b12"
 }

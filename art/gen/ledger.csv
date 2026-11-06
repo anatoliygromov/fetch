@@ -133,3 +133,5 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-06 20:21,plan,rw_rowboat_concept@1106-202149,rw_rowboat,rw_harbour_06nov,artlist,Nano Banana Pro I2I 1K,480,planned,"concept (reference only). Artlist up to 3,000 for concepts tonight (owner, 6 Nov 20:13)"
 2026-11-06 20:24,spent,rw_rowboat_concept@1106-202149,,,,,480,spent,"Artlist concept, reference only"
 2026-11-06 20:24,verdict,,rw_rowboat,,,,,reference,"rw_rowboat_concept a-c: design targets, never game pixels"
+2026-11-06 20:27,plan,cp_willow@1106-202745,cp_willow,cp_backtrees_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 2K medium (follows the reference grid),76,planned,"SpriteCook up to 900 tonight (owner, 6 Nov 20:10)"
+2026-11-06 20:29,spent,cp_willow@1106-202745,,,,,76,spent,"job 816c4bde, owner: SpriteCook up to 900 tonight"
