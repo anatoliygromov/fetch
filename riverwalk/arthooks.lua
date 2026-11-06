@@ -756,7 +756,8 @@ function H.gatewayX(def, p)                              -- the gateway's centre
     if love.filesystem.getInfo("art/scene/town_gateway.png") then
       local ex = p.x1 - 1
       for _, q in ipairs(def.props) do
-        if isFront(q) and not cutAtTop(q) and ex >= q.x0 and ex < q.x1 then
+        if isFront(q) and not cutAtTop(q) and not q.nogate and ex >= q.x0 and ex < q.x1 then   -- (night/06nov-dt:
+          -- a front with `nogate` keeps the free courtyard gate standing in front of it, screen 10)
           for _, b in ipairs(bays(q, nil, def)) do if ex >= b[2] and ex < b[2] + b[3] then c[p] = b[2] + b[3] / 2 end end
         end
       end

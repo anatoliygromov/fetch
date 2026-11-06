@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="440" height="60" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#20242c" nextlayerid="9" nextobjectid="289">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="440" height="60" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#20242c" nextlayerid="9" nextobjectid="311">
  <editorsettings>
   <export target="../riverwalk/level/tiled/downtown_tall.lua" format="lua"/>
  </editorsettings>
@@ -870,6 +870,235 @@
     <property name="fronts" value="2"/>
     <property name="plaster" value="cream"/>
     <property name="style" value="c"/>
+   </properties>
+  </object>
+  <object id="289" type="props" x="140" y="262" width="88" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="2"/>
+    <property name="plaster" value="cream"/>
+    <property name="style" value="b"/>
+    <property name="pipe" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="290" type="props" x="228" y="262" width="80" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="1"/>
+    <property name="plaster" value="yellow"/>
+    <property name="style" value="e"/>
+   </properties>
+  </object>
+  <object id="291" type="props" x="308" y="262" width="96" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="3"/>
+    <property name="plaster" value="ochre"/>
+    <property name="style" value="d"/>
+    <property name="pipe" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="292" type="props" x="404" y="262" width="88" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="2"/>
+    <property name="plaster" value="cream"/>
+    <property name="style" value="f"/>
+   </properties>
+  </object>
+  <object id="293" type="props" x="492" y="262" width="80" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="1"/>
+    <property name="plaster" value="red"/>
+    <property name="style" value="c"/>
+   </properties>
+  </object>
+  <object id="294" type="props" x="572" y="262" width="88" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="2"/>
+    <property name="plaster" value="yellow"/>
+    <property name="style" value="a"/>
+    <property name="pipe" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="295" type="props" x="660" y="262" width="96" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="3"/>
+    <property name="plaster" value="cream"/>
+    <property name="style" value="e"/>
+   </properties>
+  </object>
+  <object id="296" type="props" x="756" y="262" width="88" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="2"/>
+    <property name="plaster" value="ochre"/>
+    <property name="style" value="b"/>
+   </properties>
+  </object>
+  <object id="297" type="props" x="844" y="262" width="80" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="1"/>
+    <property name="plaster" value="yellow"/>
+    <property name="style" value="f"/>
+    <property name="pipe" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="298" type="props" x="924" y="262" width="88" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="2"/>
+    <property name="plaster" value="cream"/>
+    <property name="style" value="d"/>
+   </properties>
+  </object>
+  <object id="299" type="props" x="1012" y="262" width="88" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="1"/>
+    <property name="plaster" value="stone"/>
+    <property name="style" value="e"/>
+    <property name="pipe" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="300" type="props" x="1100" y="262" width="80" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="2"/>
+    <property name="plaster" value="ochre"/>
+    <property name="style" value="c"/>
+   </properties>
+  </object>
+  <object id="301" type="props" x="2816" y="262" width="80" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="1"/>
+    <property name="plaster" value="ochre"/>
+    <property name="style" value="e"/>
+    <property name="pipe" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="302" type="props" x="2896" y="262" width="72" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="1"/>
+    <property name="plaster" value="yellow"/>
+    <property name="style" value="a"/>
+   </properties>
+  </object>
+  <object id="303" type="props" x="2968" y="262" width="72" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="2"/>
+    <property name="plaster" value="cream"/>
+    <property name="style" value="d"/>
+   </properties>
+  </object>
+  <object id="304" type="props" x="3200" y="262" width="88" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="2"/>
+    <property name="plaster" value="ochre"/>
+    <property name="style" value="b"/>
+   </properties>
+  </object>
+  <object id="305" type="props" x="3288" y="262" width="80" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="1"/>
+    <property name="plaster" value="yellow"/>
+    <property name="style" value="f"/>
+    <property name="pipe" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="306" type="props" x="3368" y="262" width="80" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="2"/>
+    <property name="plaster" value="cream"/>
+    <property name="style" value="c"/>
+   </properties>
+  </object>
+  <object id="307" type="props" x="3448" y="262" width="72" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="1"/>
+    <property name="plaster" value="red"/>
+    <property name="style" value="e"/>
+   </properties>
+  </object>
+  <object id="308" type="props" x="2480" y="262" width="80" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="2"/>
+    <property name="plaster" value="yellow"/>
+    <property name="style" value="f"/>
+    <property name="pipe" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="309" type="props" x="2560" y="262" width="80" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="5"/>
+    <property name="plaster" value="cream"/>
+    <property name="style" value="e"/>
+   </properties>
+  </object>
+  <object id="310" type="props" x="3040" y="262" width="160" height="152">
+   <properties>
+    <property name="name" value=""/>
+    <property name="kind" value="decor"/>
+    <property name="layer" value="back"/>
+    <property name="fronts" value="5,5"/>
+    <property name="nogate" type="bool" value="true"/>
+    <property name="plaster" value="yellow"/>
+    <property name="style" value="b"/>
    </properties>
   </object>
   <object id="90" name="RIDDARHOLMEN" type="props" x="3380" y="24" width="32" height="390">
