@@ -169,6 +169,7 @@ add(["magpie"], "cp", None, base=ART, group="Characters (never shaded)")
 add(["cp_duckboat"], "cp", "play", group="City Park")
 # (night 6 Nov, cp) the true-scale art trees of the tall City Park, drawn at scene.lua's TREE_FADE (0.28, their own
 # amount): the willow (new), the limes (1004, 1112 mirrored, 1216, 1528), the ash and the old oak
+add(["cp_reeds", "cp_lily", "cp_bankstones"], "cp", "ground", group="City Park")   # (night 6 Nov) the pond kit, drawn with the bank under the ground look
 for _n in ("cp_willow", "cp_lime", "cp_ash", "cp_oak"):
     A.append(("City Park", _n, ART + "scene/" + _n + ".png", "cp", "back", 0.28))
 add(["facades_square"], "dt", "mid", True, base=R8, group="Batch 1 (rejected)")

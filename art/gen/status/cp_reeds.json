@@ -1,0 +1,14 @@
+{
+ "name": "cp_reeds",
+ "family": "cp_pond_06nov",
+ "tier": "C",
+ "steps": {
+  "spec": {
+   "time": "2026-11-06 20:53"
+  },
+  "built": {
+   "build": "tools/build_cp_pond.py",
+   "time": "2026-11-06 20:53"
+  }
+ }
+}

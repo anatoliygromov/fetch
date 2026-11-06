@@ -84,6 +84,13 @@ def reeds():
                                   (9, 13, 20, 0, REED['dk']), (6, 2, 21, 0, REED['dk'])):
         blade(B, bx, tx, ty, bend, col)
     rush(B, 10, 12, 30)
+    for a in (A, B):                                                # where blades cross, a closed gap of a few px is the
+        from scipy import ndimage                                   # clump's shade between them (no pinholes)
+        op = a[..., 3] > 0
+        holes = ndimage.binary_fill_holes(op) & ~op
+        lb, n = ndimage.label(holes)
+        for i in range(1, n + 1):
+            if (lb == i).sum() <= 6: a[lb == i] = REED['dk']
     return np.concatenate([A, B], 1), (W, H)
 
 
@@ -116,8 +123,7 @@ def stones():
             for x in range(x0, x0 + w):
                 top, bot, left, right = y == y0, y == H - 1, x == x0, x == x0 + w - 1
                 if (top or bot) and (left or right): continue      # rounded corners
-                if top and (x == x0 + 1 or x == x0 + w - 2) and w > 5: c = STONE['mid']
-                elif top or (y == y0 + 1 and left and h > 3): c = STONE['lit']
+                if top or (y == y0 + 1 and left and h > 3): c = STONE['lit']
                 elif bot or right: c = STONE['dk']
                 else: c = STONE['mid']
                 put(a, x, y, c)
