@@ -39,4 +39,8 @@ bottom); on a keyboard keycaps (SPACE, ESC, arrows). Drawn as kit-style pieces t
    left). The clock stays (owner, 24 Oct). The score is smaller than the bone count; Pepper's head gets a light rim so
    it reads on the dark road.
 9. **In-level hints:** a small bubble near Pepper with the button glyph and a picture of the action, at most 3 words,
-   gone after the action is done. The portrait panel is for story moments only.
+   gone after the action is done. The portrait panel is for story moments only. (Owner, 6 Nov: "these also need to
+   be in new lighter bubble design".) The hint bubble is the talk lines' cream speech bubble (art/ui/speech.png, its
+   tails stail_*), with the same padding and the same small dark letters (7 px, style speak); button, picture and
+   words on the bubble's centre line, 4 px apart. Placed above her head, else beside her, clear of the HUD's top
+   row and score; the tail's tip ends just outside her box. Nothing covers her.

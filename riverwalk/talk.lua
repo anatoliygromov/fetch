@@ -3,8 +3,8 @@
 --   the words, 13 px, her portrait in a thin gold frame on its side, playing its talking loop, art/portraits, 8
 --   frames, 9 fps, while the line is said), low at the right, or under the HUD when Pepper is low, never over her;
 --   it goes after a few seconds. Pepper's control hints: a small bubble near her (step 3, docs/ui_design.md screen
---   9): the button as the device used last shows it, a picture of the action (T.picFor), at most 3 words; it stays
---   while the hint applies.
+--   9), the same cream speech bubble as the talk lines (owner, 6 Nov): the button as the device used last shows it, a
+--   picture of the action (T.picFor), at most 3 words; it stays while the hint applies.
 --   The nudge: when Pepper has pushed against something for 2 s without getting anywhere, or has stood still for
 --   3 s where a control hint applies, the hint's bubble bounces (or a bubble of its own with the button she needs)
 --   until a button is pressed. It reads Pepper from outside (position, speed, the buttons held) and is never drawn
@@ -149,10 +149,11 @@ function T.layout(line, where, stage)
   return T.bubble(line, stage)
 end
 
--- the hint bubble's words: at most 3 words in one or two rows of the 13 px font (docs/ui_design.md: pictures first).
--- The level files keep their texts (the tests and the zones read them); only what is shown is shortened:
--- "TAP: " goes (a tap is the plain press), "HOLD: X" and "A, B" become two rows without the colon or comma, a row wider
--- than T.ROW_W is split at a space, and SHORT lists the one hint that was longer than 3 words.
+-- the hint bubble's words: at most 3 words in one or two rows of the speech bubble's font (7 px, plain dark, style
+-- speak, as the talk lines; docs/ui_design.md: pictures first). The level files keep their texts (the tests and the
+-- zones read them); only what is shown is shortened: "TAP: " goes (a tap is the plain press), "HOLD: X" and "A, B"
+-- become two rows without the colon or comma, a row wider than T.ROW_W is split at a space, and SHORT lists the one
+-- hint that was longer than 3 words.
 T.SHORT = { ["RUN, HOLD: BIG JUMP"] = { "HOLD", "BIG JUMP" } }
 T.ROW_W = 92
 function T.hintRows(text)
@@ -160,7 +161,7 @@ function T.hintRows(text)
   local t = text:gsub("^TAP: ", "")
   local a, b = t:match("^(.-)[:,] (.+)$")
   if a then return { a, b } end
-  return require("flow").wrap(13, t, T.ROW_W)
+  return require("flow").wrap(T.SAY_SIZE, t, T.ROW_W)
 end
 -- the buttons as the device used last shows them (hud.lua pieces, 13 px)
 T.GLYPHS = { pad = { a = "h_a", b = "h_b", x = "h_x", y = "h_y", down = "g_down", right = "g_right", up = "g_dpad", sniff = "g_l" },
@@ -168,10 +169,16 @@ T.GLYPHS = { pad = { a = "h_a", b = "h_b", x = "h_x", y = "h_y", down = "g_down"
 -- (review fix 3: sniff is taught by a bubble with the L1 shoulder or the Q key, like every other action; review fix 4:
 -- the face buttons are the 15 px hint coins, their letters in ink on a flat face, legible at 1x)
 function T.glyphFor(btn) local G = T.GLYPHS[I.last] or T.GLYPHS.key; return G[btn] or G.a end
-T.B_PAD, T.B_GAP, T.B_PITCH, T.B_AWAY = 6, 4, 15, 4
+-- (owner 6 Nov: "these also need to be in new lighter bubble design") the hint bubble is the talk lines' cream speech
+-- bubble (art/ui/speech.png, a 9-slice with 5 px corners; the tails stail_d / _u / _l / _r): the same padding (6 px
+-- left and right, 5 px top and bottom) and letters; the button, the picture and the words on its centre line, 4 px
+-- apart. B_AWAY: from the bubble to Pepper's box, the tail's reach (7 px), so the tail's tip ends just outside it.
+T.B_PAD_X, T.B_PAD_Y, T.B_GAP, T.B_AWAY = T.SAY_PAD_X, T.SAY_PAD_Y, 4, 7
+T.B_TOP = 34                      -- under the HUD's top row and the score under the bones (its last row is y 32)
 -- the bubble for a line { btn, text, pic } near Pepper: above her head (tail down), else beside her (tail toward
--- her), else above at the screen's top, else under her; the first that is on screen and clear of her sprite
--- (T.pepperRect) and, above, clear of the HUD's top row. Returns { x0, y0, x1, y1, side, tx, ty, rows, ... }.
+-- her), else above at the screen's top, else under her, else beside her up to the margin; the first that is on
+-- screen and clear of her sprite (T.pepperRect) and, above and beside, clear of the HUD's top row.
+-- Returns { x0, y0, x1, y1, side, tx, ty, rows, ... }.
 function T.bubble(line, stage)
   local rows = T.hintRows(line.text)
   local pic = T.picFor(line)
@@ -180,54 +187,67 @@ function T.bubble(line, stage)
   local pw, ph = 0, 0
   if pic then pw, ph = U.body("pic_" .. pic) end
   local tw = 0
-  for _, r in ipairs(rows) do tw = math.max(tw, U.sayW(13, r)) end
-  local th = (#rows - 1) * T.B_PITCH + U.sayH(13)
-  local w = T.B_PAD + gw + T.B_GAP + (pic and pw + T.B_GAP + 1 or 0) + tw + T.B_PAD
-  local h = math.max(th, ph, gh) + 2 * T.B_PAD
+  for _, r in ipairs(rows) do tw = math.max(tw, UF.width(T.SAY_SIZE, r)) end
+  local th = (#rows - 1) * T.SAY_PITCH + UF.height(T.SAY_SIZE)
+  local w = T.B_PAD_X + gw + T.B_GAP + (pic and pw + T.B_GAP or 0) + tw + T.B_PAD_X
+  local h = math.max(th, ph, gh) + 2 * T.B_PAD_Y
   local L = { rows = rows, pic = pic, glyph = gl, gw = gw, gh = gh, pw = pw, ph = ph, tw = tw, th = th, w = w, h = h }
   if not stage then L.x0, L.y0, L.x1, L.y1, L.by = 0, 0, w, h, 0; return L end
   local px0, py0, px1, py1 = T.pepperRect(stage)
   local pcx = (px0 + px1) / 2
   local A = T.B_AWAY
   local function clampX(x) return math.max(U.M, math.min(320 - U.M - w, x)) end
-  local function clampY(y) return math.max(U.M, math.min(240 - U.M - h, y)) end
+  local function clampY(y, y0) return math.max(y0 or U.M, math.min(240 - U.M - h, y)) end
   local hy = py0 + 14                                             -- her head's height on the sprite
+  local sy = math.floor(hy - h / 2 + 0.5)
+  -- (6 Nov) above and beside her the bubble keeps under the HUD's top row and the score (T.B_TOP); only when nothing
+  -- else fits may it go up to the margin (the light bubble is smaller: it fits beside her where the dark one did not)
   local cands = {
-    { "down", clampX(math.floor(pcx - w / 2 + 0.5)), py0 - A - h, 30 },
-    { "left", px1 + A, clampY(math.floor(hy - h / 2 + 0.5)) },          -- (right of her, the tail on its left)
-    { "right", px0 - A - w, clampY(math.floor(hy - h / 2 + 0.5)) },
+    { "down", clampX(math.floor(pcx - w / 2 + 0.5)), py0 - A - h, T.B_TOP },
+    { "left", px1 + A, clampY(sy, T.B_TOP), T.B_TOP },                 -- (right of her, the tail on its left)
+    { "right", px0 - A - w, clampY(sy, T.B_TOP), T.B_TOP },
     { "down", clampX(math.floor(pcx - w / 2 + 0.5)), py0 - A - h, U.M },
     { "up", clampX(math.floor(pcx - w / 2 + 0.5)), py1 + A },
+    { "left", px1 + A, clampY(sy) },
+    { "right", px0 - A - w, clampY(sy) },
   }
   for _, c in ipairs(cands) do
     local x, y = c[2], c[3]
     if x >= U.M and x + w <= 320 - U.M and y >= (c[4] or U.M) and y + h <= 240 - U.M
       and not (x < px1 and x + w > px0 and y < py1 and y + h > py0) then
       L.x0, L.y0, L.x1, L.y1, L.by, L.side = x, y, x + w, y + h, y, c[1]
-      if c[1] == "down" or c[1] == "up" then L.tx = math.max(x + 8, math.min(x + w - 9, math.floor(pcx + 0.5)))
-      else L.ty = math.max(y + 6, math.min(y + h - 7, math.floor(hy + 0.5))) end
+      -- the tail's tip column (down, up: the tails lean left, the tip in their first column) or its top row (left,
+      -- right: the tip in its 6th row), on the bubble's straight edge, as near her middle or her head as it can be
+      if c[1] == "down" or c[1] == "up" then L.tx = math.max(x + 4, math.min(x + w - 10, math.floor(pcx + 0.5)))
+      else L.ty = math.max(y + 2, math.min(y + h - 8, math.floor(hy + 0.5) - 5)) end
       return L
     end
   end
   return nil
 end
--- draws a bubble laid out by T.bubble, moved by dy (the nudge's bounce, the rise as it appears)
-
+-- draws a bubble laid out by T.bubble, moved by dy (the nudge's bounce, the rise as it appears). Each tail's base
+-- row or column lies over the bubble's outline (cream there), as in the talk lines (T.drawCorner).
 function T.drawBubble(L, dy)
   lg.push(); lg.translate(0, dy or 0)
   local x, y, w, h = L.x0, L.y0, L.w, L.h
-  U.nine("bubble", x, y, w, h, 4, false, "bubble")
-  if L.side == "down" then U.put("tail_d", L.tx - 4, y + h - 2, "tail")
-  elseif L.side == "up" then U.put("tail_u", L.tx - 4, y - 3, "tail")
-  elseif L.side == "left" then U.put("tail_l", x - 3, L.ty - 4, "tail")
-  elseif L.side == "right" then U.put("tail_r", x + w - 2, L.ty - 4, "tail") end
+  U.nine("speech", x, y, w, h, 5, false, "bubble")
+  if L.side == "down" then U.put("stail_d", L.tx, y + h - 1, "tail")
+  elseif L.side == "up" then U.put("stail_u", L.tx, y - 7, "tail")
+  elseif L.side == "left" then U.put("stail_l", x - 7, L.ty, "tail")
+  elseif L.side == "right" then U.put("stail_r", x + w - 1, L.ty, "tail") end
   local cy = y + (h - 1) / 2
-  local cx = x + T.B_PAD
+  local cx = x + T.B_PAD_X
   U.put(L.glyph, cx, math.floor(cy - (L.gh - 1) / 2 + 0.5), "glyph")
   cx = cx + L.gw + T.B_GAP
-  if L.pic then U.put("pic_" .. L.pic, cx, math.floor(cy - (L.ph - 1) / 2 + 0.5), "pic"); cx = cx + L.pw + T.B_GAP + 1 end
+  if L.pic then U.put("pic_" .. L.pic, cx, math.floor(cy - (L.ph - 1) / 2 + 0.5), "pic"); cx = cx + L.pw + T.B_GAP end
   local ty = math.floor(cy - (L.th - 1) / 2 + 0.5)
-  for i, r in ipairs(L.rows) do U.say(13, "cream", r, math.floor(cx + (L.tw - U.sayW(13, r)) / 2 + 0.5), ty + (i - 1) * T.B_PITCH, "hint") end
+  local rh = UF.height(T.SAY_SIZE)
+  for i, r in ipairs(L.rows) do
+    local rw = UF.width(T.SAY_SIZE, r)
+    local rx, ry = math.floor(cx + (L.tw - rw) / 2 + 0.5), ty + (i - 1) * T.SAY_PITCH
+    UF.print(T.SAY_SIZE, "speak", r, rx, ry)
+    U.logBox("hint", rx, ry, rx + rw - 1, ry + rh - 1)
+  end
   lg.pop()
 end
 -- the bounce while a nudge asks for this button (up and down 0 to 3 px, never toward her)
