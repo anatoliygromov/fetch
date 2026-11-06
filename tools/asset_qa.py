@@ -96,7 +96,7 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          # heights the true-scale fronts allow), the far spire, and the pieces drawn in code until now
          "town_roof_loggia": (122, 26, 0, 0), "town_roof_gallery88": (90, 32, 0, 0), "town_roof_gallery72": (74, 32, 0, 0),
          "town_roof_flower_roof": (90, 14, 0, 0), "town_roof_ledge": (16, 9, 0, 0), "town_footbridge": (162, 52, 0, 0),
-         "spire_riddarholmen": (36, 260, 0, 0), "town_balcony56": (58, 57, 0, 0), "town_balcony64": (66, 57, 0, 0),
+         "spire_riddarholmen": (36, 260, 0, 0), "town_balcony56": (58, 60, 0, 0), "town_balcony64": (66, 60, 0, 0),
          "town_spring": (36, 10, 0, 0), "town_stopsign": (19, 101, 0, 0), "town_jet": (24, 88, 0, 0),
          "town_tier": (50, 58, 0, 0), "town_bowl": (34, 82, 0, 0), "town_rim": (18, 18, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",

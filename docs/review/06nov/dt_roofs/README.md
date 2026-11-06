@@ -35,3 +35,15 @@ camera y 120 and 240), `before/` (the same spots on the base), `sheets/` (5x bef
 Card notes for the reviewer: the stop sign sits under the shelter roof and behind its glass (shelter drawn after it);
 the coil WARN is the squash (frames of 7 to 10 rows); the flower boxes' blooms cover the ledge's face rows 2 to 5 (never
 its top row).
+
+## Fix round 1 (review art/gen/reviews/dt_roofs.md, 11 of 15 PASS)
+
+| Finding | Change |
+| --- | --- |
+| town_roof_gallery72 Shapes: a 10 px pitch left 1-3 px slivers at the ends | Both galleries: pedestals 10, vase balusters 10 x 20 (one part), a 16 px pitch, every gap 6 px at the belly, the end gaps included (90 = 2 x 10 + 4 x 16 + 6; 74 = 2 x 10 + 3 x 16 + 6). gallery88 changed with it (its WARN was the same end gaps), so it goes back to review too |
+| town_balcony56 / 64 Read: a wall of bars, a birdcage | An open railing: a thick handrail, a bottom rail, four posts, one iron ring (12 x 12, drawn once) on a short bar in each of three panels; the wall reads through. The slab is 8 rows, the corbels stepped. 58 / 66 x 60 (was 57) |
+| town_spring Outline and Read: open at the bottom, a red tassel | A grey steel coil: three turns (a lit wire row over a narrower dark row, so the silhouette steps like a spring), closed end plates, ink all round in every frame (h 7 to 10) |
+
+Pipeline: all 15 specs in `art/gen/jobs/` (family dt_roofs, tier C), spec, built and ingame done; review done for the 10
+unchanged PASS pieces (the reviewer's sections split into `art/gen/reviews/NAME.md`, text unchanged, one item per line).
+Waiting for review: gallery88, gallery72, balcony56, balcony64, spring.

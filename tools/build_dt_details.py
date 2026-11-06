@@ -4,11 +4,12 @@ drawn once and stamped on integer grids (art/dt-roofs-06nov, tier C; BIBLE 3: 46
 alpha, no resampling, 0 credits). Every colour is from art/palettes/downtown.gpl: the sample screen's ink, granite,
 steel and copper ramps (tools/build_dt_street.py), its reds and greens.
 
-  town_balcony56.png   play, outlined (scene.lua drawBalcony; 58 x 57): a BALCONY 56 px wide. The iron railing at its
-  town_balcony64.png   back, 1 m (46 px, Sc.BALCONY_RAIL) over the slab: a top rail, a frieze of rings, square bars on an
-                       8 px pitch, a bottom rail; the stone slab (its top row is the box's top, the ink row over it the
+  town_balcony56.png   play, outlined (scene.lua drawBalcony; 58 / 66 x 60): a BALCONY 56 or 64 px wide. The iron railing
+  town_balcony64.png   at its back, 1 m (46 px, Sc.BALCONY_RAIL) over the slab, open: a thick handrail, a bottom rail,
+                       four posts, one iron ring per panel on a short bar; the stone slab, 8 rows (its ink row is the
                        box's top - 1) and two stepped corbels under it. Drawn at x0 - 1, y0 - 47.
-  town_spring.png      play, outlined (scene.lua Sc.spring): the springy awning's and parasol's coil, 9 px wide, a strip of
+  town_spring.png      play, outlined (scene.lua Sc.spring): the springy awning's and parasol's grey steel coil (three
+                       turns, closed end plates, ink round every frame), 9 px wide, a strip of
                        4 frames 9 x 10 for the heights 7, 8, 9 and 10 (it is squashed by 2 px as it launches her); the
                        frame for height h is drawn with its top on the awning's underside, rows 0 .. h - 1.
   town_stopsign.png    back, decoration (arthooks.lua stopSign; faded by the game, no outline): the tram stop sign at true
@@ -84,54 +85,70 @@ STONE = {"k": "ink", "a": "g1", "b": "g2", "c": "g3", "d": "g4"}
 
 # ---- the balcony ---------------------------------------------------------------------------------------------------
 RAIL = 46                                                                 # scene.lua Sc.BALCONY_RAIL: 1 m
-RING = [".kkk.", "k...k", "k...k", ".kkk."]                                 # the frieze's ring, iron, drawn once: it fills a
-                                                                          # 5 px gap and is held by the bars either side
-CORBEL = ["kabbbck", "kabbbck", ".kabck.", ".kabck.", "..kbk..", "...k..."]   # under the slab: steps in to the wall
+# (fix round 1, 6 Nov: a wall of bars read as a birdcage.) An open Stockholm railing: a thick handrail and a bottom
+# rail, a post at each end and between panels, and in each panel one iron ring held by a short bar above and below,
+# so the wall behind reads as wall. The ring is drawn once (12 x 12, a 3 px band: ink, lit iron, ink), clear of the posts.
+def ring12():
+    rows = []
+    for y in range(12):
+        r = ""
+        for x in range(12):
+            d = np.hypot(x + 0.5 - 6, y + 0.5 - 6)
+            r += ("a" if 4.0 <= d < 5.0 and (x + y) < 11 else "b") if 3.0 <= d < 6.0 else "."
+        rows.append(r)
+    return rows
+RING12 = ring12()
+CORBEL = ["kabbbbck", "kabbbbck", ".kabbck.", ".kabbck.", "..kbck..", "..kkkk.."]   # stepped in under the slab
+SLAB = 8                                                                  # the slab's rows: ink, lit, stone x 4, shade, ink
 
 
 def balcony(bw):
-    """a BALCONY bw wide: image bw + 2 x 57, top row = the box's top - 47"""
-    W, H = bw + 2, RAIL + 11
+    """a BALCONY bw wide: image bw + 2 x 60, its row RAIL the slab's ink row (the box's top - 1)"""
+    W, H = bw + 2, RAIL + SLAB + 6
     cv = Cv(W, H)
-    s = RAIL                                                              # the slab's ink row (the box's top - 1)
-    # the railing, set 3 px in from the slab's ends: square bars of 3 px (ink, lit, ink) on an 8 px pitch, the end bars
-    # its posts; a top rail (rows 0-3), a frieze of iron rings (rows 5-8) under a thin rail (rows 10-11), a bottom
-    # rail (rows s - 4 .. s - 1). n bars span 8 n - 5 px, so one end margin is 1 px wider (3 and 4 px)
-    n = (W - 6 + 5) // 8
-    xa = (W - (8 * n - 5)) // 2; xb = xa + 8 * n - 6
-    xs = [xa + 8 * i for i in range(n)]
-    cv.rect(xa, 0, xb, 3, "s3"); cv.rect(xa + 1, 1, xb - 1, 1, "s1"); cv.rect(xa + 1, 2, xb - 1, 2, "s2")
-    cv.rect(xa, 10, xb, 11, "s3"); cv.rect(xa + 1, 10, xb - 1, 10, "s2")
-    cv.rect(xa, s - 4, xb, s - 1, "s3"); cv.rect(xa + 1, s - 3, xb - 1, s - 3, "s2")
-    for x in xs: cv.rect(x, 0, x + 2, s - 1, "s3"); cv.rect(x + 1, 1, x + 1, s - 2, "s2")
-    for x in xs[:-1]:                                                     # a ring of iron in each gap of the frieze
-        cv.keyed(RING, {"k": "s3"}, x + 3, 5)
-    # the slab: ink, lit, stone, stone, shade, ink (rows s .. s + 5), over the whole width
-    cv.rect(0, s, W - 1, s + 5, "g2"); cv.rect(1, s + 1, W - 2, s + 1, "g1"); cv.rect(1, s + 4, W - 2, s + 4, "g3")
-    for cx in (5, W - 12):                                                # two corbels, 7 wide
-        cv.keyed(CORBEL, STONE, cx, s + 5)
+    s = RAIL
+    # three panels between four posts (3 px): 56 -> panels of 14 over x 2-55, 64 -> panels of 16 over x 3-62
+    span = W - 4 if bw == 56 else W - 6
+    xa = (W - span) // 2
+    P = (span - 12) // 3
+    assert 3 * P + 12 == span, bw
+    posts = [xa + i * (P + 3) for i in range(4)]
+    cv.rect(xa, 0, xa + span - 1, 4, "s3"); cv.rect(xa + 1, 1, xa + span - 2, 1, "s1"); cv.rect(xa + 1, 2, xa + span - 2, 3, "s2")   # handrail
+    cv.rect(xa, s - 4, xa + span - 1, s - 1, "s3"); cv.rect(xa + 1, s - 3, xa + span - 2, s - 3, "s2")   # bottom rail
+    for x in posts: cv.rect(x, 0, x + 2, s - 1, "s3"); cv.rect(x + 1, 1, x + 1, s - 2, "s2")
+    ry = (5 + s - 5) // 2 - 6                                             # the ring centred between the rails
+    for x in posts[:-1]:
+        cx = x + 3 + P // 2                                               # the panel's middle (2 columns for an even panel)
+        cv.keyed(RING12, {"a": "s2", "b": "s3"}, cx - 6, ry)
+        cv.rect(cx - 1, 5, cx, ry, "s3"); cv.rect(cx - 1, ry + 11, cx, s - 5, "s3")   # held above and below
+    cv.rect(0, s, W - 1, s + SLAB - 1, "g2"); cv.rect(1, s + 1, W - 2, s + 1, "g1"); cv.rect(1, s + SLAB - 2, W - 2, s + SLAB - 2, "g3")
+    for cx in (5, W - 13):                                                # two corbels, 8 wide
+        cv.keyed(CORBEL, STONE, cx, s + SLAB)
     cv.outline()
-    # the corbels' ink meets the slab: keep the slab's bottom ink row only outside them
-    for cx in (5, W - 12):
-        cv.keyed(CORBEL[:1], STONE, cx, s + 5)
-        cv.put(cx, s + 5, "ink"); cv.put(cx + 6, s + 5, "ink")
     return cv
 
 
 # ---- the springy coil ------------------------------------------------------------------------------------------------
-TURN = ["kAAbbbbbk", "kbbbbbcck"]                                         # one turn of the coil: lit top left, shade right
-TURN1 = ["kAAbbbcck"]                                                     # a squashed turn
+# (fix round 1, 6 Nov: the red bands read as a tassel and frames 0-2 were open at the bottom.) A grey steel coil, front
+# on: three turns, each a full-width lit wire row over a narrower dark row (the back of the coil showing between the
+# turns), so the silhouette steps in and out like a spring; a closed end plate on top and below; ink all round in
+# every frame. The turn is drawn once.
+TURN = ["kaaaaabbk", ".kccccck."]                                        # lit wire (lit left), the dark back between turns
+TURN1 = ["kaaaabbbk"]                                                     # a turn pressed flat (the squashed frame)
+PLATE = ["kbbbbbbbk"]                                                     # the closed end coil
 
 
 def spring_frame(h):
-    rows = {10: ["k", "T", "k", "T", "k", "T", "k"], 9: ["k", "T", "k", "T", "k", "T"], 8: ["k", "T", "k", "t", "k", "T"],
-            7: ["k", "t", "k", "t", "k", "T"]}[h]
+    rows = {10: ["k", "P", "T", "T", "T", "P", "k"], 9: ["k", "P", "T", "T", "T", "k"], 8: ["k", "T", "T", "T", "k"],
+            7: ["k", "T", "T", "t", "k"]}[h]
+    key = {"k": "ink", "a": "s1", "b": "s2", "c": "s4"}
     cv = Cv(9, 10)
     y = 0
     for r in rows:
         if r == "k": cv.rect(0, y, 8, y, "ink"); y += 1
-        elif r == "T": cv.keyed(TURN, {"k": "ink", "A": "r1", "b": "r2", "c": "r3"}, 0, y); y += 2
-        else: cv.keyed(TURN1, {"k": "ink", "A": "r1", "b": "r2", "c": "r3"}, 0, y); y += 1
+        elif r == "T": cv.keyed(TURN, key, 0, y); y += 2
+        elif r == "P": cv.keyed(PLATE, key, 0, y); y += 1
+        else: cv.keyed(TURN1, key, 0, y); y += 1
     assert y == h, (h, y)
     return cv
 

@@ -124,7 +124,7 @@ what it drew before (the code fallback stays).
 | `town_roof_ledge.png` | 16 x 9 | as before, a 3-slice: one modillion per 8 px middle tile |
 | `town_footbridge.png` | 162 x 52 | as before |
 | `spire_riddarholmen.png` | 36 x 260 | as before (far, the shore haze at the shore's 0.70); a silhouette in 8 colours |
-| `town_balcony56.png`, `town_balcony64.png` | 58 x 57, 66 x 57 | a BALCONY w wide (scene.lua drawBalcony): at x0 - 1, y0 - 1 - `Sc.BALCONY_RAIL` (46); the slab's ink row is row 46 |
+| `town_balcony56.png`, `town_balcony64.png` | 58 x 60, 66 x 60 | a BALCONY w wide (scene.lua drawBalcony): at x0 - 1, y0 - 1 - `Sc.BALCONY_RAIL` (46); the slab's ink row is row 46; an open railing (fix round 1) |
 | `town_spring.png` | 36 x 10 | the coil (scene.lua `Sc.spring`): 4 frames 9 x 10 for h = 7, 8, 9, 10; rows 0 .. h - 1 of frame h - 7 at x - 4, y |
 | `town_stopsign.png` | 19 x 101 | the tram stop sign (arthooks.lua stopSign), faded as back decoration: column 9 on the stop's x + 1, bottom on the rail line |
 | `town_jet.png` | 24 x 88 | the fountain's water (scene.lua drawTerrainArt): 4 frames 6 x 88 at 20 fps; left at the TIER's x0 - 7, the right one mirrored at x1 + 7, top at the TIER's top + 3 |

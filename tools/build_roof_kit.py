@@ -190,25 +190,37 @@ def ledge():
     keyed(cv, LEDGE_L, STONE_KEY, 0, 0); keyed(cv, LEDGE_M, STONE_KEY, 4, 0); keyed(cv, LEDGE_R, STONE_KEY, 12, 0)
     return cv
 
-# a vase baluster, 8 x 20, drawn once: a block under the rail, a neck, the belly (lit on the left), a neck, a foot
-BALUSTER8 = ["kabbbbck", "kabbbbck", ".kabbck.", "..kbck..", "..kbck..", "..kbck..", ".kabbck.", ".kabbck.",
-             "kaabbbck", "kaabbbck", "kaabbbck", "kaabbbck", "kabbbbck", ".kabbck.", "..kbck..", "..kbck..",
-             ".kabbck.", "kabbbbck", "kabbbbck", "kbbbbcck"]
+# a vase baluster, 10 x 20, drawn once: a block under the rail, a neck, the belly (lit on the left), a neck, a foot.
+# (fix round 1, 6 Nov: the 10 px pitch left slivers at the 72 gallery's ends.) Pedestals 10, balusters 10, every gap 6
+# at the belly, ends included: a pitch of 16 fits both galleries whole (90 = 2 x 10 + 4 x 16 + 6, 74 = 2 x 10 + 3 x 16 + 6)
+BAL_W = [10, 10, 8, 6, 6, 6, 8, 8, 10, 10, 10, 10, 10, 8, 6, 6, 8, 10, 10, 10]
+def baluster_rows():
+    rows = []
+    for i, w in enumerate(BAL_W):
+        lit = 2 if 8 <= i <= 11 else 1                                # the belly's lit side is 2 px
+        core = "k" + "a" * lit + "b" * (w - 3 - lit) + "c" + "k"
+        if i == len(BAL_W) - 1: core = "k" + "b" * (w - 4) + "cc" + "k"   # the foot's base in shade
+        pad = (10 - w) // 2
+        rows.append("." * pad + core + "." * pad)
+    return rows
+BALUSTER10 = baluster_rows()
+GAL_PED, GAL_PITCH, GAL_GAP = 10, 16, 6
 
 def gallery(w):
-    """a balustrade 32 rows (0.7 m): the handrail (rows 0-5, Pepper's edge), vase balusters on a 10 px pitch, the plinth
-    (rows 26-31), a pedestal with a sunk panel at each end; one ink outline round it"""
+    """a balustrade 32 rows (0.7 m): the handrail (rows 0-5, Pepper's edge), vase balusters on a 16 px pitch with the
+    same 6 px gap at the ends as between them, the plinth (rows 26-31), a pedestal with a sunk panel at each end"""
     cv = Cv(w, 32)
     cv.rect(0, 0, w - 1, 5, "g2"); stone_band(cv, 1, w - 2, 1, 4)
     cv.rect(0, 26, w - 1, 31, "g2"); stone_band(cv, 1, w - 2, 27, 4)
-    for px in (0, w - 7):                                             # the end pedestals
-        cv.rect(px, 0, px + 6, 31, "g2"); cv.rect(px + 1, 1, px + 1, 30, "g1"); cv.rect(px + 5, 1, px + 5, 30, "g3")
-        cv.rect(px + 1, 1, px + 5, 1, "g1")
-        cv.rect(px + 2, 8, px + 4, 22, "g3"); cv.rect(px + 2, 23, px + 4, 23, "g1")   # the sunk panel, its lit sill
-    inner0, inner1 = 7, w - 8
-    n = (inner1 - inner0 + 1 - 8) // 10 + 1                           # on a 10 px pitch, centred
-    start = inner0 + (inner1 - inner0 + 1 - ((n - 1) * 10 + 8)) // 2
-    for i in range(n): keyed(cv, BALUSTER8, STONE_KEY, start + i * 10, 6)
+    P = GAL_PED
+    for px in (0, w - P):                                             # the end pedestals
+        cv.rect(px, 0, px + P - 1, 31, "g2"); cv.rect(px + 1, 1, px + 1, 30, "g1"); cv.rect(px + P - 2, 1, px + P - 2, 30, "g3")
+        cv.rect(px + 1, 1, px + P - 2, 1, "g1")
+        cv.rect(px + 3, 8, px + P - 4, 22, "g3"); cv.rect(px + 3, 23, px + P - 4, 23, "g1")   # the sunk panel, its lit sill
+    span = w - 2 * P
+    n = (span - GAL_GAP) // GAL_PITCH
+    assert n * GAL_PITCH + GAL_GAP == span, (w, span)                  # whole balusters, equal gaps
+    for i in range(n): keyed(cv, BALUSTER10, STONE_KEY, P + GAL_GAP + i * GAL_PITCH, 6)
     cv.outline("ink")
     return cv
 
