@@ -2753,8 +2753,44 @@ function Sc.townJet()
   return JET
 end
 -- terrain set pieces drawn over the path (after the ground): City Park's slide, Downtown's fountain spout and jets
+-- (night 6 Nov, cp track; concept a) the path's end at a park pond: a grassy shoulder instead of a sawn cut. The
+-- path band (its rows from the back edge + 1 to its front edge) ends 4 px before the water in a rounded corner, and
+-- the corner is the lawn (its lit lip along the curve); the bank's face under it, the last 3 columns, is grass down
+-- to the shore's damp and wet earth, the outer column a shade darker (no ink: decoration). Pepper's edge and the
+-- boxes are unchanged (she walks on to the edge on the grass); drawn after the ground, before her.
+function Sc.drawPondShoulders(world, camx)
+  local ox = math.floor(camx)
+  local yt, yf = Sc.FOOT - 3, Sc.FOOT + 16                         -- the path band's first and last rows (ground rows 9-28)
+  local LIP, LAWN, DK = BANK.lip, BANK.lawn, hex("7d7834")
+  local function px(x, y, c) lg.setColor(c); lg.rectangle("fill", x - ox, y, 1, 1) end
+  for _, p in ipairs(pools(world)) do
+    if p.x1 - ox > -16 and p.x0 - ox < 336 then
+      local wt = p.y0 - Sc.POND_RISE
+      for _, e in ipairs({ { p.x0 - 1, -1 }, { p.x1, 1 } }) do      -- the solid column next to the water, then outwards
+        for d = 0, 12 do
+          local x = e[1] + e[2] * d
+          local top = yt                                              -- the grass's top row in this column
+          if d > 4 then top = yf - math.floor((yf - yt) * math.sqrt(math.max(0, 1 - ((d - 4) / 8) ^ 2)) + 0.5) end
+          if top <= yf then
+            for y = top, yf do px(x, y, y == top and LIP or LAWN) end
+            if (x % 3 == 0) and top > yt then px(x, top - 1, LAWN) end   -- a tuft over the curve
+          end
+          if d < 3 then                                                -- the bank's face down to the shore
+            for y = yf + 1, wt + 6 do
+              local c = y < wt + 1 and LAWN or (y < wt + 3 and BANK.damp or (y < wt + 5 and BANK.wet or BANK.foot))
+              if d == 0 then c = (y < wt + 1) and DK or BANK.foot end
+              px(x, y, c)
+            end
+          end
+        end
+      end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
 function Sc.drawTerrainArt(def, camx, t)
   local T = Sc.townArt(def.art)
+  if def.art == "park" and Sc.world then Sc.drawPondShoulders(Sc.world, camx) end
   if def.art == "park" then
     local s = named(def, "SLIDE")
     if s and s.x1 - camx > -40 and s.x0 - camx < 360 then at(T.slide, s.x0 - camx - 1, s.y0 - 1) end
