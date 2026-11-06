@@ -1,30 +1,32 @@
 {
  "name": "cp_oak",
  "size": [
-  388,
-  343
+  506,
+  511
  ],
- "render": "art/gen/renders/cp_oak_r1b.png",
- "cut_by": "tools/recut_cp_oak.py: tools/cut_cp_tree.py --leaf 5 --bark 4 --rim-lum 60 --mode 2, tools/polish_cp_trees.py, then the round 1 rules on the new colours (edits.json \"recut\")",
- "colours_in": 9,
+ "render": "art/gen/renders/cp_oak_r2a_raw.png (job 55457888, variant a, asset 1dad2249)",
+ "cut_by": "tools/grid4_cut.py (pitch 4, phase (0,2), 87 % clean cells) then tools/cut_cp_tree.py --leaf 8 --bark 5 --rim-lum 60 --mode 1, tools/polish_cp_trees.py cp_oak (glint, fringe, spike), tools/fix_cp_oak_r4.py (r4-r4d)",
+ "colours_in": 10,
  "measures_px": {
-  "trunk_20px_up": 98,
-  "trunk_50px_up": 55,
-  "trunk_80px_up": 54,
-  "lowest_leaf_px_up": 7,
-  "crown_width": 388,
+  "trunk_20px_up": 97,
+  "trunk_50px_up": 68,
+  "trunk_80px_up": 60,
+  "trunk_110px_up": 58,
+  "trunk_140px_up": 52,
+  "lowest_leaf_px_up": 150,
+  "crown_width": 506,
   "size": [
-   388,
-   343
+   506,
+   511
   ],
-  "colours": 9,
-  "top_cut_by_frame": false
+  "colours": 10,
+  "top_cut_by_frame": true
  },
- "lone_changed": 248,
- "blotches_merged": 19,
+ "lone_changed": 897,
+ "blotches_merged": 56,
  "fails": [],
  "waived": [
-  "trunk 54-55 px at 50-80 px up (old oak spec 46, big oak 60): owner question on the board",
-  "re-cut 5 Nov after three review rounds of pixel fixes (round 1-3 files in art/source/cp_oak/round3/)"
+  "trunk 52-68 px at 50-140 px up (spec 46, 1.1-1.3 m): GPT 2.5 drew it wider than the 29 px blockout column, as for the lime (36 vs 23). The asset is at its 3 paid jobs, so no regeneration: owner question on the board, as in round 2.",
+  "crown 506 px (11 m; spec 470): the render filled the 512 frame. Its sides are not cut flat (columns 0-1 and 506+ empty)."
  ]
 }
