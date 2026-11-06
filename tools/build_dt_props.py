@@ -51,6 +51,9 @@ C.update(
     zl=(204, 166, 88), zm=(160, 124, 60), zd=(104, 78, 40),
     # produce: apples, carrots, lettuces (the lettuce greens also make the carrot tops); the stall's green paint
     al=(232, 98, 76), am=(192, 46, 46), ad=(130, 30, 36),
+    # (final review: the apple crates repeat) pears, bread, a checked cloth
+    q1=(214, 214, 104), q2=(168, 176, 64), q3=(112, 122, 44),
+    c1=(196, 140, 72), c2=(160, 104, 48), c3=(110, 66, 32),
     ol=(246, 150, 60), om=(218, 108, 34),
     ll=(156, 208, 96), lm=(108, 168, 72), ld=(70, 122, 56),
     pl=(108, 146, 98), pm=(84, 120, 78), ps=(62, 94, 62), pd=(44, 68, 48),
@@ -219,7 +222,19 @@ def heap(cv, x0, x1, ytop, motif, key, step=4, rows=2):
         for x in xs: pmap(cv, motif, key, x, y)
 
 
-def apple_crate(w):
+PEAR = ["..q..",
+        ".qQq.",
+        "qQqqm",
+        ".qmm."]
+PEAR_K = {"q": "q2", "Q": "q1", "m": "q3"}
+LOAF = [".cCc.",
+        "cCccm",
+        "cccmm",
+        ".mmm."]
+LOAF_K = {"c": "c2", "C": "c1", "m": "c3"}
+FILLS = {"apples": (APPLE, APPLE_K), "pears": (PEAR, PEAR_K), "bread": (LOAF, LOAF_K)}
+
+def apple_crate(w, fill="apples"):
     """one apple crate for a CRATES box w wide: w + 2 x 21 (rows 0-3 the apples over the rim, row 4 the ink, 15 rows
     of crate, row 20 the ink it shares with the crate under it). The bread crates' build: lit top rail, hand slot,
     an opening of apples, the middle slat, a low opening, the bottom rail, posts lit left and shaded right"""
@@ -227,15 +242,25 @@ def apple_crate(w):
     cv = Cv(W, H)
     T = 4                                                                    # the crate's top ink row
     iw = W - 6; n = (iw + 1) // 6; x0 = 3 + (iw - (n * 6 - 1)) // 2
-    for i in range(n): pmap(cv, APPLE[:3], APPLE_K, x0 + i * 6, 1)          # the apples' tops over the rim
+    mot, key = FILLS.get(fill, FILLS["apples"])
+    if fill != "cloth":
+        for i in range(n): pmap(cv, mot[:3], key, x0 + i * 6, 1)              # the fruit's tops over the rim
     cv.rect(1, T + 1, W - 2, T + 15, "wm")
     cv.rect(1, T + 1, W - 2, T + 1, "wl")                                    # top rail
     cv.rect(W // 2 - 4, T + 2, W // 2 + 3, T + 2, "wd")                      # the hand slot
     o1, o2, mid = (T + 4, T + 7), (T + 10, T + 12), T + 8
     for a, b in (o1, o2): cv.rect(3, a, W - 4, b, "wi")
     # apples in the openings (the same apple, on a 4 px pitch)
-    for i in range(n): pmap(cv, APPLE, APPLE_K, x0 + i * 6, o1[0])
-    for i in range(n): pmap(cv, APPLE[:3], APPLE_K, x0 + i * 6, o2[0])
+    if fill == "cloth":                                                      # empty, a checked cloth over its
+        for y in range(1, T + 8):                                            # rim and down the front opening
+            for x in range(3, W - 3):
+                if y <= 3 and (x < 4 or x > W - 5): continue
+                if y >= T and y < o1[0]: continue
+                cv.put(x, y, "rm" if ((x // 3) + (y // 3)) % 2 else "kl")
+        cv.rect(3, o2[0], W - 4, o2[1], "wi")
+    else:
+        for i in range(n): pmap(cv, mot, key, x0 + i * 6, o1[0])
+        for i in range(n): pmap(cv, mot[:3], key, x0 + i * 6, o2[0])
     cv.rect(1, mid, W - 2, mid, "wl"); cv.rect(1, mid + 1, W - 2, mid + 1, "ws")   # the middle slat
     cv.rect(1, T + 13, W - 2, T + 13, "wl"); cv.rect(1, T + 15, W - 2, T + 15, "ws")   # bottom rail
     cv.rect(1, T + 1, 1, T + 15, "wl"); cv.rect(2, T + 2, 2, T + 15, "wm")          # posts
@@ -335,7 +360,9 @@ def build():
     out["town_kiosk"] = kiosk()
     out["town_pedestal"] = pedestal()
     out["town_stall"] = stall()
-    for w in (28, 32, 36): out[f"town_crate_front{w}"] = apple_crate(w)
+    for w in (28, 32, 36):
+        out[f"town_crate_front{w}"] = apple_crate(w)
+        for f in ("pears", "bread", "cloth"): out[f"town_crate_front{w}_{f}"] = apple_crate(w, f)
     out["town_crate_front"] = apple_crate(32)
     out["town_sign"] = river_sign()
     return out
