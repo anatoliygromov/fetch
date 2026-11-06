@@ -1,6 +1,6 @@
 {
  "name": "rw_rower",
- "model": "SpriteCook Pixel Engine Image (exact 16-128 px, no references)",
+ "model": "SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid)",
  "modelId": null,
  "settings": null,
  "inputs": [
@@ -10,22 +10,24 @@
  "prompt_file": "art/gen/prompts/rw_rower.txt",
  "k": null,
  "frame": [
-  150,
-  112
+  256,
+  256
  ],
- "credits": 12,
+ "credits": 48,
  "tool": "spritecook",
- "family": "rw_water",
+ "family": "rw_harbour_06nov",
  "tier": "A",
  "slot": {
-  "file": "riverwalk/art/scene/rower.png",
-  "where": "River Walk screens 8-9: over each ROWBOAT hull at its middle thwart (Sp.drawRowboat), animated by the rowing loop (sc_anim, 8 frames, 26 credits, after this still)"
+  "file": "riverwalk/art/scene/rw_rower.png",
+  "where": "River Walk screens 8-9 (the harbour): the rower on the middle thwart of each ROWBOAT (level/riverwalk.lua movers), drawn by Sp.drawRowboat (setpieces.lua) between the hull's far side and its near side, so the gunwale hides him from row 34 down; his arms are re-keyed per frame of the 6-frame rowing loop to follow the oar handles (tools/build_rw_rowboat.py)"
  },
  "spritecook": {
-  "model": "pixel-engine-image-v1",
+  "model": "gpt-image-2.5-sunburst",
   "pixel": true,
-  "width": 63,
-  "height": 52
+  "resolution": "1K",
+  "quality": "medium",
+  "width": 31,
+  "height": 43
  },
- "ledger_job": "rw_rower@1106-191925"
+ "ledger_job": "rw_rower@1106-202928"
 }

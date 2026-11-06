@@ -2,6 +2,9 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `night/06nov-rw`: River Walk harbour, the rowing boat rebuilt by parts, the last River Walk gaps (night of 6 Nov)
+- **Rower job (rw_rower, 0 credits until the producer runs it):** the only drawn part of the new rowing boat. Seated grandpa facing left (concept b: flat cap, white beard, navy knit jumper), 31 x 43 px at 46 px/m (seat to cap 0.92 m, head 11 px, cap top level with Pepper's head on the deck), hands forward at chest height, no oar. GPT 2.5 Sunburst 1K on a 256 frame (4 px grid), the concept crop as reference (`art/gen/upload/rw_rower_concept_crop.png`), 2 variants, 48 credits. The hull and oars are built by rule and the arms re-keyed per frame.
+
 ## Branch `night/06nov-concepts`: concept art as design targets, preflighted (6 Nov night, owner: Artlist up to 3,000 for concepts)
 - **tools/preflight.py concept jobs** (`"purpose": "concept"`): Artlist may paint a design target, never game pixels. A concept job edits a real in-game frame (`base_frame`, 320x240 or a whole multiple) and names its asset, family and slot; forbidden look words, the Artlist daily cap (or the owner's words) and a ledger plan row are checked as for any job. Output in `art/gen/concepts/`, ledger verdict "reference".
 - Why: the 6 Nov rowboat went from a grey blockout straight to final pixels with no design in its scene, and the owner called it terrible. Hero pieces now start from a concept in context, then are split into built parts (geometry), drawn parts (characters, SpriteCook at game size with the concept as reference) and rule-keyed animation.

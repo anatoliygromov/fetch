@@ -1,8 +1,13 @@
 {
- "ox": 70,
- "oy": 20,
+ "ox": 112,
+ "oy": 142,
  "art": [
-  63,
-  52
- ]
+  31,
+  43
+ ],
+ "ground": 180,
+ "pepper_x": 8,
+ "world_row0": 174,
+ "gunwale_row": 34,
+ "seat_row": 42
 }
