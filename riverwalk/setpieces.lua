@@ -359,14 +359,56 @@ end
 
 -- a wooden jetty on piles (River Walk's harbour): a plank deck (its top is the box's top), crisp and outlined,
 -- standing on three dark piles down into the water
-local jettyImg
+local jettyImg, jettyCol
 local function jetty(pc, cam)
   local x0, x1, y = math.floor(pc.x0 - cam), math.floor(pc.x1 - cam), pc.y0
   if jettyImg == nil then                                          -- the art (SpriteCook, tools/import_assets_v2.py)
-    jettyImg = love.filesystem.getInfo("art/scene/rw_jetty.png") and lg.newImage("art/scene/rw_jetty.png") or false
-    if jettyImg then jettyImg:setFilter("nearest", "nearest") end
+    jettyImg = false
+    if love.filesystem.getInfo("art/scene/rw_jetty.png") then
+      -- (night/06nov-rw, base audit: "three piles run to the screen bottom over open water like a table leg") the
+      -- piles end on an ink row 11 px under the surface: here each pile runs on down past the bottom of the screen
+      -- (its row 32, plain wood, repeated from its foot), and the part under the surface takes the water's tint
+      -- and a ripple, as the rowing boats do. The png is unchanged.
+      local src = love.image.newImageData("art/scene/rw_jetty.png")
+      local w, h = src:getDimensions()
+      local d = love.image.newImageData(w, h + 6)
+      for yy = 0, h + 5 do
+        for xx = 0, w - 1 do
+          local sy = yy < h - 1 and yy or 32
+          local r, g, b, a = src:getPixel(xx, sy)
+          if yy >= h - 1 then local _, _, _, a0 = src:getPixel(xx, h - 1); if a0 == 0 then a = 0 end end
+          d:setPixel(xx, yy, r, g, b, a)
+        end
+      end
+      jettyImg = lg.newImage(d); jettyImg:setFilter("nearest", "nearest")
+      jettyCol = {}                                                -- per column: the rows under the surface
+      for xx = 0, w - 1 do
+        local t0, t1
+        for yy = 0, h + 5 do local _, _, _, a = d:getPixel(xx, yy); if a > 0 then t0 = t0 or yy; t1 = yy end end
+        jettyCol[xx] = t0 and { t0, t1 } or false
+      end
+    end
   end
-  if jettyImg then lg.setColor(1, 1, 1, 1); lg.draw(jettyImg, x0, y - 1); return end
+  if jettyImg then
+    lg.setColor(1, 1, 1, 1); lg.draw(jettyImg, x0, y - 1)
+    local wr = 224 - (y - 1)                                       -- the surface's row in the art (world y 224)
+    lg.setColor(22 / 255, 52 / 255, 125 / 255, 0.7)
+    for xx, c in pairs(jettyCol) do
+      if c and c[2] >= wr then lg.rectangle("fill", x0 + xx, y - 1 + math.max(wr, c[1]), 1, c[2] - math.max(wr, c[1]) + 1) end
+    end
+    local ph = math.floor(love.timer.getTime() * 6)                -- a ripple round each pile: dashes either side
+    lg.setColor(0.86, 0.94, 0.97, 0.9)
+    for xx, c in pairs(jettyCol) do
+      if c and c[1] <= wr and c[2] >= wr then
+        local l = not jettyCol[xx - 1] or jettyCol[xx - 1][2] < wr
+        local r = not jettyCol[xx + 1] or jettyCol[xx + 1][2] < wr
+        if l then lg.rectangle("fill", x0 + xx - 3 - ph % 2, 224, 2, 1) end
+        if r then lg.rectangle("fill", x0 + xx + 2 + ph % 2, 224, 2, 1) end
+      end
+    end
+    lg.setColor(1, 1, 1, 1)
+    return
+  end
   local INK = { 0.11, 0.10, 0.09 }
   for _, px in ipairs({ x0 + 3, math.floor((x0 + x1) / 2) - 3, x1 - 9 }) do     -- the piles
     lg.setColor(INK); lg.rectangle("fill", px - 1, y + 5, 8, 240 - y)
