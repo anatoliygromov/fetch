@@ -457,7 +457,12 @@ def home():
         cv.rect(fx, by - 4, fx + 4, by - 1, "E"); cv.rect(fx + 4, by - 3, fx + 4, by - 1, "X")
         cv.rect(fx + 1, by - 7, fx + 3, by - 5, "P" if i % 2 == 0 else "Q"); cv.put(fx + 2, by - 8, "P" if i % 2 == 0 else "Q")
     ground = cv.role[BTF.CORNICE:]
-    up = BTF.upper(gw, {0: [42, 104], 1: [42, 104]})
+    # (night/06nov-dt, the facade lift) Pepper's home in the street's style a (tools/build_dt_facades.py): pediments
+    # over the first floor, hoods over the second, geranium boxes, dentil courses, lace curtains
+    import build_dt_facades as BF
+    for k in "OU":
+        C.setdefault(k, BF.C[k])
+    up = BF.upper(gw, [42, 104], dict(BF.STYLES["a"], anchors=False))   # (no room for anchors at its edge)
     role = np.vstack([up, ground])
     role[:, gw - 2:] = np.where(np.isin(role[:, gw - 2:], ["W"]), "S", role[:, gw - 2:])   # its right edge in shade
     im = np.zeros((role.shape[0], gw, 4), np.uint8)
