@@ -233,5 +233,830 @@
   66,
   72
  ],
- "colours": 16
+ "colours": 16,
+ "audit": {
+  "why": "audit 6 Nov: a green cube twice Pepper's height (a square green TV). Its top trimmed to read as a clipped hedge: the top corners rounded (radius 16), soft dips 6 px deep at x [37] make clumps along the top (clear of the orange leaves), two notches 3 px deep on each side; the outline closed in its ink; the crawl gap and the collision box unchanged",
+  "hand": [
+   {
+    "x": 9,
+    "y": 1,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 31,
+    "y": 1,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 32,
+    "y": 1,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 37,
+    "y": 1,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 42,
+    "y": 1,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 43,
+    "y": 1,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 59,
+    "y": 1,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 60,
+    "y": 1,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 5,
+    "y": 2,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 6,
+    "y": 2,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 32,
+    "y": 2,
+    "from": "4b6041",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 33,
+    "y": 2,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 35,
+    "y": 2,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 36,
+    "y": 2,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 37,
+    "y": 2,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 38,
+    "y": 2,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 39,
+    "y": 2,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 41,
+    "y": 2,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 42,
+    "y": 2,
+    "from": "778a4f",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 58,
+    "y": 2,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 59,
+    "y": 2,
+    "from": "f6b61b",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 60,
+    "y": 2,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 61,
+    "y": 2,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 3,
+    "y": 3,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 4,
+    "y": 3,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 5,
+    "y": 3,
+    "from": "5b7148",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 6,
+    "y": 3,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 33,
+    "y": 3,
+    "from": "4b6041",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 34,
+    "y": 3,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 35,
+    "y": 3,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 36,
+    "y": 3,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 37,
+    "y": 3,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 38,
+    "y": 3,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 39,
+    "y": 3,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 40,
+    "y": 3,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 41,
+    "y": 3,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 59,
+    "y": 3,
+    "from": "f6b61b",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 60,
+    "y": 3,
+    "from": "a55e2f",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 61,
+    "y": 3,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 62,
+    "y": 3,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 2,
+    "y": 4,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 3,
+    "y": 4,
+    "from": "5b7148",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 4,
+    "y": 4,
+    "from": "5b7148",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 34,
+    "y": 4,
+    "from": "97a156",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 35,
+    "y": 4,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 36,
+    "y": 4,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 37,
+    "y": 4,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 38,
+    "y": 4,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 39,
+    "y": 4,
+    "from": "97a156",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 40,
+    "y": 4,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 61,
+    "y": 4,
+    "from": "4b6041",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 62,
+    "y": 4,
+    "from": "5b7148",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 63,
+    "y": 4,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 1,
+    "y": 5,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 2,
+    "y": 5,
+    "from": "778a4f",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 3,
+    "y": 5,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 35,
+    "y": 5,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 36,
+    "y": 5,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 37,
+    "y": 5,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 38,
+    "y": 5,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 39,
+    "y": 5,
+    "from": "97a156",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 62,
+    "y": 5,
+    "from": "5b7148",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 63,
+    "y": 5,
+    "from": "5b7148",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 64,
+    "y": 5,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 2,
+    "y": 6,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 3,
+    "y": 6,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 62,
+    "y": 6,
+    "from": "5b7148",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 63,
+    "y": 6,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 64,
+    "y": 6,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 1,
+    "y": 7,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 2,
+    "y": 7,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 63,
+    "y": 7,
+    "from": "284127",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 64,
+    "y": 7,
+    "from": "1c301e",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 65,
+    "y": 7,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 0,
+    "y": 8,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 1,
+    "y": 8,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 2,
+    "y": 8,
+    "from": "d1be50",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 63,
+    "y": 8,
+    "from": "284127",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 64,
+    "y": 8,
+    "from": "1c301e",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 65,
+    "y": 8,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 1,
+    "y": 9,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 2,
+    "y": 9,
+    "from": "97a156",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 63,
+    "y": 9,
+    "from": "1c301e",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 64,
+    "y": 9,
+    "from": "1c301e",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 65,
+    "y": 9,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 64,
+    "y": 10,
+    "from": "0b091c",
+    "to": "clear",
+    "why": "outside the trimmed shape"
+   },
+   {
+    "x": 9,
+    "y": 2,
+    "from": "5b7148",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 31,
+    "y": 2,
+    "from": "4b6041",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 43,
+    "y": 2,
+    "from": "365032",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 32,
+    "y": 3,
+    "from": "4b6041",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 42,
+    "y": 3,
+    "from": "d1be50",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 58,
+    "y": 3,
+    "from": "f6b61b",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 5,
+    "y": 4,
+    "from": "5b7148",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 6,
+    "y": 4,
+    "from": "d1be50",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 33,
+    "y": 4,
+    "from": "5b7148",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 41,
+    "y": 4,
+    "from": "d1be50",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 59,
+    "y": 4,
+    "from": "f4941b",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 60,
+    "y": 4,
+    "from": "f4941b",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 4,
+    "y": 5,
+    "from": "d1be50",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 34,
+    "y": 5,
+    "from": "d1be50",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 40,
+    "y": 5,
+    "from": "d1be50",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 61,
+    "y": 5,
+    "from": "f6b61b",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 4,
+    "y": 6,
+    "from": "d1be50",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 35,
+    "y": 6,
+    "from": "d1be50",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 36,
+    "y": 6,
+    "from": "d1be50",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 37,
+    "y": 6,
+    "from": "97a156",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 38,
+    "y": 6,
+    "from": "97a156",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 39,
+    "y": 6,
+    "from": "97a156",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 61,
+    "y": 6,
+    "from": "284127",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 3,
+    "y": 7,
+    "from": "d1be50",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 62,
+    "y": 7,
+    "from": "5b7148",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 3,
+    "y": 8,
+    "from": "d1be50",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 62,
+    "y": 8,
+    "from": "4b6041",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 3,
+    "y": 9,
+    "from": "97a156",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 62,
+    "y": 9,
+    "from": "1c301e",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   },
+   {
+    "x": 63,
+    "y": 10,
+    "from": "1c301e",
+    "to": "0b091c",
+    "why": "the outline along the new edge"
+   }
+  ],
+  "date": "2026-11-06",
+  "branch": "art/cp-audit-06nov",
+  "source": "art/source/park_hedge/park_hedge_pre_audit.png",
+  "size": [
+   66,
+   72
+  ],
+  "colours": 16
+ }
 }

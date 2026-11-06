@@ -12,8 +12,10 @@ art/source/<name>/<name>_pre_audit.png), so running it twice gives the same pixe
           a warm grey granite ramp (the same lightness order, one to one), the two blue-grey darks to warm darks; the
           moss and the ink outline kept. The box and the shape are unchanged.
   hedge   park_hedge (66 x 72): a green cube twice Pepper's height. Its top trimmed so it reads as a clipped hedge:
-          the two top corners rounded (radius 7, the leaves outside the arc taken off), the outline closed along the
-          new edge in the hedge's own ink. The top row over the box (where Pepper stands) keeps its middle 50 px.
+          the two top corners rounded (radius 16), soft dips 6 px deep along the top near its thirds (moved clear of
+          the orange leaves, never chopping one, 16 px apart or left out) make clumps, two notches 3 px deep on each side above the crawl
+          gap; the leaves outside taken off, the outline closed along the new edge in the hedge's own ink. The collision
+          box and the crawl gap are unchanged.
   bush    park_bush (75 x 34, the front layer): a flat dark lump on the earth band. The front layer's rule (dark
           silhouette, a thin rim on top): the top pixel of every column takes the City Park front rim (look.lua fg.rim
           594257), every 5th of them the warm rim (b5793f), as Look.front's clumps are lit.
@@ -80,7 +82,7 @@ def stone():
 
 
 # ------------------------------------------------------------------------------------------------ hedge
-def hedge(R=7):
+def hedge(R=16, DIP=6, NOTCH=3):
     a = start('park_hedge')
     al = a[..., 3] > 0
     H, W = al.shape
@@ -88,27 +90,48 @@ def hedge(R=7):
     ink = cols[(cols.astype(float) @ [0.299, 0.587, 0.114]).argmin()]
     top = min(y for y in range(H) if al[y].any())
     left = min(x for x in range(W) if al[:, x].any()); right = max(x for x in range(W) if al[:, x].any())
+    gap = min(y for y in range(top + 10, H) if (a[y, W // 2, :3].astype(int) @ [1, 1, 1]) < 200)   # the crawl gap's top
     hand = []
-    # the arc's centres: R in from the art's outer edge (its outline) and R down from its top row
-    for cx, sx in ((left + R, -1), (right - R, 1)):
-        cy = top + R
-        for y in range(top, cy + 1):
-            for x in range(W):
-                if (x - cx) * sx <= 0: continue
-                d = ((x - cx) ** 2 + (y - cy) ** 2) ** 0.5
-                if d > R + 0.5 and al[y, x]:
-                    hand.append({'x': x, 'y': y, 'from': hx(a[y, x]), 'to': 'clear', 'why': 'outside the rounded corner'})
-                    a[y, x] = 0; al[y, x] = False
+    LEAF = {'f4941b', 'f6b61b', 'd76c13'}                           # the orange leaves' colours
+
+    def orange(y, x): return al[y, x] and hx(a[y, x]) in LEAF
+
+    def clear_of_leaves(xd):                                        # a dip never cuts an orange leaf (it would be chopped)
+        return not any(orange(y, x) for y in range(top, top + DIP + 3) for x in range(max(0, xd - 8), min(W, xd + 9)))
+    dips = []                                                       # the top: clumps with soft dips between them, near
+    for k in (1, 2):                                                # the thirds, moved to the nearest x clear of leaves,
+        want = left + (right - left) * k // 3                       # 16 px or more apart (else that dip is left out)
+        ok = [x for x in range(left + R, right - R) if clear_of_leaves(x) and all(abs(x - d) >= 16 for d in dips)]
+        if ok: dips.append(min(ok, key=lambda x: abs(x - want)))
+    notches = [top + (gap - top) * k // 3 for k in (1, 2)]          # each side: two shallow notches (three tiers of leaf)
+
+    def ytop(x):
+        d = min(x - left, right - x)
+        c = R - (R * R - (R - d) ** 2) ** 0.5 if d < R else 0
+        dp = max(DIP * max(0.0, 1 - (abs(x - xd) / 7) ** 2) for xd in dips)
+        return top + int(round(max(c, dp)))
+
+    def side(y):
+        return int(round(max(NOTCH * max(0.0, 1 - (abs(y - yn) / 5) ** 2) for yn in notches)))
+    for y in range(top, gap):
+        for x in range(W):
+            if not al[y, x]: continue
+            if y < ytop(x) or x < left + side(y) or x > right - side(y):
+                hand.append({'x': x, 'y': y, 'from': hx(a[y, x]), 'to': 'clear', 'why': 'outside the trimmed shape'})
+                a[y, x] = 0; al[y, x] = False
     # close the outline: an opaque pixel next to a cleared one (4-neighbour) on the new edge becomes ink
-    for y in range(top, top + R + 2):
+    cleared = {(h['y'], h['x']) for h in hand}
+    for y in range(top, gap):
         for x in range(W):
             if not al[y, x] or (a[y, x, :3] == ink).all(): continue
             nb = [(y + dy, x + dx) for dy, dx in ((-1, 0), (1, 0), (0, -1), (0, 1))]
-            if any(not (0 <= q[0] < H and 0 <= q[1] < W) or not al[q] for q in nb):
+            if any(q in cleared for q in nb):
                 hand.append({'x': x, 'y': y, 'from': hx(a[y, x]), 'to': hx(ink), 'why': 'the outline along the new edge'})
                 a[y, x, :3] = ink
-    finish('park_hedge', a, {'why': 'audit 6 Nov: a green cube twice Pepper\'s height. Its top trimmed to read as a clipped '
-                                    f'hedge: both top corners rounded (radius {R}), outline closed in its ink; box unchanged',
+    finish('park_hedge', a, {'why': 'audit 6 Nov: a green cube twice Pepper\'s height (a square green TV). Its top trimmed '
+                                    f'to read as a clipped hedge: the top corners rounded (radius {R}), soft dips {DIP} px deep '
+                                    f'at x {dips} make clumps along the top (clear of the orange leaves), two notches {NOTCH} px deep on each side; the outline '
+                                    'closed in its ink; the crawl gap and the collision box unchanged',
                              'hand': hand})
 
 
