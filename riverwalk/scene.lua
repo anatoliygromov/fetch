@@ -1109,6 +1109,7 @@ end
 -- ramp, the lawn, the stepping stones' granite; no outline (decoration). Nothing Pepper uses moves: the water box,
 -- the path and the stones' boxes are as they were (she still splashes at the box's top, 2 px under the old line).
 Sc.POND_RISE, Sc.BANK_R = 16, 16
+Sc.WINCH_DX = 8                                                   -- (the winch keeper: see WINCH)
 local BANK = { lip = hex("b5ad55"), lawn = hex("9e983f"), dry = hex("d09d68"), damp = hex("bd8354"), wet = hex("8a5a3a"),
   foot = hex("5e4127"), st1 = hex("c9c2b4"), st2 = hex("a39b8e"), st3 = hex("7a736a"), sub = hex("3d5866"),
   subEdge = hex("4f6f7a"), rip = hex("d3f2fd"), lit = hex("ddae79") }
@@ -2194,8 +2195,12 @@ function Sc.drawPropArt(p, camx, def, kicked)
                                                                   -- decoration on the back layer: faded 35 %, art/fixes)
         for i = 1, 8 do T.keeperWinchQ[i] = lg.newQuad((i - 1) * 80, 0, 80, 80, T.keeperWinch:getDimensions()) end
       end
+      -- (art/cp-audit-06nov) the audit: "he grips a barrow that is not there, a tan blob cut behind the bridge post".
+      -- The winch's left post and half its drum stood behind the treetop walk's right pylon (x 944-950): what showed
+      -- was a pale drum end and the crank, with no frame. Drawn WINCH_DX px to the right, the whole winch (both posts,
+      -- the drum, the crank he turns) stands clear beside the pylon, his back foot still clear of the lamp at 1028.
       lg.setColor(1, 1, 1, 1)
-      lg.draw(T.keeperWinch, T.keeperWinchQ[Sc.winchFrame or 1], math.floor(x + w / 2), 174 + d, 0, -1, 1, 60, 79)
+      lg.draw(T.keeperWinch, T.keeperWinchQ[Sc.winchFrame or 1], math.floor(x + w / 2) + Sc.WINCH_DX, 174 + d, 0, -1, 1, 60, 79)
     else Sc.drawProp(p, camx, C.prop) end
   else
     if n == "DOOR" then at(T.door, x, 175 + d - T.door:getHeight())
