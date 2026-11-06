@@ -54,12 +54,9 @@ LADDER = {
 FRAMES = {
     "pepper": (60, 52), "girl": (66, 66), "cat": (48, 48), "goose": (34, 34), "gull": (26, 26),
     "park_keeper_cart": (82, 82), "park_keeper_winch": (80, 80), "rowboat": (70, 70), "mia_throw": (66, 66),
-<<<<<<< HEAD
     "magpie": (32, 26),                                          # (6 Nov) perch, flick, wings up, level, down
     "town_spring": (9, 10), "town_jet": (6, 88),                  # (art/dt-roofs-06nov, tools/build_dt_details.py)
-=======
     "tram_vintage_wheel": (31, 31),                                  # (6 Nov) 4 frames of the tram's wheel
->>>>>>> origin/art/dt-traffic-06nov
 }
 ROLL = ("road_cyclist1_roll", "road_cyclist2_roll")              # 4 frames side by side (drawn: Rd.art().riders)
 # what the game never draws (loaded but unused, or replaced in the played level): not checked

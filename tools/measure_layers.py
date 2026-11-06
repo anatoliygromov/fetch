@@ -35,12 +35,8 @@ S = {
 # the load-time fade amounts per level and layer (look.lua Look.scripts[...].fade); layers not listed are not faded
 FADE = {"rw": dict(back=0.28), "cp": dict(shore=0.40, mid=0.38, back=0.20), "dt": dict(shore=0.70, mid=0.10, back=0.28)}
 # pieces with their own amount (scene.lua park gate and winch keeper, arthooks.lua tram and spire); the haze is the level's
-<<<<<<< HEAD
-OWN = {"park_gate": 0.28, "park_keeper_winch": 0.35, "tram_vintage": 0.40, "spire_riddarholmen": 0.45}
-# (art/dt-roofs-06nov) the far spire in the game: arthooks.lua H.drawFarSpire fades it by the shore's own amount (0.70)
-=======
 OWN = {"park_gate": 0.28, "park_keeper_winch": 0.35, "tram_vintage": 0.40, "tram_vintage_wheel": 0.40, "spire_riddarholmen": 0.45}
->>>>>>> origin/art/dt-traffic-06nov
+# (art/dt-roofs-06nov) the far spire in the game: arthooks.lua H.drawFarSpire fades it by the shore's own amount (0.70)
 OLD_HAZE = np.array([200, 210, 222]) / 255                        # the cool grey every fade went to before decision 3
 W = np.array([0.299, 0.587, 0.114])
 LEVELS = {"rw": "River Walk", "cp": "City Park", "dt": "Downtown"}
