@@ -68,3 +68,12 @@ Fix round 1 from art/gen/reviews/cp_critters.md, 0 credits.
 
 Round 2 checks: `citypark_tall --physics` 97/97, `--auto` GOOD GIRL (39.1 s, the magpie caught), PEPPER UNCHANGED,
 flow 125/125 (own save folder), TILED CHECK PASSED, BACKDROP OK. asset_qa: magpie WARN, cp_duckboat PASS, goose WARN.
+
+# Round 3 (maker's fixes, review 3d3c144)
+- Magpie perch 3 at (678, 247) as asked: the feet are on the willow's leaves (`frame_magpie_perch3.png`); a bark from
+  x 600 on the path still drops the ball onto the path (x 667).
+- Goose fly row (`tools/fix_goose_fly.py` steps 4 and 5, art/source/goose/edits.json): cell 2's hanging far wing
+  taken off (the near wing opening behind the back is what shows); the black stub off the beak in cells 2 and 3 taken
+  out, a 2 x 2 orange tip closed with the ink.
+- Checks: `citypark_tall --physics` 97/97, `--auto` GOOD GIRL (39.1 s), PEPPER UNCHANGED, flow 125/125 (own save
+  folder), TILED CHECK PASSED, BACKDROP OK.
