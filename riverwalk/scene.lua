@@ -2341,7 +2341,8 @@ local TREE_ART = { [1528] = "cp_lime", [1916] = "cp_ash", OAK = "cp_oak",
   -- (night 6 Nov, cp) the three LIMES trunks at 1004, 1112, 1216 were flat-topped pillars under their ledges, their
   -- crowns a low band: tables. Now lime trees whose crowns run out of the top of the screen, as the lime at 1528;
   -- the middle one mirrored ("@flip": the same art flipped whole, no new pixels) so the row is not a stamp
-  [1004] = "cp_lime", [1112] = "cp_lime@flip", [1216] = "cp_lime" }
+  -- (and the fourth pillar at 1420, the audit's "same grey as the mid crowns": the lime's darker bark, mirrored)
+  [1004] = "cp_lime", [1112] = "cp_lime@flip", [1216] = "cp_lime", [1420] = "cp_lime@flip" }
 local TREE_FADE = 0.28           -- their own amount, as the gate's: the bark's darkest 10 % then sits at the back layer's 80
 local TA_IMG = {}
 local function treeArtImg(n)
