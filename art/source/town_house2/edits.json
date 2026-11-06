@@ -2,7 +2,7 @@
 "asset": "town_house2",
 "source": "art/source/town_house2/town_house2_before.png",
 "tool": "tools/fix_dt_06nov.py",
-"changed": 323,
+"changed": 327,
 "edits": [
 {
 "x": 26,
@@ -2262,6 +2262,34 @@
 "x": 26,
 "y": 15,
 "was": "5d5957",
+"now": "b9bdac",
+"rule": "review round 1: a stray pixel -> its fill"
+},
+{
+"x": 26,
+"y": 18,
+"was": "86624f",
+"now": "b9bdac",
+"rule": "review round 1: a stray pixel -> its fill"
+},
+{
+"x": 26,
+"y": 19,
+"was": "86624f",
+"now": "b9bdac",
+"rule": "review round 1: a stray pixel -> its fill"
+},
+{
+"x": 26,
+"y": 20,
+"was": "86624f",
+"now": "b9bdac",
+"rule": "review round 1: a stray pixel -> its fill"
+},
+{
+"x": 26,
+"y": 21,
+"was": "eaedde",
 "now": "b9bdac",
 "rule": "review round 1: a stray pixel -> its fill"
 }

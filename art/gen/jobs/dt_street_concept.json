@@ -1,0 +1,5 @@
+{"name": "dt_street_concept", "purpose": "concept", "asset": "town_shelter_tall", "family": "dt_fronts_06nov", "level": "downtown",
+ "model": "nbpro_1k", "variants": 2, "base_frame": "art/gen/concepts/base/dt_street_y240_x1920.png",
+ "subject": "make this old town street lovely and finished like Gamla stan in Stockholm. The thin grey lines become a real vintage tram stop shelter: dark green painted iron posts, a glass roof with a decorative iron frieze, a wooden bench, the round tram sign on its post. The house fronts get moulded cornices, window surrounds, a shop front with a striped awning and a hanging iron shop sign with a picture (no letters), flower boxes, iron wall anchors. The ice cream freezer and the crates stay as they are. Nothing floats: the two dark ledges at the top attach to the wall with stone corbels",
+ "slot": {"file": "riverwalk/art/scene/town_shelter_tall.png and the fronts", "where": "Downtown tall street, camera y 240 x 1920, the tram stop"},
+ "extra": "Bright warm afternoon colours, full local colour and crisp edges, the same flat-shaded pixel style as the dog. Keep the dog, the crates, the goose and the framing exactly as they are."}

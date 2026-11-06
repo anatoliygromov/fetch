@@ -1,1 +1,2 @@
 # Branches or commits left out of builds on purpose (tools/check_approved.py). One per line: name or short hash, then # why.
+240ffbe  # the 6 Nov GPT 2.5 rowboat and its AI rowing loop: the owner called it "really terrible" (6 Nov 20:07); replaced by the built eka on night/06nov-rw

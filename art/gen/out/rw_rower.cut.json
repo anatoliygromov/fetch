@@ -1,0 +1,22 @@
+{
+ "name": "rw_rower",
+ "size": [
+  40,
+  46
+ ],
+ "render": "art/gen/out/rw_rower_a.png",
+ "cut_by": "SpriteCook's pixel output on its own grid, taken 1:1 (crop [104, 137, 144, 183]), nothing resampled; tools/build_rw_rowboat.py",
+ "measures_px": {
+  "cap_top_row": 0,
+  "face_rows": [
+   8,
+   19
+  ],
+  "face_px": 12,
+  "head_with_cap_px": 21,
+  "gunwale_row": 36,
+  "fists_on_handle": "stamped on the oar handle in every frame (by construction)"
+ },
+ "colours": 19,
+ "fails": []
+}

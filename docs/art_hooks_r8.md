@@ -145,6 +145,16 @@ what it drew before (the code fallback stays).
 | `town_jet.png` | 24 x 88 | the fountain's water (scene.lua drawTerrainArt): 4 frames 6 x 88 at 20 fps; left at the TIER's x0 - 7, the right one mirrored at x1 + 7, top at the TIER's top + 3 |
 | `town_tier.png`, `town_bowl.png`, `town_rim.png` | 50 x 58, 34 x 82, 18 x 18 | as before, redrawn in the sample's granite |
 
+## River Walk harbour and kennel, built by parts (night/06nov-rw, SpriteCook 64 for the rower)
+
+| File | Size | Where and how it is drawn |
+| --- | --- | --- |
+| `rw_rowboat.png` | 185 x 62 | the ROWBOAT hull (setpieces.lua `Sp.drawRowboat`), built by `tools/build_rw_rowboat.py`: bow left; its left column at the mover's x0 - 25, its top row at the mover's y0 - 36 (row 36 = the rail = Pepper's deck, y 212; row 48 = the waterline, y 224). Outlined (an obstacle). The water's tint under row 48 is drawn in code |
+| `rw_rower.png` | 468 x 62 (6 frames of 78 x 62) | the rower (at the stern thwart, rowlock hull x 150), the oar and his near arm, drawn over the hull at hull x 106, same top; frame k while the boat moves right (7 fps), backwards while it moves left, frame 5 at rest. Nothing below the rail of its own column except the oar (it is outboard) |
+| `kennel.png` | 44 x 44 | the KENNEL piece (setpieces.lua kennel()), built by `tools/build_rw_kennel.py`: top-left at (x0, y0) = (0, 140), bottom row on the path (y 183); the doorway's crown on row 25 (y 165). Outlined. Its collision: the ridge cap x 16-28 from y 140 and the eaves x 0-44 from y 158 |
+| `rw_jetty.png` (unchanged) | 48 x 41 | the jetty: in code its piles run on to the bottom of the screen and take the water's tint and a ripple at y 224 |
+| `pontoon.png` (unchanged) | 54 x 19 | in code its floats take the water's tint under y 224 (`Sp.pontoonWater`); its mooring lines sag |
+
 ## City Park (tall), night 6 Nov (cp track)
 
 | File | Size | Where and how it is drawn |
@@ -154,3 +164,48 @@ what it drew before (the code fallback stays).
 | `cp_reeds.png` | 32 x 34 (2 cells of 16 x 34) | `Sc.drawPondKit`, with each park pond's water: both cells in each corner (base on the curved shore's row), cell 2 on the far bank at a third and two thirds when clear of a stepping stone; base row = the cell's last row |
 | `cp_lily.png` | 30 x 4 (3 cells of 10 x 4) | `Sc.drawPondKit`: one every 52 px from 14 px in, rows 3 to 9 under the waterline (`p.y0 - Sc.POND_RISE`), off the stepping stones |
 | `cp_bankstones.png` | 24 x 7 (2 cells of 12 x 7) | `Sc.drawPondKit`: one per pond end, 9 px in, bottom row on the shore |
+
+## Downtown high road attached to its fronts (art/dt-highroad-06nov, 0 credits)
+
+Built by `tools/build_highroad.py` (`--check`) from the 5 Nov fronts' parts and the roof kit's ink and granite.
+Drawn by `arthooks.lua` (`townPiece`, `H.drawHighWall` after the fronts). No box moves. Without a file the game draws
+what it drew before. One flag: `H.PLAZA_FRONTS` (decision 2a; `false` brings back the plaza houses).
+
+| File | Size | Where and how it is drawn |
+| --- | --- | --- |
+| `town_front_tall6.png` | 148 x 432 | the GUILD HOUSE's front (instead of front 4): granite ground floor, its top on the steps' line, a 2.1 m door at x 1632, French windows at x 1580 and 1674 |
+| `town_front_tall5.png` | 88 x 432 | a plain bay (no door, shop or gate): with `H.PLAZA_FRONTS`, any bay whose door, shop or gate a plaza BALCONY would cross |
+| `town_guild_steps.png` | 122 x 35 | the stepped coping on GUILD ROOF and its steps: at the steps' x0 - 1, top - 1 (instead of town_portal_top) |
+| `town_guild_pier.png` | 18 x 46 | the CHIMNEY box as a stone pedestal: at x0 - 1, y0 - 1 (instead of town_oriel; no town_oriel_bay) |
+| `town_console.png` | 8 x 7 | under both ends of every ledge (unnamed, DORMER): at x + 2 and x + w - 10, y0 + 4 (its ink row on the slab's) |
+| `town_window_door.png` | 52 x 50 | decoration: the first-floor window carried down to a high BALCONY or a ledge under it (window within 8 px): at the window's x - 25, front foot - 192, cut at the slab |
+| `town_window_rail.png` | 44 x 24 | decoration: a French balcony's flush railing over a ledge: at the window's x - 22, its foot on the ledge's top - 1 |
+| `town_balcony_door.png` | 38 x 52 | decoration (`H.PLAZA_FRONTS`): behind a plaza BALCONY, centred on it inside its house, top at the front's foot - 119, cut at the slab |
+| `town_pilaster.png` | 14 x 101 | decoration: two per LOGGIA, 3 px in from its ends, from its top + 25 to the plinth; the house under a LOGGIA is one bay (its gate centred) |
+| (code) | | the galleries' string course: the fronts' course (5 rows) at a GALLERY's top + 31 along the whole front of each house it stands on; cast shadows of every high road piece and balcony, 2 px right and 3 down, multiplied so the wall's W turns into its S |
+
+## Downtown (tall) audit fixes (art/dt-audit-06nov, 0 credits)
+
+Built by `tools/build_dt_audit.py` (`--check`); `town_rim.png` by `tools/build_dt_details.py`. Review: `docs/review/06nov/dt_audit/`.
+
+| File | Size | Where and how it is drawn |
+| --- | --- | --- |
+| `town_ground.png` | 240 x 68 | as before (scene.lua paintGroundArt); rows 32-67, the quay wall, are flat granite courses |
+| `town_rim.png` | 18 x 18 | each RIM at x0 - 1, y0 - 1, as before: a granite corner bollard |
+| `town_quaydrain.png` | 20 x 22 | decoration in the quay wall (arthooks.lua `H.drawQuayDrains`, after the ground): one per front-layer prop, its bottom 2 px over the world's bottom, on dry quay only. The tall Downtown draws no front bollards |
+| `town_bridge_pier.png` | 14 x 113 | decoration, unfaded (`H.drawBridgePiers`, the back pass): centred under each foot of the FOOTBRIDGE's arch, from the foot to the street |
+| `town_punt.png` | 52 x 14 | play, outlined (scene.lua PARASOL with no table over water): its gunwale at the street + 13, the pole's foot 2 px inside it |
+| `town_lantern_bracket.png` | 18 x 12 | back, faded as the lamp (`H.wallLantern`, stage.lua): a lamp on a high-road ledge is the lamp's lantern (rows 0-26) hanging from this bracket, 44 px over the ledge, on the house front's nearest bay edge |
+| (code) | | `Sc.quayEnds`: kerb corner and quoins where the street ends at water; the far quay's coursed face and the waterline in a town pool; `H.flowerBrackets` under the FLOWER ROOF; street awnings' counters and missing posts (scene.lua AWNING); CRATES drawn only above the street; the tram's fade 0.10; the stop sign after the shelter |
+
+## Downtown facade lift (night/06nov-dt, 0 credits)
+
+Built by `tools/build_dt_facades.py` (`--check`) after the producer's concept dt_highroad_concept_a (design only).
+
+| File | Size | Slot and anchor |
+| --- | --- | --- |
+| `town_front_tall<k>_<s>.png` | 80 / 88 / 96 / 88 / 148 / 148 x 432 (k 1, 2, 3, 5, 6, 7) | as `town_front_tall<k>.png`: a front box whose `style` property is s (a-f) draws them (arthooks.lua `frontImg`, `H.STYLED`); the plaster W / S swapped per box; window glass, frame and sill rows unchanged (the carried-down French windows meet them). k 7: the LOGGIA's house as one 148 px portal bay, two window axes (x 40, 108) |
+| `town_drainpipe.png` | 6 x 432 | a full-height front box with `pipe` = true: at its right end - 8, bottom on the box's bottom (y 414), faded as the fronts |
+| `town_bridge_springer.png` | 14 x 20 | play, outlined: the FOOTBRIDGE's arch feet, on the two house corners, top at the bridge art's row 42; the right one mirrored (arthooks.lua townPiece) |
+| `town_basin_wall.png` | 10 x 56 | ground: under a fountain RIM on the water's side, from the rim's bottom (y 424) down; mirrored on the right (scene.lua RIM) |
+| `town_shelter_tall.png` | 140 x 115 | unchanged slot (decoration, centred on the SHELTER, bottom on y 414), redrawn in green cast iron |

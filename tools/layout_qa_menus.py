@@ -153,10 +153,16 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
         hud = many(bs, 'lives', 'head', 'health', 'bones', 'score', 'clock', 'time', 'bone')
         check(not overlaps([P] + hud) and not overlaps([Fr] + hud), f'{shot}: clear of the HUD')
     elif (shot.startswith('hint') or shot.startswith('nudge')) and 'rise' not in shot and 'none' not in shot:
-        Bs = many(bs, 'bubble'); Pp = many(bs, 'pepper')[-1]; tl = many(bs, 'tail')
-        check(len(Bs) == 1 and len(tl) == 1, f'{shot}: one bubble with its tail')
-        B = Bs[0]; t_ = tl[0]
-        g = many(bs, 'glyph'); pc = many(bs, 'pic'); h = sorted(many(bs, 'hint'), key=lambda b: b['y0'])
+        # (6 Nov) the bubble checked is the last one drawn (a made-up case is drawn over the game's own frame, which may
+        # show a hint or a talk line with a tail of its own); its tail is the one touching it, its contents inside it
+        Bs = many(bs, 'bubble'); Pp = many(bs, 'pepper')[-1]; B = Bs[-1]
+        near = lambda b, r: b['x0'] <= r['x1'] + 1 and b['x1'] >= r['x0'] - 1 and b['y0'] <= r['y1'] + 1 and b['y1'] >= r['y0'] - 1
+        inB = lambda b: b['x0'] >= B['x0'] and b['x1'] <= B['x1'] and b['y0'] >= B['y0'] and b['y1'] <= B['y1']
+        tl = [t for t in many(bs, 'tail') if near(t, B)]
+        check(len(tl) == 1, f'{shot}: the bubble has one tail')
+        t_ = tl[0]
+        g = [b for b in many(bs, 'glyph') if inB(b)]; pc = [b for b in many(bs, 'pic') if inB(b)]
+        h = sorted([b for b in many(bs, 'hint') if inB(b)], key=lambda b: b['y0'])
         check(B['x0'] >= 4 and B['x1'] <= 315 and B['y0'] >= 4 and B['y1'] <= 235, f'{shot}: the bubble inside the margins')
         check(not overlaps([B, Pp]) and not overlaps([t_, Pp]), f'{shot}: never over Pepper')
         inside = [b for b in g + pc + h]
@@ -169,8 +175,10 @@ for f in sorted(glob.glob(f'{D}/*.txt')):
         side = ('below' if t_['y0'] >= B['y1'] - 2 else 'above' if t_['y1'] <= B['y0'] + 2 else 'right' if t_['x0'] >= B['x1'] - 2 else 'left')
         toward = {'below': Pp['y0'] > B['y1'], 'above': Pp['y1'] < B['y0'], 'right': Pp['x0'] > B['x1'], 'left': Pp['x1'] < B['x0']}[side]
         check(toward, f'{shot}: the tail ({side}) points toward Pepper')
-        gap = {'below': Pp['y0'] - B['y1'], 'above': B['y0'] - Pp['y1'], 'right': Pp['x0'] - B['x1'], 'left': B['x0'] - Pp['x1']}[side]
-        check(3 <= gap <= 8, f'{shot}: near her ({gap} px, the nudge\'s bounce up to 3)')
+        # (6 Nov, the light bubble) its tail reaches 7 px from the bubble: its tip ends 1 px outside her box, up to 4 more
+        # while the bubble rises in or the nudge bounces
+        gap = {'below': Pp['y0'] - t_['y1'], 'above': t_['y0'] - Pp['y1'], 'right': Pp['x0'] - t_['x1'], 'left': t_['x0'] - Pp['x1']}[side]
+        check(1 <= gap <= 5, f'{shot}: the tail\'s tip near her ({gap} px, the nudge\'s bounce up to 3)')
     elif shot.startswith('pause') and 'controls' not in shot:
         P = many(bs, 'panel')[0]; R = many(bs, 'ribbon')[0]; T = many(bs, 'title')[0]; Sb = many(bs, 'subtitle')[0]
         for n, b in (('panel', P), ('ribbon', R), ('title', T), ('subtitle', Sb)): check(abs(cx(b) - 159.5) <= 0.5, f'{shot}: {n} centred ({cx(b)})')

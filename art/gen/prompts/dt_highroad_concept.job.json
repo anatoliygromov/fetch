@@ -1,0 +1,23 @@
+{
+ "name": "dt_highroad_concept",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/concepts/base/dt_highroad_y120_x1280.png"
+ ],
+ "prompt_file": "art/gen/prompts/dt_highroad_concept.txt",
+ "tool": "artlist",
+ "family": "dt_fronts_06nov",
+ "asset": "town_front_tall",
+ "slot": {
+  "file": "riverwalk/art/scene/town_front_tall1-4.png and the roof kit",
+  "where": "Downtown tall, the high road, camera y 120 x 1280"
+ },
+ "credits": 320,
+ "ledger_job": "dt_highroad_concept@1106-202522"
+}

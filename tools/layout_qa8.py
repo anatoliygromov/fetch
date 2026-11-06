@@ -45,7 +45,7 @@ def overlaps(bs, skip=()):
         for b in items[i + 1:]:
             if not (a['x1'] < b['x0'] or b['x1'] < a['x0'] or a['y1'] < b['y0'] or b['y1'] < a['y0']): out.append((a['name'], b['name']))
     return out
-TEXT = {'time', 'bones', 'score', 'lives', 'label', 'title', 'subtitle', 'hint', 'tlabel', 'tvalue', 'mlabel', 'press', 'note', 'hard'}
+TEXT = {'time', 'bones', 'score', 'lives', 'label', 'title', 'subtitle', 'tlabel', 'tvalue', 'mlabel', 'press', 'note', 'hard'}   # (6 Nov) not 'hint': the hint words are the speech bubble's plain dark letters, no outline
 def drawn(f, bs, shot):
     bad = []
     for b in bs:

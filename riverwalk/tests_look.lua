@@ -8,7 +8,7 @@ return function(api)
   I.testing = true
   local SPOTS = {
     riverwalk = { { 120, 184 }, { 480, 152 }, { 760, 184 }, { 1074, 184 }, { 1350, 216 },
-                  { 1680, 154 }, { 2110, 216 }, { 2370, 184 }, { 2660, 152 }, { 3080, 184 } },
+                  { 1680, 154 }, { 2110, 216 }, { 2520, 196 }, { 2868, 216 }, { 3288, 184 } },   -- (night/06nov-rw: the harbour +208)
     citypark = { { 60, 184 }, { 476, 184 }, { 820, 188 }, { 1132, 156 }, { 1320, 184 }, { 1640, 184 } },
     downtown = { { 60, 184 }, { 340, 184 }, { 650, 184 }, { 1060, 184 }, { 1340, 184 }, { 1668, 148 } },
   }
@@ -27,6 +27,10 @@ return function(api)
   -- the bottom of the world, then every 120 px up to the top). Pepper stands on the highest floor 60-236 px down
   -- the screen at the camera + 140, or is left out. Saves sweep_<level>_y<camY>_x<cam>.png (1x), then quits.
   if os.getenv("LOOK_SWEEP") then
+    -- (art/dt-highroad-06nov) LOOK_OLDHOUSES=1: decision 2a off, the old plaza houses (arthooks H.PLAZA_FRONTS)
+    if os.getenv("LOOK_OLDHOUSES") then (package.loaded.arthooks or require("arthooks")).PLAZA_FRONTS = false end
+    -- (night/06nov-dt, fix round 2) LOOK_CLOSED=1: the closed street (arthooks H.CLOSED_STREET, decision 2)
+    if os.getenv("LOOK_CLOSED") then (package.loaded.arthooks or require("arthooks")).CLOSED_STREET = true end
     love.update = function(dt)
       dt = 1 / 60; T = T + dt
       old(dt)

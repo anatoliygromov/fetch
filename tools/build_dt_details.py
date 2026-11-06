@@ -19,7 +19,7 @@ steel and copper ramps (tools/build_dt_street.py), its reds and greens.
   town_tier.png        play, outlined (scene.lua, the TIER: 50 x 58, drawn at x0 - 1, y0 - 1): the fountain's top
                        basin, a stone dish on a coursed column and a foot (the same silhouette as before).
   town_bowl.png        play, outlined (the FOUNTAIN: 34 x 82): the lower basin's dish on its coursed column.
-  town_rim.png         play, outlined (each RIM: 18 x 18): the pool's coping posts.
+  town_rim.png         play, outlined (each RIM: 18 x 18): the basin's corner bollard (art/dt-audit-06nov: it read as a brick cube).
   town_jet.png         decoration (scene.lua drawTerrainArt; no outline): the water falling from the top tier's lip to
                        the pool, 4 frames of 6 x 88 side by side (white dashes running down a 2 px stream that curls off
                        the lip, a splash at the bottom); the left stream as drawn, the right one mirrored. Its column 5
@@ -46,6 +46,8 @@ C = {
     "e1": (96, 146, 84), "e2": (56, 88, 70), "e3": (43, 74, 56),                                             # sign green
     "w": (244, 238, 243),                                                                                    # sign white
     "j1": (247, 249, 250), "j2": (150, 166, 174), "j3": (112, 132, 156),                                     # falling water
+    "q1": (90, 80, 100), "q2": (74, 64, 90), "q3": (68, 58, 86), "q4": (44, 38, 58),                        # quay greys (as on screen)
+    "b1": (150, 186, 206), "b2": (80, 124, 160), "b3": (60, 94, 126),                                        # basin water
 }
 
 
@@ -236,34 +238,65 @@ def bowl():
 
 
 def rim():
+    # (art/dt-audit-06nov) the audit: "lone grey brick cubes" by the fountain. Each RIM is the basin's corner bollard:
+    # one granite post, no joints, a chamfered cap stone (Pepper's flat top), a shadow under the cap, a round shaft
+    # (lit left, mid, shade right), a plinth on the pavement. Same box, same 18 x 18.
     cv = Cv(18, 18)
-    cv.rect(1, 0, 16, 17, "g2"); cv.rect(0, 1, 17, 16, "g2")
-    cv.rect(1, 1, 16, 1, "g1"); cv.rect(1, 2, 16, 4, "g2"); cv.rect(1, 5, 16, 5, "g3")    # the coping stone
-    cv.rect(1, 6, 1, 16, "g1"); cv.rect(16, 6, 16, 16, "g3"); cv.rect(8, 6, 8, 11, "g3")   # two blocks under it
-    cv.rect(1, 11, 16, 11, "g3"); cv.rect(4, 12, 4, 16, "g3"); cv.rect(12, 12, 12, 16, "g3")
+    cv.rect(1, 0, 16, 5, "g2"); cv.rect(0, 1, 17, 4, "g2")                           # the cap stone, chamfered
+    cv.rect(1, 1, 16, 1, "g1"); cv.rect(1, 4, 16, 4, "g3")
+    cv.rect(2, 5, 15, 5, "g4")                                                       # the shadow under the cap
+    cv.rect(3, 6, 14, 15, "g2")                                                      # the shaft, round
+    cv.rect(3, 6, 4, 15, "g1"); cv.rect(5, 6, 5, 15, "g2"); cv.rect(12, 6, 13, 15, "g3"); cv.rect(14, 6, 14, 15, "g4")
+    cv.rect(2, 16, 15, 17, "g3"); cv.rect(2, 16, 15, 16, "g2")                       # the plinth
     cv.outline()
     return cv
 
 
 def jet():
-    FW, FH = 6, 88
+    """the fountain's two streams (night/06nov-dt, review round 1: "1 px dotted jets"): 4 frames of 10 x 72, a 2 px
+    stream (white over light blue) that curls off the tier's lip and falls into the basin's water band, a lighter
+    pulse running down it, its foot widening as it meets the water (the splash ring is drawn on the band, scene.lua)"""
+    FW, FH = 10, 72
     cv = Cv(FW * 4, FH)
     for f in range(4):
         ox = f * FW
-        for y in range(FH - 3):
-            x = 5 if y < 2 else (4 if y < 8 else 3)                       # it curls off the lip, then falls straight
-            w = 1 if y < 2 else 2
-            lit = (y - 2 * f) % 8 < 3                                     # a white dash every 8 rows, 2 rows on per frame
-            cv.put(ox + x, y, "j1" if lit else "j2")
-            if w == 2: cv.put(ox + x - 1, y, "j2" if lit else "j3")
-        sp = [(1, 5), (2, 4)] if f % 2 else [(2, 5), (1, 4)]              # the splash on the pool: two rows, flickering
-        cv.rect(ox + sp[0][0], FH - 2, ox + sp[0][1], FH - 2, "j2"); cv.rect(ox + sp[1][0], FH - 1, ox + sp[1][1], FH - 1, "j1")
-        cv.rect(ox + 2, FH - 3, ox + 4, FH - 3, "j1")
+        for y in range(FH - 6):
+            x = 8 if y < 2 else (7 if y < 6 else 5)                       # off the lip, then straight down
+            pulse = (y - 3 * f) % 12 < 2
+            cv.put(ox + x, y, "j3" if not pulse else "j2"); cv.put(ox + x + 1, y, "j1")
+        cv.rect(ox + 4, FH - 6, ox + 7, FH - 5, "j1")                     # the crown of the splash
     return cv
 
 
+def basin():
+    """(night/06nov-dt, review round 1: "the basin is a pit into deep water") the fountain basin front-on, 112 x 68,
+    between the two RIM posts (x 1736-1848, y 412-479): the far coping (3 rows, open where the column stands), the
+    water's band (8 rows: a lit edge, the surface, a ripple row), the near granite kerb 24 rows high (a lit coping, a
+    dark lip, two 10 px ashlar courses), then the quay's courses to the bottom (the deep water hidden). Ground: no
+    outline. Drawn after the fountain's bowl, so the column stands in the water behind the kerb"""
+    W, H = 112, 68
+    cv = Cv(W, H)
+    col0, col1 = 1776 - 1736 - 1, 1808 - 1736                            # the column (FOUNTAIN x 1776-1808, its ink)
+    for x in range(W):
+        if col0 <= x <= col1: continue
+        cv.put(x, 0, "g1"); cv.put(x, 1, "g2"); cv.put(x, 2, "g3")
+    cv.rect(0, 3, W - 1, 10, "b2"); cv.rect(0, 3, W - 1, 3, "b1"); cv.rect(0, 4, W - 1, 4, "b3")   # the water band
+    for x in range(3, W - 6, 14):
+        cv.rect(x, 6, x + 5, 6, "b1"); cv.rect(x + 8, 8, x + 10, 8, "b1"); cv.rect(x + 2, 9, x + 7, 9, "b3")
+    cv.rect(0, 11, W - 1, 34, "g2")                                      # the near kerb
+    cv.rect(0, 11, W - 1, 11, "g1"); cv.rect(0, 12, W - 1, 12, "g1"); cv.rect(0, 14, W - 1, 14, "g3")
+    for k, y in enumerate((15, 25)):
+        cv.rect(0, y + 9, W - 1, y + 9, "g3")
+        for jx in range(8 + (12 if k % 2 else 0), W, 24): cv.rect(jx, y, jx, y + 8, "g3")
+    cv.rect(0, 35, W - 1, H - 1, "q2")                                   # the quay's courses below, in town_ground's
+    for k, y in enumerate(range(35, H, 12)):                             # quay greys (the street's wall)
+        cv.rect(0, y, W - 1, y, "q4"); cv.rect(0, y + 1, W - 1, y + 1, "q1")
+        if y + 6 < H: cv.rect(0, y + 6, W - 1, min(H - 1, y + 11), "q3")
+        for jx in range(4 + (12 if k % 2 else 0), W, 24): cv.rect(jx, y + 1, jx, min(H - 1, y + 11), "q4")
+    return cv
+
 def build():
-    return {"town_balcony56": balcony(56), "town_balcony64": balcony(64), "town_spring": spring(),
+    return {"town_basin": basin(), "town_balcony56": balcony(56), "town_balcony64": balcony(64), "town_spring": spring(),
             "town_stopsign": stopsign(), "town_tier": tier(), "town_bowl": bowl(), "town_rim": rim(), "town_jet": jet()}
 
 

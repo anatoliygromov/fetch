@@ -175,7 +175,10 @@ def house(nb, hue, roof, ground, gable_h=0):
     while i < nb:                                                  # the ground floor
         k = ground[i]
         if k == "W": stamp_key(cv, WIN, bx[i] - 12, H - FLOOR0 + 12, S_)
-        elif k == "D": stamp_key(cv, DOOR, bx[i] - DOOR.shape[1] // 2, b - 3 - DOOR.shape[0], S_)
+        elif k == "D":
+            stamp_key(cv, DOOR, bx[i] - DOOR.shape[1] // 2, b - 3 - DOOR.shape[0], S_)
+            dx0 = bx[i] - DOOR.shape[1] // 2                       # (fix round 3 review: a dark threshold row under
+            cv.rect(dx0 + 1, b - 3, dx0 + DOOR.shape[1] - 2, b - 3, "sv")   # the door seats it on the square)
         elif k == "S":
             cx = (bx[i] + bx[i + 1]) // 2 if i + 1 < nb else bx[i]
             stamp_key(cv, SHOP, cx - SHOP.shape[1] // 2, b - 3 - SHOP.shape[0], S_); i += 1
@@ -457,13 +460,21 @@ def home():
         cv.rect(fx, by - 4, fx + 4, by - 1, "E"); cv.rect(fx + 4, by - 3, fx + 4, by - 1, "X")
         cv.rect(fx + 1, by - 7, fx + 3, by - 5, "P" if i % 2 == 0 else "Q"); cv.put(fx + 2, by - 8, "P" if i % 2 == 0 else "Q")
     ground = cv.role[BTF.CORNICE:]
-    up = BTF.upper(gw, {0: [42, 104], 1: [42, 104]})
+    # (night/06nov-dt, the facade lift) Pepper's home in the street's style a (tools/build_dt_facades.py): pediments
+    # over the first floor, hoods over the second, geranium boxes, dentil courses, lace curtains
+    import build_dt_facades as BF
+    for k in "OU":
+        C.setdefault(k, BF.C[k])
+    up = BF.upper(gw, [42, 104], dict(BF.STYLES["a"], anchors=False))   # (no room for anchors at its edge)
     role = np.vstack([up, ground])
     role[:, gw - 2:] = np.where(np.isin(role[:, gw - 2:], ["W"]), "S", role[:, gw - 2:])   # its right edge in shade
     im = np.zeros((role.shape[0], gw, 4), np.uint8)
     for y in range(role.shape[0]):
         for x in range(gw):
             im[y, x] = (*C[role[y, x]], 255)
+    qn = BF.quoin()[:, ::-1]                                       # (fix round 2) its right flank on the square: quoins
+    m = qn[..., 3] > 0
+    im[:, gw - qn.shape[1]:][m] = qn[m]
     return im
 
 

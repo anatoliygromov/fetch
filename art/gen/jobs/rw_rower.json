@@ -3,25 +3,20 @@
  "level": "riverwalk",
  "layer": "play",
  "kind": "character",
- "real_height_m": 1.13,
- "target_px": [
-  63,
-  52
- ],
- "checks_px": {
-  "head_px": 11,
-  "seat_row": 33,
-  "waterline_row": 47
- },
- "subject": "an adult man in a navy coat and a dark flat cap, seated, seen exactly from the side facing right, rowing: both hands on the oar handles in front of his chest, the near oar running down to the left into the water, its blade under the surface",
- "part_map": "the round skin-coloured shape is his head with the dark cap on top, the blue shape his coat and arms reaching right to the handles, the dark box his thighs, the thin tan line the oar down to its blade at the bottom left.",
- "size_sentence": "seated, his head is a little higher than the dog's head; a grown man, not a child.",
- "model": "sc_pe",
+ "real_height_m": 0.92,
+ "target_px": [31, 43],
+ "checks_px": {"head_px": 11, "cap_top_row": 0, "gunwale_row": 34, "seat_row": 42, "hands": [0, 20, 5, 26]},
+ "subject": "a friendly grandfather rowing a boat, seen exactly from the side, sitting and facing to the LEFT: a dark brown-grey flat tweed cap with a short brim, a neat short white beard and white hair above the ear, a warm skin face with a small round nose and one dark eye, a navy blue knitted fisherman's jumper with fine ribbed rows and a lit top edge on the shoulders, his near arm reaching forward and a little down with both hands closed in fists at chest height as if he holds an oar handle (no oar is drawn), dark blue-grey trousers on his thighs as he sits on a low seat",
+ "part_map": "the dark grey cap shape is his flat cap (brim to the left), the round skin-coloured shape is his head (exactly that size, he looks left), the near-white shape on his chin is the beard, the big blue shape is the knitted jumper (his back on the right), the blue bar reaching left is his near arm and the small light skin oval at its end his two fists, the dark grey box at the bottom his thighs reaching forward to the knees.",
+ "size_sentence": "sitting down, the top of his cap is level with the top of the dog's head and his head is a little smaller than the dog's head. He is a grown-up grandfather, not a child.",
+ "model": "sc_gpt25",
  "variants": 2,
+ "references": 3,
  "tier": "A",
- "family": "rw_water",
+ "family": "rw_harbour_06nov",
  "slot": {
-  "file": "riverwalk/art/scene/rower.png",
-  "where": "River Walk screens 8-9: over each ROWBOAT hull at its middle thwart (Sp.drawRowboat), animated by the rowing loop (sc_anim, 8 frames, 26 credits, after this still)"
- }
+  "file": "riverwalk/art/scene/rw_rower.png",
+  "where": "River Walk screens 8-9 (the harbour): the rower on the middle thwart of each ROWBOAT (level/riverwalk.lua movers), drawn by Sp.drawRowboat (setpieces.lua) between the hull's far side and its near side, so the gunwale hides him from row 34 down; his arms are re-keyed per frame of the 6-frame rowing loop to follow the oar handles (tools/build_rw_rowboat.py)"
+ },
+ "extra": "Image 2 shows approved sprites from this game at 4x: match their pixel size, outline and flat shading. Image 3 is the design target for this man (a concept painting, not pixels): keep his cap, beard, jumper and friendly face, but at exactly the grey shape's size. Draw nothing else: no boat, no oar, no seat, no water."
 }

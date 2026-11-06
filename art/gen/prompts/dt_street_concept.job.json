@@ -1,0 +1,23 @@
+{
+ "name": "dt_street_concept",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/concepts/base/dt_street_y240_x1920.png"
+ ],
+ "prompt_file": "art/gen/prompts/dt_street_concept.txt",
+ "tool": "artlist",
+ "family": "dt_fronts_06nov",
+ "asset": "town_shelter_tall",
+ "slot": {
+  "file": "riverwalk/art/scene/town_shelter_tall.png and the fronts",
+  "where": "Downtown tall street, camera y 240 x 1920, the tram stop"
+ },
+ "credits": 320,
+ "ledger_job": "dt_street_concept@1106-202522"
+}

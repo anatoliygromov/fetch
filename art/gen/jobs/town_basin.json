@@ -1,0 +1,21 @@
+{
+ "name": "town_basin",
+ "level": "downtown",
+ "layer": "ground",
+ "kind": "decoration",
+ "real_height_m": 1.48,
+ "target_px": [
+  112,
+  68
+ ],
+ "tier": "C",
+ "family": "dt_night_06nov",
+ "method": "built from parts drawn once, stamped on integer grids, tools/build_dt_details.py",
+ "build": "tools/build_dt_details.py",
+ "frame": "docs/review/06nov-night/dt/round1/frames/sweep_downtown_y240_x1632.png",
+ "slot": {
+  "file": "riverwalk/art/scene/town_basin.png",
+  "where": "Downtown tall, between the two RIM posts of the fountain (x 1736-1848), top on def.foot - 12, drawn after the bowl (scene.lua FOUNTAIN)"
+ },
+ "concept": "review/06nov-dt dt_canal_basin.md fix 3 (design only)"
+}

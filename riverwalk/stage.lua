@@ -237,8 +237,11 @@ function St:ballLands(x, y, vx, vy)
     local ny = y + vy * dt
     local nx = math.max(14, math.min(w.width - 14, x + vx * dt))
     if w:solidIn(nx - 3, nx + 3, y - 6, y - 1) then vx = 0 else x = nx end
-    local f = w:floor(x - 3, x + 3, x, y - 0.5, ny, y)
-    if f then return not w:inWater(x, f) and not w:solidIn(x - 2, x + 2, f - 5, f - 1) and f < w.height - 4 end
+    local f, on = w:floor(x - 3, x + 3, x, y - 0.5, ny, y)
+    if f then                                                     -- (night/06nov-rw) not on a boat or a lift: they
+      for _, m in ipairs(self.movers) do if on == m then return false end end   -- move on (the harbour's 185 px boats
+      return not w:inWater(x, f) and not w:solidIn(x - 2, x + 2, f - 5, f - 1) and f < w.height - 4   -- caught a ball
+    end                                                           -- knocked off the jetty and rowed it away)
     y = ny
     if w:inWater(x, y) or y > w.height then return false end
   end
@@ -584,6 +587,7 @@ function St:draw(debug)
   if style then AH.drawTownBack(self, cam) end                    -- the tall Downtown: the spire, the tall house fronts
   AH.drawTrams(self, cam)                                          -- the back lane's tram and its stop sign (faded)
   if style then AH.drawTownStops(self, cam) end                    -- the tall Downtown: the shelters, in front of the tram
+  if style then AH.drawBridgePiers(self, cam) end                  -- (art/dt-audit-06nov) the footbridge's abutments
   for _, pr in ipairs(self.def.props) do if pr.layer == "back" then prop(pr, cam, C.back) end end
   if style then Sc.drawBalconyRails(self.def, cam) end              -- (art/dt-roofs-06nov) the balconies' railings
   if style then Sc.drawSpout(self.def, cam) end
@@ -595,13 +599,15 @@ function St:draw(debug)
   local w = self.world
   if not self.ground then
     if style then self.ground = Sc.paintGroundArt(w, style, self.def.foot)
-    else self.ground = grey and Sc.paintGroundGrey(w) or Sc.paintGround(w, self.def.props) end
+    else self.ground = grey and Sc.paintGroundGrey(w) or Sc.paintGround(w, self.def.props, self.def) end
   end
   use("ground")
   for _, ps in ipairs(self.def.passages or {}) do Sc.passageBack(ps, cam) end
   lg.setColor(1, 1, 1, 1)
   self.ground:draw(cam, camY)                                      -- (in chunks, the ones on screen: scene.lua)
+  if style then AH.drawQuayDrains(self, cam) end                   -- (art/dt-audit-06nov) the quay wall's drain arches
   if lk then Look.road(self, cam, Sc) end                          -- the road rows recede (row scrolling)
+  if self.def.ground == "quay" then Sc.drawRoadEnds(cam) end      -- (art/rw-ground-06nov) the kerb turns the road's ends
   for _, ps in ipairs(self.def.passages or {}) do Sc.passageFront(ps, cam) end
   if style then Sc.drawTerrainArt(self.def, cam, self.t) end         -- the slide, the fountain's jets
   -- the river Pepper can fall into is not drawn: it is a gap in the quay, and the river art shows through
@@ -634,7 +640,10 @@ function St:draw(debug)
           end
         end
       end
-      lg.draw(im, lx, top)
+      local wl, wt
+      if highLamp(l) and style == "town" and self.def.foot then wl, wt = AH.wallLantern(im, l.x - cam, l.y, self.def, cam) end
+      if wl then lx, top = wl, wt                                  -- (art/dt-audit-06nov) a wall lantern on a bracket:
+      else lg.draw(im, lx, top) end                                -- no lamp post stands on a ledge
       if l.lit then Sc.lampLight(lx + im:getWidth() / 2, top + 17, self.t - (l.litAt or -9), self.t) end
     end
   end
@@ -656,9 +665,9 @@ function St:draw(debug)
     elseif m.lift then Lf.draw(m, cam, Sc, self.t)                     -- a lift (lift.lua)
     elseif grey then                                                   -- greybox level: labelled boxes (the duck boat)
       Sc.outlined(C.prop, C.propEdge, m.x0 - cam, m.y0, m.x1 - m.x0, m.y1 - m.y0); Sc.label(m.name or "PONTOON", (m.x0 + m.x1) / 2 - cam, m.y0 + 8)
-    else                                                           -- the pontoon (art 54 x 12; its deck row 2 is the top)
-      if m.name == "ROWBOAT" then Sp.drawRowboat(m, cam, self.t)        -- a rowing boat, its rower at the oars
-      else lg.setColor(1, 1, 1, 1); lg.draw(art.pontoon, math.floor(m.x0 - cam + 0.5) - 3, m.y0 - 2) end
+    else                                                           -- the pontoon (art 54 x 19, 6 Nov audit: cleats in rows
+      if m.name == "ROWBOAT" then Sp.drawRowboat(m, cam, self.t)        -- 0-2, its deck ink at row 3 = y0 - 2, floats in the river)
+      else lg.setColor(1, 1, 1, 1); lg.draw(art.pontoon, math.floor(m.x0 - cam + 0.5) - 3, m.y0 - 5); Sp.pontoonWater(m, cam) end
     end
   end
   if lk then Look.off() end                                        -- the bones, the girl, the ball, Pepper: as drawn

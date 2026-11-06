@@ -43,6 +43,8 @@ C = dict(
     bl=(178, 124, 60), bm=(150, 94, 42), bd=(112, 64, 28),              # bread crust
     sl=(132, 146, 156), sm=(88, 100, 112), ss=(64, 74, 86), sd=(46, 54, 64),   # steel (dark, so it reads faded)
     gb=(150, 166, 174),                                                # the glass's reflection band
+    ii=(56, 84, 70), im=(72, 110, 90), il=(104, 144, 118),                # the shelter's green cast iron (night/06nov-dt)
+    ga=(132, 162, 170), gw=(176, 200, 206),                            # its glass canopy, the glint
     pc=(113, 108, 94), pk=(104, 63, 74),                               # the poster's card (150 on screen), pink icing
     tl=(135, 130, 120), tm=(110, 103, 95), tv=(77, 72, 68),             # granite (the fronts' L, T, V)
     pd=(58, 50, 56), pdd=(42, 36, 42), pf=(84, 76, 80),                # the passage, its shade, its floor
@@ -249,46 +251,72 @@ def oriel_bay():
 
 
 def shelter():
-    """the tram stop shelter, 140 x 115: a flat steel roof, three posts, a clear glass back wall (the facade shows
-    through it: only its edge rails and the reflections are drawn, on a grid), a lit poster"""
+    """the tram stop shelter, 140 x 115 (night/06nov-dt, after the producer's concept dt_street_concept_a: "it shows as
+    thin grey wireframe lines"): three dark green cast-iron posts on stepped feet with capitals, a glass canopy (light
+    panes between glazing bars, one glint per pane) on a beam, an iron cresting along its top, quarter-round brackets
+    from each post to the beam, a slatted bench behind the baker's board (her perch stands in front of it), the lit
+    poster at the left end. Parts drawn once: the cresting motif (8 px), a bracket, a post, a pane"""
     W, H = 140, 115
     cv = Cv(W, H)
-    roof = 7
-    cv.rect(0, 0, W - 1, 0, "sl"); cv.rect(0, 1, W - 1, roof - 3, "sm"); cv.rect(0, roof - 2, W - 1, roof - 2, "ss")
-    cv.rect(2, roof - 1, W - 3, roof - 1, "sd")                         # the roof's underside
-    gx0, gx1, gy0, gy1 = 4, W - 5, roof, H - 13                          # the glass, 13 px clear of the pavement
-    cv.rect(gx0, gy0, gx1, gy0 + 1, "sm")                                # its top rail
-    for sx in (44, 96):                                                  # one clean 45 degree band, 2 px, per pane
-        for k in range(22):
-            cv.rect(sx + k, gy0 + 12 + k, sx + k + 1, gy0 + 12 + k, "gb")
-    cv.rect(gx0, gy1 - 1, gx1, gy1 - 1, "sm")                            # the glass's bottom rail
-    cv.rect(gx0, gy1, gx1, gy1, "ss")
-    for px in (0, W // 2 - 2, W - 4):                                    # posts, 4 px: lit, mid, mid, shade
-        cv.rect(px, roof - 1, px + 3, H - 1, "sm"); cv.rect(px, roof - 1, px, H - 1, "sl"); cv.rect(px + 3, roof - 1, px + 3, H - 1, "ss")
-        fx0, fx1 = max(0, px - 1), min(W - 1, px + 4)                    # a foot plate (bolted to the pavement)
-        cv.rect(fx0, H - 3, fx1, H - 3, "sl"); cv.rect(fx0, H - 2, fx1, H - 1, "ss")
-        cv.rect(px, roof + 1, px + 3, roof + 1, "sd")                    # the post's collar under the roof
-    cv.rect(0, 2, W - 1, 2, "sl")                                        # the roof's fascia: a lit line, a dark groove
-    cv.rect(0, 3, W - 1, 3, "ss")
-    # (no bench: the baker's board on its crates stands in front of the shelter and is the seat; art/dt-sample-05nov)
-    ax0, ax1, ay0, ay1 = 5, 35, 30, 92                                   # the poster at the left end: clear of the crates,
-                                                                         # and of the stop sign on the right (arthooks)
-    cv.rect(ax0, ay0, ax1, ay1, "ss"); cv.rect(ax0, ay0, ax1, ay0, "sm"); cv.rect(ax0, ay0, ax0, ay1, "sm")
+    CREST = ["...ii...",
+             "..i..i..",
+             ".i....i.",
+             ".i.ii.i.",
+             "i..ii..i"]
+    for x0 in range(2, W - 2, 8):                                        # the cresting, its rail
+        for dy, rr in enumerate(CREST):
+            for dx, ch in enumerate(rr):
+                if ch == "i" and x0 + dx < W - 2: cv.put(x0 + dx, dy, "ii")
+    cv.rect(2, 0, W - 3, 0, "ii")                                        # (review round 1: a solid top rail, not dots)
+    cv.rect(0, 5, W - 1, 5, "ii")
+    cv.rect(0, 6, W - 1, 6, "il"); cv.rect(0, 7, W - 1, 8, "im"); cv.rect(0, 9, W - 1, 9, "ii")   # the canopy's front beam
+    gy0, gy1 = 10, 21                                                    # the glass canopy
+    cv.rect(0, gy0, W - 1, gy1, "ga")
+    bars = list(range(0, W, 23)) + [W - 1]
+    for bx in bars: cv.rect(bx, gy0, min(W - 1, bx + 1), gy1, "im")
+    for bx in bars[:-1]:                                                 # one glint per pane, the same on every pane
+        for k in range(6): cv.put(bx + 5 + k, gy0 + 8 - k, "gw")
+        cv.rect(bx + 2, gy0, bx + 21, gy0, "gw")
+    cv.rect(0, gy1 + 1, W - 1, gy1 + 1, "il"); cv.rect(0, gy1 + 2, W - 1, gy1 + 3, "im"); cv.rect(0, gy1 + 4, W - 1, gy1 + 4, "ii")
+    posts = (1, W // 2 - 3, W - 6)
+    R = 13
+    for px in posts:                                                     # the posts, 5 px: lit, three mid, shade
+        cv.rect(px, gy1 + 5, px + 4, H - 1, "im"); cv.rect(px, gy1 + 5, px, H - 1, "il"); cv.rect(px + 4, gy1 + 5, px + 4, H - 1, "ii")
+        cv.rect(px - 1, gy1 + 5, px + 5, gy1 + 7, "im"); cv.rect(px - 1, gy1 + 5, px + 5, gy1 + 5, "il"); cv.rect(px - 1, gy1 + 7, px + 5, gy1 + 7, "ii")
+        for i, (dx0, dx1) in enumerate(((-1, 5), (-2, 6), (-2, 6))):     # the stepped foot
+            y = H - 6 + 2 * i
+            cv.rect(max(0, px + dx0), y, min(W - 1, px + dx1), y + 1, "im"); cv.rect(max(0, px + dx0), y, min(W - 1, px + dx1), y, "il")
+        cv.rect(px - 1, H - 13, px + 5, H - 12, "ii")                    # a collar over the foot
+        for side in (-1, 1):                                             # quarter-round brackets to the beam
+            ox = px + (5 if side > 0 else -1)
+            if not (0 <= ox + side * R < W): continue
+            ccx, ccy = ox + side * R, gy1 + 5 + R                        # (a quarter circle round the corner's
+            for t in np.linspace(0, np.pi / 2, 60):                     # far point: post to beam)
+                cv.put(int(round(ccx - side * R * np.cos(t) - (0.5 if side > 0 else -0.5) + 0.5)) if False else int(np.floor(ccx - side * R * np.cos(t) + 0.5)),
+                       int(np.floor(ccy - R * np.sin(t) + 0.5)), "ii")
+            cv.rect(min(ox, ox + side * 3), gy1 + 6, max(ox, ox + side * 3), gy1 + 6, "ii")   # its strap on the beam
+    bx0, bx1 = 40, W - 9                                                 # the bench (behind the board and its crates)
+    for y in (H - 37, H - 31):                                           # two back slats
+        cv.rect(bx0, y, bx1, y + 2, "wm"); cv.rect(bx0, y, bx1, y, "wl"); cv.rect(bx0, y + 2, bx1, y + 2, "ws")
+    cv.rect(bx0, H - 22, bx1, H - 20, "wm"); cv.rect(bx0, H - 22, bx1, H - 22, "wl"); cv.rect(bx0, H - 20, bx1, H - 20, "wd")
+    for lx in (bx0 + 3, bx1 - 5):                                        # its iron legs and back stays
+        cv.rect(lx, H - 38, lx + 1, H - 1, "ii")
+    ax0, ax1, ay0, ay1 = 8, 34, 34, 96                                   # the poster in a green iron frame
+    cv.rect(ax0, ay0, ax1, ay1, "ii"); cv.rect(ax0, ay0, ax1, ay0, "im"); cv.rect(ax0, ay0, ax0, ay1, "im")
     cv.rect(ax0 + 2, ay0 + 2, ax1 - 2, ay1 - 2, "pc")
-    # a cinnamon bun, 21 px: a round crust (lit upper left, shade lower right), a spiral groove, pink icing on top
-    bcx, bcy, R = (ax0 + ax1) / 2, ay0 + 26, 10.5
-    for y in range(int(bcy - R) - 1, int(bcy + R) + 2):
-        for x in range(int(bcx - R) - 1, int(bcx + R) + 2):
+    bcx, bcy, Rb = (ax0 + ax1 + 1) / 2, ay0 + 24, 9.5
+    for y in range(int(bcy - Rb) - 1, int(bcy + Rb) + 2):
+        for x in range(int(bcx - Rb) - 1, int(bcx + Rb) + 2):
             dx, dy = x + 0.5 - bcx, y + 0.5 - bcy; d = np.hypot(dx, dy)
-            if d >= R: continue
+            if d >= Rb: continue
             c = "bm"
-            if d > R - 2.2: c = "bl" if dx + dy < -3 else ("bd" if dx + dy > 3 else "bm")
+            if d > Rb - 2.2: c = "bl" if dx + dy < -3 else ("bd" if dx + dy > 3 else "bm")
             th = (np.degrees(np.arctan2(dy, dx)) % 360) / 360
-            if abs(d - (2.2 + 7.0 * th)) < 0.75 and d < R - 2: c = "bd"     # the spiral groove
-            if d < R - 3 and dy < 1.5 and c == "bm" and (x + y) % 1 == 0 and d > 1.5: c = "pk" if dy < -0.5 or abs(dx) < 5 else c
+            if abs(d - (2.0 + 6.5 * th)) < 0.75 and d < Rb - 2: c = "bd"
+            if d < Rb - 3 and dy < -0.5 and c == "bm" and d > 1.5: c = "pk"
             cv.put(x, y, c)
-    cv.rect(ax0 + 7, ay1 - 14, ax1 - 7, ay1 - 12, "pk")                  # two pink bands under it (no text)
-    cv.rect(ax0 + 11, ay1 - 9, ax1 - 11, ay1 - 8, "bm")
+    cv.rect(ax0 + 6, ay1 - 14, ax1 - 6, ay1 - 12, "pk")
+    cv.rect(ax0 + 10, ay1 - 9, ax1 - 10, ay1 - 8, "bm")
     return cv
 
 

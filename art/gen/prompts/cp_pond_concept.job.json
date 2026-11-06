@@ -1,0 +1,23 @@
+{
+ "name": "cp_pond_concept",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/concepts/base/cp_pond_y144_x0640.png"
+ ],
+ "prompt_file": "art/gen/prompts/cp_pond_concept.txt",
+ "tool": "artlist",
+ "family": "cp_pond_06nov",
+ "asset": "cp_pond",
+ "slot": {
+  "file": "scene.lua pond bank (built)",
+  "where": "City Park tall, the duck pond, camera y 144 x 640"
+ },
+ "credits": 320,
+ "ledger_job": "cp_pond_concept@1106-202522"
+}
