@@ -42,7 +42,7 @@ Look.scripts = {
     bands = { { 0, "4b7ec2" }, { 16, "5a8aca" }, { 32, "6b98d1" }, { 48, "80a8d7" }, { 62, "98b8db" },
               { 76, "b2c6da" }, { 89, "cbd1d4" }, { 101, "dfd7c9" }, { 112, "ecdabd" }, { 122, "f4dcb3" } },
     fg = { dark = hex("161c2c"), mid = hex("1f2b42"), rim = hex("4c5d7c"), warm = hex("9a8174"), warmK = 0.05 },
-    kinds = { verge = 0.78, bollards = 0.22 },
+    kinds = { hedge = 1 },                                         -- (6 Nov: clipped hedges; the grass spikes and the bollards read as ink and pegs)
     fade = { back = 0.28 },                                        -- (as before: decoration, railing, kiosks)
   },
   citypark = {                                                     -- golden autumn afternoon
@@ -254,7 +254,25 @@ local function clump(r, kind, w, h)
     for dx = 1, 3 do put(x + dx, h - 16, FG.dark) end
     put(x + 1, h - 13, FG.mid); put(x + 1, h - 12, FG.mid)
   end
-  if kind == "bollards" then bollard(1); bollard(w - 6)
+  if kind == "hedge" then                                          -- (art/rw-ground-06nov) a clipped hedge on the near
+    -- verge: one dark mass with round ends (a quarter circle each) and a top of even leaf lobes (every 8 px), the
+    -- leaf clusters a shade lighter on a grid; the back light rims its top (below). Nothing spiky, nothing loose.
+    local bh = h - 6
+    local rr = math.min(9, math.floor(bh / 2))
+    local LOBE = { 3, 1, 0, 0, 0, 0, 1, 3 }                          -- round humps, 8 px each
+    for x = 0, w - 1 do
+      local e = math.min(x, w - 1 - x)
+      local endc = 0
+      if e < rr then endc = rr - math.sqrt(rr * rr - (rr - e - 0.5) ^ 2) end
+      column(x, h - bh + math.floor(endc + 0.5) + LOBE[x % 8 + 1], FG.dark)
+    end
+    for row = 0, 2 do                                               -- leaf clusters: 3 x 2, every 12 px, rows offset
+      local y = h - bh + 5 + row * 6
+      for x = 6 + (row % 2) * 6, w - 8, 12 do
+        if solid(x - 2, y - 2) and solid(x + 3, y - 2) then put(x, y, FG.mid); put(x + 1, y, FG.mid); put(x + 2, y, FG.mid); put(x + 1, y - 1, FG.mid) end
+      end
+    end
+  elseif kind == "bollards" then bollard(1); bollard(w - 6)
   elseif kind == "chain" then                                      -- low posts with a chain sagging between them
     local n = math.max(2, math.floor((w - 4) / 18))
     local gap = (w - 4) / n
@@ -303,7 +321,7 @@ local function flatSpans(world, foot)
 end
 local function pick(r, kinds)
   local u, acc, last = r(0, 1), 0, nil
-  for _, k in ipairs({ "bollards", "chain", "verge" }) do
+  for _, k in ipairs({ "bollards", "chain", "verge", "hedge" }) do
     if kinds[k] then acc = acc + kinds[k]; last = k; if u < acc then return k end end
   end
   return last
