@@ -482,21 +482,22 @@ def build_swings():
     W = beam + 2 * spread + 2
     a = canvas(W, H)
     bx0 = spread + 1
+    LW = 5                                                # (night 6-7 Nov, final gate: "a wire frame") legs 5 px, beam 6
     for y in range(H):                                    # legs: straight 1:8 stairs, lit outer edge on the left
         o = (y - 2) // 8 if y >= 2 else 0
-        lx = bx0 - o; rx = bx0 + beam - 4 + o
-        rect(a, lx, y, 4, 1, SW_MID); put(a, lx, y, SW_LT); put(a, lx + 3, y, SW_SH)
-        rect(a, rx, y, 4, 1, SW_MID); put(a, rx, y, SW_LT); put(a, rx + 3, y, SW_SH)
-    rect(a, bx0 - 1, 0, beam + 2, 5, SW_MID)             # the beam, over the legs' tops
-    rect(a, bx0 - 1, 0, beam + 2, 1, SW_LT); rect(a, bx0 - 1, 4, beam + 2, 1, SW_SH)
-    rect(a, bx0 - 1, 0, 1, 5, SW_LT); rect(a, bx0 + beam, 0, 1, 5, SW_SH)
+        lx = bx0 - o; rx = bx0 + beam - LW + o
+        rect(a, lx, y, LW, 1, SW_MID); put(a, lx, y, SW_LT); put(a, lx + LW - 1, y, SW_SH)
+        rect(a, rx, y, LW, 1, SW_MID); put(a, rx, y, SW_LT); put(a, rx + LW - 1, y, SW_SH)
+    rect(a, bx0 - 1, 0, beam + 2, 6, SW_MID)             # the beam, over the legs' tops
+    rect(a, bx0 - 1, 0, beam + 2, 1, SW_LT); rect(a, bx0 - 1, 5, beam + 2, 1, SW_SH)
+    rect(a, bx0 - 1, 0, 1, 6, SW_LT); rect(a, bx0 + beam, 0, 1, 6, SW_SH)
     seat_y = H - 1 - 21
     for sx in (bx0 + 8, bx0 + beam - 8 - 16):             # two seats, 16 px, mirrored about the beam's middle
         for cx in (sx + 1, sx + 14):                      # chains with a hook at the beam
-            put(a, cx, 5, P_MID)
-            for y in range(6, seat_y):
+            put(a, cx, 6, P_MID)
+            for y in range(7, seat_y):
                 put(a, cx, y, P_LT if (y // 2) % 2 == 0 else P_MID)
-        rect(a, sx, seat_y, 16, 3, Y_MID); rect(a, sx, seat_y, 16, 1, Y_LT); rect(a, sx, seat_y + 2, 16, 1, Y_SH)
+        rect(a, sx, seat_y, 16, 4, Y_MID); rect(a, sx, seat_y, 16, 1, Y_LT); rect(a, sx, seat_y + 3, 16, 1, Y_SH)   # a 4-row seat
     return a
 
 
