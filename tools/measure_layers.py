@@ -131,7 +131,7 @@ add(["town_door", "town_sign", "town_spout"], "dt", "back", True, group="Downtow
 add(["town_house1", "town_house2", "town_house3"], "dt", "back", True, group="Downtown")   # art/fixes, decision 4
 add(["town_statue"], "dt", "play", group="Downtown")   # art/fixes: tagged play
 add(["town_ground"], "dt", "ground", group="Downtown")
-add(["town_tramshed70", "town_tramshed96", "town_crate_front", "town_parasol", "town_table_front", "town_stall", "town_awning80",
+add(["town_tramshed70", "town_crate_front", "town_parasol", "town_table_front", "town_stall", "town_awning80",
      "town_awning64", "town_pedestal", "town_shelter", "town_kiosk", "town_tub", "town_rim", "town_bowl", "town_tier",
      "town_shopsign"], "dt", "play", group="Downtown")
 add(["town_bollard"], "dt", "front", group="Downtown")
@@ -146,6 +146,10 @@ add(["town_crates70", "town_breadboard", "town_crate_leg", "town_portal_top", "t
 add(["cp_arbour_slat48", "cp_arbour_slat56", "cp_tower_deck56", "cp_tower_post4x106", "cp_tower_post4x72", "cp_walk1968_deck", "cp_walk704_deck"], "cp", "play", group="City Park")
 add(["cp_walk1968_rail", "cp_walk704_rail", "cp_walk1968_legs", "cp_walk704_legs"], "cp", "back", group="City Park")   # (cp-pond: the pylons unfaded, one post)
 add(["cp_arbour_posts48x106", "cp_arbour_posts48x122", "cp_arbour_posts56x106"], "cp", "back", True, group="City Park")
+# art/dt-built-06nov: screen 10's courtyard gate at true scale (decoration, arthooks H.freeGate, faded as the fronts)
+# and its doorstep (the GATE's perch, play)
+add(["town_tramshed96"], "dt", "back", True, group="Downtown")
+add(["town_gatestep96"], "dt", "play", group="Downtown")
 add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, group="Characters (never shaded)")
 # art/cp-critters-06nov: the magpie (drawn without the look, like every character) and the duck boat (a play mover)
 add(["magpie"], "cp", None, base=ART, group="Characters (never shaded)")

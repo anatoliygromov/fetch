@@ -1,0 +1,23 @@
+{
+ "name": "town_bollard",
+ "level": "downtown",
+ "layer": "front",
+ "kind": "prop",
+ "real_height_m": 0.9,
+ "target_px": [
+  16,
+  54
+ ],
+ "checks_px": {
+  "height": "54 (0.9 m at 60 px/m)",
+  "width": "16 (0.26 m)"
+ },
+ "tier": "C",
+ "family": "dt_built_06nov",
+ "method": "built by rule, tools/build_dt_built.py",
+ "build": "tools/build_dt_built.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_bollard.png",
+  "where": "Downtown tall, the 6 front pieces (x 620, 1260, 1900, 2440, 3180, 3440): centred, top at screen y 221 (scene.lua front layer)"
+ }
+}

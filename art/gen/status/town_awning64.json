@@ -1,0 +1,21 @@
+{
+ "name": "town_awning64",
+ "family": "dt_built_06nov",
+ "tier": "C",
+ "steps": {
+  "spec": {
+   "time": "2026-11-06 19:12"
+  },
+  "built": {
+   "build": "tools/fix_dt_06nov.py",
+   "time": "2026-11-06 19:12"
+  },
+  "ingame": {
+   "frame": "docs/review/06nov/dt_built/frame_town_awning64.png",
+   "time": "2026-11-06 19:12"
+  },
+  "review": {
+   "time": "2026-11-06 19:30"
+  }
+ }
+}

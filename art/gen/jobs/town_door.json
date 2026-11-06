@@ -1,0 +1,24 @@
+{
+ "name": "town_door",
+ "level": "downtown",
+ "layer": "back",
+ "kind": "building",
+ "real_height_m": 14.0,
+ "target_px": [
+  140,
+  432
+ ],
+ "checks_px": {
+  "door": "48 x 97 to the crown (1.05 x 2.1 m)",
+  "storey": "140 (3.0 m)",
+  "upper_window": "44 x 74 (build_tall_fronts.upper_window)"
+ },
+ "tier": "C",
+ "family": "dt_built_06nov",
+ "method": "built from stamped parts, tools/build_dt_built.py (the street's front parts)",
+ "build": "tools/build_dt_built.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_door.png",
+  "where": "Downtown tall, DOOR (x 0-28, the start): the image's left on x 0, bottom row on y 414 (scene.lua DOOR, faded 28 %)"
+ }
+}

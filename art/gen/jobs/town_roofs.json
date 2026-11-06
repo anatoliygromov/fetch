@@ -1,0 +1,23 @@
+{
+ "name": "town_roofs",
+ "level": "downtown",
+ "layer": "shore",
+ "kind": "building",
+ "real_height_m": 20.0,
+ "target_px": [
+  524,
+  254
+ ],
+ "checks_px": {
+  "storey": "39 (3.0 m at 13 px/m)",
+  "window": "8 x 12 (0.6 x 0.9 m)"
+ },
+ "tier": "C",
+ "family": "dt_built_06nov",
+ "method": "built from stamped parts, tools/build_dt_built.py",
+ "build": "tools/build_dt_built.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_roofs.png",
+  "where": "Downtown (both), the far roofs: a strip repeating at scroll 0.25, bottom on screen y 160, faded 70 % (scene.lua Sc.drawFarArt)"
+ }
+}

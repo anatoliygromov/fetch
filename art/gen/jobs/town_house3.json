@@ -1,0 +1,23 @@
+{
+ "name": "town_house3",
+ "level": "downtown",
+ "layer": "back",
+ "kind": "building",
+ "real_height_m": 2.6,
+ "target_px": [
+  52,
+  118
+ ],
+ "checks_px": {
+  "window": "11 x 16 (house 1's window)",
+  "storey": "23-24 (house 1's)"
+ },
+ "tier": "C",
+ "family": "dt_built_06nov",
+ "method": "built from stamped parts, tools/build_dt_built.py",
+ "build": "tools/build_dt_built.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_house3.png",
+  "where": "Downtown, the third HOUSE (x 1832): centred, bottom on y 414 (scene.lua HOUSE, faded 28 %)"
+ }
+}
