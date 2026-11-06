@@ -55,18 +55,20 @@ C = dict(TF.C)
 C.update(
     P=(172, 28, 34), Q=(220, 72, 58),        # geranium red, its lit petals
     E=(54, 98, 40), O=(34, 66, 30),          # geranium leaves, their shade
-    Y=(168, 128, 52),                        # gilt (the sign's picture, the anchors' none)
+    Y=(168, 128, 52),                        # gilt (the sign's picture, the books' titles)
+    U=(176, 170, 156),                       # lace curtains (on screen just under the frames)
+    H=(92, 70, 50),                          # a shop's lit back wall
 )
 SHOP = {"green": ((56, 88, 70), (84, 120, 94)), "oxblood": ((96, 44, 40), (128, 66, 56)),
         "blue": ((50, 70, 100), (76, 100, 132)), "ink": ((40, 56, 52), (62, 82, 74))}
 
 STYLES = {
-    "a": dict(heads=("tri", "hood"), shutters=False, boxes=(1,), anchors=True, cornice="dentil", shop="green", sign="boot"),
-    "b": dict(heads=("seg", "seg"), shutters=False, boxes=(), anchors=False, cornice="double", shop="oxblood", sign="cup"),
-    "c": dict(heads=("hood", "hood"), shutters=True, boxes=(1,), anchors=False, cornice="plain", shop="blue", sign=None),
-    "d": dict(heads=("ear", "hood"), shutters=False, boxes=(), anchors=True, cornice="dentil", shop="ink", sign="key"),
-    "e": dict(heads=("hood", "hood"), shutters=False, boxes=(1, 2), anchors=True, cornice="double", shop="green", sign="fish"),
-    "f": dict(heads=("tri", "tri"), shutters=False, boxes=(), anchors=True, cornice="plain", shop="oxblood", sign=None),
+    "a": dict(heads=("tri", "hood"), shutters=False, boxes=(1,), anchors=True, cornice="dentil", shop="green", sign="boot", curtain="lace", goods="loaves"),
+    "b": dict(heads=("seg", "seg"), shutters=False, boxes=(), anchors=False, cornice="double", shop="oxblood", sign="cup", curtain=None, goods="jars"),
+    "c": dict(heads=("hood", "hood"), shutters=True, boxes=(1,), anchors=False, cornice="plain", shop="blue", sign=None, curtain="lace", goods="books"),
+    "d": dict(heads=("ear", "hood"), shutters=False, boxes=(), anchors=True, cornice="dentil", shop="ink", sign="key", curtain="drape", goods="books"),
+    "e": dict(heads=("hood", "hood"), shutters=False, boxes=(1, 2), anchors=True, cornice="double", shop="green", sign="fish", curtain="lace", goods="loaves"),
+    "f": dict(heads=("tri", "tri"), shutters=False, boxes=(), anchors=True, cornice="plain", shop="oxblood", sign=None, curtain="drape", goods="jars"),
 }
 
 class G:
@@ -85,13 +87,24 @@ class G:
                 if ch != ".": self.put(x + dx, y + dy, ch)
 
 # ---- parts, drawn once ------------------------------------------------------------------------------------------
-def glazing(g, x0, y0):
-    """the 5 Nov upper window's frame and panes (44 x 74: three across, three down, 2 px bars, a lit left column)"""
+def glazing(g, x0, y0, curtain=None):
+    """the 5 Nov upper window's frame and panes (44 x 74: three across, three down, 2 px bars, a lit left column);
+    `curtain`: 'lace' a scalloped lace valance across the top panes, 'drape' red drapes tied back in the outer panes"""
     x1, y1 = x0 + 43, y0 + 73
     g.rect(x0, y0, x1, y1, "F")
     for px in (x0 + 2, x0 + 16, x0 + 30):
         for py in (y0 + 2, y0 + 26, y0 + 50):
             g.rect(px, py, px + 11, py + 21, "G"); g.rect(px, py, px, py + 21, "R")
+    if curtain == "lace":
+        for px in (x0 + 2, x0 + 16, x0 + 30):
+            g.rect(px, y0 + 2, px + 11, y0 + 7, "U")
+            for x in range(px, px + 12, 3): g.rect(x, y0 + 8, x + 1, y0 + 8, "U")
+    elif curtain == "drape":
+        for py in (y0 + 2, y0 + 26):                                    # the outer panes: a drape on the window's side,
+            for k in range(22):                                        # wide at the top, tied in at the middle pane
+                wd = max(2, 5 - k // 6) if py == y0 + 2 else 2 + k // 8
+                g.rect(x0 + 2, py + k, x0 + 1 + wd, py + k, "P"); g.rect(x1 - 1 - wd, py + k, x1 - 2, py + k, "P")
+                g.put(x0 + 1 + wd, py + k, "Q") if False else None
 
 def surround(g, x0, y0, ears=False):
     """the 3 px stone surround (lit top and left, shade right) and its 2 px cast shadow; `ears`: the top corners
@@ -250,7 +263,7 @@ def window(g, cx, y0, head, st, storey):
         for sx in (x0 - 3 - SHUTTER_W, x0 + 44 + 3):
             shutter(g, sx, y0 - 2, 76)
         g.rect(x0 + 44 + 3 + SHUTTER_W, y0 - 2, x0 + 44 + 4 + SHUTTER_W, y0 + 75, "S")
-    glazing(g, x0, y0)
+    glazing(g, x0, y0, st.get("curtain"))
     if head == "hood": head_hood(g, x0, y0)
     elif head == "tri": head_tri(g, x0, y0)
     elif head == "seg": head_seg(g, x0, y0)
@@ -288,7 +301,27 @@ def ground(k, w, st):
     g.rect(0, 0, w - 1, 7, "W"); course(g, 0, st["cornice"])
     if k == 1 and st["sign"]: hanging_sign(g, w // 2, 13, st["sign"])
     if k == 3: gate_step(g)
+    if k == 2 and st.get("goods"): shop_goods(g, w, st["goods"])
     return g.a
+
+GOODS = {                                    # the shop window's goods, 6 px each, two to a pane on two shelves
+    "loaves": [".JJJ..", "JKKKJ.", "KKKKKD", "KKKKKD"],
+    "jars":   ["FFF...", "PPP.FF", "PQP.PP", "PPP.QP"],
+    "books":  ["N.P.Y.", "NYPYYN", "NYPYYN", "NYPYYN"],
+}
+def shop_goods(g, w, kind):
+    """the shop window (build_tall_fronts.front_shop: glass x cx-25 .. cx+24, the lower lights from row 70 of the
+    ground floor): the shop's warm back wall behind two oak shelves and the goods on them, the same in every pane"""
+    cx = w // 2
+    gx0, gx1 = cx - 25, cx + 24
+    pw = (gx1 - gx0 + 1 - 4) // 3
+    for i in range(3):
+        px0 = gx0 + i * (pw + 2)
+        g.rect(px0 + 1, 203 - TF.CORNICE - 30, px0 + pw - 1, 203 - TF.CORNICE, "H")   # the lit room behind
+        for sy in (203 - TF.CORNICE - 18, 203 - TF.CORNICE - 4):                      # two shelves
+            g.rect(px0, sy, px0 + pw - 1, sy, "J"); g.rect(px0, sy + 1, px0 + pw - 1, sy + 1, "D")
+            rows = GOODS[kind]
+            for j in range(2): g.stamp(rows, px0 + 1 + j * 7, sy - len(rows))
 
 def gate_step(g):
     """the carriage gate's threshold step runs on under its lowest jamb blocks (a 2 px stub of the jamb under it read as
