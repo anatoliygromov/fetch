@@ -26,3 +26,16 @@ Verdict: PASS. Show it.
 
 Suggested tweak, not a blocker: shift the three lower strakes one step towards red-brown (concept b's mahogany) so
 the owner's word "orange" cannot come back; it also separates the honey oar from the hull (see rw_rower.md).
+
+# Round 2 (reviewer, 6-7 Nov night)
+
+Branch `night/06nov-rw` at df396bb, merged into `review/06nov-rw`. Looked at: the file's bow and stern at 7x, the
+re-rendered sweep (13 screens), 14 ride shots both ways at 3x and 5x. `asset_qa.py --level rw`: PASS.
+
+| Item | Result | Evidence |
+| --- | --- | --- |
+| Colour against concept b | PASS | the lower strakes are red-brown mahogany now, the top strake and rail still light; no more honey-orange |
+| Bow sheer and seams | PASS | the sheer rises in runs that shorten toward the stem (5, 4, 3, 2 px), every plank seam fans into the stem with no 1 px jaggies at 7x |
+| Everything else from round 1 | PASS | unchanged: outline, planks, wet hull tint, ripple row, scale |
+
+Verdict: PASS. Finished.

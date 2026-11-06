@@ -47,3 +47,19 @@ Greyscale: the ladder holds on every screen; the road sits between the pavement 
    (74, 78, 86)) and keep the flecks, dashes and kerb. The front row's 40 is for the hedge silhouette in front of
    the road; at 40 the road would merge with the hedge and lose the dashes. One step darker makes the kerb and the
    light pavement pop, which is what the owner likes.
+
+# Round 2 (reviewer, 6-7 Nov night)
+
+Branch `night/06nov-rw` at df396bb. The sweep re-rendered (13 screens, 2x), suspect spots at 4x to 7x.
+
+| Item | Result | Evidence |
+| --- | --- | --- |
+| Road one step darker | PASS | drawn median 55 (was 63); the kerb and the light pavement pop, flecks and dashes kept, still crisp, 5 colours. asset_qa as play: WARN (the flecks); as front: FAIL on the ladder, expected, the road is the ground under the cars, not the hedge silhouette |
+| Mooring pile tinted | PASS | the pile by the ferry's bow is blue-tinted under row 224 like the jetty piles (sweep x 1280 at 5x) |
+| Rowboat and rower | PASS | see rw_rowboat.md and rw_rower.md round 2 |
+
+Screens: all 13 PASS for this track. x 2240 and x 2560 now pass (the rower). x 1920 pier: still the pier band
+track. The three orange lone pixels on the hedge silhouette's top edge (x 0 screen, world about 80, 110, 132)
+are in the base front band, not this track.
+
+Nothing left to fix on this branch before the owner sees it.

@@ -47,3 +47,20 @@ Fixes:
 
 Note for the producer: the three concept PNGs (`art/gen/concepts/rw_rowboat_concept_a/b/c.png`) are untracked in
 the maker's worktree `/home/claude/wt/rw` and are not on the branch. The README points at them. Commit them.
+
+# Round 2 (reviewer, 6-7 Nov night)
+
+Branch `night/06nov-rw` at df396bb. Sheet now 468 x 62 (6 frames of 78). Looked at: every frame at 5x on blue,
+the rower in the hull at 5x (ride shots 3 and 9, sweep x 2560), the ride 14 shots both ways with Pepper aboard and
+with the boat empty. `asset_qa.py --level rw`: WARN only (3.3 % lone pixels: eye, beard, coat ribbing; 0.5 % noise).
+
+| Fix | Result | Evidence |
+| --- | --- | --- |
+| 1 Elbow | PASS | the near arm bends at the elbow in all 6 frames, a lighter row along the top of each bone; upper arm and forearm read as two parts at 1x and 5x |
+| 2 Lifted blade | PASS | frames 5 and 6 carry the blade on rows 39-41, 7 px clear of the ripple row; the resting boats at the quays and the empty boat (shot 9) show an oar held up, not dragging |
+| 3 Oar against hull | PASS | grey-brown ash shaft in two shades, reads across the mahogany hull and the water |
+| Stern thwart (rowlock hull x 150) | PASS | he sits at the transom, cut at the rail; the lever geometry still holds about the rowlock in every frame; Pepper rides amidships clear of him in play. The sweep's fixed placement (cam + 140) can still put her over him, which is the harness, not the art: he is behind her, nothing covers her |
+| Both directions | PASS | pulling right, loop backwards left; the wake trails from the end it leaves |
+| Fist on the handle, faces, outline | PASS | all 6 frames |
+
+Verdict: PASS. Finished. The far fist and a visible rowlock remain optional.
