@@ -193,7 +193,11 @@ function H.updateTrams(s, dt)
   end
 end
 -- the tram stop sign: a pole and a round sign with a tram on it (no logo), faded; the tram, faded
+-- (art/dt-roofs-06nov) town_stopsign.png (tools/build_dt_details.py), faded as back decoration: 2.2 m at true scale,
+-- its pole's middle column (9) on x + 1 (the middle of the old 2 px pole), its bottom row on the rail line
 local function stopSign(x, y)
+  local im = H.img("scene/town_stopsign", true)
+  if im then lg.setColor(1, 1, 1, 1); lg.draw(im, x + 1 - 9, y - im:getHeight()); return end
   local pole, sign, edge = faded({ 0.30, 0.32, 0.36 }), faded({ 0.93, 0.93, 0.90 }), faded({ 0.18, 0.42, 0.30 })
   rect(pole, x, y - 46, 2, 46)
   lg.setColor(edge); lg.circle("fill", x + 1, y - 50, 7)
@@ -278,8 +282,9 @@ end
 -- landmark (RIDDARHOLMEN) is art/scene/spire_riddarholmen.png, faded 45%, centred on its box, standing on its bottom.
 H.BRIDGE_RAIL = 12
 -- layer plan decision 6d (26 Oct): the loggia and the galleries stand a stone darker than the houses behind them (their art
--- measured 147 against 128 to 154); a multiplier on the colour at draw time, the art files stay as approved
-H.STONE_TINT = { LOGGIA = 0.82, GALLERY = 0.82 }
+-- measured 147 against 128 to 154); a multiplier on the colour at draw time. (art/dt-roofs-06nov: the redrawn roof kit
+-- is in the sample screen's granite, about 103 on screen against the houses' 145 to 152, so no tint is needed)
+H.STONE_TINT = {}
 H.SPIRE_DRIFT = 0.03                                      -- the far spire's scroll (was 0.3: on screen only from camera x 2727)
 local function tallTown(def) return def.art == "town" and def.foot ~= nil end
 local function high(def, p) return p.y0 <= def.foot - 120 end           -- the high road (the street is def.foot)

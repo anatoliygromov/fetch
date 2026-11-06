@@ -1,0 +1,20 @@
+{
+ "name": "town_spring",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 0.22,
+ "target_px": [
+  36,
+  10
+ ],
+ "tier": "C",
+ "family": "dt_roofs",
+ "method": "built from parts drawn once, stamped on integer grids, tools/build_dt_details.py",
+ "build": "tools/build_dt_details.py",
+ "frame": "docs/review/06nov/dt_roofs/frames/sweep_downtown_y240_x0960.png",
+ "slot": {
+  "file": "riverwalk/art/scene/town_spring.png",
+  "where": "the springy awnings' and parasols' coil (scene.lua Sc.spring): frame h - 7 of 9 x 10, rows 0 .. h - 1 at x - 4, y"
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "name": "town_tier",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 1.26,
+ "target_px": [
+  50,
+  58
+ ],
+ "tier": "C",
+ "family": "dt_roofs",
+ "method": "built from parts drawn once, stamped on integer grids, tools/build_dt_details.py",
+ "build": "tools/build_dt_details.py",
+ "frame": "docs/review/06nov/dt_roofs/frames/sweep_downtown_y240_x1600.png",
+ "slot": {
+  "file": "riverwalk/art/scene/town_tier.png",
+  "where": "Downtown tall, TIER x 1768 y 344: at x0 - 1, y0 - 1"
+ }
+}

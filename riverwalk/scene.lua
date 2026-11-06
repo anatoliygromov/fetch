@@ -1310,10 +1310,48 @@ end
 -- a balcony (Downtown's rooftop route) over its one-way box: an iron railing at its back, the stone slab (its top
 -- the ledge), two brackets under it
 Sc.BALCONY_RAIL = 46
+-- (art/dt-roofs-06nov) built art for pieces drawn in code until now: art/scene/<name>.png, unfaded (they are obstacles),
+-- or false when the file is not there; the code drawing stays as the fallback
+local OPT = {}
+local function optImg(n)
+  if OPT[n] == nil then
+    OPT[n] = love.filesystem.getInfo("art/scene/" .. n .. ".png") and newImg("art/scene/" .. n .. ".png") or false
+  end
+  return OPT[n]
+end
+local BQ = {}
+local function balconyQ(im, rail)                                        -- the railing rows, or the slab and corbels
+  local k = tostring(im) .. (rail and "r" or "s")
+  if not BQ[k] then
+    local iw, ih = im:getDimensions()
+    BQ[k] = rail and lg.newQuad(0, 0, iw, Sc.BALCONY_RAIL, iw, ih) or lg.newQuad(0, Sc.BALCONY_RAIL, iw, ih - Sc.BALCONY_RAIL, iw, ih)
+  end
+  return BQ[k]
+end
+-- the balconies' railings with art, behind everything on her line (stage.lua, the back pass); the code fallback draws
+-- its railing with the slab (drawBalcony)
+function Sc.drawBalconyRails(def, camx)
+  local ox = math.floor(camx)
+  for _, p in ipairs(def.props) do
+    if p.name == "BALCONY" and p.layer == "play" and p.x1 - ox > -10 and p.x0 - ox < 330 then
+      local im = optImg("town_balcony" .. (p.x1 - p.x0))
+      if im then lg.setColor(1, 1, 1, 1); lg.draw(im, balconyQ(im, true), p.x0 - ox - 1, p.y0 - 1 - Sc.BALCONY_RAIL) end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
 local function drawBalcony(p, camx)
   local ox = math.floor(camx)
   local x0, x1, y = p.x0 - ox, p.x1 - ox, p.y0
   local w = x1 - x0
+  -- (art/dt-roofs-06nov) town_balcony<w>.png (tools/build_dt_details.py): w + 2 wide, its slab's ink row (row
+  -- BALCONY_RAIL) on the box's top - 1, so its top row is the box's top - 1 - BALCONY_RAIL
+  -- (review round 2) only the slab and corbels here, on her line; the railing (rows 0 .. BALCONY_RAIL - 1) is drawn in
+  -- the back pass (Sc.drawBalconyRails), so the bones, Pepper and Mia are always in front of it
+  local im = optImg("town_balcony" .. w)
+  if im then
+    lg.setColor(1, 1, 1, 1); lg.draw(im, balconyQ(im, false), x0 - 1, y - 1); return
+  end
   -- the railing (behind Pepper): 1 m high = BALCONY_RAIL px (46 at 46 px a metre; was 9; layer plan decision 6b, 26 Oct).
   -- Open work, so what is behind it shows: a top rail, a mid rail, balusters (1 px dark edge each side) every 6 px
   local hh = Sc.BALCONY_RAIL
@@ -1342,7 +1380,15 @@ local function houseIndex(def, p)
 end
 
 -- a coil spring (crisp, outlined: it is part of an obstacle), centred on x, from y down h px
+-- (art/dt-roofs-06nov) town_spring.png (tools/build_dt_details.py): 4 frames 9 x 10 side by side, for h = 7, 8, 9, 10
+-- (it is squashed by 2 px as it launches her); the frame's rows 0 .. h - 1 are drawn
+local springQ = {}
 function Sc.spring(x, y, h)
+  local im = optImg("town_spring")
+  if im and h >= 7 and h <= 10 then
+    springQ[h] = springQ[h] or lg.newQuad((h - 7) * 9, 0, 9, h, im:getDimensions())
+    lg.setColor(1, 1, 1, 1); lg.draw(im, springQ[h], math.floor(x) - 4, math.floor(y)); return
+  end
   lg.setColor(INK); lg.rectangle("fill", x - 4, y, 9, h)
   for yy = y + 1, y + h - 2, 3 do
     lg.setColor(0.86, 0.22, 0.18); lg.rectangle("fill", x - 3, yy, 7, 2)            -- red coils
@@ -2073,6 +2119,21 @@ function Sc.drawPropArt(p, camx, def, kicked)
   lg.setColor(1, 1, 1, 1)
 end
 
+-- (art/dt-roofs-06nov) the fountain's falling water, built (tools/build_dt_details.py): art/scene/town_jet.png, frames of
+-- 6 px side by side; false when it is not there (the drops in code)
+local JET
+function Sc.townJet()
+  if JET == nil then
+    JET = false
+    local im = optImg("town_jet")
+    if im then
+      local w, h = im:getDimensions()
+      JET = { im = im, q = {} }
+      for i = 0, math.floor(w / 6) - 1 do JET.q[i + 1] = lg.newQuad(i * 6, 0, 6, h, w, h) end
+    end
+  end
+  return JET
+end
 -- terrain set pieces drawn over the path (after the ground): City Park's slide, Downtown's fountain spout and jets
 function Sc.drawTerrainArt(def, camx, t)
   local T = Sc.townArt(def.art)
@@ -2086,7 +2147,13 @@ function Sc.drawTerrainArt(def, camx, t)
       lg.setColor(1, 1, 1, 1)
       local A = Sc.art()
       local tier = named(def, "TIER")
-      if tier then                                                -- water falls from the top tier's rims to the basin
+      local jet = tier and Sc.townJet()
+      if jet then                                                 -- (art/dt-roofs-06nov) town_jet.png: the built streams,
+        local q = jet.q[math.floor(t * 20) % #jet.q + 1]          -- 4 frames, the right one mirrored
+        local y = tier.y0 + 3
+        lg.setColor(1, 1, 1, 1)
+        lg.draw(jet.im, q, math.floor(tier.x0 - camx) - 7, y); lg.draw(jet.im, q, math.floor(tier.x1 - camx) + 7, y, 0, -1, 1)
+      elseif tier then                                            -- water falls from the top tier's rims to the basin
         for i = 0, 7 do
           local k = (t * 1.1 + i / 8) % 1
           for _, e in ipairs({ { tier.x0 - camx, -1 }, { tier.x1 - camx, 1 } }) do

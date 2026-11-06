@@ -1,0 +1,21 @@
+{
+ "name": "town_roof_gallery88",
+ "family": "dt_roofs",
+ "tier": "C",
+ "steps": {
+  "spec": {
+   "time": "2026-11-06 19:32"
+  },
+  "built": {
+   "build": "tools/build_roof_kit.py",
+   "time": "2026-11-06 19:32"
+  },
+  "ingame": {
+   "frame": "docs/review/06nov/dt_roofs/frames/sweep_downtown_y120_x1600.png",
+   "time": "2026-11-06 19:32"
+  },
+  "review": {
+   "time": "2026-11-06 19:46"
+  }
+ }
+}

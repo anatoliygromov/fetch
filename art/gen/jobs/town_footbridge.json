@@ -1,0 +1,20 @@
+{
+ "name": "town_footbridge",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 1.13,
+ "target_px": [
+  162,
+  52
+ ],
+ "tier": "C",
+ "family": "dt_roofs",
+ "method": "built from parts drawn once, stamped on integer grids, tools/build_roof_kit.py",
+ "build": "tools/build_roof_kit.py",
+ "frame": "docs/review/06nov/dt_roofs/frames/sweep_downtown_y120_x2380.png",
+ "slot": {
+  "file": "riverwalk/art/scene/town_footbridge.png",
+  "where": "Downtown tall, FOOTBRIDGE x 2480 y 272 160 x 6: deck outline row 12 at the box top - 1, centred"
+ }
+}

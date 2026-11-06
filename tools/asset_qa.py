@@ -55,6 +55,7 @@ FRAMES = {
     "pepper": (60, 52), "girl": (66, 66), "cat": (48, 48), "goose": (34, 34), "gull": (26, 26),
     "park_keeper_cart": (82, 82), "park_keeper_winch": (80, 80), "rowboat": (70, 70), "mia_throw": (66, 66),
     "tram_vintage_wheel": (31, 31),                                  # (6 Nov) 4 frames of the tram's wheel
+    "town_spring": (9, 10), "town_jet": (6, 88),                  # (art/dt-roofs-06nov, tools/build_dt_details.py)
 }
 ROLL = ("road_cyclist1_roll", "road_cyclist2_roll")              # 4 frames side by side (drawn: Rd.art().riders)
 # what the game never draws (loaded but unused, or replaced in the played level): not checked
@@ -99,7 +100,14 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          "town_parasol40": (42, 14, 0, 0), "town_parasol48": (50, 14, 0, 0), "town_parasol64": (66, 14, 0, 0),
          "town_parasol96": (98, 14, 0, 0), "town_crate_front": (34, 21, 0, 0), "town_crate_front28": (30, 21, 0, 0),
          "town_crate_front32": (34, 21, 0, 0), "town_crate_front36": (38, 21, 0, 0),
-         "town_shopsign": (47, 112, 0, 0)}                                  # (triage 6 Nov: kept as it is)
+         "town_shopsign": (47, 112, 0, 0),                                  # (triage 6 Nov: kept as it is)
+         # art/dt-roofs-06nov: the high road's roof kit as the game draws it (arthooks.lua townPiece: box width + 2, the
+         # heights the true-scale fronts allow), the far spire, and the pieces drawn in code until now
+         "town_roof_loggia": (122, 26, 0, 0), "town_roof_gallery88": (90, 32, 0, 0), "town_roof_gallery72": (74, 32, 0, 0),
+         "town_roof_flower_roof": (90, 14, 0, 0), "town_roof_ledge": (16, 9, 0, 0), "town_footbridge": (162, 52, 0, 0),
+         "spire_riddarholmen": (36, 260, 0, 0), "town_balcony56": (58, 60, 0, 0), "town_balcony64": (66, 60, 0, 0),
+         "town_spring": (36, 10, 0, 0), "town_stopsign": (19, 101, 0, 0), "town_jet": (24, 88, 0, 0),
+         "town_tier": (50, 58, 0, 0), "town_bowl": (34, 82, 0, 0), "town_rim": (18, 18, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",
