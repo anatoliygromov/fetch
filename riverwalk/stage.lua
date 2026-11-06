@@ -662,7 +662,7 @@ function St:draw(debug)
       Sc.outlined(C.prop, C.propEdge, m.x0 - cam, m.y0, m.x1 - m.x0, m.y1 - m.y0); Sc.label(m.name or "PONTOON", (m.x0 + m.x1) / 2 - cam, m.y0 + 8)
     else                                                           -- the pontoon (art 54 x 19, 6 Nov audit: cleats in rows
       if m.name == "ROWBOAT" then Sp.drawRowboat(m, cam, self.t)        -- 0-2, its deck ink at row 3 = y0 - 2, floats in the river)
-      else lg.setColor(1, 1, 1, 1); lg.draw(art.pontoon, math.floor(m.x0 - cam + 0.5) - 3, m.y0 - 5) end
+      else lg.setColor(1, 1, 1, 1); lg.draw(art.pontoon, math.floor(m.x0 - cam + 0.5) - 3, m.y0 - 5); Sp.pontoonWater(m, cam) end
     end
   end
   if lk then Look.off() end                                        -- the bones, the girl, the ball, Pepper: as drawn

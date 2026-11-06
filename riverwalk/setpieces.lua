@@ -171,11 +171,14 @@ end
 -- darker shade. Drawn behind the pontoon and Pepper.
 local MOOR = { line = { 0.20, 0.17, 0.14 }, iron = { 0.30, 0.33, 0.38 }, ironL = { 0.48, 0.51, 0.56 },
                pile = { 0.50, 0.40, 0.30 }, pileD = { 0.40, 0.31, 0.24 }, pileL = { 0.62, 0.51, 0.39 } }
-local function hline(x0, y0, x1, y1)                               -- a 1 px line, whole pixels, x0 < x1
-  local n = math.max(1, x1 - x0)
+local function hline(x0, y0, x1, y1, sag)                          -- a 1 px line, whole pixels, x0 < x1; sag: px
+  local n = math.max(1, x1 - x0)                                   -- it hangs at its middle (night/06nov-rw: was taut)
+  local py
   for i = 0, n - 1 do
-    local y = math.floor(y0 + (y1 - y0) * (i + 0.5) / n + 0.5)
-    lg.rectangle("fill", x0 + i, y, 1, 1)
+    local t = (i + 0.5) / n
+    local y = math.floor(y0 + (y1 - y0) * t + (sag or 0) * 4 * t * (1 - t) + 0.5)
+    if py and math.abs(y - py) > 1 then lg.rectangle("fill", x0 + i, math.min(y, py) + 1, 1, math.abs(y - py) - 1) end   -- no gaps
+    lg.rectangle("fill", x0 + i, y, 1, 1); py = y
   end
 end
 local function moored(m, cam)
@@ -188,13 +191,36 @@ local function moored(m, cam)
   lg.setColor(MOOR.pile); lg.rectangle("fill", px + 1, m.y0 - 3, 4, 240 - m.y0 + 3)
   lg.setColor(MOOR.pileL); lg.rectangle("fill", px + 1, m.y0 - 4, 4, 1); lg.rectangle("fill", px + 1, m.y0 - 3, 1, 240 - m.y0 + 3)
   lg.setColor(MOOR.line)
-  hline(qx - 1, m.y0 - 4, ax + 4, cy)                              -- quay cleat to the pontoon's left cleat
-  hline(ax + 50, cy, px + 1, m.y0 - 1)                             -- its right cleat to the pile
+  local span = m.rope[2] - m.rope[1] - 54                          -- (the longest the quay line gets)
+  local d1, d2 = ax + 4 - (qx - 1), px + 1 - (ax + 50)
+  hline(qx - 1, m.y0 - 4, ax + 4, cy, math.min(6, 2 + math.max(0, span - d1) / 24))   -- quay cleat to its left cleat:
+  hline(ax + 50, cy, px + 1, m.y0 - 1, math.min(6, 2 + math.max(0, span - d2) / 24))  -- it slackens as they come close
   lg.rectangle("fill", px, m.y0 - 2, 6, 1); lg.rectangle("fill", px, m.y0, 6, 1)          -- the turns round the pile
   lg.setColor(0.61, 0.79, 0.94)                                    -- a ripple where the floats meet the river (y 224)
   for _, dx in ipairs({ 1, 2, 24, 25, 28, 29, 50, 51 }) do lg.rectangle("fill", ax + dx, m.y0 + 10, 1, 1) end
   for _, dx in ipairs({ 0, 26, 27, 52 }) do lg.rectangle("fill", ax + dx, m.y0 + 11, 1, 1) end
   for _, dx in ipairs({ -2, -1, 6, 7 }) do lg.rectangle("fill", px + dx, m.y0 + 10, 1, 1) end              -- and round the pile
+end
+
+-- (night/06nov-rw, base audit: "the pontoon with no waterline") the water's tint over the pontoon's floats below the
+-- surface (y 224), as on the rowing boats and the jetty; called by stage.lua right after it draws the pontoon
+local pontCol
+function Sp.pontoonWater(m, cam, img)
+  if not pontCol then
+    pontCol = {}
+    local d = love.image.newImageData("art/scene/pontoon.png")
+    for x = 0, d:getWidth() - 1 do
+      local b
+      for y = 0, d:getHeight() - 1 do local _, _, _, a = d:getPixel(x, y); if a > 0 then b = y end end
+      pontCol[x] = b
+    end
+  end
+  local ax, top = math.floor(m.x0 - cam + 0.5) - 3, m.y0 - 5
+  lg.setColor(22 / 255, 52 / 255, 125 / 255, 0.7)
+  for x, b in pairs(pontCol) do
+    if b and top + b >= 224 then lg.rectangle("fill", ax + x, 224, 1, top + b - 224 + 1) end
+  end
+  lg.setColor(1, 1, 1, 1)
 end
 
 -- the rope a ferry runs on: a thin line just under its deck, from bank to bank (drawn behind the ferry); the River Walk pontoon is moored
