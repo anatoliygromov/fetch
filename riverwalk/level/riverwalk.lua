@@ -41,6 +41,7 @@ local L = {}
 L.name = "RIVER WALK"
 L.number = 1
 L.map = "level/riverwalk.map"
+L.ground = "quay"             -- (art/rw-ground-06nov) the ground by rule: kerb, asphalt, quay walls, ramps (Sc.paintQuay)
 L.time = 420
 L.start = { x = 52, y = 184 }
 
@@ -57,7 +58,7 @@ L.props = {
   -- (r6/levels, the tutorial) a branch fallen from the big tree: 21 px, the first tap hop (TAP: HOP) on flat
   -- pavement, before the flower box asks for the held jump and the bin for the climb
   { name = "LOG",      kind = "solid",  layer = "play", x0 = 270,  x1 = 310,  y0 = 163, y1 = 184, art = "park_log" },
-  { name = "",         kind = "decor",  layer = "back", x0 = 184,  x1 = 1288, y0 = 124, y1 = 174, railing = true },   -- decorative railing by the water
+  { name = "",         kind = "decor",  layer = "back", x0 = 184,  x1 = 1280, y0 = 124, y1 = 174, railing = true },   -- decorative railing by the water (6 Nov: its end post on the flat, not over the ramp)
   -- (art/rw-sample-screen) the street lime at true scale (trunk 23 px, 0.5 m), drawn after the railing so its trunk
   -- stands on the pavement in front of it; its crown runs out of the top of the screen (y0 -77). The fallen branch
   -- (LOG) lies by its foot.
@@ -128,7 +129,8 @@ L.props = {
 
 -- dark passages drawn behind the pavement (the inside of the bridge, under the pier's lintel)
 L.passages = {
-  { x0 = 1936, x1 = 2072, y0 = 192, y1 = 216 },
+  -- (art/rw-ground-06nov) drawn as a stone arch under the pier art's plinth (vx0 .. vx1: the plinth's own width)
+  { x0 = 1936, x1 = 2072, y0 = 192, y1 = 216, arch = true, vx0 = 1940, vx1 = 2068 },
 }
 
 -- lamp posts: every one is a checkpoint that lights up and saves Pepper's place when she passes
