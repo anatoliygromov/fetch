@@ -1,17 +1,28 @@
 {
  "name": "cp_duckboat",
- "size": [
-  92,
-  60
+ "method": "GPT 2.5 render, tools/grid4_cut.py (one colour per 4x4 cell, majority), tools/cut_cp_props.py (k-means medoids, clean pass on the new cut), fitted to the slot by tools/polish_cp_props.py (whole rows or columns spliced out, never resampled)",
+ "pieces": [
+  {
+   "piece": "park_boat_front",
+   "render": "art/gen/renders/cp_duckboat_a_grid4.png",
+   "cut_size": [
+    58,
+    38
+   ],
+   "fitted_size": [
+    58,
+    38
+   ],
+   "target_from_blockout": [
+    54,
+    33
+   ],
+   "splices": [],
+   "pepper_in_render_px": [
+    52,
+    38
+   ]
+  }
  ],
- "render": "art/gen/renders/cp_duckboat_a.png",
- "cut_by": "Pixel Engine Image output at game size: pitch 1, taken 1:1, nothing resampled; tools/build_duckboat.py",
- "measures_px": {
-  "length": 91,
-  "deck_row": 41,
-  "head_top_row": 0,
-  "water_row": 48
- },
- "colours": 19,
  "fails": []
 }

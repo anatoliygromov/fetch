@@ -74,6 +74,9 @@ SHARED = {"skyline": ("rw", "cp", "dt"), "water": ("rw", "cp"), "bench": ("rw", 
           **{f"cloud{i}": ("rw", "cp", "dt") for i in range(1, 9)}}
 # pieces cut into tiles: their left and right columns are joins, not silhouette
 TILES = {"rail_bg_left", "rail_bg_unit", "rail_bg_end", "pavement", "road", "park_ground", "town_ground", "water"}
+# (art/cp-audit-06nov) pieces drawn joined to another of the same build on one side: that end column is a join, not
+# silhouette (a City Park walk's deck and its tree landing are one deck, no outline between them)
+JOINS = {"cp_walk704_deck": "left", "cp_walk1968_deck": "left", "cp_walk704_landing608": "right", "cp_walk1968_landing1888": "right"}
 # slots (docs/art_hooks_r8.md): width, height, tolerance on each (0 = exact). Batch 1 files are named differently
 # from their hooks: HOOK says which game file each one becomes
 SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_throw": (528, 66, 0, 0),
@@ -122,7 +125,11 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          # art/dt-highroad-06nov: the high road attached to its fronts (tools/build_highroad.py, arthooks.lua drawHighWall)
          "town_front_tall5": (88, 432, 0, 0), "town_front_tall6": (148, 432, 0, 0), "town_balcony_door": (38, 52, 0, 0),
          "town_window_door": (52, 50, 0, 0), "town_window_rail": (44, 24, 0, 0), "town_pilaster": (14, 101, 0, 0),
-         "town_guild_steps": (122, 35, 0, 0), "town_guild_pier": (18, 46, 0, 0), "town_console": (8, 7, 0, 0)}
+         "town_guild_steps": (122, 35, 0, 0), "town_guild_pier": (18, 46, 0, 0), "town_console": (8, 7, 0, 0),
+         # (art/cp-audit-06nov) the walks' tree landings (box + outline at the far end), the tower's second posts, the
+         # rebuilt climbing frame (posts 2712 and 2796, y 264-328, bars and step on their boxes)
+         "cp_walk704_landing608": (98, 8, 0, 0), "cp_walk1968_landing1888": (82, 8, 0, 0),
+         "cp_tower_post4x34": (6, 34, 0, 0), "cp_tower_post4x6": (6, 6, 0, 0), "park_frame": (90, 67, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",
@@ -276,7 +283,7 @@ def blotch_check(r, rgb255, a, strict=True):
     elif n:
         r.add("blotches", "warn", f"{n} blotch(es) of 2-24 px in a near colour", flagged)
 
-def outline_check(r, rgb255, a, need, cls, ox=0, oy=0, where="", tile=False):
+def outline_check(r, rgb255, a, need, cls, ox=0, oy=0, where="", tile=False, join=None):
     """the outline is a property of the file, measured on its own pixels (a load-time fade must not hide a gap).
     Not counted: the bottom row (ground contact), a tile's join columns. Front pieces: dark silhouette with a lit rim,
     no rule. Play pieces and characters: complete. Decoration: none (ladder); if one is drawn it must not be broken"""
@@ -285,6 +292,8 @@ def outline_check(r, rgb255, a, need, cls, ox=0, oy=0, where="", tile=False):
     rows = np.nonzero(a.any(1))[0]
     if len(rows): e[rows.max(), :] = False
     if tile: e[:, 0] = False; e[:, -1] = False
+    if join == "left": e[:, 0] = False
+    if join == "right": e[:, -1] = False
     if not e.any(): return None
     lum = rgb255 @ W601
     dark = e & (lum < 70)
@@ -575,7 +584,7 @@ def check(name, path, lvl, layer, fade, building=False, frames=None, levels=None
     else:
         body_checks(r, rgb255, a, strict=strict)
         if cls not in ("ground", "water"):
-            s = outline_check(r, rgb255, a, need, cls, tile=name in TILES)
+            s = outline_check(r, rgb255, a, need, cls, tile=name in TILES, join=JOINS.get(name))
             if s is not None: r.info["outline"] = round(s)
     if building: window_check(r, rgb255, a)
     return r

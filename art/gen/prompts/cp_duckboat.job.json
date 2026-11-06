@@ -1,6 +1,6 @@
 {
  "name": "cp_duckboat",
- "model": "SpriteCook Pixel Engine Image (exact 16-128 px, no references)",
+ "model": "SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid)",
  "modelId": null,
  "settings": null,
  "inputs": [
@@ -10,22 +10,24 @@
  "prompt_file": "art/gen/prompts/cp_duckboat.txt",
  "k": null,
  "frame": [
-  104,
-  96
+  256,
+  256
  ],
- "credits": 12,
+ "credits": 48,
  "tool": "spritecook",
- "family": "cp_critters",
+ "family": "cp_props_06nov",
  "tier": "A",
  "slot": {
   "file": "riverwalk/art/scene/park_boat_front.png",
-  "where": "City Park tall, the pond (x 816-944): the DUCK BOAT mover (Tiled movers), deck = the mover's top y 346, drawn by scene.lua Sc.drawMoverArt"
+  "where": "City Park tall, screen 3, the DUCK BOAT mover at x 824 (deck y 346), scene.lua Sc.drawMoverArt at x - 3, y - 18, mirrored when it paddles right"
  },
  "spritecook": {
-  "model": "pixel-engine-image-v1",
+  "model": "gpt-image-2.5-sunburst",
   "pixel": true,
-  "width": 92,
-  "height": 60
+  "resolution": "1K",
+  "quality": "medium",
+  "width": 54,
+  "height": 33
  },
- "ledger_job": "cp_duckboat@1106-185137"
+ "ledger_job": "cp_duckboat@1106-185612"
 }

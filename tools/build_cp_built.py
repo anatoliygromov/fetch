@@ -138,14 +138,19 @@ def pitch_for(w, post=4, lo=40, hi=48, want=44):
     return best[1:]
 
 
-def walk_deck(w, bolts):
+def walk_deck(w, bolts, join_left=False, join_right=False, phase=0):
     """the deck: box w x 6 plus its 1 px outline. Row 0 the planks' lit top edge (the thin cap), row 1 their ends
     (7 px plank, a 1 x 2 px joint, pitch 8 from the box's left), row 2 their shadow on the stringer, rows 3-5 the stringer
-    with a bolt (2 x 2) at each x in bolts (box columns: every fourth hanger, and a pylon under the box)"""
+    with a bolt (2 x 2) at each x in bolts (box columns: every other hanger, and a pylon under the box).
+    (art/cp-audit-06nov) join_left / join_right: a landing deck of the same build joins there (the audit: "the deck is
+    thicker than the plank it joins: step and seam"), so that end has no outline column: the planks run on through it.
+    phase: the box's left x minus the walk's left x (a landing keeps the walk's plank pitch)"""
     a = canvas(w + 2, 8)
     rect(a, 0, 0, w + 2, 8, INK)
-    for x in range(w):
-        gap = x % 8 == 7 and x < w - 1
+    xs = range(-1 if join_left else 0, w + 1 if join_right else w)
+    for x in xs:
+        if not 0 <= x + 1 < w + 2: continue
+        gap = (x + phase) % 8 == 7 and (join_right or x < w - 1)
         a[1, x + 1] = T_GAP if gap else T_LIGHT
         a[2, x + 1] = T_GAP if gap else T_MID
         a[3, x + 1] = T_SHADE
@@ -220,10 +225,13 @@ def walk_pylons(p, water):
     return lx, rx, top[lx // 8], top[rx // 8]
 
 
+HANGER = 32                                            # (art/cp-audit-06nov) was 16: "hangers every 16 px read as cage bars"
+
+
 def walk_hangers(p, lx, rx):
-    """hangers at every other plank joint (box column 7 + 16 k) between the pylons, 4 px clear of each (at every
-    joint they stood as close as a harp's strings over the canopies)"""
-    return [x for x in range(p['x0'] + 7, p['x1'] - 1, 16) if lx + PYLON + 4 <= x < rx - 4]
+    """hangers at every fourth plank joint (box column 7 + 32 k) between the pylons, 4 px clear of each (at every
+    joint they stood as close as a harp's strings over the canopies; at every other joint, 16 px, as cage bars)"""
+    return [x for x in range(p['x0'] + 7, p['x1'] - 1, HANGER) if lx + PYLON + 4 <= x < rx - 4]
 
 
 def walk_rail(p, lx, rx, hangers):
@@ -291,10 +299,15 @@ def stamp_rose(a, x, y, flip=False):
 
 
 def arbour_slat(w):
-    """the slat Pepper stands on: box w x 6 plus the outline; a white painted beam, lit cap, a shade row under"""
+    """the slat Pepper stands on: box w x 6 plus the outline; a timber beam, lit cap, a shade row under.
+    (art/cp-audit-06nov) it was white paint (f7f9fa / f4eef3), the brightest thing on the screen, read as a table top or
+    glass: now the walks' timber ramp (the same wood as the bridges' decks and pylons), the cap T_LIGHT, the face T_MID
+    with the beam's end grain (a T_DEEP joint 4 px in from each end: the cross beam's ends), the shade row T_SHADE"""
     a = canvas(w + 2, 8)
     rect(a, 0, 0, w + 2, 8, INK)
-    rect(a, 1, 1, w, 1, W_CAP); rect(a, 1, 2, w, 4, W_FACE); rect(a, 1, 6, w, 1, W_SH)
+    rect(a, 1, 1, w, 1, T_LIGHT); rect(a, 1, 2, w, 4, T_MID); rect(a, 1, 6, w, 1, T_SHADE)
+    for x in (5, w - 4):
+        rect(a, x, 2, 1, 4, T_DEEP)
     return a
 
 
@@ -306,12 +319,15 @@ def arbour_posts(w, h):
     PAD = 6
     a = canvas(w + 2 * PAD, h)
     xs = (PAD + 2, PAD + w - 7)
-    for px in xs:
-        rect(a, px, 0, 5, h, W_FACE); rect(a, px, 0, 1, h, W_CAP); rect(a, px + 4, 0, 1, h, W_SH)
-    TRI = (0, 1, 2, 3, 4, 4, 4, 3, 2, 1, 0, 0)          # the vine winds across the post's front, 12 px a turn
+    for px in xs:                                        # (art/cp-audit-06nov) timber, as the slat (were white paint)
+        rect(a, px, 0, 5, h, T_MID); rect(a, px, 0, 1, h, T_LIGHT); rect(a, px + 4, 0, 1, h, T_RAILSH)
+    # (art/cp-audit-06nov) the vine winds round the post: on its front it climbs one way (left to right over 5 rows),
+    # then goes round behind it (hidden) for 7 rows; it zig-zagged back and forth across the front, so each post read
+    # as a lattice of crossing garlands
+    SPIRAL = (0, 1, 2, 3, 4, None, None, None, None, None, None, None)
     for k, px in enumerate(xs):                          # the climbing rose
         for y in range(2, h - 3):
-            put(a, px + TRI[y % 12], y, G_MID)
+            if SPIRAL[y % 12] is not None: put(a, px + SPIRAL[y % 12], y, G_MID)
         for y in range(2, h - 6):
             f = 0 if y % 12 == 11 else 4 if y % 12 == 5 else None
             if f == 0:                                   # a leaf pair where the vine turns, outside the post
@@ -484,6 +500,53 @@ def build_swings():
     return a
 
 
+# ------------------------------------------------------------------------------------- the climbing frame and its step
+FB, FB_D, FB_L = hx('3f7fb6'), hx('2c5a85'), hx('7fb4dd')   # the old frame's blue pipe (tools/make_town_art.py)
+
+
+def build_frame():
+    """(art/cp-audit-06nov) park_frame.png, 90 x 67, drawn at (FRAME x0 - 1, 119 + dy): image x = world x - 2711, y =
+    world y - 263 in the tall level (the flat one: 119). The audit: "a blue crate beside Pepper's nose with no purpose;
+    the blue frame bars read as a cage". What they are: the STEP prop (2716-2732, top 316, solid, hidden: drawn by this
+    image) is the first step up onto the climbing frame; the frame is two posts with two bars Pepper stands on (FRAME
+    2712-2784 at y 304, the bar 2724-2800 at 280), and 6 vertical rungs hung between the bars under a top rail closed
+    the whole frame into a box of bars. Built by rule, the same boxes on the same pixels:
+      posts 4 px pipes (lit left, shaded right) from y 264 to the path, each with a ball cap; no top rail
+      the two bars as before (4 px pipes), each held at its free end by one strut to the other bar; no rungs
+      a ladder up the left: 2 px rungs between the left post and the upper bar's strut, every 8 px
+      the step: a yellow tread (the play tower's yellow) on two short blue legs, open under it: a step, not a crate
+    1 px ink outline (an obstacle)."""
+    W, H = 90, 67
+    a = canvas(W, H)
+
+    def vpipe(x, y0, y1):
+        rect(a, x, y0, 4, y1 - y0, FB); rect(a, x, y0, 1, y1 - y0, FB_L); rect(a, x + 3, y0, 1, y1 - y0, FB_D)
+
+    def hpipe(x0, x1, y, h=4):
+        rect(a, x0, y, x1 - x0, h, FB); rect(a, x0, y, x1 - x0, 1, FB_L); rect(a, x0, y + h - 1, x1 - x0, 1, FB_D)
+    vpipe(1, 3, 66); vpipe(85, 3, 66)                     # the posts, to the path (y 328 = row 65)
+    for x in (1, 85):                                     # ball caps (6 x 3 over the post's 4)
+        rect(a, x, 1, 4, 1, FB_L); rect(a, x - 1, 2, 6, 1, FB); put(a, x, 2, FB_L)
+    vpipe(13, 21, 41)                                     # the upper bar's strut, down to the lower bar
+    vpipe(69, 21, 41)                                     # the lower bar's strut, up to the upper bar
+    for y in (26, 34):                                    # the ladder's rungs (left post to the strut)
+        hpipe(5, 13, y, 2)
+    hpipe(5, 13, 48, 2)                                   # and one between the lower bar and the step
+    hpipe(13, 89, 17)                                     # the upper bar (box 2724-2800, y 280)
+    hpipe(1, 73, 41)                                      # the lower bar, FRAME (box 2712-2784, y 304)
+    rect(a, 5, 53, 16, 1, Y_LT); rect(a, 5, 54, 16, 2, Y_MID); rect(a, 5, 56, 16, 1, Y_SH)   # the step's tread (box 2716-2732, top 316)
+    for x in (6, 17):                                     # its legs, open under it
+        rect(a, x, 57, 3, 9, FB); put(a, x, 57, FB_D); rect(a, x, 58, 1, 8, FB_L)
+    al = a[..., 3] > 0                                    # the 1 px ink outline round everything
+    out = a.copy()
+    for y in range(H):
+        for x in range(W):
+            if al[y, x]: continue
+            if any(0 <= y + dy < H and 0 <= x + dx < W and al[y + dy, x + dx] for dy, dx in ((-1, 0), (1, 0), (0, -1), (0, 1))):
+                out[y, x] = INK
+    return out
+
+
 # ------------------------------------------------------------------------------------------------------- main
 def main():
     P = props(); water = water_runs()
@@ -495,17 +558,36 @@ def main():
 
     save('park_gate', build_gate())
     save('park_swings', build_swings())
+    os.makedirs(os.path.join(SRC, 'park_frame'), exist_ok=True)
+    old = os.path.join(SRC, 'park_frame', 'park_frame_old.png')
+    if not os.path.exists(old): Image.open(os.path.join(SCENE, 'park_frame.png')).save(old)
+    save('park_frame', build_frame())
     named = [p for p in P if p['name'] in ('TREETOP WALK', 'ALDER WALK') and p['y1'] <= FOOT - 90]
     for p in named:
         w = p['x1'] - p['x0']
         lx, rx, glx, grx = walk_pylons(p, water)
         hangers = walk_hangers(p, lx, rx)
         rail, ex0 = walk_rail(p, lx, rx, hangers)
-        bolts = [h - p['x0'] - 1 for h in hangers[3::4]] + [x + 2 - p['x0'] for x in (lx, rx) if p['x0'] <= x and x + PYLON <= p['x1']]
-        deck = walk_deck(w, bolts)
+        bolts = [h - p['x0'] - 1 for h in hangers[1::2]] + [x + 2 - p['x0'] for x in (lx, rx) if p['x0'] <= x and x + PYLON <= p['x1']]
+        # (art/cp-audit-06nov) a tree's ledge that the walk runs on from (PLANE TREE, ASH: same top, touching) is a
+        # landing of the same build, planks on the same pitch, so the walk and the ledge read as one deck: no step,
+        # no seam. It sits on the ledge's trunk (a decor post right under it): a bolt over the trunk's middle.
+        lands = [q for q in P if q['kind'] in ('oneway', 'solid') and q['y0'] == p['y0'] and q['y1'] == p['y1']
+                 and q['name'] not in ('TREETOP WALK', 'ALDER WALK') and (q['x1'] == p['x0'] or q['x0'] == p['x1'])]
+        jl = any(q['x1'] == p['x0'] for q in lands); jr = any(q['x0'] == p['x1'] for q in lands)
+        deck = walk_deck(w, bolts, join_left=jl, join_right=jr)
         legs, _ = walk_legs(p, lx, rx, glx, grx)
         k = f"cp_walk{p['x0']}"
         save(k + '_deck', deck, k); save(k + '_rail', rail, k); save(k + '_legs', legs, k)
+        for q in lands:
+            trunk = [t for t in P if t['kind'] == 'decor' and t['y0'] == q['y1'] and q['x0'] <= t['x0'] and t['x1'] <= q['x1']]
+            lb = [(t['x0'] + t['x1']) // 2 - 1 - q['x0'] for t in trunk]
+            left = q['x1'] == p['x0']
+            land = walk_deck(q['x1'] - q['x0'], lb, join_right=left, join_left=not left, phase=q['x0'] - p['x0'])
+            n = f"{k}_landing{q['x0']}"
+            save(n, land, k)
+            entry(n, q, {'landing': (n, q['x0'] - 1, q['y0'] - 1, False)})
+            print(f"  landing {q['name']} {q['x0']}-{q['x1']}: one deck with the walk, bolt over its trunk {[t['x0'] for t in trunk]}")
         print(f"  {p['name']}: a rope bridge, pylons at x {lx} and {rx} (ground y {glx}, {grx}), {len(hangers)} hangers, "
               f"span {rx - lx - PYLON} px; nothing in the water")
         entry(k, p, {'deck': (k + '_deck', p['x0'] - 1, p['y0'] - 1, False),
@@ -524,13 +606,29 @@ def main():
     # the play tower's decks: PLAY TOWER and the one-way ledge under it (the lower deck), and their posts
     decks = [tow] + [p for p in P if p['kind'] == 'oneway' and p['name'] == '' and p['x0'] < tow['x1'] and p['x1'] > tow['x0'] - 20
                      and p['y0'] > tow['y0'] and p['y1'] < FOOT - 40]
-    for p in decks:
-        w = p['x1'] - p['x0']; d = f'cp_tower_deck{w}'
-        save(d, tower_deck(w), 'cp_tower')
-        entry(f"tower{p['x0']}", p, {'deck': (d, p['x0'] - 1, p['y0'] - 1, False)})
     posts = [p for p in P if p['kind'] == 'decor' and p['name'] == '' and p['x1'] - p['x0'] <= 12
              and p['y1'] < FOOT and p['y1'] >= FOOT - 40 and p['y0'] <= FOOT - 100
              and tow['x0'] - 20 <= p['x0'] < tow['x1']]
+    # (art/cp-audit-06nov) each deck stood on one grey post at one end, its other end in the air: it read as a street
+    # sign. A deck end with no post under it (none within 12 px) gets a second post of the same build, 4 px in from
+    # that end: down onto the deck under it if one spans that x (the upper deck stands on the lower one: two storeys)
+    # or onto the slide tower's roof (the lower deck rests on it), else down to the path
+    for p in decks:
+        w = p['x1'] - p['x0']; d = f'cp_tower_deck{w}'
+        save(d, tower_deck(w), 'cp_tower')
+        parts = {'deck': (d, p['x0'] - 1, p['y0'] - 1, False)}
+        k = 0
+        for end, sx in (('left', p['x0'] + 4), ('right', p['x1'] - 8)):
+            if any(abs((q['x0'] + q['x1']) / 2 - (sx + 2)) <= 12 and q['x0'] < p['x1'] and q['x1'] > p['x0'] for q in posts):
+                continue
+            under = [q for q in decks + [q for q in P if q['name'] == 'SLIDE']   # (or the slide tower's roof)
+                     if q is not p and q['y0'] > p['y1'] and q['x0'] <= sx and sx + 4 <= q['x1']]
+            bot = min(q['y0'] for q in under) if under else FOOT
+            h = bot - p['y1']; n = f'cp_tower_post4x{h}'
+            save(n, tower_post(4, h), 'cp_tower')
+            parts['support' + ('' if k == 0 else str(k + 1))] = (n, sx - 1, p['y1'], False); k += 1
+            print(f"  tower deck {p['x0']}-{p['x1']} y {p['y0']}: a second post at its {end} end, x {sx}, down to y {bot}")
+        entry(f"tower{p['x0']}", p, parts)
     for p in posts:
         top = p['y0']
         for q in decks:                                   # a post under a lower deck starts at that deck
