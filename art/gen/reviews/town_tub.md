@@ -16,3 +16,13 @@ Scale assumes 46 px/m on the play line. Pepper's sprite is 52 x 38 (1.13 x 0.83 
 9. Read: PASS. A potted bush. Cute, reads at 1x.
 
 VERDICT: FAIL (2 items: 3 and 5)
+
+# Round 2
+
+Reviewer: same independent reviewer, 6 Nov 2026, head 0ed30f0. Frames (mine, colour 1x, 3x, grey 3x, camera y 0, x 500, 1200, 1330, 2200, 2780): /tmp/claude-0/-home-claude/87159006-489b-566e-ae4a-e83d2f5ae5ab/scratchpad/r2/sweep_downtown_y000_x*.png. File at 5x beside Pepper, bench, bin, lamp, colour and grey: /tmp/claude-0/-home-claude/87159006-489b-566e-ae4a-e83d2f5ae5ab/scratchpad/r2/tub5x.png, tub5x_grey.png; 8x: /tmp/claude-0/-home-claude/87159006-489b-566e-ae4a-e83d2f5ae5ab/scratchpad/r2/tub8x.png. asset_qa PASS, check_backdrop OK.
+
+3. Outline: PASS. Edge 152 px, all ink #050a17; the gap at (13,2) is closed.
+5. Shading: PASS. Shrub is now lit leaf lobes in 4 greens; lone pixels 11 of 579 (1.9 %), down from 31 (5.4 %). Dark flecks are lobe undersides, not scatter. Grey 3x still shows slight diagonal streaking, same family as the bench slats; not dithered.
+Items 1, 2, 4, 6 to 9 unchanged and re-seen in frames x1330 and x2200: PASS. Silhouette and size unchanged (32x51, 0.70 x 1.1 m).
+
+VERDICT: PASS (9 of 9)

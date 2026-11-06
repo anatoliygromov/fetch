@@ -16,3 +16,11 @@ Scale assumes 46 px/m on the play line. Pepper's sprite is 52 x 38 (1.13 x 0.83 
 9. Read: FAIL. The pretzel (cols 9-26, rows 16-25 of the file) is two thin gold rings with gaps in the outline, a dashed outline; at 1x and 3x it reads as two rings, spectacles or a chain, not a pretzel. The maker flagged it as a later fix; the owner's bar is that things read as what they are.
 
 VERDICT: FAIL (1 item: 9)
+
+# Round 2
+
+Reviewer: same independent reviewer, 6 Nov 2026, head 0ed30f0. Frames: /tmp/claude-0/-home-claude/87159006-489b-566e-ae4a-e83d2f5ae5ab/scratchpad/r2/sweep_downtown_y000_x1200_3x.png (sign at screen 4, beside Pepper), grey /tmp/claude-0/-home-claude/87159006-489b-566e-ae4a-e83d2f5ae5ab/scratchpad/r2/sweep_downtown_y000_x1200_grey3x.png; file at 5x beside Pepper, lamp, bench: /tmp/claude-0/-home-claude/87159006-489b-566e-ae4a-e83d2f5ae5ab/scratchpad/r2/sign5x.png; pretzel at 8x: /tmp/claude-0/-home-claude/87159006-489b-566e-ae4a-e83d2f5ae5ab/scratchpad/r2/pretzel8x.png. asset_qa PASS, check_backdrop OK.
+
+9. Read: PASS. One gold pretzel: two lobes, crossing arms, a bottom bar, closed outline, centred on the brown plate. Reads as a pretzel at 1x and 3x, in colour and grey. Other items unchanged: PASS.
+
+VERDICT: PASS (9 of 9)
