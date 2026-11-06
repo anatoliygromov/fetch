@@ -36,6 +36,7 @@ S = {
 FADE = {"rw": dict(back=0.28), "cp": dict(shore=0.40, mid=0.38, back=0.20), "dt": dict(shore=0.70, mid=0.10, back=0.28)}
 # pieces with their own amount (scene.lua park gate and winch keeper, arthooks.lua tram and spire); the haze is the level's
 OWN = {"park_gate": 0.28, "park_keeper_winch": 0.35, "tram_vintage": 0.40, "spire_riddarholmen": 0.45}
+# (art/dt-roofs-06nov) the far spire in the game: arthooks.lua H.drawFarSpire fades it by the shore's own amount (0.70)
 OLD_HAZE = np.array([200, 210, 222]) / 255                        # the cool grey every fade went to before decision 3
 W = np.array([0.299, 0.587, 0.114])
 LEVELS = {"rw": "River Walk", "cp": "City Park", "dt": "Downtown"}
@@ -140,6 +141,14 @@ add(["town_front_tall1", "town_front_tall2", "town_front_tall3", "town_front_tal
      "town_oriel_bay"],
     "dt", "back", True, group="Downtown")
 add(["town_crates70", "town_breadboard", "town_crate_leg", "town_portal_top", "town_oriel"], "dt", "play", group="Downtown")
+# art/dt-roofs-06nov: the high road's roof kit (tools/build_roof_kit.py), drawn unfaded on Pepper's line; the far spire as
+# the game draws it (arthooks.lua H.drawFarSpire: the shore haze, the shore's amount, not OWN's 45 %); the pieces built
+# by tools/build_dt_details.py (balconies, the springy coil, the tram stop sign, the fountain)
+A.append(("Downtown", "spire_riddarholmen", ART + "scene/spire_riddarholmen.png", "dt", "shore", FADE["dt"]["shore"]))
+add(["town_roof_loggia", "town_roof_gallery88", "town_roof_gallery72", "town_roof_flower_roof", "town_roof_ledge",
+     "town_footbridge", "town_balcony56", "town_balcony64", "town_spring"], "dt", "play", group="Downtown")
+add(["town_stopsign"], "dt", "back", True, group="Downtown")        # arthooks.lua stopSign: H.img(.., true), the back fade
+add(["town_jet"], "dt", "back", group="Downtown")                  # scene.lua drawTerrainArt: decoration on her line, unfaded
 add(["pepper", "girl", "cat", "goose", "gull", "ball"], "rw", None, base=ART, group="Characters (never shaded)")
 add(["facades_square"], "dt", "mid", True, base=R8, group="Batch 1 (rejected)")
 add(["spire_riddarholmen"], "dt", "back", True, base=R8, group="Batch 1 (rejected)")     # arthooks.lua drawTownBack, own 45 %

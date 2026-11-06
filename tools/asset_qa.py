@@ -54,6 +54,7 @@ LADDER = {
 FRAMES = {
     "pepper": (60, 52), "girl": (66, 66), "cat": (48, 48), "goose": (34, 34), "gull": (26, 26),
     "park_keeper_cart": (82, 82), "park_keeper_winch": (80, 80), "rowboat": (70, 70), "mia_throw": (66, 66),
+    "town_spring": (9, 10), "town_jet": (6, 88),                  # (art/dt-roofs-06nov, tools/build_dt_details.py)
 }
 ROLL = ("road_cyclist1_roll", "road_cyclist2_roll")              # 4 frames side by side (drawn: Rd.art().riders)
 # what the game never draws (loaded but unused, or replaced in the played level): not checked
@@ -90,7 +91,14 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          "town_front_tall4": (148, 432, 0, 0), "town_shelter_tall": (140, 115, 0, 0), "town_gateway": (80, 138, 0, 0),
          "town_crates70": (71, 37, 0, 0), "town_breadboard": (74, 12, 0, 0), "town_crate_leg": (18, 37, 0, 0),
          "town_portal_top": (122, 50, 0, 0), "town_oriel": (18, 45, 0, 0), "town_oriel_bay": (58, 44, 0, 0),
-         "road_car2": (242, 102, 12, 8), "road_car3": (246, 93, 12, 8), "road_car5": (250, 89, 12, 8)}
+         "road_car2": (242, 102, 12, 8), "road_car3": (246, 93, 12, 8), "road_car5": (250, 89, 12, 8),
+         # art/dt-roofs-06nov: the high road's roof kit as the game draws it (arthooks.lua townPiece: box width + 2, the
+         # heights the true-scale fronts allow), the far spire, and the pieces drawn in code until now
+         "town_roof_loggia": (122, 26, 0, 0), "town_roof_gallery88": (90, 32, 0, 0), "town_roof_gallery72": (74, 32, 0, 0),
+         "town_roof_flower_roof": (90, 14, 0, 0), "town_roof_ledge": (16, 9, 0, 0), "town_footbridge": (162, 52, 0, 0),
+         "spire_riddarholmen": (36, 260, 0, 0), "town_balcony56": (58, 57, 0, 0), "town_balcony64": (66, 57, 0, 0),
+         "town_spring": (36, 10, 0, 0), "town_stopsign": (19, 101, 0, 0), "town_jet": (24, 88, 0, 0),
+         "town_tier": (50, 58, 0, 0), "town_bowl": (34, 82, 0, 0), "town_rim": (18, 18, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",
