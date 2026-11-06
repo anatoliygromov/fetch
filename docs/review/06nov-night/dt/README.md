@@ -21,7 +21,7 @@ it was dropped for theirs.
 | 5 Basin | hard blue rectangle | the rim's granite carried down as a basin wall on the water's side, under the audit's rim bollards | `tools/build_dt_details.py` `town_basin_wall.png`, `scene.lua` RIM |
 | 6 Cat | - | not touched (track RW makes the size sheet) | - |
 
-No box Pepper stands on moved. The map changes are only box properties (`style`, `pipe`).
+No box Pepper stands on moved. The map changes are box properties (`style`, `pipe`) and one new decoration box (the house at x 2736). `--auto` GOOD GIRL (56 s).
 
 ## Numbers
 
@@ -49,8 +49,8 @@ No box Pepper stands on moved. The map changes are only box properties (`style`,
    guild house keeps the high road branch's granite ground floor with the steps as its coping. Say if you want the
    gable anyway.
 3. **The house styles:** six styles, picked per house in the map. Keep, or fewer and calmer?
-4. **The lone house after the canal (x 2640-2736):** one tall narrow front among the low mid row. Keep, or widen it
-   into a pair?
+4. **The house after the canal (x 2640):** it stood alone as a narrow tower; it now has a neighbour (x 2736-2816, a
+   shop). Keep the pair, or one house?
 
 Not done: the low-priority kerb end at the level's right edge (audit item 5). Review gate 8 (independent reviewer) is
 for the producer; `art/gen/reviews/town_shelter_tall.md` is the old shelter's and needs a new review.
