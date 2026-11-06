@@ -306,7 +306,7 @@ local function kennel(pc, cam)
   local foot = pc.foot or 184                                      -- (the path it stands on; tall levels set foot)
   local w = x1 - x
   local A = art()
-  if w == A.kennel:getWidth() and dt - y0 == 17 then lg.setColor(1, 1, 1, 1); lg.draw(A.kennel, math.floor(x), y0); return end
+  if w == A.kennel:getWidth() and A.kennel:getHeight() == foot - y0 then lg.setColor(1, 1, 1, 1); lg.draw(A.kennel, math.floor(x), y0); return end   -- (the art from its top down to the path)
   rect(INK, x, y0, w, foot - y0)                                    -- outline and body
   rect(WOOD, x + 1, y0 + 4, w - 2, foot - y0 - 5)
   for yy = y0 + 8, foot - 2, 5 do rect(WOOD_D, x + 1, yy, w - 2, 1) end -- planks

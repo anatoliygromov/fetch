@@ -131,14 +131,14 @@ return function(mode, api)
           report("kiosks: down onto the planter (route done)", near(p.y, 154) and p.x > 976 and p.x < 1048, ("x %.0f y %.0f"):format(p.x, p.y))
           report("secret: KIOSK ROOFS counted", s.secrets[2].found, ("%d of %d"):format(s:stats().secrets, s:stats().secretsTotal)) end },
       -- 14 Pepper's kennel: it stops a walk; crawling in finds the gold bone (a secret)
-      { act = function() tp(60, 184); api.stage().pepper.face = -1; hold("left") end }, { during = 0.6 },
-      { act = function(p) report("kennel: stops a walk", p.x >= 50.9 and near(p.y, 184), ("x %.1f"):format(p.x)); hold("left", "down") end }, { during = 1.5 },
+      { act = function() tp(70, 184); api.stage().pepper.face = -1; hold("left") end }, { during = 0.6 },
+      { act = function(p) report("kennel: stops a walk", p.x >= 60.9 and near(p.y, 184), ("x %.1f"):format(p.x)); hold("left", "down") end }, { during = 1.5 },
       { act = function(p) release(); local s = api.stage(); local got
           for _, bn in ipairs(s.bones) do if bn.x == 16 then got = bn.taken end end
           report("kennel: crawl in, the gold bone is inside", p.x < 22 and got, ("x %.0f, bone %s"):format(p.x, tostring(got)))
           report("secret: KENNEL counted (2 of 3)", s.secrets[1].found and s:stats().secrets == 2 and s:stats().secretsTotal == 3, ("%d of %d"):format(s:stats().secrets, s:stats().secretsTotal)) end },
       { act = function() hold("right", "down") end }, { during = 1.2 },
-      { act = function(p) release(); report("kennel: crawl back out", p.x > 50 and near(p.y, 184), ("x %.0f"):format(p.x)) end },
+      { act = function(p) release(); report("kennel: crawl back out", p.x > 60 and near(p.y, 184), ("x %.0f"):format(p.x)) end },
       -- 15 traffic: a bike is sent 1 s before it reaches the screen edge (its bell rings then); hard mode
       { act = function() local s = api.stage(); local c = Sp.spawn(s, s.def.bikes[1]); local lead = (c.x - (s.def.bikes[1].w or 48) / 2 - (s.cam + 320)) / c.speed   -- (the front: half the hit box)
           report("bike: sent 1 s before the screen edge (bell)", math.abs(lead - 1) < 0.01, ("%.2f s"):format(lead))

@@ -44,7 +44,7 @@ L.number = 1
 L.map = "level/riverwalk.map"
 L.ground = "quay"             -- (art/rw-ground-06nov) the ground by rule: kerb, asphalt, quay walls, ramps (Sc.paintQuay)
 L.time = 420
-L.start = { x = 52, y = 184 }
+L.start = { x = 62, y = 184 }           -- (night/06nov-rw: 10 px right of the true-scale kennel, x 0-44)
 
 -- the ferry's art left x: hull 1562-1797, between the pontoon's far end (1552) and the far quay (1808)
 local FX = 1560
@@ -65,9 +65,12 @@ L.props = {
   -- (LOG) lies by its foot.
   { name = "TREE",     kind = "decor",  layer = "back", x0 = 120,  x1 = 370,  y0 = -77, y1 = 174, art = "rw_lime" },
   { name = "BENCH",    kind = "solid",  layer = "play", x0 = 93,   x1 = 189,  y0 = 156, y1 = 165, art = "bench", ax = 90, ay = 184, depth = 5 },
-  -- Pepper's kennel by the house (drawn in code): its roof and walls are solid down to the doorway (y 148-165),
-  -- 19 px to crawl in; a gold bone is inside. It ends 1 px left of her box at the start.
-  { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 0,    x1 = 34,   y0 = 148, y1 = 165, hidden = true },
+  -- Pepper's kennel by the house (night/06nov-rw: rebuilt at true scale, 44 x 44, a pitched roof; art
+  -- art/scene/kennel.png by tools/build_rw_kennel.py): solid down to its doorway's crown (y 165), 19 px to crawl in;
+  -- a gold bone is inside. Two boxes: the ridge cap (x 16-28, y 140) and the eaves (x 0-44, y 158), so wherever she
+  -- stands on it, the roof is under her paws. It ends 1 px left of her box at the start.
+  { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 16,   x1 = 28,   y0 = 140, y1 = 165, hidden = true },
+  { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 0,    x1 = 44,   y0 = 158, y1 = 165, hidden = true },
   -- promenade A
   { name = "",         kind = "decor",  layer = "back", x0 = 460,  x1 = 652,  y0 = -76, y1 = 174, art = "rw_birch" },   -- (6 Nov) true-scale birch, trunk where tree_far stood
   { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 401,  x1 = 503,  y0 = 152, y1 = 184, art = "flowerbox_front", ax = 400, ay = 184 },
@@ -149,7 +152,7 @@ L.ballHomeAtLamps = true
 
 -- code-drawn pieces (setpieces.lua); each matches a hidden collision prop above
 L.pieces = {
-  { kind = "kennel", x0 = 0, x1 = 34, y0 = 148, door = 165 },
+  { kind = "kennel", x0 = 0, x1 = 44, y0 = 140, door = 165 },
   { kind = "kiosk",  x0 = 736, x1 = 824, y0 = 112, bx0 = 748, bx1 = 812 },
   { kind = "kiosk",  x0 = 888, x1 = 968, y0 = 112, bx0 = 900, bx1 = 956 },
   { kind = "jetty",  x0 = 2496, x1 = 2544, y0 = 196 },
@@ -238,8 +241,8 @@ L.secrets = {
 L.hints = {
   { x0 = 1550, x1 = 1800, btn = "x",    text = "PICK UP",            need = "nearball" },
   { x0 = 3898, x1 = 4048, btn = "x",    text = "GIVE",               need = "ball" },
-  { x0 = 0,    x1 = 66,   btn = "right", text = "RUN" },                     -- (r6/levels: the tutorial, in order)
-  { x0 = 66,   x1 = 200,  btn = "down", text = "CRAWL",              minY = 183 },   -- under the bench (on the pavement)
+  { x0 = 0,    x1 = 76,   btn = "right", text = "RUN" },                     -- (r6/levels: the tutorial, in order)
+  { x0 = 76,   x1 = 200,  btn = "down", text = "CRAWL",              minY = 183 },   -- under the bench (on the pavement)
   { x0 = 200,  x1 = 271,  btn = "a",    text = "TAP: HOP" },                 -- over the fallen branch
   { x0 = 330,  x1 = 402,  btn = "a",    text = "HOLD: BIG JUMP" },           -- onto the flower box
   { x0 = 560,  x1 = 641,  btn = "a",    text = "HOLD: CLIMB" },
