@@ -11,7 +11,7 @@
  "size_sentence": "sitting down, the top of his cap is level with the top of the dog's head and his head is a little smaller than the dog's head. He is a grown-up grandfather, not a child.",
  "model": "sc_gpt25",
  "variants": 2,
- "references": 2,
+ "references": 3,
  "tier": "A",
  "family": "rw_harbour_06nov",
  "slot": {
