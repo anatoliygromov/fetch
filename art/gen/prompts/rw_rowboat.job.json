@@ -1,0 +1,32 @@
+{
+ "name": "rw_rowboat",
+ "model": "SpriteCook Nano Banana 2.1 1K, pixel on",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/rw_rowboat_blockout.png",
+  "art/gen/style_card_riverwalk.png"
+ ],
+ "prompt_file": "art/gen/prompts/rw_rowboat.txt",
+ "k": null,
+ "frame": [
+  256,
+  256
+ ],
+ "credits": 24,
+ "tool": "spritecook",
+ "family": "rw_water",
+ "tier": "A",
+ "slot": {
+  "file": "riverwalk/art/scene/rowboat.png",
+  "where": "River Walk screens 8-9, the harbour: the two ROWBOAT movers (level/riverwalk.lua), drawn by Sp.drawRowboat (setpieces.lua); the hull is cut from this render, the rower comes from rw_rower and its rowing loop"
+ },
+ "spritecook": {
+  "model": "gemini-nano-banana-2.1",
+  "pixel": true,
+  "resolution": "1K",
+  "width": 185,
+  "height": 56
+ },
+ "ledger_job": "rw_rowboat@1106-191925"
+}
