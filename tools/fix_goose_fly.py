@@ -13,6 +13,7 @@ The walk and hiss rows are not touched.
      shows is the near wing opening behind the back, the take-off into cell 3's wings up.
   5. (round 2) cells 2 and 3: the black stub off the beak (x 25-28 of the beak row and one pixel under it) taken out;
      the beak is a 2 x 2 orange tip closed with the ink, like the walk frames.
+  6. (night 6 Nov, cp track) cell 1 (the stand before take-off): the 2 px blotch asset_qa flags (x 9-10, y 90) to its ring.
 Run from the repo root on the original (art/source/goose/goose_before.png is kept): python3 tools/fix_goose_fly.py"""
 import json, os, shutil
 import numpy as np
@@ -28,7 +29,8 @@ cell = lambda i: (slice(ROW * C, ROW * C + C), slice((i - 1) * C, i * C))
 a[cell(4)] = before[cell(5)]
 a[cell(6)] = before[cell(7)]
 PATCHES = [[(43, 86), (44, 86), (43, 87), (44, 87), (45, 87), (46, 87), (44, 88), (45, 88), (46, 88), (47, 88)],
-           [(84, 76), (85, 77)], [(84, 79), (85, 79)]]
+           [(84, 76), (85, 77)], [(84, 79), (85, 79)],
+           [(9, 90), (10, 90)]]                             # (night 6 Nov, cp) 6. cell 1's 2 px blotch in the body (asset_qa)
 for patch in PATCHES:                                       # each patch to the colour of the pixels all round it
     ring = [tuple(before[y + dy, x + dx]) for x, y in patch for dy, dx in ((0, 1), (1, 0), (0, -1), (-1, 0))
             if (x + dx, y + dy) not in patch and before[y + dy, x + dx, 3]]
