@@ -12,3 +12,6 @@ Script: `asset_qa.py --frames 34x34 --layer play` FAIL on numbers only: 24 colou
 | crisp / reads / scale / owner | PASS | 34 px body, wingspan 60 px, as the gull redraw spec |
 
 Verdict: PASS. Optional polish, 0 credits: make frame 5 a mid-stroke (wings level) and point the crouch's head forward.
+
+# Round 2 (reviewer, 6-7 Nov night)
+PASS with a note. Cell 5 is no longer a twin of cell 4: ink closed, feet tucked, the loop is down, tucked, up, up, down. But the wings are folded along the body, not level: it reads as a gliding torpedo between the strokes, a small hiccup in the flap at 1x. If it is touched again, spread the near wing out flat to the side (level stroke) and keep everything else. Script numbers unchanged (24 colours, feather dabs).

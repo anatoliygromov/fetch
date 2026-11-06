@@ -27,3 +27,9 @@ Flat citypark (quick check, y 0 only): PASS except x 640, where three deck plank
 5. Bank pebbles: a fourth shade so they share the stepping stones' ramp; optional.
 
 Write the 10 m willow into docs/art_hooks_r8.md so the spec matches the file.
+
+# Round 2 (reviewer, 6-7 Nov night)
+
+Re-rendered at e4b9c9e: 27 tall frames and the flat x 640. Fixed since round 1: tree feet (roots and 2 dark base rows, PASS), the pond's left corner (the lawn curves into the water, PASS), pebbles (4 shades, PASS), goose cell 5 (PASS with a note), the flat x 640 (the willow trunks now run up through the crowns to the planks; nothing floats, PASS). The canoe read is gone.
+
+Still failing, all for the fork ledges: x 960, 1280, 1600 at y 144, 24 and 0, and x 2560 at y 24 and 0. The lime stubs are shelf brackets (taper the wrong way, plate and gusset) and every fork has a 1 px line through the trunk between its two halves. See cp_limes_pillars.md round 2 for the exact fix. Everything else PASS.

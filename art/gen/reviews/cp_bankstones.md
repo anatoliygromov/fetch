@@ -15,3 +15,6 @@ Script: `asset_qa.py --layer back --level cp` PASS.
 | consistency | PASS with a note | the concept's bank is a ramp of big rounded stones at the near corner; the game puts two small pebbles per end on the far bank. The pond no longer has the "bank slab" of the base review, but the concept's stone ramp is not there either |
 
 Verdict: PASS. Optional: a fourth shade (a mid-light) so the stones match the stepping stones' ramp.
+
+# Round 2 (reviewer, 6-7 Nov night)
+PASS. The pebbles now use the stepping stones' 4 greys (asset_qa --layer back PASS); on the far bank at x 640 and x 1920 they read as stones in the same ramp as the big ones. Done.
