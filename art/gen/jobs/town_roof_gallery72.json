@@ -1,0 +1,20 @@
+{
+ "name": "town_roof_gallery72",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 0.7,
+ "target_px": [
+  74,
+  32
+ ],
+ "tier": "C",
+ "family": "dt_roofs",
+ "method": "built from parts drawn once, stamped on integer grids, tools/build_roof_kit.py",
+ "build": "tools/build_roof_kit.py",
+ "frame": "docs/review/06nov/dt_roofs/frames/sweep_downtown_y120_x1600.png",
+ "slot": {
+  "file": "riverwalk/art/scene/town_roof_gallery72.png",
+  "where": "Downtown tall, GALLERY x 1816 y 256 72 x 6: at x0 - 1, y0 - 1, centred"
+ }
+}

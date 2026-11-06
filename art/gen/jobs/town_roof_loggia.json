@@ -1,0 +1,20 @@
+{
+ "name": "town_roof_loggia",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 0.57,
+ "target_px": [
+  122,
+  26
+ ],
+ "tier": "C",
+ "family": "dt_roofs",
+ "method": "built from parts drawn once, stamped on integer grids, tools/build_roof_kit.py",
+ "build": "tools/build_roof_kit.py",
+ "frame": "docs/review/06nov/dt_roofs/frames/sweep_downtown_y120_x1360.png",
+ "slot": {
+  "file": "riverwalk/art/scene/town_roof_loggia.png",
+  "where": "Downtown tall, LOGGIA (x 1416, y 280, 120 x 6): at x0 - 1, y0 - 1, centred (arthooks.lua townPiece)"
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "name": "town_balcony56",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 1.3,
+ "target_px": [
+  58,
+  60
+ ],
+ "tier": "C",
+ "family": "dt_roofs",
+ "method": "built from parts drawn once, stamped on integer grids, tools/build_dt_details.py",
+ "build": "tools/build_dt_details.py",
+ "frame": "docs/review/06nov/dt_roofs/frames/sweep_downtown_y240_x1600.png",
+ "slot": {
+  "file": "riverwalk/art/scene/town_balcony56.png",
+  "where": "Downtown tall, each BALCONY 56 px wide: at x0 - 1, y0 - 47 (scene.lua drawBalcony)"
+ }
+}

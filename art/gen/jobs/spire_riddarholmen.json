@@ -1,0 +1,19 @@
+{
+ "name": "spire_riddarholmen",
+ "level": "downtown",
+ "layer": "shore",
+ "kind": "decoration",
+ "target_px": [
+  36,
+  260
+ ],
+ "tier": "C",
+ "family": "dt_roofs",
+ "method": "built from parts drawn once, stamped on integer grids, tools/build_spire.py",
+ "build": "tools/build_spire.py",
+ "frame": "docs/review/06nov/dt_roofs/frames/sweep_downtown_y120_x2380.png",
+ "slot": {
+  "file": "riverwalk/art/scene/spire_riddarholmen.png",
+  "where": "Downtown tall, far (arthooks.lua H.drawFarSpire): shore haze, the shore's fade 0.70, tip 8 px under the screen top"
+ }
+}

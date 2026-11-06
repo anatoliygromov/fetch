@@ -1,0 +1,20 @@
+{
+ "name": "town_jet",
+ "level": "downtown",
+ "layer": "back",
+ "kind": "decoration",
+ "real_height_m": 1.91,
+ "target_px": [
+  24,
+  88
+ ],
+ "tier": "C",
+ "family": "dt_roofs",
+ "method": "built from parts drawn once, stamped on integer grids, tools/build_dt_details.py",
+ "build": "tools/build_dt_details.py",
+ "frame": "docs/review/06nov/dt_roofs/frames/sweep_downtown_y240_x1600.png",
+ "slot": {
+  "file": "riverwalk/art/scene/town_jet.png",
+  "where": "the fountain's water (scene.lua drawTerrainArt): left at TIER x0 - 7, right mirrored at x1 + 7, top TIER top + 3"
+ }
+}

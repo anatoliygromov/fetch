@@ -1,0 +1,20 @@
+{
+ "name": "town_roof_ledge",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 0.2,
+ "target_px": [
+  16,
+  9
+ ],
+ "tier": "C",
+ "family": "dt_roofs",
+ "method": "built from parts drawn once, stamped on integer grids, tools/build_roof_kit.py",
+ "build": "tools/build_roof_kit.py",
+ "frame": "docs/review/06nov/dt_roofs/frames/sweep_downtown_y120_x1960.png",
+ "slot": {
+  "file": "riverwalk/art/scene/town_roof_ledge.png",
+  "where": "Downtown tall, the unnamed high road ledges and the DORMER: a 3-slice, top row at the box top - 1"
+ }
+}
