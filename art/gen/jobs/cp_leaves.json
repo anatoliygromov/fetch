@@ -1,0 +1,28 @@
+{
+ "name": "cp_leaves",
+ "level": "citypark",
+ "kind": "plant",
+ "tier": "B",
+ "layer": "play",
+ "real_height_m": 0.48,
+ "target_px": [
+  130,
+  22
+ ],
+ "checks_px": {
+  "heap": "48x22",
+  "flat": "54x9"
+ },
+ "subject": "two piles of fallen autumn leaves on a park path, seen from the side: on the left a round heap of leaves, on the right the same leaves after a dog ran through them, spread out low and flat; maple and lime leaves in orange, golden yellow and rust red, drawn as clear leaf shapes in small clumps, lit from the upper left, the lower leaves in a deeper rust shade",
+ "part_map": "the left brown dome is the heap (exactly that size), the right low brown mound is the flat spread of the same leaves (exactly that size, very low). Both sit on the ground line; nothing between them.",
+ "size_sentence": "the heap is about as tall as the dog's legs and a little shorter than the dog is long; the spread is as low as the dog's paws. Real leaf piles at true size next to the dog.",
+ "slot": {
+  "file": "riverwalk/art/scene/park_leaves.png",
+  "where": "City Park tall, the LEAVES boxes at x 92, 1008, 1516 (drawn over Pepper, bottom on the path y 328); park_leaves_flat.png is the same pile after she kicked through it (scene.lua Sc.drawPropArt, kicked)"
+ },
+ "model": "sc_gpt25",
+ "variants": 2,
+ "family": "cp_props_06nov",
+ "references": 2,
+ "extra": "These are decoration the dog runs through: no dark outline; their edge is the deepest rust shade of the leaves."
+}

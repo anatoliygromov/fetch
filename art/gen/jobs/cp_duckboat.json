@@ -1,0 +1,29 @@
+{
+ "name": "cp_duckboat",
+ "level": "citypark",
+ "kind": "vehicle",
+ "tier": "A",
+ "layer": "play",
+ "real_height_m": 0.72,
+ "target_px": [
+  54,
+  33
+ ],
+ "checks_px": {
+  "width": 54,
+  "height": 33,
+  "deck_row": 18,
+  "water_row": 25
+ },
+ "subject": "a cute little white pedal boat shaped like a duck, seen exactly from the side, facing left: a smooth white rounded hull with a flat top edge, an orange-red stripe along its side, a white duck neck and round head at the front with a small black eye and an orange beak, a short pointed white tail at the back; lit from the upper left",
+ "part_map": "the light grey hull shape is the boat's body (exactly that size; its top edge is flat and straight), the red line is the stripe, the grey neck and round head at the left front are the duck's neck and head, the orange triangle is the beak, the black dot is the eye, the small triangle at the right is the tail. Show only the outside side of the boat, never its inside.",
+ "size_sentence": "the boat is about as long as the dog, its deck as high as the dog's back is long, and the duck head a little taller than the dog's head. Drawn the size of the dog.",
+ "slot": {
+  "file": "riverwalk/art/scene/park_boat_front.png",
+  "where": "City Park tall, screen 3, the DUCK BOAT mover at x 824 (deck y 346), scene.lua Sc.drawMoverArt at x - 3, y - 18, mirrored when it paddles right"
+ },
+ "model": "sc_gpt25",
+ "variants": 2,
+ "family": "cp_props_06nov",
+ "references": 2
+}

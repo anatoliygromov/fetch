@@ -1,0 +1,31 @@
+{
+ "name": "cp_rocklog",
+ "family": "cp_props_06nov",
+ "tier": "A",
+ "steps": {
+  "spec": {
+   "time": "2026-11-06 19:15"
+  },
+  "blockout": {
+   "time": "2026-11-06 19:15"
+  },
+  "preflight": {
+   "time": "2026-11-06 19:15"
+  },
+  "probe": {
+   "render": "art/gen/renders/cp_rocklog_a_raw.png",
+   "time": "2026-11-06 19:15"
+  },
+  "cut": {
+   "time": "2026-11-06 19:15"
+  },
+  "ingame": {
+   "frame": "docs/review/06nov/cp_props_06nov/frames/sweep_citypark_y144_x1560.png",
+   "time": "2026-11-06 19:15"
+  },
+  "polish": {
+   "aseprite": "art/source/park_stone/park_stone.aseprite",
+   "time": "2026-11-06 19:15"
+  }
+ }
+}

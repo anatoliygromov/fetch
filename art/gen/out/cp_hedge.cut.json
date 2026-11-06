@@ -1,0 +1,38 @@
+{
+ "name": "cp_hedge",
+ "method": "GPT 2.5 render, tools/grid4_cut.py (one colour per 4x4 cell, majority), tools/cut_cp_props.py (k-means medoids, clean pass on the new cut), fitted to the slot by tools/polish_cp_props.py (whole rows or columns spliced out, never resampled)",
+ "pieces": [
+  {
+   "piece": "park_hedge",
+   "render": "art/gen/renders/cp_hedge_r1b_grid4.png",
+   "cut_size": [
+    66,
+    77
+   ],
+   "fitted_size": [
+    66,
+    72
+   ],
+   "target_from_blockout": [
+    64,
+    72
+   ],
+   "splices": [
+    {
+     "splice_rows": {
+      "removed": [
+       47,
+       51
+      ],
+      "of_the_size_then": true
+     }
+    }
+   ],
+   "pepper_in_render_px": [
+    52,
+    38
+   ]
+  }
+ ],
+ "fails": []
+}

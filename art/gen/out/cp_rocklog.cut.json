@@ -1,0 +1,87 @@
+{
+ "name": "cp_rocklog",
+ "method": "GPT 2.5 render, tools/grid4_cut.py (one colour per 4x4 cell, majority), tools/cut_cp_props.py (k-means medoids, clean pass on the new cut), fitted to the slot by tools/polish_cp_props.py (whole rows or columns spliced out, never resampled)",
+ "pieces": [
+  {
+   "piece": "park_stone",
+   "render": "art/gen/renders/cp_rocklog_a_grid4.png",
+   "cut_size": [
+    29,
+    56
+   ],
+   "fitted_size": [
+    26,
+    55
+   ],
+   "target_from_blockout": [
+    26,
+    55
+   ],
+   "splices": [
+    {
+     "splice_cols": {
+      "removed": [
+       16,
+       18
+      ],
+      "of_the_size_then": true
+     }
+    },
+    {
+     "crop_rows": [
+      0,
+      55
+     ]
+    }
+   ],
+   "pepper_in_render_px": [
+    52,
+    38
+   ]
+  },
+  {
+   "piece": "park_hollowlog",
+   "render": "art/gen/renders/cp_rocklog_a_grid4.png",
+   "cut_size": [
+    72,
+    34
+   ],
+   "fitted_size": [
+    44,
+    27
+   ],
+   "target_from_blockout": [
+    44,
+    27
+   ],
+   "splices": [
+    {
+     "trim_top_rows": 4
+    },
+    {
+     "splice_cols": {
+      "removed": [
+       27,
+       54
+      ],
+      "of_the_size_then": true
+     }
+    },
+    {
+     "splice_rows": {
+      "removed": [
+       13,
+       15
+      ],
+      "of_the_size_then": true
+     }
+    }
+   ],
+   "pepper_in_render_px": [
+    52,
+    38
+   ]
+  }
+ ],
+ "fails": []
+}

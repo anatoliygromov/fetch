@@ -88,3 +88,19 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-05 23:03,plan,rw_car5@1105-230350,rw_car5,rw_traffic2,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"we have a new token allowance on Spritecook, go use it! plan first and then execute as much as possible (owner, 5 Nov 21:45)"
 2026-11-05 23:04,spent,rw_car3@1105-230350,,,,,24,spent,
 2026-11-05 23:04,spent,rw_car5@1105-230350,,,,,24,spent,
+2026-11-06 18:51,plan,cp_hedge@1106-185110,cp_hedge,cp_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:51,plan,cp_leaves@1106-185111,cp_leaves,cp_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:51,plan,cp_stone@1106-185111,cp_stone,cp_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:51,plan,cp_hollowlog@1106-185111,cp_hollowlog,cp_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:51,plan,cp_duckboat@1106-185112,cp_duckboat,cp_props_06nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:53,spent,cp_hedge@1106-185110,,,,,24,spent,
+2026-11-06 18:54,plan,cp_hedge@1106-185442,cp_hedge,cp_props_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),48,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:55,spent,cp_hedge@1106-185442,,,,,48,spent,family retry 1: model NB 2.1 -> GPT 2.5 (NB drew the hedge 2x wide)
+2026-11-06 18:56,plan,cp_leaves@1106-185611,cp_leaves,cp_props_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),48,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:56,plan,cp_rocklog@1106-185611,cp_rocklog,cp_props_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),48,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:56,plan,cp_duckboat@1106-185612,cp_duckboat,cp_props_06nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),48,planned,"owner 6 Nov 18:45: All 3 levels now, up to 2,000"
+2026-11-06 18:57,spent,cp_leaves@1106-185611,,,,,48,spent,
+2026-11-06 18:57,spent,cp_rocklog@1106-185611,,,,,48,spent,
+2026-11-06 18:57,spent,cp_duckboat@1106-185612,,,,,48,spent,
+2026-11-06 18:57,verdict,,cp_stone,,,,,rejected,"plan row cp_stone@1106-185111 not run: stone and log made as one job, cp_rocklog"
+2026-11-06 18:57,verdict,,cp_stone,,,,,pending,"correction: no job ran as cp_stone (0 credits); the NB plan rows cp_stone, cp_hollowlog, cp_leaves@1106-185111 and cp_duckboat@1106-185112 were superseded by GPT 2.5 jobs and never run"

@@ -1,0 +1,124 @@
+{
+ "name": "park_stone",
+ "cut": "art/source/park_stone/park_stone_cut.png",
+ "cut_size": [
+  29,
+  56
+ ],
+ "why": "29 to 26 wide: the STONE box is 24 + its 1 px outline each side; the 56th row is below the world",
+ "ops": [
+  {
+   "splice_cols": {
+    "removed": [
+     16,
+     18
+    ],
+    "of_the_size_then": true
+   }
+  },
+  {
+   "crop_rows": [
+    0,
+    55
+   ]
+  }
+ ],
+ "outline_px": [
+  [
+   3,
+   54
+  ],
+  [
+   4,
+   54
+  ],
+  [
+   5,
+   54
+  ],
+  [
+   6,
+   54
+  ],
+  [
+   9,
+   54
+  ],
+  [
+   10,
+   54
+  ],
+  [
+   11,
+   54
+  ],
+  [
+   12,
+   54
+  ],
+  [
+   13,
+   54
+  ],
+  [
+   14,
+   54
+  ],
+  [
+   15,
+   54
+  ],
+  [
+   16,
+   54
+  ],
+  [
+   17,
+   54
+  ],
+  [
+   18,
+   54
+  ],
+  [
+   19,
+   54
+  ],
+  [
+   20,
+   54
+  ],
+  [
+   21,
+   54
+  ],
+  [
+   22,
+   54
+  ]
+ ],
+ "hand": [],
+ "clean_changed": 1,
+ "blotches_merged": [
+  [
+   22,
+   51,
+   2
+  ],
+  [
+   1,
+   12,
+   2
+  ],
+  [
+   14,
+   4,
+   2
+  ]
+ ],
+ "size": [
+  26,
+  55
+ ],
+ "colours": 12
+}

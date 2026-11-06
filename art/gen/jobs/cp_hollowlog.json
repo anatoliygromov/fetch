@@ -1,0 +1,27 @@
+{
+ "name": "cp_hollowlog",
+ "level": "citypark",
+ "kind": "obstacle",
+ "tier": "A",
+ "layer": "play",
+ "real_height_m": 0.59,
+ "target_px": [
+  44,
+  27
+ ],
+ "checks_px": {
+  "width": 44,
+  "height": 27,
+  "hole": "left end"
+ },
+ "subject": "a hollow fallen tree trunk lying on a park path, seen exactly from the side: rough brown oak bark with long darker grain lines and a lit top edge, its left end cut flat showing a ring of light honey-coloured wood around a big dark hollow inside, its right end a rounded bark end",
+ "part_map": "the long grey rounded shape is the trunk's side (exactly that size), the light grey oval on the left is the cut end (a ring of light honey-coloured wood), the dark oval in it is the hollow inside the log.",
+ "size_sentence": "the log is a little shorter than the dog is long and about as tall as the dog's back; the dark hollow is big enough for the dog to crawl into. A real log at true size.",
+ "slot": {
+  "file": "riverwalk/art/scene/park_hollowlog.png",
+  "where": "City Park tall, screen 6, the hollow log piece at x 1564 (top ledge y 302, foot 328), scene.lua Sc.drawPieceArt at x - 1, y - 1"
+ },
+ "model": "sc_nb21",
+ "variants": 2,
+ "family": "cp_props_06nov"
+}
