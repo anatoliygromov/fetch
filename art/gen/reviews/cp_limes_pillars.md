@@ -53,3 +53,17 @@ Exact fix (0 credits, tools/cp_trunk_spans.py and the fork drawing):
 3. Never draw the ledge across the trunk span: clip the ledge art to outside the trunk's per-row span (cp_tree_spans.lua already has it), or draw the trunk after the ledge.
 4. Make each stand-on fork one limb 24-40 px long on one side (the side Pepper lands from), and on the other side a 4-6 px knot in the bark colours. Keep the hit box as it is.
 5. Two bark bands along each limb in the trunk's browns so the limb and the trunk are one material.
+
+# Round 3 (reviewer, 6-7 Nov night)
+
+Branch night/06nov-cp at cf27696 merged into review/06nov-cp. Re-rendered x 960, 1280, 1600, 2560 at y 144, 24, 0; 10x crops of the fork at 1004 (frame x 960 y 144, screen x 0-100, y 40-80) and of Pepper's fork at 1420 (frame x 1280, screen x 90-190, y 50-90).
+
+| Item | Verdict | Evidence |
+| --- | --- | --- |
+| Lime forks (1004, 1112, 1216, 1420) | PASS | each is now one limb thick at a bark collar (7-8 rows), thinning to a 1 px twig, with a curved top and two bark bands, plus a short tapered stub on the far side. The taper runs the right way, no plate, no gusset, no vertical end edge. At 1x and 2x a child sees a branch |
+| Bar across the trunk | PASS | gone on every fork and on both oaks; the trunks are clean bark |
+| Oak long limbs (1600-1700, 2560-2880) | PASS | stop at the trunk edge, forked twig tips; still flat-topped boards with a wedge underside, passable. Optional: two bark bands along each |
+| Nothing floats | PASS (note) | Pepper on the fork at 1420 stands across the crotch with the limb under her front paws and the stub under her hind paws; between them her paws rest on bare bark. It reads as standing in the fork. Optional: a 2 px bark saddle in the trunk's own browns along the hit box's top row where it crosses the trunk, so the crotch has a visible lip |
+| owner test | PASS | no boats, no shelves |
+
+Answer to the maker: they read as limbs now. A longer decorative limb past the box is not needed.
