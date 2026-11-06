@@ -1,0 +1,33 @@
+{
+ "name": "dt_cargo_bike",
+ "model": "SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid)",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/dt_cargo_bike_blockout.png",
+  "art/gen/style_card_riverwalk.png"
+ ],
+ "prompt_file": "art/gen/prompts/dt_cargo_bike.txt",
+ "k": null,
+ "frame": [
+  256,
+  256
+ ],
+ "credits": 48,
+ "tool": "spritecook",
+ "family": "dt_traffic_06nov",
+ "tier": "A",
+ "slot": {
+  "file": "riverwalk/art/scene/cargo_bike.png",
+  "where": "Downtown (tall): the street hazard (arthooks.lua drawCargo, cargo zones at x 1930 and 3120), faces left, hit box the left 80 x 26 px; its pedal loop cargo_bike_pedal.png"
+ },
+ "spritecook": {
+  "model": "gpt-image-2.5-sunburst",
+  "pixel": true,
+  "resolution": "1K",
+  "quality": "medium",
+  "width": 115,
+  "height": 85
+ },
+ "ledger_job": "dt_cargo_bike@1106-185430"
+}

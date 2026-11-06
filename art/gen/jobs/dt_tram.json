@@ -1,0 +1,30 @@
+{
+ "name": "dt_tram",
+ "level": "downtown",
+ "layer": "back",
+ "kind": "vehicle",
+ "real_height_m": 3.3,
+ "target_px": [
+  500,
+  152
+ ],
+ "checks_px": {
+  "wheel": 31,
+  "bogie_wheelbase": 74,
+  "window_w": 40,
+  "window_pitch": 52,
+  "sill": 78,
+  "roof": 140
+ },
+ "subject": "an old Stockholm city tram from the 1940s, seen exactly from the side, driving to the LEFT: steel-blue lower body and roof ends, a cream window band and cream letter board above the windows, a dark grey roof with a low raised clerestory, seven identical passenger windows with thin cream pillars, a glazed folding front door behind the cab and a glazed rear door, the driver in a dark blue uniform and peaked cap seen through the front cab window, a dark skirt along the bottom, two dark bogies each with two black spoked steel wheels, a round warm headlamp low on the front end; no numbers, no route board, no writing",
+ "part_map": "the big mid grey shape is the blue body (exactly that length and height, rounded top corners), the light grey band is the cream window band and letter board, the dark grey rectangles in it are the window glass (seven equal passenger windows, the cab window at the left end, the two tall doors), the small beige block in the cab window is the driver, the darker grey strip on top is the roof with its clerestory, the dark strip at the bottom is the skirt, the dark blocks under it are the two bogies and the four dark circles are the wheels (exactly that size and place), the small cream square at the far left is the headlamp.",
+ "size_sentence": "the tram is about ten dogs long and its roof is about four times as high as the dog's head. It is a real full-size tram, not a toy.",
+ "model": "sc_nb21_2k",
+ "variants": 2,
+ "tier": "A",
+ "family": "dt_traffic_06nov",
+ "slot": {
+  "file": "riverwalk/art/scene/tram_vintage.png",
+  "where": "Downtown (tall): the back lane's vintage tram (arthooks.lua drawTrams, L.trams at x 1700 and 3020, rails y 414), faces left, centred on the tram's x, faded 40 %"
+ }
+}

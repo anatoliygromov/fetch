@@ -116,7 +116,9 @@ end
 -- one cargo bike c (x = the hit box's middle, y = the wheel line), with its zone's depot (a courtyard gate: the
 -- bike is drawn and hurts only right of the gate's door). Art: cargo_bike.png facing left, its hit box the left
 -- w px of the frame, the bottom row on the wheel line; cargo_bike_pedal.png: frames of the same size side by side,
--- stepped by the distance ridden (one frame per 6 px).
+-- stepped by the distance ridden (one frame per H.CARGO_PEDAL_PX px; 6 Nov: 13 px, 8 frames = one crank turn in
+-- about 104 px, about once a second at its 110-130 px/s, as the River Walk riders).
+H.CARGO_PEDAL_PX = 13
 function H.drawCargo(c, cam)
   local z = c.zone or {}
   local L, B = math.floor(c.x - (z.w or 80) / 2 - cam + 0.5), math.floor(c.y + 0.5)
@@ -127,7 +129,7 @@ function H.drawCargo(c, cam)
     local pedal = H.img("scene/cargo_bike_pedal")
     local q = H.strip(pedal, still:getWidth())
     lg.setColor(1, 1, 1, 1)
-    if q and #q > 0 then lg.draw(pedal, q[1 + math.floor(-c.x / 6) % #q], L, B - still:getHeight())
+    if q and #q > 0 then lg.draw(pedal, q[1 + math.floor(-c.x / H.CARGO_PEDAL_PX) % #q], L, B - still:getHeight())
     else lg.draw(still, L, B - still:getHeight()) end
   else cargoCode(L, B, c.x, c.warn) end
   if z.depot then lg.setScissor() end
@@ -144,9 +146,23 @@ end
 -- it never touches Pepper and is drawn behind everything on her line.
 H.TRAM_W, H.TRAM_H = 300, 130
 H.TRAM_FADE = 0.4                                                   -- (the far lane: further back than the props' 0.28)
+-- (6 Nov, art/dt-traffic-06nov) the true-scale tram art: tram_vintage.png 586 x 188 (12.7 m body, 3.3 m to the
+-- clerestory at 46 px/m, the trolley pole above), its front door's middle 60 px from its left edge; its wheels are
+-- tram_vintage_wheel.png (4 frames of 31 x 31, turned a frame per TRAM_WHEEL_PX ridden) at these centres, drawn
+-- behind the body. Without the art: the code tram above (300 x 130, its door 24 px in). H.tramDims() gives the
+-- width and door the lane uses, so the stop puts the door at the sign either way.
+H.TRAM_DOOR = 24
+H.TRAM_ART = { door = 60, wheels = { 90, 164, 424, 498 }, wheelY = 16 }
+H.TRAM_WHEEL_PX = 3
+function H.tramDims()
+  local im = H.img("scene/tram_vintage", H.TRAM_FADE)
+  if im then return im:getWidth(), H.TRAM_ART.door end
+  return H.TRAM_W, H.TRAM_DOOR
+end
 function H.newTrams(def) local out = {}; for i, l in ipairs(def.trams or {}) do out[i] = { lane = l, t = l.first or 2.0 } end; return out end
 function H.updateTrams(s, dt)
   local cam = s.cam
+  local TW, TD = H.tramDims()
   for _, tl in ipairs(s.trams or {}) do
     local l, c = tl.lane, tl.car
     local mid = cam + 160
@@ -155,13 +171,13 @@ function H.updateTrams(s, dt)
         tl.t = tl.t - dt
         if tl.t <= 0 then                                         -- sent: just off the right edge of the screen
           tl.t = l.every or 16
-          c = { x = cam + 320 + H.TRAM_W / 2 + 8, v = l.speed or 110, state = "run" }
-          if l.stop + H.TRAM_W / 2 - 24 > c.x then c.state = "go" end   -- (its stop is behind it: no stop)
+          c = { x = cam + 320 + TW / 2 + 8, v = l.speed or 110, state = "run" }
+          if l.stop + TW / 2 - TD > c.x then c.state = "go" end      -- (its stop is behind it: no stop)
           tl.car = c
         end
       end
     else
-      local stopX = l.stop + H.TRAM_W / 2 - 24                      -- its middle, with the front door at the sign
+      local stopX = l.stop + TW / 2 - TD                            -- its middle, with the front door at the sign
       local vmax = l.speed or 110
       if c.state == "run" then
         local d = c.x - stopX
@@ -172,7 +188,7 @@ function H.updateTrams(s, dt)
         if c.wait <= 0 then c.state = "go" end
       else c.v = math.min(vmax, c.v + 40 * dt) end                 -- pulls away
       c.x = c.x - c.v * dt
-      if c.x + H.TRAM_W / 2 < cam - 16 or c.x - H.TRAM_W / 2 > cam + 900 then tl.car = nil end
+      if c.x + TW / 2 < cam - 16 or c.x - TW / 2 > cam + 900 then tl.car = nil end
     end
   end
 end
@@ -220,13 +236,24 @@ local function tramCode(cx, y, x, c)
 end
 -- drawn in the back layer (behind the back props and everything on Pepper's line)
 function H.drawTrams(s, cam)
+  local TW = H.tramDims()
   for _, tl in ipairs(s.trams or {}) do
     local l = tl.lane
     local c = tl.car
-    if c and c.x + H.TRAM_W / 2 - cam > -10 and c.x - H.TRAM_W / 2 - cam < 330 then
+    if c and c.x + TW / 2 - cam > -10 and c.x - TW / 2 - cam < 330 then
       local im = H.img("scene/tram_vintage", H.TRAM_FADE)
       local x = math.floor(c.x - cam + 0.5)
-      if im then lg.setColor(1, 1, 1, 1); lg.draw(im, x - math.floor(im:getWidth() / 2), l.y1 - im:getHeight())
+      if im then
+        local L0 = x - math.floor(im:getWidth() / 2)
+        local wh = H.img("scene/tram_vintage_wheel", H.TRAM_FADE)   -- the wheels turn behind the still body
+        local q = H.strip(wh, wh and wh:getHeight() or 1)
+        lg.setColor(1, 1, 1, 1)
+        if q and #q > 0 then
+          local f = q[1 + math.floor(-c.x / H.TRAM_WHEEL_PX) % #q]
+          local r = math.floor(wh:getHeight() / 2)
+          for _, wx in ipairs(H.TRAM_ART.wheels) do lg.draw(wh, f, L0 + wx - r, l.y1 - H.TRAM_ART.wheelY - r) end
+        end
+        lg.draw(im, L0, l.y1 - im:getHeight())
       else tramCode(x, l.y1, c.x, c) end
     end
     if l.stop - cam > -20 and l.stop - cam < 340 then stopSign(math.floor(l.stop - cam), l.y1) end   -- (in front of it)
