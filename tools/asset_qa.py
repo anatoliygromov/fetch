@@ -127,7 +127,6 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          # the basin's wall (tools/build_dt_details.py)
          "town_front_tall1_a": (80, 432, 0, 0), "town_front_tall2_a": (88, 432, 0, 0), "town_front_tall3_a": (96, 432, 0, 0), "town_front_tall5_a": (88, 432, 0, 0), "town_front_tall6_a": (148, 432, 0, 0), "town_front_tall7_a": (148, 432, 0, 0), "town_front_tall1_b": (80, 432, 0, 0), "town_front_tall2_b": (88, 432, 0, 0), "town_front_tall3_b": (96, 432, 0, 0), "town_front_tall5_b": (88, 432, 0, 0), "town_front_tall6_b": (148, 432, 0, 0), "town_front_tall7_b": (148, 432, 0, 0), "town_front_tall1_c": (80, 432, 0, 0), "town_front_tall2_c": (88, 432, 0, 0), "town_front_tall3_c": (96, 432, 0, 0), "town_front_tall5_c": (88, 432, 0, 0), "town_front_tall6_c": (148, 432, 0, 0), "town_front_tall7_c": (148, 432, 0, 0), "town_front_tall1_d": (80, 432, 0, 0), "town_front_tall2_d": (88, 432, 0, 0), "town_front_tall3_d": (96, 432, 0, 0), "town_front_tall5_d": (88, 432, 0, 0), "town_front_tall6_d": (148, 432, 0, 0), "town_front_tall7_d": (148, 432, 0, 0), "town_front_tall1_e": (80, 432, 0, 0), "town_front_tall2_e": (88, 432, 0, 0), "town_front_tall3_e": (96, 432, 0, 0), "town_front_tall5_e": (88, 432, 0, 0), "town_front_tall6_e": (148, 432, 0, 0), "town_front_tall7_e": (148, 432, 0, 0), "town_front_tall1_f": (80, 432, 0, 0), "town_front_tall2_f": (88, 432, 0, 0), "town_front_tall3_f": (96, 432, 0, 0), "town_front_tall5_f": (88, 432, 0, 0), "town_front_tall6_f": (148, 432, 0, 0), "town_front_tall7_f": (148, 432, 0, 0), "town_drainpipe": (6, 432, 0, 0),
          "town_bridge_springer": (14, 20, 0, 0), "town_basin_wall": (10, 56, 0, 0),
-         "town_wall_lantern": (24, 42, 0, 0), "town_parasol_pier": (12, 60, 0, 0), "town_quay32": (32, 56, 0, 0),
          # art/dt-audit-06nov (tools/build_dt_audit.py): the quay wall's drain, the footbridge's piers, the parasols' boat,
          # the wall lantern's bracket
          "town_quaydrain": (20, 22, 0, 0), "town_bridge_pier": (14, 113, 0, 0), "town_punt": (52, 14, 0, 0),
@@ -149,7 +148,7 @@ FROZEN = {"pepper"}                                               # Pepper's fil
 # owner-approved exceptions (check ids that only warn for these)
 EXCEPT = {"cafe": {"colours"}, "gable": {"colours"}, "pavement": {"ladder"},
           "bone": {"outline"}, "bone_gold": {"outline"},                   # pickups: white, unoutlined by design
-          "lamp_post": {"decor-ink"}, "town_wall_lantern": {"decor-ink"},   # (night/06nov-dt: the lamp's head on a bracket)
+          "lamp_post": {"decor-ink"},
           "kiosk_kaffe": {"decor-ink"}, "kiosk_glass": {"decor-ink"},
           "town_lantern_bracket": {"decor-ink"}}   # the approved River Walk set; (6 Nov) the lantern bracket in the lamp's iron
 

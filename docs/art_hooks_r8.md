@@ -163,3 +163,17 @@ what it drew before. One flag: `H.PLAZA_FRONTS` (decision 2a; `false` brings bac
 | `town_balcony_door.png` | 38 x 52 | decoration (`H.PLAZA_FRONTS`): behind a plaza BALCONY, centred on it inside its house, top at the front's foot - 119, cut at the slab |
 | `town_pilaster.png` | 14 x 101 | decoration: two per LOGGIA, 3 px in from its ends, from its top + 25 to the plinth; the house under a LOGGIA is one bay (its gate centred) |
 | (code) | | the galleries' string course: the fronts' course (5 rows) at a GALLERY's top + 31 along the whole front of each house it stands on; cast shadows of every high road piece and balcony, 2 px right and 3 down, multiplied so the wall's W turns into its S |
+
+## Downtown (tall) audit fixes (art/dt-audit-06nov, 0 credits)
+
+Built by `tools/build_dt_audit.py` (`--check`); `town_rim.png` by `tools/build_dt_details.py`. Review: `docs/review/06nov/dt_audit/`.
+
+| File | Size | Where and how it is drawn |
+| --- | --- | --- |
+| `town_ground.png` | 240 x 68 | as before (scene.lua paintGroundArt); rows 32-67, the quay wall, are flat granite courses |
+| `town_rim.png` | 18 x 18 | each RIM at x0 - 1, y0 - 1, as before: a granite corner bollard |
+| `town_quaydrain.png` | 20 x 22 | decoration in the quay wall (arthooks.lua `H.drawQuayDrains`, after the ground): one per front-layer prop, its bottom 2 px over the world's bottom, on dry quay only. The tall Downtown draws no front bollards |
+| `town_bridge_pier.png` | 14 x 113 | decoration, unfaded (`H.drawBridgePiers`, the back pass): centred under each foot of the FOOTBRIDGE's arch, from the foot to the street |
+| `town_punt.png` | 52 x 14 | play, outlined (scene.lua PARASOL with no table over water): its gunwale at the street + 13, the pole's foot 2 px inside it |
+| `town_lantern_bracket.png` | 18 x 12 | back, faded as the lamp (`H.wallLantern`, stage.lua): a lamp on a high-road ledge is the lamp's lantern (rows 0-26) hanging from this bracket, 44 px over the ledge, on the house front's nearest bay edge |
+| (code) | | `Sc.quayEnds`: kerb corner and quoins where the street ends at water; the far quay's coursed face and the waterline in a town pool; `H.flowerBrackets` under the FLOWER ROOF; street awnings' counters and missing posts (scene.lua AWNING); CRATES drawn only above the street; the tram's fade 0.10; the stop sign after the shelter |

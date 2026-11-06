@@ -1179,10 +1179,20 @@ function Sc.drawFarArt(L, camx, t, w, def)
       else                                                        -- the pavement's back, then the basin's granite
         local d = dy()
         for x = -ox - gw, 320, gw do lg.draw(T.ground, T.bankTop, x, 172 + d) end
-        lg.setColor(0.62, 0.59, 0.56); lg.rectangle("fill", x0, 182 + d, x1 - x0, p.y0 - 182 - d)
-        lg.setColor(0.76, 0.73, 0.69); lg.rectangle("fill", x0, 182 + d, x1 - x0, 2)
-        lg.setColor(0.45, 0.42, 0.40)
-        for x = x0 - (x0 % 18), x1, 18 do lg.rectangle("fill", x, 184 + d, 1, p.y0 - 184 - d) end
+        -- (art/dt-audit-06nov) the far quay's face down to the water, in the near quay wall's greys (town_ground.png):
+        -- a lit coping row, one course of blocks in running bond (head joints every 24 px, anchored in the world), a
+        -- wet band, then the waterline. It was a flat light slab, so the gap read as a flat blue block.
+        local h = p.y0 - 182 - d
+        local wx0 = math.floor(p.x0)
+        lg.setColor(94 / 255, 87 / 255, 81 / 255); lg.rectangle("fill", x0, 182 + d, x1 - x0, h)
+        lg.setColor(141 / 255, 136 / 255, 129 / 255); lg.rectangle("fill", x0, 182 + d, x1 - x0, 1)
+        lg.setColor(108 / 255, 103 / 255, 98 / 255); lg.rectangle("fill", x0, 183 + d, x1 - x0, 1)
+        lg.setColor(47 / 255, 43 / 255, 47 / 255); lg.rectangle("fill", x0, 184 + d, x1 - x0, 1)
+        for x = wx0 - wx0 % 24 + 12, math.floor(p.x1), 24 do
+          local sx = math.floor(x - camx)
+          if sx >= x0 and sx < x1 then lg.rectangle("fill", sx, 185 + d, 1, h - 5) end
+        end
+        lg.setColor(72 / 255, 66 / 255, 64 / 255); lg.rectangle("fill", x0, p.y0 - 3, x1 - x0, 2)   -- wet stone
       end
       lg.setColor(0.18, 0.2, 0.22); lg.rectangle("fill", x0, p.y0 - 1, x1 - x0, 1)   -- the water's edge
       Look.use("water")
@@ -1194,6 +1204,16 @@ function Sc.drawFarArt(L, camx, t, w, def)
         local o = math.floor(camx + math.sin(t * 1.3 + y * 0.55) * (0.6 + depth) + t * (1 + 2 * depth) + 0.5) % ww
         lg.setColor(tint)
         lg.draw(A.water, A.waterQ[row], -o, y); lg.draw(A.water, A.waterQ[row], ww - o, y)
+      end
+      if L.style ~= "park" then                                   -- (art/dt-audit-06nov) the waterline: the quay's
+        lg.setColor(0.13, 0.25, 0.45)                             -- dark reflection under the edge, then broken
+        lg.rectangle("fill", x0, p.y0, x1 - x0, 2)               -- light ripples drifting with the water
+        lg.setColor(0.62, 0.80, 0.93)
+        local wo = math.floor(t * 4) % 16
+        for x = math.floor(p.x0) - math.floor(p.x0) % 16 - 16, math.floor(p.x1), 16 do
+          local sx = math.floor(x + wo - camx)
+          lg.rectangle("fill", sx, p.y0 + 3, 6, 1); lg.rectangle("fill", sx + 9, p.y0 + 5, 3, 1)
+        end
       end
       lg.setScissor()
       Look.use("ground")
@@ -1248,7 +1268,54 @@ function Sc.paintGroundArt(w, style, foot)
       end
     end
   end
+  if style == "town" then Sc.quayEnds(w, xa, xb, foot, solid) end
   end)
+end
+
+-- (art/dt-audit-06nov) the audit: "the cobbles end in a hard vertical cut at every canal gap". Where the street (its
+-- top on the path line) ends at water, the street gets a granite end: the kerb turns the corner (a 3 px kerb strip
+-- up the end of the cobbles, lit on its top, the front kerb's corner stone), and the quay wall under it ends in
+-- quoins (alternate long and short corner blocks, 10 and 6 px, on the wall's 12 px courses), its arris dark. The
+-- colours are town_ground.png's kerb and quay greys (the Look's ground grade does the rest).
+local Q = { j = { 47, 43, 47 }, s = { 60, 56, 56 }, a = { 72, 66, 64 }, l = { 94, 87, 81 },
+            k1 = { 161, 158, 151 }, k2 = { 141, 136, 129 }, k3 = { 108, 103, 98 } }
+local function qc(c) lg.setColor(c[1] / 255, c[2] / 255, c[3] / 255) end
+function Sc.quayEnds(w, xa, xb, foot, solid)
+  local KERB, QUAY = foot + 15, foot + 20                          -- the tile's rows 27 and 32 (top at foot - 12)
+  local function wet(x)
+    for _, r in ipairs(w.water or {}) do if x >= r.x0 and x < r.x1 and r.y0 <= foot + 16 and r.y1 > foot then return true end end
+    return false
+  end
+  for x = math.max(1, xa), math.min(w.width - 2, xb - 1) do
+    local side = 0
+    if solid(x, foot) and not solid(x + 1, foot) and wet(x + 1) then side = 1        -- the street ends on its right
+    elseif solid(x, foot) and not solid(x - 1, foot) and wet(x - 1) then side = -1 end
+    if side ~= 0 then
+      local function col(k, c, y0, h) qc(c); lg.rectangle("fill", x - side * k, y0, 1, h) end   -- k columns in from the end
+      -- the kerb up the end of the cobbles (rows foot - 2 .. KERB - 1): the arris, two lit columns, a mid one, the
+      -- joint against the cobbles; its top row lit, its foot the front kerb's corner
+      local kh = KERB - foot + 2
+      col(0, Q.j, foot - 2, kh + 5); col(1, Q.k1, foot - 2, kh); col(2, Q.k1, foot - 2, kh); col(3, Q.k2, foot - 2, kh)
+      col(4, Q.j, foot - 1, kh - 1)
+      qc(Q.k1); lg.rectangle("fill", side > 0 and x - 4 or x, foot - 2, 5, 1)
+      -- the quay wall's end: dressed quoins on its 12 px courses, a shade lighter than the wall
+      local c = 0
+      for top = QUAY, w.height - 1, 12 do
+        local qw = (c % 2 == 0) and 10 or 6
+        local x0 = side > 0 and x - qw + 1 or x
+        local h = math.min(12, w.height - top)
+        qc(Q.k3); lg.rectangle("fill", x0, top + 1, qw, h - 1)
+        qc(Q.k2); lg.rectangle("fill", x0, top + 1, qw, 1)
+        if h >= 12 then qc(Q.a); lg.rectangle("fill", x0, top + 11, qw, 1) end
+        qc(Q.k2); lg.rectangle("fill", x0 + 1, top + 1, 1, h - 1)                        -- its lit left edge
+        qc(Q.j); lg.rectangle("fill", side > 0 and x0 or x0 + qw - 1, top + 1, 1, h - 1)   -- its inner head joint
+        qc(Q.j); lg.rectangle("fill", x0, top, qw, 1)                                       -- bed joint
+        c = c + 1
+      end
+      qc(Q.j); lg.rectangle("fill", x, QUAY, 1, w.height - QUAY)                             -- the arris against the water
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
 end
 
 -- an oak branch over its one-way box: 6 px thick by the trunk, 4 at the tip, its top row the ledge; between the
@@ -2341,6 +2408,9 @@ function Sc.drawPropArt(p, camx, def, kicked)
   local x, w = p.x0 - camx, p.x1 - p.x0
   if x > 360 or x + w < -120 then return end
   if p.layer == "front" then                                      -- the foreground frame: below Pepper's lines only
+    -- (art/dt-audit-06nov) the tall Downtown: no bollard in front of the quay wall (only its top showed, a black
+    -- dome in the wall); a drain arch in the wall instead (arthooks.lua H.drawQuayDrains)
+    if style == "town" and def.foot then return end
     local im = style == "park" and T.bush or T.bollard
     at(im, x + w / 2 - im:getWidth() / 2, math.max(221 + dy(), p.y0))
     return
@@ -2432,18 +2502,16 @@ function Sc.drawPropArt(p, camx, def, kicked)
   else
     if n == "DOOR" then at(T.door, x, 175 + d - T.door:getHeight())
     elseif n == "CRATES" then                                     -- a stack of apple crates, 16 px each
-      local qy = def.foot and p.y1 > def.foot and optImg("town_quay" .. w)   -- (night/06nov-dt) a box that runs
-      if qy then                                                  -- below the street: the crates stand on the street,
-        lg.setColor(1, 1, 1, 1); lg.draw(qy, math.floor(x), def.foot)       -- the canal's quay wall under them
-        p = { x0 = p.x0, x1 = p.x1, y0 = p.y0, y1 = def.foot }
-      end
-      local k = math.max(1, math.floor((p.y1 - p.y0) / 16 + 0.5))
-      shadowUnder(p, camx)
+      -- (art/dt-audit-06nov) a stack whose box runs on below the street (x 2624, down to the world's bottom: the
+      -- quay's end) stands on the street: crates only above it, the quay wall below (the box is unchanged)
+      local y1 = (def.foot and p.y1 > def.foot and p.y0 < def.foot) and def.foot or p.y1
+      local k = math.max(1, math.floor((y1 - p.y0) / 16 + 0.5))
+      shadowUnder({ x0 = p.x0, x1 = p.x1, y1 = y1 }, camx)
       local cr = T.crates[w]                                      -- (art/dt-props-06nov) the box's own width: 15 rows
       if cr then                                                  -- of crate, its ink shared with the crate above,
-        for i = 1, k do at(cr, x - 1, p.y1 - 16 * i - 5) end      -- the apples' tops 3 rows over its rim
+        for i = 1, k do at(cr, x - 1, y1 - 16 * i - 5) end        -- the apples' tops 3 rows over its rim
       else
-        for i = 1, k do at(T.crate, x, p.y1 - 16 * i - 12) end
+        for i = 1, k do at(T.crate, x, y1 - 16 * i - 12) end
       end
     elseif n == "TABLE" then Sc.shadow(x + w / 2, 183 + d, w + 4, 5); at(T.table, x - 1, p.y0)
     elseif n == "PARASOL" then
@@ -2451,22 +2519,19 @@ function Sc.drawPropArt(p, camx, def, kicked)
       for _, q in ipairs(def.props) do if q.name == "TABLE" and q.x0 >= p.x0 and q.x1 <= p.x1 then tb = q end end
       local px = math.floor(x + w / 2) - 1
       local foot = tb and tb.y0 or 240 + d                        -- (no table: a pole standing in the water)
-      local pier                                                  -- (night/06nov-dt) in the water: on a granite pier
       if not tb and Sc.world then                                 -- (art/dt-props-06nov) on the pavement it stands on
         local wet = false                                         -- the street, it does not run through it
-        for _, r in ipairs(Sc.world.water or {}) do
-          if p.x0 + w / 2 >= r.x0 and p.x0 + w / 2 < r.x1 then wet = true; pier = math.min(pier or 1e9, r.y0) end
-        end
-        if not wet then foot = 184 + d; pier = nil end
-        if pier and def.foot and optImg("town_parasol_pier") then foot = pier - 5 else pier = nil end
+        for _, r in ipairs(Sc.world.water or {}) do if p.x0 + w / 2 >= r.x0 and p.x0 + w / 2 < r.x1 then wet = true end end
+        if not wet then foot = 184 + d end
       end
+      local boat = not tb and def.foot and foot > 184 + d and optImg("town_punt")   -- (art/dt-audit-06nov) over
+      if boat then foot = 184 + d + 15 end                        -- water: its pole stands in a moored boat, not the water
       lg.setColor(INK); lg.rectangle("fill", px - 1, p.y1, 4, foot - p.y1)
       lg.setColor(0.55, 0.57, 0.6); lg.rectangle("fill", px, p.y1, 2, foot - p.y1)
       lg.setColor(0.72, 0.74, 0.77); lg.rectangle("fill", px, p.y1, 1, foot - p.y1)   -- its lit left edge
-      if pier then                                                -- the pier, and a ripple ring at its waterline
-        lg.setColor(1, 1, 1, 1); lg.draw(optImg("town_parasol_pier"), px - 5, pier - 6)
-        lg.setColor(0.80, 0.90, 0.96); lg.rectangle("fill", px - 10, pier + 1, 4, 1); lg.rectangle("fill", px + 8, pier + 1, 4, 1)
-        lg.rectangle("fill", px - 7, pier + 3, 2, 1); lg.rectangle("fill", px + 7, pier + 3, 2, 1)
+      if boat then                                                -- the boat: its gunwale 2 px over the pole's foot,
+        local bw = boat:getWidth()                                -- its waterline 26 px under the street (in the
+        lg.setColor(1, 1, 1, 1); lg.draw(boat, px + 1 - math.floor(bw / 2), foot - 2)   -- canal, nearer than the far quay)
       end
       local sq = (p.squashT or 0) > 0 and 2 or 0                  -- a springy one dips as it launches her
       if T.parasols[w] then at(T.parasols[w], x - 1, p.y0 - 1 + sq)   -- (the box's own width, ink round it)
@@ -2483,13 +2548,40 @@ function Sc.drawPropArt(p, camx, def, kicked)
     elseif n == "SIGN" then at(T.shopsign, x - 1, p.y0 - 6)
     elseif n == "STALL" then shadowUnder(p, camx); at(T.stall, x - 1, p.y0 - 15)
     elseif n == "AWNING" then
+      local posts = {}
       for _, q in ipairs(def.props) do                            -- its posts (thin decoration boxes under it)
         if q.kind == "decor" and q.x1 - q.x0 <= 6 and q.y0 == p.y0 and q.x0 >= p.x0 - 2 and q.x1 <= p.x1 + 2 then
-          local qx = math.floor(q.x0 - camx)
-          lg.setColor(INK); lg.rectangle("fill", qx - 1, q.y0, q.x1 - q.x0 + 2, q.y1 - q.y0)
-          lg.setColor(0.42, 0.29, 0.18); lg.rectangle("fill", qx, q.y0, q.x1 - q.x0, q.y1 - q.y0)
-          lg.setColor(0.58, 0.42, 0.27); lg.rectangle("fill", qx, q.y0, 1, q.y1 - q.y0)
+          posts[#posts + 1] = { x0 = q.x0, x1 = q.x1, y0 = q.y0, y1 = q.y1 }
         end
+      end
+      -- (art/dt-audit-06nov) a street awning is a market stall: a lone post gets its pair at the other end (x 872:
+      -- one post, the cloth hung from nothing), and a stall counter stands between the posts (decoration, drawn in
+      -- code: a pine top, a green planked front; no ink, its edges a darker shade). Not under the STALL's own awning.
+      local street = def.foot and style == "town" and p.y0 > def.foot - 80
+      if street and #posts == 1 then
+        local q = posts[1]
+        local mx = (q.x0 - p.x0 < p.x1 - q.x1) and (p.x1 - (q.x0 - p.x0) - (q.x1 - q.x0)) or (p.x0 + (p.x1 - q.x1))
+        posts[2] = { x0 = mx, x1 = mx + q.x1 - q.x0, y0 = q.y0, y1 = q.y1 }
+      end
+      local stall = false
+      for _, q in ipairs(def.props) do if q.name == "STALL" and q.x0 < p.x1 and q.x1 > p.x0 then stall = true end end
+      if street and #posts == 2 and not stall then
+        local a, b = math.min(posts[1].x1, posts[2].x1), math.max(posts[1].x0, posts[2].x0)
+        local cx0, cw, top = math.floor(a - camx), b - a, def.foot - 30
+        lg.setColor(0.32, 0.22, 0.14); lg.rectangle("fill", cx0, top, cw, 30)          -- the counter's shade
+        lg.setColor(0.24, 0.41, 0.34); lg.rectangle("fill", cx0, top + 4, cw - 1, 25)  -- the green planked front
+        lg.setColor(0.19, 0.33, 0.27)
+        for k = 6, cw - 3, 6 do lg.rectangle("fill", cx0 + k, top + 5, 1, 24) end     -- plank joints
+        lg.setColor(0.32, 0.51, 0.43); lg.rectangle("fill", cx0, top + 4, 1, 25)      -- its lit left edge
+        lg.setColor(0.50, 0.35, 0.21); lg.rectangle("fill", cx0, top, cw, 3)           -- the pine counter top
+        lg.setColor(0.65, 0.47, 0.30); lg.rectangle("fill", cx0, top, cw, 1)
+        lg.setColor(0.32, 0.22, 0.14); lg.rectangle("fill", cx0, top + 3, cw, 1)       -- its shadow line
+      end
+      for _, q in ipairs(posts) do
+        local qx = math.floor(q.x0 - camx)
+        lg.setColor(INK); lg.rectangle("fill", qx - 1, q.y0, q.x1 - q.x0 + 2, q.y1 - q.y0)
+        lg.setColor(0.42, 0.29, 0.18); lg.rectangle("fill", qx, q.y0, q.x1 - q.x0, q.y1 - q.y0)
+        lg.setColor(0.58, 0.42, 0.27); lg.rectangle("fill", qx, q.y0, 1, q.y1 - q.y0)
       end
       local im = w >= 72 and T.awning80 or T.awning64
       local sq = (p.squashT or 0) > 0 and 2 or 0                  -- a springy one dips as it launches her
