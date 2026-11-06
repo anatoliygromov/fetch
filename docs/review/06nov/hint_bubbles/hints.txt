@@ -1,0 +1,53 @@
+riverwalk 01 x PICK UP
+riverwalk 02 x GIVE
+riverwalk 03 right RUN
+riverwalk 04 down CRAWL
+riverwalk 05 a TAP: HOP
+riverwalk 06 a HOLD: BIG JUMP
+riverwalk 07 a HOLD: CLIMB
+riverwalk 08 down DUCK!
+citypark_tall 01 y BARK!
+citypark_tall 02 x PICK UP
+citypark_tall 03 x GIVE
+citypark_tall 04 down DOWN + A: DROP
+citypark_tall 05 a HOLD: CLIMB UP
+citypark_tall 06 a HOLD: UP!
+citypark_tall 07 down CRAWL
+citypark_tall 08 a HOLD: BIG JUMP
+citypark_tall 09 a TAP: HOP
+citypark_tall 10 y BARK: SHOO!
+citypark_tall 11 a STOP, THEN HOP
+citypark_tall 12 a HOLD: CLIMB
+citypark_tall 13 b HOLD: SNEAK
+downtown_tall 01 y BARK!
+downtown_tall 02 x PICK UP
+downtown_tall 03 x GIVE
+downtown_tall 04 y BARK: SHOO!
+downtown_tall 05 down DOWN + A: DROP
+downtown_tall 06 a HOLD: CLIMB UP
+downtown_tall 07 a HOLD: UP!
+downtown_tall 08 a HOLD: BIG JUMP
+downtown_tall 09 a BOUNCE UP
+downtown_tall 10 a TAP: HOP
+downtown_tall 11 down CRAWL
+downtown_tall 12 a HOLD: BOUNCE
+downtown_tall 13 a BOUNCE ON IT
+downtown_tall 14 down HOLD: STAY ON
+downtown_tall 15 a BOUNCE ACROSS
+rooftops 01 x PICK UP
+rooftops 02 down DUCK!
+rooftops 03 a BOUNCE ON IT
+rooftops 04 a HOLD: BIG JUMP
+rooftops 05 x GIVE
+rooftops 06 y BARK!
+rooftops 07 a HOP! HOP!
+soder 01 x PICK UP
+soder 02 x GIVE
+soder 03 a HOLD: BIG JUMP
+soder 04 down CRAWL
+soder 05 a TAP: HOP
+night 01 y BARK!
+night 02 x PICK UP
+night 03 x GIVE
+night 04 sniff HOLD: SNIFF
+night 05 a TAP: HOP
