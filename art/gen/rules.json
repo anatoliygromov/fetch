@@ -180,7 +180,7 @@
    "_note": "5 Nov round 3 (City Park lime and ash): the method change after two failed review rounds; a 512 frame at 4 px per art px"
   }
  },
- "default_model": "sc_nb21",
+ "default_model": "sc_gpt25",
  "forbidden_words": [
   "haze",
   "hazy",
