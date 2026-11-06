@@ -926,6 +926,15 @@ function Sc.townArt(style)
     -- their balconies are separate play ledges, drawn in code)
     for _, n in ipairs({ "door", "sign", "spout", "house1", "house2", "house3" }) do T[n] = fadeImg("town_" .. n) end
     T.crate, T.table = img("town_crate_front"), img("town_table_front")   -- front-on (tools/make_front_view.py)
+    -- (art/dt-props-06nov, tools/build_dt_props.py) one apple crate and one parasol canopy per box width, each the
+    -- box's width + 2 for its ink, drawn at x0 - 1; a width with no file keeps the old piece
+    local function byWidth(n, ws)
+      local t = {}
+      for _, w in ipairs(ws) do if love.filesystem.getInfo("art/scene/" .. n .. w .. ".png") then t[w] = img(n .. w) end end
+      return t
+    end
+    T.crates = byWidth("town_crate_front", { 28, 32, 36 })
+    T.parasols = byWidth("town_parasol", { 40, 48, 64, 96 })
     T.tramshed = { [70] = img("town_tramshed70"), [96] = img("town_tramshed96") }   -- SpriteCook (tools/import_assets_v2.py)
     -- the two far layers sit further back than the back-edge decoration, each faded to its layer's haze (the
     -- script's shore and mid amounts), so the street's obstacles and the climbable houses stand out against them
@@ -1986,18 +1995,38 @@ function Sc.drawPropArt(p, camx, def, kicked)
     elseif n == "CRATES" then                                     -- a stack of apple crates, 16 px each
       local k = math.max(1, math.floor((p.y1 - p.y0) / 16 + 0.5))
       shadowUnder(p, camx)
-      for i = 1, k do at(T.crate, x, p.y1 - 16 * i - 12) end
+      local cr = T.crates[w]                                      -- (art/dt-props-06nov) the box's own width: 15 rows
+      if cr then                                                  -- of crate, its ink shared with the crate above,
+        for i = 1, k do at(cr, x - 1, p.y1 - 16 * i - 5) end      -- the apples' tops 3 rows over its rim
+      else
+        for i = 1, k do at(T.crate, x, p.y1 - 16 * i - 12) end
+      end
     elseif n == "TABLE" then Sc.shadow(x + w / 2, 183 + d, w + 4, 5); at(T.table, x - 1, p.y0)
     elseif n == "PARASOL" then
       local tb                                                     -- its pole, down to the table under it
       for _, q in ipairs(def.props) do if q.name == "TABLE" and q.x0 >= p.x0 and q.x1 <= p.x1 then tb = q end end
       local px = math.floor(x + w / 2) - 1
       local foot = tb and tb.y0 or 240 + d                        -- (no table: a pole standing in the water)
+      if not tb and Sc.world then                                 -- (art/dt-props-06nov) on the pavement it stands on
+        local wet = false                                         -- the street, it does not run through it
+        for _, r in ipairs(Sc.world.water or {}) do if p.x0 + w / 2 >= r.x0 and p.x0 + w / 2 < r.x1 then wet = true end end
+        if not wet then foot = 184 + d end
+      end
       lg.setColor(INK); lg.rectangle("fill", px - 1, p.y1, 4, foot - p.y1)
       lg.setColor(0.55, 0.57, 0.6); lg.rectangle("fill", px, p.y1, 2, foot - p.y1)
+      lg.setColor(0.72, 0.74, 0.77); lg.rectangle("fill", px, p.y1, 1, foot - p.y1)   -- its lit left edge
       local sq = (p.squashT or 0) > 0 and 2 or 0                  -- a springy one dips as it launches her
-      at(T.parasol, x, p.y0 - 1 + sq)
-      if p.bounce then Sc.spring(px + 1, p.y1 + sq, 10 - sq) end
+      if T.parasols[w] then at(T.parasols[w], x - 1, p.y0 - 1 + sq)   -- (the box's own width, ink round it)
+      else at(T.parasol, x, p.y0 - 1 + sq) end
+      if p.bounce then                                            -- (review 6 Nov: the red coil block read as a
+        local sx, sy = px + 1, p.y0 + 12 + sq                     -- box on the pole) a steel coil spring wound round
+        local sh = math.min(10 - sq, foot - sy)                   -- the pole under the canopy's valance: ink, steel
+        lg.setColor(INK); lg.rectangle("fill", sx - 3, sy, 7, sh) -- turns lit on their top
+        for yy = sy + 1, sy + sh - 2, 3 do
+          lg.setColor(0.62, 0.65, 0.70); lg.rectangle("fill", sx - 2, yy, 5, 2)
+          lg.setColor(0.86, 0.88, 0.91); lg.rectangle("fill", sx - 2, yy, 5, 1)
+        end
+      end
     elseif n == "SIGN" then at(T.shopsign, x - 1, p.y0 - 6)
     elseif n == "STALL" then shadowUnder(p, camx); at(T.stall, x - 1, p.y0 - 15)
     elseif n == "AWNING" then
@@ -2021,7 +2050,9 @@ function Sc.drawPropArt(p, camx, def, kicked)
       end
     elseif n == "GATE" or n == "TRAM SHED" then Sc.courtyardGate(p, camx)
     elseif n == "STATUE" then at(T.statue, x - 1, p.y0 - 4)
-    elseif n == "PEDESTAL" then shadowUnder(p, camx); at(T.pedestal, x, p.y0)
+    elseif n == "PEDESTAL" then                                   -- (art/dt-props-06nov: the plinth is the box + its
+      shadowUnder(p, camx)                                        -- ink, at x0 - 1, y0 - 1; the old one was the box)
+      if T.pedestal:getWidth() == w + 2 then at(T.pedestal, x - 1, p.y0 - 1) else at(T.pedestal, x, p.y0) end
     elseif n == "ARM" then return
     elseif n == "RIM" then at(T.rim, x - 1, p.y0 - 1)
     elseif n == "FOUNTAIN" then
@@ -2030,7 +2061,8 @@ function Sc.drawPropArt(p, camx, def, kicked)
     elseif n == "KIOSK" then shadowUnder(p, camx); at(T.kiosk, x - 1, p.y0 - 1)
     elseif n == "SHELTER" then shadowUnder({ x0 = p.x0, x1 = p.x1, y1 = 184 + d }, camx); at(T.shelter, x, p.y0)
     elseif n == "RIVER" then at(T.sign, x + w / 2 - T.sign:getWidth() / 2, 175 + d - T.sign:getHeight())
-    elseif n == "TUB" then shadowUnder(p, camx); at(T.tub, x, p.y0 - 18)
+    elseif n == "TUB" then shadowUnder(p, camx); at(T.tub, x, p.y1 - T.tub:getHeight())   -- (the tub is the box, the
+                                                                  -- plant over it: art/dt-props-06nov, a taller shrub)
     elseif n == "HOUSE" then                                      -- faded decoration; their balconies are the ledges
       local im = T["house" .. ((houseIndex(def, p) - 1) % 3 + 1)]
       at(im, x + w / 2 - im:getWidth() / 2, 175 + d - im:getHeight())

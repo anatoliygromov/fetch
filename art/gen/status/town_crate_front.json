@@ -1,0 +1,21 @@
+{
+ "name": "town_crate_front",
+ "family": "dt_props_06nov",
+ "tier": "C",
+ "steps": {
+  "spec": {
+   "time": "2026-11-06 19:02"
+  },
+  "built": {
+   "build": "tools/build_dt_props.py",
+   "time": "2026-11-06 19:02"
+  },
+  "ingame": {
+   "frame": "docs/review/06nov/dt_props/frames_after/sweep_downtown_y240_x2560.png",
+   "time": "2026-11-06 19:04"
+  },
+  "review": {
+   "time": "2026-11-06 19:27"
+  }
+ }
+}

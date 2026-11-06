@@ -1,0 +1,24 @@
+{
+ "name": "town_stall",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 0.93,
+ "target_px": [
+  66,
+  43
+ ],
+ "checks_px": {
+  "counter": "64 x 28 (1.39 x 0.61 m) = the box",
+  "produce": "14 rows over it (0.3 m)"
+ },
+ "tier": "C",
+ "family": "dt_props_06nov",
+ "method": "built from stamped parts, tools/build_dt_props.py",
+ "build": "tools/build_dt_props.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_stall.png",
+  "where": "Downtown tall, STALL x 688 (solid 64 x 28, top y 396), at x0 - 1, y0 - 15 (scene.lua STALL)"
+ },
+ "note": "A market stall's counter is 0.8-0.9 m (37-41 px); the box is 28 px (0.61 m). Not moved: Pepper's hop."
+}

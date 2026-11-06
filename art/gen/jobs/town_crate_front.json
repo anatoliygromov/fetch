@@ -1,0 +1,23 @@
+{
+ "name": "town_crate_front",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 0.43,
+ "target_px": [
+  34,
+  21
+ ],
+ "checks_px": {
+  "crate": "32 x 16 pitch (0.70 x 0.35 m)",
+  "widths": "28, 32, 36 = the boxes"
+ },
+ "tier": "C",
+ "family": "dt_props_06nov",
+ "method": "built from stamped parts, tools/build_dt_props.py",
+ "build": "tools/build_dt_props.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_crate_front32.png",
+  "where": "Downtown tall, every CRATES box (stacked one per 16 px), at x0 - 1, the crate's top ink at y1 - 16 i - 1, one file per width town_crate_front<W>.png (scene.lua CRATES)"
+ }
+}

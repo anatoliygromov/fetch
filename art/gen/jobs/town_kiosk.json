@@ -1,0 +1,24 @@
+{
+ "name": "town_kiosk",
+ "level": "downtown",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 0.8,
+ "target_px": [
+  42,
+  37
+ ],
+ "checks_px": {
+  "box": "40 x 36 (0.87 x 0.78 m)",
+  "freezer": "a chest freezer 0.87 x 0.8 m"
+ },
+ "tier": "C",
+ "family": "dt_props_06nov",
+ "method": "built from stamped parts, tools/build_dt_props.py",
+ "build": "tools/build_dt_props.py",
+ "slot": {
+  "file": "riverwalk/art/scene/town_kiosk.png",
+  "where": "Downtown tall, KIOSK x 1980 (solid 40 x 36, top y 388), at x0 - 1, y0 - 1 (scene.lua Sc.drawPropArt KIOSK)"
+ },
+ "note": "A newspaper kiosk is about 2.6 m (120 px); the box is 36 px (0.78 m), so the piece is the kiosk's ice cream freezer at true size."
+}
