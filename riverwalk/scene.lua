@@ -2272,15 +2272,25 @@ end
 -- per tree, trunk and one leaf mass whose top is above the world (tools/cut_cp_tree.py). Keyed by the trunk's x in the
 -- tall City Park (OAK: the old oak). Its trunk is not drawn in code, the canopy boxes inside its crown are skipped, and
 -- the art stands on the back props' line (the path - 9, as the old oak's art did), faded as back decoration.
-local TREE_ART = { [1528] = "cp_lime", [1916] = "cp_ash", OAK = "cp_oak" }
+local TREE_ART = { [1528] = "cp_lime", [1916] = "cp_ash", OAK = "cp_oak",
+  -- (night 6 Nov, cp) the three LIMES trunks at 1004, 1112, 1216 were flat-topped pillars under their ledges, their
+  -- crowns a low band: tables. Now lime trees whose crowns run out of the top of the screen, as the lime at 1528;
+  -- the middle one mirrored ("@flip": the same art flipped whole, no new pixels) so the row is not a stamp
+  [1004] = "cp_lime", [1112] = "cp_lime@flip", [1216] = "cp_lime" }
 local TREE_FADE = 0.28           -- their own amount, as the gate's: the bark's darkest 10 % then sits at the back layer's 80
 local TA_IMG = {}
 local function treeArtImg(n)
   local key = n .. "/" .. Look.key
   if TA_IMG[key] ~= nil then return TA_IMG[key] end
-  if not love.filesystem.getInfo("art/scene/" .. n .. ".png") then TA_IMG[key] = false; return false end
-  local d = love.image.newImageData("art/scene/" .. n .. ".png")
+  local file, flip = n:match("^([^@]+)(@?f?l?i?p?)$")
+  flip = flip == "@flip"
+  if not love.filesystem.getInfo("art/scene/" .. file .. ".png") then TA_IMG[key] = false; return false end
+  local d = love.image.newImageData("art/scene/" .. file .. ".png")
   local w, h = d:getDimensions()
+  if flip then                                                       -- mirrored whole, pixel for pixel
+    local s = d; d = love.image.newImageData(w, h)
+    for y = 0, h - 1 do for x = 0, w - 1 do d:setPixel(w - 1 - x, y, s:getPixel(x, y)) end end
+  end
   local sx, cnt = 0, 0                                               -- the trunk's centre: 30 px above its foot
   for x = 0, w - 1 do local _, _, _, a = d:getPixel(x, h - 31); if a > 0 then sx = sx + x; cnt = cnt + 1 end end
   local rows = {}                                                    -- each row's opaque x extent (the old canopies' test)
@@ -2309,6 +2319,21 @@ local function treeArt(def, TI)
   end
   table.sort(TI.arttrees, function(a, b) return (a.oak and 1 or 0) < (b.oak and 1 or 0) end)   -- the oak in front
   return TI.arttrees
+end
+-- (night 6 Nov, cp track) the tall City Park's weeping willow (art/scene/cp_willow.png, SpriteCook GPT 2.5 2K cut 1:1,
+-- 10 m crown, true scale): one tree centred on the WILLOWS crown, its trunk's foot on the back props' line (the path - 10,
+-- as the old willows), faded as the other art trees. It replaces the three 1.8-2 m willows (park_willow, _tall).
+-- nil on the flat City Park or without the file.
+function Sc.bigWillow(def)
+  if def._bigWillow ~= nil then return def._bigWillow or nil end
+  def._bigWillow = false
+  local wl = def.foot and def.art == "park" and named(def, "WILLOWS")
+  local a = wl and treeArtImg("cp_willow")
+  if a then
+    local cx = math.floor((wl.x0 + wl.x1) / 2)
+    def._bigWillow = { art = a, x0 = cx - a.cx, x1 = cx - a.cx + a.w, y0 = def.foot - 9 - a.h }
+  end
+  return def._bigWillow or nil
 end
 function Sc.oakHasArt(def)
   local TI = def.foot and tier(def)
@@ -2346,6 +2371,10 @@ function Sc.drawTreetops(def, camx, world)
     for _, c in ipairs(TI.canopies) do if c.x0 <= t.x1 and c.x1 >= t.x0 and c.y1 <= t.y0 + 60 then return c end end
   end
   local AT = treeArt(def, TI)
+  local wl = Sc.bigWillow(def)                                       -- (night 6 Nov, cp) the pond's weeping willow at
+  if wl and wl.x1 - ox > -10 and wl.x0 - ox < 330 then               -- true scale, behind every other tree of the tier
+    lg.setColor(1, 1, 1, 1); lg.draw(wl.art.im, wl.x0 - ox, wl.y0)
+  end
   for _, t in ipairs(TI.trunks) do                                   -- trunks
     if not t.art and not t.hasArt and t.x1 - ox > -20 and t.x0 - ox < 340 then
       local c = canopyOver(t)
@@ -2519,7 +2548,7 @@ function Sc.drawPropArt(p, camx, def, kicked)
       if n == "FRAME" then at(T.frame, x - 1, 119 + d) end            -- (the slide: Sc.drawTerrainArt, over the path)
     elseif n == "SWINGS" then at(T.swings, x + w / 2 - T.swings:getWidth() / 2, 175 + d - T.swings:getHeight())
     elseif n == "WILLOWS" then                                    -- all three willows (decoration, base y 174)
-      for i, c in ipairs(willowCrowns(def)) do
+      for i, c in ipairs(Sc.bigWillow(def) and {} or willowCrowns(def)) do   -- (the tall level's big willow: Sc.drawTreetops)
         local im = c.y1 < 120 + d and T.willow_tall or T.willow
         local cx = math.floor((c.x0 + c.x1) / 2 - camx)
         lg.setColor(1, 1, 1, 1)

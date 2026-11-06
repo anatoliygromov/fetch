@@ -8,6 +8,16 @@
   },
   "blockout": {
    "time": "2026-11-06 19:22"
+  },
+  "preflight": {
+   "time": "2026-11-06 20:42"
+  },
+  "probe": {
+   "render": "art/gen/renders/cp_willow_a_1x.png",
+   "time": "2026-11-06 20:42"
+  },
+  "cut": {
+   "time": "2026-11-06 20:42"
   }
  }
 }

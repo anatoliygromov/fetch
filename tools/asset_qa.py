@@ -125,7 +125,9 @@ SLOTS = {"cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_t
          # (art/cp-audit-06nov) the walks' tree landings (box + outline at the far end), the tower's second posts, the
          # rebuilt climbing frame (posts 2712 and 2796, y 264-328, bars and step on their boxes)
          "cp_walk704_landing608": (98, 8, 0, 0), "cp_walk1968_landing1888": (82, 8, 0, 0),
-         "cp_tower_post4x34": (6, 34, 0, 0), "cp_tower_post4x6": (6, 6, 0, 0), "park_frame": (90, 67, 0, 0)}
+         "cp_tower_post4x34": (6, 34, 0, 0), "cp_tower_post4x6": (6, 6, 0, 0), "park_frame": (90, 67, 0, 0),
+         # (night 6 Nov, cp) the pond's weeping willow (scene.lua Sc.bigWillow), 10 m crown cut by the top of the frame
+         "cp_willow": (474, 508, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",
@@ -136,7 +138,7 @@ HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_t
 BUILDINGS = {"town_house1", "town_house2", "town_house3", "town_facades", "town_row", "building", "cafe", "gable",
              "facades_square", "house_tall_a", "house_tall_b", "house_tall_c", "town_front_tall1", "town_front_tall2",
              "town_front_tall3", "town_front_tall4", "town_door"}
-ORGANIC = {"tree", "tree_far", "rw_birch", "tree_near", "park_tree1", "park_tree2", "park_oak", "park_willow", "park_willow_tall",
+ORGANIC = {"tree", "tree_far", "rw_birch", "cp_willow", "tree_near", "park_tree1", "park_tree2", "park_oak", "park_willow", "park_willow_tall",
            "park_hedge", "park_bush", "park_leaves", "park_leaves_flat", "park_treeline", "skyline", "far_shore_bridge"}
 FROZEN = {"pepper"}                                               # Pepper's files are frozen: report only
 # owner-approved exceptions (check ids that only warn for these)
