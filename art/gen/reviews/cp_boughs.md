@@ -95,3 +95,21 @@ VERDICT: FAIL (1 item: 9, owner decision whether the fork should sit on a leafy 
 3. The low bough: a face-on sawn log with a red leaf blob next to it.
 
 No piece got `pipeline.py done`: the family asset cp_boughs has 9 PASS only for the stump and big trunk.
+
+# Round 2
+Reviewer: same independent reviewer, 6 Nov 2026, head 2e2663b. Own frames: whole high road at camera y 144, 110, 70, 24, 0
+(x every 280 plus 1960), montages and 3-5x crops in art/gen/reviews/cp_boughs_frames/r2/ (m_144, m_110, m_070, m_024,
+m_000, low.png, forks.png, longlimb.png). asset_qa PASS for limb, limbx, low, nest, stump; check_backdrop OK.
+
+Fixed since round 1: orange tufts and clumps gone, saw-cut ends gone, trunks are 33 px oak trunks.
+
+- low bough: FAIL (4, 7, 8, 9). Camera y70 x1960, screen (253-320, 114-132): a flat rectangular slab 0.7 x 0.35 m with a
+  hard vertical left end (x 253), shaded like a plank, lying in front of the walk's posts (x 253 post is hidden behind
+  its end), hovering above the deck with air under it. Reads as a sawn log across the rail. A bough, not a log, is needed.
+- thin and thick limbs: FAIL (4, 9). Straight strips with a bracket crotch (x1400 y70, (100-250,200-230)). Where they cross
+  a trunk the pale faded band (x1400 y70, (110-155,205-215)) reads as a stripe or shelf, not a branch: it is a different
+  colour from both trunk and limb. Fork tops on the 33 px trunks (x840 y70, (130-205,200-235) and (240-310,150-175)) are
+  flat-topped trunk stumps with two corbels: a table or column capital, not a fork.
+- stump: PASS. big oak trunk: PASS. nest: PASS. leaf mass, clumps, small trunks: removed (n/a).
+Verdict: not good enough for the owner. Two failed rounds: change the method (grow limbs from the canopy art, or draw
+whole forked trees as one piece, not strips stamped over trunks).
