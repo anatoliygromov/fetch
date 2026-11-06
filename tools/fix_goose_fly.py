@@ -74,12 +74,15 @@ for x in range(1, 23):                                          # the belly's in
     ys = [y for y in range(10, 22) if a[P(x, y)][3]]
     if ys and not (a[P(x, ys[-1])][:3] == INK5[:3]).all():
         a[P(x, ys[-1] + 1)] = INK5
-BAND = {11: (10, 16, None), 12: (8, 18, '3'), 13: (7, 19, '2')}
+# (polish, review c06cfb6: "spread the near wing flat") the level wing is spread out flat: 5 rows from the shoulder
+# (x 20) back past the rump to its tip (x 2), the lit leading edge on top, the coverts, the dark primaries at the back
+# end in a 3-step tip; the outline is closed by the next step
+BAND = {10: (9, 18, None), 11: (6, 19, '3'), 12: (4, 20, '2'), 13: (2, 20, '2'), 14: (2, 12, '1')}
 for y, (x0, x1, c) in BAND.items():
     for x in range(x0, x1 + 1):
-        edge = x in (x0, x1) or c is None
-        a[P(x, y)] = INK5 if edge else (G['7'] if x <= x0 + 3 else G[c])
-for x in range(8, 19): a[P(x, 14)] = G['1'] if x <= 11 else a[P(x, 14)]   # the wing's shade on the back
+        edge = c is None or x == x1 or (x == x0 and y < 14)
+        prim = x <= x0 + 4 and y >= 12                               # the primaries
+        a[P(x, y)] = INK5 if edge else (G['7'] if prim else G[c])
 for _ in range(1):                                              # the ink closed round every edge of the new cell 5
     add = []
     for y in range(34):

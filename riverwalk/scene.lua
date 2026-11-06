@@ -1574,6 +1574,7 @@ end
 -- (round 1b) the collar is the 2 px bulge itself (cpbLimbT: 2 rows more there) and one bark furrow across the limb
 -- 2 px out from the trunk, in the strip's own dark (a dark band at the root read as a bracket under a shelf)
 local COLLAR = hex("6b4329")
+local BANDC = { oak = hex("6c3628"), lime = hex("5f3326") }   -- (polish) the limbs' bark bands
 local function cpbCollar(x, top, t, ox, dir)
   lg.setColor(COLLAR); lg.rectangle("fill", x + dir * 2 - ox, top + 2, 1, math.max(1, t - 4))
   lg.setColor(1, 1, 1, 1)
@@ -1621,6 +1622,16 @@ local function drawBranch(p, trunk, camx)
     if not joined then cpbTip2(cols, tipx, p.y0, side) end
     cpbSort(cols)
     cpbDraw(A, n, cols, ox)
+    -- (night 6 Nov, cp polish; review c06cfb6: the oaks' long limbs read as flat boards) two broken bark bands along
+    -- the limb in the bark's dark (the old oak's own 6c3628, else the strip's 5f3326), a gap every 7 px
+    lg.setColor(artT and artT.artName == "cp_oak" and BANDC.oak or BANDC.lime)
+    for _, c in ipairs(cols) do
+      if not c.skip and not c.k and not c.twig and c.t >= 5 then
+        if c.x % 7 ~= 0 then lg.rectangle("fill", c.x - ox, c.top + math.floor(c.t / 3) + 1, 1, 1) end
+        if (c.x + 3) % 7 ~= 0 then lg.rectangle("fill", c.x - ox, c.top + math.floor(2 * c.t / 3) + 1, 1, 1) end
+      end
+    end
+    lg.setColor(1, 1, 1, 1)
     if edge and not flat then cpbCollar(edge, p.y0 + drop(edge), T + 2, ox, side) end
     -- (round 2) the art tree's own pixels were drawn again over the limb's end here, under the play look: a lighter
     -- box on the trunk. The limb no longer reaches over an art tree's trunk (cpbDraw skips those columns), so it is gone.
@@ -2173,6 +2184,13 @@ local function drawForkLimbs(p, t, ox, ta, tb)
   local name = t.artName and t.artName:match("^([^@]+)")
   local R = (name == "cp_oak") and LIMBR.oak or LIMBR.lime
   local oL, oR = ta - p.x0, p.x1 - tb
+  -- (night 6 Nov, cp polish; review c06cfb6) a 2 px bark saddle along the box's top over the trunk, in the tree's own
+  -- browns (its lit row, then its mid; no ink, no dark line), where she stands across the crotch
+  for x = math.max(ta, p.x0), math.min(tb, p.x1) - 1 do
+    lg.setColor(Sc.fadeC(R[1], 0.28)); lg.rectangle("fill", x - ox, p.y0, 1, 1)   -- (as the trunk is drawn: faded)
+    lg.setColor(Sc.fadeC(R[5], 0.28)); lg.rectangle("fill", x - ox, p.y0 + 1, 1, 1)
+  end
+  lg.setColor(1, 1, 1, 1)
   local cols = {}
   local function add(cs) for _, c in ipairs(cs) do cols[#cols + 1] = c end end
   if oL >= 24 and oR >= 24 then
