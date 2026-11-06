@@ -1,0 +1,31 @@
+{
+ "name": "cp_leaves",
+ "family": "cp_props_06nov",
+ "tier": "B",
+ "steps": {
+  "spec": {
+   "time": "2026-11-06 19:15"
+  },
+  "blockout": {
+   "time": "2026-11-06 19:15"
+  },
+  "preflight": {
+   "time": "2026-11-06 19:15"
+  },
+  "probe": {
+   "render": "art/gen/renders/cp_leaves_a_raw.png",
+   "time": "2026-11-06 19:15"
+  },
+  "cut": {
+   "time": "2026-11-06 19:15"
+  },
+  "ingame": {
+   "frame": "docs/review/06nov/cp_props_06nov/frames/kicked_x1290.png",
+   "time": "2026-11-06 19:15"
+  },
+  "polish": {
+   "aseprite": "art/source/park_leaves/park_leaves.aseprite",
+   "time": "2026-11-06 19:15"
+  }
+ }
+}

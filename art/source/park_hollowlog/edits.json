@@ -1,0 +1,60 @@
+{
+ "name": "park_hollowlog",
+ "cut": "art/source/park_hollowlog/park_hollowlog_cut.png",
+ "cut_size": [
+  72,
+  34
+ ],
+ "why": "72 x 34 to 44 x 27: the piece is 42 wide and 26 tall (top ledge y 302, foot 328); the branch stub, 28 columns of horizontal bark grain and 3 rows of the trunk out",
+ "ops": [
+  {
+   "trim_top_rows": 4
+  },
+  {
+   "splice_cols": {
+    "removed": [
+     27,
+     54
+    ],
+    "of_the_size_then": true
+   }
+  },
+  {
+   "splice_rows": {
+    "removed": [
+     13,
+     15
+    ],
+    "of_the_size_then": true
+   }
+  }
+ ],
+ "outline_px": [
+  [
+   27,
+   0
+  ],
+  [
+   28,
+   0
+  ],
+  [
+   29,
+   0
+  ]
+ ],
+ "hand": [],
+ "clean_changed": 1,
+ "blotches_merged": [
+  [
+   13,
+   21,
+   22
+  ]
+ ],
+ "size": [
+  44,
+  27
+ ],
+ "colours": 11
+}

@@ -1,0 +1,36 @@
+{
+ "name": "park_leaves_flat",
+ "render": "art/gen/renders/cp_leaves_a_grid4.png",
+ "variant": "a",
+ "window": [
+  165,
+  220,
+  240,
+  240
+ ],
+ "bbox_in_frame": [
+  169,
+  228,
+  232,
+  239
+ ],
+ "size": [
+  64,
+  12
+ ],
+ "target": [
+  54,
+  9
+ ],
+ "colours_in": 480,
+ "colours": 8,
+ "specks_dropped": 0,
+ "clean_changed": 11,
+ "outline": false,
+ "ink": null,
+ "edge_recoloured": 0,
+ "lone_pct": 5.36,
+ "fails": [
+  "size [64, 12] vs target [54, 9]"
+ ]
+}

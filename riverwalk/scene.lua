@@ -918,7 +918,7 @@ function Sc.townArt(style)
     end
     for _, n in ipairs({ "swings", "oak", "willow", "willow_tall", "winch" }) do T[n] = fadeImg("park_" .. n) end
     T.gate = fadeImg("park_gate", 0.28)                           -- (its own amount: dark ironwork, ladder darkest 80)
-    T.boat = img("park_boat_front")                               -- front-on (tools/make_front_view.py)
+    T.boat = img("park_boat_front")                               -- front-on (6 Nov: tools/cut_cp_props.py, 58 x 38)
     T.table = img("park_table_front")                             -- front-on (tools/make_table_front.py)
   else
     for _, n in ipairs({ "ground", "crate", "parasol", "table", "stall", "awning80", "awning64", "statue", "pedestal", "tram", "shelter", "kiosk", "shopsign", "rim", "bowl", "bollard", "tub", "tier" }) do T[n] = img("town_" .. n) end
@@ -1994,7 +1994,7 @@ function Sc.drawPropArt(p, camx, def, kicked)
       lg.setColor(0.70, 0.50, 0.28); lg.rectangle("fill", sx + 4, sy + 1, sw - 8, 1)
       lg.setColor(1, 1, 1, 1)
     elseif n == "BENCH" then Sc.shadow(x + w / 2, 183 + d, w + 10, 5); at(A.bench, x - 3, 184 + d - A.bench:getHeight())
-    elseif n == "HEDGE" then Sc.shadow(x + w / 2, 183 + d, w + 4, 5); at(T.hedge, x, p.y0)
+    elseif n == "HEDGE" then Sc.shadow(x + w / 2, 183 + d, w + 4, 5); at(T.hedge, x + math.floor((w - T.hedge:getWidth()) / 2), p.y0)   -- (6 Nov: 66 px art, its outline 1 px outside the box each side)
     elseif n == "STONE" then
       at(T.stone, x - 1, p.y0 - 1)
       local water = 208 + d                                       -- under the surface: the pond's colour over it
@@ -2143,11 +2143,20 @@ end
 function Sc.drawMoverArt(m, camx, style)
   local T = Sc.townArt(style)
   local im = T.boat
-  local x = math.floor(m.x0 - camx + 0.5) - 3
+  local iw = im:getWidth()
+  -- (6 Nov, cp_props_06nov) the duck boat art: its deck (the hull's top ink row) is row DECK, the hull's middle column
+  -- HC; the hull is centred on the mover's box both ways round. The old 54 x 33 art: deck 18, drawn 3 px left.
+  local DECK, HC = 20, 30
+  local cx = math.floor(m.x0 - camx + 0.5) + math.floor((m.x1 - m.x0) / 2)
+  local x = cx - HC
+  if iw == 54 then DECK, x = 18, math.floor(m.x0 - camx + 0.5) - 3 end
   lg.setColor(1, 1, 1, 1)
-  if m.dir and m.dir > 0 then lg.draw(im, x + im:getWidth(), m.y0 - 18, 0, -1, 1) else lg.draw(im, x, m.y0 - 18) end
+  if m.dir and m.dir > 0 then
+    if iw ~= 54 then x = cx - (iw - 1 - HC) end
+    lg.draw(im, x + iw, m.y0 - DECK, 0, -1, 1)
+  else lg.draw(im, x, m.y0 - DECK) end
   local d = dy()
-  lg.setColor(0.33, 0.47, 0.52, 0.5); lg.rectangle("fill", x, 209 + d, im:getWidth(), m.y0 - 18 + im:getHeight() - 209 - d)
+  lg.setColor(0.33, 0.47, 0.52, 0.5); lg.rectangle("fill", x, 209 + d, iw, m.y0 - DECK + im:getHeight() - 209 - d)
   lg.setColor(0.86, 0.94, 0.95, 0.8); lg.rectangle("fill", x + 2, 208 + d, im:getWidth() - 4, 1)   -- the ripple line
   lg.setColor(1, 1, 1, 1)
 end

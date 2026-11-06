@@ -1,0 +1,38 @@
+{
+ "name": "park_hedge",
+ "render": "art/gen/renders/cp_hedge_r1b_grid4.png",
+ "variant": "b",
+ "window": [
+  100,
+  150,
+  185,
+  240
+ ],
+ "bbox_in_frame": [
+  109,
+  163,
+  174,
+  239
+ ],
+ "size": [
+  66,
+  77
+ ],
+ "target": [
+  64,
+  72
+ ],
+ "colours_in": 4255,
+ "colours": 16,
+ "specks_dropped": 0,
+ "clean_changed": 186,
+ "outline": true,
+ "ink": [
+  11,
+  9,
+  28
+ ],
+ "edge_recoloured": 269,
+ "lone_pct": 3.13,
+ "fails": []
+}

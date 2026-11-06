@@ -1,0 +1,75 @@
+{
+ "name": "park_hedge",
+ "cut": "art/source/park_hedge/park_hedge_cut.png",
+ "cut_size": [
+  66,
+  77
+ ],
+ "why": "77 rows to 72: the box is 53 solid rows over a 19 row crawl gap; 5 rows of leaf clumps out of the body",
+ "ops": [
+  {
+   "splice_rows": {
+    "removed": [
+     47,
+     51
+    ],
+    "of_the_size_then": true
+   }
+  }
+ ],
+ "outline_px": [],
+ "hand": [],
+ "clean_changed": 11,
+ "blotches_merged": [
+  [
+   32,
+   47,
+   3
+  ],
+  [
+   36,
+   47,
+   2
+  ],
+  [
+   62,
+   49,
+   2
+  ],
+  [
+   43,
+   54,
+   2
+  ],
+  [
+   49,
+   20,
+   14
+  ],
+  [
+   35,
+   23,
+   11
+  ],
+  [
+   34,
+   46,
+   2
+  ],
+  [
+   37,
+   51,
+   2
+  ],
+  [
+   22,
+   56,
+   4
+  ]
+ ],
+ "size": [
+  66,
+  72
+ ],
+ "colours": 16
+}
