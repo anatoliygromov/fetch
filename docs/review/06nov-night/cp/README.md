@@ -45,3 +45,19 @@ and `sweep_all_after_1x.png` (all 27 screens, tiers y 0, 24, 144). Cards: `cards
 
 - Gate 8 (independent review) for cp_willow and the pond kit: for the producer.
 - The flat City Park keeps its three small willows (the brief: tall level only).
+
+## Fix round 1 (review origin/review/06nov-cp d7eaea3, 0 credits)
+
+Frames: `round1/<spot>_r0_r1_colour.png` and `_grey.png` (round 0 left, round 1 right, 3x), `round1/flat_citypark_x0640_boughs_1x.png`, `round1/goose_fly_row_4x.png`.
+
+| Review item | Fix |
+| --- | --- |
+| 1 Fork ledges read as canoes (limes 960/1280, oak 1600, big oak 2560) | limbs leave the trunk where it is drawn at their row (`tools/cp_trunk_spans.py` writes `riverwalk/cp_tree_spans.lua`), 8-10 rows at the trunk with a 2 row collar bulge and a bark furrow, thinning to a 3 row tip with a small fork; no crotch hook, no twig turned up; a fork is two arms of different thickness with a 2 row ridge over the trunk. Boxes unchanged |
+| 2 Tree feet sawn off on the lawn | the lawn strip was painted over the art trees' last rows; `Sc.drawTreeFeet` draws them again after the ground, with roots 1-3 px each side and 2 dark base rows |
+| 3 Pond's left lawn corner, 1 px vertical cut | the shore's last column follows the curve; the lawn shoulder runs on round the corner |
+| 4 Goose | cell 5 of the fly row is now the wings-level stroke. The crouch (cell 2) already faces forward (beak to the right, the way it flies), so it is unchanged |
+| 5 Bank pebbles | the stepping stones' 4 shades (b3ac9f added), on cp_bankstones and the far bank's pebbles |
+| 6 Flat City Park x 640, boughs floating in the willows | the willow's own trunk runs up through the crown to each bough |
+
+Checks after round 1: PEPPER UNCHANGED, flow 125/125, TILED PASSED, BACKDROP OK, spans and pond kit --check OK, physics citypark_tall 97/97, citypark 85/85, riverwalk 55/55, downtown_tall 102/102, check_curve T1-T4 PASS, City Park ladder light to dark.
+Owner questions 1-3 above were settled by the review (willow 10 m kept, highlight kept, perch 3 on the hedge). Question 4 is answered by this round.
