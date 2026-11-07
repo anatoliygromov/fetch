@@ -2,6 +2,11 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `sfx/07nov-main`: the sound pass after the 7 Nov audit (claude/sfx-audit-07nov.md), owner yes 7 Nov 15:51, onto main
+- **22 new sounds in sfx.lua, same chip (square, triangle, noise), all synthesised at start-up. No logic changes: every edit is one S.play call.**
+- Silent events that now sound: Pepper drops the ball (`drop`, in St:dropBall, so knocks and bark drops too), the ball lands (`boop`), the ball comes back home (`home`), a life lost (`lost`), time up (`timeup`), the level starts after its intro card and the bonus starts after READY (`go`), the ending (`fanfare`), pad Start pause and resume (`tick`, as the keyboard), pinned by the screen edge on Söder Hill (`hurt`), KEEP UP (`hurry`), the goose charges (`charge`), the gull dives (`dive`), steam lifts Pepper (`whoosh`), the fox drops the ball (`yip`), a bonus catch missed (`miss`).
+- Events that borrowed a wrong sound: ball pickup `key` to `grab` (key stays for keys and medals), Söder Hill hole `splash` to `fall`, barrel off its stack `spring` to `thud`, steam warning `scramble` to `vent`, steam puff `hiss` (the goose's danger sound) to `steam`, loose tile shake `key` and night plank shake `scramble` both to `creak`, tile break `land` to `crack`, fox running `flap` to `patter`, fox found `heart` to `found`, Mia's bonus throw `jump` to `throw`.
+- Pepper's files untouched (pepper.lua, frames, sheet, input, world).
 
 ## v0.7 (7 Nov 2026): River Walk, City Park and Downtown at finished quality
 Main moves from v0.6 (23 Oct) to `prod/integrate-f`: everything integrated since (prod/integrate-c and -d, the 5 Nov and 6 Nov art families, the hint bubbles, the speech bubbles and bikes in front, the night of 6-7 Nov tracks). Every check green, every screen of the three levels passed an independent review. Owner's yes, 6 Nov 20:10, on that condition. The sections below are the detail.

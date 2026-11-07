@@ -155,7 +155,7 @@ function B:update(dt, presses)
     if self.phase == "result" then m.state = self.life and "cheer" or "wave" end
     return
   end
-  if self.phase == "ready" and self.t >= 1.2 then self.phase, self.t = "play", 0 end
+  if self.phase == "ready" and self.t >= 1.2 then self.phase, self.t = "play", 0; S.play("go") end
   if self.phase == "timeup" and self.t >= 1.4 then
     self.phase, self.t = "result", 0
     self.life = self.catches >= B.LIFE_AT
@@ -184,7 +184,7 @@ function B:update(dt, presses)
       local it = self.holding
       it.state, it.x, it.y, it.vx, it.vy, it.n = "air", l.x, l.y, l.vx, l.vy, self.k
       self.items[#self.items + 1] = it; self.holding = nil; self.thrown = self.thrown + 1
-      m.state, m.t = "throw", 0; S.play("jump")
+      m.state, m.t = "throw", 0; S.play("throw")
       self.k = self.k + 1
       if self.list[self.k] then self.nextT = self.list[self.k][4] end
     end
@@ -209,7 +209,7 @@ function B:update(dt, presses)
       if self.catches == B.LIFE_AT then S.play("superbone") end
       gone = true
     elseif it.x - 8 > 320 or it.x + 8 < 0 or (it.restT or 0) > B.REST then
-      self.lost = self.lost + 1; gone = true
+      self.lost = self.lost + 1; gone = true; S.play("miss")
     end
     if gone then table.remove(self.items, i) end
   end

@@ -134,7 +134,7 @@ local function runTo(f, x, y, after)
   f.dur = math.max(0.5, math.abs(x - f.x) / 170)
   f.hops = math.max(1, math.ceil(math.abs(x - f.x) / 60))
   f.dir = x > f.x and 1 or -1
-  S.play("flap")
+  S.play("patter")
 end
 local function updateFox(s, dt)
   local f, d, p, b = s.night.fox, s.def.fox, s.pepper, s.ball
@@ -142,7 +142,7 @@ local function updateFox(s, dt)
   f.t = f.t + dt
   if f.state == "hide" and not f.found and s.night.sniff and math.abs(p.x - f.x) < FIND and math.abs(p.y - f.y) < 60 then
     f.sniffed = (f.sniffed or 0) + dt                                    -- a moment's sniffing finds it
-    if f.sniffed >= 0.4 then f.found = true; S.play("heart"); s:say("THERE IT IS! BARK!", 2) end
+    if f.sniffed >= 0.4 then f.found = true; S.play("found"); s:say("THERE IT IS! BARK!", 2) end
   end
   if f.state == "sit" then
     f.dir = p.x < f.x and -1 or 1
@@ -178,7 +178,7 @@ function Nt.bark(s)
     b.state, b.x, b.y, b.vx, b.vy, b.airT = "air", f.x, f.y - 6, 0, -40, 0  -- it drops the ball and is gone
     b.home = { x = f.x, y = f.y }
     runTo(f, s.world.width + 60, f.y, "gone")
-    s:say("IT DROPPED THE BALL!", 2.4)
+    s:say("IT DROPPED THE BALL!", 2.4); S.play("yip")
   end
 end
 -- the hint conditions for the fox (St:zoneHint asks for the needs it does not know)
@@ -204,7 +204,7 @@ local function updatePlanks(s, dt)
   for _, k in ipairs(s.night.planks) do
     k.t = k.t + dt
     if k.st == "idle" then
-      if p.onGround and p.ground == k.p then k.st, k.t = "shake", 0; S.play("scramble") end
+      if p.onGround and p.ground == k.p then k.st, k.t = "shake", 0; S.play("creak") end
     elseif k.st == "shake" and k.t >= SHAKE then
       k.st, k.t = "gone", 0; remove(w, k.p); S.play("splash")
     elseif k.st == "gone" and k.t >= GONE then

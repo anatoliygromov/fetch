@@ -38,7 +38,7 @@ function Rf.init(s, def)
 end
 
 local function rest(v) return math.max(0, (v.d.every or 0) - (v.d.warn or 0.8) - (v.d.puff or 0.9)) end
-local function startWarn(s, v) v.st, v.t = "warn", 0; S.play("scramble") end      -- the flap rattles
+local function startWarn(s, v) v.st, v.t = "warn", 0; S.play("vent") end      -- the flap rattles
 
 -- the apex a vent's puff sends Pepper to (world y of her feet)
 function Rf.apex(v) return v.d.y0 - v.d.lift end
@@ -53,13 +53,13 @@ function Rf.update(s, dt)
     if v.st == "rest" then
       if (d.every or 0) > 0 and not d.bark and v.t >= rest(v) then startWarn(s, v) end
     elseif v.st == "warn" then
-      if v.t >= (d.warn or 0.8) then v.st, v.t, v.lifted = "puff", 0, false; S.play("hiss") end     -- pfff
+      if v.t >= (d.warn or 0.8) then v.st, v.t, v.lifted = "puff", 0, false; S.play("steam") end     -- pfff
     elseif v.st == "puff" then
       if not v.lifted and p.mode == "normal" and not p.crouch and p.x >= d.x0 - Rf.MOUTH and p.x <= d.x1 + Rf.MOUTH
          and p.y >= Rf.apex(v) and p.y <= d.y0 + 2 then
         local h = p.y - Rf.apex(v)                                   -- up to the apex: only her upward speed is set
         p.vy = -math.sqrt(2 * Pp.GRAV * h); p.onGround = false; p.ground = nil
-        p.jumpBase = Rf.apex(v) + Pp.P.minJump; v.lifted = true
+        p.jumpBase = Rf.apex(v) + Pp.P.minJump; v.lifted = true; S.play("whoosh")
         s.puffed = (s.puffed or 0) + 1
       end
       if v.t >= (d.puff or 0.9) then v.st, v.t = "rest", 0 end
@@ -68,9 +68,9 @@ function Rf.update(s, dt)
   for _, k in ipairs(s.tiles or {}) do
     k.t = k.t + dt
     if k.st == "idle" then
-      if p.onGround and p.ground == k.p then k.st, k.t = "shake", 0; S.play("key") end      -- a clink: it moves
+      if p.onGround and p.ground == k.p then k.st, k.t = "shake", 0; S.play("creak") end      -- a clink: it moves
     elseif k.st == "shake" and k.t >= Rf.SHAKE then
-      k.st, k.t = "gone", 0; removeRect(w, k.p); S.play("land")
+      k.st, k.t = "gone", 0; removeRect(w, k.p); S.play("crack")
       if p.ground == k.p then p.ground = nil end
       k.fy = w:floor(k.p.x0, k.p.x1, (k.p.x0 + k.p.x1) / 2, k.p.y1, w.height, k.p.y1) or w.height   -- where it breaks
     elseif k.st == "gone" and k.t >= Rf.GONE then
