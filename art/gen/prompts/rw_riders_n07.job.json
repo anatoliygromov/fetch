@@ -1,0 +1,33 @@
+{
+ "name": "rw_riders_n07",
+ "model": "SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid)",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/rw_riders_n07_blockout.png",
+  "art/gen/style_card_riverwalk.png"
+ ],
+ "prompt_file": "art/gen/prompts/rw_riders_n07.txt",
+ "k": null,
+ "frame": [
+  256,
+  256
+ ],
+ "credits": 64,
+ "tool": "spritecook",
+ "family": "chars_07nov",
+ "tier": "A",
+ "slot": {
+  "file": "riverwalk/art/scene/cyclist_adult1.png, cyclist_adult2.png, cargo_bike.png (+ their _pedal loops)",
+  "where": "River Walk promenade bikes (stage.lua) and road.lua riders; Downtown tall street cargo bike (arthooks.lua cargo). Only the rider is drawn; bikes built by tools/build_bikes_n07.py, legs keyed by rule per pedal frame"
+ },
+ "spritecook": {
+  "model": "gpt-image-2.5-sunburst",
+  "pixel": true,
+  "resolution": "1K",
+  "quality": "medium",
+  "width": 135,
+  "height": 82
+ },
+ "ledger_job": "rw_riders_n07@1107-104838"
+}

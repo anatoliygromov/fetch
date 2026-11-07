@@ -1,0 +1,20 @@
+{
+ "name": "rw_gull_flap_n07",
+ "family": "chars_07nov",
+ "tier": "A",
+ "steps": {
+  "spec": {
+   "time": "2026-11-07 10:50"
+  },
+  "blockout": {
+   "time": "2026-11-07 10:50"
+  },
+  "preflight": {
+   "time": "2026-11-07 10:50"
+  },
+  "probe": {
+   "render": "art/gen/out/rw_gull_flap_n07.png",
+   "time": "2026-11-07 11:56"
+  }
+ }
+}

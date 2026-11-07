@@ -1,0 +1,42 @@
+{
+ "name": "rw_riders_n07",
+ "level": "riverwalk",
+ "layer": "char",
+ "kind": "character",
+ "real_height_m": 1.85,
+ "target_px": [
+  135,
+  82
+ ],
+ "checks_px": {
+  "helmet_top_to_shoe": 82,
+  "head": 11,
+  "rider_image": "88 x 87, ground row 86 (the built bike's wheels)",
+  "hip": [
+   34,
+   42
+  ],
+  "hands": [
+   59,
+   40
+  ]
+ },
+ "subject": "three grown-up people riding bicycles, seen exactly from the side, each sitting upright on an invisible bicycle seat (the bicycles are added later, do not draw them), hands forward on invisible handlebar grips, one foot forward and one back on invisible pedals. LEFT person, facing RIGHT: a woman of about 35, a red wool coat to mid thigh with a dark collar and two buttons, dark grey trousers, brown ankle boots, a white cycling helmet, brown hair in a short ponytail, a friendly face. MIDDLE person, facing RIGHT: a man of about 40, a short dark green jacket, blue jeans, dark brown boots, a grey cycling helmet, short dark hair and a short dark beard, a small brown canvas backpack. RIGHT person, facing LEFT: a baker of about 45, a white double-breasted baker's jacket, dark grey trousers, black shoes, a red cycling helmet, a short brown beard. Clean flat shading in 3 to 4 tones per colour, clear faces with one dark eye, a small nose and a mouth",
+ "part_map": "each figure: the light skin oval is the head (exactly that size), the cap on top is the helmet (its colour is the helmet colour), the big coloured block is the coat or jacket (the woman's goes to mid thigh, the others end at the hips), the thin coloured bar reaching forward is the near arm and the small skin dot at its end the hand on the grip, the two dark bars going down are the legs (the near leg bent forward, the far leg behind), the small brown box at the front foot is the shoe; the middle man's brown block on his back is the backpack.",
+ "size_sentence": "each rider's helmet top is a little more than twice as high as the dog's head; they are full-grown adults, not children.",
+ "model": "sc_gpt25",
+ "variants": 2,
+ "references": 3,
+ "tier": "A",
+ "family": "chars_07nov",
+ "slot": {
+  "file": "riverwalk/art/scene/cyclist_adult1.png, cyclist_adult2.png, cargo_bike.png (+ their _pedal loops)",
+  "where": "River Walk promenade bikes (stage.lua) and road.lua riders; Downtown tall street cargo bike (arthooks.lua cargo). Only the rider is drawn; bikes built by tools/build_bikes_n07.py, legs keyed by rule per pedal frame"
+ },
+ "extra": "Image 2 shows approved sprites from this game at 4x (the bench, bin, lamp, Pepper): match their pixel size, outline and flat shading. Image 3 shows two approved characters from this game at 4x (a seated rower and a girl): match their faces, their clean 1 px outline and their flat shading. Draw nothing else: no bicycle, no seat, no ground, no shadow.",
+ "references_files": [
+  "art/gen/upload/rw_riders_n07_blockout.png",
+  "art/gen/style_card_riverwalk.png",
+  "art/gen/upload/style_rw_rower_girl_4x.png"
+ ]
+}

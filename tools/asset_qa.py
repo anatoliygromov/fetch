@@ -98,14 +98,15 @@ SLOTS = {**{f"sky_{k}": (960, 360, 0, 0) for k in ("riverwalk", "citypark", "dow
          # the wheels' ground row; the cars at the near lane's 55 px/m (road.lua)
          "cyclist_adult1": (88, 87, 0, 0), "cyclist_adult2": (88, 87, 0, 0),         # (fix round 1: padded 2 px a side)
          "cyclist_adult1_pedal": (704, 87, 0, 0), "cyclist_adult2_pedal": (704, 87, 0, 0),
-         "road_car1": (241, 88, 12, 8), "road_car4": (185, 77, 12, 8),
-         "road_rider1": (104, 102, 0, 0), "road_rider2": (104, 103, 0, 0),
+         "road_car1": (243, 89, 12, 8), "road_car4": (187, 78, 12, 8),   # (7 Nov, chars: built cars, +1 px pad for the ink)
+         "road_rider1": (105, 110, 0, 0), "road_rider2": (105, 110, 0, 0),
+         "bone": (15, 9, 0, 0), "bone_gold": (15, 9, 0, 0), "ferry": (252, 79, 0, 0),   # (7 Nov, chars: bones 15 x 9, the boat on its lines)   # (7 Nov, tools/build_bikes_n07.py: the lane's 55 px/m bike, rider 1.98 m incl. helmet)
          # art/dt-sample-05nov (docs/art_hooks_r8.md, arthooks.lua): the full-height fronts, decisions 1a and 4a
          "town_front_tall1": (80, 432, 0, 0), "town_front_tall2": (88, 432, 0, 0), "town_front_tall3": (96, 432, 0, 0),
          "town_front_tall4": (148, 432, 0, 0), "town_shelter_tall": (140, 115, 0, 0), "town_gateway": (80, 138, 0, 0),
          "town_crates70": (71, 37, 0, 0), "town_breadboard": (74, 12, 0, 0), "town_crate_leg": (18, 37, 0, 0),
          "town_portal_top": (122, 50, 0, 0), "town_oriel": (18, 45, 0, 0), "town_oriel_bay": (58, 44, 0, 0),
-         "road_car2": (242, 102, 12, 8), "road_car3": (246, 93, 12, 8), "road_car5": (250, 89, 12, 8),
+         "road_car2": (244, 103, 12, 8), "road_car3": (248, 94, 12, 8), "road_car5": (252, 90, 12, 8),
          # art/cp-built-06nov (tools/build_cp_built.py): each tier piece is its box plus its outline, or its posts' span
          "cp_arbour_posts48x106": (60, 106, 0, 0), "cp_arbour_posts48x122": (60, 122, 0, 0), "cp_arbour_posts56x106": (68, 106, 0, 0), "cp_arbour_slat48": (50, 8, 0, 0), "cp_arbour_slat56": (58, 8, 0, 0), "cp_tower_deck56": (58, 8, 0, 0), "cp_tower_post4x106": (6, 106, 0, 0), "cp_tower_post4x72": (6, 72, 0, 0), "cp_walk1968_deck": (346, 8, 0, 0), "cp_walk1968_legs": (350, 122, 0, 0), "cp_walk1968_rail": (350, 61, 0, 0), "cp_walk704_deck": (242, 8, 0, 0), "cp_walk704_legs": (252, 106, 0, 0), "cp_walk704_rail": (252, 61, 0, 0), "park_gate": (120, 96, 0, 0), "park_swings": (84, 106, 0, 0),
          # (6 Nov, art/cp-critters-06nov) the magpie (5 cells of 32 x 26, scene.lua Sc.magpie) and the 2 m duck boat

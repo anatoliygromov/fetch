@@ -1615,7 +1615,7 @@ return {
           name = "",
           type = "bones",
           shape = "point",
-          x = 1650,
+          x = 1644,
           y = 184,
           width = 0,
           height = 0,

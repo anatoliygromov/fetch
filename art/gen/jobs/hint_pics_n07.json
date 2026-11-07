@@ -1,0 +1,17 @@
+{
+ "name": "hint_pics_n07",
+ "level": "riverwalk",
+ "layer": "play",
+ "kind": "prop",
+ "tier": "C",
+ "family": "chars_07nov",
+ "target_px": [
+  37,
+  23
+ ],
+ "built_by": "art/source/ui/v8/tools/hintdog_n07.py",
+ "slot": {
+  "file": "riverwalk/art/ui/pic_run.png",
+  "where": "track chars 7 Nov: see CHANGELOG `day/07nov-chars` and docs/review/07nov/chars/README.md"
+ }
+}

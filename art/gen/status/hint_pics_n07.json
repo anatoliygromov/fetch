@@ -1,0 +1,18 @@
+{
+ "name": "hint_pics_n07",
+ "family": "chars_07nov",
+ "tier": "C",
+ "steps": {
+  "spec": {
+   "time": "2026-11-07 11:56"
+  },
+  "built": {
+   "build": "art/source/ui/v8/tools/hintdog_n07.py",
+   "time": "2026-11-07 11:56"
+  },
+  "ingame": {
+   "frame": "/tmp/claude-0/-home-claude/ea8575c5-bc9f-5fea-884f-c03ed6b7d4d1/scratchpad/hints_new/hint_riverwalk_02.png",
+   "time": "2026-11-07 11:56"
+  }
+ }
+}

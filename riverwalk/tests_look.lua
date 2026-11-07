@@ -141,7 +141,7 @@ return function(api)
     if os.getenv("LOOK_CARGO") and s.def.bikes then
       local z
       for _, b in ipairs(s.def.bikes) do if b.kind == "cargo" then z = z or b end end
-      if z then s.bikes[1] = { x = sp[1] + tonumber(os.getenv("LOOK_CARGO")), y = z.roadY or sp[2], zone = { kind = "cargo", w = z.w, h = z.h, speed = 0, endX = -1e9, rail = true }, warn = -9 } end
+      if z then s.bikes[1] = { x = sp[1] + tonumber(os.getenv("LOOK_CARGO")), y = z.roadY or sp[2], zone = { kind = "cargo", w = z.w, h = z.h, speed = 0, endX = -1e9, rail = true, depot = z.depot }, warn = -9 } end
     end
     if os.getenv("LOOK_TRAM") and s.trams and s.trams[1] then
       local x = tonumber(os.getenv("LOOK_TRAM"))
