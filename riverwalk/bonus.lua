@@ -1,8 +1,8 @@
--- FETCH FRENZY: the golden bone bonus round (the plan's Timon and Pumbaa stages). One screen of City Park lawn,
--- 30 seconds: Mia stands on the left and throws balls, sticks and frisbees; Pepper catches them.
+-- FETCH FRENZY: the golden bone bonus round (the plan's Timon and Pumbaa stages). One screen in the place of the
+-- level it follows (bonusscene.lua; owner 7 Nov: "these levels should have different scenery"), 30 seconds: Mia stands on the left and throws balls, sticks and frisbees; Pepper catches them.
 --   Opens:     after a level's tally when Pepper found at least one of its golden bones (Flow.bonusOpen), before
 --              the story card. --bonus starts it directly; --level X --bonus plays level X's round.
---   Pepper:    her real controller and physics (pepper.lua, unchanged), on a flat lawn at y 184, the screen's
+--   Pepper:    her real controller and physics (pepper.lua, unchanged), on a flat floor at y 184, the screen's
 --              edges as walls: run, walk, tap hop, held jump, crawl.
 --   Mia:       throws every item with a throwing animation (her wave clip winds up, the cheer clip's open arms
 --              let go). Nothing moves by itself: an item is in her hand until she throws it.
@@ -19,6 +19,7 @@ local Pp = require("pepper")
 local Wd = require("world")
 local S = require("sfx")
 local U = require("hud")
+local BS = require("bonusscene")                                -- where the round is played (by level)
 local lg = love.graphics
 local B = { TIME = 30, FEET = 184, LIFE_AT = 11, AIR = 100, GROUND = 50, MIA_X = 34, REST = 3, DT = 1 / 60 }
 B.__index = B
@@ -112,7 +113,7 @@ function B.flight(kind, l)
   return { path = path, landX = landX, landT = landT, endX = it.x, top = (function() local m = 999; for _, p in ipairs(path) do m = math.min(m, p.y) end; return m end)() }
 end
 
--- the lawn: one screen, the ground at y 184 down to the bottom (the world's own walls keep Pepper on screen)
+-- the floor: one screen, the ground at y 184 down to the bottom (the world's own walls keep Pepper on screen)
 function B.world()
   local w = setmetatable({ rects = { { x0 = 0, x1 = 320, y0 = B.FEET, y1 = 240, kind = "solid", terrain = true } },
     slopes = {}, water = {}, movers = {} }, Wd)
@@ -126,6 +127,7 @@ function B.new(o)
   local r = setmetatable({ phase = "intro", t = 0, time = B.TIME, catches = 0, points = 0, air = 0, picked = 0, lost = 0,
     items = {}, pops = {}, thrown = 0 }, B)
   r.variant = o.variant or B.variantFor(o.level)
+  r.sceneKey = o.scene or BS.keyFor(o.level)                     -- the level's own place (bonusscene.lua)
   r.list = B.VARIANTS[r.variant]
   r.world = B.world()
   r.pepper = Pp.new(o.pepperX or 128, B.FEET); r.pepper.face = -1      -- she looks at Mia, ready
@@ -219,12 +221,12 @@ end
 function B:result() return { catches = self.catches, points = self.points, life = self.catches >= B.LIFE_AT, air = self.air, picked = self.picked, lost = self.lost, thrown = self.thrown } end
 
 ---------------------------------------------------------------------------------------------------- drawing
-local art                                                          -- the park (City Park's own art), loaded once
+local art                                                          -- Mia and the items, loaded once (the scene: bonusscene.lua)
 local function loadArt()
   if art then return end
   local Sc = require("scene")
   local GF = require("girl_frames")
-  art = { Sc = Sc, GF = GF, layers = Sc.buildArt(320, "park"), row = {} }
+  art = { Sc = Sc, GF = GF, row = {} }
   art.girl = lg.newImage("art/girl.png"); art.girl:setFilter("nearest", "nearest")
   art.ball = lg.newImage("art/ball.png"); art.ball:setFilter("nearest", "nearest")
   -- Mia's own throw (r8/levels, the first art batch): art/girl_throw.png, one row of frames in girl.png's 66 x 66
@@ -272,14 +274,9 @@ function B:pepperRect() local p = self.pepper; return p.x - 30, p.y - 52, p.x + 
 
 function B:drawScene()
   loadArt()
-  local Sc, Look = art.Sc, require("look")
-  Look.level({ art = "park" })
-  Sc.drawFarArt(art.layers, 0, self.t + (self.time or 0), self.world)       -- the City Park sky, skyline, trees
-  if not self.ground then self.ground = Sc.paintGroundArt(self.world, "park") end
-  if Look.on then Look.use("ground") end
-  lg.setColor(1, 1, 1, 1); self.ground:draw(0, 0)
-  Look.off()
-  -- shadows on the lawn
+  local Sc = art.Sc
+  BS.get(self.sceneKey or "citypark"):draw(self.t + (self.time or 0))      -- the level's place: sky, far rows, ground
+  -- shadows on the floor
   local m, p = self.mia, self.pepper
   Sc.shadow(m.x, B.FEET, 22)
   for _, it in ipairs(self.items) do Sc.shadow(it.x, B.FEET, 8 - math.min(4, (B.FEET - it.y) / 10)) end

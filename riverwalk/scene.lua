@@ -906,7 +906,8 @@ function Sc.paintQuay(w, props, def)
     for _, m in ipairs(merged) do if m[1] >= 150 then top[x] = m[1]; break end end
     if top[x] then
       if w:slopeAt(x) then kind[x] = "ramp"
-      elseif merged[1][1] == 184 then kind[x] = "road"
+      elseif merged[1][1] == 184 and not def.quayFront then kind[x] = "road"   -- (def.quayFront: the bonus round's
+      -- promenade, bonusscene.lua: paving, coping and the quay wall under it, no road)
       else kind[x] = "quay" end
     end
   end
@@ -1329,6 +1330,8 @@ local function strip(im, camx, f, y)
   local ox = math.floor(camx * f) % w
   for x = -ox, 320, w do lg.draw(im, x, y - im:getHeight()) end
 end
+-- (bonusscene.lua, 7 Nov) the bonus round builds its screens from the same pieces
+Sc.skyAndClouds, Sc.strip = skyAndClouds, strip
 
 -- the water's surface areas: runs of columns with their top (the world's water boxes are per map cell)
 local function pools(w)
