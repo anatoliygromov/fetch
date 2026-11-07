@@ -2,6 +2,8 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `day/07nov-dt`: Downtown (tall) low row, round 5: the far band removed (7 Nov)
+- Round 4's `town_farband.png` read as a stripe across the sky: removed (file, build, slot, registry). In low-row mode nothing is drawn between the mid row and the sky. Frames `docs/review/07nov/dt/round5/`. PEPPER UNCHANGED; physics 102/102; flow 125/125; tiled PASS.
 ## Branch `day/07nov-dt`: Downtown (tall) low row, round 4: one calm back layer (7 Nov, 0 credits)
 - The far roofs and spires strip is replaced in low-row mode by `town_farband.png`, a quiet 20 px silhouette band in one tone (scroll 0.25); the mid row rebuilt as ten big houses of 80-112 px (crow steps, curved gables, hips; 16 x 22 windows on an even grid, 2-3 per storey; three storeys, the same foot, tints and values); Riddarholmen's spire is the one spire. `L.vfloor = 152` (vcam.lua `Vc.floor`): her floor 16 px higher on screen in this level, more of the fronts under the roofs. The fountain basin: a 3 px water band over a 12 px granite wall, its face below the street drawn with the ungraded quay wall (`H.drawLowRaw`). Review folder `docs/review/07nov/dt/round4/`. Checks: PEPPER UNCHANGED; physics 102/102; qa 0; flow 125/125; tiled PASS; backdrop OK; curve T1-T4 PASS.
 ## Branch `day/07nov-dt`: Downtown (tall) low row, round 3 (7 Nov, 0 credits)

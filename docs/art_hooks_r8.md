@@ -226,7 +226,7 @@ with the table absent everything draws as before).
 | `dtl_fountain_basin/rim/plinth/column.png` | basin: ground (unfaded, no outline); the rest play, outlined | FOUNTAIN (1776, 400) draws the plinth and the basin band, RIM (1720/1848, 408) the rim blocks, TIER (1768, 344) the column with the bowl and the ball finial (top 296); jets in code (`H.drawLowFountainJets`) | round 2, the A2 concept |
 | `town_facades.png` (960 x 244) | mid, scroll 0.5, moving with the world (`L.vmid = 1.0`, vcam.lua) | `strip(T.facades, ...)`, its foot at screen 190 on the street tier (`Sc.MID_FOOT_LOW`, world 430: under the street line) | rebuilt at half size, three storeys, tinted, 14 colours (round 3) |
 | `dtl_canalhouse_canopy1.png` | play, outlined | CANOPY (2420, 328) | the canal house's cloth canopy (round 3) |
-| `town_farband.png` (480 x 20) | shore, scroll 0.25 | `strip(T.farband, camx, 0.25, 24)` in low-row mode, instead of town_roofs | one flat tone, big gable silhouettes (round 4) |
+| (no far band) | | in low-row mode the far roofs and spires strip is not drawn; nothing between the mid row and the sky (round 5; the painted sky branch brings its own skyline) | |
 | `dtl_fountain_face.png` | ground, ungraded | `H.drawLowRaw` with the quay wall (stage.lua, Look.off()) at (1736, foot) | the basin's face below the street (round 4) |
 
 Map (`maps/downtown_tall.tmx`): BALCONY 1552 y 344 -> PORCH 1568-1618 y 312 (a porch over a 2.1 m door), DORMER 1920-1976 -> SHED ROOF 1912-2000

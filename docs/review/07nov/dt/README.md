@@ -148,3 +148,10 @@ every tier, colour and greyscale), `routes_round4.png`.
 Checks: PEPPER UNCHANGED; physics 102/102; qa 14878 runs 0 problems; auto 57.1 s; flow 125/125; tiled PASS;
 backdrop OK; curve 10 seeds T1-T4 PASS (Downtown tall kids 11.9, parents 24.7, lost 2.5 %); build --check PASS
 (55 files); asset_qa PASS on the mid row, the far band, the basin's band and face. No credits.
+
+# Round 5: the far band removed
+
+`town_farband.png` read as a flat stripe across the sky. Gone: in low-row mode nothing is drawn between the mid row
+and the sky (the far roofs and spires strip stays off; the painted sky branch brings its own far skyline). The file,
+its build block, slot and registry entries are removed. Frames in `round5/` (beside_concept, after, sweep).
+Checks: PEPPER UNCHANGED; physics 102/102; flow 125/125; tiled PASS; build --check PASS (54 files).

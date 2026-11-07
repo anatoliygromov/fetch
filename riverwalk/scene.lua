@@ -1289,8 +1289,6 @@ function Sc.townArt(style)
     -- (night/06nov-dt, fix round 3) the open squares' floor on the mid layer (tools/build_dt_facades.py)
     T.squareFloor = love.filesystem.getInfo("art/scene/town_square_floor.png") and fadeImg("town_square_floor", nil, "mid") or nil
     T.roofs = fadeImg("town_roofs", nil, "shore")
-    -- (day/07nov-dt, round 4) the quiet far band behind the low row's mid row (tools/build_dt_rooftops.py)
-    T.farband = love.filesystem.getInfo("art/scene/town_farband.png") and fadeImg("town_farband", nil, "shore") or nil
   end
   T.groundQ = colQuads(T.ground)
   local gw, gd = T.ground:getWidth(), { T.ground:getDimensions() }
@@ -1596,9 +1594,9 @@ function Sc.drawFarArt(L, camx, t, w, def)
     end
   else
     Look.use("shore")
-    if def and def.foot and (package.loaded.arthooks or require("arthooks")).LOW_ROW and T.farband then
-      -- (day/07nov-dt, round 4) one back layer: a quiet 20 px silhouette band instead of the far roofs and spires
-      strip(T.farband, camx, 0.25, 24)
+    if def and def.foot and (package.loaded.arthooks or require("arthooks")).LOW_ROW then
+      -- (day/07nov-dt, round 5) nothing between the mid row and the sky: the far roofs and spires strip is not drawn
+      -- in low-row mode (round 4's far band read as a stripe; the painted sky brings its own far skyline)
     else
     strip(T.roofs, camx, 0.25, 160)                               -- 4 far roofs and spires
     end

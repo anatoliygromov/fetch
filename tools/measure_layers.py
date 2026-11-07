@@ -179,7 +179,6 @@ _dtl = sorted(os.path.basename(f)[:-4] for f in _glob.glob(ART + "scene/dtl_*.pn
 add([n for n in _dtl if n.endswith("_front")], "dt", "back", True, group="Downtown")
 add([n for n in _dtl if not n.endswith("_front") and n not in ("dtl_fountain_basin", "dtl_fountain_face")], "dt", "play", group="Downtown")
 add(["dtl_fountain_basin", "dtl_fountain_face"], "dt", "ground", group="Downtown")     # the basin's band and face: ground, unfaded, no outline
-add(["town_farband"], "dt", "shore", True, group="Downtown")       # (round 4) the quiet far band behind the mid row
 # art/dt-audit-06nov (tools/build_dt_audit.py): the drain in the quay wall (ground), the footbridge's piers (back,
 # unfaded: drawn with the back props), the wall lantern's bracket (faded as the lamp), the parasols' boat (play, ink)
 add(["town_quaydrain"], "dt", "ground", group="Downtown")
