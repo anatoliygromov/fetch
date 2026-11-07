@@ -112,7 +112,7 @@ add(["building", "cafe", "gable", "tree", "tree_far", "tree_near", "pot", "lamp_
 add(["kiosk_kaffe", "kiosk_glass"], "rw", "back", True, group="River Walk")          # setpieces.lua art()
 add(["rail_bg_left", "rail_bg_unit", "rail_bg_end"], "rw", "back", True, group="River Walk")   # Sc.railing decor fade
 add(["pavement", "road"], "rw", "ground", group="River Walk")
-add(["awning_80", "awning_88", "bench", "bin", "flowerbox_front", "gritbox_front", "planter_sq", "kennel", "ferry", "pier",
+add(["awning_80", "awning_88", "bench", "bin", "flowerbox_front", "gritbox_front", "planter_sq", "ferry", "pier",
      "pontoon", "rw_jetty", "rw_rowboat", "rw_rower", "park_log", "road_cyclist1", "road_cyclist2",
      "road_car1", "road_car2", "road_car3", "road_car4", "road_car5"], "rw", "play", group="River Walk")
 add(["pile"], "rw", "front", group="River Walk")

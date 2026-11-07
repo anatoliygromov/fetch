@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """build_rw_kennel.py: Pepper's kennel in her front garden (River Walk x 0), BUILT by rule at true scale.
 
+NOT IN THE GAME since 7 Nov 12:45 (owner: "I don't think we need kennel really, let's assume the dog lives at home"):
+the kennel, its boxes and its garden were taken out of River Walk and riverwalk/art/scene/kennel.png was deleted. This
+script is kept so the round 3 kennel can be rebuilt if it is ever wanted again (running it writes the file back).
+
   python3 -I tools/build_rw_kennel.py           write riverwalk/art/scene/kennel.png (+ art/source/kennel/kennel.aseprite)
   python3 -I tools/build_rw_kennel.py --check   fail if the file on disk is not what this script builds
 

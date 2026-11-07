@@ -688,7 +688,7 @@ function St:draw(debug)
     end
   end
   use("play")
-  Sp.drawPlay(self, cam)                                           -- code-drawn obstacles (kennel, hollow log, awnings)
+  Sp.drawPlay(self, cam)                                           -- code-drawn obstacles (hollow log, awnings)
   Rf.drawPlay(self, cam, Sc)                                       -- vent hoods, loose tiles
   use("ground")
   -- shadows of the girl, the ball and Pepper: on the floor right under them (smaller the higher they are)

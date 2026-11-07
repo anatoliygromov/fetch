@@ -906,7 +906,8 @@ local function roadShade(c, row, dir)
   return 0
 end
 -- (day/07nov-ground) Pepper's front garden (a GARDEN prop with garden = true: x0-x1, its door path path0-path1):
--- owner 7 Nov, "Kennel like this would never be on the street": the kennel stands on a lawn in front of her house.
+-- owner 7 Nov, "Kennel like this would never be on the street": the kennel stood on a lawn in front of her house.
+-- (Since 7 Nov 12:45 River Walk has no kennel and no GARDEN prop; the painter stays for a level that wants one.)
 -- Painted by rule over the paving rows (t - 12 .. t + 7) of each column; the kerb and the road under it stay.
 --   lawn: a dark row where it meets the house (its contact shadow), a shade row, then flat grass with v-shaped
 --         tufts on a 6 px grid (three bands, offset 0 / 3 / 1), a lit lip on its front row, a tuft over the

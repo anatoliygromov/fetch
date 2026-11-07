@@ -361,7 +361,8 @@ local function art()
     if fade then Sc.fadeData(d) end
     local im = lg.newImage(d); im:setFilter("nearest", "nearest"); return im
   end
-  pieceArt.kennel = load("kennel")
+  -- (day/07nov-ground: River Walk has no kennel any more, owner 7 Nov; the piece stays for a level that wants one)
+  if love.filesystem.getInfo("art/scene/kennel.png") then pieceArt.kennel = load("kennel") end
   pieceArt.kiosk = { [64] = load("kiosk_kaffe", true), [56] = load("kiosk_glass", true) }
   pieceArt.awning = { [88] = load("awning_88"), [80] = load("awning_80") }
   return pieceArt
@@ -374,7 +375,7 @@ local function kennel(pc, cam)
   local foot = pc.foot or 184                                      -- (the path it stands on; tall levels set foot)
   local w = x1 - x
   local A = art()
-  if w == A.kennel:getWidth() and A.kennel:getHeight() == foot - y0 then lg.setColor(1, 1, 1, 1); lg.draw(A.kennel, math.floor(x), y0); return end   -- (the art from its top down to the path)
+  if A.kennel and w == A.kennel:getWidth() and A.kennel:getHeight() == foot - y0 then lg.setColor(1, 1, 1, 1); lg.draw(A.kennel, math.floor(x), y0); return end   -- (the art from its top down to the path)
   rect(INK, x, y0, w, foot - y0)                                    -- outline and body
   rect(WOOD, x + 1, y0 + 4, w - 2, foot - y0 - 5)
   for yy = y0 + 8, foot - 2, 5 do rect(WOOD_D, x + 1, yy, w - 2, 1) end -- planks

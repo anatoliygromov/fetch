@@ -137,15 +137,16 @@ return function(mode, api)
       { act = function(p) local s = api.stage()
           report("kiosks: down onto the planter (route done)", near(p.y, 154) and p.x > 976 and p.x < 1048, ("x %.0f y %.0f"):format(p.x, p.y))
           report("secret: KIOSK ROOFS counted", s.secrets[2].found, ("%d of %d"):format(s:stats().secrets, s:stats().secretsTotal)) end },
-      -- 14 Pepper's kennel: it stops a walk; crawling in finds the gold bone (a secret)
-      { act = function() tp(70, 184); api.stage().pepper.face = -1; hold("left") end }, { during = 0.6 },
-      { act = function(p) report("kennel: stops a walk", p.x >= 60.9 and near(p.y, 184), ("x %.1f"):format(p.x)); hold("left", "down") end }, { during = 1.5 },
+      -- 14 (day/07nov-ground, owner 7 Nov: no kennel, the dog lives at home) the doorstep: walking left from the
+      -- start, nothing stops her; the gold bone on her doorstep is taken and counted as a secret
+      { act = function() tp(70, 184); api.stage().pepper.face = -1; hold("left") end }, { during = 1.2 },
       { act = function(p) release(); local s = api.stage(); local got
           for _, bn in ipairs(s.bones) do if bn.x == 16 then got = bn.taken end end
-          report("kennel: crawl in, the gold bone is inside", p.x < 22 and got, ("x %.0f, bone %s"):format(p.x, tostring(got)))
-          report("secret: KENNEL counted (2 of 3)", s.secrets[1].found and s:stats().secrets == 2 and s:stats().secretsTotal == 3, ("%d of %d"):format(s:stats().secrets, s:stats().secretsTotal)) end },
-      { act = function() hold("right", "down") end }, { during = 1.2 },
-      { act = function(p) release(); report("kennel: crawl back out", p.x > 60 and near(p.y, 184), ("x %.0f"):format(p.x)) end },
+          report("doorstep: walking left from the start reaches the door", p.x < 22 and near(p.y, 184), ("x %.1f"):format(p.x))
+          report("doorstep: the gold bone is taken", got, ("bone %s"):format(tostring(got)))
+          report("secret: DOORSTEP counted (2 of 3)", s.secrets[1].found and s.secrets[1].name == "DOORSTEP" and s:stats().secrets == 2 and s:stats().secretsTotal == 3, ("%d of %d"):format(s:stats().secrets, s:stats().secretsTotal)) end },
+      { act = function() hold("right") end }, { during = 1.2 },
+      { act = function(p) release(); report("doorstep: walks back right on the pavement", p.x > 60 and near(p.y, 184), ("x %.0f"):format(p.x)) end },
       -- 15 traffic: a bike is sent 1 s before it reaches the screen edge (its bell rings then); hard mode
       { act = function() local s = api.stage(); local c = Sp.spawn(s, s.def.bikes[1]); local lead = (c.x - (s.def.bikes[1].w or 48) / 2 - (s.cam + 320)) / c.speed   -- (the front: half the hit box)
           report("bike: sent 1 s before the screen edge (bell)", math.abs(lead - 1) < 0.01, ("%.2f s"):format(lead))
@@ -349,11 +350,11 @@ return function(mode, api)
     steps[#steps + 1] = { act = function() love.keypressed("g"); love.keypressed("tab") end }; steps[#steps + 1] = { wait = 0.1 }
     steps[#steps + 1] = shot("13_tuning")
     steps[#steps + 1] = { act = function() love.keypressed("tab") end }
-    -- the new spots: the kennel, the kiosk roofs over a bike, a bike's warning sign, the pontoon waiting at the
+    -- the new spots: the doorstep, the kiosk roofs over a bike, a bike's warning sign, the pontoon waiting at the
     -- quay, the planter step before the bin
     local function add(t) for _, st in ipairs(t) do steps[#steps + 1] = st end end
-    add({ { act = function() tp(60, 184); api.stage().pepper.face = -1; hold("left", "down") end }, { wait = 1.3 },
-          shot("14_kennel", 0), { act = function() release() end },
+    add({ { act = function() tp(60, 184); api.stage().pepper.face = -1; hold("left") end }, { wait = 0.6 },
+          shot("14_doorstep", 0), { act = function() release() end },
           { act = function() local s = api.stage(); tp(800, 112); s.bikes = { { x = 905, y = 184, warn = 0, zone = s.def.bikes[1], speed = 115 } } end },
           { wait = 0.4 }, shot("15_kiosk_roofs", 640),
           { act = function() local s = api.stage(); tp(860, 184); s.bikes = { Sp.spawn(s, s.def.bikes[1]) } end },
