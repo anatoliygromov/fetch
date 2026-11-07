@@ -2343,7 +2343,7 @@ return {
           type = "bones",
           shape = "point",
           x = 906,
-          y = 340,
+          y = 337,
           width = 0,
           height = 0,
           rotation = 0,
