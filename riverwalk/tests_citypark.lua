@@ -115,7 +115,7 @@ return function(mode, api)
           s.bikes = { { x = p.x + 90, y = 184, warn = 0, zone = s.def.bikes[1] } }; s.bikeT = 99 end },
       { during = 2.0 },
       { act = function(p) local s = api.stage(); report("picnic table: safe from the leaf cart", near(p.y, 156) and s.hearts == hearts, ("y %.0f hearts %d"):format(p.y, s.hearts)) end },
-      -- (r6/engine: she runs past the lamp at x 1624, and a lamp now gives a heart back: start with 3, the most)
+      -- (r6/engine: she runs past the lamp at x 1642 (1624 until 7 Nov), and a lamp now gives a heart back: start with 3, the most)
       { act = function() tp(1510, 184); local s = api.stage(); s.hearts = 3; hearts = 3; s.bikes = { { x = 1330, y = 184, warn = 0, zone = s.def.bikes[1] } }; hold("right") end },
       { cond = function(p, s) return s.bikes[1] and s.bikes[1].x - p.x < 92 end, act = function() jump("right", "jump") end, limit = 2 },
       { during = 1.2 },
@@ -153,9 +153,13 @@ return function(mode, api)
       -- each perch: a bark from the path makes it drop the ball, and the ball lands where a small child can get it:
       -- the path, or a top on the main route at most 56 px up (bench seat, bin top, slide tower, climbing frame)
     }
-    local spots = { 150, 320, 610, 1200, 1280, 1545, 2360, 2580, 2700 }                     -- where Pepper barks from, per perch
-    for k, x in ipairs(spots) do
-      steps[#steps + 1] = { act = function() local s = api.stage(); s:resetMagpie(k); s.pepper.carrying = nil; tp(x, 184); s.pepper.face = 1
+    local spots = { 150, 320, 610, 1200, 1280, { 1580, 158 }, 2360, 2580, 2700 }            -- where Pepper barks from, per perch
+    -- (7 Nov, cplog: perch 6 moved with its lamp to x 1642 and the hollow log is 1553-1625: she barks from the log's
+    -- top, 62 px off; from the path at 1545 she would be under the shell, past the log the ball drops on the branch)
+    for k, spot in ipairs(spots) do
+      local x, y = spot, 184
+      if type(spot) == "table" then x, y = spot[1], spot[2] end
+      steps[#steps + 1] = { act = function() local s = api.stage(); s:resetMagpie(k); s.pepper.carrying = nil; tp(x, y); s.pepper.face = 1
           for _, c in ipairs(s.critters) do c.state, c.y = "gone", -999 end end }                 -- geese have their own checks
       steps[#steps + 1] = { wait = 0.1 }
       steps[#steps + 1] = { act = function() love.keypressed("z") end }
@@ -215,7 +219,7 @@ return function(mode, api)
       { act = function() local s = api.stage(); tp(1535, 184); s.zoneIn[s.def.bikes[1]] = true; hold("right", "down") end }, { during = 2.5 },
       { act = function(p) release(); local s = api.stage()
           report("hollow log: crawl through it", p.x > 1620 and p.x < 1650 and near(p.y, 184) and s.hearts == hearts, ("x %.0f"):format(p.x))
-          report("secret: HOLLOW LOG counted (gold bone inside)", s.secrets[2].found and (function() for _, bn in ipairs(s.bones) do if bn.x == 1585 then return bn.taken end end end)(), ("found %s"):format(tostring(s.secrets[2].found))) end },
+          report("secret: HOLLOW LOG counted (gold bone inside)", s.secrets[2].found and (function() for _, bn in ipairs(s.bones) do if bn.x == 1589 then return bn.taken end end end)(), ("found %s"):format(tostring(s.secrets[2].found))) end },
       -- the oak's top branch (the third secret)
       { act = function() tp(1780, 128); jump("jump") end }, { during = 0.2 }, landed(),
       { act = function(p) release(); local s = api.stage()

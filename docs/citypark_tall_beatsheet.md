@@ -42,7 +42,7 @@ y is the feet line (world px, y grows downwards). The low road is y 328 everywhe
 | 2 | Bench and hedge (320-640) | bench (seat 300) or crawl under it; crawl through the hedge gap | **Way up 1:** bench seat, running jump to the hedge top (256), held jump up to the plane tree (216) | 2: the bench's backrest (ball on the seat) | 656 | low 7, high 1 (the hedge-top gold) |
 | 3 | The pond (640-960) | stones (332), duck boat (deck 346), up the far bank | the plane tree (608-704) then the **treetop walk** (704-944, y 216, solid: no dropping into the pond) | 3: the lamp by the hedge (ball to the path); **4: the walk's rail** (high only) | 976; **high: 864 on the walk** | low 7, high 6 (the walk's gold, secret TREETOP WALK) |
 | 4 | Goose lawn (960-1304) | goose (bark or jump), leaf pile, log | the **lime trees**: one-way ledges 48 px apart, 16 to 32 px up or down (y 200, 184, 200, 232) | 5: the log | 1306 | low 7, high 3 |
-| 5 | Leaf cart run (1304-1600) | **Way up 2:** the bin (272, jump + scramble), then a held jump to the lime over it (232); picnic table; the carts (see the engine notes) | three more limes (216, 200, 200), the high road skips the cart run | 6: the bin (ball stays on top) | 1624 | low 8, high 3 |
+| 5 | Leaf cart run (1304-1600) | **Way up 2:** the bin (272, jump + scramble), then a held jump to the lime over it (232); picnic table; the carts (see the engine notes) | three more limes (216, 200, 200), the high road skips the cart run | 6: the bin (ball stays on top) | 1642 (1624 until 7 Nov) | low 8, high 3 |
 | 6 | The old oak (1600-1920) | hollow log (hop or crawl; gold inside, secret HOLLOW LOG); the oak's branches 300, 272, 244 (gold, secret OAK TOP) | **Way up 3:** from the oak's top branch to the stub (224), then the **crown** (1656-1832, y 192) or the ash. The **golden bone** on the **top twig** (1756-1788, y 152, 40 px above the crown, secret GOLDEN BONE) | 7: the lamp before the oak (ball to the path); **8: the crown** (bark from the branches or the crown) | 1936; **high: 1696 on the crown** | low 5, high 7 (THE golden bone) |
 | 7 | The creek (1920-2296) | stop, then hop: three stones 80 px apart; goose on the far bank | the ash (1888-1968, y 200) and the **alder walk** (1968-2312, solid, over the creek) with a **low bough** on it: crawl under (16 px) or hop over (34 px) | **9: the alder walk** (high only) | 2300 | low 7, high 4 |
 | 8 | Rose walk (2296-2600) | second cart run: bench, picnic table | the **rose arbour's top**: three slats 48 px apart (216, 200, 216), on to the play tower's top deck | 10: the bench's backrest | 2592 | low 9, high 3 |
@@ -121,7 +121,7 @@ can make it drop the ball.
 | 4 | the treetop walk's rail (840, 216) | the walk (not from the pond below) | the walk |
 | 5 | the log on the goose lawn (1268, 312) | the path | the log |
 | 6 | the bin (1345, 272) | the path or the lime above | the bin top (on the way up anyway) |
-| 7 | the lamp before the old oak (1624, 244) | the path | the path |
+| 7 | the lamp before the old oak (1642, 244; 1624 until 7 Nov) | the path | the path |
 | 8 | the old oak's crown (1800, 192) | the oak's top branch or the crown | the crown |
 | 9 | the alder walk (2160, 200) | the walk (not from the creek's stones) | the walk |
 | 10 | the rose bench's backrest (2428, 282) | the path or the arbour | the bench seat |
