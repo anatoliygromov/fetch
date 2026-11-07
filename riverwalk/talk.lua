@@ -74,6 +74,9 @@ T.PICS = {
   { "SNEAK", "sneak" }, { "CRAWL", "crawl" }, { "DUCK", "duck" }, { "STAY ON", "stay" }, { "DROP", "drop" },
   { "PICK UP", "pickup" }, { "GIVE", "give" }, { "BARK", "bark" }, { "RUN", "run" }, { "SNIFF", "sniff" },
 }
+-- (owner 7 Nov: the drawn hint dogs looked "terrible"; he picked the button and the word only) the pictures are
+-- off; the table stays so a picture can come back by turning HINT_PICS on.
+T.HINT_PICS = false
 function T.picFor(line)
   if not line.btn then return nil end
   if line.pic then return line.pic end
@@ -181,7 +184,7 @@ T.B_TOP = 34                      -- under the HUD's top row and the score under
 -- Returns { x0, y0, x1, y1, side, tx, ty, rows, ... }.
 function T.bubble(line, stage)
   local rows = T.hintRows(line.text)
-  local pic = T.picFor(line)
+  local pic = T.HINT_PICS and T.picFor(line) or nil
   local gl = T.glyphFor(line.btn)
   local gw, gh = U.body(gl)
   local pw, ph = 0, 0

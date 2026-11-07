@@ -2,6 +2,9 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `day/07nov-hintpic`: hint bubbles without the drawn dogs, plus the second session's three pieces (owner 7 Nov)
+- **Hint bubbles: the button and the word only (talk.lua T.HINT_PICS = false).** Owner, 7 Nov: the drawn hint dogs (RUN, CRAWL) looked "terrible"; of the two options (A: Pepper's own frames, B: button and word) he picked B. T.bubble no longer adds a picture; T.picFor and the pic_*.png files stay, so a picture can come back by turning the flag on. Flow 125/125, Pepper unchanged.
+
 ## Branch `day/07nov-integration`: the reviewed day branches of 7 Nov on one branch (sky, cplog, barkdrop, chars, bonusscene, ground)
 - **check_pepper_files.sh: input.lua checked as world.lua is, all but one stated block.** The check failed on main itself since 4afd8d2 (UI pilot 2), which added the menus' last-used device to input.lua (`I.last`, `I.setLast`, `I.startDevice`, 5 lines, nothing else). Pepper never reads them: input.lua with that block taken out is byte-identical to aa38be5, and the golden trace and the lab both still print PEPPER UNCHANGED. The check now strips that block before comparing, and fails if pepper.lua ever reads the device.
 - **City Park tall: the two bones under the hollow log's leaf pile move with their pile (merge fix, maps/citypark_tall.tmx, export regenerated).** cplog moved the pile 11 px left (1505-1549) but not its bones; chars made every bone 15 px wide. Together the right bone (id 144, x 1546, art 1539-1553) showed its knob between the pile and the log's ring. Both bones moved the same 11 px: id 143 1530 to 1519, id 144 1546 to 1535, so they sit at the same places in the pile as before (7 px clear of each end), hidden as the other two piles' bones are. City Park tall physics 99/99, qa 0 problems, Tiled PASS.
