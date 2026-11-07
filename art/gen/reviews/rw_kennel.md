@@ -30,3 +30,19 @@ VERDICT: FAIL on one item (11, she floats on the peak). Everything else is finis
 - Bench legs / lawn: PASS, the legs go into the grass behind the pickets.
 - House plinth / lawn and path: PASS, the plinth band sits on the ground with a 2 px shade.
 - Note for the owner's question 2: the public bench stands inside her picket garden. It reads fine; whether a street bench belongs in a front garden is the owner's call.
+
+# Round 2 (reviewer, 7 Nov)
+
+Branch day/07nov-ground at f1bd7ca. Re-rendered the start screen and Pepper on the roof at x 16, 22 and 30 (LOOK_XS=0 LOOK_YS=0 LOOK_PX), gaps measured per column against the frame without her. asset_qa PASS.
+
+Roof now: a level 32 px board (x 6-37) three rows deep, then a 1 in 2 chamfer to the eaves over three rows; the whole roof is 6 rows (y 140-145) and the red wall grew from 30 to 38 rows.
+
+- Paw gaps measured: x 22: 2 to 4 px under the heel of the hind paw only (columns 3-5), 0 under everything else. x 16: 3 to 4 px under columns 0-3, 1 under 4-5. x 30: 1 to 4 px under columns 38-43. At 1x that is a 2 to 3 px sliver under the outer edge of one paw at the chamfers, and nothing when she stands anywhere on the board. Float: PASS. The maker's reason for 32 over 24 holds (at 24 the paws reached the chamfer).
+- Read as a classic dog house: FAIL. The gable is gone. With a 32 px flat top on a 44 px box the roof is a dark lid with two tiny corner cuts: at 1x and 3x the piece reads as a red chest, a post box or a pedestal with a round hatch, not a dog house. The taller plain wall makes it boxier still. The owner called the last kennel "weird"; this one is clean but it is a box with a lid, and Pepper standing on it reads as a dog on a crate. The round door and plate carry the "dog house" read alone.
+- Everything else (crisp, ink, colours, scale, garden, off the street): PASS as in round 1.
+
+Fix: keep a visible pitch and a shorter flat. A 20 px ridge board (x 12-31, 2 rows) on a 1 in 4 pitch (4 px per row, 3 rows to the eaves at x 0-43), eaves 2 px past the walls, roof 6 rows tall as now, wall back to 30 rows. Gaps then: under the hind paw at x 3 about 2 px (9 px from the board's end at 1 in 4), under columns 5-9 about 1 px: no sliver. The silhouette is a low gable, which is still a dog house. If the owner prefers the gable of round 1 with the 2 to 3 px slivers, that is his call (his question 3).
+
+Not done, accepted: 4 px of lawn left of the kennel. With the left eave on the frame edge it reads pinned but whole; acceptable, since moving it breaks the frozen start trace.
+
+VERDICT: FAIL on read (a box, not a dog house). Float fixed.

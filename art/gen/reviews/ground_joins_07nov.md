@@ -66,3 +66,22 @@ riverwalk/joins.lua gives every change of ground kind a rule and the --physics t
 9. Read: FAIL on RW-j and CP-f (a child sees the water painted up to a line).
 
 VERDICT: FAIL. Three joins read as cut (RW-j, RW-n, CP-f) plus the post foot CP-j. The rest is grounded.
+
+# Round 2 (reviewer, 7 Nov)
+
+Branch day/07nov-ground at f1bd7ca. Every screen of both levels re-rendered (13 + 27), sheets in colour and greyscale, the fixed joins at 8x and 12x, pixel rows read where it mattered. Own view formed before reading the maker's list.
+
+| # | Join | Round 2 | Evidence |
+| --- | --- | --- | --- |
+| RW-j | quay paving top edge / water | PASS | along the whole quay (x 320 to 1280, the lower quay at 2880, 3200 to 3728): row 171 a dark wet row (92,99,89), row 172 a grey-mauve coping row (176,168,179), then the paving. At 1x the quay now has an edge and the water a line it stops at. Under the railing posts, the lamp bases, the birch and lime feet and the kiosk feet the rows run behind the piece, nothing drawn over a foot. The quay-end caps meet the coping cleanly. |
+| RW-n | bridge pier plinth / paving | PASS | the dark lens is gone: a plain stone course under the plinth, a 1 px shade line under the plinth's lip, the course on the paving inside the slanted shadow. Reads as a pier standing on the quay. |
+| RW-2880 blob | road by the kerb return | PASS | gone (the manhole cover is clipped by the road scroll). |
+| CP-f | near pond and creek banks / water (4) | PASS (weak) | one shoulder colour (sand) at all four, the olive blob gone. Along each diagonal a 2 px darker wet earth row, 2 px steps in the strata's lower half, and 3 to 4 pale ripple dashes on the water against the bank (x 640 screen x 75-110 and 300-320; x 1920 screen x 75-110; x 2240 screen x 30-65). It reads as a wet bank meeting water, not as new stripes: the wet row is earth-dark, not a line, and the steps are small enough to read as broken soil. What remains is the level's own convention, a section through the ground with water up to a slope; that is design, not a cut. |
+| CP-j | rope-bridge post foot / path | PASS | a grey granite footing (about 10 x 2 px) under the post at x 1920 screen x 50-66, y 183. Grounded. The pergola posts at x 2240 stand on the lawn behind the tuft row, fine. |
+| CP-c | tree line and gate feet / lawn, the tuft row | PASS | the 48 px pattern (kit_cp_roots 48 x 5, kit_cp_tufts 240 x 5): bumps of 1 to 3 px in width and height in two shades, no repeat visible at 3x or 6x. At 12x the trunk feet sit in grass, not behind a battlement. Not mechanical any more. |
+| CP-n | mid-row lawn up in the trees | PASS (weak) | unchanged: the dash grid is still there behind the leaf front. Note only. |
+| all other joins | | PASS | as in round 1; nothing broken by the new rows. Checked: the wet row is not drawn over any lamp, tree, kiosk, bin, pot or step; the steps at x 1280 and x 2880 still land on the paving without a seam; the quay-end ripples still sit at the waterline. |
+
+Checklist for the system: 1 Scale PASS, 2 Layer PASS (greyscale sheets unchanged in the ladder), 3 Outline PASS, 4 Shapes PASS (the lens and the olive wedge gone), 5 Shading PASS, 6 Palette PASS, 7 View PASS, 8 Fit PASS, 9 Read PASS (the quay reads as a quay, the banks as banks).
+
+VERDICT: PASS. Every join seen is grounded. Remaining notes, not fails: the mid-row lawn's dash grid (CP-n); the quay-end reflection is faint.

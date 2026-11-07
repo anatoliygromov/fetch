@@ -29,3 +29,9 @@ VERDICT: PASS.
 ## River Walk front band (verges and bollards)
 - The scalloped hedge silhouette of 6 Nov is gone. The grass verges with shrubs, bollards and the manhole are back at the same places (x 0 to x 1280, x 2880 on). Dark silhouette, below Pepper's line, never over her.
 VERDICT: PASS.
+
+# Round 2 (reviewer, 7 Nov)
+
+Branch day/07nov-ground at f1bd7ca. Re-rendered both levels. No revert file changed between fc03880 and f1bd7ca (road, park_ground, pontoon still byte-identical to the old files; park_stone and gritbox_front untouched). The x 2880 dark blob was a manhole cover clipped by the 1.06x road scroll; it is clipped away now and the road there is clean.
+
+VERDICT: all six PASS, as in round 1.

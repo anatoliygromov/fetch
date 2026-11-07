@@ -24,3 +24,25 @@ River Walk, branch day/07nov-ground at fc03880, worktree review-ground07. 13 fra
 ## Also seen (not failed here)
 - road.png fails asset_qa (noise 3.3 %, blotches 10.9 %): it is the texture the owner asked back. If he calls it dirty later, the gate already says why.
 - The quay-end reflection is 1 to 2 px and barely reads; fine.
+
+# Round 2 (reviewer, 7 Nov)
+
+Branch day/07nov-ground at f1bd7ca, 13 frames re-rendered, same method.
+
+| x | Verdict | What is wrong |
+| --- | --- | --- |
+| 0 | FAIL | the kennel reads as a red box with a dark lid, not a dog house (rw_kennel round 2). The float is fixed. The quay edge behind the railing now has its wet row and coping. |
+| 320 | PASS | coping and wet row along the water; birch and lamp feet clean. |
+| 640 | PASS | the edge runs behind the bin, kiosks and grit box. |
+| 960 | PASS | |
+| 1280 | PASS | |
+| 1600 | PASS | |
+| 1920 | PASS | the pier stands on a plain course inside its slanted shadow. |
+| 2240 | PASS | |
+| 2560 | PASS | |
+| 2880 | PASS | the blob is gone; lower quay edge has its coping. |
+| 3200 | PASS | |
+| 3520 | PASS | |
+| 3728 | PASS | |
+
+1 of 13 fails, for the kennel's silhouette.

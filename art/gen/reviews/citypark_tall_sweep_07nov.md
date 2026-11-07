@@ -23,3 +23,21 @@ City Park tall, branch day/07nov-ground at fc03880, worktree review-ground07. 27
 - The leaf front at the bottom of the y 24 and y 0 tiers is the owner's plan decision 5 (26 Oct), by design.
 - park_ground.png fails asset_qa on noise and the ladder (darkest 37): the owner's own choice, noted only.
 - The duck boat's stern lies over the right bank's slope at x 640 (CP-i).
+
+# Round 2 (reviewer, 7 Nov)
+
+Branch day/07nov-ground at f1bd7ca, 27 frames re-rendered, same method.
+
+| x | y 144 | y 24 | y 0 |
+| --- | --- | --- | --- |
+| 0 | PASS: gate, poplar and lamp feet in the new irregular tuft row | PASS | PASS |
+| 320 | PASS | PASS | PASS |
+| 640 | PASS: both banks with wet earth, steps and ripples, sand shoulders; stones, duck boat, far bank | PASS | PASS |
+| 960 | PASS: tree feet in grass, no repeat visible | PASS | PASS |
+| 1280 | PASS | PASS | PASS |
+| 1600 | PASS | PASS | PASS |
+| 1920 | PASS: left bank fixed, the post on its granite footing | PASS | PASS |
+| 2240 | PASS: right bank in sand, no olive wedge | PASS | PASS |
+| 2560 | PASS | PASS | PASS |
+
+0 of 27 fail. Notes only: the mid-row lawn's dash grid behind the leaf front (CP-n); park_ground's asset_qa noise is the owner's chosen texture.
