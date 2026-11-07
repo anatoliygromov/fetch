@@ -430,6 +430,14 @@ function St:update(dt, presses)
   Ex.update(self.fx, self, dt)                                     -- dust and splashes: they only watch Pepper
 
   -- bark rings
+  -- (owner, 7 Nov: "if the dog barks with the ball in mouth, the ball should drop") a bark opens her mouth: the
+  -- ball pops out first, with a drop's small arc (St:dropBall, from the bark clip's first frame), then the bark.
+  -- Right after a pick-up she may still be in the grab clip, whose frames have the ball drawn in her mouth: that
+  -- clip ends here and the bark clip starts, so only the falling ball is drawn (stage state only, as night.lua's sniff)
+  if p.barked and p.carrying then
+    if p.anim == "grab" then p.grabT = 0; p.anim, p.frame, p.at = "bark", 1, 0 end
+    self:dropBall()
+  end
   if p.barked then p.barked = false; self.rings[#self.rings + 1] = { x = p.x + p.face * 22, y = p.y - 22, t = 0 }
     if math.abs(p.x - self.girl.x) < 110 and self.girl.state == "idle" then self.girl.state = "wave"; self.girl.t = 0 end
     if self.cat then self:barkAtCat() end
