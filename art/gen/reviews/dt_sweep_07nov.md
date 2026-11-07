@@ -148,3 +148,85 @@ overhang their buildings (see 1600).
 
 Then: the guild roof's brick fill to tile courses (scallop stamp, contrast at most 60 across the fill), brick
 only on the crow steps and the chimney.
+
+
+# Round 2 (reviewer, 7 Nov)
+
+Head b7fa47f. Same method: own sweep (33 frames, 2x tier stacks in colour, 1x greyscale per tier, suspect spots
+at 4x to 8x), the route render, the changed files at 5x to 7x beside the bench and bin, numpy on the fronts (no
+empty row inside any front now), the maker's `docs/review/07nov/dt/README.md` round 2 section read last. Its
+numbers hold on my frames: low-row plaster 152 to 156, mid row 197 to 207 (45 apart), the mid row's lowest
+window sills 52 px below the lowest eave at every tier (`L.vmid = 1.0`), arches 46 px, gate 62x100 from 1934,
+dormer 40x30 behind the parapet, railing garden 12 px with three planters, guild roof in tile (fill 79 to 107),
+canopies cloth, fountain rebuilt. A cargo bike rendered at the gate (LOOK_SPOTS 2060,424 with LOOK_CARGO -45
+and -15 on this branch's tests_look.lua, which has the hook).
+
+## Screens, round 2
+
+| cam x | y 240 (street) | y 120 (the high road) | y 0 (roofs and sky) |
+| --- | --- | --- | --- |
+| 0 | PASS | PASS. Tile hips with ridge caps on the shops, brick chimneys with caps, the mid row a clean step lighter with its sills 52 px above the eaves. | PASS. |
+| 320 | PASS | PASS (small: the closed1-kind hat's side slopes are 2 px vertical grey stripes that read as corrugation at 2x; flat lead with a 4 px seam would be quieter). | PASS. |
+| 640 | PASS | PASS | PASS |
+| 960 | PASS | PASS | PASS |
+| 1280 | PASS. Two 46 px arches, the statue on the pier, dentil cornices, lead parapets with light copings. | PASS. The wing and arcade parapets read as the tops of two buildings against a pale quiet town and sky. | PASS |
+| 1600 | PASS. The fountain stands free: column with a ball finial, 2 px jet arcs into a kerb basin at street level, striped cloth canopies on the pavilions' windows, the porch slab over the guild door. (Bone collisions on the statue and fountain are pending; not judged.) | PASS. Tile gable with granite crow steps and a brick chimney, tile eaves under the pavilion parapets, the column top in the gap. | PASS |
+| 1920 | FAIL. The street lamp at x 1959 stands in the middle of the shed's gate opening (1934-1996), in front of the arch: the cargo bike rides through the lamp post (my bike frames: the post crosses the bike's box). The crates (1864-1934) end at the jamb as the maker says; that part is right. | PASS. The dormer sits behind the parapet with its sill hidden; kiosk and shelter houses have edges and a window each (the kiosk house's window is behind the shelter's glass canopy at the street tier, invisible there, visible here). | PASS |
+| 2240 | FAIL. The canal house still carries the old hung balcony: map box BALCONY 2420 y 328 (56 wide) is not claimed by the low-row table, so the code fallback draws the plank with three teeth on the canal house's door wall (screen x 180-236, y 88-102 at this camera). The owner's "no hung balconies anywhere". Everything else on the screen passes: railing garden with planters, the springy awning, the footbridge. | FAIL. The same plank at the bottom right (screen x 180-236, y 208-222). | PASS |
+| 2560 | PASS | PASS (small: closed1's striped side slopes) | PASS |
+| 2880 | PASS | PASS | PASS |
+| 3200 | PASS | PASS | PASS |
+
+Street tier 9 of 11 PASS, high road tier 10 of 11, roof tier 11 of 11. Both FAIL causes are placements, not
+drawings: one unclaimed balcony box and one lamp in a doorway.
+
+## Route render, round 2
+
+PASS. Names are the new ones (WING ROOF, ARCADE ROOF, PAVILION ROOF, SHED ROOF, KIOSK ROOF, SHELTER ROOF,
+CANAL ROOF, PORCH, CANOPY), GATE at 1864-1934, CANOPY 1680-1752 and 1816-1888. The one old name left is BALCONY
+2420 y 328 on the canal house, which is the unclaimed box above.
+
+## Gate geometry
+
+GATE crates 1864-1934 y 388 (36 tall), the shed's gate opening 1934-1996: the crates' right edge, the depot line
+and the left jamb are one column, so a bike clipped at 1934 comes out of the doorway and nothing stands on the
+crates' side. The 62 px gate is 1.35 m, enough for a cargo bike's width front-on; the bike is 100 px long so it
+overlaps the piers while it leaves, which is how a doorway reads. The one fault is the lamp at 1959 (see 1920).
+Fix: the lamp to x 2008 (the 16 px alley between the shed at 2000 and the kiosk house at 2016; the post's base
+is 12 px) or to 1850, left of the crates. The checkpoint moves with it.
+
+## The five problems, round 2
+
+1. Fiction and scale: PASS. The mid row moves with the world (`L.vmid = 1.0`) and its lowest sills stay 52 px
+   under the lowest eave at every tier; no half-scale storey stands on a shop anywhere in the sweep.
+2. One language: PASS with one piece left over. Parapet with ink and a light coping = walk, on all nine roofs;
+   the gable and the chimney outlined; the middle tier is cloth canopies and a stone porch, part of the fronts.
+   The canal house's plank balcony (2420 y 328) is the last piece of the old vocabulary.
+3. Silhouettes and sky: PASS. Low row 45 luma darker than the mid row, every building ends in a dentil cornice
+   and a tile eave or a lead coping, the mid row's gables and the sky above; the y 120 greyscale sheet reads as
+   a row of houses in front of a lighter town.
+4. Two scales: PASS. One scale on the street, one behind, never touching; the alleys show plain wall (the grey
+   wall in the fountain gap at the street tier measures a neutral 194 on my frames, not violet; the only
+   lavender read is the mid row's grey-pink house beside cream at x 1920, (212,197,195), which is small).
+5. Set pieces: PASS. The fountain stands free with sky over its column at the A2 camera; statue, kiosk and
+   shelter in front of their own houses.
+
+## The seven questions, round 2
+
+1. Walkable at a glance, one language: yes. 2. Buildings with roofs: yes, low houses with cornices, tile eaves
+and parapets; the hats are tile hips. 3. Mid row behind, lighter, smaller, quieter: yes on all three (201
+against 152, 14x22 windows one per 24 px, no white frames). 4. True scale: arches 1 m, gate 1.35 by 2.2 m,
+dormer 0.9 by 0.65 m, chimneys 10 px with caps; nothing doll-sized or giant. 5. Nothing floats: the hats and
+chimneys touch their cornices, the canopies sit on their windows inside their buildings, the dormer sits behind
+the parapet, the jets land in the basin; the one hung thing is the canal house plank. 6. Concept: A1, A2 and A4
+are close now (A2 closest); A3's hall is the plainest of the four and is fine. 7. Would the owner still call the
+high road messy: no. He would ask about the plank on the canal house and the lamp in the gate.
+
+## Fixes, round 2 (in order)
+
+1. Canal house: claim BALCONY 2420 y 328 in `dt_lowrow.lua` and draw it as a cloth canopy over the canal
+   house's door (2420-2478, the box's width + 2, the same ramp), or drop the box if the route does not need it.
+2. Lamp 1959 out of the gate: to x 2008 or 1850.
+3. closed1-kind hat: side slopes as flat lead, two greys with a 4 px seam row, not 2 px vertical stripes.
+4. Pending from other tracks, seen or not: bone collisions on the statue and fountain (not judged); the violet
+   wall (not seen as violet on my frames, see problem 4).

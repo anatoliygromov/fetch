@@ -236,3 +236,38 @@ VERDICT: FAIL (the roofs and chimneys; the ground floors pass).
 2 PASS, 45 FAIL. The FAILs come from five causes: the parapet-only roof language, the value of the low row
 against the mid row, the canopy drawing and placement, four doll-sized openings and details, and the decorative
 roof kit (hats, sticks, slits). None of the 47 is dirty.
+
+
+# Round 2 (reviewer, 7 Nov)
+
+Head b7fa47f, 52 files (the 47 plus `dtl_fountain_*` and the rebuilt `town_facades.png`). Looked at at 5x to 7x
+beside the bench and bin, numpy on every front (no empty row inside any front), asset_qa as the maker reports
+(reproduced on the strips, canopies, guild roof, hall roof, facades: PASS).
+
+| Piece | Round 1 | Round 2 | Evidence |
+| --- | --- | --- | --- |
+| 7 roof strips (wing, arcade, pav1, pav2, kioskhouse, shelterhouse, canalhouse) | FAIL | PASS | granite body (on screen 162 median), 2 px light coping, ink, lead seam row, a 6 px scallop tile eave on the five houses, dentil cornice and shadow under all; reads as the top of a building |
+| shed roof | FAIL | PASS | 40x30 dormer behind the parapet, sill hidden, two-course tile cap |
+| hall roof | FAIL | PASS | 12 px iron railing, three 16x6 planters, outlined |
+| guild roof | FAIL | PASS | scallop tile fill (79 to 107 on screen), granite crow steps, brick chimney with cap |
+| pav1, pav2 canopies | FAIL | PASS | striped cloth, 10 px slope, 3 px valance with ink, 1680-1752 and 1816-1888, on their own windows (pav1 misses its window by 3 px at the right: not visible) |
+| guild canopy (porch) | FAIL | PASS | a granite slab on two brackets over the door, 1568-1618 |
+| arcade front | FAIL | PASS | two 46 px arches on 10/8/10 piers, dentil cornice |
+| wing front | FAIL | PASS | cornice and shadow |
+| pav1, pav2 fronts | FAIL | PASS | cornice, 45 luma under the mid row |
+| kioskhouse, shelterhouse, canalhouse fronts | FAIL | PASS | a 28x40 (28x32) shuttered window over the door, cornice |
+| shed front | FAIL | PASS | arched carriage gate 62x100 from 1934 (1.35 m; the 16 px route gap at 2000 is the maker's reason, accepted) |
+| hall front | PASS | PASS | |
+| guild front | PASS | PASS | |
+| start front | FAIL | PASS | tile hip with ridge cap, 10 px brick chimney with a 2 px cap, a step darker than the mid row's roofs |
+| bakery front | FAIL | PASS | chimney as above |
+| closed1-22 fronts | FAIL | PASS (small) | tile hips on the cornice band, chimneys in the roof, no slits; small: the hats of closed1's kind draw their side slopes as 2 px vertical grey stripes (corrugation at 2x); flat lead with a 4 px seam would be quieter |
+| dtl_fountain_* (column, bowl, plinth, rims, basin) | new | PASS | 16 px column with capital and ball, bowl 48 at 344, kerb basin with a water band and 2 px jet arcs; crisp, outlined, stands in front of the jets' first pixels |
+| town_facades (mid row) | FAIL (value, scroll) | PASS | 960x330, 14 colours, pastel plaster at 201 on screen, 14x22 windows one per 24 px, frames in the plaster's shade, pink-grey hips and lead flats, moves with the world |
+
+Not a file but a placement, FAIL: the canal house's BALCONY box 2420 y 328 is not claimed, so the code fallback
+draws the old plank with teeth on the canal house's door wall (x 2240 frames, both tiers). Claim it as a cloth
+canopy over the door or drop it. And the street lamp at x 1959 stands in the shed's gate opening (see the sweep
+review).
+
+Round 2: 52 of 52 files PASS (one small note on the closed hats), 2 placement FAILs.
