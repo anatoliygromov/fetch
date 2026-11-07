@@ -3,6 +3,11 @@
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
 
+## Branch `ui/07nov-newgame`: starting from scratch is easy (owner, 7 Nov)
+- **Main menu:** on a fresh save it stays PLAY, LEVELS, OPTIONS. Once a level is cleared it becomes CONTINUE (as PLAY: on from the furthest open level), NEW GAME (a fresh run from River Walk: 3 lives, score 0; open levels and bests stay), LEVELS, OPTIONS. The cursor keeps its row by name when the list changes.
+- **OPTIONS > ERASE SAVE (4th row, panel 22 px taller):** A asks ERASE SAVE? (LEVELS LOCK, BEST SCORES GO) with NO on the cursor; YES, ERASE wipes progress, best run, level bests, times, medals and the bonus best (`F.eraseSave`, through the existing `F.wipe`). Sound and HARD MODE stay. With nothing to erase the row is dimmed, A gives the dull thud and the strip shows only BACK.
+- **Checks:** flow test 135/135 (10 new: CONTINUE and NEW GAME rows, NEW GAME run, the question, B and NO keep the save, YES wipes every file, sound kept, the menu back to 3 rows). `--titleshots` adds menu_saved_1..4, options_erase_on, options_erase_empty, options_erase_ask_1/2. PEPPER UNCHANGED, Tiled passes, layout_qa_menus same as main (its strip check fails there too).
+
 ## v0.7 (7 Nov 2026): River Walk, City Park and Downtown at finished quality
 Main moves from v0.6 (23 Oct) to `prod/integrate-f`: everything integrated since (prod/integrate-c and -d, the 5 Nov and 6 Nov art families, the hint bubbles, the speech bubbles and bikes in front, the night of 6-7 Nov tracks). Every check green, every screen of the three levels passed an independent review. Owner's yes, 6 Nov 20:10, on that condition. The sections below are the detail.
 
