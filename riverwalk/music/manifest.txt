@@ -2,6 +2,7 @@
 title 801818 22050 loop
 citypark 1764000 22050 loop
 riverwalk 1417500 22050 loop
+downtown 1134000 22050 loop
 jingle_clear 79380 22050 once
 jingle_over 63945 22050 once
 jingle_fetch 34398 22050 once

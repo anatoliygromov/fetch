@@ -92,8 +92,8 @@ def parse_part(text, start, nbars, what):
         raise ValueError(f"{what}: {len(bars)} bars, the section has {nbars}")
     for bi, bar in enumerate(bars):
         row = 0
-        for tok in bar.split():
-            m = TOKEN.match(tok.replace(" ", ""))
+        for tok in re.findall(r"\[[^\]]*\]\S*|\S+", bar):     # a chord [C4 E4 G4]:8 is one token
+            m = TOKEN.match(tok)
             if not m:
                 raise ValueError(f"{what} bar {bi + 1}: bad token {tok}")
             n, ln, fl = m[1], int(m[2]), set(m[3])
@@ -689,6 +689,47 @@ RIVERWALK = {
          "drum_vol": 0.9},
     ]}
 
+# Downtown: Bb major, 140 bpm with a little swing, 30 bars (51 s). The town: busy and bouncy. Intro: "honk honk"
+# chord stabs on pulse 2 (the cargo bike), a pickup into A. A: the title's hook shape (3 5 1 7) as short street
+# notes over a driving bass, a tight echo. B (the plaza and its fountain) in Eb: a singing tune on the round 50 %
+# pulse, pulse 2 in thirds and sixths below, a walking bass, half-time drums; D7 - Gm and C7 - F7 lead it back.
+# A' over sparkling arpeggios, and a turnaround (Eb - F7) that climbs into the honks.
+_DT_A = ("D5:2s F5:2s Bb5:4 A5:2s Bb5:2s F5:4 | G5:2s F5:2s Eb5:2s F5:2s G5:4 D5:4 |"
+         "Eb5:2s G5:2s Bb5:4 A5:2s F5:2s C5:4 | D5:4 Bb4:2s C5:2s D5:8v |"
+         "D5:2s F5:2s Bb5:4 A5:2s Bb5:2s F5:4 | Bb5:2s A5:2s G5:2s D5:2s G5:4 F5:2s G5:2s |"
+         "Eb5:2s G5:2s C6:4 A5:2s C6:2s Eb6:4 | D6:2 C6:2 Bb5:12v")
+DOWNTOWN = {
+    "name": "downtown", "bpm": 140, "swing": 0.55, "key": "Bb major (B section Eb)",
+    "mood": "busy, bouncy, the town and its plaza",
+    "sections": [
+        {"name": "Intro", "chords": "Bb | Gm | Eb | F7",
+         "lead": "r:16 | r:16 | r:16 | r:10 F4:2s A4:2s C5:2s",
+         "p2": "[D5 F5 Bb5]:2> r:2 [D5 F5 Bb5]:2> r:10 | [D5 G5 Bb5]:2> r:2 [D5 G5 Bb5]:2> r:10 |"
+               "[Eb5 G5 Bb5]:2> r:2 [Eb5 G5 Bb5]:2> r:10 | [Eb5 F5 A5]:2> r:2 [Eb5 F5 A5]:2> r:10",
+         "p2_vol": 0.7, "p2_duty": 0.25, "bass": "drive",
+         "drums": "k...s...k...s... | k...s...k...s... | k...s...k...s... | k...s...s.s.ssss",
+         "hats": "c...h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h........."},
+        {"name": "A", "chords": "Bb | Gm | Eb F | Bb | Bb | Gm | Cm7 F7 | Bb",
+         "lead": _DT_A, "p2": ("echo", 2, 0.35), "bass": "drive",
+         "drums": "k...s...k.k.s..k", "hats": "h.hhh.hhh.hhh.hh"},
+        {"name": "B (plaza)", "chords": "Eb | Cm7 | F7 | Bb | Eb | D7 | Gm C7 | F7",
+         "lead": "G5:6 F5:2 Eb5:4 Bb4:4 | C5:4 Eb5:4 G5:6 F5:2 | Eb5:6 D5:2 C5:4 A4:4 | Bb4:4 D5:4 F5:8v |"
+                 "G5:6 Bb5:2 G5:4 Eb5:4 | F#5:6 A5:2 F#5:4 D5:4 | G5:4 D5:4 E5:4 G5:4 | A5:4 F5:2 Eb5:2 C5:8v",
+         "lead_duty": 0.5,
+         "p2": "Eb5:6 D5:2 Bb4:4 G4:4 | G4:4 C5:4 Eb5:6 D5:2 | C5:6 Bb4:2 A4:4 F4:4 | F4:4 Bb4:4 D5:8 |"
+               "Eb5:6 G5:2 Eb5:4 Bb4:4 | D5:6 F#5:2 D5:4 A4:4 | D5:4 Bb4:4 C5:4 E5:4 | F5:4 C5:4 A4:8",
+         "p2_vol": 0.55, "p2_duty": 0.25, "bass": "walk",
+         "drums": "k.......s.......", "hats": "h.h.h.h.h.h.h.h.", "drum_vol": 0.85},
+        {"name": "A'", "chords": "Bb | Gm7 | Eb6 F | Bb | Bb | Gm7 | Cm7 F7 | Bb",
+         "lead": _DT_A, "p2": ("arp", "x.x.x.x.x.x.x.x.", 0.38, 60),
+         "drums": "k...s...k.k.s..k", "hats": "c.hhh.hhh.hhh.hh | h.hhh.hhh.hhh.hh | h.hhh.hhh.hhh.hh |"
+         "h.hhh.hhh.hhh.hh | h.hhh.hhh.hhh.hh | h.hhh.hhh.hhh.hh | h.hhh.hhh.hhh.hh | h.hhh.hhh.hhh.hh"},
+        {"name": "Turnaround", "chords": "Eb6 | F7",
+         "lead": "Bb5:2s G5:2s Eb5:2s G5:2s Bb5:4 C6:4 | A5:2s F5:2s C5:2s F5:2s A5:2s C6:2s Eb6:4",
+         "p2": ("echo", 2, 0.35), "bass": "walk",
+         "drums": "k...s...k.k.s... | k.s.s.s.s.s.ssss", "hats": "h.h.h.h.h.h.h.h. | h.h.h.h........."},
+    ]}
+
 # Level clear: D major, 150 bpm, 2 bars and a ring (3.6 s): a rising arpeggio to the top D over I - IV - V, and the
 # top D held over I with vibrato.
 CLEAR = {
@@ -717,8 +758,8 @@ FETCH = {
                   "bass": "D2:2 r:2 A2:2 D3:6 r:4",
                   "drums": "k...s.k.........", "hats": "c..............."}]}
 
-SONGS = [TITLE, CITYPARK, RIVERWALK, CLEAR, OVER, FETCH]
-LOOPS = {"title", "citypark", "riverwalk"}
+SONGS = [TITLE, CITYPARK, RIVERWALK, DOWNTOWN, CLEAR, OVER, FETCH]
+LOOPS = {"title", "citypark", "riverwalk", "downtown"}
 
 
 # ---------------------------------------------------------------------------------------------------------------
