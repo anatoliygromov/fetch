@@ -85,3 +85,30 @@ Per piece after round 2: road_car1-5 PASS; cyclist_adult1/2 PASS; cargo_bike PAS
 Screens after round 2: River Walk 1600 PASS (bone clear of the wheelhouse). City Park tall 640 FAIL (the bone is now in the duck boat's beak), 1280 PASS with a 1 px touch at the lamp base (2 px right), 2560 FAIL (the lower bone still on the blue bar). Downtown tall 1280 and 1600 FAIL as in round 1 (not moved).
 
 Remaining fixes, all level data: City Park id 128 to y 322 or x 1294; id 172 (the lower bone at 2560) 6 px more up; id 138 2 px more right; the stern-seat bone at 640 6 px up; Downtown 1280 statue bones 8 px out each side and the gold bone 4 px up; Downtown 1600 fountain bones 6 px up. Art: nothing remains.
+
+# Round 3 (reviewer, 7 Nov)
+
+Bones only, on origin/day/07nov-integration at 4cf3975 (the merge of day/07nov-bonusdt), worktree review-integ3. City Park tall y 144 at x 640, 1280, 2560 and Downtown tall at y 240, 120, 0 around x 1280 and 1600 (five camera stops), each bone at 6x to 12x in colour and grey, the data's position boxed on the crop (bone drawn centred on x, top at y - 15, bobbing 1-2 px). Screen coordinates below are the bone's centre at the stated camera.
+
+| Bone | Where | Screen (cam) | Result |
+| --- | --- | --- | --- |
+| CP 128 (866, 308) | duck boat | (226, 153) at cam 640 | PASS: 14 px above the duck's head, over the far shrub row |
+| CP 129 (906, 340) | duck boat stern | (266, 185) at cam 640 | PASS, tight: its bottom row is 0-1 px off the blue seat cushion's top; the bob touches it. 3 px up (y 337) to be clean |
+| CP 138 (1318, 328) | lamp post base | (38, 173) at cam 1280 | PASS: 2 px clear of the base, 4 px clear of the bin |
+| CP 171 (2760, 303) | climbing frame | (200, 148) at cam 2560 | PASS: inside the blue frame's opening, 4 px off the bars above and below |
+| CP 172 (2752, 268) | trunk above the frame | (192, 113) at cam 2560 | PASS: on the trunk, clear |
+| DT 156 (1424, 396) | bush by the pedestal | (144, 145) at cam 1280 | PASS (unchanged): on the bush |
+| DT 157 (1441, 384) | statue, left | (161, 133) at cam 1280 | PASS, tight: 1 px of wall between its right knob and the coat's outline |
+| DT 158 (1487, 384) | statue, right | (207, 133) at cam 1280 | PASS, tight: 2 px from the coat's right edge, under the arm |
+| DT 159 (1464, 310) gold | above the hat | (184, 59) at cam 1280 | PASS: 12 px above the top hat, under the gallery |
+| DT 163 (1728, 408) | shop front left of the fountain | (128, 157) at cam 1600 | PASS |
+| DT 164 (1758, 400) and 165 (1772, 400) | left of the fountain's column | (158, 149) and (172, 149) at cam 1600 | FAIL: 14 px apart with a 15 px bone, they share a column (x 1765) and read as one long bone; 165's right knob is 2 px from the column. Move 164 to x 1752 and 165 to x 1770 (3 px between them, 3 px to the column) |
+| DT 166 (1826, 400) | right of the column | (226, 149) at cam 1600 | PASS: over the shop, 4 px from the column |
+| DT 167 (1856, 408) | by the crates | (256, 157) at cam 1600 | PASS, tight: 1 px from the crates' left edge |
+| DT 168 (1884, 388) | over the shop | (284, 137) at cam 1600 | PASS |
+
+The rebuilt fountain's spray is droplets, not jets, so nothing crosses a bone there. Tiers y 120 and y 0 show none of these rows.
+
+Remaining fix: Downtown 164 to x 1752 and 165 to x 1770. Optional: City Park 129 3 px up; Downtown 157 and 158 4 px further out; 167 2 px left.
+
+Note on method: my first Downtown render of this round ran from the wrong directory (main's old Downtown); it was redone from the worktree by absolute path before judging.
