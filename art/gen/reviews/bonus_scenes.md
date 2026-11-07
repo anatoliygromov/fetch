@@ -67,3 +67,19 @@ Rooftops = Downtown's round (FAIL with it), Söder = City Park's (PASS), Night =
 | 6 Night | River Walk fallback | PASS |
 
 Top fixes by impact: (1) Downtown's square floor under the back grade so its setts show; (2) door stamps on Downtown's far wall; (3) one approved prop behind the line in each scene (River Walk lamp, City Park bench, Downtown lamp); (4) jitter City Park's front tufts off the 8 px grid; (5) the stick's read on the orange path in grey (items track).
+
+# Round 2 (reviewer, 7 Nov)
+
+Branch day/07nov-bonusdt at 8741743 (on the integration branch: painted sky, rebuilt Downtown), worktree review-bonusdt. Downtown tall and Rooftops rounds re-run with the autopilot (729 frames each, two at a time, own scratchpad subfolder bonusdt); frames 120, 200, 360, 440 at 2x in colour and greyscale, the join at 6x, beside two sweep frames of the rebuilt level (x 320, 1600, y 240). Rooftops is frame-identical to Downtown (frame 1 diff 0 px).
+
+| Question | Result | Evidence |
+| --- | --- | --- |
+| Join solved | PASS | The rebuilt mid row's houses stand on the square's far kerb with their ground floors: doors reach a 1 px plinth row, bollards between the doors, the level's lamp post at the left on the kerb. No straight cut through a window row. The kerb band under the plinth is still a smooth pavement strip (the square floor's setts do not show), about 7 px; with the doors and bollards on it, it reads as a pavement, not a stripe. |
+| Houses read as houses | PASS | One storey under the gables: door, two windows, a stepped or curved gable, the sky and the cloud band over them. Pastel and faded as the mid row. |
+| Items in grey at 2x | PASS | Ball (frame 120) and frisbee (frames 360, 440) are dark on the pale walls; Pepper and Mia read on the setts. |
+| Cut or floating | PASS | The houses at both edges are cut by the frame as in any level; the gables are whole under the cloud band; nothing floats; the lamp post's foot is on the kerb line. |
+| Consistent with the rebuilt level | PASS | The same house family as the level's mid row, the same lamp, kerb, setts and granite wall; the round is the square the street opens on to, paler than the play line by the ladder. |
+
+Note, optional: the houses' gables are tall for one storey, a little toy-like beside Mia; it is the level's own piece at whole pixels, so leave it unless the owner says so.
+
+VERDICT (round 2): Downtown PASS, Rooftops PASS (same frames). With round 1: all six rounds PASS.
