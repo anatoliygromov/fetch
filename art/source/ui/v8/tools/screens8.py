@@ -412,17 +412,24 @@ PEPPER = {
 }
 
 def picture2(W, H, elems):
-    """elems: (kind, x, y, ...) drawn in order into W x H; a Pepper pose's x, y is its rim's top-left"""
+    """elems: (kind, x, y, ...) drawn in order into W x H; a Pepper pose's x, y is its outline's top-left.
+    (chars, 7 Nov) Pepper's poses come from hintdog_n07.py: built parts, one ink outline, no cream rim (the rim was
+    for the old dark bubble and read as dirt on the light one); the canvas grows to fit a pose"""
+    import hintdog_n07 as HD
+    for e in elems:
+        if e[0] in PEPPER:
+            d = HD.pose(e[0]); W = max(W, e[1] + d.W + 2); H = max(H, e[2] + d.H + 2)
     img = np.zeros((H, W, 4), np.uint8)
     for e in elems:
         k, x, y = e[0], e[1], e[2]
         if k in PEPPER:
-            rows = PEPPER[k]; h, w = len(rows), max(len(r) for r in rows)
+            d = HD.pose(k)
             m = np.zeros((H, W), bool); sub = np.zeros((H, W, 4), np.uint8)
-            for yy, r in enumerate(rows):
-                for xx, c in enumerate(r):
-                    if c in PEP: m[y + 1 + yy, x + 1 + xx] = True; sub[y + 1 + yy, x + 1 + xx] = (*PEP[c], 255)
-            put(img, outline_of(m, cross=True), PEP_RIM); img[m] = sub[m]
+            for yy in range(d.H):
+                for xx in range(d.W):
+                    c = d.c[yy, xx]
+                    if c != '.': m[y + 1 + yy, x + 1 + xx] = True; sub[y + 1 + yy, x + 1 + xx] = (*HD.COL[c], 255)
+            put(img, outline_of(m, cross=True), INK); img[m] = sub[m]
             continue
         if k == 'box': m = np.ones((e[4], e[3]), bool); col = GOLD['gold']
         elif k == 'girl': m = mask(GIRL); col = CREAM
@@ -490,7 +497,7 @@ def build(out):
     save('stail_d', sd, sh=False); save('stail_u', su, sh=False); save('stail_l', sl, sh=False); save('stail_r', sr, sh=False)
     save('ball', ball())
     rw, mw = ribbon(176, 19, arch=0); save('ribbon_wide', rw); meta['ribbon_wide_body'] = mw     # FETCH FRENZY! (review fix 5: 176, the words well clear of its ends)
-    for k, (w, h, el) in PICTURES.items(): save('pic_' + k, picture2(w, h, el))
+    for k, (w, h, el) in PICTURES.items(): save('pic_' + k, picture2(w, h, el), sh=False)   # (chars 7 Nov: no drop shadow in the bubble)
     for ch in 'ABXY': save('h_' + ch.lower(), hint_coin(ch))
     from menu8 import dpad
     save('g_right', dpad(lit=['right']))
