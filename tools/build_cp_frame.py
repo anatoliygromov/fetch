@@ -109,7 +109,7 @@ def build(variant='r2', roof=False):
     mx = ix(2748) - 1
     stamp(a, tower_post(4, FOOT - (ytop + OY)), mx, ytop)
     # the small panel: between the left post's and the middle post's ink, under the top deck's bottom ink
-    px0 = lx + 5; pw = mx - px0 - 1; ph = 13
+    px0 = lx + 5; pw = mx - px0 - 1; ph = (iy(304) - 1) - (iy(280) + 6) - 1   # its bottom ink on the low deck's top ink (row 40)
     p = panel(pw, ph, [1 + (pw - 8) // 2])
     stamp(a, p, px0, iy(280) + 6)
     a[iy(280) + 6:iy(280) + 6 + p.shape[0], px0:px0 + p.shape[1]][p[..., 3] == 0] = 0

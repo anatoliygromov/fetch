@@ -94,6 +94,11 @@ Round 2 checks: asset_qa park_frame PASS (9 colours, outline 100 %, lone 0.5 %),
 median 20, lone 0.1 %, dither 0.0); both --check OK; build_cp_built.py rebuilds its other pieces byte for byte;
 PEPPER UNCHANGED; citypark_tall --physics 97 of 97; check_flow 125 of 125.
 
+## Round 2b (review round 2: park_bush PASS; park_frame one fix)
+The red panel stopped 2 rows short of the low deck (image rows 38-39, x 18-35): a thin crack in game. It now runs down
+to the low deck, its bottom ink on the deck's top ink (row 40). `frames/r2b_frame_panel_meets_deck_x2560_3x.png`.
+Checks: --check OK, asset_qa PASS, citypark_tall --physics 97 of 97, PEPPER UNCHANGED.
+
 ## Open questions
 1. The frame is now a stepped climbing frame in the tower's build. A top deck 24 px over a low deck that overlaps it by 60 px will always look like two storeys; a roof over it would cross Pepper.
 2. The bush is a smooth dark mound of four clumps. On screen the front shader makes it very dark; if the owner wants it to catch more light, the lever is a lighter rim, within the front row's contrast 40.
