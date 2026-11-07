@@ -230,8 +230,9 @@ return function(mode, api)
             { "high, running: roof ledge -> roof ledge", x = 2024, y = 248, dir = "right", run = 2055, to = 264 },
             { "high, running: flower roof -> last ledge", x = 2300, y = 232, dir = "right", run = 2359, to = 248 },
             -- Downtown's old balcony route (the middle tier) under the new roofs: no bumped head
-            { "middle: arm -> first balcony (running)", x = 1500, y = 348, dir = "right", run = 1514, to = 344 },
-            { "middle: first balcony -> second (running)", x = 1580, y = 344, dir = "right", run = 1604, to = 336 },
+            -- (day/07nov-dt, option A) the first balcony is the guild hall's porch roof at 312 (a 2.1 m door under it)
+            { "middle: arm -> the guild porch (running, 36 up)", x = 1500, y = 348, dir = "right", run = 1514, to = 312 },
+            { "middle: the porch -> the canopy (running, 24 down)", x = 1580, y = 312, dir = "right", run = 1604, to = 336 },
             { "middle: second balcony -> the fountain's top tier (running)", x = 1680, y = 336, dir = "right", run = 1708, to = 344 },
             { "middle: tier -> last balcony (running)", x = 1790, y = 344, dir = "right", run = 1812, to = 344 },
           }

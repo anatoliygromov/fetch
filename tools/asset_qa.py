@@ -161,6 +161,14 @@ BUILDINGS = {"town_house1", "town_house2", "town_house3", "town_facades", "town_
 ORGANIC = {"tree", "tree_far", "rw_birch", "cp_willow", "cp_reeds", "tree_near", "park_tree1", "park_tree2", "park_oak", "park_willow", "park_willow_tall",
              "town_front_tall3", "town_front_tall4", "town_front_tall5", "town_front_tall6", "town_door"}
 BUILDINGS |= {f"town_front_tall{k}_{s}" for k in (1, 2, 3, 5, 6, 7) for s in "abcdef"}   # (night/06nov-dt)
+# day/07nov-dt (tools/build_dt_rooftops.py): the low row's fronts are buildings (stamped from the styled fronts); every
+# dtl_ file's slot is its own size (the build is the slot: roofs are the box + 2, fronts the building's width)
+import glob as _glob
+for _f in _glob.glob(os.path.join(ART, "scene", "dtl_*.png")):
+    _n = os.path.basename(_f)[:-4]
+    _im = Image.open(_f)
+    SLOTS.setdefault(_n, (_im.width, _im.height, 0, 0))
+    if _n.endswith("_front"): BUILDINGS.add(_n)
 ORGANIC = {"tree", "tree_far", "rw_birch", "tree_near", "park_tree1", "park_tree2", "park_oak", "park_willow", "park_willow_tall",
            "park_hedge", "park_bush", "park_leaves", "park_leaves_flat", "park_treeline", "skyline", "far_shore_bridge"}
 FROZEN = {"pepper"}                                               # Pepper's files are frozen: report only

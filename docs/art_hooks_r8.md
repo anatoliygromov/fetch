@@ -210,3 +210,21 @@ Built by `tools/build_dt_facades.py` (`--check`) after the producer's concept dt
 | `town_bridge_springer.png` | 14 x 20 | play, outlined: the FOOTBRIDGE's arch feet, on the two house corners, top at the bridge art's row 42; the right one mirrored (arthooks.lua townPiece) |
 | `town_basin_wall.png` | 10 x 56 | ground: under a fountain RIM on the water's side, from the rim's bottom (y 424) down; mirrored on the right (scene.lua RIM) |
 | `town_shelter_tall.png` | 140 x 115 | unchanged slot (decoration, centred on the SHELTER, bottom on y 414), redrawn in green cast iron |
+
+## Downtown (tall): the low row, option A (day/07nov-dt, 7 Nov, 0 credits)
+
+The owner's pick of 7 Nov (docs/review/07nov/dt/design/README.md): the street is lined with low true-scale buildings
+whose roofs are the high road; the tall houses stand on the mid row behind; sky above. `tools/build_dt_rooftops.py`
+(`--check`) writes the files and `riverwalk/dt_lowrow.lua`, the placement table `arthooks.lua` reads (`H.LOW_ROW`;
+with the table absent everything draws as before).
+
+| File | Layer | Placed | Built from |
+| --- | --- | --- | --- |
+| `dtl_<building>_front.png` (start, bakery, wing, arcade, guild, pav1, pav2, shed, kioskhouse, shelterhouse, hall, canalhouse, closed1-22) | back, faded 28 % | `H.drawLowRow`: the table's `fx, fy` (top-left, world); the bottom row on the back line 414 | the approved styled fronts' ground floors (rows 284-431, plaster swapped as `plasterImg`), `town_door` (the start house), `town_gateway` (the shed); the arcade, the guild's ashlar and the glass hall drawn by rule; the decorative roofs in the fronts' own ramps |
+| `dtl_<building>_roof.png` | play, outlined, unfaded | `H.lowRowPiece`: drawn when the building's trigger box is drawn, at `rx, ry`; the walk's ink row at the box's top - 1, the image the box + 1 px a side | tile courses, lead sheets, granite coping and parapet, the guild's crow steps, the chimney, the shed's dormer, the hall's flower boxes |
+| `dtl_<building>_canopy<k>.png` | play, outlined | the middle tier's BALCONY boxes: the guild porch (1552, 312), the pavilions' shop canopies (1656, 336), (1840, 344) | a granite slab on brackets; a wood fascia on three iron brackets |
+
+Map (`maps/downtown_tall.tmx`): BALCONY 1552 y 344 -> 312 (a porch over a 2.1 m door), DORMER 1920-1976 -> 1912-2000
+(the whole shed roof), FLOWER ROOF 2288-2376 -> 2216-2376 (the whole hall roof; the springy awning's bounce now ends on
+it). Every other box unchanged. Hidden by the table (claims): the HOUSE boxes, the plaza balconies' rails
+(`Sc.drawBalconyRails`), the tall fronts, the high lamps' wall brackets (a post on the roof instead).

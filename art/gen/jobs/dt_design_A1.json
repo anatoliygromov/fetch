@@ -1,0 +1,16 @@
+{
+ "name": "dt_design_A1",
+ "purpose": "concept",
+ "asset": "dt_design",
+ "family": "dt_redesign_07nov",
+ "level": "downtown",
+ "model": "nbpro_1k",
+ "variants": 2,
+ "base_frame": "art/gen/concepts/base07/A1_plaza_roofs_4x.png",
+ "slot": {
+  "file": "Downtown tall layout and facades (design)",
+  "where": "design option A, key screen A1"
+ },
+ "subject": "repaint this greybox frame as a finished game screen: Paint the roofs of a low old-town row seen straight from the front at the dog's height: left, a two-storey bakery with a steep red tile roof and a stepped gable, a wooden sign under its eave; right of it a lower wing with a flat lead roof and a knee-high stone parapet behind the dog, who stands on that lead flat; then an open cafe arcade of three round arches, its flat lead roof with a stone coping being the walkway, a bronze statue on a pedestal in front of the middle arch with a cat on its arm. Behind everything, a row of tall old-town houses one value step lighter and half the size, with their own gables and chimneys against a blue sky with two flat clouds. The eye should read: dog on the roofs, the way goes right along the rooftops, the cat is right under the arcade's edge.",
+ "extra": "Stockholm old town (Gamla stan: ochre, oxblood, cream plaster, red clay tile and grey lead roofs, granite), big readable masses, one strong silhouette line, decoration quieter than the route, late morning light from the upper left, full local colour. No people other than the dog. The grey and flat-colour shapes of the frame are binding geometry: keep what is walkable exactly where it is and at that height."
+}

@@ -1,0 +1,16 @@
+{
+ "name": "dt_design_A3",
+ "purpose": "concept",
+ "asset": "dt_design",
+ "family": "dt_redesign_07nov",
+ "level": "downtown",
+ "model": "nbpro_1k",
+ "variants": 1,
+ "base_frame": "art/gen/concepts/base07/A3_tram_flower_roofs_4x.png",
+ "slot": {
+  "file": "Downtown tall layout and facades (design)",
+  "where": "design option A, key screen A3"
+ },
+ "subject": "repaint this greybox frame as a finished game screen: A tram street's roofs: a low tram shed with a wide gate and a flat roof with a dormer, a kiosk house and a shelter house with flat lead roofs and parapets (the dog stands on the shelter house's roof), then a glass flower hall, taller, with a striped awning over its door that is springy and a roof garden with flower boxes on its top, then a small canal house and the start of an iron footbridge. Tall old-town houses one value step lighter behind, sky above. The eye should read: a row of rooftops stepping up and down, the awning is the one soft thing to bounce on, the garden on the roof is the high point.",
+ "extra": "Stockholm old town (Gamla stan: ochre, oxblood, cream plaster, red clay tile and grey lead roofs, granite), big readable masses, one strong silhouette line, decoration quieter than the route, late morning light from the upper left, full local colour. No people other than the dog. The grey and flat-colour shapes of the frame are binding geometry: keep what is walkable exactly where it is and at that height."
+}

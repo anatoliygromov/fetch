@@ -1,0 +1,23 @@
+{
+ "name": "dt_design_A2",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/concepts/base07/A2_guild_fountain_roofs_4x.png"
+ ],
+ "prompt_file": "art/gen/prompts/dt_design_A2.txt",
+ "tool": "artlist",
+ "family": "dt_redesign_07nov",
+ "asset": "dt_design",
+ "slot": {
+  "file": "Downtown tall layout and facades (design)",
+  "where": "design option A, key screen A2"
+ },
+ "credits": 160,
+ "ledger_job": "dt_design_A2@1107-105633"
+}

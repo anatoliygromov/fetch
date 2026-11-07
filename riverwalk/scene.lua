@@ -2168,6 +2168,7 @@ end
 -- the balconies' railings with art, behind everything on her line (stage.lua, the back pass); the code fallback draws
 -- its railing with the slab (drawBalcony)
 function Sc.drawBalconyRails(def, camx)
+  if def.foot and (package.loaded.arthooks or require("arthooks")).LOW_ROW then return end   -- (day/07nov-dt: canopies, no balconies)
   local ox = math.floor(camx)
   for _, p in ipairs(def.props) do
     if p.name == "BALCONY" and p.layer == "play" and p.x1 - ox > -10 and p.x0 - ox < 330 then

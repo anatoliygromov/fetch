@@ -1,0 +1,18 @@
+{
+ "name": "dt_lowrow",
+ "family": "dt_lowrow",
+ "tier": "C",
+ "steps": {
+  "spec": {
+   "time": "2026-11-07 11:37"
+  },
+  "built": {
+   "build": "tools/build_dt_rooftops.py",
+   "time": "2026-11-07 11:37"
+  },
+  "ingame": {
+   "frame": "docs/review/07nov/dt/after/A2_sweep_downtown_y090_x1580.png",
+   "time": "2026-11-07 11:37"
+  }
+ }
+}

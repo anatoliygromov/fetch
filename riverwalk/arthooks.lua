@@ -420,10 +420,43 @@ function H.consoles(p, x)
   lg.setColor(1, 1, 1, 1)
   for _, cx in ipairs({ x + H.CONSOLE_IN, x + (p.x1 - p.x0) - H.CONSOLE_IN - im:getWidth() }) do lg.draw(im, math.floor(cx), p.y0 + 4) end
 end
+-- (day/07nov-dt, option A: the owner's pick, 7 Nov) the LOW ROW: the street is lined with low true-scale buildings
+-- whose roofs are the high road (tools/build_dt_rooftops.py writes riverwalk/dt_lowrow.lua and the dtl_*.png files).
+-- Each building claims the map boxes it draws or hides: its roof (a play piece, outlined, drawn unfaded when the
+-- building's trigger box is drawn), its canopies (the middle tier's boxes), the old balcony / house / front boxes
+-- (hidden). The fronts are decoration drawn in H.drawTownBack (faded as the fronts were). With the file absent
+-- nothing changes.
+local LOW = love.filesystem.getInfo("dt_lowrow.lua") and require("dt_lowrow") or nil
+H.LOW_ROW = LOW ~= nil
+local LOWC, LOWCAN = {}, {}
+if LOW then
+  for _, b in ipairs(LOW) do
+    for _, c in ipairs(b.claims) do LOWC[c[1] .. "," .. c[2]] = b end
+    for _, c in ipairs(b.canopies) do LOWCAN[c[1] .. "," .. c[2]] = c end
+    if b.trigger then b.trig = b.trigger[1] .. "," .. b.trigger[2] end
+  end
+end
+function H.lowRowPiece(p, camx)
+  local key = p.x0 .. "," .. p.y0
+  local b = LOWC[key]
+  if not b then return false end
+  if b.roof and b.trig == key then
+    local im = H.img("scene/" .. b.roof)
+    if im then lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(b.rx - camx), b.ry) end
+  end
+  local c = LOWCAN[key]
+  if c then
+    local im = H.img("scene/" .. c[3])
+    if im then lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(c[4] - camx), c[5]) end
+  end
+  return true
+end
+
 -- a high road piece or a back piece of the tall Downtown (from Sc.drawPropArt): true when it is drawn (or drawn
 -- elsewhere: the fronts and the spire, H.drawTownBack)
 function H.townPiece(p, camx, def)
   if not tallTown(def) then return false end
+  if H.LOW_ROW and p.layer ~= "front" and H.lowRowPiece(p, camx) then return true end
   if p.closed and not H.CLOSED_STREET then return true end           -- (fix round 2: an open square, nothing drawn)
   if p.layer == "back" and (isFront(p) or p.name == "RIDDARHOLMEN") then return true end   -- (H.drawTownBack)
   -- layer plan decision 4a (owner, 26 Oct; art/dt-sample-05nov): the cargo bike's hiding places stand at true scale
@@ -671,6 +704,14 @@ local function decoImg(n)
   end
   return decoCache[key]
 end
+function H.drawLowRow(def, cam)
+  for _, b in ipairs(LOW) do
+    if b.front and b.x1 - cam > -20 and b.x0 - cam < 340 then
+      local im = decoImg(b.front)
+      if im then lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(b.fx - cam), b.fy) end
+    end
+  end
+end
 function H.drawTownBack(s, cam)
   local def = s.def
   if not tallTown(def) then return end
@@ -678,6 +719,12 @@ function H.drawTownBack(s, cam)
     for _, p in ipairs(def.props) do
       if p.name == "RIDDARHOLMEN" and p.x1 - cam > -40 and p.x0 - cam < 360 then spireCode(math.floor((p.x0 + p.x1) / 2 - cam), p.y0, p.y1) end
     end
+  end
+  if H.LOW_ROW then                                                  -- (day/07nov-dt) the low row's fronts
+    H.drawLowRow(def, cam)
+    H.drawTownGateways(def, cam, true)                               -- only the free courtyard gate (screen 10)
+    lg.setColor(1, 1, 1, 1)
+    return
   end
   if frontImg(1, "yellow") then                                      -- the fronts' art (all three) is there
     local nb = 0
@@ -783,7 +830,7 @@ function H.freeGate(p)
   if im and im:getHeight() > 100 and H.img("scene/town_gatestep" .. w) then return im end
   return nil
 end
-function H.drawTownGateways(def, cam)
+function H.drawTownGateways(def, cam, freeOnly)
   if not (tallTown(def) and H.FIRST_FLOOR) then return end
   local im = decoImg("town_gateway")
   for _, p in ipairs(def.props) do
@@ -793,7 +840,7 @@ function H.drawTownGateways(def, cam)
       if free then
         local x = math.floor((p.x0 + p.x1) / 2 - free:getWidth() / 2 - cam)
         if x < 330 and x + free:getWidth() > -10 then lg.setColor(1, 1, 1, 1); lg.draw(free, x, def.foot - H.BACK_LINE - free:getHeight()) end
-      elseif cx and im then
+      elseif cx and im and not freeOnly then                        -- (the low row bakes the gateway into its shed)
         local x = math.floor(cx - im:getWidth() / 2 - cam)
         if x < 330 and x + im:getWidth() > -10 then lg.setColor(1, 1, 1, 1); lg.draw(im, x, def.foot - H.BACK_LINE - im:getHeight()) end
       end
@@ -1163,6 +1210,7 @@ function H.lanternX(def, x)
   return c[x]
 end
 function H.wallLantern(im, lx, ly, def, cam)
+  if H.LOW_ROW then return nil end                                   -- (day/07nov-dt) a post on the roof terrace
   local br = H.img("scene/town_lantern_bracket", true)              -- (faded as the lamp: back decoration)
   if not br then return nil end
   if def then lx = H.lanternX(def, lx + cam) - cam end

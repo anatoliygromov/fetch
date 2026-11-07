@@ -172,6 +172,12 @@ add([f"town_front_tall{k}_{s}" for k in (1, 2, 3, 5, 6, 7) for s in "abcdef"] + 
 add(["town_bridge_springer"], "dt", "play", group="Downtown")
 add([f"town_crate_front{w}_{f}" for w in (28, 32, 36) for f in ("pears", "bread", "cloth")], "dt", "play", group="Downtown")   # (final review: crate fills)
 add(["town_basin"], "dt", "ground", group="Downtown")
+# day/07nov-dt (tools/build_dt_rooftops.py, option A): the low row's fronts faded as the fronts were; its roofs and the
+# shop canopies on Pepper's line (play, outlined)
+import glob as _glob
+_dtl = sorted(os.path.basename(f)[:-4] for f in _glob.glob(ART + "scene/dtl_*.png"))
+add([n for n in _dtl if n.endswith("_front")], "dt", "back", True, group="Downtown")
+add([n for n in _dtl if not n.endswith("_front")], "dt", "play", group="Downtown")
 # art/dt-audit-06nov (tools/build_dt_audit.py): the drain in the quay wall (ground), the footbridge's piers (back,
 # unfaded: drawn with the back props), the wall lantern's bracket (faded as the lamp), the parasols' boat (play, ink)
 add(["town_quaydrain"], "dt", "ground", group="Downtown")

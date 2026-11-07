@@ -1,0 +1,15 @@
+{
+ "name": "dt_lowrow",
+ "level": "downtown_tall",
+ "layer": "play",
+ "kind": "building",
+ "tier": "C",
+ "family": "dt_lowrow",
+ "slot": {"file": "riverwalk/art/scene/dtl_guild_roof.png", "where": "arthooks.lua H.lowRowPiece: the roof's top-left at (rx, ry) from riverwalk/dt_lowrow.lua; the walk's ink row at the box top - 1"},
+ "target_px": [130, 91],
+ "subject": "Downtown (tall), option A (owner, 7 Nov): the low row. Low true-scale buildings along the street whose roofs are the high road: the bakery, its wing, the cafe arcade, the guild hall with its stepped gable and chimney, two market pavilions with shop canopies, the tram shed, the kiosk and shelter houses, the glass flower hall with its roof garden, the canal house; one-storey houses with decorative roofs on screens 1-3 and 9-11, the start house two storeys. Built by tools/build_dt_rooftops.py (--check) from the approved styled fronts' ground floors and stamped roof parts; no render.",
+ "model": "none",
+ "variants": 0,
+ "credits": 0,
+ "notes": "design targets art/gen/concepts/dt_design_A1_a.png .. A4_a.png (never cut); design docs/review/07nov/dt/design/README.md"
+}
