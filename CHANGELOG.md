@@ -3,6 +3,10 @@
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
 
+## Branch `day/07nov-rwarch`: River Walk bridge underpass arch (7 Nov, 0 credits)
+- **The bridge's underpass rebuilt (owner 7 Nov board: "rw_bridge_arch_06n: redraw"), 0 credits.** `tools/build_rw_arch.py` (`--check`) builds `riverwalk/art/scene/rw_arch.png` (130 x 24, 13 colours, the pier art's own stone) under the approved pier's plinth (x 1939-2068, y 192-215; the pier's pixels are not touched): 18 px ashlar jambs in the pier's 10 px courses on a base course, coming down to Pepper's line; a segmental arch, span 94, rise 16 (was 6), its crown at y 192 so the opening is as tall as the passage, a ring of voussoirs with radial joints running up under the plinth and a keystone hanging at the crown; the vault and side walls in one-point perspective in darker shades of the same stone; a lit far opening (daylight, the far quay). scene.lua `archFront` draws it after the ground in the pier's back look (the 6 Nov per-pixel `archBack` behind the paving is gone). Collision, floors and the ground track's slanted shadow unchanged; physics identical to the base branch. asset_qa WARN (ladder contrast 134, back row 120). Frames, card and README: `docs/review/07nov/rwarch/`.
+
+
 ## Branch `day/07nov-ground`: River Walk and City Park ground, the owner's reverts, ground joins, the kennel (7 Nov, 0 credits)
 - **Put back what the owner liked better (board, 7 Nov), 0 credits.** Each one compared side by side with the rejected 6 Nov version in `docs/review/07nov/ground/reverts/`:
   - **Road** ("previous was better, more textured"): `tools/make_road.py` as it was before 8f91328, so road.png is the textured road again pixel for pixel (grain, worn tyre tracks, a gutter row, cracks, two repair patches, the worn dashed line). The 6 Nov flat road and the night's darker step are gone; manhole and drain unchanged.
