@@ -53,7 +53,8 @@ Look.scripts = {
               layers = { city = L(0, 0, 1.0, "000000", 0), shore = L(0.5, 1.5, 1.05, "a6c4e2", 0.28, 0.55),
                          mid = L(0.8, 1.3, 1.2, "e6e2d6", 0.15, 0.5) } },
     fg = { dark = hex("161c2c"), mid = hex("1f2b42"), rim = hex("4c5d7c"), warm = hex("9a8174"), warmK = 0.05 },
-    kinds = { verge = 0.78, bollards = 0.22 },                     -- (day/07nov-ground, owner 7 Nov on the 6 Nov hedges: "Im not
+    kinds = {},                                                    -- (owner 7 Nov 15:38: the dark grass band "looks terrible": off; the road
+                                                                   -- is the nearest layer) (was verge 0.78, bollards 0.22: day/07nov-ground, owner 7 Nov on the 6 Nov hedges: "Im not
                                                                    -- sure what that is": the previous grass verges and bollards again)
     fade = { back = 0.28 },                                        -- (as before: decoration, railing, kiosks)
   },
