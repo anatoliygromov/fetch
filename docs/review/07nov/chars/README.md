@@ -51,3 +51,6 @@ PEPPER UNCHANGED; check_flow 125/125; check_tiled PASS; check_backdrop OK; --phy
 6. **road_car5** rebuilt on `tools/build_cars_n07.py` (silver ramp, the family glass, driver, handles, wheel, rails), 252 x 90 (SLOTS updated); `tools/fix_car5_n07.py` removed (its output is superseded). `road_car5_before_after_5x.png`, `road_car5_ingame_1x.png`. PASS.
 
 Checks round 2: PEPPER UNCHANGED, check_flow 125/125, Tiled PASS, backdrop OK, physics River Walk 55/55, City Park tall 97/97, Downtown tall 102/102, River Walk --test shots taken, curve T1-T4 PASS. Cards for the four changed pieces in `round2/cards/`.
+
+## Round 3 (re-review fa43032): City Park tall bones only — `round3/`
+maps/citypark_tall.tmx, re-exported: id 128 (the duck's head) y 336 to 308: above the head with a 4 px gap (y 322 put it on the eye); id 129 (stern seat, over the blue cushion) y 346 to 340; id 138 x 1316 to 1318, clear of the lamp base; id 172 y 274 to 268, on the trunk above the top bar; id 171 y 298 to 303: it was the one across the frame's top bar, now inside the frame, clear of it. `bones_8x.png`: each bone at 8x in game, colour and grey (128, 129, 138, 172, 171 top to bottom); the three screens at 1x. Downtown bones stay with the DT track. Checks: Tiled PASS, City Park tall physics 97/97, PEPPER UNCHANGED.
