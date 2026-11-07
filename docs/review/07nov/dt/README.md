@@ -131,3 +131,20 @@ Checks: PEPPER UNCHANGED; physics 102/102; qa 0 problems; auto 57.1 s; flow 125/
 curve T1-T4 PASS, Downtown (tall) kids 11.9, parents 24.7, lost 2.5 %; build --check PASS (53 files); asset_qa:
 every play piece, the basin and the mid row PASS; fronts: 2 colour flags (bakery 22, closed14 21: two approved bays
 plus the tile pair) and 1 WARN (closed2). No credits.
+
+# Round 4 (art direction: one calm back layer)
+
+Frames in `round4/`: `beside_concept/` (round 3 | concept | round 4 at 3x), `after/`, `sweep/` (every screen at
+every tier, colour and greyscale), `routes_round4.png`.
+
+| Item | Done |
+| --- | --- |
+| 1 One back layer | In low-row mode the far roofs and spires strip (town_roofs) is not drawn; in its place `town_farband.png` (480 x 20, one flat tone, a few big gable silhouettes, no windows; scroll 0.25, the shore fade) sits just over the mid row's gables at the high-road tier (scene.lua `strip(T.farband, camx, 0.25, 24)`, under the mid row at the street tier). The far city skyline (River Walk's approved skyline, scroll 0.08) stays behind it at the top tier. |
+| 2 Few, big back houses | `town_facades.png` rebuilt (960 x 250, 14 colours, asset_qa PASS at mid): ten houses of 80 to 112 px (3 to 4 per screen), alternating crow-step gables, curved Dutch gables and hips, 16 x 22 windows in an even grid (2 or 3 per storey) with calm wall between, three storeys of 64 px, the same foot (world 430), tints and values as round 3. |
+| 3 One spire | Riddarholmen's spire (the far layer, drifting 0.03) is the only spire now; town_roofs' spires are gone with it. |
+| Camera | `L.vfloor = 152` (vcam.lua `Vc.floor(s)`: a level's own floor line, else `Vc.FLOOR` 168): her floor 16 px higher on screen, so 16 px more of the low row's fronts shows under the roofs at the high-road tier; the sky over the mid row's gables stays 60 to 90 px. One value; the camera test row uses `Vc.floor(s)`; physics 102/102, curve T1-T4 PASS, City Park tall 97/97 (its floor unchanged). |
+| Fountain basin | Its face below the street was in the old graded violet and its water band was 11 px: now a 3 px band over a 12 px granite wall between the rim blocks, and the face (`dtl_fountain_face.png`, ground) is drawn in the ungraded quay pass (`H.drawLowRaw`), the same greys as the wall beside it. |
+
+Checks: PEPPER UNCHANGED; physics 102/102; qa 14878 runs 0 problems; auto 57.1 s; flow 125/125; tiled PASS;
+backdrop OK; curve 10 seeds T1-T4 PASS (Downtown tall kids 11.9, parents 24.7, lost 2.5 %); build --check PASS
+(55 files); asset_qa PASS on the mid row, the far band, the basin's band and face. No credits.

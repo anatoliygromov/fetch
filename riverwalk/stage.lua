@@ -612,6 +612,7 @@ function St:draw(debug)
   if wallOff and lk then                                           -- the kerb's face and the quay wall as the file has
     Look.off(); lg.setColor(1, 1, 1, 1)                            -- them: the ground look turns their warm granite
     self.groundRaw:drawRows(cam, camY, self.def.foot + 18)         -- greys violet (town_ground.png's row 30 down)
+    AH.drawLowRaw(self.def, cam)                                     -- (the fountain basin's face, in the same greys)
   end
   if style then AH.drawQuayDrains(self, cam) end                   -- (art/dt-audit-06nov) the quay wall's drain arches
   if wallOff and lk then use("ground") end

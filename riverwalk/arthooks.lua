@@ -722,6 +722,11 @@ function H.drawLowFountainJets(f, camx, t)
   end
   lg.setColor(1, 1, 1, 1)
 end
+-- (round 4) drawn with the ungraded quay wall (stage.lua, Look.off()): the fountain basin's outer face below the street
+function H.drawLowRaw(def, cam)
+  local im = H.img("scene/dtl_fountain_face")
+  if im and 1848 - cam > 0 and 1736 - cam < 320 then lg.setColor(1, 1, 1, 1); lg.draw(im, 1736 - math.floor(cam), def.foot) end
+end
 function H.drawLowRow(def, cam)
   for _, b in ipairs(LOW) do
     if b.front and b.x1 - cam > -20 and b.x0 - cam < 340 then

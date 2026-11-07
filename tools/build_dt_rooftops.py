@@ -666,20 +666,24 @@ def main(check=False):
     # (decoration, drawn with the FOUNTAIN box), the two rim blocks (RIM 1720-1736 and 1848-1864, y 408, play), the
     # plinth (FOUNTAIN 1776-1808 y 400, play), the column 16 px with the bowl (TIER 1768-1816 y 344, play) and the ball
     # finial at 296; the jets are 2 px arcs drawn in code (arthooks.lua H.drawLowFountain) ------------------------------
-    c = Canvas(112, 72)                                                 # the basin front: 1736-1848, y 408-480: the water
-    c.rect(0, 0, 111, 1, GRAN[1]); c.hline(0, 111, 0, GRAN[0])         # band behind the kerb, then the basin's outer
-    c.rect(0, 2, 111, 12, (96, 150, 190))                               # face below the street in the quay wall's blocks
-    c.hline(0, 111, 2, (160, 200, 224))                                 # (the water box's pit is a sunken basin, not a pond)
-    for x in range(6, 106, 23):
-        c.hline(x, x + 4, 7, (160, 200, 224))
-    c.rect(0, 13, 111, 15, GRAN[1]); c.hline(0, 111, 13, GRAN[0]); c.hline(0, 111, 15, GRAN[2])   # the 3 px kerb
-    Q = [(106, 91, 103), (89, 75, 98), (83, 68, 95), (70, 58, 92)]
-    c.rect(0, 16, 111, 71, Q[2])
-    for y in range(16, 72, 8):
-        c.hline(0, 111, y, Q[0]); c.hline(0, 111, y + 7, Q[3])
-        for x in range((12 if ((y - 16) // 8) % 2 else 0), 112, 24):
-            c.vline(x, y + 1, y + 6, Q[3])
-    save("dtl_fountain_basin", c)
+    c = Canvas(112, 72)                                                 # the basin front: 1736-1848, y 408-480: the far
+    c.rect(0, 0, 111, 0, GRAN[0])                                       # coping, a 3 px water band, the near granite
+    c.rect(0, 1, 111, 3, (96, 150, 190)); c.hline(0, 111, 1, (160, 200, 224))   # wall (12 px, lower than the rim blocks),
+    for x in range(6, 106, 23):                                         # then the basin's outer face below the street
+        c.hline(x, x + 4, 2, (160, 200, 224))                           # in town_ground's own quay greys
+    ashlar(c, 0, 111, 4, 15, GRAN, course=6, bond=16)
+    coping2(c, 0, 111, 4, GRAN)
+    save("dtl_fountain_basin", Canvas.__new__(Canvas)) if False else None
+    top16 = Canvas(112, 16); top16.a[:] = c.a[:16]
+    save("dtl_fountain_basin", top16)
+    Q = [(94, 87, 81), (78, 72, 69), (72, 66, 64), (47, 43, 47)]        # the face below the street: drawn with the quay
+    f = Canvas(112, 56)                                                 # wall in the ungraded pass (arthooks H.drawLowRaw)
+    f.rect(0, 0, 111, 55, Q[2])
+    for y in range(0, 56, 8):
+        f.hline(0, 111, y, Q[0]); f.hline(0, 111, y + 7, Q[3])
+        for x in range((12 if (y // 8) % 2 else 0), 112, 24):
+            f.vline(x, y + 1, y + 6, Q[3])
+    save("dtl_fountain_face", f)
     c = Canvas(18, 18)                                                  # a rim block (16 x 16 + ink)
     ashlar(c, 1, 16, 1, 16, GRAN, course=5, bond=8)
     coping2(c, 1, 16, 1, GRAN)
@@ -721,75 +725,86 @@ def main(check=False):
     LUA.append(dict(name="houses", x0=0, x1=0, front=None, fx=0, fy=0, roof=None, rx=0, ry=0, trigger=None,
                     claims=[(1536, 296), (1644, 288), (1832, 296), (2404, 296), (1700, 288), (1912, 270), (2000, 256), (2088, 272), (2180, 240), (2296, 238), (2384, 256)], canopies=[]))
 
-    # ---- the mid row, rebuilt at half size (review fix 2): town_facades.png, scroll 0.5, its foot at screen 148 on
-    # the street tier (world 388), moving with the world (L.vmid 1.0). Four storeys of 70 px (3 m at 23 px/m) so the
-    # storey that shows over the low row's roofs (its windows at 200-220) is 12 px over the highest eave and 50 over
-    # the others; one window per 24 px of front (14 x 22), frames in the plaster's light shade, glass about 140 on
-    # screen, pink-grey tile hips or lead flats 25 luma over the low row's roofs, a chimney here and there -----------
-    mid_houses = [(0, 72, "hip"), (72, 148, "step"), (148, 220, "flat"), (220, 304, "hip"), (304, 376, "step"), (376, 472, "hip"),
-                  (472, 544, "flat"), (544, 628, "hip"), (628, 700, "step"), (700, 796, "hip"), (796, 868, "flat"), (868, 960, "hip")]
-    MW, MH = 960, 244
+    # ---- the mid row (round 4, the art director): FEW, BIG back houses, 3 to 4 per screen (80 to 104 px fronts),
+    # each one strong silhouette (crow steps, a curved Dutch gable, or one hip), big simple windows in an even grid
+    # (2 or 3 per storey, 16 x 22) with calm wall between, three storeys of 64 px on the foot at world 430
+    # (Sc.MID_FOOT_LOW), pale tints a step lighter than the low row; one back layer (the far band below) ---------------
+    mid_houses = [(0, 96, "step"), (96, 184, "curve"), (184, 288, "hip"), (288, 368, "step"), (368, 472, "curve"), (472, 552, "hip"),
+                  (552, 656, "step"), (656, 744, "curve"), (744, 848, "hip"), (848, 960, "step")]
+    MW, MH = 960, 250
     c = Canvas(MW, MH)
-    foot = MH                                                           # the strip's bottom row: world 430 (scene.lua
-    STOREY = 64                                                         # Sc.MID_FOOT_LOW), under the street line
+    foot = MH
+    STOREY = 64
     for hi, (hx0, hx1, kind) in enumerate(mid_houses):
         P = M_PLASTER[hi % len(M_PLASTER)]
         hw = hx1 - hx0
-        storeys = 3                                                     # (round 3: a low row behind, sky over it)
-        if hi == 0:                                                     # a garden wall with a gate: sky over it (the
-            c.rect(hx0, foot - 40, hx1 - 1, foot - 1, M_STONE)          # fountain's gap at the A2 camera)
-            c.hline(hx0, hx1 - 1, foot - 40, M_STONE2)
-            c.rect(hx0 + 28, foot - 36, hx0 + 43, foot - 1, M_DOOR)
-            for y in range(foot - 32, foot - 1, 8):
-                c.hline(hx0 + 4, hx1 - 5, y, M_STONE2)
-            continue
-        wall_top = foot - STOREY * storeys
+        wall_top = foot - STOREY * 3
         c.rect(hx0, wall_top, hx1 - 1, foot - 1, P[0])
         c.rect(hx1 - 2, wall_top, hx1 - 1, foot - 1, P[1])
-        for s in range(storeys):                                        # storeys: a course line, windows 14 x 22
-            sy = foot - STOREY * (s + 1)
-            c.hline(hx0, hx1 - 1, sy + STOREY - 1, P[1])
-            wy = sy + 22
-            n = max(1, (hw - 10) // 24)
-            gap = (hw - n * 14) / (n + 1)
+        n = 3 if hw >= 96 else 2
+        gap = (hw - n * 16) / (n + 1)
+        for st in range(3):                                             # storeys: windows 16 x 22 on an even grid
+            sy = foot - STOREY * (st + 1)
+            wy = sy + 20
             for i in range(n):
-                wx = int(round(hx0 + gap + i * (14 + gap)))
-                if s == 0 and i == n // 2:                               # the ground floor's door in the middle
-                    c.rect(wx - 1, foot - 46, wx + 14, foot - 1, M_STONE)
-                    c.rect(wx, foot - 44, wx + 13, foot - 1, M_DOOR)
-                    c.vline(wx + 7, foot - 44, foot - 1, P[1])
+                wx = int(round(hx0 + gap + i * (16 + gap)))
+                if st == 0 and i == n // 2:                              # the ground floor's door in the middle
+                    c.rect(wx - 1, foot - 48, wx + 16, foot - 1, M_STONE)
+                    c.rect(wx, foot - 46, wx + 15, foot - 1, M_DOOR)
+                    c.vline(wx + 8, foot - 46, foot - 1, P[1])
                     continue
-                c.rect(wx - 1, wy - 1, wx + 14, wy + 22, P[1])          # the frame in the plaster's shade
-                c.rect(wx, wy, wx + 13, wy + 21, M_GLASS)
-                c.vline(wx + 7, wy, wy + 21, P[0]); c.hline(wx, wx + 13, wy + 10, P[0])
-                c.hline(wx - 1, wx + 14, wy + 22, M_STONE)
+                c.rect(wx - 1, wy - 1, wx + 16, wy + 22, P[1])          # the frame in the plaster's shade
+                c.rect(wx, wy, wx + 15, wy + 21, M_GLASS)
+                c.vline(wx + 8, wy, wy + 21, P[0]); c.hline(wx, wx + 15, wy + 10, P[0])
+                c.hline(wx - 1, wx + 16, wy + 22, M_STONE)
         c.rect(hx0, wall_top - 4, hx1 - 1, wall_top - 1, M_STONE)      # the cornice
         c.hline(hx0, hx1 - 1, wall_top - 1, M_STONE2)
-        ridge = wall_top - 4 - (36 if kind != "flat" else 10)
+        gt = wall_top - 5                                               # the gable's bottom row
         if kind == "hip":
-            hip_roof(c, hx0, hx1 - 1, wall_top - 5, ridge, M_ROOF, [M_STONE, M_STONE2], ridge_w=max(10, hw // 3))
-        elif kind == "step":
-            n = min(6, hw // 12)
-            for i in range(n + 1):
-                y = wall_top - 5 - i * 7
-                lx, rxx = hx0 + i * 5, hx1 - 1 - i * 5
-                if lx > rxx:
-                    break
+            hip_roof(c, hx0, hx1 - 1, gt, gt - 34, M_ROOF, [M_STONE, M_STONE2], ridge_w=max(16, hw // 3))
+        elif kind == "step":                                            # crow steps: 6 px wide, 7 px up, a flat top
+            n2 = min(6, (hw // 2 - 12) // 6)
+            for i in range(n2 + 1):
+                y = gt - i * 7
+                lx, rxx = hx0 + i * 6, hx1 - 1 - i * 6
                 c.rect(lx, y - 6, rxx, y, P[0])
                 c.rect(lx, y - 6, rxx, y - 5, M_STONE)
-            c.rect(hx0 + 8, wall_top - 5 - 48, hx1 - 9, wall_top - 5 - 2, P[0]) if False else None
-            # the gable's own windows
-            for i in range(max(1, (hw - 40) // 24)):
-                wx = hx0 + 20 + i * 24
-                if wx + 14 < hx1 - 20:
-                    c.rect(wx, wall_top - 5 - 24, wx + 9, wall_top - 5 - 10, M_GLASS); c.vline(wx + 4, wall_top - 5 - 24, wall_top - 5 - 10, P[0])
-        else:
-            c.rect(hx0, ridge, hx1 - 1, wall_top - 5, M_LEAD[1]); c.hline(hx0, hx1 - 1, ridge, M_LEAD[0])
-            c.rect(hx0, ridge - 3, hx1 - 1, ridge - 1, M_STONE)
+            for i in range(n):                                          # the gable's windows, on the grid
+                wx = int(round(hx0 + gap + i * (16 + gap)))
+                if wx - 2 > hx0 + 12 and wx + 18 < hx1 - 12:
+                    c.rect(wx + 2, gt - 26, wx + 13, gt - 10, M_GLASS); c.vline(wx + 7, gt - 26, gt - 10, P[0])
+        else:                                                           # a curved Dutch gable: a bell curve to a flat top
+            top_y = gt - 40
+            for y in range(top_y, gt + 1):
+                k = (y - top_y) / (gt - top_y)                          # 0 at the top, 1 at the cornice
+                half = int(round((hw / 2 - 2) * (0.30 + 0.70 * (1 - (1 - k) ** 2))))
+                cxm = (hx0 + hx1) // 2
+                c.hline(cxm - half, cxm + half - 1, y, P[0])
+                c.put(cxm - half, y, M_STONE); c.put(cxm + half - 1, y, M_STONE)
+            c.rect((hx0 + hx1) // 2 - 10, top_y - 3, (hx0 + hx1) // 2 + 9, top_y, M_STONE)
+            wx = (hx0 + hx1) // 2 - 6
+            c.rect(wx, gt - 28, wx + 11, gt - 10, M_GLASS); c.vline(wx + 5, gt - 28, gt - 10, P[0])
         if hi % 3 == 0:
-            cxm = hx1 - 20
-            c.rect(cxm, ridge - 12, cxm + 7, wall_top - 6, M_ROOF[1]); c.rect(cxm - 1, ridge - 14, cxm + 8, ridge - 13, M_STONE)
+            cxm = hx1 - 18
+            c.rect(cxm, gt - 44, cxm + 7, gt - 1, M_ROOF[1]); c.rect(cxm - 1, gt - 46, cxm + 8, gt - 45, M_STONE)
     FILES["town_facades"] = c.image()
+
+    # ---- the far band (round 4): one quiet silhouette band behind the mid row, 20 px, one flat tone, no windows: a
+    # few big gables and one spire-less roofline (the far roofs and spires layer town_roofs is not drawn in low-row
+    # mode: scene.lua). Scroll 0.25, the shore fade does the rest --------------------------------------------------------
+    c = Canvas(480, 20)
+    tone = (150, 160, 176)
+    x = 0
+    k = 0
+    while x < 480:
+        w = (56, 72, 48, 88, 64)[k % 5]; k += 1
+        h = (12, 16, 10, 18, 14)[k % 5]
+        c.rect(x, 20 - h, x + w - 1, 19, tone)
+        if k % 3 == 0:                                                  # a gable on every third
+            for i in range(min(8, w // 6)):
+                c.rect(x + i * 3, 20 - h - (i if i < 4 else 8 - i) * 1 - 1, x + w - 1 - i * 3, 20 - h - 1, tone)
+        x += w
+    FILES["town_farband"] = c.image()
 
     # ---- write ---------------------------------------------------------------------------------------------------------
     lines = ["-- generated by tools/build_dt_rooftops.py (day/07nov-dt): the tall Downtown's low row, option A. Do not edit.",

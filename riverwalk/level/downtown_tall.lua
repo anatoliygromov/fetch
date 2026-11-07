@@ -13,4 +13,5 @@
 -- Both roads meet before the flooded square. Every drop off the high road lands on a floor below, never in water.
 local L = require("tiled").load("level/tiled/downtown_tall.lua")
 L.vmid = 1.0   -- (day/07nov-dt, review round 1 fix 1) the mid row moves with the world: it stands on the square behind the low row
+L.vfloor = 152 -- (round 4) her floor 16 px higher on screen than Vc.FLOOR: more of the low row's fronts under the roofs
 return L

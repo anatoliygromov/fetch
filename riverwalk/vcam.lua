@@ -23,6 +23,9 @@ Vc.LOOK_SPEED = 160   -- px/s the view slides when looking
 Vc.SPEED = 300        -- px/s at most while settling on a floor
 Vc.SKY, Vc.FAR, Vc.MID = 0.1, 0.3, 0.6   -- the parallax layers' vertical scroll factors
 
+-- (day/07nov-dt, round 4) a level may set its own floor line (L.vfloor): the tall Downtown's roofs sit a little
+-- higher on screen, so more of the low row's fronts shows under them at the high-road tier
+function Vc.floor(s) return (s.def and s.def.vfloor) or Vc.FLOOR end
 local function clamp(s, y) return math.max(0, math.min(s.camYMax, y)) end
 local function approach(v, target, rate) if v < target then return math.min(target, v + rate) else return math.max(target, v - rate) end end
 
@@ -35,7 +38,7 @@ end
 function Vc.snap(s)
   s.lookY, s.lookT, s.lookDir = 0, 0, 0
   s.floorY = s.pepper.y
-  s.camY = clamp(s, s.pepper.y - Vc.FLOOR)
+  s.camY = clamp(s, s.pepper.y - Vc.floor(s))
 end
 
 function Vc.update(s, dt)
@@ -56,7 +59,7 @@ function Vc.update(s, dt)
     -- (out of the world or in the water: the camera stays where it is until she is back)
   elseif p.onGround then
     s.floorY = p.y
-    local d = (p.y - Vc.FLOOR + s.lookY) - y
+    local d = (p.y - Vc.floor(s) + s.lookY) - y
     y = y + math.max(-Vc.SPEED * dt, math.min(Vc.SPEED * dt, d * math.min(1, dt * 6)))
     local sy = p.y - y                                               -- never let her leave the screen
     if sy < 40 then y = p.y - 40 elseif sy > 236 then y = p.y - 236 end

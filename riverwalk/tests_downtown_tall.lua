@@ -162,7 +162,7 @@ return function(mode, api)
           report("the tram is scenery: no heart lost, never in the hazards", not hurt and st.hearts == 3, ("hearts %d"):format(st.hearts))
         end },
       { act = function() tp(1852, 256) end }, { wait = 1.2 },
-      { act = function(p, s) report("on the gallery (y 256) the camera follows her up", near(s.camY, 256 - Vc.FLOOR, 1),
+      { act = function(p, s) report("on the gallery (y 256) the camera follows her up", near(s.camY, 256 - Vc.floor(s), 1),
           ("camY %.1f, her feet at screen y %.0f"):format(s.camY, p.y - s.camY)) end },
       -- 1 Pepper's numbers, measured in the simulation
       { act = function()
