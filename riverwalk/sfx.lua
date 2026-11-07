@@ -233,7 +233,7 @@ function S.load()
       return square(t * (140 + 25 * math.sin(t * 40)), 0.5) * 0.09 * (1 - t / 0.3)
     end))
     sounds.crack = src(render(0.14, function(t)                                    -- it breaks
-      return (rnd() * 0.3 + square(t * 90, 0.5) * 0.12) * math.exp(-t * 30)
+      return (rnd() * 0.2 + square(t * 90, 0.5) * 0.08) * math.exp(-t * 30)
     end))
     sounds.fall = src(sweep(1200, 200, 0.55, 0.15, "sq", 0.5))                     -- down a hole
     sounds.thud = src(sweep(120, 45, 0.16, 0.3, "tri"))                            -- a barrel tips off its stack
