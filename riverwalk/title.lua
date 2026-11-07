@@ -27,7 +27,8 @@ end
 function T.load()
   if I then return end
   I = { base = img("base"), bird = img("bird"), mouth = img("mouth"), eye = img("eye"), logos = {},
-    tagline = { caps = img("tagline_caps"), lower = img("tagline_lower"), regrid = img("tagline_regrid") } }
+    tagline = { caps = img("tagline_caps"), lower = img("tagline_lower"), regrid = img("tagline_regrid"),
+      chunky = img("tagline_chunky") } }
   for _, m in ipairs({ "clean", "bands", "gradient", "steps6", "regrid" }) do I.logos[m] = { fill = img("logo_" .. m), hi = img("logo_hi_" .. m) } end
   I.stars = img("stars"); I.starQ = {}
   for sz = 0, 2 do I.starQ[sz] = {}; for f = 0, 5 do I.starQ[sz][f] = lg.newQuad(f * 11, sz * 11, 11, 11, I.stars:getDimensions()) end end
@@ -96,12 +97,13 @@ function T.draw(t, leaving, plain)
     lg.draw(I.bird, I.birdQ[f], bx, by)
   end
   -- the logo and the tagline plate as their own layers: the older plates go under the letters; the regrid plate goes
-  -- over the logo (its outline and shadow reach down behind the plate), the composite's order
+  -- over the logo (its outline and shadow reach down behind the plate), the composite's order; the chunky plate too
   local P, L = T.plateBox(), T.logoBox()
   local plate = I.tagline[T.TAGLINE] or I.tagline.regrid
-  if plate ~= I.tagline.regrid then lg.draw(plate, P.x, P.y) end
+  local over = plate == I.tagline.regrid or plate == I.tagline.chunky
+  if not over then lg.draw(plate, P.x, P.y) end
   lg.draw(T.logo().fill, L.x, L.y)
-  if plate == I.tagline.regrid then lg.draw(plate, P.x, P.y) end
+  if over then lg.draw(plate, P.x, P.y) end
   T.shine(t)
   T.sparkle(t)
   if plain then return end
@@ -163,9 +165,16 @@ T.LOGO = "regrid"                 -- the logo: "regrid" (the regridded logo, as 
 function T.logo() return I.logos[T.LOGO] or I.logos.regrid end
 local OLD_LOGO = { clean = true, bands = true, gradient = true, steps6 = true }
 function T.logoBox() return OLD_LOGO[T.LOGO] and D.logo or R.logo end
-T.TAGLINE = "regrid"              -- the tagline plate: "regrid" (The City Dog Adventurer, regridded, as baked into
-                                  -- base.png), or the older "caps" (THE CITY DOG ADVENTURER) or "lower"
-function T.plateBox() return (T.TAGLINE == "caps" or T.TAGLINE == "lower") and D.plate or R.plate end
+T.TAGLINE = "chunky"              -- the tagline plate: "chunky" (owner 7 Nov: "stray pixels, maybe we need a better
+                                  -- chunkier type": THE CITY DOG ADVENTURER in the menus' 7 px font on a clean plate,
+                                  -- tools/build_tagline.py; it covers the regrid plate baked into base.png), "regrid"
+                                  -- (The City Dog Adventurer, regridded, as baked into base.png), or the older "caps"
+                                  -- (THE CITY DOG ADVENTURER) or "lower"
+T.CHUNKY_PLATE = { x = 138, y = 77, w = 165, h = 20 }     -- centred on T.CX (220), the regrid plate's rows
+function T.plateBox()
+  if T.TAGLINE == "chunky" then return T.CHUNKY_PLATE end
+  return (T.TAGLINE == "caps" or T.TAGLINE == "lower") and D.plate or R.plate
+end
 T.PEPPER_ANIM = false             -- Pepper's pant and blink (mouth.png, eye.png): off, they were cut from the old Pepper
 T.BIRD_ANIM = false               -- the flapping bird overlay (bird.png): off, the painting's bird stays in base.png
 T.SPARKLES = true                 -- the river ripples twinkle (title_regrid.lua ripples)
