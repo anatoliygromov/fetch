@@ -32,7 +32,7 @@ Design target: `art/gen/concepts/sky_paint_rw_a.png` and `_b.png`. They are refe
    | level, layer | before (haze, k) | after (haze, k, clean) |
    | --- | --- | --- |
    | River Walk shore | 9fb3cc, 0.30 | a6c4e2, 0.28, 0.55 |
-   | City Park shore / mid | dcc0c4, 0.30 / ecccae, 0.14 | f2d6bc, 0.30, 0.55 / f2d4b4, 0.14, 0.5 |
+   | City Park shore / mid | dcc0c4, 0.30 / ecccae, 0.14 | e4c8ae, 0.30, 0.55 (round 2, was f2d6bc) / f2d4b4, 0.14, 0.5 |
    | Downtown shore / mid | bcc8da, 0.34 / b2c3d9, 0.30 | c2d6ec, 0.30, 0.6 / dae8f6, 0.24, 0.45 |
    | far city (all) | city haze 0.46-0.52 | final colours in the file, neutral look |
    | back (all) | unchanged (already clean warm tints) | unchanged |
@@ -42,6 +42,39 @@ Design target: `art/gen/concepts/sky_paint_rw_a.png` and `_b.png`. They are refe
 **One switch for before and after:** `LOOK_SKY=bands` (or `Look.PAINTED = false` in look.lua) gives back the old band sky,
 the cloud sprites, the old hazes and the old skyline. The "before" frames here were made that way and are pixel
 identical to main.
+
+## Round 2 (reviewer's 6 fixes, art/gen/reviews/sky_sweep_07nov.md on review/07nov-sky)
+
+All six fixes are in `tools/build_sky.py`. Before/after of all 30 failed screens: `round2/` (`<level>_y<camY>_x<cam>_2x.png`
+is round 1 | round 2 at 2x, colour then greyscale; `_4x.png` is the sky rows at 4x). Before = round 1 (f01b75d).
+
+1. **Top of the tall worlds:** the City Park high bank moved down to rows 86-108 (was 64-90, cut at row 77), the
+   Downtown one to rows 56-78 (was 36-62, cut at row 48). The banks and wisps that sat above the top row, never seen, are gone.
+   `--check` now fails on any cloud pixel within 4 rows of row 120 - round(camYMax x 0.3) (City Park 77, Downtown 48,
+   River Walk 120).
+2. **The low bank behind the skyline (all three):** there are no stamped lobes anymore. Each low bank is now 3 or 4 flat soft
+   pieces (concept b): a lens with uneven stepped edges, a lit top row, an underside row and a shorter lens on top. There are no tails.
+3. **City Park horizon:** the warm joins wander 1 px per flat run (6-20 px) and get 2-4 extra shorter tongues that overlap
+   (60-180 px), so there is no long even slope. The full-width lavender stripe is now 4 separate low pieces of 90-170 px
+   with 1 px ends of 6 px or more. The row of identical scallops is gone with point 2. Every tongue, streak and lens now
+   grows in uneven steps (`profile()`, each step after a run of 6-20 px), never a ruled slope.
+4. **Cloud scraps:** a clean pass on the script's own pixels, and a `--check` rule: no cloud stroke narrower than
+   2 px (a pixel must sit in a 2 x 2 block of its own tone, or in a flat horizontal run of 6+ px: a rim or an
+   underside row) and no cloud piece, or piece of one cloud tone, under 6 px. All three skies: 0 and 0.
+5. **Cumulus base:** in runs of 6-20 px the bank's bottom row steps up 1 px, so the base wanders instead of one ruled
+   line (every bank, River Walk's left one too).
+6. **City Park far city:** fill from luma 197 to 188 (`bab8d2`, near `b2b0ca`), a quarter less violet. It now sits 14
+   luma under the glow (was 5 in greyscale). To keep the ladder, City Park's far tree-line haze goes one step down
+   (`f2d6bc` to `e4c8ae`; shore 191/180 to 184/172). Lever: "City Park city as round 1" = back to `c4c0e2` / `b8b4d8`
+   and the old shore haze.
+
+Kept, as the reviewer advised: cloud undersides at luma 185 or more, the cloud sprites retired while the painted sky is on.
+
+Checks, round 2: build_sky --check OK (the new rules included). asset_qa: sky_riverwalk and sky_citypark PASS, sky_downtown and the 3 skylines
+WARN (small blotches). The library has the same 27 FAILs as the old path. --physics River Walk 55/55, City Park tall 98/98, Downtown tall 102/102.
+check_flow 125/125, check_tiled PASSED, check_backdrop OK, PEPPER UNCHANGED, check_curve T1-T4 PASS with the same DI as
+round 1. Ladder: City Park 202/202, 222/187, city 188/180, shore 184/172, mid 157/135, back 141/116 (light to dark);
+River Walk and Downtown as in round 1.
 
 ## Where to look
 
@@ -61,7 +94,7 @@ identical to main.
 | River Walk before | 223/208 | 238/199 | 169/155 | 163/130 | - | 170/117 |
 | River Walk after | 226/226 | 226/186 | 174/162 | 167/133 | - | 170/117 |
 | City Park before | 209/205 | 239/201 | 191/178 | 181/169 | 154/132 | 141/116 |
-| City Park after | 202/202 | 222/187 | 197/185 | 191/180 | 157/135 | 141/116 |
+| City Park after (round 2) | 202/202 | 222/187 | 188/180 | 184/172 | 157/135 | 141/116 |
 | Downtown before | 237/190 | 236/195 | 200/187 | 197/184 | 171/139 | 152/100 |
 | Downtown after | 239/184 | 243/211 | 215/205 | 207/193 | 185/155 | 152/100 |
 
@@ -85,6 +118,7 @@ house fronts, noted in docs/layer_ladder.md). Cloud tones are all luma 185 or mo
 ## Levers (each one a single change)
 
 - "glow warmer / cooler": the horizon tone of the level (`build_sky.py` LEVELS[..].tones, last entry).
+- "City Park city lighter / more violet": back to round 1 (`c4c0e2` / `b8b4d8`, shore haze `f2d6bc`).
 - "fewer clouds" / "bigger clouds": remove a bank, or raise its `h` and `r` (LEVELS[..].banks).
 - "calmer sky": fewer streaks and tongues (LEVELS[..].streaks; the tongue length in build_sky()).
 - "clouds still": `Look.SKY_DRIFT = 0` (look.lua).

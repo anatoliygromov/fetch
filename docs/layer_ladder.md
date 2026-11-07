@@ -20,8 +20,8 @@ Ladder per level, median / darkest (10th pct), pooled over each level's assets (
 | Level | horizon | clouds | city | shore | mid | back | play |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | River Walk | 226/226 | 226/186 | 174/162 | 167/133 | - | 170/117 | 113/2 |
-| City Park | 202/202 | 222/187 | 197/185 | 191/180 | 157/135 | 141/116 | 83/2 |
-| Downtown | 239/184 | 243/211 | 215/205 | 207/193 | 185/155 | 152/100 | 97/14 |
+| City Park | 202/202 | 222/187 | 188/180 | 184/172 | 157/135 | 141/116 | 83/2 |
+| Downtown | 239/217 | 243/211 | 215/205 | 207/193 | 185/155 | 152/100 | 97/14 |
 
 River Walk's back decoration has a lighter median than its far shore (light house fronts), as before; its darkest keeps the order. Downtown's far layers sit close together: its look script's shore and city hazes are darker than its mid haze, so the order holds by small steps (the skyline and the roofs are mostly behind the facades).
 

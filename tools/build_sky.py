@@ -40,15 +40,20 @@ def luma(c): return float(np.dot(W601, c))
 
 
 # ------------------------------------------------------------------------------------------------ the three skies
-# tones: (colour, the screen y where this tone starts at its mean, the join's wave amplitude in px), top to bottom.
+# tones: (colour, the screen y where this tone starts at its mean, the join's wave amplitude in px[, options]), top to
+# bottom; options: jit = how far each flat run may wander from the slow wave (px), extra = more tongues on this join,
+# shorter and overlapping the first ones, tl = the tongues' length range.
+# camymax: a tall level's vertical camera range; at the top of the world the screen's top row is file row
+# 120 - round(camymax * 0.3) (vcam.lua, the far layers rise 0.3), and no cloud may be cut there (--check).
 # streaks: (tone index drawn, centre y, how many, length range, thickness range).
 # banks: dict(x = left edge, w, base = flat bottom's screen y, h = height of the tallest lobe, peak = where along the
 #   bank the tallest part is (0-1), r = lobe radius range, under = the underside's scallop height range, tail = long
-#   thin tails at the base). wisps: (x, y, w, h).
+#   thin tails at the base). low: flat soft banks behind the skyline (x, w, base, h), no scallops (concept b).
+#   wisps: (x, y, w, h).
 # light: the direction the light comes from (x, y), y up negative. rim: which edges of the skyline take the warm rim.
 LEVELS = {
     "riverwalk": dict(                                                  # summer morning, warm low sun upper left
-        seed=1994, light=(-0.62, -0.78),
+        seed=1994, light=(-0.62, -0.78), camymax=0,
         tones=[("4a80c6", None, 0), ("6293cc", 40, 4), ("8cb0d6", 55, 4), ("c3cfd0", 68, 3), ("f0e2c0", 80, 3)],
         streaks=[(2, 50, 4, (60, 150), (2, 3)), (3, 63, 4, (70, 180), (2, 3)), (4, 75, 4, (80, 200), (2, 4)),
                  (3, 86, 3, (40, 110), (1, 2))],
@@ -56,30 +61,31 @@ LEVELS = {
         banks=[dict(x=18, w=232, base=52, h=44, peak=[(0.34, 1.0, 0.42), (0.78, 0.55, 0.25)], r=(8, 22), under=(4, 8)),
                dict(x=520, w=300, base=60, h=38, peak=[(0.30, 0.62, 0.30), (0.68, 1.0, 0.36)], r=(7, 20), under=(4, 7)),
                dict(x=330, w=120, base=30, h=14, peak=0.45, r=(5, 8), under=(2, 4))],
-        low=[dict(x=150, w=330, base=94, h=16, peak=0.55, r=(4, 8), under=(2, 4), tail=(40, 70)),
-             dict(x=700, w=380, base=91, h=18, peak=0.70, r=(5, 9), under=(2, 5), tail=(50, 90))],
+        low=[dict(x=150, w=190, base=94, h=8), dict(x=372, w=120, base=92, h=6), dict(x=690, w=210, base=91, h=9),
+             dict(x=930, w=90, base=95, h=5)],
         wisps=[(240, 16, 26, 4), (458, 9, 36, 5), (290, 22, 14, 3), (880, 14, 30, 4), (618, 20, 18, 3)],
         city=dict(main="9aaee0", near="8ea2d6", rim="e8bb7c", rim_edges=("left", "top")),
     ),
     "citypark": dict(                                                   # golden autumn afternoon, warm amber glow
-        seed=2610, light=(-0.70, -0.71),
-        tones=[("a8c2ee", None, 0), ("b6cbee", -40, 5), ("c6d2ea", 34, 5), ("ead6bc", 82, 4), ("f4cd98", 104, 3),
-               ("f5c37e", 128, 3)],
+        seed=2610, light=(-0.70, -0.71), camymax=144,
+        # (round 2) the warm joins wander (jit) and are cut by extra shorter tongues that overlap: no long even slope
+        tones=[("a8c2ee", None, 0), ("b6cbee", -40, 5), ("c6d2ea", 34, 5),
+               ("ead6bc", 82, 3, dict(jit=1, extra=4, tl=(60, 180))), ("f4cd98", 104, 3, dict(jit=1, extra=3, tl=(60, 180))),
+               ("f5c37e", 128, 3, dict(jit=1, extra=2, tl=(60, 180)))],
         streaks=[(3, 74, 4, (70, 180), (2, 3)), (4, 96, 4, (80, 200), (2, 4)), (5, 118, 4, (60, 160), (2, 3)),
                  (2, 22, 3, (60, 140), (1, 2)), (1, -60, 3, (60, 140), (1, 2))],
         cloud=dict(lit1="fff0d2", lit2="fad9aa", body="d8cee6", under="bdb4de"),
         banks=[dict(x=40, w=260, base=64, h=40, peak=0.40, r=(9, 17), under=(4, 9)),
                dict(x=560, w=230, base=56, h=32, peak=0.55, r=(8, 14), under=(4, 8)),
-               dict(x=200, w=200, base=-30, h=26, peak=0.40, r=(7, 13), under=(3, 7)),
-               dict(x=700, w=160, base=-70, h=20, peak=0.50, r=(6, 11), under=(3, 6))],
-        low=[dict(x=330, w=360, base=112, h=14, peak=0.50, r=(4, 8), under=(2, 4), tail=(50, 90)),
-             dict(x=800, w=300, base=108, h=12, peak=0.40, r=(4, 8), under=(2, 4), tail=(40, 70))],
-        wisps=[(360, 18, 30, 4), (470, 8, 18, 3), (900, 24, 34, 5), (100, -92, 30, 4), (480, -100, 22, 3),
-               (860, -18, 26, 4)],
-        city=dict(main="c4c0e2", near="b8b4d8", rim="fde6b4", rim_edges=("left", "top")),
+               dict(x=200, w=200, base=-12, h=22, peak=0.40, r=(7, 12), under=(3, 6))],   # (round 2: top row 86, was 64)
+        low=[dict(x=120, w=150, base=110, h=6), dict(x=380, w=170, base=113, h=7), dict(x=620, w=90, base=108, h=5),
+             dict(x=800, w=130, base=112, h=6)],
+        wisps=[(360, 18, 30, 4), (470, 8, 18, 3), (900, 24, 34, 5), (860, -18, 26, 4)],
+        # (round 2) the fill a step darker and a quarter less violet, so the city parts from the amber glow
+        city=dict(main="bab8d2", near="b2b0ca", rim="fde6b4", rim_edges=("left", "top")),
     ),
     "downtown": dict(                                                   # bright midday, high white sun, clean blues
-        seed=1110, light=(-0.30, -0.95),
+        seed=1110, light=(-0.30, -0.95), camymax=240,
         tones=[("3e7ac8", None, 0), ("4a86d0", -40, 5), ("6aa0da", 22, 5), ("98c0e4", 62, 4), ("c6deee", 94, 3),
                ("e8f2f4", 120, 3)],
         streaks=[(4, 88, 4, (60, 160), (2, 3)), (5, 112, 4, (80, 200), (2, 3)), (3, 54, 3, (60, 140), (1, 2))],
@@ -87,10 +93,9 @@ LEVELS = {
         banks=[dict(x=60, w=170, base=40, h=30, peak=0.45, r=(8, 14), under=(2, 3)),
                dict(x=470, w=200, base=56, h=30, peak=0.50, r=(8, 14), under=(2, 3)),
                dict(x=760, w=130, base=-10, h=22, peak=0.45, r=(7, 11), under=(2, 3)),
-               dict(x=250, w=150, base=-60, h=24, peak=0.50, r=(7, 12), under=(2, 3))],
-        low=[dict(x=260, w=300, base=104, h=11, peak=0.50, r=(4, 7), under=(1, 2), tail=(40, 70)),
-             dict(x=760, w=260, base=100, h=10, peak=0.45, r=(4, 7), under=(1, 2), tail=(30, 60))],
-        wisps=[(330, 14, 30, 4), (640, 6, 22, 3), (900, 28, 26, 4), (90, -84, 30, 4), (560, -96, 24, 3)],
+               dict(x=250, w=150, base=-42, h=22, peak=0.50, r=(7, 12), under=(2, 3))],   # (round 2: top row 56, was 36)
+        low=[dict(x=260, w=170, base=104, h=6), dict(x=480, w=110, base=101, h=5), dict(x=760, w=160, base=100, h=6)],
+        wisps=[(330, 14, 30, 4), (640, 6, 22, 3), (900, 28, 26, 4), (560, -40, 24, 3)],
         city=dict(main="ccd8ec", near="c0cee6", rim="eef2f4", rim_edges=("top",)),
     ),
 }
@@ -119,7 +124,24 @@ def runs(r, lo=6, hi=20):
     return xs
 
 
-def wave(r, amp):
+def profile(r, L, t):
+    """the thickness along a lens (a tongue, a streak, a low bank) of length L and up to t px: it grows 1 px at a
+    time from 1 px at each end, each step after a flat run of 6-20 px chosen apart for each side, so its edges are
+    uneven stairs, never a ruled slope; the 1 px ends are 6 px or longer"""
+    t = max(1, min(t, 1 + (L // 2) // 6))
+    def side():
+        st = [r.i(6, 20) for _ in range(t - 1)]
+        while sum(st) > L // 2 and any(v > 6 for v in st): st = [max(6, v - 2) for v in st]
+        out, pos = np.ones(L, int), 0
+        for v in st:
+            pos += v
+            if pos < L: out[pos:] += 1
+        return out
+    left, right = side(), side()[::-1]
+    return np.minimum(np.minimum(left, right), t)
+
+
+def wave(r, amp, jit=0):
     """a join's y offset per column: two slow sines with a whole number of periods across W (so it wraps), held flat
     over each run, rounded; neighbouring runs differ by at most 1 px"""
     if amp == 0: return np.zeros(W, int)
@@ -130,9 +152,16 @@ def wave(r, amp):
     for a, b in runs(r):
         m = (a + b) / 2
         v = amp * (0.65 * math.sin(2 * math.pi * (k1 * m / W + p1)) + 0.35 * math.sin(2 * math.pi * (k2 * m / W + p2)))
-        v = int(round(v))
+        v = int(round(v)) + (r.i(-jit, jit) if jit else 0)
         if prev is not None: v = max(prev - 1, min(prev + 1, v))
         out[a:b] = v; prev = v
+    # the wrap: walking back from the end, each run within 1 px of the one after it (the last one of column 0's run)
+    edges = [0] + [x for x in range(1, W) if out[x] != out[x - 1]] + [W]
+    nxt = out[0]
+    for a, b in reversed(list(zip(edges, edges[1:]))):
+        v = max(nxt - 1, min(nxt + 1, out[a]))
+        if v == out[a]: break
+        out[a:b] = v; nxt = v
     return out
 
 
@@ -172,7 +201,7 @@ def stamp(img, role, x, y, r, base, light, toneidx, cut=(0.86, 0.66)):
                 img[row, xx] = toneidx[t]; role[row, xx] = 1
 
 
-def bank(img, role, r, b, light, T):
+def bank(img, role, r, b, light, T, sky):
     """a cumulus bank: a back row of big lobes under an envelope (tallest at `peak`), spaced so each keeps a big
     sunlit crescent; a front row of smaller, shaded lobes low down (lit edge and body only); then the underside
     scallops along the flat bottom"""
@@ -235,50 +264,38 @@ def bank(img, role, r, b, light, T):
                 row = yy - TOP
                 if 0 <= row < H and role[row, xx] == 1: img[row, xx] = T["under"]
         x += max(3, int(ru * r(1.3, 1.9)))
+    # (round 2) the flat bottom wanders: in some runs of 6-20 px the bottom row is sky, so the base is never one ruled
+    # line under the whole bank
+    x, up = x0 - 4, r(0, 1) < 0.5
+    row = base - TOP
+    while x < x0 + w + 4:
+        n = r.i(6, 20)
+        if up and 0 <= row < H:
+            for xx in range(x, x + n):
+                cx = xx % W
+                if role[row, cx]: img[row, cx] = sky[row, cx]; role[row, cx] = 0
+        x += n; up = not up if r(0, 1) < 0.8 else up
 
 
 def stratus(img, role, r, b, T):
-    """a low long bank resting behind the skyline (the concept's b): 2-3 long lenses stacked with stepped tapered
-    ends, lit on top, the underside below, a few low round humps on the top, long thin tails"""
+    """a low flat soft bank resting behind the skyline (the concept's b; round 2: no scallops, no tails): a lens with
+    uneven stepped edges, its top row lit, its bottom row the underside, and a second shorter lens on top of it"""
     x0, w, base, h = b["x"], b["w"], b["base"], b["h"]
 
-    def lens(xa, L, ybot, t, top_tone, body_tone):
-        taper = max(5, L // (2 * t + 2))
+    def lens(xa, L, ybot, t, under):
+        th = profile(r, L, t)
         for k in range(L):
-            th = min(t, 1 + min(k, L - 1 - k) // taper)
-            for d in range(th):
+            cx = (xa + k) % W
+            for d in range(th[k]):
                 row = ybot - d - TOP
-                if 0 <= row < H:
-                    img[row, (xa + k) % W] = top_tone if d == th - 1 and th > 1 else body_tone
-                    role[row, (xa + k) % W] = 1
-    # the main body: tall in the middle
-    lens(x0, w, base, max(3, h // 2), T["lit1"], T["body"])
-    # a second lens on top, shorter, further left (lit by the low sun)
-    L2 = int(w * r(0.45, 0.65)); xa = x0 + int(w * r(0.08, 0.3))
-    lens(xa, L2, base - max(2, h // 2) + 1, max(3, h // 2), T["lit1"], T["body"])
-    # humps: small round lobes on the top lens
-    lit = {1: T["lit1"], 2: T["lit1"], 3: T["body"]}
-    x = xa + r.i(6, 16)
-    while x < xa + L2 - 8:
-        rr = r.i(*b["r"])
-        ltop = base - max(2, h // 2) - max(3, h // 2) + 2                # the top lens's top row
-        stamp(img, role, int(x), ltop + int(rr * 0.35), rr, ltop - 1, (-0.62, -0.78), lit, cut=(0.75, 0.75))
-        x += int(rr * r(2.2, 3.4))
-    # underside: the bottom row
-    for k in range(4, w - 4):
-        row = base - TOP
-        if role[row, (x0 + k) % W]: img[row, (x0 + k) % W] = T["under"]
-    # tails both ends, 1 px, and a shorter one a row up
-    for side in (-1, 1):
-        n = r.i(*b["tail"])
-        start = x0 + (w - 3 if side > 0 else 3)
-        for k in range(n):
-            xx = (start + side * k) % W
-            if role[base - TOP, xx] == 0: img[base - TOP, xx] = T["under"]; role[base - TOP, xx] = 1
-        for k in range(int(n * 0.5)):
-            xx = (start + side * (k + 6)) % W
-            row = base - 2 - TOP
-            if role[row, xx] == 0: img[row, xx] = T["lit2"]; role[row, xx] = 1
+                if not 0 <= row < H: continue
+                if d == th[k] - 1 and th[k] > 1: img[row, cx] = T["lit1"]
+                elif d == 0 and under and th[k] > 2: img[row, cx] = T["under"]
+                else: img[row, cx] = T["body"]
+                role[row, cx] = 1
+    lens(x0, w, base, max(3, h // 2 + 1), True)
+    L2 = int(w * r(0.4, 0.6)); xa = x0 + int(w * r(0.1, 0.35))
+    lens(xa, L2, base - 2, max(3, h // 2 + 1), False)
 
 
 def wisp(img, role, x, y, w, h, light, T):
@@ -318,6 +335,101 @@ def clean_lone(img, role):
         for y, x in zip(ys, xs): img[y, x + 1] = img[y, x]
 
 
+def cloud_faults(img, nsky):
+    """(round 2, the reviewer's rule) cloud pixels that are scraps: a stroke narrower than 2 px (not inside any 2 x 2
+    block of its own tone, nor a flat horizontal run of 6 px or more: a rim or an underside row), or a piece of one
+    tone, or of cloud, under 6 px. Returns two masks: thin, small (the sky wraps sideways)"""
+    cl = img >= nsky
+    def thin_of(m):
+        mr = np.roll(m, -1, axis=1)                                     # the right neighbour (wraps)
+        B = np.zeros_like(m)                                            # B[y, x]: the 2x2 block with top-left (y, x)
+        B[:-1] = m[:-1] & mr[:-1] & m[1:] & mr[1:]
+        blk = B | np.roll(B, 1, axis=1)
+        blk[1:] |= B[:-1] | np.roll(B, 1, axis=1)[:-1]
+        run = np.zeros(m.shape, int)                                    # horizontal run length through each pixel
+        for y in np.nonzero(m.any(axis=1))[0]:
+            row = m[y]
+            if row.all(): run[y] = W; continue
+            start = int(np.argmin(row))                                 # begin at a gap, so runs over the wrap count
+            k = 0
+            idx = [(start + j) % W for j in range(W)]
+            seg = []
+            for xx in idx + [None]:
+                if xx is not None and row[xx]: seg.append(xx); continue
+                for q in seg: run[y, q] = len(seg)
+                seg = []
+        return m & ~blk & (run < 6)
+    thin = np.zeros(img.shape, bool)
+    thin |= thin_of(cl)
+    for t in np.unique(img[cl]): thin |= thin_of(img == t) & cl
+    small = np.zeros(img.shape, bool)
+    seen = np.zeros(img.shape, bool)
+    for mode in ("cloud", "tone"):
+        seen[:] = False
+        ys, xs = np.nonzero(cl)
+        for y0, x0 in zip(ys, xs):
+            if seen[y0, x0]: continue
+            key = None if mode == "cloud" else img[y0, x0]
+            stack, comp = [(y0, x0)], []
+            seen[y0, x0] = True
+            while stack:
+                y, x = stack.pop(); comp.append((y, x))
+                for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    yy, xx = y + dy, (x + dx) % W
+                    if 0 <= yy < H and not seen[yy, xx] and cl[yy, xx] and (key is None or img[yy, xx] == key):
+                        seen[yy, xx] = True; stack.append((yy, xx))
+            if len(comp) < 6:
+                for y, x in comp: small[y, x] = True
+    return thin, small
+
+
+def clean_cloud(img, sky, nsky):
+    """remove the scraps cloud_faults finds, on this script's own pixels before saving: a scrap takes the cloud tone
+    most of its 8 neighbours have (another tone than its own), or the sky under it when it has no cloud around"""
+    for it in range(30):
+        thin, small = cloud_faults(img, nsky)
+        bad = thin | small
+        if not bad.any(): return
+        ys, xs = np.nonzero(bad)
+        new = img.copy()
+        for y, x in zip(ys, xs):
+            vals = []
+            for dy in (-1, 0, 1):
+                for dx in (-1, 0, 1):
+                    if dx == 0 and dy == 0: continue
+                    yy, xx = y + dy, (x + dx) % W
+                    if 0 <= yy < H and not bad[yy, xx]: vals.append(int(img[yy, xx]))
+            cvals = [v for v in vals if v >= nsky and v != img[y, x]]
+            ncl = sum(v >= nsky for v in vals)
+
+            def fits(v):                                                # v would sit in a 2x2 block of v here
+                for dy in (-1, 0):
+                    for dx in (-1, 0):
+                        if all((yy == y and xx % W == x) or (0 <= yy < H and img[yy, xx % W] == v)
+                               for yy in (y + dy, y + dy + 1) for xx in (x + dx, x + dx + 1)): return True
+                return False
+            good = sorted({v for v in cvals if fits(v)}, key=lambda v: -cvals.count(v))
+            if good and ncl >= 4: new[y, x] = good[0]; continue
+            if it >= 12 and ncl == 8:                                   # stuck inside: a block needs one more pixel
+                done = False
+                for v in sorted(set(cvals), key=lambda v: -cvals.count(v)):
+                    for dy in (-1, 0):
+                        for dx in (-1, 0):
+                            cells = [(yy, xx % W) for yy in (y + dy, y + dy + 1) for xx in (x + dx, x + dx + 1)
+                                     if not (yy == y and xx % W == x)]
+                            if not all(0 <= yy < H for yy, _ in cells): continue
+                            off = [(yy, xx) for yy, xx in cells if img[yy, xx] != v]
+                            if len(off) == 1 and img[off[0]] >= nsky:
+                                new[y, x] = v; new[off[0]] = v; done = True; break
+                        if done: break
+                    if done: break
+                if done: continue
+            if it >= 12 and ncl < 8: new[y, x] = sky[y, x]             # still stuck on an edge: the sky
+            elif ncl >= 4 and cvals: new[y, x] = max(set(cvals), key=cvals.count)
+            else: new[y, x] = sky[y, x]
+        img[:] = new
+
+
 # ------------------------------------------------------------------------------------------------ build
 def build_sky(name):
     c = LEVELS[name]
@@ -331,42 +443,49 @@ def build_sky(name):
     role = np.zeros((H, W), np.uint8)
     # the tones: tone i covers every row at or below its join (mean y + the join's wave)
     joins = []
-    for i, (col, y0, amp) in enumerate(c["tones"]):
+    for i, tone in enumerate(c["tones"]):
+        col, y0, amp = tone[:3]
+        opt = tone[3] if len(tone) > 3 else {}
         if y0 is None: img[:, :] = i; continue
-        wv = wave(r, amp)
-        joins.append((i, y0 + wv))
+        wv = wave(r, amp, opt.get("jit", 0))
+        joins.append((i, y0 + wv, opt))
         for x in range(W):
             img[max(0, y0 + wv[x] - TOP):, x] = i
     # tongues: broad long shapes where one tone reaches into its neighbour (up from the join, or down from it), with
     # stepped tapered ends, so no join reads as a ruled line
-    for i, jy in joins:
+    def tongue(i, jy, x, L, t, up):
+        th = profile(r, L, t)
+        for k in range(L):
+            xx = (x + k) % W
+            for d in range(th[k]):
+                row = (jy[xx] - 1 - d if up else jy[xx] + d) - TOP
+                if 0 <= row < H: img[row, xx] = i if up else i - 1
+    for i, jy, opt in joins:
         x = r.i(0, 120)
         up = r(0, 1) < 0.5
+        tl = opt.get("tl", (90, 260))
         while x < W:
-            L = r.i(90, 260); t = r.i(3, 7)
-            taper = max(6, L // (2 * t + 2))
-            for k in range(L):
-                xx = (x + k) % W
-                th = min(t, 1 + min(k, L - 1 - k) // taper)
-                for d in range(th):
-                    row = (jy[xx] - 1 - d if up else jy[xx] + d) - TOP
-                    if 0 <= row < H: img[row, xx] = i if up else i - 1
+            L = r.i(*tl)
+            tongue(i, jy, x, L, r.i(3, 7), up)
             x += L + r.i(40, 160); up = not up
+        for _ in range(opt.get("extra", 0)):                          # overlapping, shorter, thinner
+            tongue(i, jy, r.i(0, W - 1), r.i(tl[0], (tl[0] + tl[1]) // 2), r.i(2, 5), r(0, 1) < 0.5)
     # streaks: thin lenses of tone `ti`, flat bottom, stepped tapered ends
     for ti, yc, n, (llo, lhi), (tlo, thi) in c["streaks"]:
         for _ in range(n):
             L = r.i(llo, lhi); t = r.i(tlo, thi); x0 = r.i(0, W - 1); y = yc + r.i(-4, 4)
-            taper = max(6, L // (2 * t + 2))
+            prof = profile(r, L, t)
             for k in range(L):
-                th = min(t, 1 + min(k, L - 1 - k) // taper)
-                for d in range(th):
+                for d in range(prof[k]):
                     row = y - d - TOP
                     if 0 <= row < H: img[row, (x0 + k) % W] = ti
     light = tuple(c["light"])
+    sky = img.copy()                                                    # the sky under the clouds
     for b in c["low"]: stratus(img, role, r, b, T)
     for x, y, w, h in c["wisps"]: wisp(img, role, x, y, w, h, light, T)
-    for b in c["banks"]: bank(img, role, r, b, light, T)
+    for b in c["banks"]: bank(img, role, r, b, light, T, sky)
     clean_lone(img, role)
+    clean_cloud(img, sky, nsky)
     role = (img >= nsky).astype(np.uint8)
     rgb = np.array(pal, np.uint8)[img]
     stats = dict(tones=[t[0] for t in c["tones"]], cloud=c["cloud"], light=c["light"],
@@ -411,6 +530,16 @@ def checks(name, rgb, img, nsky, stats, city):
     for row in range(1, H):
         ch = img[row] != img[row - 1]
         if ch.all(): bad.append(f"{name}: row {row + TOP} is a straight full-width join"); break
+    # (round 2) no cloud cut by the top of the world: no cloud pixel within 4 rows of the screen's top row at the top
+    # of a tall level (or at y 0 of a flat one)
+    edge = 120 - int(round(c.get("camymax", 0) * 0.3))
+    band = img[max(0, edge - 4):edge + 5] >= nsky
+    if band.any(): bad.append(f"{name}: {int(band.sum())} cloud pixels within 4 rows of row {edge} (the top of the world)")
+    stats["top_row"] = edge
+    # (round 2) no cloud stroke narrower than 2 px, no cloud piece under 6 px
+    thin, small = cloud_faults(img, nsky)
+    if thin.any(): bad.append(f"{name}: {int(thin.sum())} cloud pixels in strokes narrower than 2 px, e.g. x {int(np.nonzero(thin)[1][0])} row {int(np.nonzero(thin)[0][0])}")
+    if small.any(): bad.append(f"{name}: {int(small.sum())} cloud pixels in pieces under 6 px")
     # no dither: 2x2 checkers of two colours
     k00, k01, k10, k11 = img[:-1, :-1], img[:-1, 1:], img[1:, :-1], img[1:, 1:]
     chk = ((k00 == k11) & (k01 == k10) & (k00 != k01)).sum()
@@ -418,8 +547,8 @@ def checks(name, rgb, img, nsky, stats, city):
     # seamless: column W-1 next to column 0 behaves like any other neighbour pair
     diff = lambda a_, b_: int((a_ != b_).sum())
     seam = diff(img[:, -1], img[:, 0])
-    typ = np.percentile([diff(img[:, x], img[:, x + 1]) for x in range(W - 1)], 99)
-    if seam > max(4, typ): bad.append(f"{name}: the wrap seam differs in {seam} rows (99th pct of columns: {typ:.0f})")
+    typ = max(diff(img[:, x], img[:, x + 1]) for x in range(W - 1))
+    if seam > max(4, typ): bad.append(f"{name}: the wrap seam differs in {seam} rows (the most for any column pair: {typ})")
     # lone pixels
     pad = np.pad(img, 1, mode="edge"); same = np.zeros(img.shape, bool)
     for dy in (-1, 0, 1):
