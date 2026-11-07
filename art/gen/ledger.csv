@@ -177,3 +177,5 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-07 11:10,plan,sky_paint_rw@1107-111027,sky_paint,sky_07nov,artlist,Nano Banana Pro I2I 1K,320,planned,concept (reference only).
 2026-11-07 11:12,spent,sky_paint_rw@1107-111027,,,,,320,spent,"Artlist concept, reference only"
 2026-11-07 11:12,verdict,,sky_paint_rw@1107-111027,,,,,reference,"design target for the painted sky, not game art"
+2026-11-07 15:12,plan,bone_v3@1107-151256,bone_v3,bones_07nov,spritecook,"SpriteCook Pixel Engine Image (exact 16-128 px, no references)",24,planned,"owner 7 Nov 15:02: the bones need to look like something the dog would want to collect, more calling for attention, more volumetric. You can use spritecook for this"
+2026-11-07 15:13,spent,bone_v3@1107-151256,,,,,24,spent,"Pixel Engine 4 variants 16x16 (asked 16x10), owner 7 Nov 15:02 'You can use spritecook for this'"

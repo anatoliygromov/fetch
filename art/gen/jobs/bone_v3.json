@@ -1,0 +1,17 @@
+{
+ "name": "bone_v3",
+ "level": "riverwalk",
+ "layer": "play",
+ "kind": "prop",
+ "real_height_m": 0.22,
+ "target_px": [16, 10],
+ "subject": "a cartoon dog bone treat, the collectible of a cute 1990s platformer: a chunky bone with two round knobs at each end and a short thick shaft, seen from the side, creamy ivory with warm golden shading, a bright glossy highlight on the top knobs, a darker warm shade along the bottom so it looks round and solid, a single 1 px dark brown outline all round",
+ "part_map": "the grey shape is the bone: two round knobs at the left end, two at the right end, a short shaft between them.",
+ "size_sentence": "the bone is about a third of the dog's length; a big tasty treat next to the dog's head.",
+ "model": "sc_pe",
+ "variants": 4,
+ "tier": "A",
+ "family": "bones_07nov",
+ "slot": {"file": "riverwalk/art/scene/bone.png (15 x 9 now)", "where": "every level: the collectible bones (stage.lua), white; bone_gold.png the golden bone"},
+ "extra": "Pixel Engine is text only and draws at exactly 16 x 10."
+}

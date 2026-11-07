@@ -695,7 +695,20 @@ function St:draw(debug)
     if not bn.taken and not (self.night and Nt.hideBone(self, bn)) then   -- [night hook] bones in the dark
       local bob = math.floor(math.sin(self.t * 3 + bn.x) * 1.5 + 0.5)
       local im = bn.super and art.bone_gold or art.bone               -- centred on x, bottom row at y - 7 (as the 11 x 6 bone)
-      lg.draw(im, math.floor(bn.x - cam + 0.5) - math.floor(im:getWidth() / 2), bn.y - 6 - im:getHeight() + bob)
+      local bx, by = math.floor(bn.x - cam + 0.5) - math.floor(im:getWidth() / 2), bn.y - 6 - im:getHeight() + bob
+      lg.draw(im, bx, by)
+      -- (owner 7 Nov: "more calling for attention") a glint on the upper left knob, every 2.4 s, each bone in its own
+      -- turn: a dot, a 3 px star, a dot (0.3 s), in the highlight's white
+      local ph = (self.t + bn.x * 0.37) % 2.4
+      if ph < 0.3 then
+        local gx, gy = bx + 2, by + 1
+        lg.setColor(1, 1, 0.97, 1); lg.rectangle("fill", gx, gy, 1, 1)
+        if ph >= 0.1 and ph < 0.2 then
+          lg.rectangle("fill", gx - 1, gy, 3, 1); lg.rectangle("fill", gx, gy - 1, 1, 3)
+          if bn.super then lg.rectangle("fill", gx - 2, gy, 5, 1); lg.rectangle("fill", gx, gy - 2, 1, 5) end
+        end
+        lg.setColor(1, 1, 1, 1)
+      end
     end
   end
   use("play")                                                      -- (the leaf piles are part of the park, the bones are not)
