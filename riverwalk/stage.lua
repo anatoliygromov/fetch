@@ -158,7 +158,7 @@ function St:loseHeart()
   if self.hearts <= 0 then
     self.lives = self.lives - 1; self.hearts = self.maxHearts
     if self.lives <= 0 then self.events.over = true; return end
-    self:say("OUCH! BACK TO THE LAMP POST", 2)
+    self:say("OUCH! BACK TO THE LAMP POST", 2); S.play("lost")
     self.deadT = 0.6
   end
 end
@@ -174,7 +174,7 @@ function St:dropBall()
   local b, p, w = self.ball, self.pepper, self.world
   b.x, b.y = p:mouthPos(); b.state = "air"; b.vy = -40; b.vx = math.max(-40, math.min(40, p.vx * 0.5)); p.carrying = nil
   if w:solidIn(b.x - 3, b.x + 3, b.y - 6, b.y) then b.x, b.vx = p.x, 0 end
-  b.x = math.max(14, math.min(w.width - 14, b.x)); b.airT = 0; b.on = nil
+  b.x = math.max(14, math.min(w.width - 14, b.x)); b.airT = 0; b.on = nil; S.play("drop")
 end
 -- a spot by a lamp (or Pepper's checkpoint) where a ball can rest and be picked up: 24 px past it, 24 px before
 -- it, or on it (the respawn spot itself, always clear), whichever is first free of solids and water
@@ -272,7 +272,7 @@ function St:update(dt, presses)
   if not self.clearT and not self.events.clear then self.time = self.time - dt end
   if self.time <= 0 and not self.drownT and not self.deadT then
     self.time = self.def.time; self.lives = self.lives - 1; self.hearts = self.maxHearts
-    if self.lives <= 0 then self.events.over = true else self:say("TIME UP!", 2); self:respawn() end
+    if self.lives <= 0 then self.events.over = true else self:say("TIME UP!", 2); S.play("timeup"); self:respawn() end
   end
 
   -- moving platforms
@@ -328,7 +328,7 @@ function St:update(dt, presses)
     if p.carrying then
       if nearGirl(self) then self:giveBall() else self:dropBall() end
     elseif nearBall(self) then
-      self.ball.state = "carried"; self.ball.picked = true; self.ball.knock = nil; p.carrying = self.ball; p:grab(); S.play("key")
+      self.ball.state = "carried"; self.ball.picked = true; self.ball.knock = nil; p.carrying = self.ball; p:grab(); S.play("grab")
       self:say(self.def.pickupSay or "BRING ME THE BALL!", 2.4)
     end
   end
@@ -342,7 +342,7 @@ function St:update(dt, presses)
     local nx = math.max(14, math.min(w.width - 14, b.x + (b.vx or 0) * dt))
     if w:solidIn(nx - 3, nx + 3, b.y - 6, b.y - 1) then b.vx = 0 else b.x = nx end   -- it bounces off walls, never into them
     local f, hit = w:floor(b.x - 3, b.x + 3, b.x, b.y - 0.5, ny, b.y, b.drop)    -- drop: knocked off a branch, falls through
-    if f then b.y = f; b.state = "rest"; b.drop = nil; b.on = hit; b.airT = 0
+    if f then b.y = f; b.state = "rest"; b.drop = nil; b.on = hit; b.airT = 0; S.play("boop")
       local onMover = false                                         -- (a boat or a lift moves on: a knocked ball
       for _, m in ipairs(self.movers) do if hit == m then onMover = true end end   -- that rolls off it later still
       if b.knock and self:ballLost() then b.state = "home"; self.ballBackT = 0.6 elseif not onMover then b.knock = nil end   -- comes back by b.knock)
@@ -361,7 +361,7 @@ function St:update(dt, presses)
       b.x, b.y, b.state, b.on, b.knock = b.knock.x, b.knock.y, "rest", nil, nil; S.play("land")
       if self:ballLost() then local h = self:homeNear(self.check.x, self.check.y); b.x, b.y = h.x, h.y end
     elseif self.ballBackT <= 0 then
-      b.x, b.y, b.state = b.home.x, b.home.y, "rest"; self:say(b.homeSay or self.def.ballBack or "THE BALL IS ON THE BOAT!", 2.2)
+      b.x, b.y, b.state = b.home.x, b.home.y, "rest"; S.play("home"); self:say(b.homeSay or self.def.ballBack or "THE BALL IS ON THE BOAT!", 2.2)
       if self:ballLost() then b.home = self:homeNear(self.check.x, self.check.y); b.x, b.y = b.home.x, b.home.y end   -- never a home it can't rest at
     end
   end

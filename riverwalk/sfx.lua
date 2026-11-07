@@ -170,6 +170,77 @@ function S.load()
     end))
     sounds.land = src(sweep(140, 80, 0.05, 0.12, "tri"))
     sounds.scramble = src(sweep(180, 360, 0.18, 0.12, "tri"))
+    -- 7 Nov sound pass (claude/sfx-audit-07nov.md): events that were silent, and events that borrowed a sound
+    -- meant for something else. Same chip: square, triangle and noise.
+    local nseed = 4242
+    local function rnd() nseed = (nseed * 1103515245 + 12345) % 2147483648; return (nseed / 2147483648) * 2 - 1 end
+    local function held(rate)                    -- noise held for 1/rate s (a lower rate sounds lower, like the chip)
+      local v, left = 0, 0
+      return function()
+        left = left - 1
+        if left <= 0 then v = rnd(); left = math.max(1, math.floor(RATE / rate)) end
+        return v
+      end
+    end
+    -- the ball
+    sounds.grab = src(arp({ { 1175, 0.04 }, { 1568, 0.07 } }, 0.2))                 -- Pepper picks the ball up
+    sounds.drop = src(sweep(900, 500, 0.06, 0.16, "sq", 0.25))                     -- it leaves her mouth: a pop
+    sounds.boop = src(sweep(320, 160, 0.08, 0.24, "tri"))                          -- it lands: soft rubber
+    sounds.home = src(arp({ { 587, 0.05 }, { 880, 0.09 } }, 0.16, 0.5))            -- it is back where it rests
+    -- the run
+    sounds.lost = src(arp({ { 659, 0.1 }, { 523, 0.1 }, { 392, 0.24 } }, 0.2, 0.5))  -- a life lost
+    sounds.timeup = src(render(0.5, function(t)                                    -- a buzzer: two low notes
+      if t > 0.2 and t < 0.25 then return 0 end
+      local f = t < 0.2 and 196 or 147
+      return (square(t * f, 0.5) * 0.6 + square(t * f * 1.01, 0.25) * 0.4) * 0.17
+    end))
+    sounds.go = src(arp({ { 784, 0.08 }, { 1175, 0.18 } }, 0.22, 0.5))              -- the level (or bonus) starts
+    sounds.fanfare = src(arp({ { 523, 0.1 }, { 659, 0.1 }, { 784, 0.1 }, { 1047, 0.2 }, { 784, 0.1 },
+                               { 1047, 0.1 }, { 1319, 0.55 } }, 0.22, 0.5))          -- the ending
+    sounds.hurry = src(render(0.12, function(t)                                    -- KEEP UP: two quick ticks
+      local k = t < 0.05 and t or t - 0.08
+      if k < 0 or k > 0.03 then return 0 end
+      return square(t * 1760, 0.25) * 0.13 * (1 - k / 0.03)
+    end))
+    -- animals
+    local flapn = held(9000)
+    sounds.charge = src(render(0.35, function(t)                                   -- the goose charges: wings
+      return flapn() * 0.2 * (math.sin(t * 2 * math.pi * 14) > 0 and 1 or 0.15) * (1 - 0.5 * t / 0.35)
+    end))
+    sounds.dive = src(sweep(2000, 700, 0.4, 0.1, "sq", 0.125))                     -- the gull dives: a whistle
+    sounds.patter = src(render(0.3, function(t)                                    -- the fox runs: quick paws
+      local k = t % 0.06
+      return k < 0.012 and rnd() * 0.12 * (1 - k / 0.012) or 0
+    end))
+    sounds.found = src(arp({ { 698, 0.06 }, { 932, 0.06 }, { 1175, 0.12 } }, 0.18, 0.125))   -- sniffed it out
+    sounds.yip = src(sweep(900, 1400, 0.08, 0.18, "sq", 0.3))                      -- the fox yips
+    -- things in the levels
+    local ventn = held(3000)
+    sounds.vent = src(render(0.25, function(t)                                     -- a steam flap rattles
+      return ventn() * 0.13 * (((t * 30) % 1) < 0.5 and 1 or 0.2) * (1 - t / 0.25)
+    end))
+    local steamn = held(6500)
+    sounds.steam = src(render(0.6, function(t)                                     -- the puff (it never hurts)
+      return steamn() * 0.15 * math.min(1, t / 0.02) * math.exp(-t * 4)
+    end))
+    local whv, whl = 0, 0
+    sounds.whoosh = src(render(0.35, function(t)                                   -- steam lifts Pepper: rising air
+      whl = whl - 1
+      if whl <= 0 then whv = rnd(); whl = math.max(1, math.floor(RATE / (800 + 7000 * t / 0.35))) end
+      return whv * 0.17 * math.sin(math.pi * t / 0.35)
+    end))
+    sounds.creak = src(render(0.3, function(t)                                     -- a loose tile or plank shakes
+      return square(t * (140 + 25 * math.sin(t * 40)), 0.5) * 0.09 * (1 - t / 0.3)
+    end))
+    sounds.crack = src(render(0.14, function(t)                                    -- it breaks
+      return (rnd() * 0.3 + square(t * 90, 0.5) * 0.12) * math.exp(-t * 30)
+    end))
+    sounds.fall = src(sweep(1200, 200, 0.55, 0.15, "sq", 0.5))                     -- down a hole
+    sounds.thud = src(sweep(120, 45, 0.16, 0.3, "tri"))                            -- a barrel tips off its stack
+    sounds.throw = src(render(0.16, function(t)                                    -- Mia throws: a swish
+      return rnd() * 0.14 * math.sin(math.pi * t / 0.16) * (((t * 2600 + t * t * 30000) % 1) < 0.5 and 1 or 0.3)
+    end))
+    sounds.miss = src(sweep(220, 160, 0.14, 0.18, "sq", 0.5))                      -- a bonus catch missed
     if S.MUSIC then                                          -- music is off in builds for now (see S.MUSIC)
       music = love.audio.newSource(buildMusic(), "static")
       music:setLooping(true)

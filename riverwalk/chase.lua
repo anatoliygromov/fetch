@@ -136,14 +136,14 @@ function Ch.update(s, dt)
     c.pitT = c.pitT - dt
     if c.pitT <= 0 then c.pitT = nil; p.mode = "normal"; kill(s, "OOPS! A HOLE!") end
   elseif p.mode ~= "gone" and p.mode ~= "drown" and p.y > w.height - 4 and not s.deadT then
-    p.mode, p.vy, p.vx = "gone", 0, 0; c.pitT = 0.6; S.play("splash")
+    p.mode, p.vy, p.vx = "gone", 0, 0; c.pitT = 0.6; S.play("fall")
   end
 
   -- the left edge of the screen pushes Pepper along; pinned against an obstacle, she loses a heart
   if not busy and not c.pitT and (p.mode == "normal" or p.mode == "hurt") then
     local edge = s.cam + HW
     if p.x < edge then
-      if blocked(w, edge, p.y, p:height()) then kill(s, "OUCH! JUMP OR CRAWL, PEPPER!")
+      if blocked(w, edge, p.y, p:height()) then S.play("hurt"); kill(s, "OUCH! JUMP OR CRAWL, PEPPER!")
       else p.x = edge; if p.vx < 0 then p.vx = 0 end end
     end
     if b.state == "roll" and p.x > s.cam + AHEAD then
@@ -152,7 +152,7 @@ function Ch.update(s, dt)
       p.x = math.min(p.x, s.cam + EDGE_R)
     end
     c.edgeT = math.max(0, c.edgeT - dt)
-    if p.x - s.cam < 56 and c.edgeT == 0 and not s.msg then s:say("KEEP UP, PEPPER!", 1.4); c.edgeT = 6 end
+    if p.x - s.cam < 56 and c.edgeT == 0 and not s.msg then s:say("KEEP UP, PEPPER!", 1.4); S.play("hurry"); c.edgeT = 6 end
   end
 
   -- the ball rolls ahead, on screen, until it stops against the railing at the bottom
@@ -168,7 +168,7 @@ function Ch.update(s, dt)
   -- barrels: knocked off their stack by the ball, they roll down the street
   for _, br in ipairs(c.barrels) do
     if br.state == "stack" and b.state == "roll" and b.x >= br.def.trigger then
-      br.state, br.vx, br.vy, br.t = "roll", br.def.speed or 45, -60, 0; S.play("spring")
+      br.state, br.vx, br.vy, br.t = "roll", br.def.speed or 45, -60, 0; S.play("thud")
     elseif br.state == "roll" then
       roll(w, br, br.x + br.vx * dt, dt, false)
       br.t = (br.t or 0) + dt
