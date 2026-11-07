@@ -1,0 +1,33 @@
+{
+ "name": "bone_v4",
+ "model": "SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid)",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/bone_v4_blockout.png",
+  "art/gen/style_card_riverwalk.png"
+ ],
+ "prompt_file": "art/gen/prompts/bone_v4.txt",
+ "k": null,
+ "frame": [
+  128,
+  128
+ ],
+ "credits": 32,
+ "tool": "spritecook",
+ "family": "bones_07nov",
+ "tier": "A",
+ "slot": {
+  "file": "riverwalk/art/scene/bone.png, bone_gold.png",
+  "where": "every level: the collectible bones (stage.lua)"
+ },
+ "spritecook": {
+  "model": "gpt-image-2.5-sunburst",
+  "pixel": true,
+  "resolution": "1K",
+  "quality": "medium",
+  "width": 19,
+  "height": 11
+ },
+ "ledger_job": "bone_v4@1107-152732"
+}

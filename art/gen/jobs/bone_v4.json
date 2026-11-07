@@ -1,0 +1,23 @@
+{
+ "name": "bone_v4",
+ "level": "riverwalk",
+ "layer": "play",
+ "kind": "prop",
+ "real_height_m": 0.24,
+ "target_px": [
+  19,
+  11
+ ],
+ "subject": "three copies of the same cartoon dog bone treat, the shiny collectible of a cute 1990s SNES platformer, lying exactly horizontal: a short thick shaft between two pairs of round ball-shaped knobs; strongly three-dimensional, lit from the upper left: each knob a shaded sphere with a small bright white specular highlight on its upper left, the shaft a shaded cylinder with a light band along its top and a darker band underneath, a warm reflected light on the undersides; creamy ivory to warm caramel, one dark brown 1 px outline all round",
+ "part_map": "each grey bone shape is one bone: the round lumps at the two ends are the knobs, the bar between them the shaft. Draw all three, the same design at the three sizes.",
+ "size_sentence": "the bones are about a third of the dog's length; big tasty treats next to the dog.",
+ "model": "sc_gpt25",
+ "variants": 2,
+ "tier": "A",
+ "family": "bones_07nov",
+ "slot": {
+  "file": "riverwalk/art/scene/bone.png, bone_gold.png",
+  "where": "every level: the collectible bones (stage.lua)"
+ },
+ "references": 1
+}

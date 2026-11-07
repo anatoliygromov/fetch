@@ -22,19 +22,22 @@ OUT = ROOT / "riverwalk/art/scene"
 # O ink, H highlight, C cream, M mid, G gold shade, D deep shade, . clear
 GRID = [
     ".OOO.......OOO.",
-    "OHHCO.....OHCCO",
-    "OHCCOOOOOOOCCMO",
-    "OCHHHHHHHHHHCMO",
+    "OHCMO.....OHCMO",
+    "OCMGOOOOOOOCMGO",
+    "OMHHHHHHHHHHCGO",
     ".OCCCCCCCCCCMO.",
-    "OMGGGGGGGGGGGGO",
-    "OMGDOOOOOOOMGDO",
-    "OGDDO.....OGDDO",
+    "OGMMMMMMMMMMGDO",
+    "OCMGOOOOOOOCMGO",
+    "OMGDO.....OMGDO",
     ".OOO.......OOO.",
 ]
-WHITE = {"O": (75, 33, 4), "H": (255, 254, 239), "C": (249, 231, 193), "M": (240, 212, 158),
-         "G": (228, 182, 108), "D": (196, 140, 70)}
-GOLD = {"O": (92, 54, 10), "H": (255, 250, 214), "C": (255, 218, 96), "M": (246, 186, 54),
-        "G": (214, 138, 26), "D": (160, 88, 12)}
+# (owner 7 Nov 15:30: "original size is ok, we just need to add a little contrast and volume to it") each knob is a
+# small ball, lit upper left (H/C) to shaded lower right (G/D); the shaft a tube with a bright top, a cream middle
+# and a darker underside; the ramps reach deeper than the first 7 Nov version
+WHITE = {"O": (60, 22, 6), "H": (255, 253, 244), "C": (246, 226, 184), "M": (226, 190, 132),
+         "G": (196, 146, 86), "D": (150, 96, 48)}
+GOLD = {"O": (80, 40, 6), "H": (255, 252, 220), "C": (255, 222, 100), "M": (242, 178, 40),
+        "G": (204, 124, 18), "D": (140, 72, 8)}
 
 
 def build(pal):

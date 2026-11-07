@@ -179,3 +179,6 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-07 11:12,verdict,,sky_paint_rw@1107-111027,,,,,reference,"design target for the painted sky, not game art"
 2026-11-07 15:12,plan,bone_v3@1107-151256,bone_v3,bones_07nov,spritecook,"SpriteCook Pixel Engine Image (exact 16-128 px, no references)",24,planned,"owner 7 Nov 15:02: the bones need to look like something the dog would want to collect, more calling for attention, more volumetric. You can use spritecook for this"
 2026-11-07 15:13,spent,bone_v3@1107-151256,,,,,24,spent,"Pixel Engine 4 variants 16x16 (asked 16x10), owner 7 Nov 15:02 'You can use spritecook for this'"
+2026-11-07 15:27,plan,bone_v4@1107-152727,bone_v4,bones_07nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),16,planned,owner 7 Nov 15:02 'You can use spritecook for this' (bones); 15:26 'the bones need to be more volumetric'
+2026-11-07 15:27,plan,bone_v4@1107-152732,bone_v4,bones_07nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),32,planned,owner 7 Nov 15:02 'You can use spritecook for this' (bones); 15:26 'the bones need to be more volumetric'
+2026-11-07 15:28,spent,bone_v4@1107-152732,,,,,32,spent,"GPT 2.5 Sunburst 1K, 2 variants + blockout reference; owner 7 Nov 15:26 'more volumetric'"
