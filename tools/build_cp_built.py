@@ -506,7 +506,7 @@ FB, FB_D, FB_L = hx('3f7fb6'), hx('2c5a85'), hx('7fb4dd')   # the old frame's bl
 
 
 def build_frame():
-    """(art/cp-audit-06nov) park_frame.png, 90 x 67, drawn at (FRAME x0 - 1, 119 + dy): image x = world x - 2711, y =
+    """(superseded 7 Nov by tools/build_cp_frame.py, kept for the record) (art/cp-audit-06nov) park_frame.png, 90 x 67, drawn at (FRAME x0 - 1, 119 + dy): image x = world x - 2711, y =
     world y - 263 in the tall level (the flat one: 119). The audit: "a blue crate beside Pepper's nose with no purpose;
     the blue frame bars read as a cage". What they are: the STEP prop (2716-2732, top 316, solid, hidden: drawn by this
     image) is the first step up onto the climbing frame; the frame is two posts with two bars Pepper stands on (FRAME
@@ -562,7 +562,8 @@ def main():
     os.makedirs(os.path.join(SRC, 'park_frame'), exist_ok=True)
     old = os.path.join(SRC, 'park_frame', 'park_frame_old.png')
     if not os.path.exists(old): Image.open(os.path.join(SCENE, 'park_frame.png')).save(old)
-    save('park_frame', build_frame())
+    import build_cp_frame                                # (7 Nov, owner's board: redrawn as a play house; its own script)
+    save('park_frame', build_cp_frame.build())
     named = [p for p in P if p['name'] in ('TREETOP WALK', 'ALDER WALK') and p['y1'] <= FOOT - 90]
     for p in named:
         w = p['x1'] - p['x0']

@@ -3,6 +3,9 @@
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
 
+## Branch `day/07nov-cpplay`: City Park playground, the climbing frame and the front bush redrawn (7 Nov, owner's board)
+- **The climbing frame, redrawn as a little play house in the play tower's build (owner, 7 Nov board: "park_frame_06n: redraw, looks really weird"):** `tools/build_cp_frame.py` (`--check`) builds park_frame.png, same 90 x 67 slot and anchor. The blue pipes (two tall posts, two stacked bars, a ladder, a yellow stool: read as a cage or a gate) are gone. Every surface Pepper stands on is now one of the approved play tower's yellow decks (`tower_deck`): the step (2716-2732, top 316) a yellow tread on a red box, the low deck FRAME (2712-2784, 304) on two grey tower posts to the path, the top deck (2724-2800, 280) on a short post standing on the low deck and a tall one on the decoration box 2796 down to the path. Between the two decks the slide tower's red panel with its porthole cut 1:1 from park_slide.png (one window: two read as a face). 9 colours, 1 px ink outline, asset_qa PASS. No box moved: citypark_tall --physics 97 of 97 (as main), flow 125 of 125, PEPPER UNCHANGED. `tools/build_cp_built.py` now takes the frame from the new script (its other pieces rebuild byte for byte).
+
 ## v0.7 (7 Nov 2026): River Walk, City Park and Downtown at finished quality
 Main moves from v0.6 (23 Oct) to `prod/integrate-f`: everything integrated since (prod/integrate-c and -d, the 5 Nov and 6 Nov art families, the hint bubbles, the speech bubbles and bikes in front, the night of 6-7 Nov tracks). Every check green, every screen of the three levels passed an independent review. Owner's yes, 6 Nov 20:10, on that condition. The sections below are the detail.
 
