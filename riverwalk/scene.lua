@@ -777,6 +777,8 @@ end
 -- receding road rows); a ramp or the lower quay stands on the granite quay wall instead
 Sc.PROMENADE, Sc.QUAY_Y0, Sc.QUAY_JOINT = 184, 196, { 72 / 255, 82 / 255, 107 / 255 }
 Sc.STEP_RW = 8                                                    -- (day/07nov-ground) River Walk's ramps: 8 px stone steps (0.17 m)
+Sc.ROAD_RUNS_ON = true                                            -- (owner, 7 Nov: "the asphalt goes on") the road runs on in
+Sc.ROAD_Y, Sc.ROAD_END_W = 199, 6                                 -- front of the steps and the lower quay to the water (paintQuay)
 local function columnTop(w, x)                                      -- the first walkable top at or under y 150, or nil
   if x < 0 or x >= w.width then return nil end
   for _, m in ipairs(columnRuns(w, x, "all")) do if m[1] >= 150 then return m[1] end end
@@ -881,6 +883,7 @@ local Q = {
   sh = rgb(72, 77, 56), w = rgb(122, 125, 114), wh = rgb(135, 138, 130), wj = rgb(92, 97, 77), we = rgb(103, 107, 91),
   pb = rgb(157, 160, 173), pj = rgb(168, 170, 182),                                -- the paving's back edge and joints
   ps = { rgb(196, 192, 195), rgb(207, 200, 198), rgb(184, 183, 190) },             -- its slabs (pavement.png's colours)
+  rg1 = rgb(70, 77, 97), rg2 = rgb(82, 90, 112),                                   -- (owner, 7 Nov) road.png's gutter rows 0-1
 }
 local COURSE, COURSE0, BLOCK = 16, 231, 40
 -- the granite wall's colour at (x, y); d = distance to a corner at the water (0 = the corner's column) or nil
@@ -1035,6 +1038,24 @@ function Sc.paintQuay(w, props, def)
   for x = 0, W - 1 do
     if not top[x] then n = nil elseif kind[x] == "quay" then n = (n == nil and x > 0 and not top[x - 1]) and 0 or (n and n + 1); dL[x] = n else n = nil end
   end
+  -- (owner, 7 Nov: "the asphalt goes on") the road runs on in front of the steps and the lower quay they lead to,
+  -- as far as the water: every ramp or quay column on a stretch of land that has road on it. The asphalt is the same
+  -- tile on the same rows as the promenade's (anchored at y 199, so it never shears: the 6 Nov bug was a copy of the
+  -- road moved down with each column); the steps' and the quay's kerb face stand on it with the road's gutter rows
+  -- under them, and it stops ROAD_END_W px short of the water, where the quay's stone end goes down to the river.
+  local roadOn = {}
+  if Sc.ROAD_RUNS_ON then
+    local x0 = nil
+    for x = 0, W do
+      if x < W and top[x] then x0 = x0 or x
+      elseif x0 then
+        local has = false
+        for i = x0, x - 1 do if kind[i] == "road" then has = true; break end end
+        if has then for i = x0, x - 1 do if kind[i] == "ramp" or kind[i] == "quay" then roadOn[i] = true end end end
+        x0 = nil
+      end
+    end
+  end
   -- the road's ends next to a ramp: { x of the corner's first column, dir }
   local ends = {}
   for x = 1, W - 1 do
@@ -1044,14 +1065,19 @@ function Sc.paintQuay(w, props, def)
   -- (day/07nov-ground, audit RW1/RW10) beside a road's end the wall's corner is dressed in quoins (its distance
   -- from the road, as at the water's corners), instead of a light kerb strip running down to the screen's bottom
   local dRoad = {}
+  local corners = {}                                                -- the ends where the road stops (not running on)
   for _, e in ipairs(ends) do
+    local rx = e.dir == 1 and (e.x0 + 8) or (e.x0 - 1)              -- the ramp's first column beside the road
+    if not roadOn[rx] then corners[#corners + 1] = e end
+  end
+  for _, e in ipairs(corners) do
     for i = 0, 29 do
       local x = e.dir == 1 and (e.x0 + 8 + i) or (e.x0 - 1 - i)
       if kind[x] == "ramp" or kind[x] == "quay" then dRoad[x] = i end
     end
   end
   local function cornerAt(x)                                         -- (corner column c from the road's side, or nil)
-    for _, e in ipairs(ends) do
+    for _, e in ipairs(corners) do
       if x >= e.x0 and x < e.x0 + 8 then return e.dir == 1 and (x - e.x0) or (7 - (x - e.x0)) end
     end
   end
@@ -1153,6 +1179,11 @@ function Sc.paintQuay(w, props, def)
     if k == "road" then
       lg.setColor(1, 1, 1, 1)
       clip(x, t + 15, 1, bottom - t - 15); lg.draw(road, rq[x % rw], x, t + 15); clip()
+    elseif roadOn[x] and not ((dR[x] or dL[x] or 99) < Sc.ROAD_END_W) then
+      -- (owner, 7 Nov) the road runs on: the same tile on the promenade's rows, the gutter's two rows under the kerb
+      lg.setColor(1, 1, 1, 1)
+      clip(x, t + 15, 1, bottom - t - 15); lg.draw(road, rq[x % rw], x, Sc.ROAD_Y); clip()
+      px(Q.rg1, x, t + 15); px(Q.rg2, x, t + 16)
     else
       local d = dR[x] or dL[x] or dRoad[x]
       px(Q.sh, x, t + 15)
@@ -1257,8 +1288,20 @@ function Sc.paintQuay(w, props, def)
     x = x + 180 + (k * 53) % 90
   end
   -- the road ends' corners again, as small canvases drawn over look.lua's road (painted here, as the chunks are)
+  -- (owner, 7 Nov) the stretches where the road runs on, for look.lua's receding road: { x0, x1, y0 } runs of
+  -- columns with the same first row under the gutter
+  Sc.roadOnSegs = {}
+  local seg = nil
+  for x = 0, W do
+    local y0 = nil
+    if x < W and roadOn[x] and not ((dR[x] or dL[x] or 99) < Sc.ROAD_END_W) then
+      y0 = (kind[x] == "ramp" and stepTop(x) or top[x]) + 17
+    end
+    if seg and (y0 ~= seg[3]) then seg[2] = x; Sc.roadOnSegs[#Sc.roadOnSegs + 1] = seg; seg = nil end
+    if y0 and not seg then seg = { x, nil, y0 } end
+  end
   Sc.roadEnds = {}
-  for _, e in ipairs(ends) do
+  for _, e in ipairs(corners) do
     local t = top[e.x0] or 184
     local y0, bottom = t + 8, (w.height or 240)
     local W8 = 16                                                     -- (the cast shadow can reach 12 columns out)
