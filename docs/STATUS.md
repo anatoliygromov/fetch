@@ -1,5 +1,22 @@
 # FETCH! Status
 
+## Night of 7 Nov: audit of main (unattended run, 0 credits, no art or level changes)
+
+Base: `main` at 57440ca (v0.7 plus the sound pass). Nothing in STATUS "Next 7 days" or on the board was open for night work, so this run audited and changed no game files. No track branches were made.
+
+**Checks on main:**
+- PEPPER UNCHANGED (3908 steps identical). Flow 125/125. check_approved: ALL MERGED.
+- Tiled PASSED. (It failed at first only because the sandbox's system Pillow was broken; a clean venv fixed it. Not a game bug.)
+- check_curve with `riverwalk,citypark_tall,downtown_tall,rooftops,soder,night`: T1, T3, T4 PASS, **T2 FAIL**.
+
+**The one finding (S2): T2 spot share.** River Walk screen 13 takes 36.2% of failures (75 of 207); the limit is 35%. Soder Hill screen 9 shows 50%, but only 10 failures, so it is under the 20-failure rule and passes. The result is identical on 2c04160 (v0.7 merge, before the sound pass), so the sound pass did not cause it. The 7 Nov STATUS said T1-T4 PASS on prod/integrate-f; I could not reproduce that, possibly the later River Walk commits (e133677: rowers, jetty, ferry) shifted it. I did not bisect further.
+
+**Decision waiting:** fix screen 13 of River Walk (a level change, needs your yes and a Pepper trace re-record), or accept 1.2 points over the limit?
+
+**Still waiting from before:** the board cards, gull and cat size picks, open or closed street, the leaf front.
+
+**Branches:** `ops/night-07nov` only (this STATUS). No night/* branches.
+
 ## Night of 6-7 Nov: the three levels brought to finished quality (live session, owner asleep)
 
 **Owner, 20:01 to 20:19:** a proper lift in assets and game design tonight, 3 levels ready with full visual QA by the morning; use Fable and several agents; repo should feel mature and up to date; coordinate with the other sessions; the "Game porting and launch plan" rowboat was terrible, make it work. Picks: SpriteCook up to 900, Artlist up to 3,000 for concepts, merge to main as v0.7 if every check and the independent review pass, prune merged branches with an archive list, repo stays public, this session owns the rowboat and the "FETCH level asset plan" session's work.
