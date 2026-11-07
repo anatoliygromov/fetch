@@ -133,6 +133,8 @@ L.props = {
 -- dark passages drawn behind the pavement (the inside of the bridge, under the pier's lintel)
 L.passages = {
   -- (art/rw-ground-06nov) drawn as a stone arch under the pier art's plinth (vx0 .. vx1: the plinth's own width)
+  -- (day/07nov-rwarch) the arch rebuilt (art/scene/rw_arch.png, tools/build_rw_arch.py): its art from vx0 - 1 = 1939
+  -- (the plinth's first column) to 2068, y 192-215; the passage (x0 .. y1) and the shadow's span (vx0 .. vx1) as before
   { x0 = 1936, x1 = 2072, y0 = 192, y1 = 216, arch = true, vx0 = 1940, vx1 = 2068 },
 }
 

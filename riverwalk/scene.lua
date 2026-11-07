@@ -1378,40 +1378,28 @@ end
 -- a low passage under the bridge: its back wall (dark, a little lighter low down) is drawn before the ground, so
 -- the pavement runs into it; then the pavement inside is shaded. Ends fade with a checker dither.
 local PASS1, PASS2 = { 21 / 255, 20 / 255, 31 / 255 }, { 38 / 255, 40 / 255, 56 / 255 }
--- (art/rw-ground-06nov) p.arch: the underpass of a stone bridge seen end on (River Walk's bridge, under the
--- approved pier art): a shallow segmental arch (rise 6 px) with a granite ring, spandrels and jambs in the
--- pier's own stone, the vault inside in flat shaded bands of the same stone (darkest under the crown) with its
--- courses, no navy hole. Its shadow on the paving is painted with the ground (Sc.paintQuay: three flat bands).
-local ARCH = { lit = rgb(201, 180, 177), joint = rgb(166, 146, 146), shade = rgb(128, 112, 117), dark = rgb(97, 83, 88),
-               ring = rgb(219, 199, 195), ringJ = rgb(158, 138, 140),
-               vault = { rgb(52, 44, 52), rgb(66, 55, 62), rgb(80, 67, 73) }, vaultJ = rgb(58, 48, 56) }
--- (day/07nov-ground round 2, review RW-n: the segmental arch's dark vault read as a lens, the pier standing on a
--- cushion of shade) the pier's foot is a plain bottom course of its own stone, straight down to the paving: the
--- plinth's shadow row on top, one course of 24 px blocks like the pier's (in bond with it), the arrises at both
--- ends; the paving under it takes a 1 px dark contact row (Sc.paintQuay) and the
--- slanted shadow. Pepper still crawls under the plinth's box (y 192), in front of the course.
-local function archBack(p, camx)
-  local X0, X1 = p.vx0 or p.x0, p.vx1 or p.x1                     -- (drawn under the art's plinth)
-  if X1 - camx < -2 or X0 - camx > 322 then return end
-  for wx = X0, X1 - 1 do
-    local sx = wx - camx
-    if sx >= -1 and sx <= 321 then
-      for y = p.y0, p.y1 - 1 do
-        local r = y - p.y0
-        local c
-        if r == 0 then c = ARCH.dark                               -- the plinth's shadow on the course
-        elseif r == 1 then c = ARCH.shade
-        elseif wx == X0 or wx == X1 - 1 then c = ARCH.joint        -- the arrises
-        elseif (wx - X0 + 12) % 24 == 0 then c = ARCH.joint         -- head joints, the pier's 24 px blocks
-        else c = ARCH.lit end
-        lg.setColor(c); lg.rectangle("fill", sx, y, 1, 1)
-      end
-    end
-  end
-  lg.setColor(1, 1, 1, 1)
+-- (day/07nov-rwarch, owner 7 Nov board: "rw_bridge_arch_06n: redraw") p.arch: the underpass of River Walk's stone
+-- bridge seen end on, as on Stockholm's quays, BUILT by rule (tools/build_rw_arch.py -> art/scene/rw_arch.png,
+-- 130 x 25; its top row, y 191, only fills the plinth's two rounded corners): under the approved pier art's plinth
+-- (whose pixels are not touched) the pier's face comes down to Pepper's line as two 18 px ashlar jambs on a base
+-- course, a segmental arch (span 94, rise 16) with a ring of voussoirs running up under the plinth, the vault and
+-- side walls inside in darker shades of the pier's own stone, and a lit opening at the far end (daylight, a tree
+-- line, the far quay). Its crown is y 192: the opening is as tall as the passage. Drawn after the ground (the jambs
+-- stand on the paving and hide it behind them; the floor between them is open, so the paving and its slanted
+-- shadow run through), in the back look like the pier art above it. It replaces the 6 Nov slot (6 px jambs, a 6 px
+-- rise arch, a dark vault) drawn per pixel behind the paving.
+local archImg
+local function archFront(p, camx)
+  local x = (p.vx0 or p.x0) - 1 - camx                            -- (the plinth's first column, 1939)
+  if x > 322 or x < -134 then return end
+  archImg = archImg or newImg("art/scene/rw_arch.png")
+  local sh = lg.getShader()                                       -- a look is on: the pier's (back) grade, not the ground's
+  if sh then Look.use("back") end
+  lg.setColor(1, 1, 1, 1); lg.draw(archImg, math.floor(x), p.y0 - 1)   -- (its row 0 is y 191)
+  if sh then Look.use("ground") end
 end
 function Sc.passageBack(p, camx)
-  if p.arch then return archBack(p, camx) end
+  if p.arch then return end                                         -- (drawn after the ground: archFront)
   local x0, x1 = math.floor(p.x0 - camx), math.floor(p.x1 - camx)
   if x1 < -2 or x0 > 322 then return end
   lg.setColor(PASS1); lg.rectangle("fill", x0, p.y0, x1 - x0, p.y1 - p.y0)
@@ -1420,7 +1408,7 @@ function Sc.passageBack(p, camx)
   lg.setColor(1, 1, 1, 1)
 end
 function Sc.passageFront(p, camx)
-  if p.arch then return end                                         -- (its shadow is in the painted ground)
+  if p.arch then return archFront(p, camx) end                      -- (its shadow is in the painted ground)
   local x0, x1 = math.floor(p.x0 - camx), math.floor(p.x1 - camx)
   if x1 < -2 or x0 > 322 then return end
   lg.setColor(PASS1[1], PASS1[2], PASS1[3], 0.45); lg.rectangle("fill", x0 + 2, p.y1 - 12, x1 - x0 - 4, 14)
