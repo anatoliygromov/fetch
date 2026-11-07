@@ -355,6 +355,35 @@ return function(mode, api)
           local hl = 0; for _, l in ipairs(st.def.lamps) do if l.y < 320 then hl = hl + 1 end end
           report("8 lamps: 6 on the street, 2 up high", #st.def.lamps == 8 and hl == 2, ("%d, %d high"):format(#st.def.lamps, hl))
         end },
+      -- 5b (owner, 7 Nov) a bark drops the ball: carrying it on the street, Pepper barks at the first goose. The ball
+      --    pops out of her mouth on the bark itself (the bark clip's first frame, a drop's small arc), the goose is
+      --    shooed as before, the ball lands on the street in front of her, and X picks it up again
+      { act = function(p, s) s.cat.state = "gone"; s.cat.x = -999
+          s.bikes, s.bikeT = {}, 99; for _, bk in ipairs(s.def.bikes.zoneX0 and { s.def.bikes } or s.def.bikes) do s.zoneIn[bk] = true end
+          tp(2150, STREET); p.face = 1; p.barkT = 0; s.ball.state = "carried"; p.carrying = s.ball end },
+      { wait = 0.2 },
+      { act = function(p, s) local k = s.critters[1]; k.x, k.state, k.t, k.dir = 2226, "walk", 0, 1   -- 76 px ahead: in bark
+          s.score0 = s.score; love.keypressed("z") end },                                             -- range, not yet hissing
+      { cond = function(p) return p.barkT > 0 end, act = function(p, s)
+          report("bark while carrying: the ball drops on the bark itself", p.carrying == nil and s.ball.state == "air" and p.barkT > 0.48
+            and p.anim == "bark" and p.frame == 1, ("ball %s, %s frame %d, bark %.2f s in"):format(s.ball.state, p.anim, p.frame, 0.5 - p.barkT))
+          report("bark while carrying: the ball pops up out of her mouth (a drop's arc)", s.ball.vy < 0 and math.abs(s.ball.x - (p.x + 25)) < 8,
+            ("ball x %+.0f from her, vy %.0f"):format(s.ball.x - p.x, s.ball.vy)) end, limit = 1 },
+      { wait = 0.8 },
+      { act = function(p, s) local b, k = s.ball, s.critters[1]
+          report("bark while carrying: the bark still shoos the goose (+200)", k.state == "gone" and s.score >= s.score0 + 200, k.state)
+          report("bark while carrying: the ball lands on the street in front of her", b.state == "rest" and near(b.y, STREET) and b.x > p.x and b.x - p.x < 48,
+            ("ball %s at x %+.0f y %.0f"):format(b.state, b.x - p.x, b.y))
+          love.keypressed("x") end },
+      { wait = 0.3 },
+      { act = function(p, s) report("bark while carrying: X picks the ball up again", p.carrying == s.ball and s.ball.state == "carried", s.ball.state)
+          love.keypressed("z") end },                                 -- at once again, still in the pick-up clip (its frames
+      { cond = function(p) return p.barkT > 0 end, act = function(p, s)  -- have the ball drawn in): it ends, the bark clip starts
+          report("bark during the pick-up clip: bark clip, no ball left in her mouth", p.anim == "bark" and p.grabT == 0 and s.ball.state == "air",
+            ("%s frame %d, ball %s"):format(p.anim, p.frame, s.ball.state)) end, limit = 1 },
+      { wait = 0.8 }, { act = function() love.keypressed("x") end }, { wait = 0.3 },
+      { act = function(p, s) report("bark while carrying: and X picks it up once more", p.carrying == s.ball, s.ball.state)
+          p.carrying = nil end },                                                                    -- (the fetch below places the ball)
       -- 6 the fetch: with the ball to Mia at the river stairs: GOOD GIRL, the level ends
       { act = function(p, s) s.cat.state = "gone"; s.cat.x = -999
           s.ball.state, s.ball.x, s.ball.y = "rest", 3420, STREET; tp(3398, STREET); p.face = 1 end },
