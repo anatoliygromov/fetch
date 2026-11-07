@@ -2,6 +2,8 @@
 
 0 credits. No image service called. Both pieces built by rule in a script with `--check`.
 
+Sections 1 and 2 describe round 1. **Round 2** (after the independent review) is further down and is what the files and cards now show.
+
 ## What the owner said (FETCH! Art Review, 7 Nov)
 - park_frame_06n: redraw, "looks really weird".
 - park_bush_06n: redraw (no comment).
@@ -53,9 +55,46 @@ Frames: `frames/bush_x0460_before_after_3x.png`, `frames/bush_x1740_before_after
 | check_flow.sh | 125 of 125 |
 | check_tiled.sh | passed (no map touched) |
 
-The cards' in-game frames: `frames/frame_ingame_x2560.png`, `frames/bush_ingame_x0460.png`.
+The cards' in-game frames (round 2): `frames/frame_ingame_x2560.png`, `frames/bush_ingame_x0480.png`. The cards show round 2.
+
+## Round 2 (independent review round 1: both FAIL on read; `review_round1.md` on origin/review/07nov-cpplay)
+
+The review said the frame read as furniture (a red desk, a bench in front, a crate under it; bone 171 in the
+porthole a keyhole) and the bush as two pointed hills with a comb on top, dotted inner lines (dither 1.0) and a rim
+in the earth band's own colour. Both are rebuilt by their scripts; boxes, slots and anchors unchanged.
+
+Frame (`tools/build_cp_frame.py`):
+1. The full-width panel is gone. One small red panel (the slide tower's, 18 px inside) in the bay between the left
+   and a new middle post; the rest is open between the posts.
+2. Posts flush under every deck end (no overhang). The middle post (world 2748-2752) runs from the top deck through
+   the low deck to the path, as the tower's posts run from deck to ground.
+3. The porthole is at world 2733-2740, clear of bone 171 (2760, 304) and bone 245 (2724, 316). No bone moved.
+4. The step is the lowest of three decks: the deck cap on a grey block in the posts' colours.
+5. The roof bar (`--roof`) was tried: 12 px over the top deck it crosses Pepper's chest and the magpie and its ball on
+   perch 11 (`frames/r2_frame_r1_vs_r2_5x.png`, right). Not used.
+
+Bush (`tools/build_cp_bush.py`):
+1. Four clumps of different sizes and heights (tallest centre-left, a smaller one right, the lowest left, a low one
+   far right).
+2. Flat-topped clumps with round shoulders: no 1 px apex.
+3. The top edge is continuous runs: no notches, no teeth.
+4. No dotted lines: each clump lays a solid 3-row lit band (the fg mid) over the clumps behind. measure_layers
+   dither 0.0 (round 1: 1.0).
+5. The rim is a warm brown (6b4a3a), continuous runs, no longer the earth band's colour.
+
+Frames:
+- `frames/r2_frame_spots_r1_top_r2_bottom_3x.png`: cam 2560, the magpie on perch 11, Pepper at LOOK_PX 166, 190, 236
+  (low and top deck), round 1 above, round 2 below, colour and greyscale.
+- `frames/r2_frame_r1_vs_r2_5x.png`: the files, round 1, round 2, and the rejected roof.
+- `frames/r2_bush_main_r1_r2_x0480_x1760_4x.png`: y 212-240 at cam 480 (top three) and 1760 (bottom three), each
+  main, round 1, round 2, colour and greyscale.
+- `frames/r2_bush_r1_vs_r2_8x.png`: the files.
+
+Round 2 checks: asset_qa park_frame PASS (9 colours, outline 100 %, lone 0.5 %), park_bush PASS (3 colours, on screen
+median 20, lone 0.1 %, dither 0.0); both --check OK; build_cp_built.py rebuilds its other pieces byte for byte;
+PEPPER UNCHANGED; citypark_tall --physics 97 of 97; check_flow 125 of 125.
 
 ## Open questions
-1. The play house reads as a stepped climbing block in the tower's colours. If the owner would rather have a timber balance beam or a bridge, the boxes allow it, but a top deck 24 px over a low deck that overlaps it by 60 px will always look like two storeys.
-2. The bush is now a calm dark mound with no warm rim pixels. If the owner wants it to catch more light, the next lever is a warm rim on the two top clumps only, as one rule.
+1. The frame is now a stepped climbing frame in the tower's build. A top deck 24 px over a low deck that overlaps it by 60 px will always look like two storeys; a roof over it would cross Pepper.
+2. The bush is a smooth dark mound of four clumps. On screen the front shader makes it very dark; if the owner wants it to catch more light, the lever is a lighter rim, within the front row's contrast 40.
 3. The old fix scripts (tools/fix_cp_bush.py, the bush part of tools/fix_cp_audit.py) are superseded. They would overwrite the new bush if run again. Should they be removed?
