@@ -1334,13 +1334,14 @@ end
 local PASS1, PASS2 = { 21 / 255, 20 / 255, 31 / 255 }, { 38 / 255, 40 / 255, 56 / 255 }
 -- (day/07nov-rwarch, owner 7 Nov board: "rw_bridge_arch_06n: redraw") p.arch: the underpass of River Walk's stone
 -- bridge seen end on, as on Stockholm's quays, BUILT by rule (tools/build_rw_arch.py -> art/scene/rw_arch.png,
--- 130 x 24): under the approved pier art's plinth (whose pixels are not touched) the pier's face comes down to
--- Pepper's line as two 18 px ashlar jambs on a base course, a segmental arch (span 94, rise 16) with a ring of
--- voussoirs and a keystone, the vault and side walls inside in darker shades of the pier's own stone, and a lit
--- opening at the far end (daylight, the far quay). Its crown is y 192: the opening is as tall as the passage. Drawn
--- after the ground (the jambs stand on the paving and hide it behind them; the floor between them is open, so the
--- paving and its slanted shadow run through), in the back look like the pier art above it. It replaces the 6 Nov
--- slot (6 px jambs, a 6 px rise arch, a dark vault) drawn per pixel behind the paving.
+-- 130 x 25; its top row, y 191, only fills the plinth's two rounded corners): under the approved pier art's plinth
+-- (whose pixels are not touched) the pier's face comes down to Pepper's line as two 18 px ashlar jambs on a base
+-- course, a segmental arch (span 94, rise 16) with a ring of voussoirs running up under the plinth, the vault and
+-- side walls inside in darker shades of the pier's own stone, and a lit opening at the far end (daylight, a tree
+-- line, the far quay). Its crown is y 192: the opening is as tall as the passage. Drawn after the ground (the jambs
+-- stand on the paving and hide it behind them; the floor between them is open, so the paving and its slanted
+-- shadow run through), in the back look like the pier art above it. It replaces the 6 Nov slot (6 px jambs, a 6 px
+-- rise arch, a dark vault) drawn per pixel behind the paving.
 local archImg
 local function archFront(p, camx)
   local x = (p.vx0 or p.x0) - 1 - camx                            -- (the plinth's first column, 1939)
@@ -1348,7 +1349,7 @@ local function archFront(p, camx)
   archImg = archImg or newImg("art/scene/rw_arch.png")
   local sh = lg.getShader()                                       -- a look is on: the pier's (back) grade, not the ground's
   if sh then Look.use("back") end
-  lg.setColor(1, 1, 1, 1); lg.draw(archImg, math.floor(x), p.y0)
+  lg.setColor(1, 1, 1, 1); lg.draw(archImg, math.floor(x), p.y0 - 1)   -- (its row 0 is y 191)
   if sh then Look.use("ground") end
 end
 function Sc.passageBack(p, camx)

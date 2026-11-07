@@ -20,9 +20,10 @@ track's slanted shadow.
 
 ## What I built and how
 
-`tools/build_rw_arch.py` (`--check`) builds `riverwalk/art/scene/rw_arch.png`, 130 x 24, by rule, in the pier
+`tools/build_rw_arch.py` (`--check`) builds `riverwalk/art/scene/rw_arch.png`, 130 x 25 (round 2), by rule, in the pier
 art's own stone colours (13 colours, no new stone colours). Source: `art/source/rw_arch/rw_arch.aseprite`.
-Art (0, 0) is world (1939, 192): the plinth's own width, down to y 215. Pepper's line is y 216.
+Art row 1 is world y 192, x 0 is world 1939: the plinth's own width, down to y 215. Pepper's line is y 216. Row 0
+(y 191) is transparent except the two outer corners (round 2).
 
 - **Jambs**: 18 px of the pier's ashlar a side, 10 px courses like the block above (lit top row, face, shade row,
   joint), the head joints alternating, a base course like the pier's plinth, the outer edges as the pier's sides.
@@ -30,10 +31,11 @@ Art (0, 0) is world (1939, 192): the plinth's own width, down to y 215. Pepper's
 - **Arch**: segmental, span 94 px, rise 16 (was 6). Its crown is at y 192, so the opening is as tall as the passage
   Pepper crawls through (y 192-216). A ring of voussoirs (5 px) on each haunch in the pier's light granite with
   radial joints, a lit arris row and a joint round its back. The ring runs up under the plinth, so the plinth reads
-  as the band course over the arch. A keystone wedge hangs from the plinth at the crown (8 px wide, y 192-194).
+  as the band course over the arch. (Round 1 had a keystone hanging under the plinth; dropped in round 2.)
 - **Vault**: one-point perspective from Pepper's eye height. Soffit and side walls in darker shades of the same
   stone (deeper is darker), a 2 px ring joint half way in. The floor is left open, so the paving runs through.
-- **Far end**: the same arch scaled to 0.44 about the eye point, lit: daylight, the far quay's trees and paving.
+- **Far end**: the same arch scaled to 0.44 about the eye point, lit: daylight, a tree line of rounded crowns of
+  uneven widths over a shaded row (round 2), the far quay's paving.
   It sits right behind Pepper when she crawls through, so she reads clearly.
 - **Drawing** (scene.lua `archFront`, called from `Sc.passageFront`): drawn after the ground, in the back look like
   the pier art above it (the 6 Nov arch took the ground's grade, a shade off the plinth). `archBack` and its per-pixel
@@ -52,8 +54,20 @@ Art (0, 0) is world (1939, 192): the plinth's own width, down to y 215. Pepper's
 | Pepper crawling inside (x 2004) | `arch_pepper_inside_before.png`, `_grey` | `arch_pepper_inside_after.png`, `_grey` |
 | history 5 / 6 / 7 Nov | `arch_history_5nov_6nov_7nov.png`, `_grey` | |
 
-Card: `cards/WARN_rw_arch.png` (5x beside the approved bench, bin and lamp, in-game frame in colour and greyscale,
-slot 130 x 24 OK).
+Round 2: `round2/arch_x1860_round2.png`, `round2/arch_pepper_inside_round2.png` (each with `_grey`),
+`round2/round1_vs_round2_6x.png` (and `_grey`), `round2/corner_{left,right}_{round1,round2}_16x.png`.
+
+Card: `cards/PASS_rw_arch.png` (round 2; 5x beside the approved bench, bin and lamp, in-game frame in colour and
+greyscale, slot 130 x 25 OK).
+
+## Round 2 (independent review round 1: FAIL with 3 small fixes)
+
+| Review said | Done |
+| --- | --- |
+| One pixel of river at each outer corner, (1939, 191) and (2068, 191), where the plinth's rounded corner meets the jamb | The arch file has one more row on top (y 191), transparent except those two pixels, in the jambs' side colours (158 left, 109 right). Drawn at y 191. pier.png unchanged. |
+| Drop the hanging keystone (wrong as stonework, 1 px or less over Pepper's back) | Dropped. The ring runs up under the band course; the opening is clear to y 192 everywhere. |
+| The far trees read as a green railing (flat rows, a dark tick every 6 px) | A tree line: rounded crowns of uneven widths (3 to 8 px), 1 to 3 px over a shaded underside row, no regular ticks. |
+| Keep 18 px jambs; do not lighten the vault; base course top row 243 to 219 if it does not hurt | Done. The base course's lit row is 219. asset_qa now PASS (contrast inside the back row). |
 
 ## Checks
 
@@ -65,17 +79,14 @@ slot 130 x 24 OK).
 | `tools/check_tiled.sh` | TILED CHECK PASSED |
 | `tools/check_backdrop.py` | BACKDROP OK |
 | `tools/build_rw_arch.py --check` | CHECK PASS |
-| `asset_qa.py --file rw_arch.png --layer back --level rw --fade 0` | WARN: ladder contrast 134, the back row allows 120. Lone 0.0 %, dirt 0.0 %, blotches 0, darkest 100 (row: 80), colours 13 (row: 20) |
+| `asset_qa.py --file rw_arch.png --layer back --level rw --fade 0` | PASS (round 2; round 1 was WARN, contrast 134). Lone 0.0 %, dirt 0.0 %, blotches 0, colours 13 |
 
-About the contrast WARN: it comes from the pier's own joint colour (97) and the vault against the lit far opening.
-The piece is the foot of an obstacle on Pepper's line (the pier she walks on), which is checked as back only because
-it takes the back look. Lifting the vault two more steps passes the number but loses the "under the bridge" read.
+All checks above were run again after round 2 with the same results.
+
+About the round 1 WARN: the reviewer measured that its cause was the light end (the daylight and the 243 lit rows),
+not the vault: the arch's darkest equals the approved pier's. Dropping the keystone and taking the base course's lit
+row to 219 brought it inside the row; the vault is unchanged.
 
 ## Open questions
 
-1. The keystone hangs 3 px below the crown (y 192-194). Pepper's crawling back is at y 194-197, so it can touch her
-   back for one frame as she passes the middle. Keep it, or drop it to a flat crown (opening fully clear to y 192)?
-2. Pepper still crosses the jambs at both ends of the passage (the collision passage is x 1936-2072, the jambs are
-   inside it), drawn in front of them as everywhere. Narrower jambs (12 px) would shorten that, but read less
-   load-bearing. Keep 18 px?
-3. The contrast WARN above: accept, or lighten the vault?
+None left from round 1: the reviewer answered all three (keystone dropped, 18 px jambs kept, vault not lightened).

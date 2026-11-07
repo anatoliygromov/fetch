@@ -10,7 +10,9 @@ pier block sitting on a dark gap, not as a stone bridge you walk under.
 
 7 Nov (day/07nov-rwarch): a stone underpass seen end on, as on Stockholm's quays, under the pier art's plinth (the
 approved pier's pixels are not touched; this piece starts on the row under the plinth's dark bottom line).
-Art (0, 0) = world (1939, 192): the plinth's own width (1939-2068), down to row 23 (y 215); Pepper's line is y 216.
+Art row 1 = world y 192, x 0 = world 1939: the plinth's own width (1939-2068), down to y 215; Pepper's line is y 216.
+Row 0 (y 191) is transparent except its two corners: the plinth's rounded bottom corners left a pixel of river
+there (review round 1), filled with the jambs' side colours.
   * the jambs: 18 px of the pier's own ashlar (10 px courses: a lit top row, the face, a shade row, a joint row; the
     vertical joints alternate per course), a base course like the pier's plinth (lit top, face, shade), the outer
     edges as the pier's sides (lit 158 left, 109 right). They stand on the paving: the pier's face comes down to
@@ -18,14 +20,17 @@ Art (0, 0) = world (1939, 192): the plinth's own width (1939-2068), down to row 
   * the arch: a segmental arch (span 94 px, rise 16), its crown at row 0 right under the plinth, so the opening is as
     tall as the passage Pepper crawls through (y 192-216). A ring of voussoirs (5 px) on each haunch in the pier's
     light granite (219) with radial joints and an arris (158), a lit row along the arris (243), a joint (97) round
-    its back; the ring runs up under the plinth, so the plinth reads as the band course over the arch. The keystone
-    hangs from the plinth at the crown: a wedge 8 px wide, rows 0-2 (y 192-194; Pepper's crawling back is at y 194-197).
+    its back; the ring runs up under the plinth, so the plinth reads as the band course over the arch (its crown
+    voussoirs, the keystone among them, are behind the plinth). Round 1 had a keystone hanging 3 px under the plinth:
+    wrong as stonework, and 1 px or less over Pepper's crawling back (review round 1); dropped in round 2.
   * the passage inside, in one-point perspective from the eye point (row VPY, about Pepper's eye height): the soffit
     and the side walls in darker shades of the same stone (soffit 128 then 109, walls 109 then 97, a 2 px ring joint
     half way in; deeper is darker), the floor left open, so the paving runs through (painted with the ground, with
     its slanted shadow bands);
   * at the far end a lit opening, the same arch scaled by K about the eye point: daylight (the sky's horizon colour),
-    the far quay's trees and paving.
+    a tree line of rounded crowns of uneven widths (a shaded underside row), the far quay's paving.
+Round 2 (review round 1): the base course's lit row is 219 (was 243), which also brings asset_qa's ladder contrast
+inside the back row.
 Flat ramps from the pier art's palette (no new stone colours), parts drawn once by rule on the pixel grid; the
 voussoirs are symmetric about the crown (the left half is built, the right half is its mirror)."""
 import os, sys, math
@@ -42,7 +47,7 @@ HI, LIT, FACE, H2, EDGE, SHADE, DARKE, JOINT, DEEP, DEEPEST = (
 # the far end: daylight (the sky's horizon colour), the far quay's trees and its paving (pavement.png's colours)
 SKY, TREE, TREE_D, PAVE, PAVE_B = rgb(221, 229, 236), rgb(141, 169, 137), rgb(98, 122, 106), rgb(214, 206, 202), rgb(184, 183, 190)
 
-W, H = 130, 24                     # world x 1939-2068, y 192-215
+W, H = 130, 24                     # world x 1939-2068, y 192-215 (the file has one more row on top: y 191)
 J = 18                             # jamb width
 X0, X1 = J, W - J - 1              # the opening's columns (18 .. 111)
 CX = W / 2                         # 65.0: the opening's centre line (between cols 64 and 65)
@@ -86,7 +91,7 @@ def depth(px, py):
 def stone(y, lx, right):
     """the pier's ashlar at row y, lx px in from the pier's outer side (both jambs and the spandrels)"""
     if y >= 20:                                                              # the base course (as the pier's plinth)
-        c = HI if y == 20 else (SHADE if y == 23 else FACE)
+        c = LIT if y == 20 else (SHADE if y == 23 else FACE)   # (round 2: lit row 219, was 243)
     else:
         r, course = y % 10, y // 10
         vj = 24 if course == 0 else J                                        # the vertical joints alternate
@@ -116,6 +121,18 @@ def ring_px(px, py):
     return HI if d < R + 2 else LIT                                          # a lit row along the arris, the face
 
 
+def crowns():
+    """the far tree line's crown height (1 to 3 px over its dark row) per column: rounded crowns of uneven widths, no
+    regular ticks (round 2: two flat rows with a dark tick every 6 px read as a green railing)"""
+    prof, x = [0] * W, 0
+    for w, h in [(6, 3), (4, 2), (7, 3), (5, 2), (3, 2), (8, 3), (5, 2), (6, 3), (4, 2), (7, 3), (5, 2), (6, 3)] * 3:
+        for i in range(w):
+            if x < W: prof[x] = h - 1 if (i == 0 or i == w - 1) else h      # rounded ends
+            x += 1
+    return prof
+CROWNS = crowns()
+
+
 def build():
     a = np.zeros((H, W, 4), np.uint8)
     # 1 the jambs and the spandrels: the pier's ashlar (10 px courses), the base course; mirrored about the centre
@@ -132,10 +149,11 @@ def build():
             t, surf, qx, qy = depth(px, py)
             lx = min(x, W - 1 - x)
             if surf == 'far':                                                 # daylight: sky, trees, the far quay
-                d = fy - py
-                if d < 2: c = PAVE
-                elif d < 3: c = PAVE_B
-                elif d < 5: c = TREE_D if lx % 6 == 0 else TREE
+                r = int(fy - py)                                             # rows above its floor
+                if r < 2: c = PAVE
+                elif r < 3: c = PAVE_B
+                elif r < 4: c = TREE_D                                       # the trees' shaded underside
+                elif r < 4 + CROWNS[x]: c = TREE                             # their bumpy top
                 else: c = SKY
                 a[y, x] = c
                 continue
@@ -153,13 +171,13 @@ def build():
         for x in range(W // 2):
             c = ring_px(x + 0.5, y + 0.5)
             if c is not None: a[y, x] = c; a[y, W - 1 - x] = c
-    # 4 the keystone hangs from the plinth at the crown: a wedge, 8 px wide on row 0, 6 px on row 2
-    for y in range(3):
-        for lx in range(int(CX) - 4 + y // 2, int(CX)):
-            edge = lx == int(CX) - 4 + y // 2 or y == 2
-            c = EDGE if edge else (HI if lx < int(CX) - 1 else LIT)
-            a[y, lx] = c; a[y, W - 1 - lx] = c if c is not HI else LIT
-    return a
+    # 4 (round 2) one row on top, world y 191: transparent except the two outer corners, where the plinth's rounded
+    # bottom corners leave a pixel of river; filled with the jambs' side colours (158 left, 109 right). The hanging
+    # keystone of round 1 is gone (it brushed Pepper's back): the ring runs up under the band course.
+    out = np.zeros((H + 1, W, 4), np.uint8)
+    out[1:] = a
+    out[0, 0] = EDGE; out[0, W - 1] = DARKE
+    return out
 
 
 if __name__ == '__main__':
@@ -172,4 +190,4 @@ if __name__ == '__main__':
     Image.fromarray(a).save(out)
     if out.startswith('riverwalk/'):
         os.makedirs('art/source/rw_arch', exist_ok=True); aseprite_io.write('art/source/rw_arch/rw_arch.aseprite', [a])
-    print(os.path.basename(out), W, 'x', H, 'colours', len({tuple(p) for p in a.reshape(-1, 4) if p[3]}))
+    print(os.path.basename(out), a.shape[1], 'x', a.shape[0], 'colours', len({tuple(p) for p in a.reshape(-1, 4) if p[3]}))
