@@ -271,3 +271,21 @@ canopy over the door or drop it. And the street lamp at x 1959 stands in the she
 review).
 
 Round 2: 52 of 52 files PASS (one small note on the closed hats), 2 placement FAILs.
+
+
+# Round 3 (reviewer, 7 Nov)
+
+Head a2506f8. The changed files looked at at 5x to 7x and in the frames (the sweep review has the screens).
+
+| Piece | Round 2 | Round 3 | Evidence |
+| --- | --- | --- | --- |
+| town_facades (mid row) | PASS | PASS | 960x250, ten houses of 80-112 px, crow-step, Dutch and hip gables, 16x22 windows in an even grid, one tint each (pale ochre, rose, grey-blue, cream), 184-195 on screen; calm and big as the concepts. Small: its chimneys 8x38 px are 1.65 m at half scale, a thin tower; 24 px. |
+| canal house canopy (CANOPY 2420 y 328) | FAIL (plank) | PASS | striped cloth over the door, box width + 2, the same ramp |
+| closed1-22, start, bakery fronts | PASS (small) | PASS | hips with transparent sides (the stripes gone), 36-44 px over the eave, saturated plasters; small: the closed-kind chimneys in the oak ramp read as brown posts against the pale mid row at 1x (closed4 at x 0, closed1 at x 2560); brick as on the start house would read |
+| low-row plasters (all fronts) | PASS | PASS | ochre 0.49, salmon 0.35, oxblood 0.40, cream 0.30 on screen, values 153-173: warm, as A1-A4 |
+| dtl_fountain_face, the basin band | new | PASS | the face in the quay wall's greys, a 3 px water band over 12 px of granite; the violet is gone |
+| kerb face and quay wall (ground) | note | PASS | neutral granite greys 64-78, the cobbles unchanged |
+| roof strips, canopies, guild roof, hall roof, shed roof, arcade, shed, hall, guild fronts, dtl_fountain_* | PASS | PASS | unchanged |
+
+Round 3: every file PASS; two polish items (closed-kind chimneys to brick, mid-row chimneys to 24 px). Nothing dirty,
+nothing floating, nothing doll-sized.

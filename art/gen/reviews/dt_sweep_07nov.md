@@ -230,3 +230,112 @@ high road messy: no. He would ask about the plank on the canal house and the lam
 3. closed1-kind hat: side slopes as flat lead, two greys with a 4 px seam row, not 2 px vertical stripes.
 4. Pending from other tracks, seen or not: bone collisions on the statue and fountain (not judged); the violet
    wall (not seen as violet on my frames, see problem 4).
+
+
+# Round 3 (reviewer, 7 Nov)
+
+Head a2506f8 (rounds 3, 4 and 5 of the maker: canal canopy, lamp, hips; the mid row lowered to world 430 and rebuilt
+as 3-4 big gabled houses per screen, the far roofs strip off, saturated low-row plasters, hips 36-44 px, the camera
+floor 152; the far band of round 4 removed again). Own sweep of 33 frames at the three tiers with a cargo bike parked
+at x 1965 (`LOOK_CARGO=1965` in the sweep), 2x colour tier stacks, 1x colour and greyscale sheets per tier, suspect
+spots at 6x, the route render, the maker's rounds 3 to 5 notes read last (their numbers hold: mid walls 184-195 on
+screen against low-row plaster 153-173, sky over the gables 70-80 px at y 120, lamp at 2040, gate 1934-1996). The
+sky is unpainted here (day/07nov-sky brings it) and is judged for space and clipping only.
+
+## Round 2 fixes
+
+1. Canal house balcony: DONE. Box 2420 y 328 is CANOPY, claimed, a striped cloth awning over the canal house's
+   door (x 2240 frames, both tiers). No hung balcony anywhere now.
+2. Lamp in the gate: DONE. The lamp is at 2040, the gate opening 1934-1996 is clear; the parked bike at 1965 stands
+   in the arch with nothing through it. At 2040 the post stands in front of the kiosk house's door under the end of
+   the shelter's glass roof (the maker's respawn reason for not 2008 accepted); at 1x it reads as a lamp beside the
+   shelter's post. PASS.
+3. Hips' side stripes: DONE. The rows beside a hip are transparent; the hip is the silhouette, sky or the mid row
+   beside it (x 320, x 2560 at y 120).
+
+## Screens, round 3
+
+| cam x | y 240 (street) | y 120 (the high road) | y 0 (roofs and sky) |
+| --- | --- | --- | --- |
+| 0 | PASS | PASS (small: closed4's chimney at screen x 288-298 is a 10x36 oak-brown column against the pale gable and the sky; at 1x it reads as a post, the start house's brick chimney reads as a chimney) | PASS |
+| 320 | PASS | PASS | PASS |
+| 640 | PASS | PASS | PASS |
+| 960 | PASS | PASS | PASS |
+| 1280 | PASS | PASS | PASS |
+| 1600 | PASS (the fountain's face in the quay wall's greys now; the gap behind the column is cream wall at the street tier, sky at y 120) | PASS (small: the mid row's chimney at screen x 150-158 is 8x38 px, 1.65 m at half scale, a thin tower) | PASS |
+| 1920 | PASS (bike in the arch, lamp at 2040 clear of it, crates end at the jamb) | PASS | PASS |
+| 2240 | PASS (cloth canopy on the canal house, railing garden, bridge) | PASS | PASS |
+| 2560 | PASS | PASS | PASS (small: the far spire's cross lands on closed2's parapet at screen x 215, y 90 at this camera and reads as a cross on the house; the spire drifts at 0.03 so it sits on a roofline somewhere on three of the eleven screens) |
+| 2880 | PASS | PASS | PASS |
+| 3200 | PASS | PASS | PASS |
+
+33 of 33 PASS. The small notes are polish, none would make the owner call a screen messy.
+
+## Route render, round 3
+
+PASS. CANOPY 2420 y 328 named and claimed, lamp at 2040, GATE 1864-1934, everything else as round 2.
+
+## The five problems, round 3
+
+1 fiction and scale PASS (the mid row is a row of big houses behind a square, its foot at 430 under the street
+line, moving with the world; never on a cornice). 2 one language PASS, no leftover (parapet with ink and light
+coping = walk; cloth canopies and the stone porch on the middle tier; nothing hung). 3 silhouettes and sky PASS
+(crow-step, Dutch and hip gables of 80-112 px wide houses against 70-80 px of sky at y 120; the low row 30 luma
+darker with cornices and tile eaves). 4 two scales PASS. 5 set pieces PASS.
+
+## The seven questions, round 3
+
+1 walkable at a glance: yes. 2 buildings with roofs: yes. 3 mid row behind, lighter, smaller, quieter: yes, and
+now also few and big (3-4 houses a screen, 2-3 windows a storey). 4 true scale: yes; small: the mid row's chimneys
+at 38 px are too tall for half scale (24 px). 5 nothing floats: nothing. 6 concept: close, see below. 7 messy: no.
+
+## The main question: character against A1-A4
+
+Close. The three things the concepts are made of are all there: a warm front row (ochre 0.49, salmon, oxblood,
+cream, red tile hips 36-44 px with ridge caps, brick chimney on the start house, the guild's tile gable), calm big
+pale houses behind (one tint each, two or three big windows a storey, flat wall between, crow steps and Dutch
+gables as the concept's skyline), and sky over all of it at the high road tier. Beside A1 (x 1280 y 120) the
+picture has the same bones: bakery wing and arcade at the left, the gables and sky behind, the dog on the lead
+flat. Beside A2 (x 1600 y 120) the gable, the chimney with the bone, the two pavilion roofs, the column in the
+gap. Beside A3 (x 1920-2240) the stepped roofs, the glass hall with its railing garden. A4 (x 1280 y 240) was
+close already.
+
+What is still busy, washed out or cut, all small:
+- Busy: at the y 0 tier the River Walk skyline (far city, scroll 0.08) shows as a band of towers, domes and
+  spires between the mid row's gables and the clouds (x 1600-2560 y 0, luma 173-200); it keeps the ladder but
+  it is the one thing the concepts do not have behind the tall houses. The painted sky branch replaces it; if
+  that sky keeps a skyline, it should be lower and simpler than this one (tops only, 20-30 px, no spires).
+- Busy (small): the Riddarholmen spire's cross drifts with the camera and sits on a roofline on three screens.
+- Washed out: nothing. The mid row at 184-195 reads as pale houses against a saturated blue sky, not as haze;
+  the greyscale sheet keeps the order sky, mid, low row, play.
+- Cut: nothing wrong. At y 120 the gables are whole (tops at screen y 60-100) and the low row's hips are whole;
+  the mid row's lower storeys are hidden by the low row as the concept intends; at y 240 the parapet caps sit at
+  the top edge as before.
+- Reads: the closed-kind chimneys in the oak ramp (10x36 brown columns) read as posts beside the pale mid row;
+  brick like the start house's would read as chimneys at 1x.
+
+## Camera floor 152
+
+Her feet sit at screen y 152 instead of 168, so 152 px of world is visible above her feet (was 168) and 16 px
+more below. What that hides: anything 152-168 px above the floor she stands on. From the street (424) that is
+world 256-272: the pavilion roofs, galleries, wing, bridge and bakery balcony, which at the old floor showed as 0
+to 16 px of parapet cap at the top edge and are reached only from other roofs (every roof-to-roof step is within
+her 46 px jump: wing 272 to arcade 280, steps 272 to 244, chimney 200 from 244, pavilions 256 from 248, shed 264,
+kiosk 248, shelter 264, hall 232 from the awning's bounce, canal 248, bridge 272). The sign (304, 120 up), the
+porch and canopies (312-344, 80-112 up), the crates and awnings are all on screen from the street. Bones: the 32
+bones above y 300 all sit on or over the roofs and are collected from them; the five at y 272 (x 1360, 2500-2624)
+sit at the top edge from the street, half cut, as roof bones. Hazards are at street level or below (water, bikes,
+trams) and unaffected; the in-air dead zone (TOP 64) is unchanged. Looking up (64 px) still exists. Nothing Pepper
+needs is hidden. PASS.
+
+## Fixes, round 3 (polish, in order)
+
+1. Closed-kind chimneys in the brick ramp (as the start house), 10 px with the 2 px cap, so they read as
+   chimneys and not posts (closed1, 2, 4, 7, 13, 16, 22 and the bakery).
+2. Mid row chimneys 24 px tall (not 38), 2 px cap.
+3. When the painted sky lands: its far skyline lower and simpler than the River Walk one (tops only), and the
+   spire parked at an x where its cross never lands on a low-row or mid-row roofline at any tier (or its drift
+   off in this level).
+
+VERDICT: PASS. The high road is not messy any more; I would show every screen to the owner as finished, with the
+three polish items above as the next small round.
