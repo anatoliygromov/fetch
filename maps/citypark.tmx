@@ -250,7 +250,7 @@
     <property name="over" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="26" name="HOLLOW LOG" type="props" x="1564" y="158" width="42" height="7">
+  <object id="26" name="HOLLOW LOG" type="props" x="1553" y="158" width="72" height="7">
    <properties>
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
@@ -422,7 +422,7 @@
     <property name="layer" value="front"/>
    </properties>
   </object>
-  <object id="51" type="pieces" x="1564" y="158" width="42" height="7">
+  <object id="51" type="pieces" x="1553" y="158" width="72" height="7">
    <properties>
     <property name="kind" value="hollowlog"/>
    </properties>
@@ -452,7 +452,7 @@
    </properties>
   </object>
   <object id="54" name="WILLOWS" type="secrets" x="764" y="100" width="80" height="12"/>
-  <object id="55" name="HOLLOW LOG" type="secrets" x="1570" y="176" width="30" height="8"/>
+  <object id="55" name="HOLLOW LOG" type="secrets" x="1574" y="176" width="30" height="8"/>
   <object id="56" name="OAK TOP" type="secrets" x="1732" y="90" width="72" height="10"/>
  </objectgroup>
  <objectgroup id="4" name="movers" color="#40c0ff" draworder="index">
@@ -510,7 +510,7 @@
    </properties>
    <point/>
   </object>
-  <object id="64" type="lamps" x="1624" y="184">
+  <object id="64" type="lamps" x="1642" y="184">
    <properties>
     <property name="checkpoint" type="bool" value="true"/>
    </properties>
@@ -659,13 +659,13 @@
   <object id="106" type="bones" x="1546" y="184">
    <point/>
   </object>
-  <object id="107" type="bones" x="1585" y="184">
+  <object id="107" type="bones" x="1589" y="184">
    <properties>
     <property name="super" type="bool" value="true"/>
    </properties>
    <point/>
   </object>
-  <object id="108" type="bones" x="1648" y="184">
+  <object id="108" type="bones" x="1656" y="184">
    <point/>
   </object>
   <object id="109" type="bones" x="1780" y="156">
@@ -784,7 +784,7 @@
   <object id="144" type="magpie.perches" x="1345" y="128">
    <point/>
   </object>
-  <object id="145" type="magpie.perches" x="1624" y="100">
+  <object id="145" type="magpie.perches" x="1642" y="100">
    <point/>
   </object>
   <object id="146" type="magpie.perches" x="2428" y="138">
