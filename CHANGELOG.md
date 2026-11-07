@@ -3,6 +3,11 @@
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
 
+## Branch `ui/07nov-tagline`: the title's tagline plate rebuilt with chunky type (owner, 7 Nov: "stray pixels, maybe we need a better chunkier type")
+- `tools/build_tagline.py` writes `riverwalk/art/title/tagline_chunky.png` (165 x 20): THE CITY DOG ADVENTURER in the menus' own 7 px font (2 px stems), its outline and shadow recoloured from the menus' brown to the plate's deep navy; the plate in the regrid plate's colours and build (navy edge, light blue rim, navy fill) with the same 3-step chamfer on all four corners, no doubled steps or loose end pixels.
+- `title.lua`: `T.TAGLINE = "chunky"` (default), drawn over the logo at x 138..302, y 77..96, centred on T.CX 220; it covers the old plate baked into base.png. "regrid", "caps" and "lower" stay selectable. Nothing else of the title changes (base.png, logo, Pepper untouched).
+- Checks: layout_qa_menus same as main (its strip check fails there too).
+
 ## v0.7 (7 Nov 2026): River Walk, City Park and Downtown at finished quality
 Main moves from v0.6 (23 Oct) to `prod/integrate-f`: everything integrated since (prod/integrate-c and -d, the 5 Nov and 6 Nov art families, the hint bubbles, the speech bubbles and bikes in front, the night of 6-7 Nov tracks). Every check green, every screen of the three levels passed an independent review. Owner's yes, 6 Nov 20:10, on that condition. The sections below are the detail.
 
