@@ -6,8 +6,13 @@
 --   2 split toning per layer (a shader): light colours lean warm, dark ones lean blue-violet, colours a bit
 --     richer; the further back a layer is, the more it turns into its haze colour. Each colour in maps to one
 --     colour out, so an asset keeps its number of colours. The art files are untouched.
---   3 a painted sky in bands, joined by 2 x 2 ordered dither rows (the 16-bit way to do a gradient); in a tall
---     art level it goes on above the old top (deeper blues) and rises with the far city (Look.skyTall)
+--   3 the sky. (day 7 Nov, owner on the board: "the sky now feels very technical ... we need something more
+--     artistic") Look.PAINTED: a painted sky per level, built by tools/build_sky.py (broad flat tones with wavy,
+--     stepped joins, long calm streaks, cumulus banks of stamped lobes, a low bank behind the skyline, wisps), which
+--     replaces the drifting cloud sprites; the far city drawn as one clean light shape with a warm rim
+--     (skyline_<level>.png); and each level's far hazes a clean tint of its own sky's horizon (script.paint).
+--     LOOK_SKY=bands (or Look.PAINTED = false) is the old path, for the before / after: the sky in even bands of
+--     flat steps, in a tall art level carried on above the old top (deeper blues), rising with the far city
 --   4 River Walk's road recedes: each road row scrolls a little faster the nearer it is (row scrolling, like the
 --     river), and the near-lane traffic slides with its row
 --   5 a dark foreground band at the bottom that scrolls 1.4x, only in front of the flat ground Pepper walks at
@@ -15,7 +20,7 @@
 --     Downtown have none: their bottom band (earth, quay wall) is already dark, and shapes there did not read.
 --     Its tops are at y 218 or lower (under her lowest walking line, the lower quay at y 216), or y 206 deep
 --     inside a stretch of flat ground. It never covers her.
-local Look = { on = true, CHECK = os.getenv("LOOK_CHECK") ~= nil }
+local Look = { on = true, CHECK = os.getenv("LOOK_CHECK") ~= nil, PAINTED = os.getenv("LOOK_SKY") ~= "bands" }
 local lg = love.graphics
 local function hex(h) return { tonumber(h:sub(1, 2), 16) / 255, tonumber(h:sub(3, 4), 16) / 255, tonumber(h:sub(5, 6), 16) / 255 } end
 
@@ -31,7 +36,7 @@ local function hex(h) return { tonumber(h:sub(1, 2), 16) / 255, tonumber(h:sub(3
 -- the old cool grey. The amounts keep the ladder (docs/layer_ladder.md): the further back, the lighter. A piece
 -- with its own amount (the park gate 28 %, the winch keeper 35 %, the vintage tram 40 %, the spire 45 %) keeps it
 -- and takes the haze.
-local function L(warm, cool, sat, haze, k) return { warm = warm, cool = cool, sat = sat, haze = hex(haze), k = k } end
+local function L(warm, cool, sat, haze, k, clean) return { warm = warm, cool = cool, sat = sat, haze = hex(haze), k = k, clean = clean or 0 } end
 Look.scripts = {
   riverwalk = {                                                    -- summer morning
     layers = { clouds = L(0.9, 1.6, 1.0, "f7ead2", 0.10), city = L(0.2, 1.8, 0.70, "aaa6d0", 0.46),
@@ -41,6 +46,12 @@ Look.scripts = {
                front = L(0.0, 1.8, 1.10, "1b1934", 0.40) },
     bands = { { 0, "4b7ec2" }, { 16, "5a8aca" }, { 32, "6b98d1" }, { 48, "80a8d7" }, { 62, "98b8db" },
               { 76, "b2c6da" }, { 89, "cbd1d4" }, { 101, "dfd7c9" }, { 112, "ecdabd" }, { 122, "f4dcb3" } },
+    -- (day 7 Nov) Look.PAINTED: the painted sky's look. Each building layer's haze is a clean tint of this sky's horizon
+    -- (never grey); clean = how much of the colour a haze mix takes away is given back (0 = as before), so a far layer
+    -- gets lighter and takes the air's hue without turning dull. The far city's colours are final in its file.
+    paint = { horizon = "f0e2c0",
+              layers = { city = L(0, 0, 1.0, "000000", 0), shore = L(0.5, 1.5, 1.05, "a6c4e2", 0.28, 0.55),
+                         mid = L(0.8, 1.3, 1.2, "e6e2d6", 0.15, 0.5) } },
     fg = { dark = hex("161c2c"), mid = hex("1f2b42"), rim = hex("4c5d7c"), warm = hex("9a8174"), warmK = 0.05 },
     kinds = { hedge = 1 },                                         -- (6 Nov: clipped hedges; the grass spikes and the bollards read as ink and pegs)
     fade = { back = 0.28 },                                        -- (as before: decoration, railing, kiosks)
@@ -57,6 +68,9 @@ Look.scripts = {
               { 89, "d4c3b7" }, { 104, "e5c9a9" }, { 118, "efcb9b" }, { 131, "f4cc8e" }, { 143, "f7cd86" } },
     -- a tall level's sky goes on above y 0 (up in the treetops): pale blues like the bands below, each band 24 rows
     above = { { -120, "aac3ef" }, { -96, "adc5ef" }, { -72, "b0c7ef" }, { -48, "b3c9ee" }, { -24, "b6cbee" } },
+    paint = { horizon = "f4cd98",                                  -- (day 7 Nov) Look.PAINTED, see River Walk
+              layers = { city = L(0, 0, 1.0, "000000", 0), shore = L(0.6, 1.5, 1.05, "f2d6bc", 0.30, 0.55),
+                         mid = L(1.0, 1.3, 1.25, "f2d4b4", 0.14, 0.5) } },
     fg = { dark = hex("1d1525"), mid = hex("2b1f33"), rim = hex("594257"), warm = hex("b5793f"), warmK = 0.22 },
     kinds = {},                                                    -- (the earth band is already the dark frame)
     leafFront = true,                                              -- a tall level's high road gets the leaf front (Look.leaves)
@@ -73,6 +87,9 @@ Look.scripts = {
                front = L(0.0, 1.8, 1.10, "141a26", 0.40) },
     bands = { { 0, "3e72c3" }, { 16, "4d7fc9" }, { 32, "5f8ecf" }, { 48, "75a0d5" }, { 64, "8db2da" },
               { 80, "a7c3de" }, { 96, "c0d3e0" }, { 112, "d5e0e2" }, { 126, "e3e9e3" }, { 140, "ebefe5" } },
+    paint = { horizon = "c6deee",                                  -- (day 7 Nov) Look.PAINTED, see River Walk
+              layers = { city = L(0, 0, 1.0, "000000", 0), shore = L(0.4, 1.4, 1.00, "c2d6ec", 0.30, 0.6),
+                         mid = L(0.7, 1.3, 1.15, "dae8f6", 0.24, 0.45) } },
     fg = { dark = hex("141a26"), mid = hex("1e2838"), rim = hex("4a5a72"), warm = hex("8e8070"), warmK = 0.04 },
     kinds = {},                                                    -- (the quay wall is already the dark frame)
     -- the far roofs (shore) must read lighter than the facades in front (mid), yet darker than the far city: roofs
@@ -83,9 +100,28 @@ Look.scripts = {
 Look.key = "riverwalk"
 function Look.level(def) Look.key = ({ park = "citypark", town = "downtown" })[def.art] or "riverwalk" end
 local function S() return Look.scripts[Look.key] end
+-- a layer's look: the painted sky's override (script.paint.layers) when Look.PAINTED, else the script's own
+function Look.layer(name)
+  local s = S()
+  local p = Look.PAINTED and s.paint and s.paint.layers[name]
+  return p or s.layers[name] or s.layers.play
+end
+function Look.haze(name) local s = S(); return (Look.PAINTED and s.paint and s.paint.layers[name] or s.layers[name] or s.layers.back).haze end
+function Look.clean(name) local s = S(); local p = Look.PAINTED and s.paint and s.paint.layers[name]; return p and p.clean or 0 end
+-- ImageData d, every pixel k of the way to the layer's haze, the colour given back by the layer's clean (in place)
+function Look.fadeData(d, k, name)
+  local h, c = Look.haze(name), Look.clean(name)
+  if k > 0 then
+    d:mapPixel(function(_, _, r, g, b, a)
+      local l, ck = 0.299 * r + 0.587 * g + 0.114 * b, c * k
+      return r + (h[1] - r) * k + ck * (r - l), g + (h[2] - g) * k + ck * (g - l), b + (h[3] - b) * k + ck * (b - l), a
+    end)
+  end
+  return d
+end
 
 local SRC = [[
-extern vec3 haze; extern float k; extern float warm; extern float cool; extern float sat;
+extern vec3 haze; extern float k; extern float warm; extern float cool; extern float sat; extern float clean;
 vec4 effect(vec4 color, Image tex, vec2 tc, vec2 sc) {
   vec4 c = Texel(tex, tc) * color;
   vec3 rgb = c.rgb;
@@ -93,15 +129,18 @@ vec4 effect(vec4 color, Image tex, vec2 tc, vec2 sc) {
   rgb = mix(vec3(L), rgb, sat);
   rgb += warm * L * L * vec3(0.080, 0.032, -0.048);
   rgb += cool * (1.0 - L) * (1.0 - L) * vec3(-0.030, -0.045, 0.085);
+  vec3 pre = rgb;
   rgb = mix(rgb, haze, k);
+  rgb += clean * k * (pre - vec3(dot(pre, vec3(0.299, 0.587, 0.114))));   // (7 Nov) give back the colour the mix took
   return vec4(clamp(rgb, 0.0, 1.0), c.a);
 }]]
 local shader
 function Look.use(name)
   if not Look.on then return end
   shader = shader or lg.newShader(SRC)
-  local p = S().layers[name] or S().layers.play
+  local p = Look.layer(name)
   shader:send("haze", p.haze); shader:send("k", p.k); shader:send("warm", p.warm); shader:send("cool", p.cool); shader:send("sat", p.sat)
+  shader:send("clean", p.clean or 0)
   lg.setShader(shader)
 end
 function Look.off() lg.setShader() end
@@ -136,14 +175,63 @@ local function sky()
   skies[Look.key] = im
   return im
 end
-function Look.sky() lg.setColor(1, 1, 1, 1); lg.draw(sky(), 0, 0) end
+-- (day 7 Nov) the painted sky: art/scene/sky_<level>.png (tools/build_sky.py), 960 px wide, wrapping, row 0 = screen
+-- y -SKY_ABOVE. It moves at SKY_SPEED of the camera plus a slow drift (SKY_DRIFT px a second), the far city in front.
+Look.SKY_SPEED, Look.SKY_DRIFT = 0.05, 2
+local painted = {}
+local function paintedSky()
+  local key = Look.key
+  if painted[key] == nil then
+    local f = "art/scene/sky_" .. key .. ".png"
+    painted[key] = love.filesystem.getInfo(f) and lg.newImage(f) or false
+    if painted[key] then painted[key]:setFilter("nearest", "nearest") end
+  end
+  return painted[key] or nil
+end
+local skyQ = {}
+local function drawPainted(im, camx, t, row0, y)
+  local w, h = im:getDimensions()
+  local o = math.floor((camx or 0) * Look.SKY_SPEED + (t or 0) * Look.SKY_DRIFT) % w
+  local key = row0 .. ":" .. w
+  skyQ[key] = skyQ[key] or { lg.newQuad(0, row0, 1, 1, w, h), lg.newQuad(0, row0, 1, 1, w, h) }
+  local a, b = skyQ[key][1], skyQ[key][2]
+  local n = math.min(320, w - o)                                    -- the strip's end, then its start (it wraps;
+  a:setViewport(o, row0, n, h - row0, w, h)                         -- two quads, no texture wrap mode needed)
+  lg.setColor(1, 1, 1, 1); lg.draw(im, a, 0, y)
+  if n < 320 then b:setViewport(0, row0, 320 - n, h - row0, w, h); lg.draw(im, b, n, y) end
+end
+-- the sprite clouds drift over the old band sky only; the painted sky has its own banks
+function Look.spriteClouds() return not (Look.on and Look.PAINTED and paintedSky()) end
+-- the far city: the painted look's own file (one clean shape, warm rim; final colours, so a neutral city look), or
+-- the approved skyline under the city look
+local cities = {}
+function Look.skyline(im)
+  if Look.on and Look.PAINTED then
+    local key = Look.key
+    if cities[key] == nil then
+      local f = "art/scene/skyline_" .. key .. ".png"
+      cities[key] = love.filesystem.getInfo(f) and lg.newImage(f) or false
+      if cities[key] then cities[key]:setFilter("nearest", "nearest") end
+    end
+    if cities[key] then Look.use("city"); return cities[key] end
+  end
+  if Look.on then Look.use("city") end
+  return im
+end
+function Look.sky(camx, t)
+  local im = Look.PAINTED and paintedSky()
+  if im then drawPainted(im, camx, t, Look.SKY_ABOVE, 0); return end
+  lg.setColor(1, 1, 1, 1); lg.draw(sky(), 0, 0)
+end
 
 -- a tall level's sky (art levels): the same bands with Look.SKY_ABOVE more rows above y 0, from the script's
 -- `above` bands (or, without them, the top two bands' step carried on upwards, darker). Drawn from y -SKY_ABOVE.
 Look.SKY_ABOVE = 120
 local tallSkies = {}
-function Look.skyTall()
+function Look.skyTall(camx, t)
   local key = Look.key
+  local im = Look.PAINTED and paintedSky()
+  if im then drawPainted(im, camx, t, 0, -Look.SKY_ABOVE); return end
   if not tallSkies[key] then
     local S_ = S()
     local A, top = Look.SKY_ABOVE, S_.bands

@@ -15,6 +15,14 @@ Ladder per level, median / darkest (10th pct), pooled over each level's assets (
 | City Park | 209/199 | 239/201 | 169/157 | 166/153 (was 160/139) | 164/145 (was 143/118) | 134/88 (was 137/86) | 78/2 |
 | Downtown | 237/190 | 236/195 | 175/162 | 173/161 (was 162/139) | 170/124 (was 184/154) | 158/102 (was 151/96) | 96/2 |
 
+(day 7 Nov, the painted sky, look.lua Look.PAINTED; LOOK_SKY=bands gives the table above) horizon = the painted sky's rows from y 76 down, clouds = the painted banks' pixels (no look), city = skyline_<level>.png (final colours, neutral look), the far hazes clean tints of each sky's horizon (script.paint):
+
+| Level | horizon | clouds | city | shore | mid | back | play |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| River Walk | 226/226 | 226/186 | 174/162 | 167/133 | - | 170/117 | 113/2 |
+| City Park | 202/202 | 222/187 | 197/185 | 191/180 | 157/135 | 141/116 | 83/2 |
+| Downtown | 239/184 | 243/211 | 215/205 | 207/193 | 185/155 | 152/100 | 97/14 |
+
 River Walk's back decoration has a lighter median than its far shore (light house fronts), as before; its darkest keeps the order. Downtown's far layers sit close together: its look script's shore and city hazes are darker than its mid haze, so the order holds by small steps (the skyline and the roofs are mostly behind the facades).
 
 | Layer | Scroll x / y | Scale | Darkest (10th pct) | Max contrast | Colours | Outline |

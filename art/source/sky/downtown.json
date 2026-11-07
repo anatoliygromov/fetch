@@ -1,0 +1,60 @@
+{
+ "tones": [
+  "3e7ac8",
+  "4a86d0",
+  "6aa0da",
+  "98c0e4",
+  "c6deee",
+  "e8f2f4"
+ ],
+ "cloud": {
+  "lit1": "ffffff",
+  "lit2": "eef4fa",
+  "body": "d8e4f2",
+  "under": "c4d6ee"
+ },
+ "light": [
+  -0.3,
+  -0.95
+ ],
+ "counts": {
+  "3e7ac8": 74876,
+  "4a86d0": 56056,
+  "6aa0da": 30339,
+  "98c0e4": 30700,
+  "c6deee": 22406,
+  "e8f2f4": 115247,
+  "ffffff": 6798,
+  "eef4fa": 4205,
+  "d8e4f2": 2711,
+  "c4d6ee": 2262
+ },
+ "roles": {
+  "sky": [
+   "3e7ac8",
+   "4a86d0",
+   "6aa0da",
+   "98c0e4",
+   "c6deee",
+   "e8f2f4"
+  ],
+  "cloud": [
+   "ffffff",
+   "eef4fa",
+   "d8e4f2",
+   "c4d6ee"
+  ]
+ },
+ "cloud_share": 4.6,
+ "lone": 0.0,
+ "city": {
+  "p10": 205,
+  "median": 215,
+  "p90": 215,
+  "colours": 3
+ },
+ "horizon": {
+  "p10": 184,
+  "median": 217
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "name": "skyline_riverwalk",
+ "level": "riverwalk",
+ "layer": "city",
+ "kind": "backdrop",
+ "tier": "C",
+ "family": "sky_07nov",
+ "target_px": [
+  320,
+  77
+ ],
+ "built_by": "tools/build_sky.py (day/07nov-sky), from the approved skyline.png (unchanged)",
+ "slot": {
+  "file": "riverwalk/art/scene/skyline_riverwalk.png",
+  "where": "River Walk: the far city (scene.lua via Look.skyline), bottom at y 138 (River Walk) or 150 (art levels), repeats every 320 px"
+ }
+}

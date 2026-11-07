@@ -1,0 +1,17 @@
+{
+ "name": "sky_citypark",
+ "level": "citypark",
+ "layer": "sky",
+ "kind": "backdrop",
+ "tier": "C",
+ "family": "sky_07nov",
+ "target_px": [
+  960,
+  360
+ ],
+ "built_by": "tools/build_sky.py (day/07nov-sky)",
+ "slot": {
+  "file": "riverwalk/art/scene/sky_citypark.png",
+  "where": "City Park (tall): the whole sky (look.lua Look.sky / Look.skyTall), row 0 = screen y -120, wraps sideways, 0.05 of the camera + 2 px/s drift"
+ }
+}

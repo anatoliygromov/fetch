@@ -49,6 +49,9 @@ LADDER = {
     "lane":   dict(colours=20, outline=True),       # (5 Nov) the road's near lane, 55 px/m (road.lua): drawn with the play look
     "char":   dict(colours=24, outline=True),
     "front":  dict(median_max=40, contrast=40, colours=8),
+    # (day 7 Nov) the painted sky, drawn as it is (no look): its tones and its clouds (tools/build_sky.py --check holds
+    # the sky's own rules: 4-6 tones, clouds at luma 185 or more, no dither, no straight join, a seamless wrap)
+    "sky":    dict(colours=10),
 }
 # animated sheets: frame width x height (from the code that cuts them)
 FRAMES = {
@@ -81,7 +84,9 @@ TILES = {"rail_bg_left", "rail_bg_unit", "rail_bg_end", "pavement", "road", "par
 JOINS = {"cp_walk704_deck": "left", "cp_walk1968_deck": "left", "cp_walk704_landing608": "right", "cp_walk1968_landing1888": "right"}
 # slots (docs/art_hooks_r8.md): width, height, tolerance on each (0 = exact). Batch 1 files are named differently
 # from their hooks: HOOK says which game file each one becomes
-SLOTS = {"rw_rowboat": (185, 62, 0, 0), "rw_rower": (644, 62, 0, 0), "kennel": (44, 44, 0, 0), "rw_jetty": (48, 51, 0, 0),   # (night/06nov-rw) 4.0 m eka; 7 x 92 x 62 loop; kennel; built jetty
+SLOTS = {**{f"sky_{k}": (960, 360, 0, 0) for k in ("riverwalk", "citypark", "downtown")},      # (day 7 Nov) tools/build_sky.py
+         **{f"skyline_{k}": (320, 77, 0, 0) for k in ("riverwalk", "citypark", "downtown")},
+         "rw_rowboat": (185, 62, 0, 0), "rw_rower": (644, 62, 0, 0), "kennel": (44, 44, 0, 0), "rw_jetty": (48, 51, 0, 0),   # (night/06nov-rw) 4.0 m eka; 7 x 92 x 62 loop; kennel; built jetty
          "cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_throw": (528, 66, 0, 0),
          "cyclist_a_84": (76, 76, 8, 8), "cyclist_b_84": (76, 76, 8, 8), "cyclist_a_92": (76, 76, 8, 8), "cyclist_b_92": (76, 76, 8, 8),
          "roof_gable": (122, 80, 0, 20), "roof_loggia": (122, 48, 0, 12), "roof_gallery88": (90, 32, 0, 8),
@@ -210,6 +215,7 @@ def edge_mask(a):
 def as_drawn(rgb01, a, lvl, layer, fade):
     """RGB 0-1 as on screen: the load-time fade towards the level's haze for the layer, then the layer's look shader"""
     if layer == "lane": layer = "play"                 # (5 Nov) the near lane's traffic takes the play look (stage.lua)
+    if layer == "sky": return rgb01.copy()             # (7 Nov) the painted sky: no fade, no look
     out = ML.fade_to(rgb01.copy(), fade, lvl, layer if layer != "char" else None)
     if layer and layer != "char":
         flat = ML.shade(out[a], ML.S[lvl][layer]); out[a] = flat
@@ -599,7 +605,7 @@ def check(name, path, lvl, layer, fade, building=False, frames=None, levels=None
         r.add("ladder", "fail", f"median {med:.0f}, the front layer must be {row['median_max']} or darker")
     # body, outline, frames, windows
     need = bool(row.get("outline"))
-    organic = name in ORGANIC or cls in ("clouds", "water")
+    organic = name in ORGANIC or cls in ("clouds", "water", "sky")
     strict = cls in ("play", "lane", "char") or building
     blotch_check(r, rgb255, a, strict=not organic and cls not in ("char", "ground"))   # fur, cloth, cobbles: warn only
     if frames:
@@ -624,6 +630,15 @@ def registry():
         if n in NOT_DRAWN or n in out: continue
         out[n] = dict(path=p, level=lvl, layer=LAYER_FIX.get(n, layer), fade=fade, group=g, building=n in BUILDINGS,
                       frames=FRAMES.get(n), levels=SHARED.get(n))
+    # (day 7 Nov) the painted sky (look.lua Look.PAINTED): the sky and the far city per level; the cloud sprites retire
+    if ML.PAINT:
+        for lv, key in ML.KEYS.items():
+            for n, layer in ((f"sky_{key}", "sky"), (f"skyline_{key}", "city")):
+                p = os.path.join(ART, "scene", n + ".png")
+                if os.path.exists(p):
+                    out[n] = dict(path=p, level=lv, layer=layer, fade=0.0, group="Sky", building=False, frames=None, levels=None)
+        for i in range(1, 9): out.pop(f"cloud{i}", None)
+        out.pop("skyline", None)
     # pieces measure_layers does not list (animated sheets, cyclists' wheels, small props)
     extra = [("park_keeper_cart", "cp", "play", 0.0), ("park_leaves_flat", "cp", "play", 0.0),
              ("bone", "rw", None, 0.0), ("bone_gold", "rw", None, 0.0)]
