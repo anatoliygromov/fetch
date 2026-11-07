@@ -1,5 +1,25 @@
 # FETCH! Status
 
+## 7 Nov day: the reviewed day branches on one branch (`day/07nov-integration`, not merged to main)
+
+**On this branch** (off `origin/main` 5f30120, each merged with `--no-ff`, in this order):
+1. `day/07nov-sky`: the painted sky per level (`tools/build_sky.py`), the far city with a warm rim, clean hazes; City Park's leaf front off.
+2. `day/07nov-cplog`: City Park's hollow log (1553-1625, Pepper crawls inside, bark front drawn over her), checkpoint lamp and magpie perch to 1642.
+3. `day/07nov-barkdrop`: a bark while carrying drops the ball.
+4. `day/07nov-chars`: built cars, bikes and riders, the 24 px gull, the ferry, bones 15 x 9, hint pictures, the cat_r2.
+5. `day/07nov-bonusscene`: each bonus round in its level's own place.
+6. `day/07nov-ground`: ground joins by rule, the owner's ground reverts, City Park lawn kit; no kennel (secret KENNEL is now DOORSTEP).
+
+Not on it: `day/07nov-dt` (Downtown still in review).
+
+**Integration commits:** `check_pepper_files.sh` compares input.lua without the menus' last-used device block (it failed on main since 4afd8d2; Pepper unchanged by the trace and the lab). One merge fix: City Park tall's leaf-pile bones 143 and 144 moved 11 px left with their pile (cplog moved the pile, chars made bones wider, one knob showed).
+
+**Checks on the branch:** PEPPER UNCHANGED (trace 3908, lab 1401), PEPPER FILES UNCHANGED, flow 125/125, Tiled PASSED, BACKDROP OK, APPROVED ALL MERGED; physics River Walk 56/56, City Park 85/85, City Park tall 99/99, Downtown tall 109/109, Rooftops 139/139, Söder 29/29, Night 40/40; qa 0 problems (River Walk, City Park tall, Downtown tall); bonus tests 23/23 and every level's round by autopilot as before; the build tools' `--check` all OK. Curve T1 PASS, T2 FAIL (as on main: River Walk screen 13 at 36 %, Söder 9 Cafe tables at 50 %, unchanged), T3 PASS, T4 PASS; DI within 0.1 of main on every level.
+
+**Look at:** `docs/review/07nov/integration/` (2x sheets of every screen of River Walk, City Park tall and Downtown tall, the hollow log crawl, the riders, the bone fix).
+
+**Waiting for the owner:** merge `day/07nov-integration` into `main` after the board.
+
 ## Night of 6-7 Nov: the three levels brought to finished quality (live session, owner asleep)
 
 **Owner, 20:01 to 20:19:** a proper lift in assets and game design tonight, 3 levels ready with full visual QA by the morning; use Fable and several agents; repo should feel mature and up to date; coordinate with the other sessions; the "Game porting and launch plan" rowboat was terrible, make it work. Picks: SpriteCook up to 900, Artlist up to 3,000 for concepts, merge to main as v0.7 if every check and the independent review pass, prune merged branches with an archive list, repo stays public, this session owns the rowboat and the "FETCH level asset plan" session's work.
