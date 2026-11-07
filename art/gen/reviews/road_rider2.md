@@ -41,3 +41,25 @@ Script (--layer lane --level rw): WARN, 1 blotch at (43,56-57).
 | R9 | Read: cute and clear for a 7 year old at 1x | PASS | Bearded cyclist with helmet and backpack reads at 1x (face detail under A5). |
 
 VERDICT (round 2): FAIL (4 items)
+
+# Round 1 (reviewer, 7 Nov)
+
+Branch day/07nov-chars at fec05c6, worktree review-chars07. Independent gate 8 reviewer; I did not make the art. The file at 5x beside the bench and bin; in the game on River Walk x 760 at 1x, 2x and a 5x crop (my own still-vehicle hook in a local copy of tests_look.lua), colour and greyscale. Rows measured. Maker's notes read after.
+
+Piece: riverwalk/art/scene/road_rider2.png 105 x 110, the bike lane at 55 px/m (the bearded man with the backpack); road.lua draws it at y 190, so rows 0-49 show.
+
+Owner's rider checks at 5x on the whole file: seated PASS (hip on the saddle line), hands on the grips PASS (the hand at rows 51-56, x 67-72, closes on the bar end; the basket or bar at rows 55-66), facing the travel PASS (faces right, flipped by road.lua when riding left; checked both ways), limbs connected PASS, no pedal loop (only the top shows), the foot is on the pedal in the still.
+
+| # | Item | Result | Evidence |
+|---|---|---|---|
+| 1-4 | Repeated parts, wheels, light, outline | PASS | Same geometry as the promenade bike x 55/46, drawn fresh (crisp spokes, no resampling smear at 5x); one ink. |
+| 5 | Face | PASS | Eye with a white, brow, nose, mouth, beard; helmet with vents. |
+| 6 | Scale | PASS | 110 px = 2.0 m with the helmet at 55 px/m: a grown-up seated; the head is bigger than the promenade riders', as the near lane should be. |
+| 7 | Mirrored | PASS | Reads both ways (lane1 right, lane2 left shots). |
+| 8 | In game, what shows | PASS, with a judgement | Rows 0-49: helmet, face, shoulders, upper arm. Crisp at 5x. But a bust gliding along the road with no hand and no bar is odd for a child: at 2x (lane1 and lane2 crops) it reads as a head sliding by. |
+| 9 | Beside bench, bin, lamp | PASS | As crisp as the bench; script PASS / WARN (17 dirt px, 0.4 %, not visible at 5x). |
+| R | Scale, layer, outline, shapes, shading, palette, view, fit, read | PASS | 18-19 colours, flat ramps, profile, reads at 1x. |
+
+On raising the riders 6 px (the open question): no, 6 px is not enough. Rows 0-55 would show the hand's rows 51-55 as 5 px of skin at the very bottom edge and no bar: a hand reaching for nothing. 12 px (RIDER_TOP 178) shows the hand and 7 rows of the bar and basket (rows 55-61), and that is the smallest raise where the hand reads as holding something; 16 px (top 174) shows the whole basket (rows 55-66). Either overlaps Pepper's feet line by 6-10 px, which the 25 Oct rule allows for passing bikes (they ride in front of her). I would take 12 px and check at 1x that the helmet does not cut the kerb awkwardly; the kerb is behind the lane, so it should read as depth.
+
+VERDICT (round 1, 7 Nov): PASS (art); the lane placement is a judgement for the owner, 12 px recommended.

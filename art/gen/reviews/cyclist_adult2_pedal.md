@@ -78,3 +78,7 @@ Script (--layer lane --level rw): PASS (--frames 88x87).
 | R9 | Read: cute and clear for a 7 year old at 1x | PASS | Red coat, white helmet, friendly face with nose and lip, reads at 1x. |
 
 VERDICT (round 2): PASS
+
+# Round 1 (reviewer, 7 Nov)
+
+See cyclist_adult2.md round 1. Script with --frames 88x87: WARN (78 single pixels a shade off, 0.3 %, and two small blotches; the jeans' fold pixels, not visible at 5x). Frames whole, the loop is one turn. VERDICT: PASS

@@ -111,3 +111,26 @@ Result of the one open item:
 - All other items stay as in Round 2: asset_qa.md items 1-3 and 5-9 PASS, rules.json Scale, Layer, Shapes, Shading, Palette, View, Fit, Read PASS (the route lines, row 0, 30 and 52, are untouched).
 
 VERDICT: PASS
+
+# Round 1 (reviewer, 7 Nov)
+
+Branch day/07nov-chars at fec05c6, worktree review-chars07. Independent gate 8 reviewer; I did not make the art. The file at 5x beside the bench and bin; River Walk sweep screen 6 (camera x 1600) at 2x, 4x crop and greyscale. Maker's notes read after.
+
+Piece: riverwalk/art/scene/ferry.png 252 x 79 (was the "flat orange slab" boat), River Walk screen 6, Pepper walks its deck.
+
+| # | Item | Result | Evidence |
+|---|---|---|---|
+| 1 | Repeated parts the same | PASS | Four cabin windows one stamp (x 66-72 wide, evenly spaced on a 20 px pitch), two wheelhouse windows one stamp, two fenders one stamp, plank lines on one pitch. |
+| 2 | Round things round, symmetric parts symmetric | PASS | The lifebuoy is a round 8-band ring at 5x; the lamp on the wheelhouse is a 3 x 3 dome. |
+| 3 | One light direction, ramps | PASS | Cabin in 3 wood shades, a dark band under the cabin roof and the wheelhouse roof (shadow), the hull white with a grey shade row; no mottling. |
+| 4 | Outline 1 px, one ink | PASS | One ink around the hull, cabin and wheelhouse; the bow's curve is a clean stair at 5x. |
+| 5 | Faces | n/a | |
+| 6 | Scale against Pepper | PASS | 252 px = 5.5 m, a small harbour launch; Pepper on its deck reaches the cabin's window sill, which is right for a 46 px dog. |
+| 7 | Mirrored | n/a | |
+| 8 | In game | PASS | Sits in the water: a white foam dash line at the waterline, the hull below it is drawn dark (the water tint takes the red; it reads as the wet hull), the pontoon and quay meet it at the right rows. Not floating, not a sticker: the hull's dark band and the foam line do the work in the greyscale sheet too. |
+| 9 | Beside bench, bin, lamp | PASS | As crisp as the bench at 5x; script PASS, 17 colours. |
+| R | Scale, layer, outline, shapes, shading, palette, view, fit, read | PASS | Reads as a little boat at 1x: cabin, windows, lifebuoy, flag. Cute. |
+
+Notes: the Swedish flag's cross is 1 px and lumpy at 5x (x 234-244, y 17-25); at 1x it reads as a flag, leave it. The bone at River Walk screen 6 touches the wheelhouse (see bones.md); that is level data, not this piece.
+
+VERDICT (round 1, 7 Nov): PASS

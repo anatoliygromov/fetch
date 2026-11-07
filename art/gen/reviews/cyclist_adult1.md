@@ -82,3 +82,25 @@ Script (--layer lane --level rw): PASS
 | R9 | Read: cute and clear for a 7 year old at 1x | PASS | Red coat, white helmet, friendly face with nose and lip, reads at 1x. |
 
 VERDICT (round 2): PASS
+
+# Round 1 (reviewer, 7 Nov)
+
+Branch day/07nov-chars at fec05c6, worktree review-chars07. Independent gate 8 reviewer; I did not make the art. Every frame looked at at 5x and the leg region at 8x, the still at 5x beside the bench and bin, in the game at 1x and 2x (my own LOOK_BIKE shots on River Walk x 760), colour and greyscale. Shoe positions measured per frame (the shoe colour's lowest cluster). Script run on the still and the sheet (--frames). Maker's notes read after.
+
+Piece: riverwalk/art/scene/cyclist_adult1.png 88 x 87; the pedal sheet cyclist_adult1_pedal.png (8 frames, frame 1 is the still pixel for pixel; only the leg region x 6-79, y 44-82 and the spokes change between frames).
+
+Owner's rider checks at 5x, every frame:
+- Seated on the saddle: PASS. The hip sits on the saddle line (saddle top row 43); the saddle shows behind the hip in every frame.
+- Hands on the grips: PASS. The arm runs shoulder to bar, the hand closes on the grip in front of the basket, all 8 frames (the arm does not move).
+- Feet on the pedals: PASS. The near shoe sits on its grey pedal in all 8 frames; the far shoe shows at the opposite phase where the near leg does not hide it (frames 2, 3, 5, 6, 7, 8) and is hidden behind the near thigh in 1 and 4, which is right.
+- Facing the direction of travel: PASS. Drawn facing right, the game flips her to ride left on the promenade; face, basket and bike agree.
+- Limbs connected: PASS. Hip to knee to shoe is one run of pixels in every frame; no gap at the knee or ankle at 8x.
+- Loop physically sensible: PASS. See below: a 16 px circle, clockwise seen from the near side, one turn in 8 frames, the knee rises when the foot is at the top.
+
+Pedal loop (near shoe, x,y at 1x): f1 (49,74) front-bottom, f2 (46,78), f3 (40,80) bottom, f4 (36,78), f5 (34,72) back, f6 (36,66), f7 (40,64) top, f8 (45,66). Crank centre about (41,72), radius 8 px. No frame repeats, no pop between 8 and 1.
+
+Checklist: scale PASS (85 px with the helmet, 1.85 m seated at 46 px/m, wheels 31 px = 0.7 m; next to Pepper a grown-up on a town bike); layer PASS (ink darkest, play row); outline PASS (one ink, unbroken); shapes PASS (wheels round, spokes even, tubes straight); shading PASS (3 shades per material, light upper left; the script's 0.3-0.4 % noise is the shoe and cuff edges, not visible at 5x); palette PASS (19 colours); view PASS (profile); fit PASS (as crisp as the bench at 5x); read PASS (a cyclist at 1x, cute).
+
+Notes: The chain case is a solid ink slab, 22 x 7 px core at x 19-40, y 72-78: at 2x it reads as a black box between the wheels. A 1 px lighter rim (the frame grey 58,60,68) on its top and front edge would turn it into a chain case without adding a colour. Not a FAIL: it is the same on the approved rowing boat's oarlocks and the owner has not flagged it.
+
+VERDICT (round 1, 7 Nov): PASS

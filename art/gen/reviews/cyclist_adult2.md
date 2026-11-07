@@ -80,3 +80,25 @@ Script (--layer lane --level rw): PASS
 | R9 | Read: cute and clear for a 7 year old at 1x | PASS | Red coat, white helmet, friendly face with nose and lip, reads at 1x. |
 
 VERDICT (round 2): PASS
+
+# Round 1 (reviewer, 7 Nov)
+
+Branch day/07nov-chars at fec05c6, worktree review-chars07. Independent gate 8 reviewer; I did not make the art. Every frame looked at at 5x and the leg region at 8x, the still at 5x beside the bench and bin, in the game at 1x and 2x (my own LOOK_BIKE shots on River Walk x 760), colour and greyscale. Shoe positions measured per frame (the shoe colour's lowest cluster). Script run on the still and the sheet (--frames). Maker's notes read after.
+
+Piece: riverwalk/art/scene/cyclist_adult2.png 88 x 87; the pedal sheet cyclist_adult2_pedal.png (8 frames, frame 1 is the still pixel for pixel; only the leg region x 6-79, y 44-82 and the spokes change between frames).
+
+Owner's rider checks at 5x, every frame:
+- Seated on the saddle: PASS. The hip sits on the saddle line (saddle top row 43); the saddle shows behind the hip in every frame.
+- Hands on the grips: PASS. The arm runs shoulder to bar, the hand closes on the grip at the bar end, all 8 frames (the arm does not move).
+- Feet on the pedals: PASS. The near shoe sits on its grey pedal in all 8 frames; the far shoe shows at the opposite phase where the near leg does not hide it (frames 3 and 7 show both shoes; the far shoe is hidden by the near leg and the chain case elsewhere, which is right.
+- Facing the direction of travel: PASS. Drawn facing right, the game flips her to ride left on the promenade; face, basket and bike agree.
+- Limbs connected: PASS. Hip to knee to shoe is one run of pixels in every frame; no gap at the knee or ankle at 8x.
+- Loop physically sensible: PASS. See below: a 16 px circle, clockwise seen from the near side, one turn in 8 frames, the knee rises when the foot is at the top.
+
+Pedal loop (near shoe, x,y at 1x): f1 (47,72) front, f2 (45,77), f3 (40,79) bottom, f4 (35,77), f5 (33,72) back, f6 (35,67), f7 (40,65) top, f8 (45,67). A 14 x 14 px circle, clockwise, one turn in 8 frames; no repeats, no pop.
+
+Checklist: scale PASS (85 px with the helmet, 1.85 m seated at 46 px/m, wheels 31 px = 0.7 m; next to Pepper a grown-up on a town bike); layer PASS (ink darkest, play row); outline PASS (one ink, unbroken); shapes PASS (wheels round, spokes even, tubes straight); shading PASS (3 shades per material, light upper left; the script's 0.3-0.4 % noise is the shoe and cuff edges, not visible at 5x); palette PASS (19 colours); view PASS (profile); fit PASS (as crisp as the bench at 5x); read PASS (a cyclist at 1x, cute).
+
+Notes: Same chain case note as cyclist_adult1. The top tube is drawn over the thigh in frames 1-4 (x 44-66, y 60-63): it reads as the tube in front of the leg, which is right for the far side only; at 1x nobody will see it. The jeans (88,124,166) read clearly against the blue frame; good.
+
+VERDICT (round 1, 7 Nov): PASS

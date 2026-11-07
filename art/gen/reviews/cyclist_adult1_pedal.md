@@ -80,3 +80,7 @@ Script (--layer lane --level rw): WARN, 1 blotch at (656-658,51-52); no frame wa
 | R9 | Read: cute and clear for a 7 year old at 1x | PASS | Red coat, white helmet, friendly face with nose and lip, reads at 1x. |
 
 VERDICT (round 2): PASS
+
+# Round 1 (reviewer, 7 Nov)
+
+See cyclist_adult1.md round 1: the sheet is reviewed there frame by frame. Script with --frames 88x87: WARN (one 2-24 px blotch, the shoe sole in one frame; not visible at 5x). Frames whole, no colour in one frame only, the body never moves, the loop is one turn. VERDICT: PASS
