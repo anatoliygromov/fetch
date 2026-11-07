@@ -1190,6 +1190,10 @@ function Sc.paintQuay(w, props, def)
       -- stair's flank, quoined by the road's end) down to that kerb line: (owner, 7 Nov) steps standing one by one on
       -- the asphalt "look really bad"
       local ry = roadOn[x] + 15
+      -- (owner, 7 Nov: the block beside the road was wrong; same composition, only the join) under the steps the
+      -- stair's side is a granite stringer that runs down along the steps: its foot line follows the slope 2 px under
+      -- the treads' kerb line, from the road's kerb at the top to the quay's at the bottom, the asphalt under it
+      if k == "ramp" then ry = math.min(ry, math.max(Sc.ROAD_Y + 2, top[x] + 17)) end
       if k == "ramp" then
         local d = dRoad[x]
         px(Q.sh, x, t + 15)
@@ -1315,6 +1319,7 @@ function Sc.paintQuay(w, props, def)
     local y0 = nil
     if x < W and roadOn[x] and not ((dR[x] or dL[x] or 99) < Sc.ROAD_END_W) then
       y0 = roadOn[x] + 17
+      if kind[x] == "ramp" then y0 = math.min(y0, math.max(Sc.ROAD_Y + 2, top[x] + 17) + 2) end
     end
     if seg and (y0 ~= seg[3]) then seg[2] = x; Sc.roadOnSegs[#Sc.roadOnSegs + 1] = seg; seg = nil end
     if y0 and not seg then seg = { x, nil, y0 } end
