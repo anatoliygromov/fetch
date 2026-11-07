@@ -673,10 +673,11 @@ function St:draw(debug)
   end
   if lk then Look.off() end                                        -- the bones, the girl, the ball, Pepper: as drawn
   lg.setColor(1, 1, 1, 1)
-  for _, bn in ipairs(self.bones) do                               -- bones (11 x 6), gold = super bone
+  for _, bn in ipairs(self.bones) do                               -- bones (15 x 9 since 7 Nov), gold = super bone
     if not bn.taken and not (self.night and Nt.hideBone(self, bn)) then   -- [night hook] bones in the dark
       local bob = math.floor(math.sin(self.t * 3 + bn.x) * 1.5 + 0.5)
-      lg.draw(bn.super and art.bone_gold or art.bone, math.floor(bn.x - cam + 0.5) - 5, bn.y - 12 + bob)
+      local im = bn.super and art.bone_gold or art.bone               -- centred on x, bottom row at y - 7 (as the 11 x 6 bone)
+      lg.draw(im, math.floor(bn.x - cam + 0.5) - math.floor(im:getWidth() / 2), bn.y - 6 - im:getHeight() + bob)
     end
   end
   use("play")                                                      -- (the leaf piles are part of the park, the bones are not)

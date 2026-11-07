@@ -1,0 +1,30 @@
+{
+ "name": "rw_gull_flap_n07",
+ "level": "riverwalk",
+ "layer": "char",
+ "kind": "animal",
+ "target_px": [
+  24,
+  16
+ ],
+ "owner_size": {
+  "px": 16,
+  "words": "owner, board 7 Nov, gull_size_n0607: '24' (option C, 24 px wingspan); the still rw_gull_n07 variant c is 24 x 16",
+  "sheet": "docs/review/06nov-night/rw/size_sheets/gull_sizes_4x.png"
+ },
+ "checks_px": {
+  "wingspan": 24,
+  "cell": "26 x 26"
+ },
+ "subject": "the flight still rw_gull_n07 variant c padded to the game's 26 x 26 cell (art/gen/upload/rw_gull_n07_c_26.png: 1 px left and right, 4 px above, 6 px below, room for the downstroke) animated at 1x: a steady wingbeat loop, the wings beat from raised high above the back down to level with the belly and back up; the body, head, bill and tail stay level and do not change, feet tucked",
+ "part_map": "the source is the finished 24 x 16 flight still; only the wings move.",
+ "size_sentence": "a small gull: its wingspan is about half the dog's length.",
+ "model": "sc_anim",
+ "variants": 1,
+ "tier": "A",
+ "family": "chars_07nov",
+ "slot": {
+  "file": "riverwalk/art/gull.png",
+  "where": "River Walk gull (critters.lua Cr.draw, 6 flap frames of 26 x 26, frame 2 the folded swoop) and the rooftop gull (Cr.drawBird); only the wings are taken from the animation, the body is the still's"
+ }
+}

@@ -470,7 +470,8 @@ function Nt.draw(s, cam)
     for _, bn in ipairs(s.bones) do
       if not bn.taken and math.abs(bn.x - p.x) < SNIFF_REACH then
         lg.setColor(1, 0.95, 0.7, 0.55 + 0.35 * math.sin(s.t * 6 + bn.x))
-        lg.draw(bn.super and art.bone_gold or art.bone, math.floor(bn.x - cam + 0.5) - 5, bn.y - 12)
+        local im = bn.super and art.bone_gold or art.bone
+        lg.draw(im, math.floor(bn.x - cam + 0.5) - math.floor(im:getWidth() / 2), bn.y - 6 - im:getHeight())
       end
     end
   end
