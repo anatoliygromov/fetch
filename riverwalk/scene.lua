@@ -778,6 +778,7 @@ end
 Sc.PROMENADE, Sc.QUAY_Y0, Sc.QUAY_JOINT = 184, 196, { 72 / 255, 82 / 255, 107 / 255 }
 Sc.STEP_RW = 8                                                    -- (day/07nov-ground) River Walk's ramps: 8 px stone steps (0.17 m)
 Sc.ROAD_RUNS_ON = true                                            -- (owner, 7 Nov: "the asphalt goes on") the road runs on in
+Sc.SLOPE_SHADE = os.getenv("SLOPE_SHADE") or "slope"           -- (owner, 7 Nov) "slope": the road going down in shade; "face"
 Sc.ROAD_Y, Sc.ROAD_END_W = 199, 6                                 -- front of the steps and the lower quay to the water (paintQuay)
 local function columnTop(w, x)                                      -- the first walkable top at or under y 150, or nil
   if x < 0 or x >= w.width then return nil end
@@ -1129,10 +1130,17 @@ function Sc.paintQuay(w, props, def)
   -- end) the ramp as stone steps, a slope tile of STEP px rise per STEP px run (Sc.STEP_RW): each step one granite
   -- tread, its courses level, a joint at its edge, the coping nosing along its front, its face and the wall's
   -- courses under it on the world grid; the first and last steps are the landings into the flat paving
+  local cheekTop
   local function stepTop(x)
     local t0 = top[x]
     local S = Sc.STEP_RW
     return Sc.PROMENADE + math.floor((t0 - Sc.PROMENADE) / S + 0.5) * S
+  end
+  -- (owner, 7 Nov) where the road runs on, the steps' side is one face with a diagonal foot: its kerb line (the
+  -- row the flat kerbs' faces start on) follows the slope itself, from the promenade's (y 194) to the quay's
+  local function cheekOn(x) return roadOn[x] and not ((dR[x] or dL[x] or 99) < Sc.ROAD_END_W) end
+  function cheekTop(x)
+    return math.max(Sc.PROMENADE + 10, math.min(roadOn[x] + 10, math.floor(top[x] + 0.5) + 10))
   end
   local function column(x, bottom)
     local t, k = top[x], kind[x]
@@ -1175,10 +1183,26 @@ function Sc.paintQuay(w, props, def)
     -- 2 the granite kerb / coping face (rows t + 10 .. t + 14)
     local joint = k ~= "ramp" and (x % 16 == 0) or (k == "ramp" and (kind[x - 1] ~= "ramp" or stepTop(x - 1) ~= t))
     local edge = (dR[x] == 0 or dL[x] == 0)
-    for r = 0, 4 do
-      local c = (r == 0) and Q.kf1 or (r == 4 and Q.kf3 or Q.kf2)
-      if joint or edge then c = (r == 0 and edge) and Q.kf2 or Q.kj end
-      px(c, x, t + 10 + r)
+    local cheek = k == "ramp" and cheekOn(x)
+    if cheek then
+      -- (owner, 7 Nov: "the steps need to connect properly and the edges of the stairs as well") the stair's side: one
+      -- granite face from under each tread's nosing down to a straight diagonal foot that runs from the promenade
+      -- kerb's foot to the quay kerb's foot, so both flat kerbs bend into it with no seam: the lit row under each
+      -- nosing (kf1, the kerb's own top row), the face (kf2), the foot row along the diagonal (kf3, the kerb's own
+      -- foot), a 3 px joint under each step's first column
+      local yk = cheekTop(x)
+      for y = t + 10, yk + 4 do
+        local c = (y == yk + 4) and Q.kf3 or (y == t + 10 and Q.kf1 or Q.kf2)
+        if Sc.SLOPE_SHADE == "face" and y > t + 10 then c = (y >= yk + 3) and Q.sh or Q.kj end
+        if joint and y > t + 10 and y <= t + 12 and y < yk + 4 then c = Q.kj end
+        px(c, x, y)
+      end
+    else
+      for r = 0, 4 do
+        local c = (r == 0) and Q.kf1 or (r == 4 and Q.kf3 or Q.kf2)
+        if joint or edge then c = (r == 0 and edge) and Q.kf2 or Q.kj end
+        px(c, x, t + 10 + r)
+      end
     end
     -- 3 under it: the asphalt, or the quay wall
     if k == "road" then
@@ -1189,21 +1213,9 @@ function Sc.paintQuay(w, props, def)
       -- on the promenade's rows, the gutter's two rows under the kerb. The steps keep their solid granite body (the
       -- stair's flank, quoined by the road's end) down to that kerb line: (owner, 7 Nov) steps standing one by one on
       -- the asphalt "look really bad"
-      local ry = roadOn[x] + 15
-      -- (owner, 7 Nov: the block beside the road was wrong; same composition, only the join) under the steps the
-      -- stair's side is a granite stringer that runs down along the steps: its foot line follows the slope 2 px under
-      -- the treads' kerb line, from the road's kerb at the top to the quay's at the bottom, the asphalt under it
-      if k == "ramp" then ry = math.min(ry, math.max(Sc.ROAD_Y + 2, top[x] + 17)) end
-      if k == "ramp" then
-        local d = dRoad[x]
-        px(Q.sh, x, t + 15)
-        for y = t + 16, ry - 1 do px(wallColour(x, y, d), x, y) end
-        for r = 0, 4 do                                            -- the quay's kerb face carried under the stair
-          local c = (r == 0) and Q.kf1 or (r == 4 and Q.kf3 or Q.kf2)
-          if x % 16 == 0 then c = Q.kj end
-          px(c, x, ry - 5 + r)
-        end
-      end
+      -- (owner, 7 Nov: same composition, only the join) under the steps the asphalt starts under the stair's
+      -- diagonal foot (cheekTop + 5); its shadow on the road is an overlay (Sc.roadEnds, over look.lua's road)
+      local ry = (k == "ramp") and (cheekTop(x) + 5) or (roadOn[x] + 15)
       lg.setColor(1, 1, 1, 1)
       clip(x, ry, 1, bottom - ry); lg.draw(road, rq[x % rw], x, Sc.ROAD_Y); clip()
       px(Q.rg1, x, ry); px(Q.rg2, x, ry + 1)
@@ -1319,7 +1331,7 @@ function Sc.paintQuay(w, props, def)
     local y0 = nil
     if x < W and roadOn[x] and not ((dR[x] or dL[x] or 99) < Sc.ROAD_END_W) then
       y0 = roadOn[x] + 17
-      if kind[x] == "ramp" then y0 = math.min(y0, math.max(Sc.ROAD_Y + 2, top[x] + 17) + 2) end
+      if kind[x] == "ramp" then y0 = cheekTop(x) + 7 end
     end
     if seg and (y0 ~= seg[3]) then seg[2] = x; Sc.roadOnSegs[#Sc.roadOnSegs + 1] = seg; seg = nil end
     if y0 and not seg then seg = { x, nil, y0 } end
@@ -1345,6 +1357,52 @@ function Sc.paintQuay(w, props, def)
     lg.pop()
     Sc.roadEnds[#Sc.roadEnds + 1] = { cv = cv, x = e.x0 + ox, y = y0 }
   end
+  -- (owner, 7 Nov: "the hill down needs a shadow") an overlay over look.lua's road wherever the road runs on: the
+  -- gutter's two rows under the kerb line from the road tile itself (so they match the promenade's gutter under the
+  -- same grade), and under the steps' diagonal foot their shadow on the asphalt, a soft band fading in from the
+  -- promenade's kerb and out into the quay's (the road's rows scroll; the shadow stays with the steps)
+  local SH = { 0.55, 0.45, 0.36, 0.27, 0.19, 0.12, 0.06 }
+  local rampIn = {}                                                  -- a ramp column's distance to its run's ends
+  do
+    local a0 = nil
+    for x = 0, W do
+      local on = x < W and kind[x] == "ramp"
+      if on and not a0 then a0 = x
+      elseif not on and a0 then for i = a0, x - 1 do rampIn[i] = math.min(i - a0, x - 1 - i) end; a0 = nil end
+    end
+  end
+  local g0, g1 = lg.newQuad(0, 0, 1, 1, rw, rh), lg.newQuad(0, 1, 1, 1, rw, rh)
+  local a0 = nil
+  for x = 0, W do
+    local on = x < W and top[x] and (kind[x] == "ramp" or kind[x] == "quay") and cheekOn(x)
+    if on and not a0 then a0 = x
+    elseif not on and a0 then
+      local a1 = x
+      local y0 = Sc.ROAD_Y
+      local cv = lg.newCanvas(a1 - a0, 240 - y0)
+      cv:setFilter("nearest", "nearest")
+      lg.push("all"); lg.setCanvas(cv); lg.clear(0, 0, 0, 0); lg.origin()
+      lg.setShader()                                                  -- (raw: the ground's grade is applied once, when drawn)
+      for i = 0, a1 - a0 - 1 do
+        local xx = a0 + i
+        local ry = kind[xx] == "ramp" and (cheekTop(xx) + 5) or (roadOn[xx] + 15)
+        lg.setColor(1, 1, 1, 1)
+        g0:setViewport(xx % rw, 0, 1, 1); lg.draw(road, g0, i, ry - y0)
+        g1:setViewport(xx % rw, 1, 1, 1); lg.draw(road, g1, i, ry + 1 - y0)
+        if kind[xx] == "ramp" and Sc.SLOPE_SHADE == "slope" then
+          -- the road going down beside the steps: the asphalt between the diagonal and the quay's road line is a
+          -- slope facing away from the light, in shade (a flat tone, its lower edge level with the quay's gutter)
+          local low = roadOn[xx] + 15
+          lg.setColor(0.03, 0.04, 0.10, 0.38)
+          if low > ry + 2 then lg.rectangle("fill", i, ry + 2 - y0, 1, low - ry - 2) end
+          lg.setColor(0.03, 0.04, 0.10, 0.18); lg.rectangle("fill", i, low - y0, 1, 1)
+        end
+      end
+      lg.pop()
+      Sc.roadEnds[#Sc.roadEnds + 1] = { cv = cv, x = a0, y = y0 }
+      a0 = nil
+    end
+  end
   return g
 end
 -- the road ends' corner pieces over look.lua's road (stage.lua, right after Look.road)
@@ -1365,7 +1423,7 @@ end
 function Sc.drawRoadEnds(cam)
   lg.setColor(1, 1, 1, 1)
   for _, e in ipairs(Sc.roadEnds or {}) do
-    if e.x - cam > -10 and e.x - cam < 330 then lg.draw(e.cv, e.x - cam, e.y) end
+    if e.x + e.cv:getWidth() - cam > 0 and e.x - cam < 330 then lg.draw(e.cv, e.x - cam, e.y) end
   end
 end
 
