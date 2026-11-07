@@ -83,7 +83,10 @@ function Lf.update(s, m, dt)
   m.x0, m.x1, m.y0, m.y1, m.k, m.dx, m.dy = nx, nx + m.w, ny, ny + m.h, nk, dx, dy
   if riding then p.y = ny end                                         -- up and down with it (sideways: pepper.lua adds dx)
   if b.state == "rest" and b.on == m then b.y = ny end                -- (and the ball's x: stage.lua adds dx)
-  if arrive then m.dir = -m.dir; m.waitT = m.pause end
+  if arrive then
+    m.dir = -m.dir; m.waitT = m.pause
+    if m.x1 > s.cam - 16 and m.x0 < s.cam + 336 then require("sfx").play("gate") end   -- the winch clanks at each end (on screen only)
+  end
 end
 
 -- greybox: the cables from the winch, the winch house with its operator, the platform (outlined: Pepper stands on it)

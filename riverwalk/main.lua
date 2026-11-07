@@ -158,7 +158,7 @@ end
 local function nextLevel()
   if run and run.k < #run.names then
     run.k = run.k + 1
-    if def.outro then story = def.outro; state, t = "story", 0 else startLevel() end
+    if def.outro then story = def.outro; state, t = "story", 0; S.play("page") else startLevel() end
   else
     local score = run and run.score or tally.score
     local newBest = Flow.runOver(score)

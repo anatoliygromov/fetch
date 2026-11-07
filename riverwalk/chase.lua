@@ -177,6 +177,7 @@ function Ch.update(s, dt)
       local d = br.x - p.x
       br.close = d > -8 and d < CLOSE and math.abs(br.y - p.y) < 40
       if br.close and not br.rumbled then br.rumbled = true; S.play("push") end
+      if br.y > 250 then S.play("thud") end                                    -- it drops into a hatch
       if br.y > 250 or br.x < s.cam - 60 or br.x > w.width then br.state = "gone" end
       local x0, y0, x1, y1 = p:box()
       if br.state == "roll" and x1 - 6 > br.x - BARREL_HIT and x0 + 6 < br.x + BARREL_HIT and y1 > br.y - 12 and y0 < br.y and p:hurt(br.x, w) then s:hazardHit() end

@@ -106,7 +106,10 @@ function St:updateMagpie(dt)
     local k = math.min(1, m.t / f.dur)
     m.x = f.x0 + (f.x1 - f.x0) * k
     m.y = f.y0 + (f.y1 - f.y0) * k - f.peak * 4 * k * (1 - k)
-    if k >= 1 then m.state, m.t = f.after, 0; if f.after == "gone" then m.x = -999 end end
+    if k >= 1 then
+      m.state, m.t = f.after, 0; if f.after == "gone" then m.x = -999 end
+      if f.after == "perch" then S.play(d.look == "gull" and "squawk" or "chatter") end   -- it lands on the next perch
+    end
   elseif m.state == "perch" then
     m.dir = (p.x < m.x) and -1 or 1                                -- it keeps an eye on Pepper
     local dist = math.abs(p.x - m.x)
@@ -450,7 +453,7 @@ function St:update(dt, presses)
   if self.cat then self:updateCat(dt) end
   if not self.deadT and not self.drownT then Cr.update(self, dt) end
   for _, pr in ipairs(self.def.props) do                           -- leaf piles flatten when Pepper runs through
-    if pr.leaves and not self.kicked[pr] and x1 > pr.x0 and x0 < pr.x1 and y1 > pr.y0 then self.kicked[pr] = true end
+    if pr.leaves and not self.kicked[pr] and x1 > pr.x0 and x0 < pr.x1 and y1 > pr.y0 then self.kicked[pr] = true; S.play("rustle") end
   end
   for i = #self.rings, 1, -1 do local r = self.rings[i]; r.t = r.t + dt; if r.t > 0.4 then table.remove(self.rings, i) end end
   for i = #self.pops, 1, -1 do local h = self.pops[i]; h.t = h.t + dt; if h.t > POP_T then table.remove(self.pops, i) end end
@@ -484,14 +487,14 @@ function St:barkAtCat()
   local dx, dy = c.x - p.x, (c.y - 8) - (p.y - p:height() / 2)
   local range = self.def.cat.range or 90
   if dx * dx + dy * dy > range * range then
-    if dx * dx + dy * dy < (range * 2) ^ 2 then c.heard = 0.7 end      -- too far: it only looks up ("?")
+    if dx * dx + dy * dy < (range * 2) ^ 2 then if not c.heard then S.play("query") end; c.heard = 0.7 end   -- too far: it only looks up ("?")
     return
   end
   c.state, c.t = "scared", 0
   c.dir = (c.x >= p.x) and 1 or -1
   b.state, b.vx, b.vy, b.drop, b.airT = "air", -c.dir * 20, -60, true, 0
   b.home = { x = b.x - c.dir * 12, y = self.world:groundAt(b.x - c.dir * 12, self.world.height > 240 and b.y - 2 or nil) or b.y }; b.homeSay = nil
-  S.play("spring")
+  S.play("spring"); S.play("meow")
 end
 
 function St:updateCat(dt)
@@ -504,7 +507,7 @@ function St:updateCat(dt)
     c.vy = c.vy + 560 * dt; c.x = c.x + c.vx * dt
     local ny = c.y + c.vy * dt
     local g = w:groundAt(c.x, w.height > 240 and c.y - 34 or nil)   -- (a tall world: the ground below it)
-    if c.vy > 0 and g and ny >= g then c.y = g; c.state = "run"; self:say("THE CAT RAN! GET THE BALL!", 2.4)
+    if c.vy > 0 and g and ny >= g then c.y = g; c.state = "run"; S.play("patter"); self:say("THE CAT RAN! GET THE BALL!", 2.4)
     else c.y = ny end
   elseif c.state == "run" then
     c.x = c.x + c.dir * 170 * dt

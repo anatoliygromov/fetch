@@ -260,6 +260,30 @@ function S.load()
       return rnd() * 0.14 * math.sin(math.pi * t / 0.16) * (((t * 2600 + t * t * 30000) % 1) < 0.5 and 1 or 0.3)
     end))
     sounds.miss = src(sweep(220, 160, 0.14, 0.18, "sq", 0.5))                      -- a bonus catch missed
+    -- 7 Nov, round 2 (the audit's open list): the cat, the magpie, leaves, the story card
+    local mph = 0
+    sounds.meow = src(render(0.34, function(t)                                     -- the cat is startled: mi-aow
+      local k = t / 0.34
+      mph = mph + (620 + 420 * math.sin(math.pi * math.min(1, k * 1.4)) - 120 * k) / RATE
+      return square(mph, 0.18 + 0.25 * k) * 0.13 * math.min(1, t / 0.03) * (1 - 0.7 * k)
+    end))
+    sounds.query = src(arp({ { 880, 0.04 }, { 1319, 0.07 } }, 0.1, 0.125))           -- the cat looks up: "?"
+    sounds.chatter = src(render(0.26, function(t)                                  -- the magpie lands: chak chak chak
+      local k = t % 0.085
+      if k > 0.035 then return 0 end
+      return (rnd() * 0.5 + square(t * 1900, 0.5) * 0.5) * 0.12 * (1 - k / 0.035)
+    end))
+    local leafn = held(5000)
+    sounds.rustle = src(render(0.32, function(t)                                   -- Pepper runs through a leaf pile
+      local g = math.sin(t * 2 * math.pi * 23) + 0.6 * math.sin(t * 2 * math.pi * 37)
+      return leafn() * 0.1 * (g > 0.2 and 1 or 0.25) * math.sin(math.pi * t / 0.32)
+    end))
+    local pgv, pgl = 0, 0
+    sounds.page = src(render(0.2, function(t)                                      -- the story card: a page turns
+      pgl = pgl - 1
+      if pgl <= 0 then pgv = rnd(); pgl = math.max(1, math.floor(RATE / (1500 + 9000 * t / 0.2))) end
+      return pgv * 0.11 * math.sin(math.pi * t / 0.2) ^ 2
+    end))
   end)
 end
 

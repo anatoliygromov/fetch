@@ -3,6 +3,12 @@
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
 
+## Branch `sfx/07nov-r2` (on fix/07nov-music): sound effects, round 2 (the 7 Nov audit's open list, 0 credits)
+- **5 new sounds on the same chip (sfx.lua):** `meow` (the cat is startled), `query` (the cat only looks up, "?"), `chatter` (the magpie lands on its next perch), `rustle` (Pepper runs through a leaf pile), `page` (the story card between levels).
+- **Silent events that now sound, one S.play call each:** cat startled (meow with the ball's spring), cat lands and runs off (patter), cat looks up (query), magpie lands (chatter; a gull's nest would squawk), leaf pile (rustle), story card (page), a Söder barrel dropping into a hatch (thud), a lift reaching either end (gate, on screen only; no level has a lift yet).
+- Pepper's files untouched. Not done from the list: the girl calling Pepper, a dialogue blip, an under-30 s tick (each changes how the game talks to the player: owner's call), skid and head bonk (pepper.lua is frozen).
+- Checks: physics River Walk 56/56, City Park 85/85, City Park tall 99/99, Downtown tall 109/109, Rooftops 139/139, Söder 29/29, Night 40/40, bonus 23/23, flow, PEPPER UNCHANGED (trace 3908, lab 1401). Each new sound fired in the level checks (City Park tall: chatter, rustle; Downtown tall: meow, query, patter; Söder: thud). Listen: `docs/review/07nov/sfx_r2/new_sounds_round2.m4a` (meow, query, patter, chatter, rustle, page, thud, gate).
+
 ## Branch `fix/07nov-music` (off preview/07nov-all-music): two music bugs found by the audit of the build the owner is testing
 - **The ending: the fanfare, then the title theme (main.lua).** The ending started the fanfare (C major) and the title theme (D major) at the same moment, so for 1.3 s they clashed. Now the music pauses, the fanfare plays alone, and the title theme starts at 1.5 s (ENDING_TUNE_AT). After a bonus round the level's tune no longer runs under the fanfare either.
 - **FETCH FRENZY is no longer silent (main.lua, sfx.lua).** The tally pauses the level's tune and the bonus round never started it again, so the round had sound effects only (the build note said the level's tune plays). The round now plays the level's tune from the top, or music/bonus.ogg once the music session adds one (S.has).
