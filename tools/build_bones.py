@@ -20,16 +20,15 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "riverwalk/art/scene"
 
 # O ink, H highlight, C cream, M mid, G gold shade, D deep shade, . clear
-GRID = [
-    ".OOO.......OOO.",
-    "OHCMO.....OHCMO",
-    "OCMGOOOOOOOCMGO",
-    "OMHHHHHHHHHHCGO",
-    ".OCCCCCCCCCCMO.",
-    "OGMMMMMMMMMMGDO",
-    "OCMGOOOOOOOCMGO",
-    "OMGDO.....OMGDO",
-    ".OOO.......OOO.",
+GRID = [                                       # (owner 7 Nov 15:45: "maybe they can be slightly smaller, the
+    ".OOO.....OOO.",                           # previous were cuter") 13 x 8, the same shading
+    "OHCMO...OHCMO",
+    "OCMGOOOOOCMGO",
+    ".OHHHHHHHHCO.",
+    ".OMMMMMMMMGO.",
+    "OCMGOOOOOCMGO",
+    "OMGDO...OMGDO",
+    ".OOO.....OOO.",
 ]
 # (owner 7 Nov 15:30: "original size is ok, we just need to add a little contrast and volume to it") each knob is a
 # small ball, lit upper left (H/C) to shaded lower right (G/D); the shaft a tube with a bright top, a cream middle
