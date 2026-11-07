@@ -148,3 +148,11 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-06 22:35,verdict,,town_shelter_tall,,,,,reference,dt_street_concept: design target
 2026-11-06 22:35,verdict,,cp_willow,,,,,in_game,"riverwalk/art/scene/cp_willow.png, Sc.bigWillow, review PASS (night 6-7 Nov)"
 2026-11-06 22:35,verdict,,rw_rower,,,,,in_game,"rw_rower.png 6 frames, Sp.drawRowboat, review PASS round 2 (night 6-7 Nov)"
+2026-11-07 10:48,plan,rw_riders_n07@1107-104838,rw_riders_n07,chars_07nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),64,planned,"SpriteCook up to 1,100 for the 7 Nov board plan (owner, 7 Nov 10:40)"
+2026-11-07 10:48,plan,rw_lane_riders_n07@1107-104839,rw_lane_riders_n07,chars_07nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),64,planned,"SpriteCook up to 1,100 for the 7 Nov board plan (owner, 7 Nov 10:40)"
+2026-11-07 10:48,plan,rw_gull_n07@1107-104839,rw_gull_n07,chars_07nov,spritecook,"SpriteCook Pixel Engine Image (exact 16-128 px, no references)",24,planned,"SpriteCook up to 1,100 for the 7 Nov board plan (owner, 7 Nov 10:40)"
+2026-11-07 10:49,spent,rw_gull_n07@1107-104839,,,,,24,spent,"job a0021ff2; prompt shortened to Pixel Engine's 100 words, text only (no blockout: Pixel Engine takes no references)"
+2026-11-07 10:52,spent,rw_riders_n07@1107-104838,,,,,64,spent,job 424061dc
+2026-11-07 10:52,spent,rw_lane_riders_n07@1107-104839,,,,,64,spent,job a0826e32
+2026-11-07 10:53,plan,rw_gull_flap_n07@1107-105304,rw_gull_flap_n07,chars_07nov,spritecook,SpriteCook pixel-engine-v1.5 animation from a 1x still,26,planned,"SpriteCook up to 1,100 for the 7 Nov board plan (owner, 7 Nov 10:40)"
+2026-11-07 10:54,spent,rw_gull_flap_n07@1107-105304,,,,,26,spent,"job 96e183b7, 8 frames 28x28"
