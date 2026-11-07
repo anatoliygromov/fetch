@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+"""make_ground_kit.py: the ground transition kit's drawn parts (day/07nov-ground, 0 credits).
+
+The owner, 7 Nov: "whenever we see two different types of ground connecting, they look cut, including the hills
+etc". The joins audit (docs/review/07nov/ground_joins/README.md) found 29 cut joins. The fix is one transition system:
+a per-column ground kind map and a rule table (riverwalk/joins.lua) that stamps a transition at every change, from
+pieces built by rule. The geometric pieces (stone steps as 8 px slope tiles, kerb returns, quay-end caps, the near
+pond bank as a 2 px slope tile, contact shadows) are drawn by rule in scene.lua from each level's own palette; the
+textured parts are drawn here once, on the 8 px grid where they repeat, in the level's palette, and stamped:
+
+  kit_cp_midlawn.png   240 x 96   City Park's mid row stands on its own lawn (audit CP9: with the camera up in the
+                                  trees the mid row ended straight over the sky). The ground art's lawn colour
+                                  (#9e983f), a darker seam row on top where the row's trees stand, short tufts on a
+                                  7 px grid in two offset rows, tiling at 240 like park_ground.png. Faded as the mid
+                                  layer in the game (scene.lua Sc.townArt), so it sits in the mid haze.
+  kit_cp_tufts.png     240 x 5    a tuft row drawn over the mid row's feet (audit CP6: the bushes stood cut flat on
+                                  the lawn's top line): 1-4 px blades every 7 px in the lawn's two greens, transparent
+                                  between; also faded as mid.
+  kit_cp_roots.png     16 x 5     grass over a trunk's foot (audit CP8: root flares ended in a straight line): the
+                                  path's lawn greens, stamped over each tree's foot in the back pass.
+
+  python3 -I tools/make_ground_kit.py           write the parts
+  python3 -I tools/make_ground_kit.py --check   fail if a part on disk differs from the build
+"""
+import os, sys
+import numpy as np
+from PIL import Image
+
+OUT = 'riverwalk/art/scene'
+hexc = lambda h: (int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16), 255)
+LAWN, LAWN_D, LAWN_L, SEAM = hexc('9e983f'), hexc('867744'), hexc('b5ad55'), hexc('665c3b')   # park_ground.png's lawn
+
+
+def midlawn():
+    W, H = 240, 96
+    a = np.zeros((H, W, 4), np.uint8); a[:, :] = LAWN
+    a[0, :] = SEAM                                                   # the seam under the row's feet
+    a[1, :] = LAWN_D
+    for row, off in ((6, 0), (14, 3), (26, 5), (44, 2)):            # tufts, sparser further down (nearer)
+        for x in range(off, W, 7):
+            a[row, x] = LAWN_L; a[row + 1, x] = LAWN_D
+            a[row + 1, (x + 1) % W] = LAWN_L
+    return a
+
+
+def tufts():
+    W, H = 240, 5
+    a = np.zeros((H, W, 4), np.uint8)
+    HT = (4, 2, 3, 1, 3, 2, 4, 1, 2, 3)                             # blade heights, a fixed list
+    for i, x in enumerate(range(0, W, 7)):
+        h = HT[i % len(HT)]
+        for k in range(h): a[H - 1 - k, x] = LAWN_D if k == 0 else LAWN
+        a[H - 1, (x + 1) % W] = LAWN_D
+        if h >= 3: a[H - 2, (x + 1) % W] = LAWN_L
+    return a
+
+
+def roots():
+    W, H = 16, 5
+    a = np.zeros((H, W, 4), np.uint8)
+    PROF = (1, 2, 3, 2, 4, 3, 2, 3, 4, 2, 3, 2, 4, 3, 2, 1)           # grass heights across the foot
+    for x, h in enumerate(PROF):
+        for k in range(h): a[H - 1 - k, x] = LAWN_D if k == 0 else (LAWN_L if k == h - 1 and x % 3 == 0 else LAWN)
+    return a
+
+
+PARTS = {'kit_cp_midlawn': midlawn, 'kit_cp_tufts': tufts, 'kit_cp_roots': roots}
+
+
+def main():
+    check = '--check' in sys.argv
+    bad = 0
+    for n, f in PARTS.items():
+        a = f(); p = f'{OUT}/{n}.png'
+        if check:
+            ok = os.path.exists(p) and np.array_equal(np.array(Image.open(p).convert('RGBA')), a)
+            print(n, 'OK' if ok else 'DIFFERS'); bad += not ok
+        else:
+            Image.fromarray(a, 'RGBA').save(p); print(n, a.shape[1], 'x', a.shape[0])
+    sys.exit(1 if bad else 0)
+
+
+if __name__ == '__main__':
+    main()

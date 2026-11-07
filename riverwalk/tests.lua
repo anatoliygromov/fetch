@@ -30,6 +30,13 @@ return function(mode, api)
     steps = {
       { wait = 0.6 }, { act = function() love.keypressed("space") end },      -- leave the intro
       { wait = 0.3 },
+      -- 0 (day/07nov-ground) the ground's joins: every change of ground kind has its transition stamped (joins.lua)
+      { act = function(p, s)
+          local Jn, Sc = require("joins"), require("scene")
+          if not s.ground then s.ground = Sc.paintGround(s.world, s.def.props, s.def) end
+          local ok, n, bad = Jn.check(Jn.kinds(s.world, s.def, Sc.columnRuns), s.world.width)
+          report("ground joins: every change of ground has its transition", ok and n > 0, ("%d changes%s"):format(n, ok and "" or ": " .. table.concat(bad, "; ")))
+        end },
       -- 1 held jump
       { act = function() tp(330, 184); startY = 184; minY = 184 end }, { wait = 0.2 },
       { act = function() hold("jump"); love.keypressed("space") end },

@@ -4,6 +4,7 @@
 local F = require("bigfont")
 local Look = require("look")
 local Sc = {}
+local Jn = require("joins")                                          -- (day/07nov-ground) the ground's transitions
 local lg = love.graphics
 local function hex(h) return { tonumber(h:sub(1, 2), 16) / 255, tonumber(h:sub(3, 4), 16) / 255, tonumber(h:sub(5, 6), 16) / 255 } end
 
@@ -423,6 +424,7 @@ local function columnRuns(w, x, which)
   memo[x] = merged
   return merged
 end
+Sc.columnRuns = columnRuns
 
 local Ground = {}
 Ground.__index = Ground
@@ -1033,6 +1035,19 @@ function Sc.paintQuay(w, props, def)
   end
   local gardens = {}                                                -- (day/07nov-ground) the front garden
   for _, p in ipairs(def.props or {}) do if p.garden then gardens[#gardens + 1] = p end end
+  -- (day/07nov-ground) the transitions this painter stamps, marked for the joins check (joins.lua)
+  Jn.reset()
+  for _, g in ipairs(gardens) do
+    Jn.mark(g.x1, "garden>road")
+    if g.path0 then Jn.mark(g.path0, "garden>path"); Jn.mark(g.path1, "path>garden") end
+  end
+  for _, e in ipairs(ends) do Jn.mark(e.dir == 1 and e.x0 + 8 or e.x0, e.dir == 1 and "road>ramp" or "ramp>road") end
+  for x = 1, W - 1 do
+    if kind[x - 1] == "ramp" and kind[x] == "quay" then Jn.mark(x, "ramp>quay") end
+    if kind[x - 1] == "quay" and kind[x] == "ramp" then Jn.mark(x, "quay>ramp") end
+    if kind[x - 1] == "quay" and not top[x] then Jn.mark(x, "quay>water") end
+    if not top[x - 1] and kind[x] == "quay" then Jn.mark(x, "water>quay") end
+  end
   local under = {}                                                  -- the columns under the bridge (its shadow)
   local spans = {}                                                  -- (day/07nov-ground, audit RW6: the shadow's ends
   for _, ps in ipairs(def.passages or {}) do                        -- were vertical cuts) its spans, for the slant
@@ -1417,6 +1432,11 @@ function Sc.townArt(style)
     if love.filesystem.getInfo("art/scene/cp_mid_lime.png") then
       T.cpmid = {}
       for _, n in ipairs({ "cp_mid_lime", "cp_mid_maple", "cp_mid_birch" }) do T.cpmid[#T.cpmid + 1] = fadeImg(n, nil, "mid") end
+      -- (day/07nov-ground, audit CP9 / CP6) the mid row's own lawn and a tuft row over its feet (tools/make_ground_kit.py)
+      if love.filesystem.getInfo("art/scene/kit_cp_midlawn.png") then
+        T.midLawn, T.midTufts = fadeImg("kit_cp_midlawn", nil, "mid"), fadeImg("kit_cp_tufts", nil, "mid")
+        T.shoreLawn = fadeImg("kit_cp_midlawn", nil, "shore")      -- (and the far tree line's, faded as the shore)
+      end
     end
     for _, n in ipairs({ "swings", "oak", "willow", "willow_tall", "winch" }) do T[n] = fadeImg("park_" .. n) end
     T.gate = fadeImg("park_gate", 0.28)                           -- (its own amount: dark ironwork, ladder darkest 80)
@@ -1736,6 +1756,8 @@ function Sc.drawFarArt(L, camx, t, w, def)
   lg.draw(A.skyline, sx, 150 - A.skyline:getHeight()); lg.draw(A.skyline, sx + A.skyline:getWidth(), 150 - A.skyline:getHeight())
   if L.style == "park" then
     Look.use("shore")
+    if def and def.foot and T.shoreLawn then strip(T.shoreLawn, camx, 0.25, 175 + T.shoreLawn:getHeight()) end   -- (day/07nov-
+    -- ground, audit CP9: up in the trees, the rows behind ended straight over the sky) the tree line's own lawn
     strip(T.treeline, camx, 0.25, 177)                            -- 4 the far tree line
     if def and def.foot and hasProp(def, "BIG OAK") then          -- the big oak's silhouette on it (a tall park's finale)
       local oi = farOakImg(T)
@@ -1745,11 +1767,14 @@ function Sc.drawFarArt(L, camx, t, w, def)
     vpop(on); on = vpush("mid")
     Look.use("mid")
     local ox = math.floor(camx * 0.5)                             -- 5 near trees (faded)
+    local tall = def and def.foot and T.midLawn
+    if tall then strip(T.midLawn, camx, 0.5, 176 + T.midLawn:getHeight()) end   -- (day/07nov-ground) its own lawn
     for k, tr in ipairs(L.trees) do
       local im = (def and def.foot and T.cpmid) and T.cpmid[1 + (k - 1) % #T.cpmid] or T["tree" .. tr.i]
       local x = tr.x - ox
       if x < 330 and x + im:getWidth() > -10 then lg.draw(im, x, 180 - im:getHeight()) end
     end
+    if tall then strip(T.midTufts, camx, 0.5, 181) end            -- tufts over the row's feet
   else
     Look.use("shore")
     strip(T.roofs, camx, 0.25, 160)                               -- 4 far roofs and spires
@@ -1857,6 +1882,7 @@ local function qc(c) lg.setColor(c[1] / 255, c[2] / 255, c[3] / 255) end
 -- above Pepper's line), dark edges on the cut faces (the pond's banks); Downtown's river stairs as stone steps.
 function Sc.paintGroundArt(w, style, foot)
   foot = foot or 184                                              -- (the path line: a tall level's def.foot)
+  Jn.reset()                                                      -- (day/07nov-ground: the joins check's marks)
   local T = Sc.townArt(style)
   local gw, gh = T.ground:getDimensions()
   return chunked(w, function(xa, xb)                              -- (painted once per chunk: Sc.CHUNK)
@@ -1914,7 +1940,56 @@ function Sc.paintGroundArt(w, style, foot)
     end
   end
   if style == "town" then Sc.quayEnds(w, xa, xb, foot, solid) end
+  if style == "park" then Sc.nearBanks(w, xa, xb, foot, T) end
   end)
+end
+
+-- (day/07nov-ground, audit CP2-CP5: the path, its verge and every earth band ended in a straight vertical cut at
+-- each end of a pond) the near bank, a transition stamped by rule at both ends of every pond, into the pond's first
+-- NEAR_R columns (drawn with the ground, so in front of the water): the ground's own column (path, verge, strata)
+-- with its silhouette going down into the water: a rounded shoulder (6 px), then NEAR_STEP px down per column (a
+-- slope tile of 2 px per step: the strata step back 1 px every 2 rows, the bank slopes away) to the world's bottom, a grass lip along its top with a tuft
+-- every other column down the path and its verge, a wet foot down the earth, a ripple every 4 px against it.
+Sc.NEAR_R, Sc.NEAR_STEP = 40, 2
+function Sc.nearBanks(w, xa, xb, foot, T)
+  local gw = T.ground:getWidth()
+  local top0 = foot - 12 + 9                                       -- the path's top row (the tile's row 9)
+  local H = w.height - top0
+  local R = Sc.NEAR_R
+  local K, S = 6, Sc.NEAR_STEP                                     -- a rounded shoulder, then S px down per column
+  local function drop(i)
+    if i < K then return math.floor(S * i * i / (2 * K) + 0.5) end
+    return S * (i - math.floor(K / 2))
+  end
+  for _, p in ipairs(pools(w)) do
+    local wt = p.y0 - Sc.POND_RISE
+    Jn.mark(p.x0, "path>pond"); Jn.mark(p.x1, "pond>path")
+    for _, e in ipairs({ { p.x0, 1 }, { p.x1 - 1, -1 } }) do
+      for i = 0, R - 1 do
+        local x = e[1] + e[2] * i
+        local d, dp = drop(i), (i > 0) and drop(i - 1) or 0
+        local ys = top0 + d
+        if x >= xa and x < xb and x >= p.x0 and x < p.x1 and ys < w.height then
+          clip(x, ys, 1, w.height - ys)
+          lg.setColor(1, 1, 1, 1); lg.draw(T.ground, T.groundQ[x % gw], x, foot - 12)
+          clip()
+          if d > dp + 1 then                                         -- the step's side face, a shade darker
+            lg.setColor(0.10, 0.06, 0.04, 0.28); lg.rectangle("fill", x, top0 + dp + 1, 1, math.max(0, ys - (top0 + dp + 1)))
+          end
+          if ys < top0 + 22 then                                     -- the path and its verge: a grass lip
+            lg.setColor(0.10, 0.06, 0.04, 0.22); lg.rectangle("fill", x, ys + 1, 1, math.min(3, w.height - ys - 1))   -- the face under it
+            lg.setColor(BANK.lip); lg.rectangle("fill", x, ys, 1, 1)
+            if i % 2 == 0 and ys > top0 then lg.setColor(BANK.lawn); lg.rectangle("fill", x, ys - 1, 1, 1) end   -- a tuft
+          else                                                       -- the earth meets the water: a wet foot
+            lg.setColor(BANK.foot); lg.rectangle("fill", x, ys, 1, 1)
+            lg.setColor(0.08, 0.10, 0.18, 0.35); lg.rectangle("fill", x, ys + 1, 1, math.min(2, w.height - ys - 1))
+          end
+          if ys - 1 >= wt and i % 4 == 0 then lg.setColor(BANK.rip[1], BANK.rip[2], BANK.rip[3], 0.6); lg.rectangle("fill", x + e[2], ys - 1, 1, 1) end   -- a ripple
+        end
+      end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
 end
 
 -- (art/dt-audit-06nov) the audit: "the cobbles end in a hard vertical cut at every canal gap". Where the street (its
