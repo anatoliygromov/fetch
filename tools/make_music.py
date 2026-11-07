@@ -4,6 +4,7 @@
     python3 tools/make_music.py              all tunes -> riverwalk/music/*.ogg (+ title.mod), manifest
     python3 tools/make_music.py --out DIR    also copies the files, a piano roll PNG per tune and chords.txt to DIR
     python3 tools/make_music.py title        only the named tunes
+    python3 tools/make_music.py --style chip the 22 Oct versions (default: disco, the 7 Nov groove)
 
 The sound is a 90s console sound chip: pulse 1 (the tune), pulse 2 (echo, harmony, answers, chord arpeggios),
 a 16-step triangle for the bass and a noise channel for the drums (an LFSR like the real chips). Everything is
@@ -146,6 +147,12 @@ def gen_bass(style, spans):
             seq = [r, third, five, five + 2 if five + 2 < r + 12 else r + 12]
             for i, k in enumerate(range(0, ln, 4)):
                 evs.append({"row": row + k, "len": 4, "notes": [seq[i % 4]], "flags": set()})
+        elif style == "disco":               # octave disco bass: R . O . R . O O (eighths, a sixteenth pickup)
+            pat = [(0, 0, 2), (2, 12, 2), (4, 0, 2), (6, 12, 1), (7, 12, 1)]
+            for k0 in range(0, ln, 8):
+                for off, up, n in pat:
+                    if k0 + off < ln:
+                        evs.append({"row": row + k0 + off, "len": n, "notes": [r + up], "flags": {"s"}})
         elif style == "hold":
             evs.append({"row": row, "len": ln, "notes": [r], "flags": set()})
         else:
@@ -170,9 +177,27 @@ def gen_arp(rhythm, spans, lo=62):
     return evs
 
 
+def gen_stab(rhythm, spans, lo=60):
+    """disco chord stabs on a third pulse: minor chords get their seventh, played as a fast chip arpeggio"""
+    evs = []
+    for row, ln, sym in spans:
+        _, pcs = chord(sym)
+        pcs = list(pcs)
+        if pcs[1] == (pcs[0] + 3) % 12 and len(pcs) == 3:
+            pcs.append((pcs[0] + 10) % 12)
+        tones = sorted(in_range(pc, lo) for pc in pcs)
+        for k in range(ln):
+            if rhythm[(row + k) % 16] == "x":
+                n = 1
+                while k + n < ln and rhythm[(row + k + n) % 16] == ".":
+                    n += 1
+                evs.append({"row": row + k, "len": n, "notes": tones, "flags": {"s"}, "arp_hz": 60})
+    return evs
+
+
 def build(song):
     """the song's sections -> events per channel, the chord spans and the section marks"""
-    ch = {"lead": [], "p2": [], "bass": [], "drum": []}
+    ch = {"lead": [], "p2": [], "stab": [], "bass": [], "drum": []}
     spans_all, marks = [], []
     row = 0
     for sec in song["sections"]:
@@ -202,14 +227,19 @@ def build(song):
                 e.update(vol=sec.get("p2_vol", 0.6), duty=sec.get("p2_duty", 0.5))
             ch["p2"] += evs
         b = sec.get("bass", "bounce")
-        if b in ("bounce", "drive", "pizz", "walk", "hold"):
+        if "stab" in sec:                 # (rhythm, volume[, lowest note])
+            st = sec["stab"]
+            for e in gen_stab(st[0], spans, st[2] if len(st) > 2 else 60):
+                e.update(vol=st[1], duty=sec.get("stab_duty", 0.5))
+                ch["stab"].append(e)
+        if b in ("bounce", "drive", "pizz", "walk", "hold", "disco"):
             evs = gen_bass(b, spans)
         else:
             evs = parse_part(b, row, nb, song["name"] + " " + sec["name"] + " bass")
         for e in evs:
             e.update(vol=sec.get("bass_vol", 1.0))
         ch["bass"] += evs
-        for lane in ("drums", "hats"):
+        for lane in ("drums", "hats", "perc"):
             pat = bars_of(sec.get(lane, ""))
             if not pat:
                 continue
@@ -300,6 +330,12 @@ def drum(c):
     if c == "t":
         t = t_(0.03)
         return noise(len(t), 30000, short=True) * np.exp(-t / 0.008) * 0.45
+    if c == "p":                                          # clap: three quick bursts and a short tail
+        t = t_(0.2)
+        x = np.diff(noise(len(t), 22000, seed=99), prepend=0) * 0.6
+        env = sum(np.exp(-np.clip(t - d0, 0, None) / 0.004) * (t >= d0) for d0 in (0.0, 0.009, 0.018))
+        env = np.minimum(env, 1.0) * (t < 0.024) + np.exp(-np.clip(t - 0.024, 0, None) / 0.05) * (t >= 0.024)
+        return x * env * 0.85
     if c in "ho":
         t = t_(0.04 if c == "h" else 0.2)
         x = noise(len(t), 44100, seed=1234)
@@ -313,7 +349,7 @@ def drum(c):
     raise ValueError("drum " + c)
 
 
-CH_GAIN = {"lead": 0.30, "p2": 0.27, "bass": 0.42, "drum": 0.32}
+CH_GAIN = {"lead": 0.30, "p2": 0.27, "stab": 0.20, "bass": 0.42, "drum": 0.32}
 
 
 def render_note(song, e, chname):
@@ -329,7 +365,7 @@ def render_note(song, e, chname):
     t = np.arange(n) / HI
     notes = e["notes"]
     if len(notes) > 1:                                    # chip chord: step through the notes 40 times a second
-        steps = (t * 40).astype(int) % len(notes)
+        steps = (t * e.get("arp_hz", 40)).astype(int) % len(notes)
         semis = np.array(notes, dtype=float)[steps]
     else:
         semis = np.full(n, float(notes[0]))
@@ -372,7 +408,7 @@ def render(song, loop):
             i0 %= Lh if loop else len(buf)
             n = min(len(x), len(cb) - i0)
             cb[i0:i0 + n] += x[:n]
-        buf += cb * CH_GAIN[name]
+        buf += cb * song.get("gains", {}).get(name, CH_GAIN[name])
     if loop:
         out = buf[:Lh].copy()
         out[:tail] += buf[Lh:Lh + tail]                       # the tail runs on into the start
@@ -445,7 +481,7 @@ def write_mod(song, path, title):
                mod_sample(tri), mod_sample(drum_8("k"), False), mod_sample(drum_8("s"), False),
                mod_sample(drum_8("h"), False), mod_sample(drum_8("c"), False), mod_sample(drum_8("t"), False)]
     names = ["pulse 25", "pulse 12.5", "pulse 50", "triangle", "kick", "snare", "hat", "crash", "tick"]
-    drum_ins = {"k": 5, "s": 6, "h": 7, "o": 7, "c": 8, "t": 9}
+    drum_ins = {"k": 5, "s": 6, "p": 6, "h": 7, "o": 7, "c": 8, "t": 9}
 
     def period(m, octave_base):
         i = m - octave_base
@@ -677,7 +713,94 @@ FETCH = {
                   "bass": "D2:2 r:2 A2:2 D3:6 r:4",
                   "drums": "k...s.k.........", "hats": "c..............."}]}
 
-SONGS = [TITLE, CITYPARK, CLEAR, OVER, FETCH]
+# ---------------------------------------------------------------------------------------------------------------
+# DISCO (7 Nov 2026): the same tunes, chords and melodies, with a disco-pop groove on the same chip. Four on the
+# floor, claps on 2 and 4, open hats on the off-beats, the octave bass (R . O . R . O O), chord stabs on a third
+# pulse (minor chords with their seventh), around 120 bpm. The owner: "a little Dua Lipa vibe", "8-bit music
+# from consoles". Nothing is borrowed from any real song: only the groove style.
+import copy
+
+FLOOR = "k...k...k...k..."
+CLAPS = "....p.......p..."
+DHATS = "h.o.h.o.h.o.h.oh"
+OFFSTAB = "__x.__x.__x.__x."
+FUNKSTAB = "__x._x.___x._x.x"
+
+
+def restyle(song, bpm, swing=None, **secs):
+    """a copy of song at bpm; secs maps a section name (spaces and quotes as written) to overrides"""
+    new = copy.deepcopy(song)
+    new["bpm"] = bpm
+    if swing is not None:
+        new["swing"] = swing
+    new["mood"] = song["mood"] + ", disco groove"
+    by = {sec["name"]: sec for sec in new["sections"]}
+    for name, ov in secs.items():
+        sec = by[name]
+        for k, v in ov.items():
+            if v is None:
+                sec.pop(k, None)
+            else:
+                sec[k] = v
+    return new
+
+
+def bars(*pats):
+    return " | ".join(pats)
+
+
+TITLE_D = restyle(TITLE, 124, **{
+    "Intro": {"drums": "k..k..k.k...k.k. | k..k..k.k...k.kk", "perc": "........p....... | ........p...pppp",
+              "hats": "c...........o... | ............o..."},
+    "A": {"drums": FLOOR, "perc": CLAPS, "hats": bars("c.o.h.o.h.o.h.oh", *[DHATS] * 7), "bass": "disco",
+          "stab": (OFFSTAB, 0.32)},
+    "B": {"drums": FLOOR, "perc": CLAPS, "hats": DHATS, "bass": "disco", "stab": (FUNKSTAB, 0.22)},
+    "A'": {"drums": FLOOR, "perc": CLAPS, "hats": bars("c.o.h.o.h.o.h.oh", *[DHATS] * 3), "bass": "disco",
+           "stab": (OFFSTAB, 0.3)},
+    "Turnaround": {"drums": bars(FLOOR, "k...k...k.k.k.k."), "perc": bars(CLAPS, "....p...pppppppp"),
+                   "hats": bars(DHATS, "h.o.h.o.o.o.o.o.")},
+})
+
+_cp_a_drums = bars(*[FLOOR] * 7, "k...k...k.k.k.k.")
+CITYPARK_D = restyle(CITYPARK, 120, swing=0.54, **{
+    "Intro": {"drums": bars("k.......k.......", "k...k...k...k...", FLOOR, "k...k...k.k.k.k."),
+              "perc": bars("................", "................", CLAPS, "....p...p.p.pppp"),
+              "hats": bars("h.h.h.h.h.h.h.h.", "h.h.h.h.h.h.h.h.", DHATS, DHATS)},
+    "A": {"drums": FLOOR, "perc": CLAPS, "hats": bars("c.o.h.o.h.o.h.oh", *[DHATS] * 7), "bass": "disco",
+          "stab": (OFFSTAB, 0.28)},
+    "A2": {"drums": _cp_a_drums, "perc": bars(*[CLAPS] * 7, "....p...p.p.pppp"), "hats": DHATS, "bass": "disco"},
+    # the breakdown: the kick drops out, finger-snap claps, then a kick roll back into the geese
+    "B (sneaking)": {"drums": bars(*["....t.......t..."] * 7, "k...k...k.k.kkkk"),
+                     "perc": bars(*["....p.......p..."] * 7, "....p...p.p.pppp"),
+                     "hats": bars(*["..h...h...h...h."] * 7, "..o...o...o.o.o.")},
+    "C (geese)": {"drums": FLOOR, "perc": CLAPS, "bass": "disco",
+                  "hats": bars("c.o.h.o.h.o.h.oh", DHATS, DHATS, "h.o.h.o.h.o.o.o.")},
+    "A'": {"drums": FLOOR, "perc": CLAPS, "hats": bars("c.o.h.o.h.o.h.oh", *[DHATS] * 7), "bass": "disco",
+           "stab": (OFFSTAB, 0.24)},
+    "Turnaround": {"drums": bars(FLOOR, "k...k...k.k.k.k."), "perc": bars(CLAPS, "....p...pppppppp"),
+                   "hats": bars(DHATS, "h.o.h.o.o.o.o.o.")},
+})
+
+CLEAR_D = restyle(CLEAR, 150, **{"Fanfare": {
+    "bass": "D2:2s D3:2s D2:2s D3:2s G2:2s G3:2s A2:2s A3:2s | D2:2 D3:10 r:4",
+    "drums": "k...k...k...k.k. | k...............", "perc": "....p.......p.pp | ................",
+    "hats": "c.o...o...o...o. | c...............", "stab": ("__x.__x.__x.__x.", 0.3)}})
+
+OVER_D = restyle(OVER, 100, **{"Fall": {
+    "bass": "D2:2s D3:2s A#1:2s A#2:2s A1:2s A2:2s D2:4",
+    "drums": "k...k...k...k...", "perc": "....p.......p...", "drum_vol": 0.55}})
+
+FETCH_D = restyle(FETCH, 160, **{"Good girl": {
+    "bass": "D2:1s D3:1s D2:1s D3:1s A2:2s D3:6 r:4",
+    "drums": "k...k.k.........", "perc": "....p...........", "hats": "c.o............."}})
+
+# the disco mix: the groove (kick, claps, octave bass, stabs) sits closer to the tune than the 22 Oct mix
+for _s in (TITLE_D, CITYPARK_D, CLEAR_D, OVER_D, FETCH_D):
+    _s["gains"] = {"drum": 0.62, "stab": 0.5, "bass": 0.55}
+
+CHIP = [TITLE, CITYPARK, CLEAR, OVER, FETCH]
+DISCO = [TITLE_D, CITYPARK_D, CLEAR_D, OVER_D, FETCH_D]
+SONGS = DISCO
 LOOPS = {"title", "citypark"}
 
 
@@ -699,7 +822,10 @@ def piano_roll(song, x, ch, spans, marks, rows, length, path):
     px = max(2, min(16, 1000 // rows))
     cols = int(len(x) / SR / length * rows * px)          # the wave on the same time scale (a jingle rings on)
     W = max(rows * px, cols) + 70
-    lanes = [("lead", 52, 92, (250, 210, 70)), ("p2", 52, 92, (110, 200, 250)), ("bass", 28, 64, (240, 120, 90))]
+    lanes = [("lead", 52, 92, (250, 210, 70)), ("p2", 52, 92, (110, 200, 250))]
+    if ch.get("stab"):
+        lanes.append(("stab", 52, 80, (200, 140, 250)))
+    lanes.append(("bass", 28, 64, (240, 120, 90)))
     H = 70 + sum((hi - lo) * 2 + 14 for _, lo, hi, _ in lanes) + 60 + 30
     img = Image.new("RGB", (W, H), (18, 20, 30))
     d = ImageDraw.Draw(img)
@@ -729,7 +855,7 @@ def piano_roll(song, x, ch, spans, marks, rows, length, path):
         d.text((4, y + h / 2 - 5), name, fill=(200, 200, 200))
         y += h + 14
     # drums
-    rowy = {"k": 0, "s": 8, "t": 16, "h": 24, "o": 32, "c": 40}
+    rowy = {"k": 0, "s": 8, "p": 8, "t": 16, "h": 24, "o": 32, "c": 40}
     d.text((4, y + 20), "drums", fill=(200, 200, 200))
     for e in ch["drum"]:
         x0 = 60 + e["row"] * px
@@ -751,6 +877,11 @@ def main():
     if "--out" in args:
         i = args.index("--out")
         out = args[i + 1]
+        del args[i:i + 2]
+    global SONGS
+    if "--style" in args:
+        i = args.index("--style")
+        SONGS = {"chip": CHIP, "disco": DISCO}[args[i + 1]]
         del args[i:i + 2]
     names = set(args)
     os.makedirs(MUSIC, exist_ok=True)
