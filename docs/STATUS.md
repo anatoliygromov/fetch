@@ -1,5 +1,21 @@
 # FETCH! Status
 
+## 7 Nov evening: audit of the music build, two music fixes, sound effects round 2 (live session, 0 credits)
+
+**Owner, 16:43:** "Im gonna test everything now, but go on keep working on the game".
+
+**Audit of `preview/07nov-all-music` (820680d), the build he is testing:** all green. PEPPER UNCHANGED (trace 3908, lab 1401), flow 135/135, Tiled, BACKDROP OK, MUSIC OK, physics River Walk 56/56, City Park tall 99/99, Downtown tall 109/109, Rooftops 139/139, Söder 29/29, Night 40/40, qa 0 problems on the three finished levels, bonus 23/23, curve T1 to T4 all PASS (T2 passes now).
+
+**Two music bugs found in the code, fixed on `fix/07nov-music` (14ba476, on 820680d):** the ending played the fanfare (C) and the title theme (D) at once; now the fanfare plays alone and the theme starts at 1.5 s. FETCH FRENZY was silent (the tally paused the tune, nothing restarted it); it now plays the level's tune from the top, or music/bonus.ogg as soon as the music session adds it. Flow 139/139 with 3 new checks.
+
+**`sfx/07nov-r2` (2b79466, on fix/07nov-music):** 5 new chip sounds (meow, query, chatter, rustle, page) and 8 silent events wired (cat, magpie, leaf piles, story card, Söder barrel into a hatch, lift ends). All checks green, each sound fired in the level checks.
+
+**Mac:** `2d game test/TODAY 7 Nov/FETCH_all_music_fix_07nov.love` (= 2b79466) and `new_sounds_round2.m4a`.
+
+**Waiting for the owner:** (1) a MUSIC on/off row in OPTIONS: today music only turns off with the M key, which the handheld does not have; (2) merges into main, as before.
+
+**Kept branches:** both above, until he merges or rejects them.
+
 ## 7 Nov day: the reviewed day branches on one branch (`day/07nov-integration`, not merged to main)
 
 **On this branch** (off `origin/main` 5f30120, each merged with `--no-ff`, in this order):
