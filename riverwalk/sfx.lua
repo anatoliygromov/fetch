@@ -1,13 +1,32 @@
--- Chiptune sound effects and a short music loop, synthesised at start-up
--- (square, triangle and noise channels, like a 90s sound chip).
+-- Chiptune sound effects, synthesised at start-up (square, triangle and noise channels, like a 90s sound chip),
+-- and the music: the tunes in music/ (made by tools/make_music.py), one track at a time.
+--
+-- Music: S.music(on, name) plays the track called name: music/<name>.ogg ("title" for the title and the menus,
+-- each level by its name in levels.lua, so music/downtown.ogg is all Downtown needs). A .xm or .mod of that name
+-- plays if there is no .ogg. A level with no tune yet gets the short loop synthesised here (built the first time
+-- it is needed). S.music(false) pauses; S.music(true) goes on from there; a name starts its track from the top
+-- (or lets it run on if it is already playing). Tracks are streamed; only one is open at a time.
+-- Jingles: S.play("clear"), S.play("over") and S.play("fetch") play music/jingle_<name>.ogg (static, loaded the
+-- first time) when the music is on, and pause the track; with the music off "clear" and "over" are the short
+-- sound effects as before. The music plays MUSIC_VOL under the sound effects (about 6 dB); the player's volume
+-- (settings.lua, LOVE's master volume) scales everything.
+local Se = require("settings")
 local S = {}
 local RATE = 22050
 local sounds = {}
-local music
--- Music is switched off in builds (22 Oct): the owner takes music on separately. Sound effects stay.
--- Set S.MUSIC = true to hear the old synthesised loop again; the new tunes live on branch audio/music.
-S.MUSIC = false
 local ok = love.audio ~= nil
+local MUSIC_VOL = 0.67                      -- the tunes are made at -20.5 dB (A-weighted RMS), the effects sound at
+                                            -- about -18 dB: at 0.67 (-3.5 dB) the music sits 6 dB under them
+local LOOP_VOL = 0.62                       -- the synthesised loop (about -20 dB A: as loud as the tunes)
+S.FORMATS = { ".ogg", ".xm", ".mod" }       -- the first one found is played
+S.JINGLES = { clear = true, over = true, fetch = true }
+-- (7 Nov, the all-of-today build: the music session's audio/harmony tunes hooked up on today's game) a tall
+-- level plays its flat twin's tune: citypark_tall -> citypark, downtown_tall -> downtown
+local track = "title"                       -- the track the game is in
+local src                                   -- the source playing it
+local loop                                  -- the synthesised loop (static, kept)
+local jingles = {}                          -- name -> static source, or false when there is no file
+
 
 local function render(dur, fn)
   local n = math.floor(dur * RATE)
@@ -241,24 +260,81 @@ function S.load()
       return rnd() * 0.14 * math.sin(math.pi * t / 0.16) * (((t * 2600 + t * t * 30000) % 1) < 0.5 and 1 or 0.3)
     end))
     sounds.miss = src(sweep(220, 160, 0.14, 0.18, "sq", 0.5))                      -- a bonus catch missed
-    if S.MUSIC then                                          -- music is off in builds for now (see S.MUSIC)
-      music = love.audio.newSource(buildMusic(), "static")
-      music:setLooping(true)
-      music:setVolume(0.55)
-    end
   end)
 end
 
+local function musicFile(name)
+  for _, ext in ipairs(S.FORMATS) do
+    local f = "music/" .. name .. ext
+    if love.filesystem.getInfo(f) then return f end
+  end
+end
+-- the source for a track: its file, streamed and looping, or the synthesised loop
+local function open(name)
+  local f = musicFile(name)
+  if f then
+    local good, s = pcall(love.audio.newSource, f, "stream")
+    if good then s:setLooping(true); s:setVolume(MUSIC_VOL); return s end
+  end
+  if not loop then
+    loop = love.audio.newSource(buildMusic(), "static")
+    loop:setLooping(true); loop:setVolume(LOOP_VOL)
+  end
+  return loop
+end
+local function close()
+  if not src then return end
+  src:stop()
+  if src ~= loop then src:release() end
+  src = nil
+end
+local function stopJingles() for _, j in pairs(jingles) do if j then j:stop() end end end
+
+-- a jingle: its file when the music is on; nil when there is none (then the sound effect plays)
+local function jingle(name)
+  if not Se.music then return nil end
+  if jingles[name] == nil then
+    local f = musicFile("jingle_" .. name)
+    local good, s = false, nil
+    if f then good, s = pcall(love.audio.newSource, f, "static") end
+    jingles[name] = good and s or false
+    if good then s:setVolume(MUSIC_VOL) end
+  end
+  return jingles[name] or nil
+end
+
 function S.play(name)
+  if S.JINGLES[name] and ok then
+    local played = false
+    pcall(function()
+      local j = jingle(name)
+      if not j then return end
+      if src then src:pause() end
+      if name == "fetch" and sounds.heart then sounds.heart:stop() end      -- the sting says it instead
+      stopJingles(); j:play(); played = true
+    end)
+    if played then return end
+  end
   local s = sounds[name]
   if s then pcall(function() s:stop() s:play() end) end
 end
 
-function S.music(on)
-  if not music then return end
+-- on: play or go on; off: pause. name: the track (see the top of this file); without it, the one already set
+function S.music(on, name)
+  if not ok then return end
   pcall(function()
-    if on then if not music:isPlaying() then music:play() end else music:stop() end
+    if name then
+      name = name:gsub("_tall$", "")
+      stopJingles()
+      if name ~= track then close(); track = name
+      elseif src and not src:isPlaying() then src:stop() end           -- the same track again: from the top
+    end
+    if not on then if src then src:pause() end; return end
+    src = src or open(track)
+    if not src:isPlaying() then src:play() end
   end)
 end
+-- the track being played (tests)
+function S.track() return track, src ~= nil and src ~= loop end
 
 return S

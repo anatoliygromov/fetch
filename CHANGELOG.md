@@ -2,6 +2,11 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+
+## Branch `preview/07nov-all-music`: the all-of-today build with the music session's tunes (owner, 7 Nov: "I need the build with music from the Music plans session")
+- The tunes of `audio/harmony` (riverwalk/music/*.ogg: title, City Park, River Walk, Downtown, Rooftops, Söder Hill, Night Harbour, jingles clear, over, fetch; title.mod; manifest) and its player (sfx.lua: S.music(on, name) streams one track at a time at MUSIC_VOL, jingles pause the track; the M key and settings still switch it off), ported onto today's sfx.lua with its 22 new sounds. A tall level plays its flat twin's tune (citypark_tall -> citypark). main.lua: the title and menus play "title", each level its own tune from its intro, the ending the title theme after the fanfare; stage.lua: the fetch jingle when the ball reaches the girl. tools/make_music.py, tools/check_music.sh (its Downtown expectation updated: Downtown has a tune now).
+- Checks: MUSIC OK, flow 135/135, physics all six levels, bonus 23/23, PEPPER UNCHANGED.
+
 ## Branch `day/07nov-hintpic`: hint bubbles without the drawn dogs, plus the second session's three pieces (owner 7 Nov)
 - **Bones a little smaller: 13 x 8 (was 15 x 9) (tools/build_bones.py).** Owner, 7 Nov 15:45: "maybe they can be slightly smaller, the previous were cuter". The same round shading (ball knobs, a shiny shaft, darker ink) on a 13 x 8 silhouette, the gold bone too. A smaller bone keeps every clearance the 15 x 9 placements had. No shadow under them (owner asked; they float at every height).
 - **River Walk: the dark grass band at the screen's bottom is off (look.lua kinds = {}).** Owner, 7 Nov: "this first plan dark thing looks terrible" (the code-drawn grass verges and bollards the ground revert had put back); 15:38 yes to removing it. The road is the nearest layer, as in Downtown. Physics 56/56, flow 125/125, backdrop OK, Pepper unchanged.

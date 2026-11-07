@@ -66,7 +66,7 @@ local function newRun() freeStage(); stage = St.new(def); state, t, tally = "int
 local function startLevel()
   setLevel(run.names[run.k])
   freeStage(); stage = St.new(def, { score = run.score, lives = run.lives, hard = Flow.hard or nil }); state, t, tally = "intro", 0, nil
-  fresh(); S.music(musicOn)
+  fresh(); S.music(musicOn, levelName)                           -- the level's tune (sfx.lua; a tall level plays its flat twin's)
 end
 local function startRun(i) run = Flow.newRun(i); if #run.names > 0 then startLevel() end end
 -- FETCH FRENZY: the round of the level just cleared (its number picks the round's throws)
@@ -78,7 +78,7 @@ local function startBonus(direct)
 end
 local Title = require("title")                                  -- the title screen: PRESS ANY KEY, then the menu
 local titleLeaving                                              -- seconds since a key was pressed on the title
-local function toTitle() state, t, titleLeaving, run = "title", 0, nil, nil; S.music(musicOn) end
+local function toTitle() state, t, titleLeaving, run = "title", 0, nil, nil; S.music(musicOn, "title") end
 local function leaveTitle()
   if state ~= "title" then return false end
   if t > 0.5 and not titleLeaving then S.play("select"); titleLeaving = 0 end
@@ -160,7 +160,7 @@ local function nextLevel()
     local score = run and run.score or tally.score
     local newBest = Flow.runOver(score)
     ending = { score = score, best = Flow.bestRun, newBest = newBest, lines = def.outro }
-    state, t = "ending", 0; S.play("fanfare")
+    state, t = "ending", 0; S.play("fanfare"); S.music(musicOn, "title")     -- the ending: the title theme again
   end
 end
 -- the round is over: its points go into the tally's (and the run's) score, B.LIFE_AT catches give an extra life (at most
@@ -179,7 +179,7 @@ local function bonusKey(name)
   if name and bonus.phase ~= "intro" and bonus.phase ~= "result" then presses[name] = true end
 end
 -- GAME OVER: TRY AGAIN plays the same level again with 3 lives and the score it started with; MENU
-local function toMenu() state, t, run = "menu", 0, nil; Flow.menu.sel = 1; S.music(musicOn) end
+local function toMenu() state, t, run = "menu", 0, nil; Flow.menu.sel = 1; S.music(musicOn, "title") end
 local function tryAgain() if run then run.lives = 3; startLevel() else newRun() end end
 local function overAction(a)
   if t < Flow.OVER_WAIT then return end

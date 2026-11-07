@@ -258,7 +258,7 @@ end
 function St:giveBall()
   local b = self.ball
   b.state = "given"; self.pepper.carrying = nil; self.girl.state = "cheer"; self.girl.t = 0
-  self.score = self.score + 2000; S.play("heart"); self:say("GOOD GIRL, PEPPER!", 3)
+  self.score = self.score + 2000; S.play("heart"); S.play("fetch"); self:say("GOOD GIRL, PEPPER!", 3)   -- (the fetch jingle when the music is on)
   self.bonus = { "FETCH", 2000 }
   self.clearT = 2.2
 end
