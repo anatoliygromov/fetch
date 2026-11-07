@@ -649,6 +649,46 @@ CITYPARK = {
          "drums": "k...s...k.k.s... | k...s.s.s.s.ssss", "hats": "h.h.h.h.h.h.h.h. | h.h.h.h........."},
     ]}
 
+# River Walk: F major, 112 bpm with a light swing, 30 bars (64 s). The first level: a sunny waterfront, the ball is on
+# a ferry. The tune opens on the title's hook shape (3 5 1 7), so the levels sound like one score. Intro: water
+# ripples (pulse 2 arpeggios) over long bass notes like a ferry horn, a pickup into A. A: call 4 bars, answer 4
+# bars, echoed. B (the ferry) in D minor: short calls answered by pulse 2 (the gulls), a walking bass, ending on A7.
+# A' over ripple arpeggios with sevenths, and a turnaround (Bb - C7) that climbs back into the intro.
+_RW_A = ("A4:4 C5:2 F5:6 E5:2 F5:2 | D5:4 C5:2 A4:2 D5:8v | Bb4:2 D5:2 F5:4 G5:2 F5:2 D5:4 |"
+         "C5:2 E5:2 G5:6 F5:2 E5:4 | A4:4 C5:2 F5:6 E5:2 F5:2 | A5:4 G5:2 E5:2 F5:4 D5:4 |"
+         "Bb4:2 D5:2 G5:4 E5:2 G5:2 Bb5:4 | A5:2 G5:2 F5:12v")
+RIVERWALK = {
+    "name": "riverwalk", "bpm": 112, "swing": 0.58, "key": "F major (B section D minor)",
+    "mood": "sunny, breezy, the river and the ferry",
+    "sections": [
+        {"name": "Intro", "chords": "F | Dm | Bb | C7",
+         "lead": "r:16 | r:16 | r:16 | r:10 E4:2s F4:2s G4:2s",
+         "p2": ("arp", "x.x.x.x.x.x.x.x.", 0.45), "bass": "hold",
+         "drums": "k............... | k............... | k.......k....... | k.......k...s.ss",
+         "hats": "c...h.......h... | ....h.......h... | ....h.......h... | h.h.h.h.h.h.h.h.", "drum_vol": 0.8},
+        {"name": "A", "chords": "F | Dm | Bb | C | F | Am Dm | Gm7 C7 | F",
+         "lead": _RW_A, "p2": ("echo", 3, 0.4),
+         "drums": "k...s...k.k.s...", "hats": "h.h.h.h.h.h.h.h.", "drum_vol": 0.9},
+        {"name": "B (ferry)", "chords": "Dm | Bb | C7 | F A7 | Dm | Bb | Gm | A7",
+         "lead": "D5:2 E5:2 F5:2 A5:4 r:6 | Bb4:2 C5:2 D5:2 F5:4 r:6 | E5:2 F5:2 G5:2 A5:2 Bb5:4 A5:2 G5:2 |"
+                 "A5:4 F5:4 E5:4 C#5:4 | D5:2 E5:2 F5:2 A5:4 r:6 | D5:2 F5:2 Bb5:4 A5:2 G5:2 F5:4 |"
+                 "G5:2 F5:2 E5:2 D5:2 Bb4:4 D5:4 | C#5:4 E5:4 A5:8v",
+         "p2": "r:10 A5:2 G5:2 F5:2 | r:10 Bb5:2 A5:2 F5:2 | C5:2 D5:2 E5:2 F5:2 G5:4 F5:2 E5:2 |"
+               "F5:4 C5:4 C#5:4 A4:4 | r:10 A5:2 G5:2 F5:2 | Bb4:2 D5:2 F5:4 F5:2 E5:2 D5:4 |"
+               "Bb4:2 A4:2 G4:2 F4:2 G4:4 Bb4:4 | A4:4 C#5:4 E5:8", "p2_vol": 0.65,
+         "bass": "walk", "drums": "k...t...k.k.t...", "hats": "h.hhh.hhh.hhh.hh", "drum_vol": 0.8},
+        {"name": "A'", "chords": "F | Dm7 | Bb | C | F | Am7 Dm7 | Gm7 C7 | F",
+         "lead": _RW_A, "p2": ("arp", "x.x.x.x.x.x.x.x.", 0.38, 60),
+         "drums": "k...s...k.k.s...", "hats": "c.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. |"
+         "h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h.",
+         "drum_vol": 0.9},
+        {"name": "Turnaround", "chords": "Bb | C7",
+         "lead": "r:4 F5:2s F5:2s G5:2s G5:2s A5:2s Bb5:2s | C6:4 Bb5:2s A5:2s G5:2s E5:2s C5:4",
+         "p2": ("echo", 3, 0.4), "bass": "walk",
+         "drums": "k...s...k.k.s... | k.s.s.s.s.s.ssss", "hats": "h.h.h.h.h.h.h.h. | h.h.h.h.........",
+         "drum_vol": 0.9},
+    ]}
+
 # Level clear: D major, 150 bpm, 2 bars and a ring (3.6 s): a rising arpeggio to the top D over I - IV - V, and the
 # top D held over I with vibrato.
 CLEAR = {
@@ -677,8 +717,8 @@ FETCH = {
                   "bass": "D2:2 r:2 A2:2 D3:6 r:4",
                   "drums": "k...s.k.........", "hats": "c..............."}]}
 
-SONGS = [TITLE, CITYPARK, CLEAR, OVER, FETCH]
-LOOPS = {"title", "citypark"}
+SONGS = [TITLE, CITYPARK, RIVERWALK, CLEAR, OVER, FETCH]
+LOOPS = {"title", "citypark", "riverwalk"}
 
 
 # ---------------------------------------------------------------------------------------------------------------
