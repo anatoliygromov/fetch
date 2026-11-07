@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""build_cp_frame.py [--check] [--variant open|house]: City Park's climbing frame (park_frame.png), built by rule,
+"""build_cp_frame.py [--check] [--roof]: City Park's climbing frame (park_frame.png), built by rule,
 0 credits (day/07nov-cpplay, owner 7 Nov board: "park_frame_06n: redraw, looks really weird").
 
   python3 -I tools/build_cp_frame.py           -> riverwalk/art/scene/park_frame.png, art/source/park_frame/
@@ -13,14 +13,19 @@ What it is in the game (citypark_tall.lua; the flat citypark.lua has the same bo
 The image is 90 x 67 at (FRAME x0 - 1, 119 + dy): image x = world x - 2711, image y = world y - 263 (tall level).
 
 The redraw (was: blue pipes, two tall posts and two stacked bars, a ladder and a yellow stool: "a cage", "a gate",
-"random bars"). Now a playground climbing block in the build of the approved play tower (tools/build_cp_built.py
+"random bars"). A playground climbing frame in the build of the approved play tower (tools/build_cp_built.py
 tower_deck, tower_post): every surface Pepper stands on is one of the tower's yellow decks (lit cap, flat front,
-shade row, bolts, 1 px ink), every deck stands on the tower's grey posts down to the path (or onto the deck below,
-as the tower's upper deck does). The step is a red box (the slide's red) with a yellow tread: a step, not a stool.
-Under the top deck a red panel (the slide tower's red panel and its round window, cut 1:1 from park_slide.png)
-closes the space between the two decks, from post to post, so the top deck is the roof of a little play house and
-the low deck its porch: one piece in the tower's family, not two shelves. Under the low deck it stays open (Pepper
-walks the path under it: the deck is one-way). One window, not two (two read as a face).
+shade row, bolts, 1 px ink), exactly on its box, and stands on the tower's grey posts.
+Round 1 (a full-width red panel between the decks, posts 4 px in from the deck ends, a red box step) failed the
+independent review: "a red desk with a bench in front and a crate under it", the porthole round bone 171 a keyhole.
+Round 2 (now):
+  - posts flush under every deck end (no table-top overhang); a middle post through both decks to the path, so the
+    posts run from deck to ground as the tower's do
+  - one small red panel, the slide tower's (its porthole cut 1:1 from park_slide.png), in the bay between the left
+    and middle posts, clear of bones 171 (2760, 304) and 245 (2724, 316); the rest open between the posts
+  - the step the lowest of three decks: the deck cap on a grey block in the posts' colours
+  - --roof (the review's fix 5, a red roof bar on raised posts) was tried and not used: 12 px over the top deck it
+    crosses Pepper's chest and the magpie and its ball on perch 11
 Parts are drawn once (deck, post, panel, step) and stamped on the integer grid of the boxes. 1 px ink outline round
 everything (an obstacle). Light from the upper left."""
 import os, sys
@@ -42,17 +47,6 @@ def ix(wx): return wx - OX
 
 
 def iy(wy): return wy - OY
-
-
-def step_box(w, h):
-    """the step: box w x h plus the outline; a yellow tread (the decks' cap, 3 rows) on a red box (lit left
-    column, a dark bottom row), the ink on all four sides"""
-    a = canvas(w + 2, h + 1)
-    rect(a, 0, 0, w + 2, h + 1, INK)
-    rect(a, 1, 1, w, 1, Y_LT); rect(a, 1, 2, w, 2, Y_MID); rect(a, 1, 4, w, 1, Y_SH)    # the tread
-    rect(a, 1, 5, w, 1, INK)                                                            # its edge over the box
-    rect(a, 1, 6, w, h - 7, R_MID); rect(a, 1, 6, 1, h - 7, R_LT); rect(a, w, 6, 1, h - 7, R_DK)
-    return a
 
 
 def porthole():
@@ -78,33 +72,60 @@ def panel(w, h, holes):
     return a
 
 
-def build(variant='house'):
+def step_block(w, h):
+    """(round 2) the step as the lowest of three decks: the tower's yellow deck cap (tower_deck) on a grey block in
+    the posts' colours (lit left column), ink round all of it: box w x h"""
+    a = canvas(w + 2, h + 1)
+    rect(a, 0, 0, w + 2, h + 1, INK)
+    rect(a, 1, 8, w, h - 8, P_MID); rect(a, 1, 8, 1, h - 8, P_LT)
+    stamp(a, tower_deck(w), 0, 0)
+    return a
+
+
+def roof_bar(w):
+    """the slide tower's red roof bar, its rows 0-3 as in park_slide.png: ink, red, dark red, ink"""
+    a = canvas(w, 4)
+    rect(a, 0, 0, w, 4, INK); rect(a, 1, 1, w - 2, 1, R_MID); rect(a, 1, 2, w - 2, 1, R_DK)
+    return a
+
+
+def build(variant='r2', roof=False):
+    """round 2 (independent review round 1: "a red desk with a bench in front and a crate under it"): posts flush
+    under every deck end (no table-top overhang), a middle post from the top deck through the low deck to the path
+    (posts that run from deck to ground: the tower's frame, not a table's legs), one small red panel like the slide
+    tower's in the bay between the left and middle posts (its porthole clear of bones 171 and 245), the rest open;
+    the step the lowest of three decks (deck cap on a grey block). roof: the top deck's posts carried 12 px higher
+    with the slide's red roof bar between them (the review's fix 5, only if it still reads as a table)"""
     a = canvas(W, H)
-    # the top deck's posts: the right one on the decoration box 2796-2800 down to the path; the left one 4 px in
-    # from the deck's left end, standing on the low deck (the tower's rule for an upper deck over a lower one)
     top0, top1, low0, low1 = 2724, 2800, 2712, 2784
-    stamp(a, tower_post(4, FOOT - 284), ix(2796) - 1, iy(284))
-    stamp(a, tower_post(4, 304 - 284), ix(top0 + 4) - 1, iy(284))
-    if variant == 'house':                                  # the wall between the decks, from post to post, its
-        x0, x1 = ix(top0 + 4) + 4, ix(2796) - 1             # ink rows on the decks' ink rows (top 286, bottom 303)
-        pw = x1 - x0 - 1; ph = (iy(304) - 1) - (iy(280) + 6) - 1
-        holes = [1 + (pw - 8) // 2]                     # one porthole in the middle (two read as a face)
-        p = panel(pw, ph, holes)
-        stamp(a, p, x0, iy(280) + 6)
-        a[iy(280) + 6:iy(304), x0:x1 + 1][p[..., 3] == 0] = 0     # the portholes: open (stamp skips the clear)
-    # the low deck's posts: the left one on the decoration box 2712-2716, the right one 4 px in from its right end
+    lx, rx = ix(top0) - 1, ix(top1 + 1) - 6                 # the top deck's posts: flush under its ink ends
+    ytop = iy(268) if roof else iy(284)
+    stamp(a, tower_post(4, FOOT - (ytop + OY)), rx, ytop)                 # right: down to the path
+    stamp(a, tower_post(4, 304 - (ytop + OY)), lx, ytop)                  # left: stands on the low deck
+    if roof:
+        stamp(a, roof_bar(rx + 6 - lx), lx, ytop - 3)
+    # a middle post through both decks to the path (the tower's frame: posts run from deck to ground), at the
+    # small panel's right end, clear of bone 171 (2760, 304: image x 43-55)
+    mx = ix(2748) - 1
+    stamp(a, tower_post(4, FOOT - (ytop + OY)), mx, ytop)
+    # the small panel: between the left post's and the middle post's ink, under the top deck's bottom ink
+    px0 = lx + 5; pw = mx - px0 - 1; ph = 13
+    p = panel(pw, ph, [1 + (pw - 8) // 2])
+    stamp(a, p, px0, iy(280) + 6)
+    a[iy(280) + 6:iy(280) + 6 + p.shape[0], px0:px0 + p.shape[1]][p[..., 3] == 0] = 0
+    # the low deck's posts, flush under its ends (the left one on the decoration box 2712-2716)
     stamp(a, tower_post(4, FOOT - 308), ix(low0) - 1, iy(308))
-    stamp(a, tower_post(4, FOOT - 308), ix(low1 - 8) - 1, iy(308))
+    stamp(a, tower_post(4, FOOT - 308), ix(low1 + 1) - 6, iy(308))
     stamp(a, tower_deck(top1 - top0), ix(top0) - 1, iy(280) - 1)
     stamp(a, tower_deck(low1 - low0), ix(low0) - 1, iy(304) - 1)
-    stamp(a, step_box(16, 12), ix(2716) - 1, iy(316) - 1)
+    stamp(a, step_block(16, 12), ix(2716) - 1, iy(316) - 1)
     a[a[..., 3] == 0] = 0
     return a
 
 
 def main():
-    variant = sys.argv[sys.argv.index('--variant') + 1] if '--variant' in sys.argv else 'house'
-    a = build(variant)
+    variant = 'roof' if '--roof' in sys.argv else 'r2'
+    a = build(variant, roof='--roof' in sys.argv)
     p = os.path.join(SCENE, 'park_frame.png')
     if '--check' in sys.argv:
         same = os.path.exists(p) and np.array_equal(np.array(Image.open(p).convert('RGBA')), a)
