@@ -16,7 +16,7 @@ textured parts are drawn here once, on the 8 px grid where they repeat, in the l
   kit_cp_tufts.png     240 x 5    a tuft row drawn over the mid row's feet (audit CP6: the bushes stood cut flat on
                                   the lawn's top line): 2 px clumps every 8 px on a dark foot row, transparent
                                   between; also faded as mid.
-  kit_cp_roots.png     16 x 5     grass over a trunk's foot (audit CP8: root flares ended in a straight line): the
+  kit_cp_roots.png     48 x 5     grass over a trunk's foot (audit CP8: root flares ended in a straight line): the
                                   path's lawn greens, stamped over each tree's foot in the back pass.
 
   python3 -I tools/make_ground_kit.py           write the parts
@@ -31,36 +31,55 @@ hexc = lambda h: (int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16), 255)
 LAWN, LAWN_D, LAWN_L, SEAM = hexc('9e983f'), hexc('867744'), hexc('b5ad55'), hexc('665c3b')   # park_ground.png's lawn
 
 
+# (round 2, review CP-c / CP-n: "one 16 px pattern repeated: a battlement"; the lawn "a dot grid, not grass") one
+# 48 px tuft pattern in no regular order: bumps 1 to 3 px wide and 1 to 3 px tall with gaps of 1 to 3 px, from a fixed
+# list (so the build is the same every time); a 1 px wide bump is never 1 px tall (no lone pixels). It tiles at 48.
+BUMPS = [(2, 1, 2), (1, 3, 1), (3, 2, 3), (2, 2, 1), (1, 2, 2), (3, 1, 1), (2, 3, 3), (1, 2, 2), (2, 1, 2), (3, 3, 2),
+         (1, 3, 3), (2, 2, 3)]                                       # (width, height, gap after) - 48 px in all
+assert sum(w + g for w, h, g in BUMPS) == 48
+
+
+def tuft_row(W, colour_of):
+    """the pattern's columns over width W: a list of (x, height); colour_of(k, h) gives the colour of row k (0 = foot)"""
+    out = []
+    x = 0
+    while x < W:
+        for w, h, g in BUMPS:
+            for dx in range(w):
+                if x + dx < W: out.append((x + dx, h))
+            x += w + g
+            if x >= W: break
+    return out
+
+
 def midlawn():
     W, H = 240, 96
     a = np.zeros((H, W, 4), np.uint8); a[:, :] = LAWN
     a[0, :] = SEAM                                                   # the seam under the row's feet
     a[1, :] = LAWN_D
-    for row, off in ((6, 0), (14, 4), (26, 2), (44, 6)):            # tufts on an 8 px grid, two px wide (no lone
-        for x in range(off, W, 8):                                   # pixels): a lit pair over a dark pair
-            for dx in (0, 1):
-                a[row, (x + dx) % W] = LAWN_L; a[row + 1, (x + dx) % W] = LAWN_D
+    for row, off in ((7, 0), (19, 17), (37, 31)):                    # the tuft pattern in 3 rows, each shifted
+        for x, h in tuft_row(W + 48, None):
+            if h == 1: continue                                      # (on the open lawn only the 2-3 px tufts)
+            xx = (x + off) % W
+            for k in range(h): a[row - k, xx] = LAWN_D if k == 0 else LAWN_L
     return a
 
 
 def tufts():
     W, H = 240, 5
     a = np.zeros((H, W, 4), np.uint8)
-    HT = (4, 2, 3, 2, 3, 2, 4, 2, 2, 3)                             # clump heights, a fixed list
-    for i, x in enumerate(range(0, W, 8)):                           # a clump 2 px wide every 8 px on a dark
-        h = HT[i % len(HT)]                                          # foot row 4 px wide
-        for dx in range(-1, 3): a[H - 1, (x + dx) % W] = LAWN_D
-        for k in range(1, h):
-            for dx in (0, 1): a[H - 1 - k, (x + dx) % W] = LAWN
+    a[H - 1, :] = LAWN_D                                             # a dark foot row, the bumps of the pattern on it
+    for x, h in tuft_row(W, None):
+        for k in range(1, h + 1): a[H - 1 - k, x] = LAWN
     return a
 
 
 def roots():
-    W, H = 16, 5
+    W, H = 48, 5
     a = np.zeros((H, W, 4), np.uint8)
-    PROF = (2, 2, 3, 3, 2, 2, 4, 4, 3, 3, 2, 2, 4, 4, 2, 2)           # grass heights across the foot, in pairs
-    for x, h in enumerate(PROF):
-        for k in range(h): a[H - 1 - k, x] = LAWN_D if k == 0 else LAWN
+    a[H - 1, :] = LAWN_D
+    for x, h in tuft_row(W, None):
+        for k in range(1, h + 1): a[H - 1 - k, x] = LAWN
     return a
 
 

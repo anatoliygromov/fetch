@@ -43,9 +43,16 @@ DOOR_X0, DOOR_X1, CROWN = 12, 31, 25                                            
 PLATE = (15, 28, 17, 21)                                                          # x0, x1, y0, y1 (inclusive)
 
 
+RIDGE = (int(os.environ.get('KENNEL_RB0', 6)), int(os.environ.get('KENNEL_RB1', 37)))   # the ridge board's columns
+
+
 def roof_top(x):
-    """the roof's top row at column x: 1 in 2 from the peak (cols 21 and 22 at row 0), even 2 px steps"""
-    return int(abs(x - 21.5) - 0.5) // 2
+    """the roof boards' top row at column x: under the level ridge board (rows 0-3) it is row 4; outside it the
+    boards fall 1 in 2 (even 2 px steps) from the board's ends to the eaves"""
+    r0, r1 = RIDGE
+    if r0 <= x <= r1: return 4
+    d = (r0 - x) if x < r0 else (x - r1)
+    return 2 + (d + 1) // 2
 
 
 def build():
@@ -74,6 +81,14 @@ def build():
                 c = SLATE
                 if i in (1, 2) and ((x if x <= 21 else 43 - x) + 2 * (i % 2)) % 4 == 0: c = SLATE_D   # shingle ends
             a[r, x] = c
+    # the ridge board: a level plank over the peak, rows 0-3 (lit top, two mid rows, a shaded underside), its
+    # ends square; Pepper's paws land on it (round 2: on a 4 px peak she straddled the slopes, 5-9 px over them)
+    r0, r1 = RIDGE
+    for x in range(r0, r1 + 1):
+        for r in range(4):
+            inside[r, x] = True
+            a[r, x] = (SLATE_L, SLATE, SLATE, SLATE_D)[r]
+            if x in (r0, r1) and 0 < r < 3: a[r, x] = SLATE_D if x == r1 else SLATE   # its ends
     # the round door: a semicircle arch (radius 10, centre col 21.5, row 35) on straight jambs
     door = np.zeros((H, W), bool)
     cx, cr, rad = 21.5, CROWN + 10, 10

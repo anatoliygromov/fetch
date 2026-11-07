@@ -214,11 +214,11 @@ Built by `tools/build_dt_facades.py` (`--check`) after the producer's concept dt
 ## River Walk and City Park ground, the owner's reverts, the kennel garden (day/07nov-ground, 0 credits)
 | File | Size | Where the game draws it |
 | --- | --- | --- |
-| `kennel.png` | 44 x 44 | rebuilt by `tools/build_rw_kennel.py` as a classic dog house (gable end, round door, name plate), same place: top-left (0, 140), bottom row y 183, door crown y 165. Collision: the peak x 16-28 from y 140, the eaves x 0-44 from y 150 (was 158). It stands on the GARDEN prop's lawn (scene.lua `Sc.paintGarden`) |
+| `kennel.png` | 44 x 44 | rebuilt by `tools/build_rw_kennel.py` as a classic dog house (round door, name plate) with a level ridge board (art x 6-37, rows 0-3, round 2), same place: top-left (0, 140), bottom row y 183, door crown y 165. Collision: the board x 16-28 from y 140, the eaves x 0-44 from y 145 (was 158). It stands on the GARDEN prop's lawn (scene.lua `Sc.paintGarden`) |
 | `gritbox_front.png` | 88 x 32 | unchanged slot; the front-on build in the old box's greens (`tools/fix_gritbox_07nov.py`) |
 | `pontoon.png` | 54 x 12 | the previous pontoon again, drawn at the mover's x0 - 3, y0 - 2 (`Sp.PONT_DY`); the mooring lines tie on under the deck's ends |
 | `park_stone.png` | 26 x 21 | the previous pink granite stone again (as the cp-pond branch drew it) |
 | `park_ground.png`, `road.png` | 240 x 68, 640 x 41 | the previous textured files again (`tools/revert_ground_07nov.py`, `tools/make_road.py`) |
 | `kit_cp_midlawn.png` | 240 x 96 | City Park tall only: under the mid row (top y 176, scroll 0.5, faded as mid) and under the far tree line (top y 175, scroll 0.25, faded as the shore), scene.lua `Sc.drawFarArt` |
 | `kit_cp_tufts.png` | 240 x 5 | City Park tall: over the mid row's feet, rows 176-180, scroll 0.5, faded as mid |
-| `kit_cp_roots.png` | 16 x 5 | City Park tall: over every tree foot (bottom on the foot line), stamped every 16 px, faded as the back (scene.lua `rootTufts`) |
+| `kit_cp_roots.png` | 48 x 5 | City Park tall: over every tree foot (bottom on the foot line), a 48 px pattern anchored in the world, faded as the back (scene.lua `rootTufts`) |

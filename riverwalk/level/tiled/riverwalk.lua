@@ -272,9 +272,9 @@ return {
           type = "props",
           shape = "rectangle",
           x = 0,
-          y = 150,
+          y = 145,
           width = 44,
-          height = 15,
+          height = 20,
           rotation = 0,
           visible = true,
           properties = {

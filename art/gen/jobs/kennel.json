@@ -8,7 +8,7 @@
   44
  ],
  "real_height_m": 0.95,
- "built_by": "tools/build_rw_kennel.py (day/07nov-ground: classic dog house, gable end, round door, name plate)",
+ "built_by": "tools/build_rw_kennel.py (day/07nov-ground round 2: a level ridge board, art x 6-37, rows 0-3)",
  "slot": {
   "file": "riverwalk/art/scene/kennel.png",
   "where": "River Walk screen 1, x 0-44, in the front garden (GARDEN prop): the KENNEL piece (setpieces.lua kennel())"

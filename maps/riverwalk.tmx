@@ -137,7 +137,7 @@
     <property name="hidden" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="9" name="KENNEL" type="props" x="0" y="150" width="44" height="15">
+  <object id="9" name="KENNEL" type="props" x="0" y="145" width="44" height="20">
    <properties>
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
