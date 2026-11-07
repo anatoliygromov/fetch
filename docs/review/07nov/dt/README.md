@@ -55,7 +55,7 @@ Concepts (Artlist, design targets only, never cut): `art/gen/concepts/dt_design_
 | `tools/check_tiled.sh` | TILED CHECK PASSED |
 | `tools/check_backdrop.py` | BACKDROP OK |
 | `tools/check_curve.py` (10 seeds, branch) | T1-T4 PASS; Downtown (tall) DI kids 11.6, parents 24.7, retro 8.1, worst spot 4 Bakery row (20 %), Elsa 100 %, lost 3.8 % |
-| `tools/check_curve.py` (10 seeds, base) | see the CURVE BASE line at the end of this file |
+| `tools/check_curve.py` (10 seeds, base main 5f30120) | T1-T4 PASS; Downtown (tall) DI kids 11.6, parents 18.5, retro 7.9, worst spot 4 Bakery row (21 %), Elsa 100 %, lost 1.2 % |
 | `tools/build_dt_rooftops.py --check` | PASS, 47 files |
 | `tools/asset_qa.py --file` on every `dtl_` file | roofs and canopies (20 files): PASS. Fronts: 22 PASS, 1 WARN (closed2: one near-colour patch), 5 FAIL by heuristics on approved parts: `dtl_bakery_front` 21 colours (the shop bay + the door bay, 19 + 18 approved colours, side by side); `dtl_closed10/14/18_front` "speck in the glass" on the approved shop bay's goods seen as a storey window; `dtl_hall_front` the glass hall's panes read as uneven storey windows (it has no storeys). Not changed: the parts are the approved fronts and the glasshouse is one glazed wall. |
 
@@ -75,4 +75,7 @@ Concepts (Artlist, design targets only, never cut): `art/gen/concepts/dt_design_
    running held jump, proven by --physics); the middle tier is a secret route, so the difficulty curve did not move
    (T1-T4 PASS, DI within 1 of the base).
 
-CURVE BASE (origin/main 5f30120, 10 seeds): filled in below when the run finishes.
+7. The curve: kids unchanged (11.6), parents 18.5 -> 24.7 (now inside the owner's 22-28 band for the mid levels),
+   retro 7.9 -> 8.1, lost runs 1.2 % -> 3.8 % (10 seeds; T1-T4 PASS on both). The map moved three boxes, so the
+   levers if the reviewer wants the base numbers back: the porch at 312 (36 up from the arm; 344 would need a
+   1.5 m door under it), or the flower hall roof back to 2288-2376 (then the bounce needs Right held again).
