@@ -148,3 +148,6 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-06 22:35,verdict,,town_shelter_tall,,,,,reference,dt_street_concept: design target
 2026-11-06 22:35,verdict,,cp_willow,,,,,in_game,"riverwalk/art/scene/cp_willow.png, Sc.bigWillow, review PASS (night 6-7 Nov)"
 2026-11-06 22:35,verdict,,rw_rower,,,,,in_game,"rw_rower.png 6 frames, Sp.drawRowboat, review PASS round 2 (night 6-7 Nov)"
+2026-11-07 11:10,plan,sky_paint_rw@1107-111027,sky_paint,sky_07nov,artlist,Nano Banana Pro I2I 1K,320,planned,concept (reference only).
+2026-11-07 11:12,spent,sky_paint_rw@1107-111027,,,,,320,spent,"Artlist concept, reference only"
+2026-11-07 11:12,verdict,,sky_paint_rw@1107-111027,,,,,reference,"design target for the painted sky, not game art"
