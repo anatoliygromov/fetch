@@ -51,6 +51,13 @@ return function(api)
       if os.getenv("LOOK_XS") then xs = {}; for v in os.getenv("LOOK_XS"):gmatch("%-?%d+") do xs[#xs + 1] = tonumber(v) end end
       if os.getenv("LOOK_YS") then tiers = {}; for v in os.getenv("LOOK_YS"):gmatch("%-?%d+") do tiers[#tiers + 1] = tonumber(v) end end
       s.bikes = {}; s.bikeT = 99
+      -- (day/07nov-dt, round 3) LOOK_CARGO=x in a sweep: a cargo bike standing with its middle at world x, with its
+      -- zone's depot (clipped at the gateway's jamb as it rides in), for frames of the shed's gate
+      if os.getenv("LOOK_CARGO") and s.def.bikes then
+        local z
+        for _, b in ipairs(s.def.bikes) do if b.kind == "cargo" then z = z or b end end
+        if z then s.bikes[1] = { x = tonumber(os.getenv("LOOK_CARGO")), y = z.roadY or s.def.foot, zone = { kind = "cargo", w = z.w, h = z.h, speed = 0, endX = -1e9, rail = true, depot = z.depot }, warn = -9 } end
+      end
       -- (night 6 Nov, cp) LOOK_MAGPIE=k: the magpie sits on its perch k with the ball (card frames of a perch)
       if os.getenv("LOOK_MAGPIE") and s.def.magpie then s:resetMagpie(tonumber(os.getenv("LOOK_MAGPIE"))) end
       -- (6 Nov, cp_props_06nov) LOOK_KICK=1: every leaf pile drawn as Pepper leaves it after running through

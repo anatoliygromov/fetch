@@ -593,7 +593,7 @@
     <property name="label" value="top"/>
    </properties>
   </object>
-  <object id="64" name="BALCONY" type="props" x="2420" y="328" width="56" height="4">
+  <object id="64" name="CANOPY" type="props" x="2420" y="328" width="56" height="4">
    <properties>
     <property name="kind" value="oneway"/>
     <property name="layer" value="play"/>
@@ -1432,7 +1432,7 @@
    </properties>
    <point/>
   </object>
-  <object id="129" type="lamps" x="1959" y="424">
+  <object id="129" type="lamps" x="2040" y="424">
    <properties>
     <property name="checkpoint" type="bool" value="true"/>
    </properties>

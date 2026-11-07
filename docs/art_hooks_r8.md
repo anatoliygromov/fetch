@@ -224,7 +224,8 @@ with the table absent everything draws as before).
 | `dtl_<building>_roof.png` | play, outlined, unfaded | `H.lowRowPiece`: drawn when the building's trigger box is drawn, at `rx, ry`; the walk's ink row at the box's top - 1, the image the box + 1 px a side | tile courses, lead sheets, granite coping and parapet, the guild's crow steps, the chimney, the shed's dormer, the hall's flower boxes |
 | `dtl_<building>_canopy<k>.png` | play, outlined | the middle tier: PORCH (1568, 312), CANOPY (1680, 336), (1816, 344) | a granite slab on brackets over the guild door; cloth canopies in the street awning's ramp over the pavilions' shop windows (round 2) |
 | `dtl_fountain_basin/rim/plinth/column.png` | basin: ground (unfaded, no outline); the rest play, outlined | FOUNTAIN (1776, 400) draws the plinth and the basin band, RIM (1720/1848, 408) the rim blocks, TIER (1768, 344) the column with the bowl and the ball finial (top 296); jets in code (`H.drawLowFountainJets`) | round 2, the A2 concept |
-| `town_facades.png` (960 x 330) | mid, scroll 0.5, moving with the world (`L.vmid = 1.0`, vcam.lua) | `strip(T.facades, ...)` as before, its foot at screen 148 on the street tier | rebuilt at half size, 14 colours (round 2) |
+| `town_facades.png` (960 x 244) | mid, scroll 0.5, moving with the world (`L.vmid = 1.0`, vcam.lua) | `strip(T.facades, ...)`, its foot at screen 190 on the street tier (`Sc.MID_FOOT_LOW`, world 430: under the street line) | rebuilt at half size, three storeys, tinted, 14 colours (round 3) |
+| `dtl_canalhouse_canopy1.png` | play, outlined | CANOPY (2420, 328) | the canal house's cloth canopy (round 3) |
 
 Map (`maps/downtown_tall.tmx`): BALCONY 1552 y 344 -> PORCH 1568-1618 y 312 (a porch over a 2.1 m door), DORMER 1920-1976 -> SHED ROOF 1912-2000
 (the whole shed roof), FLOWER ROOF 2288-2376 -> 2216-2376 (the whole hall roof; the springy awning's bounce now ends on

@@ -109,3 +109,25 @@ dtl_fountain_basin PASS (ground); fronts 34 PASS, 1 WARN, 4 heuristic FAILs on a
 the approved shop bay's goods). No credits spent, no SpriteCook or Artlist calls.
 
 Open: the sky haze (sky track); the hint bubbles over the canopies read as before.
+
+# Round 3 (after the second review, 5187d45, and the art director's notes)
+
+Frames in `round3/`: `beside_concept/` (round 2 | concept | round 3 at 3x), `after/`, `before/` (round 2),
+`sweep/` (every screen at every tier, colour stacks and greyscale rows), `cargo/` (the cargo bike at the shed's
+gate, 1x and 3x), `cards/`, `routes_round3.png`.
+
+| Item | Done |
+| --- | --- |
+| Bones (chars reviewer) | `tools/dt_bone_overlap.py`: every bone against the play art (roof images below the walk's top, canopies, the fountain, the statue, the jets, play boxes). Moved: 1452/1476 y 384 -> x 1444/1484 (off the statue's coat), the hat's gold bone 316 -> 308, the plinth and bowl bones 1792 -> 1775 (off the column). 102 bones, 0 overlap; physics 102/102 (counts, pickups, "within a jump of a floor" hold). Commit f52c3fc. |
+| Violet kerb face and quay wall | A second ground paint with the look off (`stage.lua` `groundRaw`, only the tall Downtown with the low row), its rows from the kerb face down drawn over the graded street with `Look.off()`, as the bonus round does; the drains are drawn in that pass. Measured on screen: 72/66/64, 78/72/69, joints 47/43/47, the file's own; the street's cobbles pixel-identical to before. No look.lua change. Commit b97f143. |
+| R3.1 the canal house's balcony | Box 2420 y 328 renamed CANOPY, claimed, drawn as a cloth canopy over the canal house's door (box width + 2, the same ramp). The route keeps it (tub -> table -> parasol -> the canopy: physics row passes). |
+| R3.2 the lamp in the gate | Lamp 1959 -> 2040 (2008 and 2030 put the respawn inside or against the KIOSK box 1980-2020: `--qa` 5 problems; at 2040 her 34 px box clears it and the shelter: 0 problems). The checkpoint moves with it; physics and curve rerun. `cargo/cargo_at_gate_x1962_*.png`: the bike clipped at the jamb 1934, the opening clear, the lamp in front of the shelter's end. `LOOK_CARGO=x` now also works in a sweep (tests_look.lua). |
+| R3.3 the hats' stripes | The rows beside a hip were filled with the ground floor's top row (window frame pixels: vertical stripes). They are transparent now: the hip is the silhouette, sky or the mid row shows beside it (`front_canvas(fill_rows=6)`). The hips' edge pixels in the lit shade (no dark rim: asset_qa decor-ink clean). |
+| AD.1 sky | The mid row's foot lowered to world 430 (under the street line; `Sc.MID_FOOT_LOW`, scene.lua, low-row mode only) and cut to three storeys of 64 px with 36 px hips: its cornice at 234, gables to 198. At the y 120 tier: 78 px of sky over the gables, 50 to 86 px of houses over the low row's eaves; the far roofs (0.25) and the spire are the skyline behind. |
+| AD.2 front row colour | The low row's plasters a step more saturated than the tall fronts' (the swap is the build's): ochre 0.49, salmon 0.35, oxblood 0.40, cream 0.30 measured on screen (bakery, pav1 0.49; the wing 0.35); values unchanged (153 to 173). Tile hips 36 to 44 px over the eave on the bakery, the start house and the closed row; the guild gable 28 px (its boxes). |
+| AD.3 mid row tint | Pale ochre, pale rose, pale grey-blue, cream (source saturation 0.3 to 0.5; on screen after the mid fade and the look's 0.7 saturation about 0.1 to 0.15 on the walls, lower where the windows are sampled); walls 184 to 195 on screen against the low row's 153 to 173. asset_qa PASS at mid (14 colours). |
+
+Checks: PEPPER UNCHANGED; physics 102/102; qa 0 problems; auto 57.1 s; flow 125/125; tiled PASS; backdrop OK;
+curve T1-T4 PASS, Downtown (tall) kids 11.9, parents 24.7, lost 2.5 %; build --check PASS (53 files); asset_qa:
+every play piece, the basin and the mid row PASS; fronts: 2 colour flags (bakery 22, closed14 21: two approved bays
+plus the tile pair) and 1 WARN (closed2). No credits.

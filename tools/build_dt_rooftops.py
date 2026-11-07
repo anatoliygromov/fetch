@@ -65,15 +65,19 @@ D_IRON = [(44, 64, 56), (28, 42, 36)]
 D_DARK = (40, 34, 36)                                    # an alley's / arcade's inside
 D_OAK = [(136, 92, 60), (104, 66, 44), (68, 44, 32)]
 D_FRAME = (140, 137, 131)
-D_PLASTER = {"yellow": ((135, 106, 66), (116, 85, 53)), "red": ((154, 82, 63), (127, 64, 51)), "cream": ((129, 115, 88), (110, 94, 68)),
-             "ochre": ((137, 101, 66), (114, 81, 53)), "stone": ((115, 105, 96), (96, 86, 78))}
+# (round 3, the art director) the low row's plasters a step more saturated than the tall fronts' (on screen after the
+# 28 % fade: ochre 0.45, oxblood 0.41, salmon 0.35, cream 0.30; values as before, so the mid row stays 40 luma lighter)
+D_PLASTER = {"yellow": ((150, 104, 48), (126, 84, 38)), "red": ((144, 66, 54), (124, 58, 48)), "cream": ((160, 138, 96), (134, 114, 76)),
+             "ochre": ((150, 104, 48), (126, 84, 38)), "stone": ((115, 105, 96), (96, 86, 78)), "salmon": ((170, 110, 86), (142, 88, 68))}
 SRC = ((135, 106, 66), (116, 85, 53))
 # the mid row (scroll 0.5, faded 25 % towards b2c3d9 and the look's mid band): source values set for on-screen
 # plaster medians of 185-210 (the low row sits at 150-160), glass about 140, frames in the plaster's light shade,
 # roofs a pink-grey about 25 luma above the low row's hips
-M_PLASTER = [((232, 224, 206), (214, 204, 184)), ((226, 202, 160), (206, 180, 136)), ((228, 196, 182), (206, 170, 156))]
-M_GLASS = (134, 148, 166)
-M_ROOF = [(206, 150, 132), (170, 116, 100)]
+# (round 3) tinted a little: pale ochre, pale rose, pale grey-blue, cream (about 0.15-0.2 saturation on screen after
+# the mid fade and the look's 0.7 saturation), all about 200 luma
+M_PLASTER = [((234, 198, 122), (212, 176, 102)), ((236, 166, 140), (214, 146, 122)), ((188, 202, 226), (166, 182, 208)), ((240, 222, 174), (218, 200, 150))]
+M_GLASS = (144, 158, 176)
+M_ROOF = [(212, 146, 124), (172, 112, 96)]
 M_STONE = (198, 192, 180)
 M_STONE2 = (178, 172, 162)
 M_LEAD = [M_STONE, M_STONE2]
@@ -222,7 +226,7 @@ def hip_roof(c, x0, x1, eave_y, ridge_y, pal, cap, ridge_w=None):
         k = (y - ridge_y) / max(1, eave_y - ridge_y)
         lx = int(round(rx0 - (rx0 - x0) * k)); rxx = int(round(rx1 + (x1 - rx1) * k))
         tmp.a[y, :max(0, lx)] = 0; tmp.a[y, min(c.w, rxx + 1):] = 0
-        tmp.put(lx, y, pal[1]); tmp.put(rxx, y, pal[1])
+        tmp.put(lx, y, pal[0]); tmp.put(rxx, y, pal[0])              # the hips' edge in the lit shade (no dark rim)
     c.paste(tmp, 0, 0)
     c.rect(rx0 - 1, ridge_y - 1, rx1 + 1, ridge_y, cap[1]); c.hline(rx0 - 1, rx1 + 1, ridge_y - 1, cap[0])
 
@@ -272,18 +276,20 @@ def lua_building(name, x0, x1, front, fx, fy, roof=None, rx=0, ry=0, trigger=Non
     LUA.append(dict(name=name, x0=x0, x1=x1, front=front, fx=fx, fy=fy, roof=roof, rx=rx, ry=ry, trigger=trigger, claims=list(claims), canopies=list(canopies)))
 
 
-def front_canvas(w, gf, top, plaster, extra=None):
+def front_canvas(w, gf, top, plaster, extra=None, fill_rows=None):
     """a front image from the row `top` (world) down to the back line: the ground floor block (bottom on 414), any
-    upper block over it, plain wall above that, the house's right edge in shade"""
+    upper block over it, plain wall above that (fill_rows: only that many rows over the block, the cornice band of a
+    house with a hip: the rows beside the hip stay transparent, the sky shows), the house's right edge in shade"""
     c = Canvas(w, BACK - top)
     y = BACK - gf.shape[0]
     c.paste(gf, 0, y - top)
     if extra is not None:
         y -= extra.shape[0]
         c.paste(extra, 0, y - top)
-    for yy in range(top, y):
-        c.a[yy - top] = gf[0]
-    c.rect(w - 2, 0, w - 1, BACK - top - 1, D_PLASTER[plaster][1])
+    P = D_PLASTER[plaster][0]
+    for yy in range(top if fill_rows is None else max(top, y - fill_rows), y):
+        c.hline(0, w - 1, yy - top, P)
+    c.rect(w - 2, max(0, (y - (fill_rows or (y - top))) - top), w - 1, BACK - top - 1, D_PLASTER[plaster][1])
     return c
 
 
@@ -404,7 +410,7 @@ def main(check=False):
         rise = 14 if flat else min(44, 10 + bw // 3)
         ridge = wall_top - 6 - rise
         top = ridge - 4
-        c = front_canvas(bw, gf, top, plaster, extra=uf)
+        c = front_canvas(bw, gf, top, plaster, extra=uf, fill_rows=6)
         e = wall_top - top                                              # the cornice band: 6 rows over the wall block
         c.rect(0, e - 6, bw - 1, e - 1, D_GRAN[1]); c.hline(0, bw - 1, e - 6, D_GRAN[0]); c.hline(0, bw - 1, e - 1, D_GRAN[2])
         for x in range(0, bw, 3):
@@ -426,7 +432,7 @@ def main(check=False):
     wall_top = BACK - gf.shape[0] - uf.shape[0]
     ridge = wall_top - 6 - 36
     top = ridge - 4
-    c = front_canvas(bw, gf, top, "yellow", extra=uf)
+    c = front_canvas(bw, gf, top, "yellow", extra=uf, fill_rows=6)
     e = wall_top - top
     c.rect(0, e - 6, bw - 1, e - 1, D_GRAN[1]); c.hline(0, bw - 1, e - 6, D_GRAN[0]); c.hline(0, bw - 1, e - 1, D_GRAN[2])
     for x in range(0, bw, 3):
@@ -439,9 +445,9 @@ def main(check=False):
     # ---- the wing 1328-1392: a door bay under the lead flat (WING ROOF 1328-1392 y 272-278) ---------------------------
     r, rx, ry = roof_strip(1328, 1392, 272, 278, parapet_h=10, tile_eave=False)
     save("dtl_wing_roof", r)
-    gf = ground_floor(1, "d", "red", 64, top_row=302)
+    gf = ground_floor(1, "d", "salmon", 64, top_row=302)
     top = 278 + 6 + 1                                                   # under the roof image (its cornice ends at 284)
-    c = front_canvas(64, gf, top, "red")
+    c = front_canvas(64, gf, top, "salmon")
     save("dtl_wing_front", c)
     lua_building("wing", 1328, 1392, "dtl_wing_front", 1328, top, "dtl_wing_roof", rx, ry, trigger=(1328, 272), claims=[(1328, 272), (1320, 278)])
 
@@ -652,7 +658,9 @@ def main(check=False):
     c = front_canvas(48, gf, top, "yellow")
     shuttered_window(c, 10, 318 - 40 - 8 - top, 28, 40, "yellow")
     save("dtl_canalhouse_front", c)
-    lua_building("canalhouse", 2416, 2464, "dtl_canalhouse_front", 2416, top, "dtl_canalhouse_roof", rx, ry, trigger=(2416, 248), claims=[(2416, 248), (2384, 256), (2404, 296)])
+    save("dtl_canalhouse_canopy1", cloth_canopy(56 + 2))              # (round 3) the old flower balcony: a canopy over the door
+    lua_building("canalhouse", 2416, 2464, "dtl_canalhouse_front", 2416, top, "dtl_canalhouse_roof", rx, ry, trigger=(2416, 248),
+                 claims=[(2416, 248), (2384, 256), (2404, 296), (2420, 328)], canopies=[(2420, 328, "dtl_canalhouse_canopy1", 2419, 327)])
 
     # ---- the fountain to the A2 concept (review fix 7): a kerb basin 1736-1848 with a water band behind a 3 px kerb
     # (decoration, drawn with the FOUNTAIN box), the two rim blocks (RIM 1720-1736 and 1848-1864, y 408, play), the
@@ -720,13 +728,14 @@ def main(check=False):
     # screen, pink-grey tile hips or lead flats 25 luma over the low row's roofs, a chimney here and there -----------
     mid_houses = [(0, 72, "hip"), (72, 148, "step"), (148, 220, "flat"), (220, 304, "hip"), (304, 376, "step"), (376, 472, "hip"),
                   (472, 544, "flat"), (544, 628, "hip"), (628, 700, "step"), (700, 796, "hip"), (796, 868, "flat"), (868, 960, "hip")]
-    MW, MH = 960, 330
+    MW, MH = 960, 244
     c = Canvas(MW, MH)
-    foot = MH                                                           # row 330 = world 388 on the street tier
+    foot = MH                                                           # the strip's bottom row: world 430 (scene.lua
+    STOREY = 64                                                         # Sc.MID_FOOT_LOW), under the street line
     for hi, (hx0, hx1, kind) in enumerate(mid_houses):
         P = M_PLASTER[hi % len(M_PLASTER)]
         hw = hx1 - hx0
-        storeys = 4 if hi % 3 == 1 else 3                               # (a taller house every third: a skyline)
+        storeys = 3                                                     # (round 3: a low row behind, sky over it)
         if hi == 0:                                                     # a garden wall with a gate: sky over it (the
             c.rect(hx0, foot - 40, hx1 - 1, foot - 1, M_STONE)          # fountain's gap at the A2 camera)
             c.hline(hx0, hx1 - 1, foot - 40, M_STONE2)
@@ -734,13 +743,13 @@ def main(check=False):
             for y in range(foot - 32, foot - 1, 8):
                 c.hline(hx0 + 4, hx1 - 5, y, M_STONE2)
             continue
-        wall_top = foot - 70 * storeys
+        wall_top = foot - STOREY * storeys
         c.rect(hx0, wall_top, hx1 - 1, foot - 1, P[0])
         c.rect(hx1 - 2, wall_top, hx1 - 1, foot - 1, P[1])
         for s in range(storeys):                                        # storeys: a course line, windows 14 x 22
-            sy = foot - 70 * (s + 1)
-            c.hline(hx0, hx1 - 1, sy + 69, P[1])
-            wy = sy + 26
+            sy = foot - STOREY * (s + 1)
+            c.hline(hx0, hx1 - 1, sy + STOREY - 1, P[1])
+            wy = sy + 22
             n = max(1, (hw - 10) // 24)
             gap = (hw - n * 14) / (n + 1)
             for i in range(n):
@@ -756,7 +765,7 @@ def main(check=False):
                 c.hline(wx - 1, wx + 14, wy + 22, M_STONE)
         c.rect(hx0, wall_top - 4, hx1 - 1, wall_top - 1, M_STONE)      # the cornice
         c.hline(hx0, hx1 - 1, wall_top - 1, M_STONE2)
-        ridge = wall_top - 4 - (40 if kind != "flat" else 10)
+        ridge = wall_top - 4 - (36 if kind != "flat" else 10)
         if kind == "hip":
             hip_roof(c, hx0, hx1 - 1, wall_top - 5, ridge, M_ROOF, [M_STONE, M_STONE2], ridge_w=max(10, hw // 3))
         elif kind == "step":

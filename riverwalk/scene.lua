@@ -1336,6 +1336,7 @@ local function skyAndClouds(L, camx, t)
 end
 
 -- a strip that repeats sideways, scrolled at factor f, bottom at y
+Sc.MID_FOOT_LOW = 190                                           -- (day/07nov-dt) the mid row's foot on screen at the bottom tier, low row on
 Sc.SQUARE_DEPTH = 30                                            -- (fix round 3) the square's floor under the mid row
 local function strip(im, camx, f, y)
   local w = im:getWidth()
@@ -1602,7 +1603,11 @@ function Sc.drawFarArt(L, camx, t, w, def)
     -- Downtown the row stands across an open square: its foot 30 px up, the square's floor (a far kerb, setts,
     -- bollards at 23 px/m) under it at the same scroll, down to the pavement's far edge, so the row never touches
     -- the play floor
-    if def and def.foot and T.squareFloor then
+    if def and def.foot and (package.loaded.arthooks or require("arthooks")).LOW_ROW then
+      -- (day/07nov-dt, round 3) the low row in front: the mid row stands lower, its foot under the street line
+      -- (world 430), three storeys of 64 px, so its gables are the skyline and the sky shows over the roofs
+      strip(T.facades, camx, 0.5, Sc.MID_FOOT_LOW)
+    elseif def and def.foot and T.squareFloor then
       strip(T.facades, camx, 0.5, 178 - Sc.SQUARE_DEPTH)
       strip(T.squareFloor, camx, 0.5, 178 - Sc.SQUARE_DEPTH + T.squareFloor:getHeight() - 21)
     else

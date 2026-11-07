@@ -1334,7 +1334,7 @@ return {
         },
         {
           id = 64,
-          name = "BALCONY",
+          name = "CANOPY",
           type = "props",
           shape = "rectangle",
           x = 2420,
@@ -3232,7 +3232,7 @@ return {
           name = "",
           type = "lamps",
           shape = "point",
-          x = 1959,
+          x = 2040,
           y = 424,
           width = 0,
           height = 0,
