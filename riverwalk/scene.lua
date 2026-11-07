@@ -1600,7 +1600,8 @@ function Sc.drawFarArt(L, camx, t, w, def)
     else
     strip(T.roofs, camx, 0.25, 160)                               -- 4 far roofs and spires
     end
-    if def then (package.loaded.arthooks or require("arthooks")).drawFarSpire(def, camx, w.width) end   -- (art/placement:
+    local lowRow = def and def.foot and (package.loaded.arthooks or require("arthooks")).LOW_ROW
+    if def and not lowRow then (package.loaded.arthooks or require("arthooks")).drawFarSpire(def, camx, w.width) end   -- (art/placement:
     -- the tall Downtown's landmark, Riddarholmen's spire, behind the old town row on this layer)
     vpop(on); on = vpush("mid")
     Look.use("mid")
@@ -1610,7 +1611,12 @@ function Sc.drawFarArt(L, camx, t, w, def)
     -- the play floor
     if def and def.foot and (package.loaded.arthooks or require("arthooks")).LOW_ROW then
       -- (day/07nov-dt, round 3) the low row in front: the mid row stands lower, its foot under the street line
-      -- (world 430), three storeys of 64 px, so its gables are the skyline and the sky shows over the roofs
+      -- (world 430), three storeys of 64 px, so its gables are the skyline and the sky shows over the roofs.
+      -- (round 6) the spire in this push, locked to the world (vmid 1.0): its tip at world 136, behind the mid row
+      Look.use("shore")
+      local AH = package.loaded.arthooks or require("arthooks")
+      AH.drawFarSpire(def, camx, w.width, 136 - 240)
+      Look.use("mid")
       strip(T.facades, camx, 0.5, Sc.MID_FOOT_LOW)
     elseif def and def.foot and T.squareFloor then
       strip(T.facades, camx, 0.5, 178 - Sc.SQUARE_DEPTH)

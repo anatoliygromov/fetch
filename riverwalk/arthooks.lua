@@ -670,7 +670,11 @@ end
 -- (art/placement) the far landmark with its art: behind the old town row, on the far roofs' layer (scroll 0.3, the
 -- shore's haze and fade), placed so that at the level's end it stands where its box is; its tip 8 px under the top
 -- of the screen there (called by Sc.drawFarArt between the far roofs and the facades)
-function H.drawFarSpire(def, camx, worldW)
+-- (round 6) y: the image's top on screen (default 8). In low-row mode scene.lua draws the spire inside the mid push
+-- (locked to the world) with its tip at world 136, so its cross stands 62 px over the mid row's gables (198) and over
+-- every low-row roof of the high-road screens (the guild chimney 196, the hall 226) at every tier: never on a roofline
+function H.drawFarSpire(def, camx, worldW, y)
+  y = y or 8
   if not tallTown(def) then return end
   if spireFar[Look.key] == nil then
     spireFar[Look.key] = false
@@ -687,7 +691,7 @@ function H.drawFarSpire(def, camx, worldW)
       -- (26 Oct, layer plan decision 6a: it drifts only H.SPIRE_DRIFT of the camera's way, so it is on screen from
       -- screen 1 to the end; at the level's end it still stands where its box is)
       local x = math.floor((p.x0 + p.x1) / 2 - (camx - camEnd) * H.SPIRE_DRIFT - camEnd - im:getWidth() / 2 + 0.5)
-      if x > -im:getWidth() and x < 320 then lg.setColor(1, 1, 1, 1); lg.draw(im, x, 8) end
+      if x > -im:getWidth() and x < 320 then lg.setColor(1, 1, 1, 1); lg.draw(im, x, y) end
     end
   end
 end

@@ -155,3 +155,13 @@ backdrop OK; curve 10 seeds T1-T4 PASS (Downtown tall kids 11.9, parents 24.7, l
 and the sky (the far roofs and spires strip stays off; the painted sky branch brings its own far skyline). The file,
 its build block, slot and registry entries are removed. Frames in `round5/` (beside_concept, after, sweep).
 Checks: PEPPER UNCHANGED; physics 102/102; flow 125/125; tiled PASS; build --check PASS (54 files).
+
+# Round 6: last polish (after the round 3 review PASS, 5f06d09)
+
+| Item | Done |
+| --- | --- |
+| Closed-kind and bakery chimneys | Brick instead of oak: body in the red plaster pair's shade (127/64/51) with the oak K edge, 10 px wide, a 2 px stone cap (no new colours: every closed front and the start house PASS; the bakery stays at its two-bay count). Crops `round6/after/*_roof_4x.png`, before `round6/before/dtl_closed1_front_roof_round5_4x.png`. |
+| Mid-row chimneys | 24 px tall with a 2 px cap (were 44). |
+| The spire | Drawn in the mid push in low-row mode, locked to the world (vmid 1.0), its tip at world 136: the cross stands 62 px over the mid row's gables (198) and over every low-row roof of the high-road screens (guild chimney 196, hall 226) at every tier; at the street tier it is behind the mid row; its x drift (0.03) and the shore look unchanged. `round6/before|after/sweep_*_3x.png`: cams 0, 320, 1240, 1580, 2880 at y 0, 100, 120. |
+
+Checks: PEPPER UNCHANGED; physics 102/102; flow 125/125; build --check PASS (54 files).

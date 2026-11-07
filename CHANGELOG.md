@@ -2,6 +2,8 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `day/07nov-dt`: Downtown (tall) low row, round 6: chimneys and the spire (7 Nov)
+- Closed-kind and bakery chimneys in brick (10 px, 2 px stone cap, the fronts' own colours); mid-row chimneys 24 px; the Riddarholmen spire drawn locked to the world in low-row mode with its tip at world 136, so its cross never sits on a roofline at any tier. Frames `docs/review/07nov/dt/round6/`. PEPPER UNCHANGED; physics 102/102; flow 125/125; build --check PASS.
 ## Branch `day/07nov-dt`: Downtown (tall) low row, round 5: the far band removed (7 Nov)
 - Round 4's `town_farband.png` read as a stripe across the sky: removed (file, build, slot, registry). In low-row mode nothing is drawn between the mid row and the sky. Frames `docs/review/07nov/dt/round5/`. PEPPER UNCHANGED; physics 102/102; flow 125/125; tiled PASS.
 ## Branch `day/07nov-dt`: Downtown (tall) low row, round 4: one calm back layer (7 Nov, 0 credits)

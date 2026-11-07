@@ -59,7 +59,7 @@ CANVAS = [(233, 221, 199), (202, 70, 60), (157, 46, 52), (188, 172, 158)]
 # red plaster pair of the fronts): the mid row's roofs are 25 luma lighter than these on screen
 D_TILE = [(154, 82, 63), (104, 66, 44)]                                          # lit (the red plaster), shade (the oak K): 28 luma apart
 D_GRAN = [(135, 130, 120), (110, 103, 95), (77, 72, 68)]                        # the fronts' granite L, T, V
-D_CHIM = [(104, 66, 44), (68, 44, 32)]                                           # the chimney one shade darker than the roof (the oak K, D)
+D_CHIM = [(127, 64, 51), (104, 66, 44)]                                          # (round 6) brick: the red plaster pair's shade, the oak K edge
 D_GLASS = [(100, 128, 150), (72, 98, 120)]
 D_IRON = [(44, 64, 56), (28, 42, 36)]
 D_DARK = (40, 34, 36)                                    # an alley's / arcade's inside
@@ -784,9 +784,9 @@ def main(check=False):
             c.rect((hx0 + hx1) // 2 - 10, top_y - 3, (hx0 + hx1) // 2 + 9, top_y, M_STONE)
             wx = (hx0 + hx1) // 2 - 6
             c.rect(wx, gt - 28, wx + 11, gt - 10, M_GLASS); c.vline(wx + 5, gt - 28, gt - 10, P[0])
-        if hi % 3 == 0:
+        if hi % 3 == 0:                                                 # (round 6) a 24 px chimney with a 2 px cap
             cxm = hx1 - 18
-            c.rect(cxm, gt - 44, cxm + 7, gt - 1, M_ROOF[1]); c.rect(cxm - 1, gt - 46, cxm + 8, gt - 45, M_STONE)
+            c.rect(cxm, gt - 22, cxm + 7, gt - 1, M_ROOF[1]); c.rect(cxm - 1, gt - 24, cxm + 8, gt - 23, M_STONE)
     FILES["town_facades"] = c.image()
 
     # ---- write ---------------------------------------------------------------------------------------------------------
