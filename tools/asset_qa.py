@@ -107,7 +107,7 @@ SLOTS = {"rw_rowboat": (185, 62, 0, 0), "rw_rower": (644, 62, 0, 0), "kennel": (
          # (92 x 60, deck row 41 on the DUCK BOAT mover's top, scene.lua Sc.drawMoverArt)
          "magpie": (160, 26, 0, 0), "cp_duckboat": (92, 60, 0, 0),
          # art/dt-built-06nov (docs/art_hooks_r8.md, tools/build_dt_built.py): the board's Downtown redraws at true scale
-         "town_facades": (806, 210, 0, 0), "town_roofs": (524, 254, 0, 0), "town_door": (140, 432, 0, 0),
+         "town_facades": (960, 330, 0, 0), "town_roofs": (524, 254, 0, 0), "town_door": (140, 432, 0, 0),
          "town_tramshed96": (160, 161, 0, 0), "town_gatestep96": (98, 37, 0, 0), "town_house3": (52, 118, 0, 0),
          "town_bollard": (16, 54, 0, 0), "town_house1": (54, 118, 0, 0), "town_house2": (58, 126, 0, 0),
          "town_awning64": (64, 18, 0, 0), "town_awning80": (80, 18, 0, 0), "town_table_front": (50, 26, 0, 0),

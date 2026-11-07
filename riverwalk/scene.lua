@@ -3504,7 +3504,9 @@ function Sc.drawTerrainArt(def, camx, t)
       local A = Sc.art()
       local tier = named(def, "TIER")
       local jet = tier and Sc.townJet()
-      if jet then                                                 -- (art/dt-roofs-06nov) town_jet.png: the built streams,
+      if def.foot and (package.loaded.arthooks or require("arthooks")).LOW_ROW then   -- (day/07nov-dt) the A2 fountain
+        (package.loaded.arthooks or require("arthooks")).drawLowFountainJets(f, camx, t)
+      elseif jet then                                             -- (art/dt-roofs-06nov) town_jet.png: the built streams,
         local q = jet.q[math.floor(t * 20) % #jet.q + 1]          -- 4 frames, the right one mirrored
         local y = tier.y0 + 3
         lg.setColor(1, 1, 1, 1)

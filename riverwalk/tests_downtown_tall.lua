@@ -231,10 +231,12 @@ return function(mode, api)
             { "high, running: flower roof -> last ledge", x = 2300, y = 232, dir = "right", run = 2359, to = 248 },
             -- Downtown's old balcony route (the middle tier) under the new roofs: no bumped head
             -- (day/07nov-dt, option A) the first balcony is the guild hall's porch roof at 312 (a 2.1 m door under it)
-            { "middle: arm -> the guild porch (running, 36 up)", x = 1500, y = 348, dir = "right", run = 1514, to = 312 },
-            { "middle: the porch -> the canopy (running, 24 down)", x = 1580, y = 312, dir = "right", run = 1604, to = 336 },
-            { "middle: second balcony -> the fountain's top tier (running)", x = 1680, y = 336, dir = "right", run = 1708, to = 344 },
-            { "middle: tier -> last balcony (running)", x = 1790, y = 344, dir = "right", run = 1812, to = 344 },
+            -- (round 2) the porch 1568-1618 over the guild door, the cloth canopies over the pavilions' shop windows
+            -- (1688-1760 at 336, 1816-1888 at 344), the bowl 1768-1816 between them
+            { "middle: arm -> the guild porch (running, 50 across, 36 up)", x = 1500, y = 348, dir = "right", run = 1514, to = 312 },
+            { "middle: the porch -> the first canopy (running, 62 across, 24 down)", x = 1580, y = 312, dir = "right", run = 1613, to = 336 },
+            { "middle: the canopy -> the fountain's bowl (running)", x = 1700, y = 336, dir = "right", run = 1750, to = 344 },
+            { "middle: the bowl -> the second canopy (a walk)", x = 1790, y = 344, dir = "right", brake = 1830, to = 344 },
           }
           for _, j in ipairs(J) do
             local r = leap(j)

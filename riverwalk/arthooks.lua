@@ -704,6 +704,24 @@ local function decoImg(n)
   end
   return decoCache[key]
 end
+-- (day/07nov-dt, round 2) the fountain's jets: two 2 px arcs from the column's capital (y 304) out over the bowl into
+-- the basin's water band (y 418), a highlight running down each; drawn by Sc.drawTerrainArt before the play props,
+-- so the column stands in front of the arcs' first pixels (they come out of the capital)
+function H.drawLowFountainJets(f, camx, t)
+  local cx = math.floor((f.x0 + f.x1) / 2 - camx)
+  local n = 28
+  for _, dir in ipairs({ -1, 1 }) do
+    for i = 2, n do
+      local k = i / n
+      local x = cx + dir * math.floor(4 + 46 * k + 0.5)
+      local y = math.floor(304 - 16 * k + 130 * k * k + 0.5)
+      local hl = (math.floor(t * 18 + (dir < 0 and 7 or 0)) % n) == i
+      if hl then lg.setColor(0.98, 0.99, 1.0) else lg.setColor(0.72, 0.86, 0.95) end
+      lg.rectangle("fill", x - (dir < 0 and 1 or 0), y, 2, 2)
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
 function H.drawLowRow(def, cam)
   for _, b in ipairs(LOW) do
     if b.front and b.x1 - cam > -20 and b.x0 - cam < 340 then

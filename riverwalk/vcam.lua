@@ -76,7 +76,10 @@ end
 function Vc.parallax(s, cy)
   if (s.camYMax or 0) <= 0 then return nil end                     -- a flat level: nothing moves
   local rel = s.camYMax - cy
-  return { sky = math.floor(rel * Vc.SKY + 0.5), far = math.floor(rel * Vc.FAR + 0.5), mid = math.floor(rel * Vc.MID + 0.5), world = -cy }
+  -- (day/07nov-dt) a level may set its own mid factor (L.vmid): the tall Downtown's mid row stands on a square behind
+  -- the low row at world distance (1.0), so it never climbs onto the low row's roofs as the camera rises
+  local mid = (s.def and s.def.vmid) or Vc.MID
+  return { sky = math.floor(rel * Vc.SKY + 0.5), far = math.floor(rel * Vc.FAR + 0.5), mid = math.floor(rel * mid + 0.5), world = -cy }
 end
 
 return Vc

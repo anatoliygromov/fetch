@@ -222,9 +222,13 @@ with the table absent everything draws as before).
 | --- | --- | --- | --- |
 | `dtl_<building>_front.png` (start, bakery, wing, arcade, guild, pav1, pav2, shed, kioskhouse, shelterhouse, hall, canalhouse, closed1-22) | back, faded 28 % | `H.drawLowRow`: the table's `fx, fy` (top-left, world); the bottom row on the back line 414 | the approved styled fronts' ground floors (rows 284-431, plaster swapped as `plasterImg`), `town_door` (the start house), `town_gateway` (the shed); the arcade, the guild's ashlar and the glass hall drawn by rule; the decorative roofs in the fronts' own ramps |
 | `dtl_<building>_roof.png` | play, outlined, unfaded | `H.lowRowPiece`: drawn when the building's trigger box is drawn, at `rx, ry`; the walk's ink row at the box's top - 1, the image the box + 1 px a side | tile courses, lead sheets, granite coping and parapet, the guild's crow steps, the chimney, the shed's dormer, the hall's flower boxes |
-| `dtl_<building>_canopy<k>.png` | play, outlined | the middle tier's BALCONY boxes: the guild porch (1552, 312), the pavilions' shop canopies (1656, 336), (1840, 344) | a granite slab on brackets; a wood fascia on three iron brackets |
+| `dtl_<building>_canopy<k>.png` | play, outlined | the middle tier: PORCH (1568, 312), CANOPY (1680, 336), (1816, 344) | a granite slab on brackets over the guild door; cloth canopies in the street awning's ramp over the pavilions' shop windows (round 2) |
+| `dtl_fountain_basin/rim/plinth/column.png` | basin: ground (unfaded, no outline); the rest play, outlined | FOUNTAIN (1776, 400) draws the plinth and the basin band, RIM (1720/1848, 408) the rim blocks, TIER (1768, 344) the column with the bowl and the ball finial (top 296); jets in code (`H.drawLowFountainJets`) | round 2, the A2 concept |
+| `town_facades.png` (960 x 330) | mid, scroll 0.5, moving with the world (`L.vmid = 1.0`, vcam.lua) | `strip(T.facades, ...)` as before, its foot at screen 148 on the street tier | rebuilt at half size, 14 colours (round 2) |
 
-Map (`maps/downtown_tall.tmx`): BALCONY 1552 y 344 -> 312 (a porch over a 2.1 m door), DORMER 1920-1976 -> 1912-2000
+Map (`maps/downtown_tall.tmx`): BALCONY 1552 y 344 -> PORCH 1568-1618 y 312 (a porch over a 2.1 m door), DORMER 1920-1976 -> SHED ROOF 1912-2000
 (the whole shed roof), FLOWER ROOF 2288-2376 -> 2216-2376 (the whole hall roof; the springy awning's bounce now ends on
-it). Every other box unchanged. Hidden by the table (claims): the HOUSE boxes, the plaza balconies' rails
+it), the middle tier's balconies -> CANOPY 1680-1752 y 336 and 1816-1888 y 344, GATE 1868 -> 1864-1934 with zone 1's depot
+at 1934 (the shed gate's left jamb). The high road's boxes renamed to what they are (WING ROOF, ARCADE ROOF, PAVILION ROOF,
+SHED ROOF, KIOSK ROOF, SHELTER ROOF, CANAL ROOF). Every other box unchanged. Hidden by the table (claims): the HOUSE boxes, the plaza balconies' rails
 (`Sc.drawBalconyRails`), the tall fronts, the high lamps' wall brackets (a post on the roof instead).

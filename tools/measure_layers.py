@@ -177,7 +177,8 @@ add(["town_basin"], "dt", "ground", group="Downtown")
 import glob as _glob
 _dtl = sorted(os.path.basename(f)[:-4] for f in _glob.glob(ART + "scene/dtl_*.png"))
 add([n for n in _dtl if n.endswith("_front")], "dt", "back", True, group="Downtown")
-add([n for n in _dtl if not n.endswith("_front")], "dt", "play", group="Downtown")
+add([n for n in _dtl if not n.endswith("_front") and n != "dtl_fountain_basin"], "dt", "play", group="Downtown")
+add(["dtl_fountain_basin"], "dt", "ground", group="Downtown")     # the basin's face: ground, unfaded, no outline
 # art/dt-audit-06nov (tools/build_dt_audit.py): the drain in the quay wall (ground), the footbridge's piers (back,
 # unfaded: drawn with the back props), the wall lantern's bracket (faded as the lamp), the parasols' boat (play, ink)
 add(["town_quaydrain"], "dt", "ground", group="Downtown")

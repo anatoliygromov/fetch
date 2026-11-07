@@ -11,4 +11,6 @@
 -- off from up there), the guild house's roof and its chimney (the golden bone), the gallery over the fountain, the
 -- roof ledges over cargo bike street and the flower market with a springy window awning, the footbridge over the canal.
 -- Both roads meet before the flooded square. Every drop off the high road lands on a floor below, never in water.
-return require("tiled").load("level/tiled/downtown_tall.lua")
+local L = require("tiled").load("level/tiled/downtown_tall.lua")
+L.vmid = 1.0   -- (day/07nov-dt, review round 1 fix 1) the mid row moves with the world: it stands on the square behind the low row
+return L
