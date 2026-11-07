@@ -272,7 +272,8 @@ return function(mode, api)
           local spots = {   -- perch -> where Pepper barks from, and the floor the ball must land on
             { 190, 312, 328 }, { 330, PATH, 300 }, { 500, PATH, 256 },   -- (night 6 Nov: perch 3 on the hedge, its ball on the hedge top)
             { 780, 216, 216 }, { 1200, PATH, 312 },
-            { 1300, 232, 272 }, { 1560, PATH, PATH }, { 1752, 244, 192 }, { 2100, 200, 200 }, { 2350, PATH, 300 },
+            { 1300, 232, 272 }, { 1580, 302, PATH }, { 1752, 244, 192 }, { 2100, 200, 200 }, { 2350, PATH, 300 },
+            -- (7 Nov, cplog: perch 7 from the hollow log's top; x 1560 on the path is now under its shell)
             { 2700, PATH, 280 }, { 2790, 152, 88 } }
           report("the magpie has 12 perches, the last one in the big oak", #d.perches == 12 and d.perches[12].y < 100, ("%d perches, the last at y %d"):format(#d.perches, d.perches[#d.perches].y))
           for i, sp in ipairs(spots) do

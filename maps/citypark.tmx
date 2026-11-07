@@ -242,7 +242,7 @@
     <property name="layer" value="play"/>
    </properties>
   </object>
-  <object id="25" name="LEAVES" type="props" x="1516" y="172" width="44" height="12">
+  <object id="25" name="LEAVES" type="props" x="1505" y="172" width="44" height="12">
    <properties>
     <property name="kind" value="decor"/>
     <property name="layer" value="play"/>

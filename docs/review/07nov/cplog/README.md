@@ -15,6 +15,9 @@ Round 1 (two arched mouths seen front-on) read as a little house with two doorwa
   - Each band runs in its own order, forwards and backwards, so the grain does not repeat at one period.
   - Rows are never moved, so the ink line on top, the shell and the bottom ink stay exactly as before.
   - 12 hand edits, listed with reasons in the script: lone pixels and one short streak that asset_qa flagged in the inserted columns.
+  - Review fix (round 1 review): columns 36-51 of the insert mirrored around x 43.5, making a symmetric butterfly of dark strokes. Fixed in the script, so `--check` still holds:
+    - the right-hand row 8 stroke is cut to a dash (x 49-51 painted with the row's lit grain);
+    - a knot is added in the bark at x 44-47, rows 12-16: a dark core, a darker ring and a lit lower lip.
 - **FRONT** (`park_hollowlog_front.png`): the longer log with only the dark inside of the left ellipse taken out (its dark pixels, flood-filled from the middle of the mouth).
 - **BACK** (`park_hollowlog_back.png`): that dark inside, the same pixels, plus a slightly darker tunnel tone (35, 20, 16) behind the bark, where her body is while she is in the log.
 - Front over back is exactly the longer log. `--check` fails if the files on disk differ from what the script builds.
@@ -37,12 +40,20 @@ Round 1 (two arched mouths seen front-on) read as a little house with two doorwa
 | Checkpoint lamp | x 1624 | x 1642 |
 | Magpie perch on that lamp | x 1624 | x 1642 (moved with its lamp) |
 | Path bone right of the lamp | x 1648 | x 1656 |
+| LEAVES pile in front of the log | x 1516-1560 | x 1505-1549 (11 px left) |
 
 - **Why the lamp moved.** Pepper respawns standing at the lamp. With the lamp at 1624 her box (1607-1641) would be inside the longer log's shell.
 - **Why the path bone moved.** The lamp post art now spans 1635-1648, and the bone's art (1643-1653) touched it by 6 px. Nudged 8 px right, the bone (1651-1661) clears the post by 3 px.
 - **Why the left end stops at 1553.** The tests' walk and crawl checks start Pepper at 1535 (her box reaches 1552).
 - `relx`/`rely` are kept (the piece's `rely.foot` = 26). The objects keep their ids.
 - `docs/citypark_tall_beatsheet.md` lists the lamp at 1642. `tools/draw_routes.py` has the bone at 1589.
+
+- **Leaf pile.** The review asked for a 6 px move so the ring has air. At 6 px (1510-1554) the pile's art still touched the ring, so I moved it 11 px instead (1505-1549). That leaves 3 px of air, the same gap the old log had (pile end 1560, log 1563). The two path bones under the pile (1530, 1546) stay covered, as before.
+- **Magpie perch (optional review item, not done).** I tried moving the perch 4 px left (1638). Its ball then drops at x 1627 and rests on the log's top end instead of the path, which failed the tall City Park's perch 7 check ("the ball lands on y 328"). The perch stays at 1642.
+
+### Test changes (`riverwalk/tests_citypark_tall.lua`)
+
+- Magpie perch 7 (on the moved lamp): the bark spot was x 1560 on the path, which is now under the shell. It now barks from the log's top (x 1580, y 302), and the ball still lands on the path (x 1631).
 
 ### Test changes (`riverwalk/tests_citypark.lua`, flat City Park)
 
@@ -75,13 +86,15 @@ Her crawl sprite is 59 px. The log hides all of her only between x 1595 and 1597
 
 ## Checks (each with its own XDG_DATA_HOME, xvfb-run -a, SDL_AUDIODRIVER=dummy)
 
+Rerun after the review fix: both physics runs, both qa runs, check_pepper and check_tiled, with the same results as below. check_flow, the `--test` tour and check_curve are from round 2, before the leaf pile move and the knot.
+
 - `love riverwalk --level citypark --physics`: 85 of 85
   - hollow log: stops a walk (x 1536)
   - a held jump lands on top (y 158)
   - crawl through it (x 1635)
   - secret HOLLOW LOG counted with the gold bone taken
   - magpie perch 6: the ball rests on the path (x 1631)
-- `love riverwalk --level citypark_tall --physics`: 97 of 97
+- `love riverwalk --level citypark_tall --physics`: 97 of 97, including magpie perch 7 from the log's top
 - `love riverwalk --level citypark_tall --test`: the screenshot tour ran through, exit 0
 - `--qa`: citypark_tall 12780 runs, 0 problems; citypark 7883 runs, 0 problems
 - `tools/check_flow.sh`: 125 of 125

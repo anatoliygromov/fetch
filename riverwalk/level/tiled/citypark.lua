@@ -536,7 +536,7 @@ return {
           name = "LEAVES",
           type = "props",
           shape = "rectangle",
-          x = 1516,
+          x = 1505,
           y = 172,
           width = 44,
           height = 12,

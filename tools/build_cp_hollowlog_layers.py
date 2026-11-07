@@ -90,6 +90,16 @@ HAND = [(x, 2, E, 'asset_qa noise: a lone growth-ring pixel of column 23 or 21 i
     (38, 8, G, 'asset_qa noise: a lone dark grain pixel, painted with the bark round it'),
     (49, 8, G, 'asset_qa noise: the same'),
 ] + [(x, 20, G, 'asset_qa blotch: a 3 px streak cut short by the insert, painted with the bark round it') for x in (42, 43, 44)]
+# review round 1 (7 Nov): columns 36-51 of the insert mirror round x 43.5 (a butterfly of dark strokes at rows 8-9 and
+# 13-16). Broken on the right half: the row 8 stroke cut to a dash, and a knot in the bark at x 44-47, rows 12-16
+J, K, INK, C = (213, 139, 61), (82, 51, 42), (28, 12, 19), (161, 95, 51)
+HAND += [(x, 8, J, 'review: the mirrored row 8 stroke cut to a dash (the lit grain of the row)') for x in (49, 50, 51)]
+HAND += [(x, y, c, 'review: a knot at x 44-47 to break the mirror') for x, y, c in (
+    (45, 12, G), (46, 12, G),
+    (44, 13, G), (45, 13, K), (46, 13, K), (47, 13, G),
+    (44, 14, K), (45, 14, INK), (46, 14, INK), (47, 14, K),
+    (44, 15, G), (45, 15, K), (46, 15, K), (47, 15, G),
+    (45, 16, C), (46, 16, C))]
 
 
 def hand(img):
