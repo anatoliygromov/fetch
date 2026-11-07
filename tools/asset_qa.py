@@ -94,7 +94,7 @@ SLOTS = {"rw_rowboat": (185, 62, 0, 0), "rw_rower": (644, 62, 0, 0), "kennel": (
          "cyclist_adult1": (88, 87, 0, 0), "cyclist_adult2": (88, 87, 0, 0),         # (fix round 1: padded 2 px a side)
          "cyclist_adult1_pedal": (704, 87, 0, 0), "cyclist_adult2_pedal": (704, 87, 0, 0),
          "road_car1": (241, 88, 12, 8), "road_car4": (185, 77, 12, 8),
-         "road_rider1": (104, 102, 0, 0), "road_rider2": (104, 103, 0, 0),
+         "road_rider1": (105, 110, 0, 0), "road_rider2": (105, 110, 0, 0),   # (7 Nov, tools/build_bikes_n07.py: the lane's 55 px/m bike, rider 1.98 m incl. helmet)
          # art/dt-sample-05nov (docs/art_hooks_r8.md, arthooks.lua): the full-height fronts, decisions 1a and 4a
          "town_front_tall1": (80, 432, 0, 0), "town_front_tall2": (88, 432, 0, 0), "town_front_tall3": (96, 432, 0, 0),
          "town_front_tall4": (148, 432, 0, 0), "town_shelter_tall": (140, 115, 0, 0), "town_gateway": (80, 138, 0, 0),

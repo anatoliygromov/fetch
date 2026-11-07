@@ -35,7 +35,8 @@ from PIL import Image
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import aseprite_io
 
-CUT = 'art/gen/out/rw_riders_n07_a_cut.png'        # tools/grid4_cut.py art/gen/renders/rw_riders_n07_a_raw.png (phase 0,0)
+CUT = 'art/gen/out/rw_riders_n07_a_cut.png'
+LANE_CUT = 'art/gen/out/rw_lane_riders_n07_a_cut.png'   # tools/grid4_cut.py art/gen/renders/rw_lane_riders_n07_a_raw.png (phase 0,0, 96 %)        # tools/grid4_cut.py art/gen/renders/rw_riders_n07_a_raw.png (phase 0,0)
 SRC = 'art/source/bikes_n07'
 hexc = lambda h: (int(h[1:3], 16), int(h[3:5], 16), int(h[5:7], 16))
 INK = hexc('#17181f')
@@ -71,21 +72,25 @@ N_RIDER = 13
 
 def is_key(c):
     r, g, b = int(c[0]), int(c[1]), int(c[2])
-    return (r > 170 and b > 170 and g < 120) or (r > 120 and b > 110 and g < min(r, b) - 70)
+    return ((r > 170 and b > 170 and g < 120) or (r > 120 and b > 110 and g < min(r, b) - 70)
+            or (r - g > 30 and b - g > 30 and abs(r - b) < 60))       # the magenta fringe, also its dark purples
 
 
 def rider_cut(cut, who, log):
     """one rider from the cut, in its 88 x 87 image coords facing RIGHT (C is mirrored), keyed and reduced"""
-    R = RIDERS[who]; x0, x1 = R['cols']
-    W, H = 88, 87
+    return rider_cut_size(cut, who, log, 88, 87)
+
+
+def rider_cut_size(cut, who, log, W, H):
+    R = RIDERS[who]; x0, x1 = R['cols']; Gi = H - 1
     out = np.zeros((H, W, 4), np.uint8)
     for y in range(cut.shape[0]):
-        iy = y - GROUND_IN_CUT + G
+        iy = y - GROUND_IN_CUT + Gi
         if not 0 <= iy < H: continue
         for x in range(x0, x1):
             c = cut[y, x]
             if is_key(c): continue
-            ix = x - R['ox'] if not R['flip'] else 87 - (x - R['ox'])
+            ix = x - R['ox'] if not R['flip'] else W - 1 - (x - R['ox'])
             if 0 <= ix < W: out[iy, ix, :3] = c[:3]; out[iy, ix, 3] = 255
     # colours: the render's pixels carry small noise (about 1,900 colours per rider). Groups of near colours (5 bits
     # a channel) each stand for their most frequent real colour; the most used groups are kept while at least T apart
@@ -118,8 +123,8 @@ def rider_cut(cut, who, log):
     out[m & np.all(out[..., :3] == ink, -1), :3] = INK
     # by rule: the coat's red that the reduction gave to cheek and brow pixels in the head (rows 0-19) becomes the
     # face's own shade (the skin colour next darker than the lightest)
-    if who == 'A':
-        hm = m.copy(); hm[17:] = False
+    if who in ('A', 'LA'):
+        hm = m.copy(); hm[round(17 * H / 87):] = False
         sk = [tuple(c) for c in keep.tolist() if c[0] > 200 and 140 < c[1] < 200 and c[2] < 170]
         sk.sort(key=lambda c: -sum(c))
         if len(sk) >= 2:
@@ -161,10 +166,10 @@ def rider_cut(cut, who, log):
                         yy, xx = y + dy, x + dx
                         if (yy, xx) in cs: continue
                         ring.append(tuple(o[yy, xx, :3]) if 0 <= yy < H and 0 <= xx < W and o[yy, xx, 3] else None)
-                if None in ring or not ring: continue
+                ring = [q for q in ring if q is not None and q != INK] or [INK]   # the outline (or its gap) does not vote
                 best = max(set(ring), key=ring.count)
                 lim = 45 if len(comp) <= 4 else 32                  # (a 5-24 px patch: a blotch in asset_qa's words)
-                if best != INK and ring.count(best) >= 0.75 * len(ring) and abs(lumf(best) - lumf(col)) < lim:
+                if best != INK and ring.count(best) >= (0.75 if len(comp) <= 4 else 0.5) * len(ring) and abs(lumf(best) - lumf(col)) < lim:
                     for y, x in comp: log.append([who, 'patch', x, y, list(col), list(best)]); out[y, x, :3] = best
     return out
 
@@ -180,9 +185,30 @@ def leg_palette(r, who):
     sh = cols(80, 85)[:2]
     tr = [c for c in cols(60, 76) if c not in sh and c not in (LEATHER, LEATHER_L)]
     sat = lambda c: max(c) - min(c)
-    tr = [c for c in tr if abs(sat(c) - sat(tr[0])) < 30][:3]          # one material: the main trouser colour's family
+    tr = [c for c in tr if abs(sat(c) - sat(tr[0])) < 30][:3] if tr else [STEEL_D, TYRE]   # one material
     lum = lambda c: 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]
     tr = sorted(tr, key=lum, reverse=True); sh = sorted(sh, key=lum, reverse=True)
+    while len(tr) < 3: tr.append(tr[-1])
+    while len(sh) < 2: sh.append(sh[-1])
+    return tr, sh
+
+
+def leg_palette_s(r, H):
+    """leg_palette for a rider image H tall (the rows scaled from the 87 px image)"""
+    k = H / 87
+    def cols(y0, y1):
+        sub = r[round(y0 * k):round(y1 * k)]; m = sub[..., 3] > 0
+        px = [tuple(c) for c in sub[m][:, :3].tolist() if tuple(c) not in (INK, TYRE)]
+        u = {}
+        for c in px: u[c] = u.get(c, 0) + 1
+        return sorted(u, key=lambda c: -u[c])
+    lum = lambda c: 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]
+    sh = cols(80, 85)[:2]
+    tr = [c for c in cols(60, 76) if c not in sh and c not in (LEATHER, LEATHER_L)]
+    sat = lambda c: max(c) - min(c)
+    tr = sorted([c for c in tr if abs(sat(c) - sat(tr[0])) < 30][:3], key=lum, reverse=True) if tr else []
+    if not tr: tr = [STEEL_D, TYRE]                                     # dark grey trousers snapped to the parts' greys
+    sh = sorted(sh, key=lum, reverse=True)
     while len(tr) < 3: tr.append(tr[-1])
     while len(sh) < 2: sh.append(sh[-1])
     return tr, sh
@@ -291,7 +317,8 @@ def wheel_img(R, phase):
     return a
 
 
-def ik(hip, ankle, l1=L1, l2=L2, fwd=1):
+def ik(hip, ankle, l1=None, l2=None, fwd=1):
+    l1 = l1 or L1; l2 = l2 or L2
     """knee of a two-bone leg from hip to ankle, bent forward"""
     hx, hy = hip; ax, ay = ankle; dx, dy = ax - hx, ay - hy; d = min(math.hypot(dx, dy), l1 + l2 - 0.01)
     a = math.acos(max(-1, min(1, (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d))))
@@ -300,22 +327,26 @@ def ik(hip, ankle, l1=L1, l2=L2, fwd=1):
     return (hx + l1 * math.cos(ang), hy + l1 * math.sin(ang))
 
 
-def draw_leg(c, hip, pedal, tr, sh, far):
+def draw_leg(c, hip, pedal, tr, sh, far, s=1.0):
     """thigh 6 px, shin 5 px, the shoe 7 x 3 on the pedal; near: lit top row, shade under; far: one step darker"""
     W, H = c.W, c.H
-    ankle = (pedal[0] - 1, pedal[1] - 3)
-    knee = ik(hip, ankle)
-    lit, mid, dk = (tr[1], tr[1], INK) if far else (tr[0], tr[0], tr[1])
-    mk = seg_mask(W, H, hip, knee, 6.2) | seg_mask(W, H, knee, ankle, 4.8)
+    ankle = (pedal[0] - 1, pedal[1] - round(3 * s))
+    knee = ik(hip, ankle, L1 * s, L2 * s)
+    sat = lambda c_: max(c_) - min(c_)
+    far_c = tr[1] if abs(sat(tr[1]) - sat(tr[0])) < 30 and tr[1] != tr[0] else tr[0]   # one material, one step darker
+    if tuple(tr[0]) == STEEL_D: far_c = INK                     # dark grey trousers: the far leg in shadow
+    lit, mid, dk = (far_c, far_c, INK) if far else (tr[0], tr[0], tr[1] if tr[1] != tr[0] else STEEL_D)
+    mk = seg_mask(W, H, hip, knee, 6.2 * s) | seg_mask(W, H, knee, ankle, 4.8 * s)
     c.mask(mk, mid)
     top = mk & ~np.roll(mk, 1, 0); bot = mk & ~np.roll(mk, -1, 0)
     c.a[bot] = dk                                            # (no lit top row: on a slanted leg it is a stair of single pixels)
     # shoe: heel over the ankle, toe forward, sole on the pedal row
     sx, sy = int(round(pedal[0])), int(round(pedal[1]))
     s_top, s_bot = (sh[1], INK) if far else (sh[0], sh[1])
-    for x in range(sx - 3, sx + 3): c.px(x, sy - 2, s_top)
-    for x in range(sx - 3, sx + 4): c.px(x, sy - 1, s_top)
-    for x in range(sx - 3, sx + 4): c.px(x, sy, s_bot)
+    e = round(3 * s)
+    for x in range(sx - e, sx + e): c.px(x, sy - 2, s_top)
+    for x in range(sx - e, sx + e + 1): c.px(x, sy - 1, s_top)
+    for x in range(sx - e, sx + e + 1): c.px(x, sy, s_bot)
     return knee
 
 
@@ -395,6 +426,42 @@ def finish(c):
     out &= ~c.m
     rgba = np.zeros((H, W, 4), np.uint8); rgba[c.m, :3] = c.a[c.m]; rgba[c.m, 3] = 255
     rgba[out, :3] = INK; rgba[out, 3] = 255
+    return deblotch(rgba)
+
+
+def deblotch(rgba):
+    """a clean pass on the built frame, asset_qa's blotch rule turned round: a 2-24 px patch of one colour whose
+    ring is 80 % one other colour nearer than 45 (RGB) takes that colour (a drawn 1 px line is left alone)"""
+    H, W = rgba.shape[:2]; a = rgba[..., 3] > 0
+    key = (rgba[..., 0].astype(int) << 16) | (rgba[..., 1].astype(int) << 8) | rgba[..., 2].astype(int)
+    key[~a] = -1
+    for _ in range(2):
+        seen = np.zeros((H, W), bool)
+        for y0, x0 in zip(*np.nonzero(a)):
+            if seen[y0, x0]: continue
+            k = key[y0, x0]; st = [(y0, x0)]; seen[y0, x0] = True; comp = []
+            while st:
+                y, x = st.pop(); comp.append((y, x))
+                for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    yy, xx = y + dy, x + dx
+                    if 0 <= yy < H and 0 <= xx < W and not seen[yy, xx] and key[yy, xx] == k: seen[yy, xx] = True; st.append((yy, xx))
+            if not 2 <= len(comp) <= 24: continue
+            ys_ = [p_[0] for p_ in comp]; xs_ = [p_[1] for p_ in comp]
+            bh, bw = max(ys_) - min(ys_) + 1, max(xs_) - min(xs_) + 1
+            if min(bh, bw) == 1 and max(bh, bw) >= 4: continue
+            cs = set(comp); ring = []
+            for y, x in comp:
+                for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    yy, xx = y + dy, x + dx
+                    if (yy, xx) in cs: continue
+                    ring.append(key[yy, xx] if 0 <= yy < H and 0 <= xx < W else -1)
+            if -1 in ring: continue
+            o = max(set(ring), key=ring.count)
+            if ring.count(o) / len(ring) < 0.8: continue
+            d = math.sqrt(sum((((o >> sh) & 255) - ((int(k) >> sh) & 255)) ** 2 for sh in (16, 8, 0)))
+            if d < 45:
+                for y, x in comp:
+                    key[y, x] = o; rgba[y, x, :3] = ((o >> 16) & 255, (o >> 8) & 255, o & 255)
     return rgba
 
 
@@ -465,6 +532,72 @@ def build_cargo(rider, legs, k):
     return c
 
 
+def build_lane(rider, legs, kind, frame_col, extras, s, W, H, dy_r):
+    """a lane rider (road.lua: only rows 0-49 show), the promenade bike's geometry scaled by s (55 / 46) about the
+    ground row, image W x H facing right, a still (no pedal loop in the lane)"""
+    c = Canvas(W, H); gl = H - 1
+    P = lambda x, y: (round(x * s), round(gl - (G - y) * s))
+    col = FRAMES[frame_col] if frame_col in FRAMES else [legs[0][0], legs[0][1]]
+    wr = round(WR * s)
+    rear, front = (P(17, 0)[0], gl - wr), (P(68, 0)[0], gl - wr)
+    bb = P(*BB); hip = P(*HIP); cr = CRANK * s
+    cp = lambda th: (bb[0] + cr * math.cos(math.radians(th)), bb[1] + cr * math.sin(math.radians(th)))
+    fp = cp(180)
+    draw_leg(c, (hip[0] - 1, hip[1]), fp, *legs, far=True, s=s)
+    for x, y in line_px(bb, fp): c.px(x, y, STEEL_D)
+    seat = P(34, 48); head_top, head_bot = P(61, 47), P(63, 55)
+    c.tube(bb, seat, col, 2); c.tube(seat, rear, col); c.tube(bb, rear, col)
+    if kind == 'step':
+        for p_, q_ in ((P(41, 72), P(48, 64)), (P(48, 64), P(62, 54))): c.tube(p_, q_, col, 2)
+        c.tube(P(36, 64), P(50, 60), col); c.tube(P(50, 60), P(62, 51), col)
+    else:
+        c.tube(P(35, 50), head_top, col, 2); c.tube(bb, head_bot, col, 2)
+    c.tube(head_top, head_bot, col, 2); c.tube(head_bot, front, col, 2)
+    c.tube(P(33, 48), P(33, 46), (STEEL, STEEL_D))
+    for (cx, cy), a0, a1 in ((rear, 196, 350), (front, 196, 344)):
+        for d in range(a0, a1):
+            t = math.radians(d); c.px(int(round(cx + (wr + 1.2) * math.cos(t))), int(round(cy + (wr + 1.2) * math.sin(t))), col[0])
+    from PIL import Image as _I, ImageDraw as _D
+    im = _I.new('L', (W, H), 0); _D.Draw(im).polygon([P(19, 69), P(37, 70), P(43, 72), P(43, 76), P(37, 78), P(19, 73)], fill=255)
+    cm = np.array(im) > 0; c.mask(cm, CASE); c.a[cm & ~np.roll(cm, 1, 0)] = CASE_L
+    if 'rack' in extras:
+        c.tube(P(8, 52), P(30, 52), (STEEL, STEEL_D)); c.tube(P(9, 52), P(15, 70), (STEEL, STEEL_D)); c.tube(P(28, 52), P(33, 48), (STEEL, STEEL_D))
+    sx0, sy0 = P(29, 44); sx1, _ = P(38, 44)
+    for i, (y, a_, b_) in enumerate(((sy0, sx0, sx1), (sy0 + 1, sx0, sx1 - 1), (sy0 + 2, sx0 + 2, sx1 - 3))):
+        for x in range(a_, b_): c.px(x, y, LEATHER_L if i == 0 else LEATHER)
+    c.mask(seg_mask(W, H, bb, bb, 3.8), STEEL)
+    wim = wheel_img(wr, 0)
+    for (cx, cy) in (rear, front):
+        ys, xs = np.nonzero(wim[..., 3] > 0)
+        for y, x in zip(ys, xs):
+            X, Y = x + cx - wr, y + cy - wr
+            if 0 <= X < W and 0 <= Y < H and not c.m[Y, X]: c.px(X, Y, tuple(wim[y, x, :3]), ol=False)
+    c.tube(head_top, P(62, 44), (STEEL, STEEL_D)); c.tube(P(62, 44), P(66, 43), (STEEL, STEEL_D)); c.tube(P(66, 43), P(61, 42), (STEEL, STEEL_D))
+    lx, ly = P(65, 52); c.px(lx, ly, LAMP); c.px(lx + 1, ly, LAMP)
+    if 'basket' in extras:
+        bx0, by0 = P(65, 43); bx1, by1 = P(79, 52)
+        for y in range(by0, by1):
+            for x in range(bx0, bx1):
+                rim = y == by0; rib = (x - bx0) % 4 == 2; foot = y == by1 - 1
+                c.px(x, y, WICKER[0] if rim else (WICKER[2] if (rib or foot) else WICKER[1]))
+    np_ = cp(0)
+    draw_leg(c, hip, np_, *legs, far=False, s=s)
+    for x, y in line_px(bb, np_): c.px(x, y, STEEL)
+    c.sprite(rider, 0, dy_r)
+    return c
+
+
+def lane_cut(cut, who, ox, log, W, H, gy=220):
+    """a lane rider from its cut (rw_lane_riders_n07.py: ground row 220, image left edge at ox), image W x H with
+    the ground on row H - 1"""
+    RIDERS['L' + who] = dict(cols=(ox - 10, ox + 90), ox=ox, flip=False)
+    global GROUND_IN_CUT
+    g0, GROUND_IN_CUT = GROUND_IN_CUT, gy
+    r = rider_cut_size(cut, 'L' + who, log, W, H)
+    GROUND_IN_CUT = g0
+    return r
+
+
 BIKES = {
     'cyclist_adult1': dict(who='A', kind='step', frame='black', extras=['basket'], hem=52),
     'cyclist_adult2': dict(who='B', kind='diamond', frame='jeans', extras=['rack'], hem=47),
@@ -491,6 +624,15 @@ def main():
     files['riverwalk/art/scene/cargo_bike.png'] = frames[0]
     files['riverwalk/art/scene/cargo_bike_pedal.png'] = np.concatenate(frames, axis=1)
     if not check: aseprite_io.write(f'{SRC}/cargo_bike.aseprite', frames, ms=90)
+    lcut = np.array(Image.open(LANE_CUT).convert('RGB'))
+    LW, LH, S = 105, 110, 55 / 46
+    for name, who, ox, kind, fc, ex, hem in (('road_rider1', 'A', 52, 'step', 'black', ['basket'], 67),
+                                            ('road_rider2', 'B', 140, 'diamond', 'jeans', ['rack'], 61)):
+        r = lane_cut(lcut, who, ox, log, LW, LH)
+        tr, sh = leg_palette_s(r, LH)
+        top = strip_legs(r, 'L' + who, tr, sh, hem, log)
+        files[f'riverwalk/art/scene/{name}.png'] = finish(build_lane(top, (tr, sh), kind, fc, ex, S, LW, LH, 2))
+        if not check: aseprite_io.write(f'{SRC}/{name}.aseprite', [files[f'riverwalk/art/scene/{name}.png']])
     for p, a in files.items():
         if check:
             same = os.path.exists(p) and np.array_equal(np.array(Image.open(p).convert('RGBA')), a)
