@@ -255,9 +255,9 @@ return {
           type = "props",
           shape = "rectangle",
           x = 16,
-          y = 140,
+          y = 144,
           width = 12,
-          height = 25,
+          height = 21,
           rotation = 0,
           visible = true,
           properties = {
@@ -272,9 +272,9 @@ return {
           type = "props",
           shape = "rectangle",
           x = 0,
-          y = 145,
+          y = 148,
           width = 44,
-          height = 20,
+          height = 17,
           rotation = 0,
           visible = true,
           properties = {
@@ -796,7 +796,7 @@ return {
           type = "pieces",
           shape = "rectangle",
           x = 0,
-          y = 140,
+          y = 144,
           width = 44,
           height = 8,
           rotation = 0,
@@ -804,7 +804,7 @@ return {
           properties = {
             ["box"] = "x0,x1,y0",
             ["kind"] = "kennel",
-            ["rely.door"] = 25,
+            ["rely.door"] = 21,
           },
         },
         {

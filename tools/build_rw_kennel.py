@@ -20,9 +20,12 @@ True scale: a Labrador's kennel is about 0.95 m wide and tall: 44 x 44 px at 46 
     19 px to crawl under, as before), a cream frame, a dark inside with the arch's inner shadow;
   * a name plate over the door: a cream board with a dark edge and two nails, no letters (no text in art);
   * one 1 px ink outline round the whole (an obstacle), the kennel's own ink #12121a; the door is open at the bottom.
-Art row 0 = world y 140, the bottom row 43 = y 183 (Pepper's line is y 184). Drawn by setpieces.lua kennel().
-Collision (level/riverwalk.lua): the ridge box x 16-28 from y 140 and the eaves box x 0-44 from y 150 (the roof
-boards' top at the walls' corners), so she stands on the roof wherever she is on it; the door crown stays y 165."""
+Round 3 (review: the round 2 flat 32 px lid on a 38-row wall read as a red chest): a 20 px ridge board (x 12-31, 2 rows)
+on a low 1 in 4 pitch (one row down every 4 px, 3 rows to the eaves), the eaves 2 px past the walls, the roof 6 rows
+deep at every column, the walls 30 rows at the corners: a low gable. 44 x 40.
+Art row 0 = world y 144, the bottom row 39 = y 183 (Pepper's line is y 184). Drawn by setpieces.lua kennel().
+Collision (level/riverwalk.lua): the ridge box x 16-28 from y 144 and the eaves box x 0-44 from y 148 (the roof's top
+at the eaves), so she stands on the roof wherever she is on it; the door crown stays y 165."""
 import os, sys
 import numpy as np
 from PIL import Image
@@ -36,59 +39,53 @@ RED_L, RED, RED_D = hexc('#da4640'), hexc('#ce3531'), hexc('#a42c30')           
 LAP = hexc('#7d1c24')
 CREAM, CREAM_D = hexc('#f1dbbb'), hexc('#d3c3b4')                                 # door frame, plate
 IN_D, IN = hexc('#1c1c1c'), hexc('#2b2a25')                                       # the inside
-W, H = 44, 44
-BAND = 5                                                                          # the roof boards' thickness
-WALL_X0, WALL_X1 = 3, 40                                                          # the walls (overhang 3 px a side)
-DOOR_X0, DOOR_X1, CROWN = 12, 31, 25                                              # the opening, the arch's crown row
-PLATE = (15, 28, 17, 21)                                                          # x0, x1, y0, y1 (inclusive)
-
-
-RIDGE = (int(os.environ.get('KENNEL_RB0', 6)), int(os.environ.get('KENNEL_RB1', 37)))   # the ridge board's columns
+W, H = 44, 40                                                                     # round 3: art row 0 = world y 144
+WALL_X0, WALL_X1 = 2, 41                                                          # the walls (the eaves 2 px past them)
+RIDGE = (12, 31)                                                                  # the ridge board, 2 rows
+ROOF = 6                                                                          # the roof's rows at every column
+DOOR_X0, DOOR_X1, CROWN = 12, 31, 21                                              # the opening; crown row 21 = y 165
+PLATE = (15, 28, 13, 17)                                                          # x0, x1, y0, y1 (inclusive)
 
 
 def roof_top(x):
-    """the roof boards' top row at column x: under the level ridge board (rows 0-3) it is row 4; outside it the
-    boards fall 1 in 2 (even 2 px steps) from the board's ends to the eaves"""
+    """the roof's top row at column x: the ridge board (x 12-31) at row 0, then a 1 in 4 pitch, one row down every
+    4 px, 3 rows to the eaves (x 0-3 at row 4... the board itself is 2 rows, so the eaves' top is row 4)"""
     r0, r1 = RIDGE
-    if r0 <= x <= r1: return 4
+    if r0 <= x <= r1: return 0
     d = (r0 - x) if x < r0 else (x - r1)
-    return 2 + (d + 1) // 2
+    return 1 + (d + 3) // 4
 
 
 def build():
     a = np.zeros((H, W, 4), np.uint8)
     inside = np.zeros((H, W), bool)
-    # the gable wall: under the roof boards, cols 3-40, down to the bottom
+    # the gable wall: under the roof, cols 2-41, down to the bottom (30 rows at the corners)
     for x in range(WALL_X0, WALL_X1 + 1):
-        for r in range(roof_top(x) + BAND, H):
+        for r in range(roof_top(x) + ROOF, H):
             inside[r, x] = True
             k = r % 4
             c = (RED_L, RED, RED, LAP)[k]
             if x == WALL_X0 + 1: c = RED_L                                # the corner posts: lit left, shaded right
             if x == WALL_X1 - 1: c = RED_D
-            if r == roof_top(x) + BAND: c = LAP                           # the roof's shadow on the wall
+            if r == roof_top(x) + ROOF: c = LAP                           # the roof's shadow on the wall
             a[r, x] = c
-    # the roof boards
+    # the roof: ROOF rows under its top line at every column; the ridge board's 2 rows lit, the slopes' boards
+    # slate with shingle ends every 4 px, a dark underside (sun upper left: the left side one step lighter on top)
+    r0, r1 = RIDGE
     for x in range(W):
         t = roof_top(x)
-        for i in range(BAND):
+        for i in range(ROOF):
             r = t + i
-            if r >= H: continue
             inside[r, x] = True
-            if i == 0: c = SLATE_L if x <= 21 else SLATE
-            elif i == BAND - 1: c = SLATE_D
+            board = r0 <= x <= r1 and i < 2
+            if board: c = SLATE_L if i == 0 else SLATE
+            elif i == 0: c = SLATE_L if x <= 21 else SLATE
+            elif i == ROOF - 1: c = SLATE_D
             else:
                 c = SLATE
-                if i in (1, 2) and ((x if x <= 21 else 43 - x) + 2 * (i % 2)) % 4 == 0: c = SLATE_D   # shingle ends
+                if i in (2, 3) and ((x if x <= 21 else 43 - x) + 2 * (i % 2)) % 4 == 0: c = SLATE_D   # shingle ends
             a[r, x] = c
-    # the ridge board: a level plank over the peak, rows 0-3 (lit top, two mid rows, a shaded underside), its
-    # ends square; Pepper's paws land on it (round 2: on a 4 px peak she straddled the slopes, 5-9 px over them)
-    r0, r1 = RIDGE
-    for x in range(r0, r1 + 1):
-        for r in range(4):
-            inside[r, x] = True
-            a[r, x] = (SLATE_L, SLATE, SLATE, SLATE_D)[r]
-            if x in (r0, r1) and 0 < r < 3: a[r, x] = SLATE_D if x == r1 else SLATE   # its ends
+        if x in (r0, r1): a[1, x] = SLATE_D                           # the board's square ends
     # the round door: a semicircle arch (radius 10, centre col 21.5, row 35) on straight jambs
     door = np.zeros((H, W), bool)
     cx, cr, rad = 21.5, CROWN + 10, 10

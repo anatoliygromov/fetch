@@ -214,7 +214,7 @@ Built by `tools/build_dt_facades.py` (`--check`) after the producer's concept dt
 ## River Walk and City Park ground, the owner's reverts, the kennel garden (day/07nov-ground, 0 credits)
 | File | Size | Where the game draws it |
 | --- | --- | --- |
-| `kennel.png` | 44 x 44 | rebuilt by `tools/build_rw_kennel.py` as a classic dog house (round door, name plate) with a level ridge board (art x 6-37, rows 0-3, round 2), same place: top-left (0, 140), bottom row y 183, door crown y 165. Collision: the board x 16-28 from y 140, the eaves x 0-44 from y 145 (was 158). It stands on the GARDEN prop's lawn (scene.lua `Sc.paintGarden`) |
+| `kennel.png` | 44 x 40 | rebuilt by `tools/build_rw_kennel.py` as a classic dog house (round door, name plate) with a low gable (round 3: a 20 px ridge board x 12-31, a 1 in 4 pitch, eaves 2 px past the walls, walls 30 rows), same place: top-left (0, 144), bottom row y 183, door crown y 165. Collision: the board x 16-28 from y 144, the eaves x 0-44 from y 148 (was 158). It stands on the GARDEN prop's lawn (scene.lua `Sc.paintGarden`) |
 | `gritbox_front.png` | 88 x 32 | unchanged slot; the front-on build in the old box's greens (`tools/fix_gritbox_07nov.py`) |
 | `pontoon.png` | 54 x 12 | the previous pontoon again, drawn at the mover's x0 - 3, y0 - 2 (`Sp.PONT_DY`); the mooring lines tie on under the deck's ends |
 | `park_stone.png` | 26 x 21 | the previous pink granite stone again (as the cp-pond branch drew it) |

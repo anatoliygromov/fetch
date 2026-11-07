@@ -130,14 +130,14 @@
     <property name="rely.ay" type="int" value="28"/>
    </properties>
   </object>
-  <object id="8" name="KENNEL" type="props" x="16" y="140" width="12" height="25">
+  <object id="8" name="KENNEL" type="props" x="16" y="144" width="12" height="21">
    <properties>
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
     <property name="hidden" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="9" name="KENNEL" type="props" x="0" y="145" width="44" height="20">
+  <object id="9" name="KENNEL" type="props" x="0" y="148" width="44" height="17">
    <properties>
     <property name="kind" value="solid"/>
     <property name="layer" value="play"/>
@@ -371,11 +371,11 @@
     <property name="art" value="pile"/>
    </properties>
   </object>
-  <object id="38" type="pieces" x="0" y="140" width="44" height="8">
+  <object id="38" type="pieces" x="0" y="144" width="44" height="8">
    <properties>
     <property name="box" value="x0,x1,y0"/>
     <property name="kind" value="kennel"/>
-    <property name="rely.door" type="int" value="25"/>
+    <property name="rely.door" type="int" value="21"/>
    </properties>
   </object>
   <object id="39" type="pieces" x="736" y="112" width="88" height="8">

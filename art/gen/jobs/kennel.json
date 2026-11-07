@@ -5,13 +5,13 @@
  "tier": "C",
  "target_px": [
   44,
-  44
+  40
  ],
  "real_height_m": 0.95,
- "built_by": "tools/build_rw_kennel.py (day/07nov-ground round 2: a level ridge board, art x 6-37, rows 0-3)",
+ "built_by": "tools/build_rw_kennel.py (day/07nov-ground round 3: a low gable, 20 px ridge board, 1 in 4 pitch)",
  "slot": {
   "file": "riverwalk/art/scene/kennel.png",
-  "where": "River Walk screen 1, x 0-44, in the front garden (GARDEN prop): the KENNEL piece (setpieces.lua kennel())"
+  "where": "River Walk screen 1, x 0-44, y 144-184, in the front garden (GARDEN prop): the KENNEL piece (setpieces.lua kennel())"
  },
  "name": "kennel",
  "family": "rw_ground_07nov"

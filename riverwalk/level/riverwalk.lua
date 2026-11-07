@@ -72,14 +72,15 @@ L.props = {
   { name = "TREE",     kind = "decor",  layer = "back", x0 = 120,  x1 = 370,  y0 = -77, y1 = 174, art = "rw_lime" },
   { name = "BENCH",    kind = "solid",  layer = "play", x0 = 93,   x1 = 189,  y0 = 156, y1 = 165, art = "bench", ax = 90, ay = 184, depth = 5 },
   -- Pepper's kennel in her front garden (day/07nov-ground, owner 7 Nov: "would never be on the street", "why is the
-  -- dog house look so weird?"): a classic dog house from its gable end, 44 x 44 at true scale, a round door, a name
+  -- dog house look so weird?"): a classic dog house from its gable end, 44 x 40 at true scale (round 3: a low
+  -- gable), a round door, a name
   -- plate (art/scene/kennel.png by tools/build_rw_kennel.py), on the garden's lawn (L.garden). Solid down to its
-  -- door's crown (y 165), 19 px to crawl in; a gold bone is inside. Two boxes: the roof's level ridge board (round 2:
-  -- art x 6-37, rows 0-3, y 140; the box x 16-28) and the eaves (x 0-44, y 145, the roof boards' top at the corners),
+  -- door's crown (y 165), 19 px to crawl in; a gold bone is inside. Two boxes: the roof's ridge board (round 3: a
+  -- low gable, the board art x 12-31 at y 144; the box x 16-28) and the eaves (x 0-44, y 148, the roof's eaves),
   -- so wherever she stands on it, the roof is under her paws. It ends 1 px left of her box at the start. Same place,
   -- same door, same reach as before.
-  { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 16,   x1 = 28,   y0 = 140, y1 = 165, hidden = true },
-  { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 0,    x1 = 44,   y0 = 145, y1 = 165, hidden = true },
+  { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 16,   x1 = 28,   y0 = 144, y1 = 165, hidden = true },
+  { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 0,    x1 = 44,   y0 = 148, y1 = 165, hidden = true },
   -- promenade A
   { name = "",         kind = "decor",  layer = "back", x0 = 460,  x1 = 652,  y0 = -76, y1 = 174, art = "rw_birch" },   -- (6 Nov) true-scale birch, trunk where tree_far stood
   { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 401,  x1 = 503,  y0 = 152, y1 = 184, art = "flowerbox_front", ax = 400, ay = 184 },
@@ -161,7 +162,7 @@ L.ballHomeAtLamps = true
 
 -- code-drawn pieces (setpieces.lua); each matches a hidden collision prop above
 L.pieces = {
-  { kind = "kennel", x0 = 0, x1 = 44, y0 = 140, door = 165 },
+  { kind = "kennel", x0 = 0, x1 = 44, y0 = 144, door = 165 },
   { kind = "kiosk",  x0 = 736, x1 = 824, y0 = 112, bx0 = 748, bx1 = 812 },
   { kind = "kiosk",  x0 = 888, x1 = 968, y0 = 112, bx0 = 900, bx1 = 956 },
   { kind = "jetty",  x0 = 2496, x1 = 2544, y0 = 196 },

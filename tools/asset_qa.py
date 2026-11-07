@@ -81,7 +81,7 @@ TILES = {"rail_bg_left", "rail_bg_unit", "rail_bg_end", "pavement", "road", "par
 JOINS = {"cp_walk704_deck": "left", "cp_walk1968_deck": "left", "cp_walk704_landing608": "right", "cp_walk1968_landing1888": "right"}
 # slots (docs/art_hooks_r8.md): width, height, tolerance on each (0 = exact). Batch 1 files are named differently
 # from their hooks: HOOK says which game file each one becomes
-SLOTS = {"rw_rowboat": (185, 62, 0, 0), "rw_rower": (644, 62, 0, 0), "kennel": (44, 44, 0, 0), "rw_jetty": (48, 51, 0, 0),   # (night/06nov-rw) 4.0 m eka; 7 x 92 x 62 loop; kennel; built jetty
+SLOTS = {"rw_rowboat": (185, 62, 0, 0), "rw_rower": (644, 62, 0, 0), "kennel": (44, 40, 0, 0), "rw_jetty": (48, 51, 0, 0),   # (night/06nov-rw) 4.0 m eka; 7 x 92 x 62 loop; kennel; built jetty
          "cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_throw": (528, 66, 0, 0),
          "cyclist_a_84": (76, 76, 8, 8), "cyclist_b_84": (76, 76, 8, 8), "cyclist_a_92": (76, 76, 8, 8), "cyclist_b_92": (76, 76, 8, 8),
          "roof_gable": (122, 80, 0, 20), "roof_loggia": (122, 48, 0, 12), "roof_gallery88": (90, 32, 0, 8),
