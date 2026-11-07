@@ -3,7 +3,10 @@
 --                 select, to the end. One score for the whole run, lives carry from level to level, hearts refill
 --                 and the timer starts again in every level. A level whose file is missing is skipped.
 --   Main menu:    PLAY (on from the furthest open level), LEVELS (the level select), OPTIONS (SOUND, HARD MODE,
---                 CONTROLS), outlined text over the title picture (docs/ui_design.md, 24 Oct).
+--                 CONTROLS, ERASE SAVE), outlined text over the title picture (docs/ui_design.md, 24 Oct). (owner
+--                 7 Nov: starting from scratch must be easy) once a level is cleared PLAY becomes CONTINUE and NEW
+--                 GAME comes under it: a fresh run from level 1 (3 lives, score 0); the open levels and bests stay.
+--                 ERASE SAVE (asks first) wipes the progress, bests, times and medals; sound and HARD MODE stay.
 --   Level select: every level of levels.lua. Level 1 is always open; a level opens when the one before it is
 --                 cleared. Locked ones are dimmed with a padlock, a missing file says COMING SOON.
 --   Saved:        progress.txt (the open levels, one name per line), best_run.txt (the best run score), the
@@ -54,6 +57,25 @@ function F.wipe()
   for _, n in ipairs(F.FILES) do list[#list + 1] = n end
   for _, l in ipairs(F.levels) do for _, n in ipairs({ F.bestFile(l.name), "time_" .. l.name .. ".txt", "medals_" .. l.name .. ".txt" }) do list[#list + 1] = n end end
   for _, n in ipairs(list) do pcall(love.filesystem.remove, F.prefix .. n) end
+end
+-- (owner 7 Nov) any progress to erase: a save file there (hard.txt is a setting, not progress)
+function F.hasSave()
+  if next(F.unlocked) then return true end
+  if F.save == false then return false end
+  for _, n in ipairs(F.FILES) do if n ~= "hard.txt" and love.filesystem.getInfo(F.prefix .. n) then return true end end
+  for _, l in ipairs(F.levels) do
+    for _, n in ipairs({ F.bestFile(l.name), "time_" .. l.name .. ".txt", "medals_" .. l.name .. ".txt" }) do
+      if love.filesystem.getInfo(F.prefix .. n) then return true end
+    end
+  end
+  return false
+end
+-- ERASE SAVE: every progress file goes, the game is as on its first start; HARD MODE (a setting) stays as it was
+function F.eraseSave()
+  local hard = F.hard
+  F.wipe(); F.load()
+  if hard then F.setHard(true) end
+  F.pick.sel = 1
 end
 function F.setHard(on) F.hard = on; write("hard.txt", on and "1\n" or "0\n") end
 function F.isOpen(i) return i == 1 or F.unlocked[F.levels[i].name] == true end
@@ -132,7 +154,19 @@ function F.action(key, pad) if key then return KEYS[key] end; return PADS[pad] e
 
 -- the main menu (docs/ui_design.md screen 2): PLAY, LEVELS, OPTIONS. PLAY goes on from the furthest level that is
 -- open (its file there); LEVELS is the level select; OPTIONS the options panel. The cursor moves; returns the choice.
+-- (owner 7 Nov) once a level is cleared: CONTINUE (as PLAY), NEW GAME (a fresh run from level 1), LEVELS, OPTIONS
 F.menu = { sel = 1, items = { "PLAY", "LEVELS", "OPTIONS" }, moved = -1, from = 1 }
+F.MENU_FRESH, F.MENU_SAVED = { "PLAY", "LEVELS", "OPTIONS" }, { "CONTINUE", "NEW GAME", "LEVELS", "OPTIONS" }
+local MENU_DO = { PLAY = "play", CONTINUE = "play", ["NEW GAME"] = "new", LEVELS = "select", OPTIONS = "options" }
+-- the rows for the save as it is now; the cursor stays on the same row by name (OPTIONS stays OPTIONS)
+function F.syncMenu()
+  local m = F.menu
+  local items = next(F.unlocked) and F.MENU_SAVED or F.MENU_FRESH
+  if items == m.items then return end
+  local name = m.items[m.sel]
+  m.items, m.sel, m.from = items, 1, 1
+  for i, it in ipairs(items) do if it == name then m.sel, m.from = i, i end end
+end
 F.pick = { sel = 1 }
 local function move(m, a, n)
   m.from, m.moved = m.sel, love.timer.getTime()
@@ -140,10 +174,11 @@ local function move(m, a, n)
 end
 function F.menuInput(a)
   local m = F.menu
+  F.syncMenu()
   if a == "up" or a == "down" then move(m, a, #m.items)
   elseif a == "ok" then
     S.play("select")
-    return ({ "play", "select", "options" })[m.sel]
+    return MENU_DO[m.items[m.sel]]
   elseif a == "back" then return "back" end
 end
 -- the furthest level open with its file there (PLAY starts the run there)
@@ -153,11 +188,29 @@ function F.furthest()
   return best
 end
 -- OPTIONS (screen 3): SOUND (left / right turn it down or up; A steps it up and wraps round to off), HARD MODE
--- (A, left or right switch it), CONTROLS (A opens the controls page). B goes back.
-F.opts = { sel = 1, items = { "SOUND", "HARD MODE", "CONTROLS" }, moved = -1, from = 1 }
-F.OPT_SOUND, F.OPT_HARD, F.OPT_CONTROLS = 1, 2, 3
+-- (A, left or right switch it), CONTROLS (A opens the controls page), ERASE SAVE (owner 7 Nov: A asks ERASE SAVE?
+-- with NO on the cursor; YES, ERASE wipes it; dimmed with a dull thud when there is nothing to erase).
+-- B goes back (out of the question first).
+F.opts = { sel = 1, items = { "SOUND", "HARD MODE", "CONTROLS", "ERASE SAVE" }, moved = -1, from = 1 }
+F.OPT_SOUND, F.OPT_HARD, F.OPT_CONTROLS, F.OPT_ERASE = 1, 2, 3, 4
+F.eraseItems = { "NO", "YES, ERASE" }
+-- entering OPTIONS: the cursor on SOUND, no question open, and whether there is a save to erase (read once here:
+-- nothing saves while the options are open)
+function F.openOptions()
+  local o = F.opts
+  o.sel, o.from, o.confirm, o.cm = 1, 1, nil, nil
+  o.canErase = F.hasSave()
+end
 function F.optionsInput(a)
   local o, Se = F.opts, require("settings")
+  if o.confirm then                                                -- ERASE SAVE? (1 NO, 2 YES, ERASE)
+    if a == "back" then o.confirm, o.cm = nil, nil; S.play("tick"); return end
+    local c = o.cm or { sel = o.confirm }; c.sel = o.confirm
+    local r = F.cursor(c, a, #F.eraseItems); o.confirm, o.cm = c.sel, c
+    if r == 1 then o.confirm, o.cm = nil, nil
+    elseif r == 2 then o.confirm, o.cm = nil, nil; F.eraseSave(); o.canErase = F.hasSave(); return "erased" end
+    return
+  end
   if a == "up" or a == "down" then move(o, a, #o.items)
   elseif a == "back" then S.play("tick"); return "back"
   elseif o.sel == F.OPT_SOUND and (a == "left" or a == "right" or a == "ok") then
@@ -168,7 +221,10 @@ function F.optionsInput(a)
     local on = (a == "ok" and not F.hard) or a == "right"
     if on ~= F.hard then F.setHard(on); S.play("select") else S.play("push") end
     return "hard"
-  elseif o.sel == F.OPT_CONTROLS and a == "ok" then S.play("select"); return "controls" end
+  elseif o.sel == F.OPT_CONTROLS and a == "ok" then S.play("select"); return "controls"
+  elseif o.sel == F.OPT_ERASE and a == "ok" then
+    if o.canErase then S.play("select"); o.confirm, o.cm = 1, nil else S.play("push") end
+  end
 end
 -- the controls page: B (or A) goes back
 function F.controlsInput(a) if a == "back" or a == "ok" then S.play("tick"); return "back" end end
@@ -199,6 +255,7 @@ local function bob() return (math.floor(love.timer.getTime() * 3) % 2 == 0) and 
 -- logo on Title.CX, the selected one gold with the paw coin before it; the controls strip at the bottom
 F.M = { ROW0 = 132, PITCH = 20, CUR_GAP = 4 }
 function F.drawMenu(t)
+  F.syncMenu()
   Title.draw(t, nil, true)
   local th = U.sayH(13)
   local function rowY(i) return F.M.ROW0 + (i - 1) * F.M.PITCH end
@@ -216,9 +273,12 @@ function F.drawMenu(t)
   U.strip({ { "ok", "OK" }, { "back", "BACK" } })
 end
 
--- OPTIONS: the title picture under the smooth warm dim, the kit's gold panel with the OPTIONS ribbon, three rows
--- (label left, its control right: the 9-segment sound meter, the HARD MODE switch), the strip at the bottom
-F.O = { X = 60, W = 200, PANEL = 66, H = 104, RIB = 56, ROW0 = 88, PITCH = 22, LABEL_IN = 36, CUR_IN = 10, RIGHT_IN = 16 }
+-- OPTIONS: the title picture under the smooth warm dim, the kit's gold panel with the OPTIONS ribbon, four rows
+-- (label left, its control right: the 9-segment sound meter, the HARD MODE switch), the strip at the bottom.
+-- (owner 7 Nov) ERASE SAVE's question takes the same panel: ERASE SAVE? (13 px gold) and what goes (7 px)
+-- in the first two rows' place, NO and YES, ERASE in the last two
+F.O = { X = 60, W = 200, PANEL = 66, H = 126, RIB = 56, ROW0 = 88, PITCH = 22, LABEL_IN = 36, CUR_IN = 10, RIGHT_IN = 16,
+  ASK_SUB = 106 }
 local function backdropWarm(t) Title.draw(t, nil, true); U.dimWarm() end
 function F.drawOptions(t)
   local Se = require("settings")
@@ -230,11 +290,26 @@ function F.drawOptions(t)
   U.say(13, "ink", "OPTIONS", math.floor(159.5 - (tw - 1) / 2 + 0.5), O.RIB + 2, "title")
   local th = U.sayH(13)
   local function rowY(i) return O.ROW0 + (i - 1) * O.PITCH end
+  local o = F.opts
+  if o.confirm then
+    U.sayC(13, "gold", "ERASE SAVE?", 159.5, rowY(1), "question")
+    U.sayC(7, "cream", "LEVELS LOCK, BEST SCORES GO", 159.5, O.ASK_SUB, "subtitle")
+    local function askY(i) return rowY(i + 2) end
+    for i, it in ipairs(F.eraseItems) do U.say(13, o.confirm == i and "gold" or "cream", it, O.X + O.LABEL_IN, askY(i), "label") end
+    local m = o.cm or {}
+    local cw, ch = U.body("coin_paw")
+    local cy = cursorY({ sel = o.confirm, from = m.from or o.confirm, moved = m.moved }, askY) + (th - 1) / 2
+    U.put("coin_paw", O.X + O.CUR_IN, math.floor(cy - (ch - 1) / 2 + 0.5) - bob(), "cursor")
+    U.strip({ { "ok", "OK" }, { "back", "BACK" } })
+    return
+  end
   local xr = O.X + O.W - 1 - O.RIGHT_IN                            -- the controls' right edge
   for i, it in ipairs(F.opts.items) do
     local on = F.opts.sel == i
     local y = rowY(i); local cy = y + (th - 1) / 2
-    U.say(13, on and "gold" or "cream", it, O.X + O.LABEL_IN, y, "label")
+    local style = on and "gold" or "cream"
+    if i == F.OPT_ERASE and not o.canErase then style = "dim" end  -- nothing to erase
+    U.say(13, style, it, O.X + O.LABEL_IN, y, "label")
     if i == F.OPT_SOUND then                                       -- one segment a step, lit up to the level
       local segw, segh = U.body("seg_on")
       local mw = (Se.MAX - 1) * 4 + segw
@@ -252,7 +327,8 @@ function F.drawOptions(t)
   U.put("coin_paw", O.X + O.CUR_IN, math.floor(cy - (ch - 1) / 2 + 0.5) - bob(), "cursor")
   local items = { { "ok", "OK" }, { "back", "BACK" } }
   if F.opts.sel == F.OPT_SOUND then items = { { "lr", "CHANGE" }, { "back", "BACK" } }
-  elseif F.opts.sel == F.OPT_HARD then items = { { "ok", F.hard and "OFF" or "ON" }, { "back", "BACK" } } end
+  elseif F.opts.sel == F.OPT_HARD then items = { { "ok", F.hard and "OFF" or "ON" }, { "back", "BACK" } }
+  elseif F.opts.sel == F.OPT_ERASE and not o.canErase then items = { { "back", "BACK" } } end
   U.strip(items)
 end
 
