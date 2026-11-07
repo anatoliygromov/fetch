@@ -226,9 +226,10 @@ local function menuAction(a)
   if not a then return end
   if state == "menu" then
     local r = Flow.menuInput(a)
-    if r == "play" then startRun(Flow.furthest())                  -- PLAY: on from the furthest open level
+    if r == "play" then startRun(Flow.furthest())                  -- PLAY / CONTINUE: on from the furthest open level
+    elseif r == "new" then startRun(1)                             -- NEW GAME: a fresh run from level 1 (owner 7 Nov)
     elseif r == "select" then state = "select"; Flow.pick.sel = 1
-    elseif r == "options" then state = "options"; Flow.opts.sel, Flow.opts.from = 1, 1
+    elseif r == "options" then state = "options"; Flow.openOptions()
     elseif r == "back" then toTitle(); t = 0.5 end                 -- back to PRESS START (no fade-in)
   elseif state == "options" then
     local r = Flow.optionsInput(a)

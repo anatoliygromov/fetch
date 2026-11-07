@@ -267,7 +267,7 @@ return function(api)
     check("ending: back to the title", function() return api.getState() == "title", api.getState() end))
 
   -- level select again: everything played is open; the last level from the select starts a fresh run
-  add(wait(0.8), key("space"), state("menu", 2), key("down"), key("space"), state("select", 1))
+  add(wait(0.8), key("space"), state("menu", 2), key("down"), key("down"), key("space"), state("select", 1))
   add(check("level select: every level of the run is open now", function()
     local ok = true; for i, l in ipairs(F.levels) do if l.exists then ok = ok and F.isOpen(i) end end
     F.load(); for i, l in ipairs(F.levels) do if l.exists then ok = ok and F.isOpen(i) end end      -- and from the file
@@ -295,12 +295,12 @@ return function(api)
   add(key("space"))
   require("tests_bonus").flow(bh, { name = "bonus, clean clear", life = true, after = "ending", tag = "c" })    -- [bonus] every bone: golden too
   add(wait(2.3), key("space"), state("title", 1))
-  add(wait(0.8), key("space"), state("menu", 2), key("down"), key("space"), state("select", 1), wait(0.3), shot("u6_select"),
+  add(wait(0.8), key("space"), state("menu", 2), key("down"), key("down"), key("space"), state("select", 1), wait(0.3), shot("u6_select"),
     check("level select: medals shown from the saves", function() local m = F.medals(last); return m.nohit and m.bones and m.par, "" end))
   add(key("escape"), state("menu", 1))
 
   -- pause: B never quits, QUIT asks first
-  add(key("up"), key("space"), state("intro", 1), wait(0.6), key("space"), state("play", 1), wait(0.2), key("return"), state("pause", 1), wait(0.1), shot("7_pause"))
+  add(key("up"), key("up"), key("space"), state("intro", 1), wait(0.6), key("space"), state("play", 1), wait(0.2), key("return"), state("pause", 1), wait(0.1), shot("7_pause"))
   add(key("lshift"), check("pause: B does nothing", function() return api.getState() == "pause", api.getState() end))
   add(key("escape"), check("pause: Esc (back) goes on playing", function() return api.getState() == "play", api.getState() end))
   -- SOUND (the second row): left / right change the game's volume, A steps it up; the volume buttons work anywhere
@@ -340,8 +340,9 @@ return function(api)
     return ok, api.getState()
   end))
 
-  -- OPTIONS (the menu's third item): SOUND, HARD MODE, CONTROLS; B goes back one screen at a time
-  add(key("down"), key("down"), key("space"), state("options", 1), wait(0.2), shot("u12_options"),
+  -- OPTIONS (the menu's last item, the fourth once a level is cleared): SOUND, HARD MODE, CONTROLS; B goes back one
+  -- screen at a time
+  add(key("down"), key("down"), key("down"), key("space"), state("options", 1), wait(0.2), shot("u12_options"),
     check("options: SOUND is selected", function() return F.opts.sel == 1, F.opts.items[F.opts.sel] end))
   add({ act = function() Se.volume = 5 end }, key("left"), check("options: SOUND left turns the volume down", function() return Se.volume == 4, "volume " .. Se.volume end),
     key("right"), key("right"), check("options: SOUND right turns it up", function() return Se.volume == 6, "volume " .. Se.volume end))
@@ -352,13 +353,48 @@ return function(api)
   add(key("up"), key("space"), check("hard mode: on and saved", function()
     return F.hard and readSave("hard.txt"):find("1") ~= nil, readSave("hard.txt"):gsub("\n", "") end), wait(0.2), shot("u8_menu"))
   add(key("escape"), check("options: B goes back to the menu", function() return api.getState() == "menu", api.getState() end))
-  add(key("up"), key("up"), key("space"), state("intro", 1), wait(0.6), key("space"), state("play", 1), wait(0.5),
+  add(key("up"), key("up"), key("up"), key("space"), state("intro", 1), wait(0.6), key("space"), state("play", 1), wait(0.5),
     check("hard mode: the stage is hard, no hints, no nudge", function()
       local s = api.stage(); return s.hard == true and s:hint() == nil and T.cur == nil, tostring(s.hard) end))
   add(wait(3.2), check("hard mode: no idle nudge", function() return T.nudge.btn == nil, tostring(T.nudge.btn) end), shot("u9_hard"))
   add(key("return"), state("pause", 1), key("down"), key("down"), key("down"), key("space"), key("down"), key("space"), state("menu", 1),
-    key("down"), key("down"), key("space"), state("options", 1), key("down"), key("space"),
+    key("down"), key("down"), key("down"), key("space"), state("options", 1), key("down"), key("space"),
     check("hard mode: off again", function() return not F.hard and readSave("hard.txt"):find("0") ~= nil, "" end))
+
+  -- (owner 7 Nov) starting from scratch: CONTINUE and NEW GAME once a level is cleared; NEW GAME is a fresh run from
+  -- level 1 that keeps the open levels; OPTIONS > ERASE SAVE asks first, then wipes the progress (sound stays)
+  add(key("escape"), state("menu", 1), wait(0.2), shot("u14_menu_saved"), check("menu: CONTINUE and NEW GAME once a level is cleared", function()
+    local it = F.menu.items
+    return it[1] == "CONTINUE" and it[2] == "NEW GAME" and it[3] == "LEVELS" and it[4] == "OPTIONS" and it[F.menu.sel] == "OPTIONS", table.concat(it, ", ")
+  end))
+  add(key("up"), key("up"), key("space"), state("intro", 1), check("new game: a fresh run from level 1, levels stay open", function()
+    local st, r = stats(), api.run(); F.load()
+    local ok = r.names[1] == names[1] and #r.names == #names and r.k == 1 and st.lives == 3 and st.score == 0
+    for i, l in ipairs(F.levels) do if l.exists then ok = ok and F.isOpen(i) end end
+    return ok, ("%s (%d levels), lives %d, score %d"):format(r.names[1], #r.names, st.lives, st.score)
+  end))
+  add(wait(0.6), key("space"), state("play", 1), key("return"), state("pause", 1), key("down"), key("down"), key("down"), key("space"), key("down"), key("space"), state("menu", 1))
+  add({ act = function() Se.volume = 6 end }, key("down"), key("down"), key("down"), key("space"), state("options", 1), key("down"), key("down"), key("down"),
+    check("erase save: the row is on and there is a save", function() return F.opts.items[F.opts.sel] == "ERASE SAVE" and F.opts.canErase == true, F.opts.items[F.opts.sel] end))
+  add(key("space"), wait(0.2), shot("u15_erase_ask"), check("erase save: asks first, NO on the cursor", function() return F.opts.confirm == 1 and api.getState() == "options", tostring(F.opts.confirm) end))
+  add(key("escape"), check("erase save: B leaves the question, nothing erased", function()
+    return api.getState() == "options" and F.opts.confirm == nil and readSave("progress.txt") ~= "", api.getState() end))
+  add(key("space"), key("space"), check("erase save: NO keeps the save", function()
+    return F.opts.confirm == nil and readSave("progress.txt") ~= "" and F.isOpen(2), (readSave("progress.txt"):gsub("\n", " ")) end))
+  add(key("space"), key("down"), key("space"), wait(0.2), shot("u16_erased"), check("erase save: YES wipes progress, bests, times and medals", function()
+    local ok = readSave("progress.txt") == "" and readSave("best_run.txt") == "" and readSave("bonus_best.txt") == "" and F.bestRun == 0
+    for i, l in ipairs(F.levels) do
+      ok = ok and F.levelBest(l.name) == 0 and F.levelTimeBest(l.name) == nil and readSave("medals_" .. l.name .. ".txt") == ""
+      if i > 1 then ok = ok and not F.isOpen(i) end
+    end
+    return ok and not F.opts.canErase and api.getState() == "options", "progress '" .. readSave("progress.txt"):gsub("\n", " ") .. "'"
+  end))
+  add(check("erase save: the sound setting stays", function() return Se.volume == 6, "volume " .. Se.volume end))
+  add(key("space"), check("erase save: nothing left, A does not ask", function() return F.opts.confirm == nil and api.getState() == "options", tostring(F.opts.confirm) end))
+  add(key("escape"), state("menu", 1), wait(0.2), shot("u17_menu_fresh"), check("erase save: the menu is PLAY, LEVELS, OPTIONS again", function()
+    local it = F.menu.items
+    return #it == 3 and it[1] == "PLAY" and it[F.menu.sel] == "OPTIONS", table.concat(it, ", ") .. " on " .. tostring(it[F.menu.sel])
+  end))
 
   -- the summary and the contact sheet (4 x 2, the screens at 2x)
   add(wait(0.2), { act = function()
