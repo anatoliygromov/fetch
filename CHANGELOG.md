@@ -3,6 +3,9 @@
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
 
+## Branch `day/07nov-sky`: the painted sky, clean hazes, City Park's leaf front off (day of 7 Nov)
+- **City Park: the leaf front off (owner, 7 Nov: the black spiky foreground shapes "look terrible"):** `Look.LEAF_ON` (look.lua, default off; `LOOK_LEAVES=1` brings it back for a before / after). The high road has no dark foreground band now. River Walk's hedge band is untouched (the ground track owns it). tests_citypark_tall.lua checks it is off, and still runs its safety checks with it on. Frames: `docs/review/07nov/sky/leaf/` (2 high-road spots, with and without, 1x and 3x, colour and greyscale): Pepper, the deck's outline and the bones read without it. City Park tall --physics 98 of 98, check_flow 125 of 125, PEPPER UNCHANGED.
+
 ## v0.7 (7 Nov 2026): River Walk, City Park and Downtown at finished quality
 Main moves from v0.6 (23 Oct) to `prod/integrate-f`: everything integrated since (prod/integrate-c and -d, the 5 Nov and 6 Nov art families, the hint bubbles, the speech bubbles and bikes in front, the night of 6-7 Nov tracks). Every check green, every screen of the three levels passed an independent review. Owner's yes, 6 Nov 20:10, on that condition. The sections below are the detail.
 

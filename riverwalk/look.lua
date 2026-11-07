@@ -376,6 +376,9 @@ end
 -- her (her sprite's box, padded), a bone, the ball, Mia or the magpie drops down out of the way for as long as it is
 -- near (nothing is kept between frames, so a still frame always shows the same thing).
 Look.LEAF_H, Look.LEAF_FROM, Look.LEAF_TO, Look.LEAF_PAD = 22, 72, 112, 4
+-- (owner, 7 Nov: the black spiky foreground shapes in City Park "look terrible") the leaf front is off: the high road
+-- has no dark foreground band. LOOK_LEAVES=1 (or Look.LEAF_ON = true) brings it back for a before / after.
+Look.LEAF_ON = os.getenv("LOOK_LEAVES") ~= nil
 -- (art/cp-audit-06nov) the audit: "front black bushes end in vertical cuts". A leaf leaning out past the clump's
 -- ends was cut off by the image's edge, and the bank under the leaves started 3 rows high at each end: straight
 -- sides. The image now has LEAF_M px of room each side (drawn LEAF_M px further left), so every leaf is whole, and
@@ -453,7 +456,7 @@ local function leafKeepOut(stage, cam, camY)
   return R
 end
 function Look.leaves(stage, cam, camY, camYMax)
-  if not S().leafFront or (camYMax or 0) <= 0 then return end
+  if not Look.LEAF_ON or not S().leafFront or (camYMax or 0) <= 0 then return end
   local hide = math.max(0, math.min(1, (camY - Look.LEAF_FROM) / (Look.LEAF_TO - Look.LEAF_FROM)))
   if hide >= 1 then return end
   stage.lkLeaves = stage.lkLeaves or buildLeaves(stage)

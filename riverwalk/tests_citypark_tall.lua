@@ -343,6 +343,13 @@ return function(mode, api)
             drawn = {}; st.cam, st.camY = cam, camY; Look.leaves(st, cam, camY, st.camYMax); return drawn
           end
           local function hit(r, x0, y0, x1, y1) return r.x < x1 and r.x + r.w > x0 and r.y < y1 and r.y + r.h > y0 end
+          -- (owner, 7 Nov: "look terrible") the leaf front is off by default (Look.LEAF_ON); the checks below run
+          -- with it on, so it is still safe if it comes back
+          local wasOn = Look.LEAF_ON
+          Look.LEAF_ON = false
+          local off = 0
+          for cam = 0, st.world.width - 320, 40 do off = off + #leaves(cam, 0) end
+          Look.LEAF_ON = true
           local up, path, bad, tested, shown = 0, 0, 0, 0, 0
           for _, camY in ipairs({ 0, 16, 24, 48, 64 }) do
             for cam = 0, st.world.width - 320, 40 do
@@ -365,6 +372,8 @@ return function(mode, api)
           for cam = 0, st.world.width - 320, 40 do path = path + #leaves(cam, st.camYMax) end
           for cam = 0, st.world.width - 320, 40 do up = up + #leaves(cam, 112) end
           lgm.draw = real
+          Look.LEAF_ON = wasOn
+          report("the leaf front is off (owner, 7 Nov): nothing drawn up in the trees", off == 0, ("%d clumps drawn"):format(off))
           report("the leaf front runs along the high road's screen bottom", shown > 100, ("%d clumps drawn over the high road"):format(shown))
           report("the leaf front never covers Pepper, a bone or Mia", bad == 0 and tested > 0, ("%d overlaps in %d clump checks"):format(bad, tested))
           report("the leaf front is gone on the path (camera y 144 and from 112 up)", path == 0 and up == 0, ("%d + %d clumps drawn"):format(path, up))
