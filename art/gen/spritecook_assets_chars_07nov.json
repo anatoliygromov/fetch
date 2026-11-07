@@ -1,0 +1,13 @@
+{
+ "rw_riders_n07_a (GPT 2.5, the cut: art/gen/out/rw_riders_n07_a_cut.png)": "1e8af8dc-60dd-44a1-9fe9-eb7b51a67637",
+ "rw_riders_n07_b": "8cd345b3-1108-437f-aaf1-c5a1aee580a9",
+ "rw_lane_riders_n07_a (the cut)": "9212e21d-066e-4ca1-95eb-b7e91286f968",
+ "rw_lane_riders_n07_b": "48a8aa7b-7352-4115-99bd-b7af84ec4428",
+ "rw_gull_flap_n07 (from still c padded to 26 x 26)": "dc00f883-7e6b-4262-a14c-94565ed1e9d2",
+ "_jobs": {
+  "rw_riders_n07": "424061dc",
+  "rw_lane_riders_n07": "a0826e32",
+  "rw_gull_n07": "a0021ff2",
+  "rw_gull_flap_n07": "96e183b7"
+ }
+}
