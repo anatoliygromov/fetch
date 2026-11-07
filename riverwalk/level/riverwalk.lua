@@ -46,6 +46,7 @@ L.ground = "quay"             -- (art/rw-ground-06nov) the ground by rule: kerb,
 L.time = 420
 L.start = { x = 62, y = 184 }           -- (night/06nov-rw: 10 px right of the true-scale kennel, x 0-44)
 
+
 -- the ferry's art left x: hull 1562-1797, between the pontoon's far end (1552) and the far quay (1808)
 local FX = 1560
 
@@ -55,6 +56,11 @@ L.props = {
   -- passes. (art/rw-sample-screen) The house is at true scale now (door 98 px, storey 147 px, its top above the
   -- screen) and the street lime stands right of it, by the fallen branch, its crown over the bench
   { name = "HOME",     kind = "decor",  layer = "back", x0 = 0,    x1 = 184,  y0 = -5,  y1 = 174, art = "rw_home" },
+  -- (day/07nov-ground) Pepper's front garden in front of her house: a lawn across its front instead of the street paving (x 0-184),
+  -- the paved path from the green door to the street (path0-path1, where she starts), a low white picket edging
+  -- along the kerb on both sides of the path (under her line: it never covers her). No box: painted with the ground
+  -- (scene.lua Sc.paintGarden); the kennel stands on it.
+  { name = "GARDEN",   kind = "decor",  layer = "back", x0 = 0,    x1 = 184,  y0 = 172, y1 = 194, hidden = true, garden = true, path0 = 42, path1 = 84 },
   { name = "POT",      kind = "decor",  layer = "play", x0 = 214,  x1 = 231,  y0 = 147, y1 = 174, art = "pot" },
   -- (r6/levels, the tutorial) a branch fallen from the big tree: 21 px, the first tap hop (TAP: HOP) on flat
   -- pavement, before the flower box asks for the held jump and the bin for the climb
@@ -65,12 +71,14 @@ L.props = {
   -- (LOG) lies by its foot.
   { name = "TREE",     kind = "decor",  layer = "back", x0 = 120,  x1 = 370,  y0 = -77, y1 = 174, art = "rw_lime" },
   { name = "BENCH",    kind = "solid",  layer = "play", x0 = 93,   x1 = 189,  y0 = 156, y1 = 165, art = "bench", ax = 90, ay = 184, depth = 5 },
-  -- Pepper's kennel by the house (night/06nov-rw: rebuilt at true scale, 44 x 44, a pitched roof; art
-  -- art/scene/kennel.png by tools/build_rw_kennel.py): solid down to its doorway's crown (y 165), 19 px to crawl in;
-  -- a gold bone is inside. Two boxes: the ridge cap (x 16-28, y 140) and the eaves (x 0-44, y 158), so wherever she
-  -- stands on it, the roof is under her paws. It ends 1 px left of her box at the start.
+  -- Pepper's kennel in her front garden (day/07nov-ground, owner 7 Nov: "would never be on the street", "why is the
+  -- dog house look so weird?"): a classic dog house from its gable end, 44 x 44 at true scale, a round door, a name
+  -- plate (art/scene/kennel.png by tools/build_rw_kennel.py), on the garden's lawn (L.garden). Solid down to its
+  -- door's crown (y 165), 19 px to crawl in; a gold bone is inside. Two boxes: the roof's peak (x 16-28, y 140) and
+  -- the eaves (x 0-44, y 150, the roof boards' top at the corners), so wherever she stands on it, the roof is under
+  -- her paws. It ends 1 px left of her box at the start. Same place, same door, same reach as before.
   { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 16,   x1 = 28,   y0 = 140, y1 = 165, hidden = true },
-  { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 0,    x1 = 44,   y0 = 158, y1 = 165, hidden = true },
+  { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 0,    x1 = 44,   y0 = 150, y1 = 165, hidden = true },
   -- promenade A
   { name = "",         kind = "decor",  layer = "back", x0 = 460,  x1 = 652,  y0 = -76, y1 = 174, art = "rw_birch" },   -- (6 Nov) true-scale birch, trunk where tree_far stood
   { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 401,  x1 = 503,  y0 = 152, y1 = 184, art = "flowerbox_front", ax = 400, ay = 184 },

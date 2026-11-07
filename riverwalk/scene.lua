@@ -887,6 +887,70 @@ local function cornerColour(c, row)
   end
   return nil
 end
+-- (day/07nov-ground) Pepper's front garden (a GARDEN prop with garden = true: x0-x1, its door path path0-path1):
+-- owner 7 Nov, "Kennel like this would never be on the street": the kennel stands on a lawn in front of her house.
+-- Painted by rule over the paving rows (t - 12 .. t + 7) of each column; the kerb and the road under it stay.
+--   lawn: a dark row where it meets the house (its contact shadow), a shade row, then flat grass with v-shaped
+--         tufts on a 6 px grid (three bands, offset 0 / 3 / 1), a lit lip on its front row, a tuft over the
+--         kerb's top every 5 px (a lip, so lawn and kerb do not meet in a hard line)
+--   joins: the paving next to the lawn (the door path, the garden's end) takes grass over its edge, 2 px deep,
+--          on a fixed row rule (a worn edge, never a straight seam)
+--   picket edging: low white pickets along the kerb on both sides of the path, rows t .. t + 7 (under her
+--          line: it never covers her), 2 px pickets every 4 px with a pointed top, two rails, a post at each end
+--          and by the path; decoration (no outline, edges a darker shade), a shadow under each picket on the kerb.
+local G = { dark = rgb(68, 110, 72), shade = rgb(86, 132, 66), base = rgb(109, 144, 46), lit = rgb(148, 172, 57),
+            tip = rgb(148, 172, 57), pick = rgb(240, 236, 224), pickD = rgb(211, 195, 180), rail = rgb(192, 172, 142),
+            post = rgb(226, 209, 196), postD = rgb(170, 162, 158) }
+local function gardenAt(gs, x)
+  for _, g in ipairs(gs) do
+    if x >= g.x0 and x < g.x1 then return g, (g.path0 and x >= g.path0 and x < g.path1) end
+  end
+end
+Sc.G = G
+function Sc.paintGarden(gs, x, t, px)
+  local g, onPath = gardenAt(gs, x)
+  local function lawnAt(u) local h, p = gardenAt(gs, u); return h and not p end
+  if g and not onPath then
+    for y = t - 12, t + 7 do
+      local r = y - (t - 12)
+      local c = G.base
+      if r == 0 then c = G.dark elseif r == 1 then c = G.shade
+      elseif y == t + 7 then c = G.lit
+      else
+        local band = math.floor((r - 2) / 6)                        -- three bands of tufts
+        local by = (t - 12) + 2 + band * 6 + 2
+        local u = (x + ({ 0, 3, 1 })[band % 3 + 1]) % 6
+        if y == by and (u == 0 or u == 2) then c = G.lit
+        elseif y == by + 1 and u == 1 then c = G.shade end
+      end
+      px(c, x, y)
+    end
+    if x % 5 == 0 then px(G.tip, x, t + 8) end                       -- a tuft over the kerb's top
+  elseif lawnAt(x - 1) or lawnAt(x + 1) or lawnAt(x - 2) or lawnAt(x + 2) then
+    local d = (lawnAt(x - 1) or lawnAt(x + 1)) and 1 or 2           -- paving beside the lawn: grass over its edge
+    for y = t - 10, t + 6 do
+      if (d == 1 and y % 3 ~= 0) or (d == 2 and y % 4 == 1) then px(d == 1 and G.base or G.lit, x, y) end
+    end
+  end
+  -- the picket edging (not on the path)
+  if g and not onPath then
+    local e0 = (x - g.x0 < 3) or (g.path0 and x >= g.path0 - 3 and x < g.path0) or (g.path1 and x >= g.path1 and x < g.path1 + 3) or (x >= g.x1 - 3)
+    if e0 then                                                      -- a post: 3 px, lit left, shaded right
+      local k = (x - g.x0 < 3) and (x - g.x0) or ((x >= g.x1 - 3) and (x - (g.x1 - 3)) or ((x < (g.path0 or 0)) and (x - (g.path0 - 3)) or (x - g.path1)))
+      for y = t, t + 7 do px(k == 2 and G.postD or G.post, x, y) end
+      px(G.postD, x, t + 8)
+    else
+      local u = x % 4
+      if u == 0 or u == 1 then                                      -- a picket
+        if u == 0 then px(G.pick, x, t + 1) end                       -- the point
+        for y = t + 2, t + 7 do px(u == 0 and G.pick or G.pickD, x, y) end
+        px(Q.tj, x, t + 8)                                          -- its shadow on the kerb top
+      else
+        px(G.rail, x, t + 3); px(G.rail, x, t + 6)                   -- the rails between the pickets
+      end
+    end
+  end
+end
 Sc.roadEnds = {}
 function Sc.paintQuay(w, props, def)
   local art = Sc.art()
@@ -930,6 +994,8 @@ function Sc.paintQuay(w, props, def)
       if x >= e.x0 and x < e.x0 + 8 then return e.dir == 1 and (x - e.x0) or (7 - (x - e.x0)) end
     end
   end
+  local gardens = {}                                                -- (day/07nov-ground) the front garden
+  for _, p in ipairs(def.props or {}) do if p.garden then gardens[#gardens + 1] = p end end
   local under = {}                                                  -- the columns under the bridge (its shadow)
   for _, ps in ipairs(def.passages or {}) do for x = ps.vx0 or ps.x0, (ps.vx1 or ps.x1) - 1 do under[x] = true end end
   local SHADE = { { 7, 0.62 }, { 14, 0.74 }, { 22, 0.86 } }           -- the bridge's shadow: three flat bands, back to front
@@ -989,6 +1055,7 @@ function Sc.paintQuay(w, props, def)
       px(Q.sh, x, t + 15)
       for y = t + 16, bottom - 1 do px(wallColour(x, y, d), x, y) end
     end
+    if #gardens > 0 and k == "road" then Sc.paintGarden(gardens, x, t, px) end
     -- 4 the road's end: the kerb turns the corner
     local c = cornerAt(x)
     if c then for row = 0, bottom - (t + 8) - 1 do local col = cornerColour(c, row); if col then px(col, x, t + 8 + row) end end end
