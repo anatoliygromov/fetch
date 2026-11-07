@@ -1,0 +1,16 @@
+{
+ "name": "dt_design_B2",
+ "purpose": "concept",
+ "asset": "dt_design",
+ "family": "dt_redesign_07nov",
+ "level": "downtown",
+ "model": "nbpro_1k",
+ "variants": 1,
+ "base_frame": "art/gen/concepts/base07/B2_guild_fountain_portico_4x.png",
+ "slot": {
+  "file": "Downtown tall layout and facades (design)",
+  "where": "design option B, key screen B2"
+ },
+ "subject": "repaint this greybox frame as a finished game screen: The same portico rising in granite steps to the guild house's porch landing with a tall stone lantern on it (the golden bone's perch), then two portico sections a storey higher flanking the fountain with a gap over its column, the basin at the street. The eye should read: steps up, the lantern, across the two high sections.",
+ "extra": "Stockholm old town (Gamla stan: ochre, oxblood, cream plaster, red clay tile and grey lead roofs, granite), big readable masses, one strong silhouette line, decoration quieter than the route, late morning light from the upper left, full local colour. No people other than the dog. The grey and flat-colour shapes of the frame are binding geometry: keep what is walkable exactly where it is and at that height."
+}

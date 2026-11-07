@@ -114,7 +114,7 @@ SLOTS = {**{f"sky_{k}": (960, 360, 0, 0) for k in ("riverwalk", "citypark", "dow
          # (92 x 60, deck row 41 on the DUCK BOAT mover's top, scene.lua Sc.drawMoverArt)
          "magpie": (160, 26, 0, 0), "cp_duckboat": (92, 60, 0, 0),
          # art/dt-built-06nov (docs/art_hooks_r8.md, tools/build_dt_built.py): the board's Downtown redraws at true scale
-         "town_facades": (806, 210, 0, 0), "town_roofs": (524, 254, 0, 0), "town_door": (140, 432, 0, 0),
+         "town_facades": (960, 250, 0, 0), "town_roofs": (524, 254, 0, 0), "town_door": (140, 432, 0, 0),
          "town_tramshed96": (160, 161, 0, 0), "town_gatestep96": (98, 37, 0, 0), "town_house3": (52, 118, 0, 0),
          "town_bollard": (16, 54, 0, 0), "town_house1": (54, 118, 0, 0), "town_house2": (58, 126, 0, 0),
          "town_awning64": (64, 18, 0, 0), "town_awning80": (80, 18, 0, 0), "town_table_front": (50, 26, 0, 0),
@@ -170,6 +170,14 @@ BUILDINGS = {"town_house1", "town_house2", "town_house3", "town_facades", "town_
 ORGANIC = {"tree", "tree_far", "rw_birch", "cp_willow", "cp_reeds", "tree_near", "park_tree1", "park_tree2", "park_oak", "park_willow", "park_willow_tall",
              "town_front_tall3", "town_front_tall4", "town_front_tall5", "town_front_tall6", "town_door"}
 BUILDINGS |= {f"town_front_tall{k}_{s}" for k in (1, 2, 3, 5, 6, 7) for s in "abcdef"}   # (night/06nov-dt)
+# day/07nov-dt (tools/build_dt_rooftops.py): the low row's fronts are buildings (stamped from the styled fronts); every
+# dtl_ file's slot is its own size (the build is the slot: roofs are the box + 2, fronts the building's width)
+import glob as _glob
+for _f in _glob.glob(os.path.join(ART, "scene", "dtl_*.png")):
+    _n = os.path.basename(_f)[:-4]
+    _im = Image.open(_f)
+    SLOTS.setdefault(_n, (_im.width, _im.height, 0, 0))
+    if _n.endswith("_front"): BUILDINGS.add(_n)
 ORGANIC = {"tree", "tree_far", "rw_birch", "tree_near", "park_tree1", "park_tree2", "park_oak", "park_willow", "park_willow_tall",
            "park_hedge", "park_bush", "park_leaves", "park_leaves_flat", "park_treeline", "skyline", "far_shore_bridge"}
 FROZEN = {"pepper"}                                               # Pepper's files are frozen: report only

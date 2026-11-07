@@ -1,0 +1,16 @@
+{
+ "name": "dt_design_A2",
+ "purpose": "concept",
+ "asset": "dt_design",
+ "family": "dt_redesign_07nov",
+ "level": "downtown",
+ "model": "nbpro_1k",
+ "variants": 1,
+ "base_frame": "art/gen/concepts/base07/A2_guild_fountain_roofs_4x.png",
+ "slot": {
+  "file": "Downtown tall layout and facades (design)",
+  "where": "design option A, key screen A2"
+ },
+ "subject": "repaint this greybox frame as a finished game screen: The guild hall: a one-storey granite hall with a tall stepped gable roof of red tile, its steps big enough for a dog to walk up, a brick chimney with a stone cap on the ridge (the golden bone sits on it); then the fountain square: two one-storey market pavilions with flat lead roofs and low parapets flanking a stone fountain whose column and bowl stand free between them with sky above, water in a granite basin at the street. The dog walks up the gable's steps. The pavilions' canopies are part of their fronts, not hung balconies. Tall old-town houses one value step lighter behind, sky above. The eye should read: up the gable to the chimney, across the two pavilion roofs, the gap between them is the fountain.",
+ "extra": "Stockholm old town (Gamla stan: ochre, oxblood, cream plaster, red clay tile and grey lead roofs, granite), big readable masses, one strong silhouette line, decoration quieter than the route, late morning light from the upper left, full local colour. No people other than the dog. The grey and flat-colour shapes of the frame are binding geometry: keep what is walkable exactly where it is and at that height."
+}

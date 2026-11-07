@@ -1,0 +1,23 @@
+{
+ "name": "dt_design_B1",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/concepts/base07/B1_plaza_portico_4x.png"
+ ],
+ "prompt_file": "art/gen/prompts/dt_design_B1.txt",
+ "tool": "artlist",
+ "family": "dt_redesign_07nov",
+ "asset": "dt_design",
+ "slot": {
+  "file": "Downtown tall layout and facades (design)",
+  "where": "design option B, key screen B1"
+ },
+ "credits": 320,
+ "ledger_job": "dt_design_B1@1107-105626"
+}

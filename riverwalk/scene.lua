@@ -465,6 +465,19 @@ function Ground:draw(cam, camY)
     if c.x - cam < 320 and c.x + c.w - cam > 0 and c.y - camY < 240 and c.y + c.h - camY > 0 then lg.draw(c.cv, c.x - cam, c.y) end
   end
 end
+-- (day/07nov-dt, round 2b) the chunks' rows from world y0 down, drawn again: the tall Downtown draws the kerb's face
+-- and the quay wall this way with the look off, in town_ground.png's own granite greys (graded, their darks lean
+-- violet: 83/68/95 on screen for the file's 72/66/64), as the bonus round does (bonusscene.lua)
+function Ground:drawRows(cam, camY, y0)
+  camY = camY or 0
+  for _, c in ipairs(self.chunks) do
+    local r0 = y0 - c.y
+    if r0 < c.h and c.x - cam < 320 and c.x + c.w - cam > 0 and c.y + math.max(0, r0) - camY < 240 and c.y + c.h - camY > 0 then
+      r0 = math.max(0, r0)
+      lg.draw(c.cv, lg.newQuad(0, r0, c.w, c.h - r0, c.w, c.h), c.x - cam, c.y + r0)
+    end
+  end
+end
 function Ground:release() for _, c in ipairs(self.chunks) do c.cv:release() end; self.chunks = {} end
 -- the video memory the ground takes (bytes, RGBA8) and its largest chunk side
 function Ground:bytes() local n, m = 0, 0; for _, c in ipairs(self.chunks) do n = n + c.w * c.h * 4; m = math.max(m, c.w, c.h) end; return n, m end
@@ -1544,6 +1557,7 @@ local function skyAndClouds(L, camx, t)
 end
 
 -- a strip that repeats sideways, scrolled at factor f, bottom at y
+Sc.MID_FOOT_LOW = 190                                           -- (day/07nov-dt) the mid row's foot on screen at the bottom tier, low row on
 Sc.SQUARE_DEPTH = 30                                            -- (fix round 3) the square's floor under the mid row
 local function strip(im, camx, f, y)
   local w = im:getWidth()
@@ -1809,8 +1823,14 @@ function Sc.drawFarArt(L, camx, t, w, def)
     if tall then strip(T.midTufts, camx, 0.5, 181) end            -- tufts over the row's feet
   else
     Look.use("shore")
+    if def and def.foot and (package.loaded.arthooks or require("arthooks")).LOW_ROW then
+      -- (day/07nov-dt, round 5) nothing between the mid row and the sky: the far roofs and spires strip is not drawn
+      -- in low-row mode (round 4's far band read as a stripe; the painted sky brings its own far skyline)
+    else
     strip(T.roofs, camx, 0.25, 160)                               -- 4 far roofs and spires
-    if def then (package.loaded.arthooks or require("arthooks")).drawFarSpire(def, camx, w.width) end   -- (art/placement:
+    end
+    local lowRow = def and def.foot and (package.loaded.arthooks or require("arthooks")).LOW_ROW
+    if def and not lowRow then (package.loaded.arthooks or require("arthooks")).drawFarSpire(def, camx, w.width) end   -- (art/placement:
     -- the tall Downtown's landmark, Riddarholmen's spire, behind the old town row on this layer)
     vpop(on); on = vpush("mid")
     Look.use("mid")
@@ -1818,7 +1838,16 @@ function Sc.drawFarArt(L, camx, t, w, def)
     -- Downtown the row stands across an open square: its foot 30 px up, the square's floor (a far kerb, setts,
     -- bollards at 23 px/m) under it at the same scroll, down to the pavement's far edge, so the row never touches
     -- the play floor
-    if def and def.foot and T.squareFloor then
+    if def and def.foot and (package.loaded.arthooks or require("arthooks")).LOW_ROW then
+      -- (day/07nov-dt, round 3) the low row in front: the mid row stands lower, its foot under the street line
+      -- (world 430), three storeys of 64 px, so its gables are the skyline and the sky shows over the roofs.
+      -- (round 6) the spire in this push, locked to the world (vmid 1.0): its tip at world 136, behind the mid row
+      Look.use("shore")
+      local AH = package.loaded.arthooks or require("arthooks")
+      AH.drawFarSpire(def, camx, w.width, 136 - 240)
+      Look.use("mid")
+      strip(T.facades, camx, 0.5, Sc.MID_FOOT_LOW)
+    elseif def and def.foot and T.squareFloor then
       strip(T.facades, camx, 0.5, 178 - Sc.SQUARE_DEPTH)
       strip(T.squareFloor, camx, 0.5, 178 - Sc.SQUARE_DEPTH + T.squareFloor:getHeight() - 21)
     else
@@ -2464,6 +2493,7 @@ end
 -- the balconies' railings with art, behind everything on her line (stage.lua, the back pass); the code fallback draws
 -- its railing with the slab (drawBalcony)
 function Sc.drawBalconyRails(def, camx)
+  if def.foot and (package.loaded.arthooks or require("arthooks")).LOW_ROW then return end   -- (day/07nov-dt: canopies, no balconies)
   local ox = math.floor(camx)
   for _, p in ipairs(def.props) do
     if p.name == "BALCONY" and p.layer == "play" and p.x1 - ox > -10 and p.x0 - ox < 330 then
@@ -3857,7 +3887,9 @@ function Sc.drawTerrainArt(def, camx, t)
       local A = Sc.art()
       local tier = named(def, "TIER")
       local jet = tier and Sc.townJet()
-      if jet then                                                 -- (art/dt-roofs-06nov) town_jet.png: the built streams,
+      if def.foot and (package.loaded.arthooks or require("arthooks")).LOW_ROW then   -- (day/07nov-dt) the A2 fountain
+        (package.loaded.arthooks or require("arthooks")).drawLowFountainJets(f, camx, t)
+      elseif jet then                                             -- (art/dt-roofs-06nov) town_jet.png: the built streams,
         local q = jet.q[math.floor(t * 20) % #jet.q + 1]          -- 4 frames, the right one mirrored
         local y = tier.y0 + 3
         lg.setColor(1, 1, 1, 1)

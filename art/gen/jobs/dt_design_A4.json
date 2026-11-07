@@ -1,0 +1,16 @@
+{
+ "name": "dt_design_A4",
+ "purpose": "concept",
+ "asset": "dt_design",
+ "family": "dt_redesign_07nov",
+ "level": "downtown",
+ "model": "nbpro_1k",
+ "variants": 1,
+ "base_frame": "art/gen/concepts/base07/A4_plaza_street_4x.png",
+ "slot": {
+  "file": "Downtown tall layout and facades (design)",
+  "where": "design option A, key screen A4"
+ },
+ "subject": "repaint this greybox frame as a finished game screen: The same plaza from the street: the dog on the cobbles by a wooden tub, the three-arch cafe arcade with its lead roof edge at the top of the frame, the bronze statue on its granite pedestal with the cat holding a red ball on its arm, the guild hall's granite door and the foot of its gable, the first market pavilion and the fountain's basin at the right, the lighter tall houses showing above the arcade's roof. The eye should read: the arcade's roof is where the dog must get to, the statue is the stair.",
+ "extra": "Stockholm old town (Gamla stan: ochre, oxblood, cream plaster, red clay tile and grey lead roofs, granite), big readable masses, one strong silhouette line, decoration quieter than the route, late morning light from the upper left, full local colour. No people other than the dog. The grey and flat-colour shapes of the frame are binding geometry: keep what is walkable exactly where it is and at that height."
+}

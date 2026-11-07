@@ -162,7 +162,7 @@ return function(mode, api)
           report("the tram is scenery: no heart lost, never in the hazards", not hurt and st.hearts == 3, ("hearts %d"):format(st.hearts))
         end },
       { act = function() tp(1852, 256) end }, { wait = 1.2 },
-      { act = function(p, s) report("on the gallery (y 256) the camera follows her up", near(s.camY, 256 - Vc.FLOOR, 1),
+      { act = function(p, s) report("on the gallery (y 256) the camera follows her up", near(s.camY, 256 - Vc.floor(s), 1),
           ("camY %.1f, her feet at screen y %.0f"):format(s.camY, p.y - s.camY)) end },
       -- 1 Pepper's numbers, measured in the simulation
       { act = function()
@@ -230,10 +230,13 @@ return function(mode, api)
             { "high, running: roof ledge -> roof ledge", x = 2024, y = 248, dir = "right", run = 2055, to = 264 },
             { "high, running: flower roof -> last ledge", x = 2300, y = 232, dir = "right", run = 2359, to = 248 },
             -- Downtown's old balcony route (the middle tier) under the new roofs: no bumped head
-            { "middle: arm -> first balcony (running)", x = 1500, y = 348, dir = "right", run = 1514, to = 344 },
-            { "middle: first balcony -> second (running)", x = 1580, y = 344, dir = "right", run = 1604, to = 336 },
-            { "middle: second balcony -> the fountain's top tier (running)", x = 1680, y = 336, dir = "right", run = 1708, to = 344 },
-            { "middle: tier -> last balcony (running)", x = 1790, y = 344, dir = "right", run = 1812, to = 344 },
+            -- (day/07nov-dt, option A) the first balcony is the guild hall's porch roof at 312 (a 2.1 m door under it)
+            -- (round 2) the porch 1568-1618 over the guild door, the cloth canopies over the pavilions' shop windows
+            -- (1688-1760 at 336, 1816-1888 at 344), the bowl 1768-1816 between them
+            { "middle: arm -> the guild porch (running, 50 across, 36 up)", x = 1500, y = 348, dir = "right", run = 1514, to = 312 },
+            { "middle: the porch -> the first canopy (running, 62 across, 24 down)", x = 1580, y = 312, dir = "right", run = 1613, to = 336 },
+            { "middle: the canopy -> the fountain's bowl (running)", x = 1700, y = 336, dir = "right", run = 1750, to = 344 },
+            { "middle: the bowl -> the second canopy (a walk)", x = 1790, y = 344, dir = "right", brake = 1830, to = 344 },
           }
           for _, j in ipairs(J) do
             local r = leap(j)
