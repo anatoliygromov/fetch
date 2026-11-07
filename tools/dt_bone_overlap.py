@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """tools/dt_bone_overlap.py: every bone of the tall Downtown against the art on Pepper's line (day/07nov-dt, round 2b).
 
-A bone is drawn 11 x 6 at (x - 5, y - 12), bobbing 2 px. It must not sit on a play piece's drawn pixels: the low
+A bone is drawn as stage.lua draws it: art/scene/bone.png (15 x 9 since chars, 7 Nov; it was 11 x 6) centred on x,
+its bottom row at y - 7, bobbing -1 to +2 px (integration, 7 Nov: the size is read from the file). It must not sit on a play piece's drawn pixels: the low
 row's roofs (below the walk's top: a bone on the walk stands in front of the parapet), canopies and fountain (riverwalk/dt_lowrow.lua and their files), the statue and its hat, the fountain's
 jets (the arcs of arthooks.lua H.drawLowFountainJets), or inside any play box. Prints each overlap with the piece
 and the clearance needed; --fix moves those bones up (8 px at a time, up to 24) in maps/downtown_tall.tmx.
@@ -66,8 +67,12 @@ def main(fix=False):
     jets = jets_mask()
     statue = [b for b in boxes if b[0] in ("STATUE",)]
     hits = []
+    BW, BH = Image.open(os.path.join(SCENE, "bone.png")).size
+    def rect(bx, by):                                              # the bone's columns and rows with its bob (stage.lua)
+        x0, y0 = bx - BW // 2, by - 6 - BH
+        return x0, x0 + BW, y0 - 1, y0 + BH + 2
     for o, bx, by in bones:
-        x0, x1, y0, y1 = bx - 5, bx + 6, by - 14, by - 4            # the bone's rows with its bob
+        x0, x1, y0, y1 = rect(bx, by)
         why = []
         for name, px, py, a in ms:
             h, w = a.shape
@@ -90,7 +95,7 @@ def main(fix=False):
             ny = by
             for _ in range(3):
                 ny -= 8
-                x0, x1, y0, y1 = bx - 5, bx + 6, ny - 14, ny - 4
+                x0, x1, y0, y1 = rect(bx, ny)
                 clear = not any((x, y) in jets for x in range(x0, x1) for y in range(y0, y1))
                 for name, px, py, a in ms:
                     h, w = a.shape
