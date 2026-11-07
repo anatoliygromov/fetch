@@ -148,32 +148,52 @@ end
 local function farCitypark(s, t) Sc.drawFarArt(s.layers, 0, t, s.world) end
 
 ---------------------------------------------------------------------------------------------------- Downtown
--- An old town square at midday. Downtown is being redesigned (day/07nov-dt: low rooftop rows), so this uses only
--- what stays: Downtown's sky and clouds, the skyline, the far roofs and spires (town_roofs.png, the backdrop), the
--- square's floor on the mid layer (town_square_floor.png: its far kerb under the backdrop's walls, setts, bollards),
--- then the street's setts and kerb (town_ground.png) as the play floor. No facades. In the level the backdrop stands
--- behind the facade row (the shore layer, faded 70 %); here nothing is in front of it, so it stands across the square
--- where the mid row would be: faded as the mid layer, and set lower, its foot hidden under the square's floor, so
--- the roofs and two storeys show under the sky (whole pixels, the file untouched). Keep the Downtown part here.
-BS.DT_KERB = 160                                                    -- the square's far kerb: the backdrop's walls end on it
-BS.DT_ROOFS = 214                                                   -- the backdrop's bottom row + 1 (hidden by the floor)
-BS.DT_X = 60                                                        -- the backdrop's first column (the spire left of the clock)
+-- An old town square at midday, from the rebuilt Downtown (day/07nov-dt, merged 7 Nov): Downtown's painted sky and
+-- clouds, its low painted skyline, and across the square the level's new mid row (town_facades.png: big pastel
+-- houses at half scale, crow steps, Dutch gables and hips, a door in every ground floor), faded and graded as the
+-- level's mid layer. Its ground floors stand on the square's far kerb (town_square_floor.png, its row 21), so every
+-- house ends in its door and plinth on the kerb, not on a cut. Then the square's setts under the back grade, the
+-- bollards, the lamp post, the street's setts and kerb and the granite quay wall (town_ground.png) as before.
+-- The row's file is three storeys of 64 px (250 px tall): with its foot on the kerb its gables would be off the top
+-- of the screen, the sky and the skyline hidden (with one upper storey kept the gables are still cut by the top
+-- edge: docs/review/07nov/bonusscene/round4/storeys_0_1_2_2x.png). Its two upper storeys are pixel-identical stamped
+-- bands (tools/build_dt_rooftops.py), so the bonus keeps BS.DT_STOREYS of them (0) when it loads the row: the same
+-- houses, each its ground floor under its gable, whole pixels, nothing redrawn or scaled, the file untouched. The
+-- gables then stand in the sky with the low skyline between them. Keep the Downtown part here.
+BS.DT_KERB = 164                                                    -- the square's far kerb: the row's ground floors on it
+BS.DT_X = 0                                                         -- the row's first column (a house's edge)
+BS.DT_FLOOR_X = 28                                                  -- the floor's first column: its bollards (every 64 px)
+                                                                    -- at x 2, 66, 130, 194, 258, clear of the row's doors
 BS.DT_WALL = 30                                                     -- town_ground.png's kerb face, then the quay wall
+BS.DT_STOREYS = 0                                                   -- upper storeys kept (the file has 2 over the ground floor)
+BS.DT_STOREY, BS.DT_WALLTOP = 64, 58                                -- (the file's storey height and its walls' top row)
 local function farDowntown(s, t)
-  local T, A = Sc.townArt("town"), Sc.art()
   Sc.skyAndClouds(s.layers, 0, t)
-  Look.use("city"); lg.setColor(1, 1, 1, 1)
-  lg.draw(A.skyline, 0, 150 - A.skyline:getHeight())
-  Look.use("mid"); Sc.strip(s.roofs, BS.DT_X, 1, BS.DT_ROOFS)
+  local city = Look.skyline(Sc.art().skyline)                      -- (the painted far city; it sets the city grade)
+  lg.setColor(1, 1, 1, 1)
+  lg.draw(city, 0, s.cornice + 4 - city:getHeight())               -- (its foot just under the row's cornice: it shows
+  Look.use("mid")                                                  -- between and over the gables)
+  Sc.strip(s.row, BS.DT_X, 1, BS.DT_KERB)
   -- (round 3, review: under the mid grade its setts were smothered, a flat pale stripe) the square's floor is the
   -- ground plane a few metres behind Pepper: the back row, unfaded, under the back grade, so its kerb and setts show
-  Look.use("back"); Sc.strip(s.floor, 0, 0, BS.DT_KERB - 21 + s.floor:getHeight())          -- (its row 21: the kerb)
+  Look.use("back"); Sc.strip(s.floor, BS.DT_FLOOR_X, 1, BS.DT_KERB - 21 + s.floor:getHeight())   -- (row 21: the kerb)
   Look.off()
+end
+-- the mid row as the bonus stands it: the gables and cornice (rows 0 .. walls' top - 1), BS.DT_STOREYS upper storeys,
+-- the ground floor; faded to the mid haze as the level loads it
+local function midRow()
+  local src = love.image.newImageData("art/scene/town_facades.png")
+  local w, h = src:getDimensions()
+  local keep = BS.DT_WALLTOP + BS.DT_STOREY * BS.DT_STOREYS
+  local out = love.image.newImageData(w, keep + BS.DT_STOREY)
+  out:paste(src, 0, 0, 0, 0, w, keep)
+  out:paste(src, 0, keep, 0, h - BS.DT_STOREY, w, BS.DT_STOREY)
+  local im = lg.newImage(Sc.fadeData(out, nil, "mid")); im:setFilter("nearest", "nearest")
+  return im, BS.DT_KERB - out:getHeight() + BS.DT_WALLTOP - 4        -- (the cornice's top row on screen)
 end
 local function buildDowntown(s)
   s.layers = Sc.buildArt(320, "town")
-  local d = love.image.newImageData("art/scene/town_roofs.png")
-  s.roofs = lg.newImage(Sc.fadeData(d, nil, "mid")); s.roofs:setFilter("nearest", "nearest")
+  s.row, s.cornice = midRow()
   s.floor = lg.newImage("art/scene/town_square_floor.png"); s.floor:setFilter("nearest", "nearest")
   s.ground = painted(function() tileFloor("town", BS.DT_WALL) end)
   -- (round 2, 7 Nov) the kerb's face and the quay wall in their own granite greys: graded twice like the street
