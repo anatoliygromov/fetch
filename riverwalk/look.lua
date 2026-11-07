@@ -69,7 +69,7 @@ Look.scripts = {
     -- a tall level's sky goes on above y 0 (up in the treetops): pale blues like the bands below, each band 24 rows
     above = { { -120, "aac3ef" }, { -96, "adc5ef" }, { -72, "b0c7ef" }, { -48, "b3c9ee" }, { -24, "b6cbee" } },
     paint = { horizon = "f4cd98",                                  -- (day 7 Nov) Look.PAINTED, see River Walk
-              layers = { city = L(0, 0, 1.0, "000000", 0), shore = L(0.6, 1.5, 1.05, "f2d6bc", 0.30, 0.55),
+              layers = { city = L(0, 0, 1.0, "000000", 0), shore = L(0.6, 1.5, 1.05, "e4c8ae", 0.30, 0.55),
                          mid = L(1.0, 1.3, 1.25, "f2d4b4", 0.14, 0.5) } },
     fg = { dark = hex("1d1525"), mid = hex("2b1f33"), rim = hex("594257"), warm = hex("b5793f"), warmK = 0.22 },
     kinds = {},                                                    -- (the earth band is already the dark frame)
