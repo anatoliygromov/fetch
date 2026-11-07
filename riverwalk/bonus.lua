@@ -150,6 +150,8 @@ end
 
 function B:update(dt, presses)
   self.t = self.t + dt
+  self.clock = (self.clock or 0) + dt                              -- (owner 7 Nov: the clouds stood still) the scene's
+                                                                   -- own clock: self.t + self.time was constant in play
   for i = #self.pops, 1, -1 do local p = self.pops[i]; p.t = p.t + dt; if p.t > 0.7 then table.remove(self.pops, i) end end
   local m = self.mia
   m.t = m.t + dt
@@ -275,7 +277,7 @@ function B:pepperRect() local p = self.pepper; return p.x - 30, p.y - 52, p.x + 
 function B:drawScene()
   loadArt()
   local Sc = art.Sc
-  BS.get(self.sceneKey or "citypark"):draw(self.t + (self.time or 0))      -- the level's place: sky, far rows, ground
+  BS.get(self.sceneKey or "citypark"):draw(self.clock or 0)      -- the level's place: sky, far rows, ground
   -- shadows on the floor
   local m, p = self.mia, self.pepper
   Sc.shadow(m.x, B.FEET, 22)

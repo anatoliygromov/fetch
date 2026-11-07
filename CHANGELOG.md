@@ -3,6 +3,7 @@
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
 ## Branch `day/07nov-hintpic`: hint bubbles without the drawn dogs, plus the second session's three pieces (owner 7 Nov)
+- **Bonus round: the clouds drift again (bonus.lua).** Owner, 7 Nov: "why in these levels the clouds are not moving?" The scene was drawn at self.t + self.time; in play self.t counts up exactly as the round's timer counts down, so the sum stood still and so did the painted sky's drift. The round now keeps its own clock (self.clock, every frame). Bonus checks 23/23.
 - **Hint bubbles: the button and the word only (talk.lua T.HINT_PICS = false).** Owner, 7 Nov: the drawn hint dogs (RUN, CRAWL) looked "terrible"; of the two options (A: Pepper's own frames, B: button and word) he picked B. T.bubble no longer adds a picture; T.picFor and the pic_*.png files stay, so a picture can come back by turning the flag on. Flow 125/125, Pepper unchanged.
 
 ## Branch `day/07nov-integration`: the reviewed day branches of 7 Nov on one branch (sky, cplog, barkdrop, chars, bonusscene, ground)
