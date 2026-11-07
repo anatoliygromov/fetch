@@ -1533,13 +1533,13 @@
   <object id="156" type="bones" x="1424" y="396">
    <point/>
   </object>
-  <object id="157" type="bones" x="1452" y="384">
+  <object id="157" type="bones" x="1444" y="384">
    <point/>
   </object>
-  <object id="158" type="bones" x="1476" y="384">
+  <object id="158" type="bones" x="1484" y="384">
    <point/>
   </object>
-  <object id="159" type="bones" x="1464" y="316">
+  <object id="159" type="bones" x="1464" y="308">
    <properties>
     <property name="super" type="bool" value="true"/>
    </properties>
@@ -1560,7 +1560,7 @@
   <object id="164" type="bones" x="1758" y="400">
    <point/>
   </object>
-  <object id="165" type="bones" x="1792" y="400">
+  <object id="165" type="bones" x="1775" y="400">
    <point/>
   </object>
   <object id="166" type="bones" x="1826" y="400">
@@ -1578,7 +1578,7 @@
   <object id="170" type="bones" x="1684" y="336">
    <point/>
   </object>
-  <object id="171" type="bones" x="1792" y="344">
+  <object id="171" type="bones" x="1775" y="344">
    <properties>
     <property name="super" type="bool" value="true"/>
    </properties>
