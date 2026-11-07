@@ -148,7 +148,7 @@ local TUNE = {
 
 local function press(name)
   if not name then return end
-  if state == "intro" and t > 0.5 then state = "play"; return end
+  if state == "intro" and t > 0.5 then state = "play"; S.play("go"); return end
   if state == "play" then presses[name] = true end
 end
 -- after the tally: the story card (if the level has one), the next level's intro, or the ending after the last
@@ -160,7 +160,7 @@ local function nextLevel()
     local score = run and run.score or tally.score
     local newBest = Flow.runOver(score)
     ending = { score = score, best = Flow.bestRun, newBest = newBest, lines = def.outro }
-    state, t = "ending", 0
+    state, t = "ending", 0; S.play("fanfare")
   end
 end
 -- the round is over: its points go into the tally's (and the run's) score, B.LIFE_AT catches give an extra life (at most
@@ -276,7 +276,7 @@ function love.keypressed(k, sc)
   if state == "over" then overAction(Flow.action(k)); return end
   if state == "story" then if k == "space" or k == "return" then storyA() end; return end
   if (k == "return" or k == "p" or k == "escape") and state == "play" then state = "pause"; S.play("tick"); S.music(false); return end
-  if state == "intro" and t > 0.5 then state = "play"; return end
+  if state == "intro" and t > 0.5 then state = "play"; S.play("go"); return end
   press(I.keyName(k)); anyKey()
 end
 function love.gamepadpressed(j, b)
@@ -288,13 +288,13 @@ function love.gamepadpressed(j, b)
   if MENUS[state] then menuAction(Flow.action(nil, b)); return end
   if state == "bonus" then bonusKey(I.padName(b)); return end
   if b == "start" and (state == "play" or state == "pause") then
-    if state == "play" then state = "pause"; S.music(false) else resume() end
+    S.play("tick"); if state == "play" then state = "pause"; S.music(false) else resume() end
     return
   end
   if state == "pause" then pauseAction(Flow.action(nil, b ~= "start" and b or nil)); return end
   if state == "over" then overAction(Flow.action(nil, b ~= "start" and b or nil)); return end
   if state == "story" then if b == "a" or b == "start" then storyA() end; return end
-  if state == "intro" and t > 0.5 then state = "play"; return end
+  if state == "intro" and t > 0.5 then state = "play"; S.play("go"); return end
   press(I.padName(b)); anyKey()
 end
 -- the left stick moves the menu cursor too (one step each time it is pushed past half way)

@@ -54,7 +54,7 @@ function Cr.update(s, dt)
             k.state, k.t = "hiss", 0; S.play("hiss")
           end
         elseif k.state == "hiss" then
-          if k.t >= 0.5 then k.state, k.t = "charge", 0 end
+          if k.t >= 0.5 then k.state, k.t = "charge", 0; S.play("charge") end
         elseif k.state == "charge" then
           k.x = math.max(c.x0 - 24, math.min(c.x1 + 24, k.x + k.dir * 90 * dt))
           if k.t >= 0.9 then k.state, k.t = "rest", 0 end
@@ -90,7 +90,7 @@ function Cr.update(s, dt)
         end
       elseif k.state == "warn" then
         k.tx = k.tx + (p.x - k.tx) * math.min(1, dt * 3)            -- its shadow follows her a little
-        if k.t >= 0.9 then k.state, k.t, k.sx, k.sy = "swoop", 0, k.x, k.y; k.ty = k.ty end
+        if k.t >= 0.9 then k.state, k.t, k.sx, k.sy = "swoop", 0, k.x, k.y; k.ty = k.ty; S.play("dive") end
       elseif k.state == "swoop" then
         local u = math.min(1, k.t / 1.0)                           -- down to her head height and up again
         local low = k.ty - 24                                       -- (a crouched Pepper 3 px higher, on the quay, still clears it)
