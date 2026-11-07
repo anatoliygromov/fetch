@@ -3,6 +3,14 @@
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
 
+## Branch `day/07nov-ground`: River Walk and City Park ground, the owner's reverts, ground joins, the kennel (7 Nov, 0 credits)
+- **Put back what the owner liked better (board, 7 Nov), 0 credits.** Each one compared side by side with the rejected 6 Nov version in `docs/review/07nov/ground/reverts/`:
+  - **Road** ("previous was better, more textured"): `tools/make_road.py` as it was before 8f91328, so road.png is the textured road again pixel for pixel (grain, worn tyre tracks, a gutter row, cracks, two repair patches, the worn dashed line). The 6 Nov flat road and the night's darker step are gone; manhole and drain unchanged.
+  - **park_ground** ("was better before"), **park_stone** ("prev was better"), **pontoon** ("previous pontoon was better"): back to the files the board showed as before (`tools/revert_ground_07nov.py`, `--check`; sources, edits.json `07nov_revert`, the rejected files kept as `*_06nov_rejected.png`). The pontoon is the 54 x 12 slab on two floats again (drawn at y0 - 2, `Sp.PONT_DY`); its mooring from the 6 Nov audit stays (the old line ended at a post in open water): the lines tie on under the deck's ends, ripples under the floats' ends.
+  - **Grit box** ("Green sand box was better in terms of colors"): the front-on build stays (the old 3/4 side face read as a dumpster), in the old box's forest greens by a listed colour map (`tools/fix_gritbox_07nov.py`, `--check`; edits.json `07nov_green`, every pixel). 10 colours, 1 px ink, same slot and box.
+  - **Front band** ("Im not sure what that is" on the clipped hedges): River Walk's previous grass verges with shrubs and bollards again (look.lua kinds, same seed, so the same clumps in the same places as before 6 Nov).
+
+
 ## v0.7 (7 Nov 2026): River Walk, City Park and Downtown at finished quality
 Main moves from v0.6 (23 Oct) to `prod/integrate-f`: everything integrated since (prod/integrate-c and -d, the 5 Nov and 6 Nov art families, the hint bubbles, the speech bubbles and bikes in front, the night of 6-7 Nov tracks). Every check green, every screen of the three levels passed an independent review. Owner's yes, 6 Nov 20:10, on that condition. The sections below are the detail.
 

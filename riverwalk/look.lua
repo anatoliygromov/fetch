@@ -42,7 +42,8 @@ Look.scripts = {
     bands = { { 0, "4b7ec2" }, { 16, "5a8aca" }, { 32, "6b98d1" }, { 48, "80a8d7" }, { 62, "98b8db" },
               { 76, "b2c6da" }, { 89, "cbd1d4" }, { 101, "dfd7c9" }, { 112, "ecdabd" }, { 122, "f4dcb3" } },
     fg = { dark = hex("161c2c"), mid = hex("1f2b42"), rim = hex("4c5d7c"), warm = hex("9a8174"), warmK = 0.05 },
-    kinds = { hedge = 1 },                                         -- (6 Nov: clipped hedges; the grass spikes and the bollards read as ink and pegs)
+    kinds = { verge = 0.78, bollards = 0.22 },                     -- (day/07nov-ground, owner 7 Nov on the 6 Nov hedges: "Im not
+                                                                   -- sure what that is": the previous grass verges and bollards again)
     fade = { back = 0.28 },                                        -- (as before: decoration, railing, kiosks)
   },
   citypark = {                                                     -- golden autumn afternoon

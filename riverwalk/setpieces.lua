@@ -167,10 +167,12 @@ function Sp.drawRowboat(m, cam, t)
   lg.setColor(1, 1, 1, 1)
 end
 
--- (6 Nov audit) The River Walk pontoon's line ended at a post in open water. It is moored now: a line from the
--- horn cleat on each end of its deck (pontoon.png, cleat horns at y0 - 4), one to a cleat on the quay's end, one to
--- a timber pile in the river by the ferry's bow (the ferry's crew winch it). Decoration: no outline, edges a
--- darker shade. Drawn behind the pontoon and Pepper.
+-- (6 Nov audit) The River Walk pontoon's line ended at a post in open water. It is moored now: a line from each
+-- end of its deck, one to a cleat on the quay's end, one to a timber pile in the river by the ferry's bow (the
+-- ferry's crew winch it). Decoration: no outline, edges a darker shade. Drawn behind the pontoon and Pepper.
+-- (day/07nov-ground, owner 7 Nov: "previous pontoon was better") pontoon.png is the 54 x 12 slab on two floats
+-- again, drawn PONT_DY px over y0 (its deck top at y 212, the floats' last row at y 223 on the river line); the
+-- mooring stays: the lines tie on under the deck's ends (y0), the ripples sit under the floats' ends (y0 + 10).
 local MOOR = { line = { 0.20, 0.17, 0.14 }, iron = { 0.30, 0.33, 0.38 }, ironL = { 0.48, 0.51, 0.56 },
                pile = { 0.50, 0.40, 0.30 }, pileD = { 0.40, 0.31, 0.24 }, pileL = { 0.62, 0.51, 0.39 } }
 local function hline(x0, y0, x1, y1, sag)                          -- a 1 px line, whole pixels, x0 < x1; sag: px
@@ -183,10 +185,12 @@ local function hline(x0, y0, x1, y1, sag)                          -- a 1 px lin
     lg.rectangle("fill", x0 + i, y, 1, 1); py = y
   end
 end
+Sp.PONT_DY = 2
+local PONT_RIP1, PONT_RIP2 = { 2, 3, 21, 22, 31, 32, 50, 51 }, { 1, 23, 30, 52 }   -- the floats: columns 3-21 and 32-50
 local function moored(m, cam)
   local qx, px = math.floor(m.rope[1] - cam + 0.5), math.floor(m.rope[2] - cam + 0.5) - 7   -- the quay's end, the pile
-  local ax = math.floor(m.x0 - cam + 0.5) - 3                      -- the pontoon art's left (drawn at x0 - 3, y0 - 5)
-  local cy = m.y0 - 4                                              -- the cleats' horns
+  local ax = math.floor(m.x0 - cam + 0.5) - 3                      -- the pontoon art's left (drawn at x0 - 3, y0 - PONT_DY)
+  local cy = m.y0                                                  -- the lines tie on under the deck's ends
   lg.setColor(MOOR.iron); lg.rectangle("fill", qx - 7, m.y0 - 3, 7, 1); lg.rectangle("fill", qx - 5, m.y0 - 2, 3, 2)
   lg.setColor(MOOR.ironL); lg.rectangle("fill", qx - 7, m.y0 - 4, 7, 1)                    -- a horn cleat on the quay
   lg.setColor(MOOR.pileD); lg.rectangle("fill", px, m.y0 - 3, 6, 240 - m.y0 + 3)          -- the pile, to the river bed
@@ -200,8 +204,8 @@ local function moored(m, cam)
   hline(ax + 50, cy, px + 1, m.y0 - 1, math.min(6, 2 + math.max(0, span - d2) / 24))  -- it slackens as they come close
   lg.rectangle("fill", px, m.y0 - 2, 6, 1); lg.rectangle("fill", px, m.y0, 6, 1)          -- the turns round the pile
   lg.setColor(0.61, 0.79, 0.94)                                    -- a ripple where the floats meet the river (y 224)
-  for _, dx in ipairs({ 1, 2, 24, 25, 28, 29, 50, 51 }) do lg.rectangle("fill", ax + dx, m.y0 + 10, 1, 1) end
-  for _, dx in ipairs({ 0, 26, 27, 52 }) do lg.rectangle("fill", ax + dx, m.y0 + 11, 1, 1) end
+  for _, dx in ipairs(PONT_RIP1) do lg.rectangle("fill", ax + dx, m.y0 + 10, 1, 1) end
+  for _, dx in ipairs(PONT_RIP2) do lg.rectangle("fill", ax + dx, m.y0 + 11, 1, 1) end
   for _, dx in ipairs({ -2, -1, 6, 7 }) do lg.rectangle("fill", px + dx, m.y0 + 10, 1, 1) end              -- and round the pile
 end
 
@@ -218,7 +222,7 @@ function Sp.pontoonWater(m, cam, img)
       pontCol[x] = b
     end
   end
-  local ax, top = math.floor(m.x0 - cam + 0.5) - 3, m.y0 - 5
+  local ax, top = math.floor(m.x0 - cam + 0.5) - 3, m.y0 - Sp.PONT_DY
   lg.setColor(22 / 255, 52 / 255, 125 / 255, 0.7)
   for x, b in pairs(pontCol) do
     if b and top + b >= 224 then lg.rectangle("fill", ax + x, 224, 1, top + b - 224 + 1) end
