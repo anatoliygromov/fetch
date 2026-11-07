@@ -754,7 +754,7 @@ function St:draw(debug)
   lg.setColor(1, 1, 1, 1)
   self.pepper:draw(cam)
   if b.state == "carried" and self.pepper.anim ~= "grab" then lg.setColor(1, 1, 1, 1); lg.draw(ballImg, math.floor(b.x - cam - 3 + 0.5), math.floor(b.y - 3 + 0.5)) end
-  Sc.drawPieceFront(self, cam)                                     -- (7 Nov) the hollow log's near wall over her while she crawls inside it
+  Sc.drawPieceFront(self, cam)                                     -- (7 Nov) the hollow log's bark over her while she crawls inside it
   Ex.drawFront(self.fx, cam)                                       -- and the extras in front of her
   -- bikes in front of the obstacles and of Pepper (owner, 25 Oct: "bikes need to go in front of obstacles and
   -- Pepper"; until then, r5/bugs, they rode behind the obstacles): River Walk's cyclists and Downtown's cargo bikes
