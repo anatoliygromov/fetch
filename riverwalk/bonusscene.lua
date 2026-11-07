@@ -98,8 +98,9 @@ end
 -- dark foreground clumps (the owner called City Park's black front shapes "terrible", 11:27), no full-width bands.
 --   a kerb of granite setts in the park stone's greys (park_stone.png): a lit top, the face, a shaded foot, joints
 --   every 12 px; grass tufts with lit tips lean over its foot so the lawn meets it without a cut
---   the lawn runs on to the bottom of the screen: tufts (a lit pair over a dark pair, 8 px apart) in offset rows
---   that come closer together towards the bottom (the lawn nearer the eye), and a few fallen leaves in the leaf
+--   the lawn runs on to the bottom of the screen: tufts (a lit pair over a dark pair, about 8 px apart, each moved
+--   0-3 px and one in five left out) in offset rows that come closer together towards the bottom (the lawn nearer
+--   the eye), and a few fallen leaves in the leaf
 --   piles' colours (park_leaves.png), single leaves only (a pile would read as a bone's hiding place)
 -- (An earth bank under a stepped verge edge was tried and dropped: graded as the ground it read as a plum band,
 -- docs/review/07nov/bonusscene/round2_citypark_options_3x.png.)
@@ -122,8 +123,12 @@ local function parkFront()
     local h = ({ 2, 1, 2, 2, 1, 2, 1, 2 })[math.floor(x / 8) % 8 + 1]
     rect(PK.lawn, x, y0 + 5 - h, 2, h); rect(PK.lawnL, x, y0 + 5 - h, 2, 1)
   end
-  for _, rw in ipairs(BS.PARK_TUFTS) do
-    for x = rw[2], 319, 8 do rect(PK.lawnL, x, y0 + 5 + rw[1], 2, 1); rect(PK.lawnD, x, y0 + 6 + rw[1], 2, 1) end
+  local r = rng(1107)                                               -- (round 3) off the 8 px grid: each tuft moved
+  for _, rw in ipairs(BS.PARK_TUFTS) do                            -- 0-3 px, one in five left out (no dot screen)
+    for x = rw[2], 319, 8 do
+      local jx, drop = math.floor(r(0, 4)), r(0, 1) < 0.2
+      if not drop then rect(PK.lawnL, x + jx, y0 + 5 + rw[1], 2, 1); rect(PK.lawnD, x + jx, y0 + 6 + rw[1], 2, 1) end
+    end
   end
   for _, l in ipairs(BS.PARK_LEAVES) do
     for r, row in ipairs(LEAF) do
@@ -160,13 +165,16 @@ local function farDowntown(s, t)
   Look.use("city"); lg.setColor(1, 1, 1, 1)
   lg.draw(A.skyline, 0, 150 - A.skyline:getHeight())
   Look.use("mid"); Sc.strip(s.roofs, BS.DT_X, 1, BS.DT_ROOFS)
-  if T.squareFloor then Sc.strip(T.squareFloor, 0, 0, BS.DT_KERB - 21 + T.squareFloor:getHeight()) end   -- (its row 21: the kerb)
+  -- (round 3, review: under the mid grade its setts were smothered, a flat pale stripe) the square's floor is the
+  -- ground plane a few metres behind Pepper: the back row, unfaded, under the back grade, so its kerb and setts show
+  Look.use("back"); Sc.strip(s.floor, 0, 0, BS.DT_KERB - 21 + s.floor:getHeight())          -- (its row 21: the kerb)
   Look.off()
 end
 local function buildDowntown(s)
   s.layers = Sc.buildArt(320, "town")
   local d = love.image.newImageData("art/scene/town_roofs.png")
   s.roofs = lg.newImage(Sc.fadeData(d, nil, "mid")); s.roofs:setFilter("nearest", "nearest")
+  s.floor = lg.newImage("art/scene/town_square_floor.png"); s.floor:setFilter("nearest", "nearest")
   s.ground = painted(function() tileFloor("town", BS.DT_WALL) end)
   -- (round 2, 7 Nov) the kerb's face and the quay wall in their own granite greys: graded twice like the street
   -- (painted under "back", drawn under "ground") their darks lean violet, a purple brick band. Drawn as the file has them
@@ -180,6 +188,34 @@ local function buildDowntown(s)
 end
 
 ----------------------------------------------------------------------------------------------------
+-- (round 3, review) one approved prop behind the line per scene, so each round says its place: River Walk's and
+-- Downtown's lamp post at the far left (the levels' lamp, faded as their back decoration, unlit), City Park's bench
+-- on the back lawn at the right (faded to the back haze like the back decoration). Feet as in the levels: River
+-- Walk's back edge y 174, the art levels' lawn and pavement edge y 172. Nothing on the play floor, no collision.
+BS.PROPS = {
+  riverwalk = { { "lamp_post", 3, BS.FEET - 10, shadow = 14 } },                  -- { art, x, foot }, its shadow as
+  citypark  = { { "bench", 250, BS.FEET - 12, fade = true, shadow = 107, depth = 5 } },   -- stage.lua draws it
+  downtown  = { { "lamp_post", 3, BS.FEET - 12, shadow = 14 } },
+}
+local function buildProps(s)
+  s.props = {}
+  local A = Sc.art()
+  for _, p in ipairs(BS.PROPS[s.key] or {}) do
+    local im = A[p[1]]
+    if p.fade then                                                 -- (the bench is an obstacle in River Walk: here it
+      im = lg.newImage(Sc.fadeData(love.image.newImageData("art/scene/" .. p[1] .. ".png"), nil, "back"))   -- is back
+      im:setFilter("nearest", "nearest")                           -- decoration, so it takes the back's fade)
+    end
+    s.props[#s.props + 1] = { im = im, x = p[2], foot = p[3], shadow = p.shadow, depth = p.depth }
+  end
+end
+local function drawProps(s)
+  for _, p in ipairs(s.props) do Sc.shadow(p.x + p.im:getWidth() / 2, p.foot - 1, p.shadow, p.depth) end
+  Look.use("back"); lg.setColor(1, 1, 1, 1)
+  for _, p in ipairs(s.props) do lg.draw(p.im, p.x, p.foot - p.im:getHeight()) end
+  Look.off()
+end
+
 local BUILD = { riverwalk = buildRiverwalk, citypark = buildCitypark, downtown = buildDowntown }
 local FAR = { riverwalk = farRiverwalk, citypark = farCitypark, downtown = farDowntown }
 
@@ -187,12 +223,13 @@ local FAR = { riverwalk = farRiverwalk, citypark = farCitypark, downtown = farDo
 function BS:draw(t)
   Look.level({ art = BS.ART[self.key] })
   Sc.FOOT = BS.FEET
-  if not self.built then BUILD[self.key](self); self.built = true end
+  if not self.built then BUILD[self.key](self); buildProps(self); self.built = true end
   FAR[self.key](self, t or 0)
   Look.use("ground"); lg.setColor(1, 1, 1, 1)
   lg.draw(self.ground, 0, 0)
   Look.off(); lg.setColor(1, 1, 1, 1)
   if self.top then lg.draw(self.top, 0, 0) end                    -- (no grade: the file's own colours)
+  drawProps(self)                                                  -- (after the ground, as the levels draw their lamps)
 end
 
 return BS

@@ -83,6 +83,35 @@ ground kinds. The front edges here are drawn by rule in each level's own colours
    47/43/47). The street's setts and kerb top keep the level's grade. Rooftops falls back to Downtown, so it gets
    the same fix. Before/after: `round2_downtown_before_after_3x.png`, `round2_rooftops_before_after_3x.png`.
 
+## Round 3 (review on review/07nov-bonusscene, 83bf364, art/gen/reviews/bonus_scenes.md)
+
+The review passed River Walk, City Park, Söder and Night, and failed Downtown and Rooftops on the join: the houses
+ended on a straight line at y 160 over a flat pale 10 px stripe (the square's floor under the mid grade, its setts
+smothered).
+
+- **(a) Downtown's square floor under the back grade, done.** `town_square_floor.png` is now drawn unfaded under
+  the back layer's grade (the ground plane a few metres behind Pepper): its kerb and setts show, so the band reads as
+  the square's floor. `round3_downtown_join_before_after_4x.png` (and `_grey_4x`): round 2 above, now below.
+- **(b) town_door on the far wall: tried, not used.** The approved door is a true-scale play-line piece: a
+  140 x 432 opaque brick panel, the door with its arch 60 x 110 px (2.1 m at 46 px/m). The backdrop is at about
+  13 px/m (its windows 6 x 8 px, a storey about 39 px), so the door stands 2.5 storeys tall over the houses
+  (`round3_downtown_door_trial_3x.png`, a mockup pasted on the frame, which is why it covers Pepper there). Scaling
+  it down is not allowed (grid rule), and the scale rule says big things go on a slower layer, not the other way. No
+  approved door exists at the backdrop's scale. Options, each needs a yes: a doorway built once by rule in the
+  backdrop's own colours at its scale and stamped on two or three ground floors (new art, 0 credits), or wait for
+  the Downtown redesign's low rooftop rows and take their ground floor.
+- **(c) A lamp post at the far left in Downtown, done.** The levels' lamp, faded as their back decoration, unlit,
+  foot on y 172, with its shadow as `stage.lua` draws it.
+- **(d) One approved prop behind the line in River Walk and City Park, done.** River Walk: the lamp post at the far
+  left, foot on y 174. City Park: the bench at x 250 on the back lawn, feet on y 172, faded to the back haze like the
+  back decoration (in River Walk it is an obstacle with its own outline; here Pepper cannot reach it, nothing has a
+  collision box). `round3_riverwalk_before_after_2x.png`, `round3_citypark_before_after_2x.png`,
+  `round3_downtown_before_after_2x.png` (round 2 left, now right).
+- **(e) City Park's front tufts, done.** Each moved 0-3 px off the 8 px grid by the file's rng, one in five left out:
+  no dot screen. `round3_citypark_tufts_before_after_3x.png`.
+
+Nothing is on the play floor. Throws, catch rules and timings unchanged.
+
 ## Readability (greyscale, 2x)
 
 Background luma where the items fly and Pepper runs (y 40-184, Mia and Pepper masked, READY frame): River Walk p5
@@ -98,17 +127,18 @@ taken from the 2x window as 1x by one pixel per 2x2 block):
 
 - `N_<level>_<scene>_1x.png`, `_3x.png` and `_grey_2x.png` for N = 1-6
 - `all_rounds_1x.png`: the six rounds in order (rows of 3, colour over greyscale)
-- `round2_*_3x.png`: this round's fixes and the City Park options
+- `round2_*_3x.png`: round 2's fixes and the City Park options
+- `round3_*.png`: round 3's fixes and the door trial
 
 ## Checks (final commit)
 
 - `love riverwalk --bonus` and `--level X --bonus` for riverwalk, citypark_tall, downtown_tall, rooftops, soder and
   night: no Lua errors; every level's full round played by the autopilot (`--auto`) with the same results as before
   the change (A 14 of 15, B 13 of 15, C 13 of 14).
-- Bonus tests (`love riverwalk --bonus --physics`): 23 of 23 passed (round 2 too).
-- `tools/check_flow.sh`: 125 of 125 passed (round 2 too).
-- `tools/check_pepper.sh`: PEPPER UNCHANGED, 3908 steps identical (round 2 too).
-- Round 2: every level's round played again by the autopilot, results unchanged.
+- Bonus tests (`love riverwalk --bonus --physics`): 23 of 23 passed (rounds 2 and 3 too).
+- `tools/check_flow.sh`: 125 of 125 passed (rounds 2 and 3 too).
+- `tools/check_pepper.sh`: PEPPER UNCHANGED, 3908 steps identical (rounds 2 and 3 too).
+- Rounds 2 and 3: every level's round played again by the autopilot, results unchanged.
 - River Walk physics (`--level riverwalk --physics`, as `Sc.paintQuay` got one option): 55 of 55 passed.
 
 Each run with its own `XDG_DATA_HOME=$(mktemp -d)`, under `xvfb-run -a`, `SDL_AUDIODRIVER=dummy`.
@@ -128,3 +158,5 @@ Each run with its own `XDG_DATA_HOME=$(mktemp -d)`, under `xvfb-run -a`, `SDL_AU
 2. Söder Hill's round is on the City Park lawn. Would you rather have Downtown's square or the River Walk quay there?
 3. Downtown's quay wall is granite grey in the bonus but still violet in the level itself (the same grade). Should
    the level get the same fix?
+4. Downtown's far houses have no ground floor. A doorway built by rule at their scale (new art, 0 credits), or wait
+   for the redesign's rows?
