@@ -1,0 +1,17 @@
+{
+ "name": "road_car4_n07",
+ "level": "riverwalk",
+ "layer": "lane",
+ "kind": "vehicle",
+ "tier": "C",
+ "family": "chars_07nov",
+ "target_px": [
+  187,
+  78
+ ],
+ "built_by": "tools/build_cars_n07.py",
+ "slot": {
+  "file": "riverwalk/art/scene/road_car4.png",
+  "where": "track chars 7 Nov: see CHANGELOG `day/07nov-chars` and docs/review/07nov/chars/README.md"
+ }
+}

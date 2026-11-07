@@ -11,6 +11,10 @@
   },
   "preflight": {
    "time": "2026-11-07 10:50"
+  },
+  "probe": {
+   "render": "art/gen/out/rw_gull_flap_n07.png",
+   "time": "2026-11-07 11:56"
   }
  }
 }

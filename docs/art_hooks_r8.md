@@ -34,7 +34,7 @@ box (the old rails) are no longer drawn.
 | --- | --- | --- | --- | --- |
 | `art/scene/cyclist_adult1.png`, `cyclist_adult2.png` | 88 x 87 (5 Nov: true scale, 1.85 m with the helmet = 85 px at 46 px/m; wheels 31 px; 2 px clear each side so no wheel touches the edge) | **right** (mirrored when riding left) | The promenade bikes: centred on the bike's x, bottom row on the pavement (the hit box stays 70 x 28, wheel to wheel). The road's cyclists: top row at y 190 (below Pepper's feet; the frame crops the wheels, as now) | `road_cyclist1-2.png` (both uses) |
 | `art/scene/cyclist_adult1_pedal.png`, `cyclist_adult2_pedal.png` | frames of the still's size side by side (8 frames: 704 x 87, no gutter: the game cuts each frame by the still's width) | right | One frame per 26 px ridden (road.lua `Rd.PEDAL_PX`: a pedal turn about once a second at riding speed), looped. Optional: without it the still is drawn (the old `_roll` wheel frames are not used with the new riders) | `road_cyclist1-2_roll.png` |
-| `art/scene/road_rider1.png`, `road_rider2.png` | 104 x 102 (5 Nov: the bike lane's 55 px/m, like the cars; 1.85 m with the helmet = 102 px) | **right** (mirrored when riding left), lit from the upper left | The road's bike lane only: top row at y 190, rows 0-49 show (head, body, hands); no pedal loop | the promenade riders in the lane |
+| `art/scene/road_rider1.png`, `road_rider2.png` | 105 x 110 (7 Nov, tools/build_bikes_n07.py: the bike lane's 55 px/m, like the cars; the render's riders are 1.98 m with the helmet, the bike the promenade geometry x 55/46; was 104 x 102) | **right** (mirrored when riding left), lit from the upper left | The road's bike lane only: top row at y 190, rows 0-49 show (head, body, hands); no pedal loop | the promenade riders in the lane |
 
 ## Mia's throw (FETCH FRENZY, the bonus round)
 
@@ -153,7 +153,7 @@ what it drew before (the code fallback stays).
 | `rw_rower.png` | 644 x 62 (7 frames of 92 x 62) | the rower (at the stern thwart, rowlock hull x 150), the oar and his near arm, drawn over the hull at hull x 106, same top; frames 1-6 the stroke while the boat moves right (7 fps), backwards while it moves left, frame 7 at rest (the oar shipped along the hull). Nothing below the rail of its own column except the oar (it is outboard) |
 | `kennel.png` | 44 x 44 | the KENNEL piece (setpieces.lua kennel()), built by `tools/build_rw_kennel.py`: top-left at (x0, y0) = (0, 140), bottom row on the path (y 183); the doorway's crown on row 25 (y 165). Outlined. Its collision: the ridge cap x 16-28 from y 140 and the eaves x 0-44 from y 158 |
 | `rw_jetty.png` | 48 x 51 | the jetty, built by `tools/build_rw_jetty.py`: its bottom row on world y 239 (the deck's ink row on y 195, the box top 196), x on the JETTY piece's x0; the water's tint under y 224 and a ripple round each pile in code |
-| `ferry.png` (unchanged) | 252 x 79 | the BOAT prop has `wet = true`: setpieces.lua tints its columns under y 224 and runs a ripple row along it |
+| `ferry.png` (7 Nov: rebuilt by rule, tools/build_ferry_n07.py, same lines) | 252 x 79 | the BOAT prop has `wet = true`: setpieces.lua tints its columns under y 224 and runs a ripple row along it |
 | `pontoon.png` (unchanged) | 54 x 19 | in code its floats take the water's tint under y 224 (`Sp.pontoonWater`); its mooring lines sag |
 
 ## City Park (tall), night 6 Nov (cp track)

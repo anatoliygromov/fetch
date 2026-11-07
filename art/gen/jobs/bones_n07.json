@@ -1,0 +1,17 @@
+{
+ "name": "bones_n07",
+ "level": "riverwalk",
+ "layer": "play",
+ "kind": "prop",
+ "tier": "C",
+ "family": "chars_07nov",
+ "target_px": [
+  15,
+  9
+ ],
+ "built_by": "tools/build_bones_n07.py",
+ "slot": {
+  "file": "riverwalk/art/scene/bone.png",
+  "where": "track chars 7 Nov: see CHANGELOG `day/07nov-chars` and docs/review/07nov/chars/README.md"
+ }
+}

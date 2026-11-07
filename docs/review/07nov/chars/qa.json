@@ -1,0 +1,1739 @@
+[
+ {
+  "name": "bone",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/bone.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 15,
+  "h": 9,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 4,
+   "lone": 1.0,
+   "p10": 54,
+   "median": 177,
+   "p90": 246,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "bone_gold",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/bone_gold.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 15,
+  "h": 9,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 4,
+   "lone": 1.0,
+   "p10": 58,
+   "median": 150,
+   "p90": 227,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "cargo_bike",
+  "verdict": "WARN",
+  "file": "riverwalk/art/scene/cargo_bike.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 116,
+  "h": 88,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 20,
+   "lone": 2.0,
+   "p10": 20,
+   "median": 76,
+   "p90": 207,
+   "noise": 0.4,
+   "blotches": 1,
+   "outline": 100
+  },
+  "checks": [
+   {
+    "id": "noise",
+    "sev": "warn",
+    "msg": "17 dirt pixels (0.4 %): single pixels a shade off the fill around them",
+    "pixels": [
+     [
+      78,
+      5
+     ],
+     [
+      85,
+      6
+     ],
+     [
+      86,
+      14
+     ],
+     [
+      93,
+      27
+     ],
+     [
+      86,
+      29
+     ],
+     [
+      87,
+      37
+     ],
+     [
+      94,
+      38
+     ],
+     [
+      76,
+      40
+     ],
+     [
+      77,
+      40
+     ],
+     [
+      71,
+      42
+     ],
+     [
+      93,
+      43
+     ],
+     [
+      76,
+      51
+     ],
+     [
+      60,
+      57
+     ],
+     [
+      63,
+      64
+     ],
+     [
+      64,
+      66
+     ],
+     [
+      65,
+      68
+     ],
+     [
+      66,
+      71
+     ]
+    ]
+   },
+   {
+    "id": "blotches",
+    "sev": "warn",
+    "msg": "1 blotch(es) of 2-24 px in a near colour",
+    "pixels": [
+     [
+      69,
+      53
+     ],
+     [
+      70,
+      53
+     ],
+     [
+      71,
+      53
+     ],
+     [
+      72,
+      53
+     ],
+     [
+      65,
+      54
+     ],
+     [
+      66,
+      54
+     ],
+     [
+      67,
+      54
+     ],
+     [
+      68,
+      54
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "name": "cargo_bike_pedal",
+  "verdict": "WARN",
+  "file": "riverwalk/art/scene/cargo_bike_pedal.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 928,
+  "h": 88,
+  "building": false,
+  "frames": [
+   116,
+   88
+  ],
+  "info": {
+   "colours": 20,
+   "lone": 2.0,
+   "p10": 20,
+   "median": 76,
+   "p90": 207,
+   "noise": 0.3,
+   "blotches": 3,
+   "frames": {
+    "fw": 116,
+    "fh": 88,
+    "count": 8
+   },
+   "outline_min": 100
+  },
+  "checks": [
+   {
+    "id": "noise",
+    "sev": "warn",
+    "msg": "104 dirt pixels (0.3 %): single pixels a shade off the fill around them",
+    "pixels": [
+     [
+      78,
+      5
+     ],
+     [
+      194,
+      5
+     ],
+     [
+      310,
+      5
+     ],
+     [
+      426,
+      5
+     ],
+     [
+      542,
+      5
+     ],
+     [
+      658,
+      5
+     ],
+     [
+      774,
+      5
+     ],
+     [
+      890,
+      5
+     ],
+     [
+      85,
+      6
+     ],
+     [
+      201,
+      6
+     ],
+     [
+      317,
+      6
+     ],
+     [
+      433,
+      6
+     ],
+     [
+      549,
+      6
+     ],
+     [
+      665,
+      6
+     ],
+     [
+      781,
+      6
+     ],
+     [
+      897,
+      6
+     ],
+     [
+      86,
+      14
+     ],
+     [
+      202,
+      14
+     ],
+     [
+      318,
+      14
+     ],
+     [
+      434,
+      14
+     ],
+     [
+      550,
+      14
+     ],
+     [
+      666,
+      14
+     ],
+     [
+      782,
+      14
+     ],
+     [
+      898,
+      14
+     ],
+     [
+      93,
+      27
+     ],
+     [
+      209,
+      27
+     ],
+     [
+      325,
+      27
+     ],
+     [
+      441,
+      27
+     ],
+     [
+      557,
+      27
+     ],
+     [
+      673,
+      27
+     ],
+     [
+      789,
+      27
+     ],
+     [
+      905,
+      27
+     ],
+     [
+      86,
+      29
+     ],
+     [
+      202,
+      29
+     ],
+     [
+      318,
+      29
+     ],
+     [
+      434,
+      29
+     ],
+     [
+      550,
+      29
+     ],
+     [
+      666,
+      29
+     ],
+     [
+      782,
+      29
+     ],
+     [
+      898,
+      29
+     ],
+     [
+      87,
+      37
+     ],
+     [
+      203,
+      37
+     ],
+     [
+      319,
+      37
+     ],
+     [
+      435,
+      37
+     ],
+     [
+      551,
+      37
+     ],
+     [
+      667,
+      37
+     ],
+     [
+      783,
+      37
+     ],
+     [
+      899,
+      37
+     ],
+     [
+      94,
+      38
+     ],
+     [
+      210,
+      38
+     ],
+     [
+      326,
+      38
+     ],
+     [
+      442,
+      38
+     ],
+     [
+      558,
+      38
+     ],
+     [
+      674,
+      38
+     ],
+     [
+      790,
+      38
+     ],
+     [
+      906,
+      38
+     ],
+     [
+      76,
+      40
+     ],
+     [
+      77,
+      40
+     ],
+     [
+      192,
+      40
+     ],
+     [
+      193,
+      40
+     ],
+     [
+      308,
+      40
+     ],
+     [
+      309,
+      40
+     ],
+     [
+      424,
+      40
+     ],
+     [
+      425,
+      40
+     ],
+     [
+      540,
+      40
+     ],
+     [
+      541,
+      40
+     ],
+     [
+      656,
+      40
+     ],
+     [
+      657,
+      40
+     ],
+     [
+      772,
+      40
+     ],
+     [
+      773,
+      40
+     ],
+     [
+      888,
+      40
+     ],
+     [
+      889,
+      40
+     ],
+     [
+      71,
+      42
+     ],
+     [
+      187,
+      42
+     ],
+     [
+      303,
+      42
+     ],
+     [
+      419,
+      42
+     ],
+     [
+      535,
+      42
+     ],
+     [
+      651,
+      42
+     ],
+     [
+      767,
+      42
+     ],
+     [
+      883,
+      42
+     ],
+     [
+      93,
+      43
+     ],
+     [
+      209,
+      43
+     ],
+     [
+      325,
+      43
+     ],
+     [
+      441,
+      43
+     ],
+     [
+      557,
+      43
+     ],
+     [
+      673,
+      43
+     ],
+     [
+      789,
+      43
+     ],
+     [
+      905,
+      43
+     ],
+     [
+      76,
+      51
+     ],
+     [
+      60,
+      57
+     ],
+     [
+      878,
+      63
+     ],
+     [
+      63,
+      64
+     ],
+     [
+      179,
+      64
+     ],
+     [
+      297,
+      65
+     ],
+     [
+      532,
+      65
+     ],
+     [
+      64,
+      66
+     ],
+     [
+      180,
+      66
+     ],
+     [
+      65,
+      68
+     ],
+     [
+      181,
+      69
+     ],
+     [
+      300,
+      70
+     ],
+     [
+      66,
+      71
+     ],
+     [
+      182,
+      71
+     ],
+     [
+      183,
+      73
+     ],
+     [
+      889,
+      79
+     ]
+    ]
+   },
+   {
+    "id": "blotches",
+    "sev": "warn",
+    "msg": "3 blotch(es) of 2-24 px in a near colour",
+    "pixels": [
+     [
+      770,
+      51
+     ],
+     [
+      771,
+      51
+     ],
+     [
+      772,
+      51
+     ],
+     [
+      764,
+      52
+     ],
+     [
+      765,
+      52
+     ],
+     [
+      766,
+      52
+     ],
+     [
+      767,
+      52
+     ],
+     [
+      768,
+      52
+     ],
+     [
+      769,
+      52
+     ],
+     [
+      69,
+      53
+     ],
+     [
+      70,
+      53
+     ],
+     [
+      71,
+      53
+     ],
+     [
+      72,
+      53
+     ],
+     [
+      65,
+      54
+     ],
+     [
+      66,
+      54
+     ],
+     [
+      67,
+      54
+     ],
+     [
+      68,
+      54
+     ],
+     [
+      876,
+      60
+     ],
+     [
+      877,
+      61
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "name": "cat",
+  "verdict": "WARN",
+  "file": "riverwalk/art/cat.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 384,
+  "h": 144,
+  "building": false,
+  "frames": [
+   48,
+   48
+  ],
+  "info": {
+   "colours": 12,
+   "lone": 1.5,
+   "p10": 2,
+   "median": 151,
+   "p90": 177,
+   "noise": 0.0,
+   "blotches": 1,
+   "frames": {
+    "fw": 48,
+    "fh": 48,
+    "count": 24
+   },
+   "outline_min": 100
+  },
+  "checks": [
+   {
+    "id": "blotches",
+    "sev": "warn",
+    "msg": "1 blotch(es) of 2-24 px in a near colour",
+    "pixels": [
+     [
+      243,
+      129
+     ],
+     [
+      244,
+      129
+     ]
+    ]
+   },
+   {
+    "id": "frames",
+    "sev": "warn",
+    "msg": "a colour missing in one frame (a lost eye or hand; fine if it is a blink): row 2 col 7: 1 colour(s) the other frames have; row 2 col 8: 1 colour(s) the other frames have",
+    "pixels": []
+   },
+   {
+    "id": "frames",
+    "sev": "warn",
+    "msg": "feet not anchored (fine in a jump or flight): row 2: lowest pixel moves 10 px",
+    "pixels": []
+   }
+  ]
+ },
+ {
+  "name": "cyclist_adult1",
+  "verdict": "WARN",
+  "file": "riverwalk/art/scene/cyclist_adult1.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 88,
+  "h": 87,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 18,
+   "lone": 1.8,
+   "p10": 20,
+   "median": 58,
+   "p90": 188,
+   "noise": 0.4,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": [
+   {
+    "id": "noise",
+    "sev": "warn",
+    "msg": "14 dirt pixels (0.4 %): single pixels a shade off the fill around them",
+    "pixels": [
+     [
+      47,
+      3
+     ],
+     [
+      51,
+      5
+     ],
+     [
+      48,
+      7
+     ],
+     [
+      52,
+      7
+     ],
+     [
+      37,
+      9
+     ],
+     [
+      46,
+      44
+     ],
+     [
+      52,
+      52
+     ],
+     [
+      55,
+      56
+     ],
+     [
+      54,
+      58
+     ],
+     [
+      53,
+      60
+     ],
+     [
+      52,
+      63
+     ],
+     [
+      51,
+      65
+     ],
+     [
+      50,
+      67
+     ],
+     [
+      49,
+      70
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "name": "cyclist_adult1_pedal",
+  "verdict": "WARN",
+  "file": "riverwalk/art/scene/cyclist_adult1_pedal.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 704,
+  "h": 87,
+  "building": false,
+  "frames": [
+   88,
+   87
+  ],
+  "info": {
+   "colours": 18,
+   "lone": 1.6,
+   "p10": 20,
+   "median": 58,
+   "p90": 188,
+   "noise": 0.3,
+   "blotches": 1,
+   "frames": {
+    "fw": 88,
+    "fh": 87,
+    "count": 8
+   },
+   "outline_min": 100
+  },
+  "checks": [
+   {
+    "id": "blotches",
+    "sev": "warn",
+    "msg": "1 blotch(es) of 2-24 px in a near colour",
+    "pixels": [
+     [
+      143,
+      58
+     ],
+     [
+      142,
+      59
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "name": "cyclist_adult2",
+  "verdict": "WARN",
+  "file": "riverwalk/art/scene/cyclist_adult2.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 88,
+  "h": 87,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 18,
+   "lone": 1.8,
+   "p10": 20,
+   "median": 58,
+   "p90": 143,
+   "noise": 0.4,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": [
+   {
+    "id": "noise",
+    "sev": "warn",
+    "msg": "13 dirt pixels (0.4 %): single pixels a shade off the fill around them",
+    "pixels": [
+     [
+      46,
+      3
+     ],
+     [
+      54,
+      5
+     ],
+     [
+      46,
+      9
+     ],
+     [
+      52,
+      23
+     ],
+     [
+      44,
+      26
+     ],
+     [
+      33,
+      31
+     ],
+     [
+      50,
+      31
+     ],
+     [
+      55,
+      35
+     ],
+     [
+      55,
+      56
+     ],
+     [
+      54,
+      58
+     ],
+     [
+      53,
+      60
+     ],
+     [
+      52,
+      63
+     ],
+     [
+      49,
+      70
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "name": "cyclist_adult2_pedal",
+  "verdict": "WARN",
+  "file": "riverwalk/art/scene/cyclist_adult2_pedal.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 704,
+  "h": 87,
+  "building": false,
+  "frames": [
+   88,
+   87
+  ],
+  "info": {
+   "colours": 18,
+   "lone": 1.8,
+   "p10": 20,
+   "median": 58,
+   "p90": 143,
+   "noise": 0.3,
+   "blotches": 2,
+   "frames": {
+    "fw": 88,
+    "fh": 87,
+    "count": 8
+   },
+   "outline_min": 100
+  },
+  "checks": [
+   {
+    "id": "noise",
+    "sev": "warn",
+    "msg": "78 dirt pixels (0.3 %): single pixels a shade off the fill around them",
+    "pixels": [
+     [
+      46,
+      3
+     ],
+     [
+      134,
+      3
+     ],
+     [
+      222,
+      3
+     ],
+     [
+      310,
+      3
+     ],
+     [
+      398,
+      3
+     ],
+     [
+      486,
+      3
+     ],
+     [
+      574,
+      3
+     ],
+     [
+      662,
+      3
+     ],
+     [
+      54,
+      5
+     ],
+     [
+      142,
+      5
+     ],
+     [
+      230,
+      5
+     ],
+     [
+      318,
+      5
+     ],
+     [
+      406,
+      5
+     ],
+     [
+      494,
+      5
+     ],
+     [
+      582,
+      5
+     ],
+     [
+      670,
+      5
+     ],
+     [
+      46,
+      9
+     ],
+     [
+      134,
+      9
+     ],
+     [
+      222,
+      9
+     ],
+     [
+      310,
+      9
+     ],
+     [
+      398,
+      9
+     ],
+     [
+      486,
+      9
+     ],
+     [
+      574,
+      9
+     ],
+     [
+      662,
+      9
+     ],
+     [
+      52,
+      23
+     ],
+     [
+      140,
+      23
+     ],
+     [
+      228,
+      23
+     ],
+     [
+      316,
+      23
+     ],
+     [
+      404,
+      23
+     ],
+     [
+      492,
+      23
+     ],
+     [
+      580,
+      23
+     ],
+     [
+      668,
+      23
+     ],
+     [
+      44,
+      26
+     ],
+     [
+      132,
+      26
+     ],
+     [
+      220,
+      26
+     ],
+     [
+      308,
+      26
+     ],
+     [
+      396,
+      26
+     ],
+     [
+      484,
+      26
+     ],
+     [
+      572,
+      26
+     ],
+     [
+      660,
+      26
+     ],
+     [
+      33,
+      31
+     ],
+     [
+      50,
+      31
+     ],
+     [
+      121,
+      31
+     ],
+     [
+      138,
+      31
+     ],
+     [
+      209,
+      31
+     ],
+     [
+      226,
+      31
+     ],
+     [
+      297,
+      31
+     ],
+     [
+      314,
+      31
+     ],
+     [
+      385,
+      31
+     ],
+     [
+      402,
+      31
+     ],
+     [
+      473,
+      31
+     ],
+     [
+      490,
+      31
+     ],
+     [
+      561,
+      31
+     ],
+     [
+      578,
+      31
+     ],
+     [
+      649,
+      31
+     ],
+     [
+      666,
+      31
+     ],
+     [
+      55,
+      35
+     ],
+     [
+      143,
+      35
+     ],
+     [
+      231,
+      35
+     ],
+     [
+      319,
+      35
+     ],
+     [
+      407,
+      35
+     ],
+     [
+      495,
+      35
+     ],
+     [
+      583,
+      35
+     ],
+     [
+      671,
+      35
+     ],
+     [
+      55,
+      56
+     ],
+     [
+      668,
+      57
+     ],
+     [
+      54,
+      58
+     ],
+     [
+      53,
+      60
+     ],
+     [
+      141,
+      61
+     ],
+     [
+      52,
+      63
+     ],
+     [
+      140,
+      63
+     ],
+     [
+      226,
+      64
+     ],
+     [
+      138,
+      68
+     ],
+     [
+      49,
+      70
+     ],
+     [
+      137,
+      70
+     ],
+     [
+      136,
+      72
+     ],
+     [
+      135,
+      74
+     ],
+     [
+      220,
+      74
+     ]
+    ]
+   },
+   {
+    "id": "blotches",
+    "sev": "warn",
+    "msg": "2 blotch(es) of 2-24 px in a near colour",
+    "pixels": [
+     [
+      399,
+      68
+     ],
+     [
+      398,
+      69
+     ],
+     [
+      397,
+      70
+     ],
+     [
+      396,
+      71
+     ],
+     [
+      487,
+      68
+     ],
+     [
+      486,
+      69
+     ],
+     [
+      485,
+      70
+     ],
+     [
+      484,
+      71
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "name": "ferry",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/ferry.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 252,
+  "h": 79,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 16,
+   "lone": 0.2,
+   "p10": 36,
+   "median": 128,
+   "p90": 235,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "gull",
+  "verdict": "WARN",
+  "file": "riverwalk/art/gull.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 156,
+  "h": 26,
+  "building": false,
+  "frames": [
+   26,
+   26
+  ],
+  "info": {
+   "colours": 7,
+   "lone": 1.1,
+   "p10": 2,
+   "median": 166,
+   "p90": 236,
+   "noise": 0.0,
+   "blotches": 0,
+   "frames": {
+    "fw": 26,
+    "fh": 26,
+    "count": 6
+   },
+   "outline_min": 100
+  },
+  "checks": [
+   {
+    "id": "frames",
+    "sev": "warn",
+    "msg": "feet not anchored (fine in a jump or flight): row 1: lowest pixel moves 4 px",
+    "pixels": []
+   }
+  ]
+ },
+ {
+  "name": "road_car1",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/road_car1.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 243,
+  "h": 89,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 20,
+   "lone": 0.3,
+   "p10": 32,
+   "median": 61,
+   "p90": 122,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "road_car2",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/road_car2.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 244,
+  "h": 103,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 20,
+   "lone": 0.1,
+   "p10": 33,
+   "median": 225,
+   "p90": 225,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "road_car3",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/road_car3.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 248,
+  "h": 94,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 20,
+   "lone": 0.3,
+   "p10": 33,
+   "median": 150,
+   "p90": 211,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "road_car4",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/road_car4.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 187,
+  "h": 78,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 20,
+   "lone": 0.3,
+   "p10": 33,
+   "median": 89,
+   "p90": 122,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "road_car5",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/road_car5.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 250,
+  "h": 89,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 17,
+   "lone": 0.3,
+   "p10": 2,
+   "median": 65,
+   "p90": 200,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "road_rider1",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/road_rider1.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 105,
+  "h": 110,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 18,
+   "lone": 1.7,
+   "p10": 20,
+   "median": 58,
+   "p90": 188,
+   "noise": 0.3,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "road_rider2",
+  "verdict": "WARN",
+  "file": "riverwalk/art/scene/road_rider2.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 105,
+  "h": 110,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 17,
+   "lone": 1.7,
+   "p10": 20,
+   "median": 58,
+   "p90": 151,
+   "noise": 0.4,
+   "blotches": 2,
+   "outline": 100
+  },
+  "checks": [
+   {
+    "id": "noise",
+    "sev": "warn",
+    "msg": "17 dirt pixels (0.4 %): single pixels a shade off the fill around them",
+    "pixels": [
+     [
+      45,
+      22
+     ],
+     [
+      58,
+      27
+     ],
+     [
+      50,
+      28
+     ],
+     [
+      47,
+      30
+     ],
+     [
+      55,
+      37
+     ],
+     [
+      56,
+      38
+     ],
+     [
+      68,
+      50
+     ],
+     [
+      40,
+      64
+     ],
+     [
+      66,
+      72
+     ],
+     [
+      65,
+      75
+     ],
+     [
+      64,
+      77
+     ],
+     [
+      63,
+      80
+     ],
+     [
+      62,
+      82
+     ],
+     [
+      61,
+      84
+     ],
+     [
+      60,
+      87
+     ],
+     [
+      59,
+      89
+     ],
+     [
+      53,
+      92
+     ]
+    ]
+   },
+   {
+    "id": "blotches",
+    "sev": "warn",
+    "msg": "2 blotch(es) of 2-24 px in a near colour",
+    "pixels": [
+     [
+      57,
+      38
+     ],
+     [
+      56,
+      39
+     ],
+     [
+      57,
+      39
+     ],
+     [
+      44,
+      66
+     ],
+     [
+      45,
+      66
+     ],
+     [
+      46,
+      66
+     ],
+     [
+      47,
+      66
+     ],
+     [
+      48,
+      67
+     ],
+     [
+      49,
+      67
+     ],
+     [
+      50,
+      67
+     ],
+     [
+      51,
+      67
+     ]
+    ]
+   }
+  ]
+ }
+]

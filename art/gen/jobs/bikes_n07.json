@@ -1,0 +1,17 @@
+{
+ "name": "bikes_n07",
+ "level": "riverwalk",
+ "layer": "play",
+ "kind": "vehicle",
+ "tier": "C",
+ "family": "chars_07nov",
+ "target_px": [
+  88,
+  87
+ ],
+ "built_by": "tools/build_bikes_n07.py",
+ "slot": {
+  "file": "riverwalk/art/scene/cyclist_adult1.png",
+  "where": "track chars 7 Nov: see CHANGELOG `day/07nov-chars` and docs/review/07nov/chars/README.md"
+ }
+}
