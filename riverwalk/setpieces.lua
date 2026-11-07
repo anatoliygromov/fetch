@@ -480,7 +480,7 @@ local function each(s, cam, list)
   for _, pc in ipairs(s.def.pieces or {}) do
     local f = list[pc.kind]
     if f and pc.x1 - cam > -20 and pc.x0 - cam < 340 then
-      if not (s.def.art and Sc.drawPieceArt(pc, cam, s.def)) then f(pc, cam) end   -- art levels: scene.lua's art
+      if not (s.def.art and Sc.drawPieceArt(pc, cam, s.def, s)) then f(pc, cam) end   -- art levels: scene.lua's art
     end
   end
 end

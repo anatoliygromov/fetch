@@ -26,6 +26,40 @@ return function(api)
   -- LOOK_STEP px (default 300; the last frame ends at the level's right end) at each height tier (a tall level:
   -- the bottom of the world, then every 120 px up to the top). Pepper stands on the highest floor 60-236 px down
   -- the screen at the camera + 140, or is left out. Saves sweep_<level>_y<camY>_x<cam>.png (1x), then quits.
+  -- (7 Nov, cplog) LOOK_CRAWL="1530,1556,1585": Pepper crawling (crouched, the crawl clip's frame LOOK_FRAME, default
+  -- 5) on the floor under her at each x (or at y LOOK_CRAWLY: the path under a log), the camera at LOOK_CAM (default x - 140) and LOOK_CAMY (default the
+  -- bottom of the world); a bone she has passed (within her reach) is taken. Saves crawl_<level>_x<x>.png (1x, look
+  -- on, no HUD), then quits. For the hollow log frames.
+  if os.getenv("LOOK_CRAWL") then
+    love.update = function(dt)
+      dt = 1 / 60; T = T + dt
+      old(dt)
+      local s = api.stage()
+      if phase == "start" and T > 0.5 then love.keypressed("space"); phase = "go"; T = 0 end
+      if phase ~= "go" or T < 0.7 then return end
+      local w, p = s.world, s.pepper
+      s.bikes = {}; s.bikeT = 99
+      local n = 0
+      for v in os.getenv("LOOK_CRAWL"):gmatch("%-?%d+") do
+        local px = tonumber(v)
+        local cx = tonumber(os.getenv("LOOK_CAM") or "") or (px - 140)
+        local cy = tonumber(os.getenv("LOOK_CAMY") or "") or math.max(0, w.height - 240)
+        local fy = tonumber(os.getenv("LOOK_CRAWLY") or "") or w:floor(px - 4, px + 4, px, cy + 60, cy + 240, -1e9)
+        p.x, p.y, p.vx, p.vy, p.onGround, p.ground, p.mode, p.invuln = px, fy or cy + 200, 0, 0, true, nil, "normal", 0
+        p.crouch, p.anim, p.frame, p.face = true, "crawl", tonumber(os.getenv("LOOK_FRAME") or "") or 5, 1
+        for _, bn in ipairs(s.bones) do if math.abs(bn.y - p.y) < 20 and bn.x - 5 < px + 17 and bn.x > px - 400 then bn.taken = true end end
+        s.cam, s.camY = cx, cy
+        love.graphics.push("all"); love.graphics.setCanvas(cv); love.graphics.clear(0, 0, 0, 1); love.graphics.origin()
+        s:draw(false)
+        love.graphics.pop()
+        cv:newImageData():encode("png", ("crawl_%s_x%04d.png"):format(name, px))
+        n = n + 1
+      end
+      print("CRAWL " .. n); io.stdout:flush(); love.event.quit()
+      phase = "done"
+    end
+    return
+  end
   if os.getenv("LOOK_SWEEP") then
     -- (art/dt-highroad-06nov) LOOK_OLDHOUSES=1: decision 2a off, the old plaza houses (arthooks H.PLAZA_FRONTS)
     if os.getenv("LOOK_OLDHOUSES") then (package.loaded.arthooks or require("arthooks")).PLAZA_FRONTS = false end
