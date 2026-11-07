@@ -50,6 +50,7 @@ local acc = 0
 local presses = {}
 local debugView, tuning, tuneRow = false, false, 1
 local musicOn = true                                           -- from settings.txt (Se.music) once loaded
+local ENDING_TUNE_AT = 1.5                                     -- the ending: the title theme after the fanfare (1.3 s, in C) is over
 local fps, frameMs = 60, 0
 local tally
 local run                                                       -- the run (Flow.newRun): its levels, score, lives
@@ -75,6 +76,8 @@ local function startBonus(direct)
   local lv = Flow.levels[Flow.index(levelName) or 0] or {}
   bonus = Bonus.new({ level = lv.number or def.number or 1 }); state, t = "bonus", 0; presses = {}
   bonus.direct = direct
+  -- its own tune when music/bonus.ogg exists, else the level's tune from the top (the tally had paused it)
+  if not direct then S.music(musicOn, S.has("bonus") and "bonus" or levelName) end
 end
 local Title = require("title")                                  -- the title screen: PRESS ANY KEY, then the menu
 local titleLeaving                                              -- seconds since a key was pressed on the title
@@ -160,7 +163,8 @@ local function nextLevel()
     local score = run and run.score or tally.score
     local newBest = Flow.runOver(score)
     ending = { score = score, best = Flow.bestRun, newBest = newBest, lines = def.outro }
-    state, t = "ending", 0; S.play("fanfare"); S.music(musicOn, "title")     -- the ending: the title theme again
+    state, t = "ending", 0; S.music(false); S.play("fanfare")         -- the ending: the fanfare, then the title theme
+    ending.tuneAt = ENDING_TUNE_AT                                     -- (love.update starts it once the fanfare is done)
   end
 end
 -- the round is over: its points go into the tally's (and the run's) score, B.LIFE_AT catches give an extra life (at most
@@ -325,6 +329,7 @@ function love.update(dt)
     titleLeaving = titleLeaving + dt
     if titleLeaving >= Title.LEAVE then titleLeaving = nil; state = "menu"; Flow.menu.sel = 1 end
   end
+  if state == "ending" and ending and ending.tuneAt and t >= ending.tuneAt then ending.tuneAt = nil; S.music(musicOn, "title") end
   fps = love.timer.getFPS()
   local t0 = love.timer.getTime()
   if state == "play" then

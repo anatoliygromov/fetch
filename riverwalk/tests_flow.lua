@@ -262,8 +262,10 @@ return function(api)
   add(state("ending", 1), check("ending: the final score is the run's score", function()
     return api.run().score == prev.score, ("%d"):format(api.run().score) end))
   add(check("ending: best run saved", function() return tonumber(readSave("best_run.txt")) == prev.score and F.bestRun == prev.score, readSave("best_run.txt") end))
+  add(check("ending: the fanfare alone first (no title theme over it)", function() local tr = require("sfx").track(); return tr ~= "title", tostring(tr) end))
   add(key("space"), check("ending: no key for the first 2 s", function() return api.getState() == "ending", api.getState() end))
-  add(wait(2.3), shot("6_ending"), key("space"), state("title", 1),
+  add(wait(1.5), check("ending: then the title theme", function() local tr = require("sfx").track(); return tr == "title", tostring(tr) end))
+  add(wait(0.8), shot("6_ending"), key("space"), state("title", 1),
     check("ending: back to the title", function() return api.getState() == "title", api.getState() end))
 
   -- level select again: everything played is open; the last level from the select starts a fresh run

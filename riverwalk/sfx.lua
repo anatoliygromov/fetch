@@ -334,6 +334,8 @@ function S.music(on, name)
     if not src:isPlaying() then src:play() end
   end)
 end
+-- whether a track has its own file (main.lua: the bonus round plays music/bonus.ogg once it exists)
+function S.has(name) return musicFile(name) ~= nil end
 -- the track being played (tests)
 function S.track() return track, src ~= nil and src ~= loop end
 

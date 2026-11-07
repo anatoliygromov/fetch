@@ -68,6 +68,8 @@ function love.load(args)
       S.music(true, "citypark"); S.music(false, "soder")
       local name, file = S.track()
       report("sfx.lua: music off still sets the track", name == "soder" and not file, name)
+      report("sfx.lua: S.has knows which tunes have a file", S.has("title") and S.has("riverwalk") and not S.has("no_such_tune"),
+        "bonus " .. (S.has("bonus") and "has its own tune" or "plays the level's tune"))
     end)
     report("sfx.lua: music calls run without errors", good, err)
   end

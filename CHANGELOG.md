@@ -3,6 +3,11 @@
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
 
+## Branch `fix/07nov-music` (off preview/07nov-all-music): two music bugs found by the audit of the build the owner is testing
+- **The ending: the fanfare, then the title theme (main.lua).** The ending started the fanfare (C major) and the title theme (D major) at the same moment, so for 1.3 s they clashed. Now the music pauses, the fanfare plays alone, and the title theme starts at 1.5 s (ENDING_TUNE_AT). After a bonus round the level's tune no longer runs under the fanfare either.
+- **FETCH FRENZY is no longer silent (main.lua, sfx.lua).** The tally pauses the level's tune and the bonus round never started it again, so the round had sound effects only (the build note said the level's tune plays). The round now plays the level's tune from the top, or music/bonus.ogg once the music session adds one (S.has).
+- Checks: flow 139/139 (3 new: the round's tune, the fanfare alone, then the title theme), MUSIC OK (S.has), bonus checks, PEPPER UNCHANGED.
+
 ## Branch `preview/07nov-all-music`: the all-of-today build with the music session's tunes (owner, 7 Nov: "I need the build with music from the Music plans session")
 - The tunes of `audio/harmony` (riverwalk/music/*.ogg: title, City Park, River Walk, Downtown, Rooftops, Söder Hill, Night Harbour, jingles clear, over, fetch; title.mod; manifest) and its player (sfx.lua: S.music(on, name) streams one track at a time at MUSIC_VOL, jingles pause the track; the M key and settings still switch it off), ported onto today's sfx.lua with its 22 new sounds. A tall level plays its flat twin's tune (citypark_tall -> citypark). main.lua: the title and menus play "title", each level its own tune from its intro, the ending the title theme after the fanfare; stage.lua: the fetch jingle when the ball reaches the girl. tools/make_music.py, tools/check_music.sh (its Downtown expectation updated: Downtown has a tune now).
 - Checks: MUSIC OK, flow 135/135, physics all six levels, bonus 23/23, PEPPER UNCHANGED.
