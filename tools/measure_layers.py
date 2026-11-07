@@ -123,6 +123,10 @@ add(["park_keeper_winch"], "cp", "back", True, group="City Park")   # scene.lua 
 add(["park_leaves"], "cp", "play", group="City Park")
 add(["park_slide"], "cp", "ground", group="City Park")   # unfaded art under the back shader
 add(["park_ground"], "cp", "ground", group="City Park")
+# day/07nov-ground (tools/make_ground_kit.py): the mid row's and tree line's own lawn, the tuft row over the mid row's
+# feet (faded as the mid layer; the lawn also as the shore under the tree line), grass over the trees' feet (back fade)
+add(["kit_cp_midlawn", "kit_cp_tufts"], "cp", "mid", True, group="City Park")
+add(["kit_cp_roots"], "cp", "back", True, group="City Park")
 add(["park_hedge", "park_log", "park_hollowlog", "park_table_front", "park_stone", "park_boat_front", "park_frame",
      "park_keeper_cart"], "cp", "play", group="City Park")
 add(["park_bush"], "cp", "front", group="City Park")

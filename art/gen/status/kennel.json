@@ -1,18 +1,18 @@
 {
  "name": "kennel",
- "family": "rw_built_06nov",
+ "family": "rw_ground_07nov",
  "tier": "C",
  "steps": {
   "spec": {
-   "time": "2026-11-06 21:10"
+   "time": "2026-11-07 11:26"
   },
   "built": {
    "build": "tools/build_rw_kennel.py",
-   "time": "2026-11-06 21:10"
+   "time": "2026-11-07 11:26"
   },
   "ingame": {
-   "frame": "docs/review/06nov-night/rw/frames/after_kennel_lookspot.png",
-   "time": "2026-11-06 21:10"
+   "frame": "docs/review/07nov/ground/kennel/ingame_x0.png",
+   "time": "2026-11-07 11:26"
   }
  }
 }

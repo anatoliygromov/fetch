@@ -1,0 +1,17 @@
+{
+ "level": "riverwalk",
+ "layer": "play",
+ "kind": "prop",
+ "tier": "C",
+ "target_px": [
+  54,
+  12
+ ],
+ "built_by": "tools/revert_ground_07nov.py (the owner's previous pontoon restored)",
+ "slot": {
+  "file": "riverwalk/art/scene/pontoon.png",
+  "where": "River Walk PONTOON mover, drawn at y0 - 2 (stage.lua, Sp.PONT_DY)"
+ },
+ "name": "pontoon",
+ "family": "rw_ground_07nov"
+}

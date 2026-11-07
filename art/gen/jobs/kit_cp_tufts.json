@@ -1,0 +1,17 @@
+{
+ "level": "citypark_tall",
+ "layer": "mid",
+ "kind": "tile",
+ "tier": "C",
+ "target_px": [
+  240,
+  5
+ ],
+ "built_by": "tools/make_ground_kit.py",
+ "slot": {
+  "file": "riverwalk/art/scene/kit_cp_tufts.png",
+  "where": "City Park tall: over the mid row's feet, rows 176-180, scroll 0.5"
+ },
+ "name": "kit_cp_tufts",
+ "family": "rw_ground_07nov"
+}

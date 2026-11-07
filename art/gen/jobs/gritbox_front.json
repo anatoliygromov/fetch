@@ -1,0 +1,17 @@
+{
+ "level": "riverwalk",
+ "layer": "play",
+ "kind": "prop",
+ "tier": "C",
+ "target_px": [
+  88,
+  32
+ ],
+ "built_by": "tools/fix_gritbox_07nov.py (front-on build of tools/fix_rw_audit_06nov.py in the old greens)",
+ "slot": {
+  "file": "riverwalk/art/scene/gritbox_front.png",
+  "where": "River Walk SAND props x 830 and 3447, ay 184"
+ },
+ "name": "gritbox_front",
+ "family": "rw_ground_07nov"
+}

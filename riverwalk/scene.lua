@@ -2607,6 +2607,24 @@ end
 
 -- a faded trunk from y top down to the path: bark lines, a lit left edge, a shaded right edge, roots that flare
 local CPBT = {}                                                    -- (6 Nov) the trunk art, faded as the back, per script
+-- (day/07nov-ground, audit CP8: the root flares ended in a straight line on the lawn) grass over a trunk's foot:
+-- the kit's root tuft strip (tools/make_ground_kit.py kit_cp_roots, 16 x 5, faded as the back), stamped every 16 px
+-- across the foot, 4 px past it each side
+local ROOTS = {}
+local function rootTufts(xa, xb, foot)
+  if ROOTS[Look.key] == nil then
+    local f = "art/scene/kit_cp_roots.png"
+    ROOTS[Look.key] = love.filesystem.getInfo(f) and newImg(Sc.fadeData(love.image.newImageData(f))) or false
+  end
+  local im = ROOTS[Look.key]
+  if not im then return end
+  lg.setColor(1, 1, 1, 1)
+  local a, b = math.floor(xa) - 4, math.floor(xb) + 4
+  for x = a, b - 1, 16 do
+    local w = math.min(16, b - x)
+    lg.draw(im, lg.newQuad(0, 0, w, 5, 16, 5), x, foot - 5)
+  end
+end
 local function drawTrunk(t, top, foot, ox, big)
   local x0, w = t.x0 - ox, t.x1 - t.x0
   local h = foot - top
@@ -2639,6 +2657,7 @@ local function drawTrunk(t, top, foot, ox, big)
           y = y - s
         end
       end
+      rootTufts(ix + d.x0, ix + d.x0 + d.tw, foot)
       return
     end
   end
@@ -3731,6 +3750,7 @@ function Sc.drawTreeFeet(def, camx)
       end
       lg.setColor(FC[1]); lg.rectangle("fill", x0 - 3, yb + 1, x1 - x0 + 7, 1)
       lg.setColor(FC[2]); lg.rectangle("fill", x0 - 1, yb + 2, x1 - x0 + 3, 1)
+      rootTufts(x0, x1, yb + 3)                                       -- (day/07nov-ground) grass over the foot's line
     end
   end
   lg.setColor(1, 1, 1, 1)

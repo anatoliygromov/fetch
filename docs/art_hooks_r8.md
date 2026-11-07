@@ -210,3 +210,15 @@ Built by `tools/build_dt_facades.py` (`--check`) after the producer's concept dt
 | `town_bridge_springer.png` | 14 x 20 | play, outlined: the FOOTBRIDGE's arch feet, on the two house corners, top at the bridge art's row 42; the right one mirrored (arthooks.lua townPiece) |
 | `town_basin_wall.png` | 10 x 56 | ground: under a fountain RIM on the water's side, from the rim's bottom (y 424) down; mirrored on the right (scene.lua RIM) |
 | `town_shelter_tall.png` | 140 x 115 | unchanged slot (decoration, centred on the SHELTER, bottom on y 414), redrawn in green cast iron |
+
+## River Walk and City Park ground, the owner's reverts, the kennel garden (day/07nov-ground, 0 credits)
+| File | Size | Where the game draws it |
+| --- | --- | --- |
+| `kennel.png` | 44 x 44 | rebuilt by `tools/build_rw_kennel.py` as a classic dog house (gable end, round door, name plate), same place: top-left (0, 140), bottom row y 183, door crown y 165. Collision: the peak x 16-28 from y 140, the eaves x 0-44 from y 150 (was 158). It stands on the GARDEN prop's lawn (scene.lua `Sc.paintGarden`) |
+| `gritbox_front.png` | 88 x 32 | unchanged slot; the front-on build in the old box's greens (`tools/fix_gritbox_07nov.py`) |
+| `pontoon.png` | 54 x 12 | the previous pontoon again, drawn at the mover's x0 - 3, y0 - 2 (`Sp.PONT_DY`); the mooring lines tie on under the deck's ends |
+| `park_stone.png` | 26 x 21 | the previous pink granite stone again (as the cp-pond branch drew it) |
+| `park_ground.png`, `road.png` | 240 x 68, 640 x 41 | the previous textured files again (`tools/revert_ground_07nov.py`, `tools/make_road.py`) |
+| `kit_cp_midlawn.png` | 240 x 96 | City Park tall only: under the mid row (top y 176, scroll 0.5, faded as mid) and under the far tree line (top y 175, scroll 0.25, faded as the shore), scene.lua `Sc.drawFarArt` |
+| `kit_cp_tufts.png` | 240 x 5 | City Park tall: over the mid row's feet, rows 176-180, scroll 0.5, faded as mid |
+| `kit_cp_roots.png` | 16 x 5 | City Park tall: over every tree foot (bottom on the foot line), stamped every 16 px, faded as the back (scene.lua `rootTufts`) |

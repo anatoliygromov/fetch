@@ -10,11 +10,11 @@ textured parts are drawn here once, on the 8 px grid where they repeat, in the l
 
   kit_cp_midlawn.png   240 x 96   City Park's mid row stands on its own lawn (audit CP9: with the camera up in the
                                   trees the mid row ended straight over the sky). The ground art's lawn colour
-                                  (#9e983f), a darker seam row on top where the row's trees stand, short tufts on a
-                                  7 px grid in two offset rows, tiling at 240 like park_ground.png. Faded as the mid
+                                  (#9e983f), a darker seam row on top where the row's trees stand, tufts (a lit pair over a dark
+                                  pair) on an 8 px grid in four offset rows, tiling at 240 like park_ground.png. Faded as the mid
                                   layer in the game (scene.lua Sc.townArt), so it sits in the mid haze.
   kit_cp_tufts.png     240 x 5    a tuft row drawn over the mid row's feet (audit CP6: the bushes stood cut flat on
-                                  the lawn's top line): 1-4 px blades every 7 px in the lawn's two greens, transparent
+                                  the lawn's top line): 2 px clumps every 8 px on a dark foot row, transparent
                                   between; also faded as mid.
   kit_cp_roots.png     16 x 5     grass over a trunk's foot (audit CP8: root flares ended in a straight line): the
                                   path's lawn greens, stamped over each tree's foot in the back pass.
@@ -36,31 +36,31 @@ def midlawn():
     a = np.zeros((H, W, 4), np.uint8); a[:, :] = LAWN
     a[0, :] = SEAM                                                   # the seam under the row's feet
     a[1, :] = LAWN_D
-    for row, off in ((6, 0), (14, 3), (26, 5), (44, 2)):            # tufts, sparser further down (nearer)
-        for x in range(off, W, 7):
-            a[row, x] = LAWN_L; a[row + 1, x] = LAWN_D
-            a[row + 1, (x + 1) % W] = LAWN_L
+    for row, off in ((6, 0), (14, 4), (26, 2), (44, 6)):            # tufts on an 8 px grid, two px wide (no lone
+        for x in range(off, W, 8):                                   # pixels): a lit pair over a dark pair
+            for dx in (0, 1):
+                a[row, (x + dx) % W] = LAWN_L; a[row + 1, (x + dx) % W] = LAWN_D
     return a
 
 
 def tufts():
     W, H = 240, 5
     a = np.zeros((H, W, 4), np.uint8)
-    HT = (4, 2, 3, 1, 3, 2, 4, 1, 2, 3)                             # blade heights, a fixed list
-    for i, x in enumerate(range(0, W, 7)):
-        h = HT[i % len(HT)]
-        for k in range(h): a[H - 1 - k, x] = LAWN_D if k == 0 else LAWN
-        a[H - 1, (x + 1) % W] = LAWN_D
-        if h >= 3: a[H - 2, (x + 1) % W] = LAWN_L
+    HT = (4, 2, 3, 2, 3, 2, 4, 2, 2, 3)                             # clump heights, a fixed list
+    for i, x in enumerate(range(0, W, 8)):                           # a clump 2 px wide every 8 px on a dark
+        h = HT[i % len(HT)]                                          # foot row 4 px wide
+        for dx in range(-1, 3): a[H - 1, (x + dx) % W] = LAWN_D
+        for k in range(1, h):
+            for dx in (0, 1): a[H - 1 - k, (x + dx) % W] = LAWN
     return a
 
 
 def roots():
     W, H = 16, 5
     a = np.zeros((H, W, 4), np.uint8)
-    PROF = (1, 2, 3, 2, 4, 3, 2, 3, 4, 2, 3, 2, 4, 3, 2, 1)           # grass heights across the foot
+    PROF = (2, 2, 3, 3, 2, 2, 4, 4, 3, 3, 2, 2, 4, 4, 2, 2)           # grass heights across the foot, in pairs
     for x, h in enumerate(PROF):
-        for k in range(h): a[H - 1 - k, x] = LAWN_D if k == 0 else (LAWN_L if k == h - 1 and x % 3 == 0 else LAWN)
+        for k in range(h): a[H - 1 - k, x] = LAWN_D if k == 0 else LAWN
     return a
 
 

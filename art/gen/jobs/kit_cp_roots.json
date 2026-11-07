@@ -1,0 +1,17 @@
+{
+ "level": "citypark_tall",
+ "layer": "back",
+ "kind": "prop",
+ "tier": "C",
+ "target_px": [
+  16,
+  5
+ ],
+ "built_by": "tools/make_ground_kit.py",
+ "slot": {
+  "file": "riverwalk/art/scene/kit_cp_roots.png",
+  "where": "City Park tall: over every tree foot (scene.lua rootTufts in Sc.drawTreeFeet and drawTrunk)"
+ },
+ "name": "kit_cp_roots",
+ "family": "rw_ground_07nov"
+}
