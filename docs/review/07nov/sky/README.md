@@ -76,6 +76,18 @@ check_flow 125/125, check_tiled PASSED, check_backdrop OK, PEPPER UNCHANGED, che
 round 1. Ladder: City Park 202/202, 222/187, city 188/180, shore 184/172, mid 157/135, back 141/116 (light to dark);
 River Walk and Downtown as in round 1.
 
+## Downtown far city, low and simple (follow-up, 7 Nov)
+
+The DT reviewer: behind the rebuilt tall houses the full skyline (towers, domes, spires) was the one thing the concepts
+do not have, and at the top tier it read busy. `skyline_downtown.png` is now 320 x 30: tops only, built by
+`build_sky.low_city()` from three parts placed on the grid (a flat block, a low gable 1 px up every 2 px, a round
+dome), bodies 14-20 px, tops 20-28 px, shapes 18-44 px wide, so there are no spires and no thin towers. It is one clean fill
+`c6d2e8` (luma 209: under the clouds' darkest 211, over the far roofs' 207) with the warm rim on the tops. River Walk and
+City Park keep theirs. Frames: `dt_city_low/downtown_y000_x*_2x.png`: the top tier on a scratch merge of this branch
+with day/07nov-dt at a2506f8 (not committed anywhere), before | after at 2x, colour and greyscale. On this branch alone
+the old houses hide the far city at the top tier. Lever: "Downtown city as before" = remove `low` from its city entry in
+build_sky.py.
+
 ## Where to look
 
 - `concept_rw_before_after.png`: River Walk before | after (top), concept a | concept b (bottom).
@@ -96,7 +108,7 @@ River Walk and Downtown as in round 1.
 | City Park before | 209/205 | 239/201 | 191/178 | 181/169 | 154/132 | 141/116 |
 | City Park after (round 2) | 202/202 | 222/187 | 188/180 | 184/172 | 157/135 | 141/116 |
 | Downtown before | 237/190 | 236/195 | 200/187 | 197/184 | 171/139 | 152/100 |
-| Downtown after | 239/184 | 243/211 | 215/205 | 207/193 | 185/155 | 152/100 |
+| Downtown after (DT follow-up) | 239/217 | 243/211 | 209/209 | 207/193 | 185/155 | 152/100 |
 
 City Park and Downtown run light to dark. River Walk's "shore median under back median" is the same as on main (its light
 house fronts, noted in docs/layer_ladder.md). Cloud tones are all luma 185 or more (the clouds row), and the far city has 3 colours with contrast 12.

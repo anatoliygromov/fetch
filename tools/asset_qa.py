@@ -85,7 +85,8 @@ JOINS = {"cp_walk704_deck": "left", "cp_walk1968_deck": "left", "cp_walk704_land
 # slots (docs/art_hooks_r8.md): width, height, tolerance on each (0 = exact). Batch 1 files are named differently
 # from their hooks: HOOK says which game file each one becomes
 SLOTS = {**{f"sky_{k}": (960, 360, 0, 0) for k in ("riverwalk", "citypark", "downtown")},      # (day 7 Nov) tools/build_sky.py
-         **{f"skyline_{k}": (320, 77, 0, 0) for k in ("riverwalk", "citypark", "downtown")},
+         **{f"skyline_{k}": (320, 77, 0, 0) for k in ("riverwalk", "citypark")},
+         "skyline_downtown": (320, 30, 0, 0),           # (DT follow-up, 7 Nov) the low simple far city
          "rw_rowboat": (185, 62, 0, 0), "rw_rower": (644, 62, 0, 0), "kennel": (44, 44, 0, 0), "rw_jetty": (48, 51, 0, 0),   # (night/06nov-rw) 4.0 m eka; 7 x 92 x 62 loop; kennel; built jetty
          "cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_throw": (528, 66, 0, 0),
          "cyclist_a_84": (76, 76, 8, 8), "cyclist_b_84": (76, 76, 8, 8), "cyclist_a_92": (76, 76, 8, 8), "cyclist_b_92": (76, 76, 8, 8),
