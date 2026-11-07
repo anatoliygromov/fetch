@@ -49,10 +49,10 @@
  "top_row": 48,
  "lone": 0.0,
  "city": {
-  "p10": 205,
-  "median": 215,
-  "p90": 215,
-  "colours": 3
+  "p10": 209,
+  "median": 209,
+  "p90": 209,
+  "colours": 2
  },
  "horizon": {
   "p10": 184,

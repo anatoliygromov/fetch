@@ -96,7 +96,9 @@ LEVELS = {
                dict(x=250, w=150, base=-42, h=22, peak=0.50, r=(7, 12), under=(2, 3))],   # (round 2: top row 56, was 36)
         low=[dict(x=260, w=170, base=104, h=6), dict(x=480, w=110, base=101, h=5), dict(x=760, w=160, base=100, h=6)],
         wisps=[(330, 14, 30, 4), (640, 6, 22, 3), (900, 28, 26, 4), (560, -40, 24, 3)],
-        city=dict(main="ccd8ec", near="c0cee6", rim="eef2f4", rim_edges=("top",)),
+        # (DT follow-up, 7 Nov) behind the rebuilt tall houses the far city is low and simple: tops only, a few broad
+        # roof and dome shapes, no spires or thin towers (low = the tops' height range in px: build_sky.low_city)
+        city=dict(main="c6d2e8", near="c0cee6", rim="eef2f4", rim_edges=("top",), low=(20, 28)),
     ),
 }
 ROLES = ("sky", "cloud")
@@ -496,11 +498,55 @@ def build_sky(name):
     return rgb, img, nsky, stats
 
 
+def low_city(lo, hi, seed=320):
+    """a low simple far city for Downtown (follow-up, 7 Nov: behind the rebuilt tall houses the full skyline read
+    busy): tops only, built from 3 parts drawn by rule and placed on the grid along a 320 px strip that repeats: a flat
+    block, a block with a low gable roof (1 px up every 2 px) and a block with a round dome on it. Bodies 14-20 px,
+    tops lo-hi px, shapes 18-44 px wide, so nothing thin: no spires, no towers. Returns the silhouette, hi + 2 rows."""
+    r = Rng(seed)
+    H2, w = hi + 2, 320
+    out = np.zeros((H2, w), bool)
+    out[H2 - (lo - 6):, :] = True                                        # the continuous base under the tops
+    def fill(x0, x1, ytop):
+        for x in range(x0, x1): out[max(0, ytop):, x % w] = True
+    kinds = ["gable", "dome", "flat", "gable", "flat", "dome", "gable", "flat"]
+    x, k = 0, 0
+    while x < w:
+        bw = r.i(18, 44)
+        if w - (x + bw) < 18: bw = w - x                                 # the strip ends exactly at 320
+        kind = kinds[k % len(kinds)]; k += 1
+        hb = r.i(lo - 4, lo + 2)                                         # body height
+        fill(x, x + bw, H2 - hb)
+        if kind == "gable":                                              # a low pitched roof, 1 px up every 2 px
+            ap = min(bw // 4, hi - hb)
+            for d in range(1, ap + 1): fill(x + 2 * d, x + bw - 2 * d, H2 - hb - d)
+        elif kind == "dome":                                             # a round dome, centred on the block
+            rr = min(bw // 2 - 3, hi - hb)
+            cx = x + bw / 2 - 0.5
+            for xx in range(x, x + bw):
+                dx = xx - cx
+                if abs(dx) <= rr:
+                    fill(xx, xx + 1, H2 - hb - int(round(math.sqrt(max(0.0, rr * rr - dx * dx)))))
+        x += bw + (r.i(0, 6) if x + bw < w - 24 else 0)
+    return out
+
+
 def build_skyline(name):
-    """the far city from the approved skyline.png: 2 clean tones and a 1 px warm rim on the lit edges"""
+    """the far city from the approved skyline.png: 2 clean tones and a 1 px warm rim on the lit edges (Downtown: the
+    low simple city of low_city, one clean fill and the rim)"""
     c = LEVELS[name]["city"]
     src = np.array(Image.open(os.path.join(SCENE, "skyline.png")).convert("RGBA"))
     a = src[..., 3] > 127
+    if c.get("low"):
+        a = low_city(c["low"][0], c["low"][1])
+        out = np.zeros(a.shape + (4,), np.uint8)
+        out[a] = hexc(c["main"]) + (255,)
+        pa = np.pad(a, 1)
+        edge = np.zeros_like(a)
+        if "left" in c["rim_edges"]: edge |= a & ~np.roll(a, 1, axis=1)
+        if "top" in c["rim_edges"]: edge |= a & ~pa[:-2, 1:-1]
+        out[edge] = hexc(c["rim"]) + (255,)
+        return out
     lum = src[..., :3].astype(float) @ W601
     q = np.unique(lum[a])
     cut = np.sort(q)[2] if len(q) > 3 else q.max()                      # the drawing's 3 darkest colours: the nearer parts
