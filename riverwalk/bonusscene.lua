@@ -7,8 +7,8 @@
 --   Nothing stands on it: decoration is behind Pepper's line (the railing, far rows) or below it (the front edge).
 --   Every ground has a finished front edge (owner 7 Nov: no "cut" joins, no stack of flat earth stripes):
 --     River Walk  the promenade's paving, its granite coping, the quay wall under it (Sc.paintQuay's own rule)
---     City Park   the path, a granite kerb (the park stone's greys), a grass verge, clipped hedges in front
---     Downtown    the street's setts and kerb with the quay wall under it (town_ground.png, as in the level)
+--     City Park   the path, a granite kerb (the park stone's greys), the lawn on to the bottom, a few leaves
+--     Downtown    the street's setts and kerb, the quay wall under it in its own granite greys (town_ground.png)
 -- Rooftops, Söder Hill and Night Harbour have no art key and no colour script yet (greybox levels), so their rounds
 -- use the nearest level's place (BS.BY_LEVEL); change the line when their art lands.
 local Sc = require("scene")
@@ -94,38 +94,51 @@ end
 
 ---------------------------------------------------------------------------------------------------- City Park
 -- The park lawn: City Park's sky, skyline, far tree line and round trees (Sc.drawFarArt), the lawn and the path
--- (park_ground.png rows 0-28), then the path's front edge by rule:
+-- (park_ground.png rows 0-28), then the path's front edge by rule, in the park's own colours. Round 2 (7 Nov): no
+-- dark foreground clumps (the owner called City Park's black front shapes "terrible", 11:27), no full-width bands.
 --   a kerb of granite setts in the park stone's greys (park_stone.png): a lit top, the face, a shaded foot, joints
---   every 12 px; grass tufts lean over its foot so the lawn meets it without a cut
---   the verge: the tile's own lawn green, tufts (a lit pair over a dark pair) on an 8 px grid in offset rows
---   in front, clipped hedges in City Park's foreground colours (look.lua's approved hedge, tops at y 224 or lower,
---   under every line Pepper and the items use), with a gap where the verge runs on to the bottom
+--   every 12 px; grass tufts with lit tips lean over its foot so the lawn meets it without a cut
+--   the lawn runs on to the bottom of the screen: tufts (a lit pair over a dark pair, 8 px apart) in offset rows
+--   that come closer together towards the bottom (the lawn nearer the eye), and a few fallen leaves in the leaf
+--   piles' colours (park_leaves.png), single leaves only (a pile would read as a bone's hiding place)
+-- (An earth bank under a stepped verge edge was tried and dropped: graded as the ground it read as a plum band,
+-- docs/review/07nov/bonusscene/round2_citypark_options_3x.png.)
 local PK = { top = hexc("c9c2b4"), face1 = hexc("b3ac9f"), face = hexc("a39b8e"), foot = hexc("7a736a"), joint = hexc("5d5953"),
-             lawn = hexc("9e983f"), lawnD = hexc("867744"), lawnL = hexc("b5ad55"), seam = hexc("665c3b") }
+             lawn = hexc("9e983f"), lawnD = hexc("867744"), lawnL = hexc("b5ad55"), seam = hexc("665c3b"),
+             leaf = { hexc("fb8c29"), hexc("fec244"), hexc("ec6e1f"), hexc("c6261b") }, leafL = hexc("fec244"), leafD = hexc("7d1812") }
 BS.PARK_KERB = BS.FEET + 17                                         -- the kerb's top row (the path's tile rows end above it)
+BS.PARK_TUFTS = { { 3, 0 }, { 8, 4 }, { 14, 2 }, { 19, 6 }, { 23, 1 }, { 27, 5 }, { 30, 3 }, { 33, 7 } }   -- { rows under the verge's top, x offset }
+-- a leaf (5 x 3, its stem dark), drawn as is or mirrored: { x, y } as placed, colour i
+local LEAF = { ".lc..", "cccck", ".kc.." }
+BS.PARK_LEAVES = { { 19, 213, 1 }, { 61, 226, 2, true }, { 97, 217, 3 }, { 129, 233, 4, true }, { 168, 221, 1 },
+                   { 205, 230, 3, true }, { 244, 215, 2 }, { 281, 227, 4 }, { 306, 235, 1, true }, { 2, 234, 3 } }
 local function parkFront()
   local y0 = BS.PARK_KERB
   rect(PK.top, 0, y0, 320, 1); rect(PK.face1, 0, y0 + 1, 320, 1); rect(PK.face, 0, y0 + 2, 320, 1)
   rect(PK.foot, 0, y0 + 3, 320, 1); rect(PK.seam, 0, y0 + 4, 320, 1)
   for x = 6, 319, 12 do rect(PK.face, x, y0, 1, 1); rect(PK.joint, x, y0 + 1, 1, 3) end
-  rect(PK.lawn, 0, y0 + 5, 320, 240 - y0 - 5)                      -- the verge
-  for x = 2, 319, 8 do                                             -- grass over the kerb's foot: 2 px tufts
+  rect(PK.lawn, 0, y0 + 5, 320, 240 - y0 - 5)                      -- the lawn, on to the bottom
+  for x = 2, 319, 8 do                                             -- grass over the kerb's foot: 2 px tufts, lit tips
     local h = ({ 2, 1, 2, 2, 1, 2, 1, 2 })[math.floor(x / 8) % 8 + 1]
     rect(PK.lawn, x, y0 + 5 - h, 2, h); rect(PK.lawnL, x, y0 + 5 - h, 2, 1)
   end
-  for _, rw in ipairs({ { 4, 0 }, { 9, 4 }, { 15, 2 }, { 22, 6 }, { 30, 3 } }) do   -- tufts in the verge
+  for _, rw in ipairs(BS.PARK_TUFTS) do
     for x = rw[2], 319, 8 do rect(PK.lawnL, x, y0 + 5 + rw[1], 2, 1); rect(PK.lawnD, x, y0 + 6 + rw[1], 2, 1) end
   end
+  for _, l in ipairs(BS.PARK_LEAVES) do
+    for r, row in ipairs(LEAF) do
+      for i = 1, #row do
+        local ch = row:sub(i, i)
+        local c = (ch == "c" and PK.leaf[l[3]]) or (ch == "l" and PK.leafL) or (ch == "k" and PK.leafD) or nil
+        if c then rect(c, l[1] + (l[4] and (#row - i) or (i - 1)), l[2] + r - 2, 1, 1) end
+      end
+    end
+  end
 end
-BS.HEDGES = { { -12, 168 }, { 214, 130 } }                         -- { x, width }: the gap shows the verge to the bottom
-BS.HEDGE_H = 240 - Look.FRONT_TOP                                  -- (as the levels' front band: top 218 + 6 + the lobes)
 local function buildCitypark(s)
   s.layers = Sc.buildArt(320, "park")
   s.world = flatWorld()
   s.ground = painted(function() tileFloor("park", BS.PARK_KERB - (BS.FEET - 12)); parkFront() end)
-  s.front = {}
-  local r = rng(707)
-  for _, h in ipairs(BS.HEDGES) do s.front[#s.front + 1] = { x = h[1], img = Look.clump(r, "hedge", h[2], BS.HEDGE_H) } end
 end
 local function farCitypark(s, t) Sc.drawFarArt(s.layers, 0, t, s.world) end
 
@@ -140,6 +153,7 @@ local function farCitypark(s, t) Sc.drawFarArt(s.layers, 0, t, s.world) end
 BS.DT_KERB = 160                                                    -- the square's far kerb: the backdrop's walls end on it
 BS.DT_ROOFS = 214                                                   -- the backdrop's bottom row + 1 (hidden by the floor)
 BS.DT_X = 60                                                        -- the backdrop's first column (the spire left of the clock)
+BS.DT_WALL = 30                                                     -- town_ground.png's kerb face, then the quay wall
 local function farDowntown(s, t)
   local T, A = Sc.townArt("town"), Sc.art()
   Sc.skyAndClouds(s.layers, 0, t)
@@ -153,7 +167,16 @@ local function buildDowntown(s)
   s.layers = Sc.buildArt(320, "town")
   local d = love.image.newImageData("art/scene/town_roofs.png")
   s.roofs = lg.newImage(Sc.fadeData(d, nil, "mid")); s.roofs:setFilter("nearest", "nearest")
-  s.ground = painted(function() tileFloor("town") end)
+  s.ground = painted(function() tileFloor("town", BS.DT_WALL) end)
+  -- (round 2, 7 Nov) the kerb's face and the quay wall in their own granite greys: graded twice like the street
+  -- (painted under "back", drawn under "ground") their darks lean violet, a purple brick band. Drawn as the file has them
+  local T = Sc.townArt("town")
+  local gw, gh = T.ground:getDimensions()
+  s.top = lg.newCanvas(320, 240); s.top:setFilter("nearest", "nearest")
+  lg.push("all"); lg.setCanvas(s.top); lg.clear(0, 0, 0, 0); lg.origin(); lg.setShader(); lg.setColor(1, 1, 1, 1)
+  local q = lg.newQuad(0, BS.DT_WALL, gw, gh - BS.DT_WALL, gw, gh)
+  for x = 0, 319, gw do lg.draw(T.ground, q, x, BS.FEET - 12 + BS.DT_WALL) end
+  lg.pop()
 end
 
 ----------------------------------------------------------------------------------------------------
@@ -169,7 +192,7 @@ function BS:draw(t)
   Look.use("ground"); lg.setColor(1, 1, 1, 1)
   lg.draw(self.ground, 0, 0)
   Look.off(); lg.setColor(1, 1, 1, 1)
-  for _, f in ipairs(self.front or {}) do lg.draw(f.img, f.x, 240 - f.img:getHeight()) end   -- (no grade: final colours)
+  if self.top then lg.draw(self.top, 0, 0) end                    -- (no grade: the file's own colours)
 end
 
 return BS

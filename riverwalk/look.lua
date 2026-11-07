@@ -306,7 +306,6 @@ local function clump(r, kind, w, h)
   local im = lg.newImage(d); im:setFilter("nearest", "nearest")
   return im
 end
-Look.clump = clump                                                 -- (bonusscene.lua: City Park's front hedges)
 
 -- the stretches of flat ground at Pepper's line (terrain top y 184, or a tall level's path line foot), found as
 -- the road's traffic finds them

@@ -33,8 +33,7 @@ stands on it. Decoration is behind Pepper's line (the railing, the far rows) or 
   (`park_ground.png` rows 0-28), then a new front edge by rule (below).
 - **Downtown** (one function, `farDowntown` / `buildDowntown`): only what stays through the redesign on
   `day/07nov-dt`: the sky and clouds, the skyline, the far roofs and spires (`town_roofs.png`) and the square's floor
-  (`town_square_floor.png`), then the street's setts, kerb and quay wall (`town_ground.png`, as in the level). No
-  facades. In the level the roofs stand behind the facade row, faded 70 % to the shore haze; with nothing in front
+  (`town_square_floor.png`), then the street's setts, kerb and quay wall (`town_ground.png`). No facades. In the level the roofs stand behind the facade row, faded 70 % to the shore haze; with nothing in front
   they read as a pale wall of houses over the whole screen, so here they stand across the square where the mid row
   would be: faded as the mid layer (25 %) and set 54 px lower, their foot hidden under the square's floor. The
   file is untouched; it is whole-pixel placement and the game's own fade.
@@ -45,12 +44,13 @@ Under the City Park path there were 5 flat bands of dark earth (olive, brown, pl
 screen. Each scene now ends in a finished front edge:
 
 - **City Park**: a kerb of granite setts in the park stone's greys (`park_stone.png`: lit top, face, shaded foot,
-  joints every 12 px), grass tufts leaning over its foot so the lawn meets it without a cut, a grass verge in the
-  tile's own lawn green with tufts on an 8 px grid in offset rows, and in front two clipped hedges in City Park's
-  foreground colours (the approved hedge from `look.lua`, tops at y 224 or lower, never over Pepper or an item),
-  with a gap where the verge runs on to the bottom.
+  joints every 12 px), grass tufts with lit tips leaning over its foot so the lawn meets it without a cut, then the
+  lawn runs on to the bottom of the screen in the tile's own green: tufts (a lit pair over a dark pair) in offset
+  rows that come closer together towards the bottom, and ten single fallen leaves in the leaf piles' colours
+  (`park_leaves.png`). No dark foreground shapes, no full-width bands.
 - **River Walk**: the quay coping (lit kerb top, granite face, a shadow row) and the quay wall face under it.
-- **Downtown**: the setts end at the street's granite kerb with the quay wall under it (the level's own tile).
+- **Downtown**: the setts end at the street's granite kerb with the quay wall under it (the level's own tile). The
+  kerb's face and the wall are drawn in the file's own granite greys (see round 2).
 
 Frames: `citypark_before_after_2x.png` (same autopilot frame, before left, after right, colour over greyscale) and
 `citypark_ground_before_after_4x.png` (the bottom band, before above, after below).
@@ -63,6 +63,25 @@ levels. Before, the bonus painted it with no grade, so its path was a shade dull
 nothing from them. The kit's drawn parts are City Park's mid-row lawn, tufts and tree-root grass, and its geometric
 parts are painters inside `scene.lua` that work from a level's kind map. A flat 320 px screen has no joins between
 ground kinds. The front edges here are drawn by rule in each level's own colours.
+
+## Round 2 (coordinator's fixes, 7 Nov)
+
+1. **City Park's dark hedges removed.** At 11:27 the owner called exactly these black foreground shapes in City
+   Park "terrible". No bonus scene has dark foreground clumps now (`look.lua` is back as on main).
+2. **City Park's front edge: no flat olive band.** Two options at 3x in `round2_citypark_options_3x.png`:
+   - above: the verge, then a low earth bank, its edge breaking into 2-3 px steps with a dark contact line, stones
+     in it, in `park_ground.png`'s earth colours
+   - below: the lawn running to the bottom with tufts closer together lower down and a few fallen leaves
+
+   Picked: **the lawn**. Graded as the ground (as in the level), the bank's earth reads as a plum band across the
+   screen, the colour and shape the owner disliked in the old earth stripes. The lawn has no band at all.
+   Before/after: `round2_citypark_before_after_3x.png` (round 1 above, now below).
+3. **Downtown's quay wall: granite, not purple.** The level paints its ground under the back layer's grade and draws
+   it under the ground's, and both push dark greys towards violet, so the wall read as a purple brick band (it does
+   in the level too: 83/68/95 and 89/75/98 at street level). The bonus now draws the kerb's face and the quay wall
+   (`town_ground.png` rows 30-67) ungraded, in the file's own warm granite greys (72/66/64, 78/72/69, joints
+   47/43/47). The street's setts and kerb top keep the level's grade. Rooftops falls back to Downtown, so it gets
+   the same fix. Before/after: `round2_downtown_before_after_3x.png`, `round2_rooftops_before_after_3x.png`.
 
 ## Readability (greyscale, 2x)
 
@@ -79,26 +98,27 @@ taken from the 2x window as 1x by one pixel per 2x2 block):
 
 - `N_<level>_<scene>_1x.png`, `_3x.png` and `_grey_2x.png` for N = 1-6
 - `all_rounds_1x.png`: the six rounds in order (rows of 3, colour over greyscale)
+- `round2_*_3x.png`: this round's fixes and the City Park options
 
 ## Checks (final commit)
 
 - `love riverwalk --bonus` and `--level X --bonus` for riverwalk, citypark_tall, downtown_tall, rooftops, soder and
   night: no Lua errors; every level's full round played by the autopilot (`--auto`) with the same results as before
   the change (A 14 of 15, B 13 of 15, C 13 of 14).
-- Bonus tests (`love riverwalk --bonus --physics`): 23 of 23 passed.
-- `tools/check_flow.sh`: 125 of 125 passed.
-- `tools/check_pepper.sh`: PEPPER UNCHANGED (3908 steps identical).
+- Bonus tests (`love riverwalk --bonus --physics`): 23 of 23 passed (round 2 too).
+- `tools/check_flow.sh`: 125 of 125 passed (round 2 too).
+- `tools/check_pepper.sh`: PEPPER UNCHANGED, 3908 steps identical (round 2 too).
+- Round 2: every level's round played again by the autopilot, results unchanged.
 - River Walk physics (`--level riverwalk --physics`, as `Sc.paintQuay` got one option): 55 of 55 passed.
 
 Each run with its own `XDG_DATA_HOME=$(mktemp -d)`, under `xvfb-run -a`, `SDL_AUDIODRIVER=dummy`.
 
 ## Files
 
-- `riverwalk/bonusscene.lua` (new): the scene table, the three scenes, the front edges.
+- `riverwalk/bonusscene.lua` (new): the scene table, the three scenes, the front edges, Downtown's ungraded wall.
 - `riverwalk/bonus.lua`: the round picks its scene from the level number; the City Park drawing moved out.
 - `riverwalk/scene.lua`: `Sc.paintQuay` takes `def.quayFront` (every column the quay's kind, no road);
   `Sc.skyAndClouds` and `Sc.strip` exported. The levels draw exactly as before.
-- `riverwalk/look.lua`: `Look.clump` exported (the hedge). The levels draw exactly as before.
 - Not touched: Pepper's files, `world.lua`, `stage.lua`, the throws, catch rules and timings.
 
 ## Questions for the owner
@@ -106,4 +126,5 @@ Each run with its own `XDG_DATA_HOME=$(mktemp -d)`, under `xvfb-run -a`, `SDL_AU
 1. Night Harbour's round is on River Walk's promenade in morning light until Night gets its own colour script. OK,
    or should it wait for a night look?
 2. Söder Hill's round is on the City Park lawn. Would you rather have Downtown's square or the River Walk quay there?
-3. City Park's front: clipped hedges with a gap where the verge runs on. OK, or the verge alone to the bottom?
+3. Downtown's quay wall is granite grey in the bonus but still violet in the level itself (the same grade). Should
+   the level get the same fix?
