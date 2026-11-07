@@ -730,6 +730,114 @@ DOWNTOWN = {
          "drums": "k...s...k.k.s... | k.s.s.s.s.s.ssss", "hats": "h.h.h.h.h.h.h.h. | h.h.h.h........."},
     ]}
 
+# Rooftops: A minor with the Dorian D major, 150 bpm, 30 bars (48 s). High above the town: airy and daring. The
+# hook shape (3 5 1 7) again; A over a driving bass with echo; B soars in C major with long notes over "wind"
+# arpeggios and a bass that walks down C B A G F E D (held notes, half-time drums: the gulls and the steam);
+# A' over arpeggios; F - E7 turnaround.
+_RF_A = ("C5:2 E5:2 A5:4 G5:2 A5:2 E5:4 | F#5:2 E5:2 D5:2 E5:2 F#5:4 A5:4 | A5:2 F5:2 C5:4 B4:2 D5:2 G5:4 |"
+         "E5:4 C5:2 B4:2 A4:8v | C5:2 E5:2 A5:4 G5:2 A5:2 E5:4 | A5:2 B5:2 A5:2 F#5:2 D5:4 F#5:2 A5:2 |"
+         "F5:2 A5:2 C6:4 B5:2 G#5:2 E5:4 | C6:2 B5:2 A5:12v")
+ROOFTOPS = {
+    "name": "rooftops", "bpm": 150, "key": "A minor (Dorian D major; B section C major)",
+    "mood": "airy, daring, high above the town",
+    "sections": [
+        {"name": "Intro", "chords": "Am | D | F | E7",
+         "lead": "r:16 | r:16 | r:16 | r:10 E4:2s A4:2s B4:2s",
+         "p2": ("arp", "x.x.x.x.x.x.x.x.", 0.45, 64), "bass": "drive",
+         "drums": "k.......k....... | k.......k....... | k...s...k...s... | k...s...s.s.ssss",
+         "hats": "c...h...h...h... | h...h...h...h... | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h."},
+        {"name": "A", "chords": "Am | D | F G | Am | Am | D | Dm7 E7 | Am",
+         "lead": _RF_A, "p2": ("echo", 3, 0.4), "bass": "drive",
+         "drums": "k...s...k.k.s...", "hats": "c.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. |"
+         "h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h."},
+        {"name": "B (gulls)", "chords": "C | G/B | Am | Em/G | F | C/E | Dm | G7",
+         "lead": "G5:8 E5:4 C5:4 | D5:4 G5:4 B5:8 | C6:8 A5:4 E5:4 | G5:4 B5:4 E5:8 |"
+                 "A5:8 F5:4 C5:4 | E5:4 G5:4 C6:8 | D6:4 C6:2 A5:2 F5:4 D5:4 | B5:4 G5:2 F5:2 D5:8v",
+         "p2": ("arp", "x.x.x.x.x.x.x.x.", 0.4, 64), "bass": "hold",
+         "drums": "k.......s.......", "hats": "c...h...h...h... | h...h...h...h... | h...h...h...h... |"
+         "h...h...h...h... | h...h...h...h... | h...h...h...h... | h...h...h...h... | h...h...h.h.h.h."},
+        {"name": "A'", "chords": "Am7 | D | F G | Am | Am7 | D | Dm7 E7 | Am",
+         "lead": _RF_A, "p2": ("arp", "x.x.x.x.x.x.x.x.", 0.38, 60), "bass": "drive",
+         "drums": "k...s...k.k.s...", "hats": "c.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. |"
+         "h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h."},
+        {"name": "Turnaround", "chords": "F | E7",
+         "lead": "A5:2s G5:2s F5:2s E5:2s F5:2s A5:2s C6:4 | B5:2s G#5:2s E5:2s G#5:2s B5:2s D6:2s E6:4",
+         "p2": ("echo", 3, 0.4), "bass": "walk",
+         "drums": "k...s...k.k.s... | k.s.s.s.s.s.ssss", "hats": "h.h.h.h.h.h.h.h. | h.h.h.h........."},
+    ]}
+
+# Söder Hill: E minor, 160 bpm, 30 bars (45 s). The chase down the hill: urgent but fun. The hook shape as a gallop
+# (eighth, two sixteenths); A ends on B7; B in G major is stair-step runs (the stairs, the rolling barrels) over
+# quarter-note chord stabs, B7 at the end; A' over arpeggios; C - B7 turnaround.
+_SH_A = ("G4:2 B4:1 B4:1 E5:4 D5:2 E5:1 E5:1 B4:4 | C5:2 E5:1 E5:1 G5:4 E5:2 C5:2 G4:4 |"
+         "A4:2 C5:1 C5:1 E5:4 D#5:2 F#5:1 F#5:1 A5:4 | G5:4 F#5:2 E5:2 B4:8 |"
+         "G4:2 B4:1 B4:1 E5:4 D5:2 E5:1 E5:1 B4:4 | E5:2 G5:1 G5:1 C6:4 B5:2 G5:2 E5:4 |"
+         "A5:2 C6:1 C6:1 E6:4 D6:2 C6:2 A5:2 F#5:2 | G5:4 B5:4 B5:2 A5:2 F#5:2 D#5:2")
+SODER = {
+    "name": "soder", "bpm": 160, "key": "E minor (B section G major)",
+    "mood": "the chase: urgent, fun, galloping",
+    "sections": [
+        {"name": "Intro", "chords": "Em | Em | C | B7",
+         "lead": "r:16 | r:16 | r:16 | r:10 D#4:2s E4:2s F#4:2s",
+         "p2": ("arp", "x.xxx.xxx.xxx.xx", 0.42, 59), "bass": "drive",
+         "drums": "k.k.s...k.k.s... | k.k.s...k.k.s... | k.k.s...k.k.s... | k.k.s.s.s.ssssss",
+         "hats": "c.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h......."},
+        {"name": "A", "chords": "Em | C | Am B7 | Em | Em | C | Am D7 | G B7",
+         "lead": _SH_A, "p2": ("echo", 3, 0.4), "bass": "drive",
+         "drums": "k.k.s...k.k.s..k", "hats": "c.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. |"
+         "h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h."},
+        {"name": "B (stairs)", "chords": "C | D | Bm | Em | C | D | B7 | B7",
+         "lead": "C5:1s D5:1s E5:1s G5:1s E5:4 D5:1s E5:1s G5:1s C6:1s G5:4 |"
+                 "D5:1s E5:1s F#5:1s A5:1s F#5:4 E5:1s F#5:1s A5:1s D6:1s A5:4 |"
+                 "A4:1s B4:1s D5:1s F#5:1s D5:4 B4:1s D5:1s F#5:1s B5:1s F#5:4 |"
+                 "E5:1s F#5:1s G5:1s B5:1s G5:4 E5:4 r:4 |"
+                 "E5:1s G5:1s C6:1s E6:1s C6:4 G5:4 E5:4 | D5:1s F#5:1s A5:1s D6:1s A5:4 F#5:4 D5:4 |"
+                 "B5:4 A5:2 F#5:2 D#5:8v | B5:2s A5:2s F#5:2s D#5:2s B4:4 r:4",
+         "p2": ("arp", "x...x...x...x...", 0.42, 55), "bass": "bounce",
+         "drums": "k.k.s.k.k.k.s...", "hats": "h.h.h.h.h.h.h.h."},
+        {"name": "A'", "chords": "Em | C | Am B7 | Em | Em | C | Am D7 | G B7",
+         "lead": _SH_A, "p2": ("arp", "x.x.x.x.x.x.x.x.", 0.38, 60), "bass": "drive",
+         "drums": "k.k.s...k.k.s..k", "hats": "c.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. |"
+         "h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h."},
+        {"name": "Turnaround", "chords": "C | B7",
+         "lead": "E5:2s G5:2s C6:2s B5:2s G5:2s E5:2s C5:4 | D#5:2s F#5:2s A5:2s B5:2s D#6:4 B5:4",
+         "p2": ("echo", 3, 0.4), "bass": "walk",
+         "drums": "k.k.s...k.k.s... | k.s.s.s.s.s.ssss", "hats": "h.h.h.h.h.h.h.h. | h.h.h.h........."},
+    ]}
+
+# Night Harbour: C minor, 96 bpm with a gentle swing, 30 bars (75 s). Night by the water, sniffing for the fox: calm,
+# a little mysterious. A soft 50 % lead, a plucked bass, ticks for drums. Intro: a buoy bell on a thin pulse. The
+# hook shape (3 5 1 7) in minor over Ab major 7; B (the stars) in Eb with long notes over a bass that walks down
+# Eb D C B Ab G F G, echoed like a reflection on the water; A' over slow arpeggios; Abmaj7 - G7 turnaround.
+_NH_A = ("Eb5:2 G5:2 C6:6 Bb5:2 G5:4 | Ab5:4 G5:2 F5:2 G5:8v | F5:2 Ab5:2 C6:4 B5:2 G5:2 D5:4 |"
+         "Eb5:4 D5:2 B4:2 C5:8v | Eb5:2 G5:2 C6:6 Bb5:2 G5:4 | C6:4 Bb5:2 Ab5:2 Eb5:4 G5:4 |"
+         "F5:2 Ab5:2 D5:4 B4:2 D5:2 F5:4 | Eb5:2 D5:2 C5:12v")
+NIGHT = {
+    "name": "night", "bpm": 96, "swing": 0.6, "key": "C minor (B section Eb major)", "lead_duty": 0.5,
+    "mood": "night by the water: calm, a little mysterious",
+    "sections": [
+        {"name": "Intro", "chords": "Cm | Abmaj7 | Fm | G7",
+         "lead": "r:16 | r:16 | r:16 | r:12 C5:2 D5:2",
+         "p2": "C6:2 r:2 G5:8 r:4 | C6:2 r:2 G5:8 r:4 | Ab5:2 r:2 F5:8 r:4 | B5:2 r:2 G5:8 r:4",
+         "p2_vol": 0.5, "p2_duty": 0.125, "bass": "pizz", "bass_vol": 0.9,
+         "drums": "....t.......t...", "hats": "h.......h.......", "drum_vol": 0.6},
+        {"name": "A", "chords": "Cm | Abmaj7 | Fm G7 | Cm | Cm | Abmaj7 | Ddim G7 | Cm",
+         "lead": _NH_A, "p2": ("echo", 3, 0.35), "p2_duty": 0.125, "bass": "pizz", "bass_vol": 0.9,
+         "drums": "k.......k...t...", "hats": "h...h...h...h...", "drum_vol": 0.65},
+        {"name": "B (stars)", "chords": "Eb | Bb/D | Cm | G/B | Ab | Eb/G | Fm7 | G7",
+         "lead": "G5:6 Bb5:2 Eb6:8 | D6:6 C6:2 Bb5:8 | C6:4 G5:4 Eb5:4 G5:4 | D5:4 G5:4 B5:8v |"
+                 "C6:6 Bb5:2 Ab5:4 Eb5:4 | G5:4 Bb5:4 Eb6:8 | Eb6:4 C6:4 Ab5:4 F5:4 | D5:4 F5:2 G5:2 B5:8v",
+         "p2": ("echo", 4, 0.3), "p2_duty": 0.125, "bass": "hold", "bass_vol": 0.85,
+         "drums": "................", "hats": "h...h...h...h...", "drum_vol": 0.55},
+        {"name": "A'", "chords": "Cm7 | Ab | Fm7 G7 | Cm | Cm7 | Ab | Ddim G7 | Cm",       # (Ab, not Abmaj7: G and Ab side by side in a fast arpeggio buzz)
+         "lead": _NH_A, "p2": ("arp", "x.x.x.x.x.x.x.x.", 0.32, 60), "bass": "pizz", "bass_vol": 0.9,
+         "drums": "k.......k...t...", "hats": "h...h...h...h...", "drum_vol": 0.65},
+        {"name": "Turnaround", "chords": "Abmaj7 | G7",
+         "lead": "C6:4 Bb5:2 G5:2 Eb5:4 C5:4 | B4:4 D5:4 F5:4 G5:4",
+         "p2": ("echo", 3, 0.35), "p2_duty": 0.125, "bass": "walk",
+         "drums": "k.......k...t... | k.......t.t.t.t.", "hats": "h...h...h...h...", "drum_vol": 0.65},
+    ]}
+
 # Level clear: D major, 150 bpm, 2 bars and a ring (3.6 s): a rising arpeggio to the top D over I - IV - V, and the
 # top D held over I with vibrato.
 CLEAR = {
@@ -758,8 +866,8 @@ FETCH = {
                   "bass": "D2:2 r:2 A2:2 D3:6 r:4",
                   "drums": "k...s.k.........", "hats": "c..............."}]}
 
-SONGS = [TITLE, CITYPARK, RIVERWALK, DOWNTOWN, CLEAR, OVER, FETCH]
-LOOPS = {"title", "citypark", "riverwalk", "downtown"}
+SONGS = [TITLE, CITYPARK, RIVERWALK, DOWNTOWN, ROOFTOPS, SODER, NIGHT, CLEAR, OVER, FETCH]
+LOOPS = {"title", "citypark", "riverwalk", "downtown", "rooftops", "soder", "night"}
 
 
 # ---------------------------------------------------------------------------------------------------------------
