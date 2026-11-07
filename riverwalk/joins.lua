@@ -15,8 +15,10 @@ local Jn = { marks = {} }
 
 -- the transitions, by "A>B" (A on the left). `what` says what is stamped, `by` which painter does it.
 Jn.RULES = {
-  ["road>ramp"]   = { what = "kerb return in granite, the wall's quoined corner, the road's contact shadow", by = "Sc.paintQuay cornerColour / roadShade / dRoad" },
-  ["ramp>road"]   = { what = "the same, mirrored: the wall's cast shadow on the asphalt", by = "Sc.paintQuay" },
+  -- (owner, 7 Nov: "the asphalt goes on") the road runs on in front of the steps (Sc.ROAD_RUNS_ON); with it off,
+  -- the old kerb return with the quoined corner and the road's contact shadow (cornerColour / roadShade / dRoad)
+  ["road>ramp"]   = { what = "the road runs on under the steps: the kerb face steps down with the treads, the gutter under each", by = "Sc.paintQuay roadOn" },
+  ["ramp>road"]   = { what = "the same, mirrored", by = "Sc.paintQuay roadOn" },
   ["ramp>quay"]   = { what = "the steps' last tread lands on the quay paving (8 px slope tile)", by = "Sc.paintQuay stepTop" },
   ["quay>ramp"]   = { what = "the same, mirrored", by = "Sc.paintQuay stepTop" },
   ["quay>water"]  = { what = "quay-end cap: coping overhang and its shadow, wet arris, ripple, reflection", by = "Sc.paintQuay quay-end pass" },

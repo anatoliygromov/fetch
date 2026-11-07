@@ -79,12 +79,12 @@ end
 local function buildRiverwalk(s)
   s.layers = Sc.build(320)
   s.rail = Sc.railing(340, "decor")
-  local keepD, keepR = Sc.decals, Sc.roadEnds                      -- (paintQuay resets the level's road decals)
+  local keepD, keepR, keepS = Sc.decals, Sc.roadEnds, Sc.roadOnSegs  -- (paintQuay resets the level's road decals)
   Look.use("back")                                                 -- (painted under the back grade, as in the level)
   local g = Sc.paintQuay(flatWorld(), {}, { ground = "quay", quayFront = true })
   Look.off()
   s.ground = g.chunks[1].cv                                        -- (one 320 x 240 chunk at 0, 0)
-  Sc.decals, Sc.roadEnds = keepD, keepR
+  Sc.decals, Sc.roadEnds, Sc.roadOnSegs = keepD, keepR, keepS
 end
 local function farRiverwalk(s, t)
   Sc.drawFar(s.layers, 0, t)

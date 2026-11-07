@@ -305,6 +305,20 @@ function Look.road(stage, cam, Sc)
       lg.setScissor()
     end
   end
+  -- (owner, 7 Nov: "the asphalt goes on") the road in front of the steps and the lower quay: the same rows, the
+  -- same speeds, only from under each step's (or the quay's) kerb and gutter down (Sc.roadOnSegs)
+  for _, sg in ipairs(Sc.roadOnSegs or {}) do
+    local a, b = math.max(sg[1], cam) - cam, math.min(sg[2], cam + 320) - cam
+    if b > a and sg[3] < 240 then
+      lg.setScissor(a, sg[3], b - a, 240 - sg[3])
+      for r = math.max(0, sg[3] - Look.ROAD_TOP), rh - 1 do
+        local y = Look.ROAD_TOP + r
+        local o = math.floor(cam * Look.rowFactor(y) + 0.5) % rw
+        lg.draw(road, roadQ[r], -o, y); lg.draw(road, roadQ[r], rw - o, y)
+      end
+      lg.setScissor()
+    end
+  end
 end
 
 -- 5 the foreground band: dark shapes near the camera, back-lit (a 1 px lighter rim on their tops): grass verges
