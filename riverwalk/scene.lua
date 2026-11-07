@@ -755,6 +755,7 @@ end
 -- (owner, 6 Nov) the road runs only under the level promenade (feet y 184, as the traffic's spans and look.lua's
 -- receding road rows); a ramp or the lower quay stands on the granite quay wall instead
 Sc.PROMENADE, Sc.QUAY_Y0, Sc.QUAY_JOINT = 184, 196, { 72 / 255, 82 / 255, 107 / 255 }
+Sc.STEP_RW = 8                                                    -- (day/07nov-ground) River Walk's ramps: 8 px stone steps (0.17 m)
 local function columnTop(w, x)                                      -- the first walkable top at or under y 150, or nil
   if x < 0 or x >= w.width then return nil end
   for _, m in ipairs(columnRuns(w, x, "all")) do if m[1] >= 150 then return m[1] end end
@@ -875,17 +876,29 @@ end
 -- the road's end: its kerb turns the corner towards us (8 columns; dir 1: the road is on the left, -1: on the right).
 -- Rows from the kerb top's first row (t + 8); returns a colour or nil (leave what is there)
 local function cornerColour(c, row)
-  -- c: 0 .. 7 from the road's side; row: 0 = t + 8 (the kerb top), 2 = the face's first row, 7 = the road's first
-  if c >= 5 then if row >= 2 then return c == 7 and Q.top2 or Q.top1 end return nil end
-  if c == 4 then
-    if row == 2 then return Q.top1 elseif row <= 7 then return Q.kf2 elseif row >= 8 then return Q.kf3 end
-    return nil
-  end
-  if c == 3 then
-    if row == 2 then return Q.kf1 elseif row >= 3 and row <= 6 then return Q.kf2 elseif row == 7 or row == 8 then return Q.kf3 end
-    return nil
-  end
+  -- c: 0 .. 7 from the road's side (7 = the column against the wall's corner); row: 0 = t + 8 (the kerb top),
+  -- 2 = the face's first row, 7 = the road's first.
+  -- (day/07nov-ground, audit RW1/RW10: the kerb return ran down to the screen's bottom as a light strip) the kerb
+  -- ends in an end stone against the wall (its end joint); the asphalt runs on to the wall's quoins, with a soft
+  -- shadow at its foot (Sc.roadEnds, drawn over look.lua's road)
+  -- the kerb's return down the road's end: 3 px of granite face (lit, mid, shade) with a rounded top corner,
+  -- then the shadow row against the wall's quoins
+  if c == 7 then return row <= 1 and Q.tj or Q.sh end
+  if c == 6 then if row == 0 then return nil end return row <= 2 and Q.kf2 or Q.kf3 end
+  if c == 5 then if row <= 1 then return Q.top2 end return row == 2 and Q.kf1 or Q.kf2 end
+  if c == 4 then if row <= 1 then return nil end return (row <= 7) and nil or Q.kf1 end
   return nil
+end
+-- the shadow on the asphalt beside the wall's corner (alpha, 0 = none); c as above, row from the road's first row.
+-- dir 1 (the wall on the road's right, the sun upper left): a 2 px contact line. dir -1 (the wall on its left):
+-- the wall's cast shadow, 5 px at the kerb widening 1 px every 6 rows nearer the camera, its edge 1 px softer
+local function roadShade(c, row, dir)
+  local i = 3 - c                                                  -- columns out from the kerb return (c 4 .. 7)
+  if i < 0 then return 0 end
+  if dir == 1 then return (i == 0) and 0.35 or ((i == 1) and 0.15 or 0) end
+  local w = 4 + math.floor(row / 8)                                -- the wall's cast shadow (wall on the road's left)
+  if i < w - 1 then return 0.34 elseif i == w - 1 then return 0.17 end
+  return 0
 end
 -- (day/07nov-ground) Pepper's front garden (a GARDEN prop with garden = true: x0-x1, its door path path0-path1):
 -- owner 7 Nov, "Kennel like this would never be on the street": the kennel stands on a lawn in front of her house.
@@ -907,6 +920,21 @@ local function gardenAt(gs, x)
   end
 end
 Sc.G = G
+-- the columns of an art file's bottom row that are opaque (its foot), cached: { x0, x1 } or false
+local FOOT = {}
+function Sc.footCols(name)
+  if FOOT[name] == nil then
+    FOOT[name] = false
+    local ok, d = pcall(love.image.newImageData, "art/scene/" .. name .. ".png")
+    if ok then
+      local h = d:getHeight()
+      local x0, x1
+      for x = 0, d:getWidth() - 1 do local _, _, _, a = d:getPixel(x, h - 1); if a > 0 then x0 = x0 or x; x1 = x end end
+      if x0 then FOOT[name] = { x0 = x0, x1 = x1 } end
+    end
+  end
+  return FOOT[name]
+end
 function Sc.paintGarden(gs, x, t, px)
   local g, onPath = gardenAt(gs, x)
   local function lawnAt(u) local h, p = gardenAt(gs, u); return h and not p end
@@ -989,6 +1017,15 @@ function Sc.paintQuay(w, props, def)
     if kind[x - 1] == "road" and kind[x] == "ramp" then ends[#ends + 1] = { x0 = x - 8, dir = 1 } end
     if kind[x - 1] == "ramp" and kind[x] == "road" then ends[#ends + 1] = { x0 = x, dir = -1 } end
   end
+  -- (day/07nov-ground, audit RW1/RW10) beside a road's end the wall's corner is dressed in quoins (its distance
+  -- from the road, as at the water's corners), instead of a light kerb strip running down to the screen's bottom
+  local dRoad = {}
+  for _, e in ipairs(ends) do
+    for i = 0, 29 do
+      local x = e.dir == 1 and (e.x0 + 8 + i) or (e.x0 - 1 - i)
+      if kind[x] == "ramp" or kind[x] == "quay" then dRoad[x] = i end
+    end
+  end
   local function cornerAt(x)                                         -- (corner column c from the road's side, or nil)
     for _, e in ipairs(ends) do
       if x >= e.x0 and x < e.x0 + 8 then return e.dir == 1 and (x - e.x0) or (7 - (x - e.x0)) end
@@ -997,36 +1034,57 @@ function Sc.paintQuay(w, props, def)
   local gardens = {}                                                -- (day/07nov-ground) the front garden
   for _, p in ipairs(def.props or {}) do if p.garden then gardens[#gardens + 1] = p end end
   local under = {}                                                  -- the columns under the bridge (its shadow)
-  for _, ps in ipairs(def.passages or {}) do for x = ps.vx0 or ps.x0, (ps.vx1 or ps.x1) - 1 do under[x] = true end end
+  local spans = {}                                                  -- (day/07nov-ground, audit RW6: the shadow's ends
+  for _, ps in ipairs(def.passages or {}) do                        -- were vertical cuts) its spans, for the slant
+    spans[#spans + 1] = { ps.vx0 or ps.x0, ps.vx1 or ps.x1 }
+    for x = (ps.vx0 or ps.x0) - 2, (ps.vx1 or ps.x1) + 22 do under[x] = true end
+  end
+  -- the bridge's shadow at (x, paving row r): the sun is upper left, so each row's shadow is shifted 1 px right per
+  -- row nearer the camera (a parallelogram, its ends slanting), and the darkest band is the narrowest (1 px in)
+  local function shadeAt(x, r)
+    for _, sp in ipairs(spans) do
+      local a, b = sp[1] + math.floor(r / 2), sp[2] + math.floor(r / 2)
+      if x >= a and x < b then
+        local e = math.min(x - a, b - 1 - x)                          -- columns from the shadow's slanted ends
+        if e == 0 then return 0.86 end                                -- a 1 px penumbra at each end
+        if r < 7 then return 0.62 elseif r < 14 then return 0.74 else return 0.86 end
+      end
+    end
+  end
   local SHADE = { { 7, 0.62 }, { 14, 0.74 }, { 22, 0.86 } }           -- the bridge's shadow: three flat bands, back to front
   local function px(c, x, y) lg.setColor(c); lg.rectangle("fill", x, y, 1, 1) end
   local function run(c, x, y0, y1) if y1 > y0 then lg.setColor(c); lg.rectangle("fill", x, y0, 1, y1 - y0) end end
+  -- (day/07nov-ground, audit RW2/RW3/RW9: the ramp was the flat recipe sheared per column, with a seam at each
+  -- end) the ramp as stone steps, a slope tile of STEP px rise per STEP px run (Sc.STEP_RW): each step one granite
+  -- tread, its courses level, a joint at its edge, the coping nosing along its front, its face and the wall's
+  -- courses under it on the world grid; the first and last steps are the landings into the flat paving
+  local function stepTop(x)
+    local t0 = top[x]
+    local S = Sc.STEP_RW
+    return Sc.PROMENADE + math.floor((t0 - Sc.PROMENADE) / S + 0.5) * S
+  end
   local function column(x, bottom)
     local t, k = top[x], kind[x]
-    local first = kind[x - 1] ~= "ramp" and k == "ramp"
-    local last = kind[x + 1] ~= "ramp" and k == "ramp"
+    if k == "ramp" then t = stepTop(x) end
     -- 1 the paving (rows 0-21 from t - 12)
     if k == "ramp" then
+      local edge = kind[x - 1] ~= "ramp" or stepTop(x - 1) ~= t     -- a step's first column: the joint
+      local si = math.floor(x / Sc.STEP_RW)
       for r = 0, 19 do
         local c
-        if first or last then c = Q.pj
-        elseif r == 0 then c = Q.pb
+        if r == 0 then c = Q.pb
+        elseif edge then c = Q.pj
         elseif r % 5 == 0 then c = Q.pj
-        else
-          local cr = math.floor(r / 5)
-          local u = x + cr * 6
-          if u % 12 == 0 then c = Q.pj else c = Q.ps[(math.floor(u / 12) * 7 + cr * 3) % 3 + 1] end
-        end
+        else c = Q.ps[(si * 2 + math.floor(r / 5)) % 3 + 1] end
         px(c, x, t - 12 + r)
       end
-      px((first or last) and Q.tj or Q.top1, x, t + 8); px((first or last) and Q.tj or Q.top2, x, t + 9)
+      px(edge and Q.tj or Q.top1, x, t + 8); px(edge and Q.tj or Q.top2, x, t + 9)
     else
       if under[x] then
-        local r0 = 0
-        for _, b in ipairs(SHADE) do
-          clip(x, t - 12 + r0, 1, b[1] - r0)
-          lg.setColor(b[2], b[2], b[2] * 1.06, 1); lg.draw(pave, q[x % pw], x, t - 12)
-          r0 = b[1]
+        for r = 0, 21 do
+          local k = shadeAt(x, r) or 1
+          clip(x, t - 12 + r, 1, 1)
+          lg.setColor(k, k, k * (k < 1 and 1.06 or 1), 1); lg.draw(pave, q[x % pw], x, t - 12)
         end
         clip()
       else
@@ -1039,7 +1097,7 @@ function Sc.paintQuay(w, props, def)
       end
     end
     -- 2 the granite kerb / coping face (rows t + 10 .. t + 14)
-    local joint = k ~= "ramp" and (x % 16 == 0) or (k == "ramp" and (first or last))
+    local joint = k ~= "ramp" and (x % 16 == 0) or (k == "ramp" and (kind[x - 1] ~= "ramp" or stepTop(x - 1) ~= t))
     local edge = (dR[x] == 0 or dL[x] == 0)
     for r = 0, 4 do
       local c = (r == 0) and Q.kf1 or (r == 4 and Q.kf3 or Q.kf2)
@@ -1051,7 +1109,7 @@ function Sc.paintQuay(w, props, def)
       lg.setColor(1, 1, 1, 1)
       clip(x, t + 15, 1, bottom - t - 15); lg.draw(road, rq[x % rw], x, t + 15); clip()
     else
-      local d = dR[x] or dL[x]
+      local d = dR[x] or dL[x] or dRoad[x]
       px(Q.sh, x, t + 15)
       for y = t + 16, bottom - 1 do px(wallColour(x, y, d), x, y) end
     end
@@ -1068,6 +1126,49 @@ function Sc.paintQuay(w, props, def)
         column(x, bottom)
       end
     end
+    -- (day/07nov-ground, audit RW4/5/7/8: the quay ended in one vertical line to the screen's bottom, no waterline)
+    -- the quay-end cap: the coping overhangs the wall's end by 2 px with its shadow under it, the arris wet and dark
+    -- from the river's surface (y 224) down, a ripple along the waterline, the wall's dark reflection in the water
+    for x = xa, xb - 1 do
+      local side = (dR[x] == 0 and 1) or (dL[x] == 0 and -1) or nil
+      if side and top[x] then
+        local t = top[x]
+        for i = 1, 2 do                                             -- the overhang
+          local ox = x + side * i
+          run(i == 1 and Q.top1 or Q.top2, ox, t - 11, t + 10); px(Q.pj, ox, t - 12)
+          for r = 0, 4 do px(i == 2 and Q.kj or (r == 0 and Q.kf1 or Q.kf2), ox, t + 10 + r) end
+          lg.setColor(0.04, 0.06, 0.16, i == 1 and 0.5 or 0.35); lg.rectangle("fill", ox, t + 15, 1, 2)   -- its shadow
+        end
+        local wl = Sc.WATER_Y or 224
+        for i = 0, 1 do lg.setColor(0.08, 0.10, 0.16, i == 0 and 0.5 or 0.25); lg.rectangle("fill", x - side * i, wl, 1, 240 - wl) end   -- wet stone
+        for i, a in ipairs({ 0.30, 0.22, 0.14, 0.08 }) do           -- the reflection, fading out from the wall
+          lg.setColor(0.04, 0.08, 0.22, a); lg.rectangle("fill", x + side * (2 + i), wl + 1, 1, 240 - wl - 1)
+        end
+        lg.setColor(0.86, 0.94, 0.97, 0.9)                          -- the waterline: a ripple against the stone
+        for i = 1, 6 do if i % 3 ~= 0 then lg.rectangle("fill", x + side * i, wl, 1, 1) end end
+        lg.setColor(1, 1, 1, 1)
+      end
+    end
+    -- (day/07nov-ground, audit RW12-14: things stood on the paving with no contact) the contact pass: under every
+    -- piece of back art that stands on the paving's back edge (y1 174: houses, trees, pots), a soft shadow on the
+    -- paving's first two rows under its bottom row's columns (a tree grate was tried: it read as a bar in front)
+    for _, pr in ipairs(def.props or {}) do
+      if pr.art and pr.layer == "back" and pr.y1 == 174 and not pr.garden then
+        local cols = Sc.footCols(pr.art)
+        local ax = pr.ax or pr.x0
+        if cols and ax + cols.x1 >= xa - 8 and ax + cols.x0 < xb + 8 then
+          local a0, a1 = ax + cols.x0, ax + cols.x1
+          for x = math.max(xa, a0 - 1), math.min(xb - 1, a1 + 1) do
+            if top[x] and not gardenAt(gardens, x) and not under[x] then
+              local t = top[x]
+              lg.setColor(0.10, 0.08, 0.14, 0.30); lg.rectangle("fill", x, t - 12, 1, 1)
+              lg.setColor(0.10, 0.08, 0.14, 0.16); lg.rectangle("fill", x, t - 11, 1, 1)
+            end
+          end
+        end
+      end
+    end
+    lg.setColor(1, 1, 1, 1)
     for x = xa, xb - 1 do                                           -- greybox terrain above y 150 (none is drawn
       for _, m in ipairs(columnRuns(w, x, "all")) do                 -- here: the bridge pier's art covers it)
         if m[1] < 150 then
@@ -1113,18 +1214,22 @@ function Sc.paintQuay(w, props, def)
   for _, e in ipairs(ends) do
     local t = top[e.x0] or 184
     local y0, bottom = t + 8, (w.height or 240)
-    local cv = lg.newCanvas(8, bottom - y0)
+    local W8 = 16                                                     -- (the cast shadow can reach 12 columns out)
+    local ox = e.dir == 1 and (8 - W8) or 0                           -- the canvas's left, from e.x0
+    local cv = lg.newCanvas(W8, bottom - y0)
     cv:setFilter("nearest", "nearest")
     lg.push("all"); lg.setCanvas(cv); lg.clear(0, 0, 0, 0); lg.origin()
-    for i = 0, 7 do
-      local c = e.dir == 1 and i or (7 - i)
-      for row = 0, bottom - y0 - 1 do
-        local col = cornerColour(c, row)
-        if col and row >= 7 then lg.setColor(col); lg.rectangle("fill", i, row, 1, 1) end
+    for i = 0, W8 - 1 do
+      local c = e.dir == 1 and (i + ox) or (7 - i)                    -- c may run below 0 (further out on the road)
+      for row = 7, bottom - y0 - 1 do
+        local col = (c >= 0 and c <= 7) and cornerColour(c, row) or nil
+        local a = roadShade(c, row - 7, e.dir)
+        if col then lg.setColor(col); lg.rectangle("fill", i, row, 1, 1)
+        elseif a > 0 then lg.setColor(0.04, 0.05, 0.10, a); lg.rectangle("fill", i, row, 1, 1) end
       end
     end
     lg.pop()
-    Sc.roadEnds[#Sc.roadEnds + 1] = { cv = cv, x = e.x0, y = y0 }
+    Sc.roadEnds[#Sc.roadEnds + 1] = { cv = cv, x = e.x0 + ox, y = y0 }
   end
   return g
 end
