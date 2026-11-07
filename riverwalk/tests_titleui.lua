@@ -48,6 +48,15 @@ return function(api)
       shot("controls_" .. dev, function() F.drawControls(3.0) end)
     end
     F.hard = true; F.opts.sel = 2; I.last = "pad"; shot("options_hard_on", function() F.drawOptions(3.0) end); F.hard = false
+    -- (owner 7 Nov) starting from scratch: the menu with a save (CONTINUE, NEW GAME, LEVELS, OPTIONS), ERASE SAVE dimmed
+    -- with nothing to erase, and its question with NO and with YES, ERASE on the cursor
+    local unl, fr = F.unlocked, F.opts.from
+    F.unlocked = { citypark_tall = true }
+    for i = 1, 4 do F.syncMenu(); F.menu.sel, F.menu.from = i, i; shot(("menu_saved_%d_pad"):format(i), function() F.drawMenu(3.0) end) end
+    F.opts.sel, F.opts.from, F.opts.canErase = F.OPT_ERASE, F.OPT_ERASE, false; shot("options_erase_empty", function() F.drawOptions(3.0) end)
+    F.opts.canErase = true; shot("options_erase_on", function() F.drawOptions(3.0) end)
+    for c = 1, 2 do F.opts.confirm, F.opts.cm = c, { from = c }; shot(("options_erase_ask_%d"):format(c), function() F.drawOptions(3.0) end) end
+    F.opts.confirm, F.opts.cm, F.unlocked, F.opts.sel, F.opts.from = nil, nil, unl, 1, fr; F.syncMenu()
     -- the title loop: 12 fps from 2.0 s for 9 s (blinks, about ten sparkles and two shine sweeps fall in it)
     for i = 0, 107 do shot(("gif_%03d"):format(i), function() Title.draw(2.0 + i / 12, nil, false) end) end
     print("TITLESHOTS " .. love.filesystem.getSaveDirectory()); io.stdout:flush()
