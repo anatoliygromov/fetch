@@ -4,7 +4,7 @@
  "kind": "prop",
  "tier": "C",
  "target_px": [
-  16,
+  48,
   5
  ],
  "built_by": "tools/make_ground_kit.py",

@@ -149,7 +149,7 @@ SLOTS = {"rw_rowboat": (185, 62, 0, 0), "rw_rower": (644, 62, 0, 0), "kennel": (
          "town_quaydrain": (20, 22, 0, 0), "town_bridge_pier": (14, 113, 0, 0), "town_punt": (52, 14, 0, 0),
          "town_lantern_bracket": (18, 12, 0, 0),
          # day/07nov-ground: the kennel in its garden (tools/build_rw_kennel.py), the ground kit (tools/make_ground_kit.py)
-         "kit_cp_midlawn": (240, 96, 0, 0), "kit_cp_tufts": (240, 5, 0, 0), "kit_cp_roots": (16, 5, 0, 0)}
+         "kit_cp_midlawn": (240, 96, 0, 0), "kit_cp_tufts": (240, 5, 0, 0), "kit_cp_roots": (48, 5, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",

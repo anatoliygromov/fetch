@@ -74,11 +74,12 @@ L.props = {
   -- Pepper's kennel in her front garden (day/07nov-ground, owner 7 Nov: "would never be on the street", "why is the
   -- dog house look so weird?"): a classic dog house from its gable end, 44 x 44 at true scale, a round door, a name
   -- plate (art/scene/kennel.png by tools/build_rw_kennel.py), on the garden's lawn (L.garden). Solid down to its
-  -- door's crown (y 165), 19 px to crawl in; a gold bone is inside. Two boxes: the roof's peak (x 16-28, y 140) and
-  -- the eaves (x 0-44, y 150, the roof boards' top at the corners), so wherever she stands on it, the roof is under
-  -- her paws. It ends 1 px left of her box at the start. Same place, same door, same reach as before.
+  -- door's crown (y 165), 19 px to crawl in; a gold bone is inside. Two boxes: the roof's level ridge board (round 2:
+  -- art x 6-37, rows 0-3, y 140; the box x 16-28) and the eaves (x 0-44, y 145, the roof boards' top at the corners),
+  -- so wherever she stands on it, the roof is under her paws. It ends 1 px left of her box at the start. Same place,
+  -- same door, same reach as before.
   { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 16,   x1 = 28,   y0 = 140, y1 = 165, hidden = true },
-  { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 0,    x1 = 44,   y0 = 150, y1 = 165, hidden = true },
+  { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 0,    x1 = 44,   y0 = 145, y1 = 165, hidden = true },
   -- promenade A
   { name = "",         kind = "decor",  layer = "back", x0 = 460,  x1 = 652,  y0 = -76, y1 = 174, art = "rw_birch" },   -- (6 Nov) true-scale birch, trunk where tree_far stood
   { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 401,  x1 = 503,  y0 = 152, y1 = 184, art = "flowerbox_front", ax = 400, ay = 184 },

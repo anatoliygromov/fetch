@@ -208,7 +208,10 @@ function Look.road(stage, cam, Sc)
       end
       for _, dc in ipairs(Sc.decals or {}) do                     -- manhole covers and drains ride with their row
         local f = Look.rowFactor(dc.y)
-        lg.draw(dc.im, math.floor(dc.x - cam * f + 0.5), dc.y)
+        local dx = math.floor(dc.x - cam * f + 0.5)
+        -- (day/07nov-ground round 2: a cover sliding past the road's end was cut by the span's edge into a 6 x 5
+        -- dark blob by the kerb return) only a cover wholly on this stretch of road is drawn
+        if dx >= a and dx + dc.im:getWidth() <= b then lg.draw(dc.im, dx, dc.y) end
       end
       lg.setScissor()
     end
