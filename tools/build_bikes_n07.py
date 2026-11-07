@@ -492,6 +492,7 @@ def build_cargo(rider, legs, k):
     from PIL import Image as _I, ImageDraw as _D
     im = _I.new('L', (W, H), 0); _D.Draw(im).polygon([(19, 69 + dy), (37, 70 + dy), (43, 72 + dy), (43, 76 + dy), (37, 78 + dy), (19, 73 + dy)], fill=255)
     cm = np.array(im) > 0; c.mask(cm, CASE); c.a[cm & ~np.roll(cm, 1, 0)] = CASE_L
+    c.a[cm & ~np.roll(cm, -1, 1)] = CASE_L                    # (round 2) a frame-grey rim on its front edge too
     for y, x0, x1 in ((44, 29, 38), (45, 29, 37), (46, 31, 35)):
         for x in range(x0, x1): c.px(x, y + dy, LEATHER_L if y == 44 else LEATHER)
     c.mask(seg_mask(W, H, P(BB), P(BB), 3.2), STEEL)
@@ -620,6 +621,12 @@ def main():
     r = rider_cut(cut, 'C', log)
     tr, sh = leg_palette(r, 'C')
     top = strip_legs(r, 'C', tr, sh, 50, log)
+    # (round 2, review cargo_bike.md: "trousers, shoes, frame and chain case are one dark mass: no legs at 1x") the
+    # baker's trousers one ramp lighter, his shoes brown, on the legs keyed per frame and on what of them the cut keeps
+    BAKER_TR, BAKER_SH = [(118, 124, 134), STEEL_D], [LEATHER, LEATHER]
+    for old, new in (((75, 79, 80), BAKER_TR[0]), ((35, 41, 42), LEATHER)):
+        mm = (top[..., 3] > 0) & np.all(top[..., :3] == old, -1); top[mm, :3] = new
+    tr, sh = BAKER_TR, BAKER_SH
     frames = [finish(build_cargo(top, (tr, sh), k))[:, ::-1].copy() for k in range(8)]
     files['riverwalk/art/scene/cargo_bike.png'] = frames[0]
     files['riverwalk/art/scene/cargo_bike_pedal.png'] = np.concatenate(frames, axis=1)
