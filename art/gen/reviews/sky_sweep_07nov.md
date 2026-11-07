@@ -110,3 +110,36 @@ Downtown tall:
 6. City Park far city, optional, owner's call: fill from luma 197 to about 186-190 and a quarter less violet, so the
    silhouette separates from the amber glow in greyscale (now 12 luma, concept a about 30) without the purple-on-
    orange clash.
+
+# Round 2 (reviewer, 7 Nov)
+
+Re-rendered all 73 screens at e6b62a4 (riverwalk 13, citypark_tall 27, downtown_tall 33; round 1 counted a map file
+as a 34th) with the painted sky, 2x contact sheets in colour and greyscale, the files at 2x and 5x, the wraps at 2x,
+the round 1 FAIL screens first, then the rest.
+
+Per piece: sky_riverwalk PASS, sky_citypark PASS, sky_downtown PASS, the three skylines PASS (City Park's fill now
+luma 188, a quarter less violet), clean hazes PASS (City Park tree line one step darker, order kept), leaf front off
+PASS, motion PASS (unchanged code path), family PASS.
+
+The four questions:
+- Stamped repeat, ruled line or scrap left: none. The low banks are flat soft pieces in all three skies; the City
+  Park glow edge is stepped tongues and four streaks; the cloud interiors are clean at 5x; 0 lone pixels in each file.
+- Top of the world: clean on all 9 City Park and 11 Downtown top-tier screens; the moved banks show whole with sky
+  above them (City Park y 0 x 0 and x 2240, Downtown y 0 x 2880 and x 3200 checked at 2x).
+- City Park tree line one step darker: reads correctly. Horizon 209, city 188, tree line about 181, mid trees
+  darker; in greyscale the three far bands are three clean steps and the tree line is still clearly lighter than
+  the mid trees and the lamp.
+- The flat low bank: it reads calm and painted and lost nothing. The scalloped row was never in the concepts;
+  concept b's low bank is this soft flat shape. The screens are quieter behind the far city, which is what the
+  clouds row wants.
+
+Screen by screen: every screen on the round 1 FAIL list now PASS (River Walk x 640 to 3520; City Park y 144 x 0,
+320, 1920, 2240, 2560 and y 24 / y 0 x 0, 320, 2240, 2560; Downtown y 0 x 0, 320, 640, 960, 2560, 2880, 3200). All
+other screens PASS as in round 1. No new defect on any screen.
+
+Remaining, optional, not blocking the owner: the 2-3 px slanted mid-tone hooks inside the River Walk and City Park
+banks at 5x (lobe shading fragments; invisible at 1x). The script gates: build_sky --check OK, asset_qa PASS on
+sky_riverwalk and sky_citypark, WARN (lobe-shading blotches) on sky_downtown and the skylines as before.
+
+Verdict: the sky track is ready for the owner's one yes on the total, with the two owner questions from round 1
+still open for him (keep the clouds row at 185; retiring the sprite clouds while the painted sky is on is fine).

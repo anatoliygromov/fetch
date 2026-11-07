@@ -25,3 +25,12 @@ Verdict: FAIL for one placement defect; otherwise the cleanest of the three skie
 
 Fix:
 1. Move the bank at rows 35-62 wholly below row 48 with its top at row 53 or lower (it then sits at screen y 5-32 at the roof tier, under the sliced position), or delete it; the second bank at rows 88-112 already sits well. Add the same rule to build_sky --check as for City Park (no cloud pixel within 4 rows of row 120 - round(camYMax x 0.3)).
+
+# Round 2 (reviewer, 7 Nov)
+
+Re-rendered at e6b62a4, all 33 screens at 2x in colour and greyscale, the top of the world at y 0 x 0 to 960 and 2560
+to 3200, the file at 2x and 5x, the wrap at 2x. asset_qa: WARN (3 blotches, lobe shading). build_sky --check: OK.
+
+PASS. The bank that straddled row 48 now sits at rows 55-80 and shows whole with blue above it on every roof-tier
+screen (y 0 x 2880: the cloud at screen x 105-260, y 5-25, complete). Nothing else changed on screen; the sky stays
+the cleanest of the three. No seam at the wrap, greyscale unchanged.

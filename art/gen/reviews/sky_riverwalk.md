@@ -28,3 +28,17 @@ the horizon that shows between the towers on every screen, and a few 1 px scraps
 Fixes for the FAILs:
 1. Low bank (build_sky.py, the River Walk `banks` low entry): do not stamp one radius. Vary the lobe radius 3 to 7 px and the gap 2 to 9 px, drop every third lobe, let the baseline wander 1 to 2 rows, or drop the lobes and keep the flat bank only. Concept b's low bank is a soft flat shape, not scallops.
 2. Scraps: no cloud stroke narrower than 2 px and no cloud piece under 6 px; add that to build_sky --check so the lone-pixel number cannot be 0.0 % while 2 px strokes remain.
+
+# Round 2 (reviewer, 7 Nov)
+
+Re-rendered at e6b62a4, all 13 screens at 2x in colour and greyscale, the file at 2x and 5x, the wrap at 2x.
+asset_qa: PASS. build_sky --check: OK, lone 0.0 %, 0 lone pixels by my own count.
+
+PASS. The low bank is now a flat soft cream piece with wavy ends; between the towers it reads as a calm haze band, not
+a row of bumps, on every screen (x 640, 1280, 2240, 3520 checked at 2x). The scraps inside the big bank are gone; the
+new lobe layout (five back lobes, a lower front row) is cleaner at 5x and the base steps 1 px in runs. The flat bank
+did not lose the concept's charm: concept b's low bank is exactly this kind of soft shape, and the screen is calmer
+for it. No seam at the wrap. Greyscale unchanged: Pepper, bones and the route read.
+
+Optional polish, not a FAIL: at 5x two shadow pockets inside the big bank (file x 65-75, rows 150-157 and x 115-125,
+rows 152-163) are hook-shaped gaps where the underside tone shows between lobes; at 1x they read as shadow.

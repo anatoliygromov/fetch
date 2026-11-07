@@ -33,3 +33,14 @@ the left, 130 to the right (corners and the tops of right-hand slopes), 9 below;
 | Clean | PASS | Two tones (204,216,236 and 192,206,230). |
 | Rim | PASS | Top only, (238,242,244) on a 215 fill: barely there, right for a sun straight above; it does not read as an outline. |
 | Value | PASS | Horizon 239, city 215 (darkest 205), the far roofs under it darker. Only visible above the gables at the roof tier, where it reads as a pale distant town. |
+
+# Round 2 (reviewer, 7 Nov)
+
+skyline_citypark.png at e6b62a4: fill (186,184,210) luma 188 and (178,176,202) luma 180, rim unchanged. On y 144 x 320:
+horizon 209, city 188, far tree line about 181 (the shore haze one step darker, look.lua e4c8ae), mid trees darker
+again. The city now separates from the glow by 21 luma in greyscale instead of 12 and no longer reads as a purple
+cut-out in colour; the order sky, city, tree line, mid holds at 2x in greyscale on every City Park screen with a
+horizon (y 144 x 0, 320, 1920, 2240, 2560; y 24 and y 0 x 0, 320, 2240, 2560). The tree line reads correctly: one clean
+step under the city, still clearly lighter than the mid trees and the lamp. PASS.
+
+skyline_riverwalk and skyline_downtown: unchanged, PASS.

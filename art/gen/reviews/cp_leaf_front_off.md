@@ -17,3 +17,8 @@ Verdict: PASS. The high road looks finished at the bottom, not cut.
 
 No fix proposed. If the owner wants a frame back later, the right thing is not a band but a few whole foreground
 branches hanging in from the top corners at the front scale (about 60 px/m), dark silhouette, never at the bottom.
+
+# Round 2 (reviewer, 7 Nov)
+
+No change to the leaf front; re-checked the 18 high-road screens at e6b62a4 with the new sky. Still finished at the
+bottom. PASS.

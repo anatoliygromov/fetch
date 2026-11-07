@@ -32,3 +32,22 @@ Fixes:
 4. The low bank: vary radius 3-7 px and gaps 2-9 px, drop every third lobe, or keep a flat bank without scallops.
 5. The bank base at rows 178-180: let it wander 1 row under the lobes, or break it under every second lobe.
 6. Scraps: no cloud stroke narrower than 2 px, no cloud piece under 6 px.
+
+# Round 2 (reviewer, 7 Nov)
+
+Re-rendered at e6b62a4, all 27 screens at 2x in colour and greyscale, the file at 2x and 5x, the horizon at 5x, the
+top of the world at y 0 x 0, 320, 2240, 2560, the wrap at 2x. asset_qa: PASS. build_sky --check: OK.
+
+PASS. Every round 1 item is fixed:
+- Top of the world: the bank that straddled row 77 now sits at rows 85-110; at y 0 x 0 and x 2240 the cloud is whole
+  with sky above it. Nothing is sliced on any of the 9 top-tier screens.
+- Horizon: the glow's top edge is stepped tongues in runs of 6-20 px, no slope longer than 30 px; the lavender band is
+  four streaks of 60-180 px with tapered ends; the low bank is one flat soft lavender piece. At y 144 x 0 and 320 and
+  y 24 x 0 the horizon reads as painted haze, warm over cool, with no ruled line.
+- Scraps: gone at 5x; the bank base wanders 1 px in runs.
+- Wrap: 1.9 % of rows differ at the seam, more than before because the horizon tongues vary more column to column;
+  at 2x the seam is invisible.
+Greyscale: Pepper, bones, the goose and the route read; the sky stays the lightest layer.
+
+Optional polish, not a FAIL: the lobes' sunlit mid-tone still makes two or three 2-3 px slanted hooks inside the big
+bank (file x 110-118, rows 160-170 and x 160-170, rows 160-168); at 1x and 2x they read as lobe shading.

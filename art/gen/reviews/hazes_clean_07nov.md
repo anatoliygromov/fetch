@@ -19,3 +19,9 @@ Verdict: PASS.
 
 No fix. Optional: the River Walk shore haze could lean 10 % towards the cream glow so the far trees share the morning
 light; the maker's reason for keeping it blue (cream over green reads khaki) is fair, so leave it unless the owner asks.
+
+# Round 2 (reviewer, 7 Nov)
+
+Only change: City Park shore haze f2d6bc to e4c8ae (one step darker, to keep the tree line under the darker city).
+Checked on the 27 City Park screens: the far tree line is still amber and clean, one step under the city and above
+the mid trees; the Downtown old town and River Walk far trees are as in round 1. PASS.
