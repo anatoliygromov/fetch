@@ -1051,7 +1051,12 @@ function Sc.paintQuay(w, props, def)
       elseif x0 then
         local has = false
         for i = x0, x - 1 do if kind[i] == "road" then has = true; break end end
-        if has then for i = x0, x - 1 do if kind[i] == "ramp" or kind[i] == "quay" then roadOn[i] = true end end end
+        if has then
+          local low = 0                                             -- the stretch's lowest walk (its quay)
+          for i = x0, x - 1 do if kind[i] == "quay" and top[i] > low then low = top[i] end end
+          if low == 0 then low = Sc.PROMENADE end
+          for i = x0, x - 1 do if kind[i] == "ramp" or kind[i] == "quay" then roadOn[i] = low end end
+        end
         x0 = nil
       end
     end
@@ -1070,7 +1075,7 @@ function Sc.paintQuay(w, props, def)
     local rx = e.dir == 1 and (e.x0 + 8) or (e.x0 - 1)              -- the ramp's first column beside the road
     if not roadOn[rx] then corners[#corners + 1] = e end
   end
-  for _, e in ipairs(corners) do
+  for _, e in ipairs(ends) do
     for i = 0, 29 do
       local x = e.dir == 1 and (e.x0 + 8 + i) or (e.x0 - 1 - i)
       if kind[x] == "ramp" or kind[x] == "quay" then dRoad[x] = i end
@@ -1180,10 +1185,24 @@ function Sc.paintQuay(w, props, def)
       lg.setColor(1, 1, 1, 1)
       clip(x, t + 15, 1, bottom - t - 15); lg.draw(road, rq[x % rw], x, t + 15); clip()
     elseif roadOn[x] and not ((dR[x] or dL[x] or 99) < Sc.ROAD_END_W) then
-      -- (owner, 7 Nov) the road runs on: the same tile on the promenade's rows, the gutter's two rows under the kerb
+      -- (owner, 7 Nov) the road runs on along the bottom at the quay's kerb (the stretch's lowest walk): the same tile
+      -- on the promenade's rows, the gutter's two rows under the kerb. The steps keep their solid granite body (the
+      -- stair's flank, quoined by the road's end) down to that kerb line: (owner, 7 Nov) steps standing one by one on
+      -- the asphalt "look really bad"
+      local ry = roadOn[x] + 15
+      if k == "ramp" then
+        local d = dRoad[x]
+        px(Q.sh, x, t + 15)
+        for y = t + 16, ry - 1 do px(wallColour(x, y, d), x, y) end
+        for r = 0, 4 do                                            -- the quay's kerb face carried under the stair
+          local c = (r == 0) and Q.kf1 or (r == 4 and Q.kf3 or Q.kf2)
+          if x % 16 == 0 then c = Q.kj end
+          px(c, x, ry - 5 + r)
+        end
+      end
       lg.setColor(1, 1, 1, 1)
-      clip(x, t + 15, 1, bottom - t - 15); lg.draw(road, rq[x % rw], x, Sc.ROAD_Y); clip()
-      px(Q.rg1, x, t + 15); px(Q.rg2, x, t + 16)
+      clip(x, ry, 1, bottom - ry); lg.draw(road, rq[x % rw], x, Sc.ROAD_Y); clip()
+      px(Q.rg1, x, ry); px(Q.rg2, x, ry + 1)
     else
       local d = dR[x] or dL[x] or dRoad[x]
       px(Q.sh, x, t + 15)
@@ -1295,7 +1314,7 @@ function Sc.paintQuay(w, props, def)
   for x = 0, W do
     local y0 = nil
     if x < W and roadOn[x] and not ((dR[x] or dL[x] or 99) < Sc.ROAD_END_W) then
-      y0 = (kind[x] == "ramp" and stepTop(x) or top[x]) + 17
+      y0 = roadOn[x] + 17
     end
     if seg and (y0 ~= seg[3]) then seg[2] = x; Sc.roadOnSegs[#Sc.roadOnSegs + 1] = seg; seg = nil end
     if y0 and not seg then seg = { x, nil, y0 } end
