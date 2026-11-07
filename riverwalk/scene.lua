@@ -1237,7 +1237,7 @@ function Sc.townArt(style)
   local T = {}
   if style == "park" then
     for _, n in ipairs({ "ground", "bush", "log", "leaves", "leaves_flat", "table", "hedge", "stone", "boat", "cart", "slide", "frame", "hollowlog" }) do T[n] = img("park_" .. n) end
-    -- (7 Nov) the hollow log in two layers, the dark inside and the near wall with its two mouths (Sc.drawPieceArt)
+    -- (7 Nov) the hollow log in two layers, the dark inside and the log around it (Sc.drawPieceArt)
     if love.filesystem.getInfo("art/scene/park_hollowlog_front.png") then T.hollowlog_back, T.hollowlog_front = img("park_hollowlog_back"), img("park_hollowlog_front") end
     -- the far tree line (shore), the round trees (mid) and the back decoration, each faded to its own layer's haze
     T.treeline = fadeImg("park_treeline", nil, "shore")
@@ -3545,11 +3545,12 @@ end
 
 -- code-drawn pieces (setpieces.lua) that have art in an art level: City Park's hollow log. Returns true if drawn.
 -- (7 Nov, owner: "isnt hollow wood suppose to make the dog climb inside? it looks like shes just crawling on the
--- side") The log is two layers (tools/build_cp_hollowlog_layers.py, both 44 x 27 where the one file was): the back,
--- its dark inside, here in the play pass before Pepper; the front, the near bark wall, the shell and the two cut ends
--- with their round mouths, after her while she crawls in it (Sc.drawPieceFront, called by stage.lua right after
--- Pepper) and here, before her, otherwise, so nothing covers her outside the log (BIBLE 1). Inside, the near wall
--- hides her (and the gold bone) and the mouths show her. Without the two files: the one file, before her, as before.
+-- side") The log is two layers (tools/build_cp_hollowlog_layers.py: the old 3/4 log, made 30 px longer for the 72 px
+-- box, 74 x 27 at x0 - 1, y0 - 1): the back, the dark inside of its open left end and a tunnel tone behind the bark,
+-- here in the play pass before Pepper; the front, the log with only that dark inside taken out, after her while she
+-- crawls in it (Sc.drawPieceFront, called by stage.lua right after Pepper) and here, before her, otherwise, so nothing
+-- covers her outside the log (BIBLE 1). Inside, the bark hides her (and the gold bone), her rear shows in the open
+-- end as she goes in, and her nose comes out from behind the closed right end. Without the two files: the old file.
 local function inLog(s, pc)                                        -- crouched, under the shell, her sprite (60 px,
   local p = s and s.pepper                                         -- 30 each side of her x) over the log
   if not p or not p.crouch or p.mode == "gone" then return false end
@@ -3567,7 +3568,7 @@ function Sc.drawPieceArt(pc, camx, def, s)
   end
   return false
 end
--- the front pass for pieces Pepper goes inside (stage.lua, right after her): the hollow log's near wall while she
+-- the front pass for pieces Pepper goes inside (stage.lua, right after her): the hollow log's front while she
 -- crawls in it, in the play layer's look
 function Sc.drawPieceFront(s, cam)
   if s.def.art ~= "park" then return end
