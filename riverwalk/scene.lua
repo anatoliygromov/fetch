@@ -778,7 +778,7 @@ end
 Sc.PROMENADE, Sc.QUAY_Y0, Sc.QUAY_JOINT = 184, 196, { 72 / 255, 82 / 255, 107 / 255 }
 Sc.STEP_RW = 8                                                    -- (day/07nov-ground) River Walk's ramps: 8 px stone steps (0.17 m)
 Sc.ROAD_RUNS_ON = true                                            -- (owner, 7 Nov: "the asphalt goes on") the road runs on in
-Sc.SLOPE_SHADE = os.getenv("SLOPE_SHADE") or "slope"           -- (owner, 7 Nov) "slope": the road going down in shade; "face"
+Sc.SLOPE_SHADE = os.getenv("SLOPE_SHADE") or "face"            -- (owner, 7 Nov, picked B) "face": the steps' side in shade; "slope"
 Sc.ROAD_Y, Sc.ROAD_END_W = 199, 6                                 -- front of the steps and the lower quay to the water (paintQuay)
 local function columnTop(w, x)                                      -- the first walkable top at or under y 150, or nil
   if x < 0 or x >= w.width then return nil end
