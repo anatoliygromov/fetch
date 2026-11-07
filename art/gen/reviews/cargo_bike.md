@@ -37,3 +37,11 @@ Fixes (0 credits, Aseprite on the still and the 8 frames):
 The depot (not this piece, known, level track): at the Downtown tall gates the bike is clipped at a vertical line at x 1938 and 3168 (cargoE-H shots). The line is the right edge of the GATE crates, so the box and wheels do read as sliding behind the crates, but above the crates' top (37 px) nothing covers the rider: his front half, then the whole rider, is sliced in the open air in front of the arch opening and the lamp post (cargoH, 4x crop: half a helmet and a back hanging over the crates). It reads as a cut, not as riding in. Fix for that track: cover the depot column from the crates' top to the arch's top with a foreground piece (a gate leaf or the arch's left pier drawn in front), or move the depot x to the arch's left pier so the pier itself hides him.
 
 VERDICT (round 1, 7 Nov): FAIL (the legs do not read at 1x; one recolour fixes it)
+
+# Round 2 (reviewer, 7 Nov)
+
+Branch day/07nov-chars at 3b69dbf merged into the review worktree. Re-rendered: the changed files at 5x to 8x, River Walk x 1600, 2240, 2880, City Park tall y 144 x 640, 1280, 2560, the lane riders, car 5 and the baker in game (my still-vehicle hook now reads Rd.RIDER_TOP), colour and greyscale.
+
+Legs at 1x: PASS. Trousers (118,124,134) with the (93,98,108) shade, brown shoes, a frame-grey rim on the chain case: in the Downtown shot at 1x, 2x and the 5x crop, colour and grey, the leg runs hip to knee to the pedal as its own shape against the dark frame; the chain case reads as a case. The other checks hold from round 1 (seated, hand on the grip, both shoes on the pedals, facing left, limbs joined, the crank circle). Script: still WARN (15 dirt px, 0.4 %), sheet PASS.
+
+VERDICT (round 2): PASS

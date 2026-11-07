@@ -29,3 +29,16 @@ Bone placements that collide with level art (level data, not the piece; the bigg
 - Downtown tall 320, 2880: bones touching the umbrella tables' tops (2880: (66, 124)); 3 px up.
 
 VERDICT (round 1, 7 Nov): PASS (the piece). The placements above go to the level tracks: 7 real collisions (ferry wheelhouse, duck boat, lamp base, ropes, climbing frame, statue, fountain), the rest overlaps that read.
+
+# Round 2 (reviewer, 7 Nov)
+
+Branch day/07nov-chars at 3b69dbf merged into the review worktree. Re-rendered: the changed files at 5x to 8x, River Walk x 1600, 2240, 2880, City Park tall y 144 x 640, 1280, 2560, the lane riders, car 5 and the baker in game (my still-vehicle hook now reads Rd.RIDER_TOP), colour and greyscale.
+
+Moves checked in game (6x to 10x crops):
+- River Walk 1600, bone 1650 to 1644: PASS, clear of the wheelhouse wall by 4 px.
+- City Park 1280, id 138 x 1310 to 1316: nearly. The bone's left end still touches the lamp base's foot by 1 px at screen (31-32, 171). 2 px more right clears it. Minor.
+- City Park 2560, ids 171 and 172 up 6: the upper bone is clear on the trunk (PASS); the lower bone at screen (200, 141) still sits across the blue climbing frame's top bar. FAIL: 6 px more up (y 268) or 8 px down below the bar.
+- City Park 640, id 128 y 346 to 336: FAIL. The bone moved from the duck boat's neck into its beak: at screen (233, 174) it lies on the beak under the eye (8x crop). Funny by accident, but it is a collision and it bobs. Move it 14 px up (y 322, above the head) or 16 px left (x 1294, over the water). The other bone on the boat's stern seat at (268, 180) also overlaps the blue cushion; 6 px up.
+- Downtown tall 1280 (statue coat, gold bone on the hat) and 1600 (fountain jets and rim): not moved in round 2; the round 1 collisions stand.
+
+VERDICT (round 2): the piece PASS; placements still FAIL at City Park 640 and 2560 and the two Downtown screens.

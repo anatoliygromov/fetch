@@ -75,3 +75,13 @@ Hint bubbles: all 36 control-hint frames of the three levels PASS (hint_pics.md)
 4. Lane riders: RIDER_TOP 190 to 178 in road.lua (12 px) so the hand and the bar's first 7 rows show; 6 px would show only the fingers.
 5. gull.png frames 1, 2, 6: 1 px of sky between the head and the far wing; feet pixels in all 6 frames or none.
 6. road_car5: optional rebuild of the body on the n07 builder (driver, light glass, 1 px bar handles) so the five cars are one family at 5x; the roof alone passes in the game.
+
+# Round 2 (reviewer, 7 Nov)
+
+Branch day/07nov-chars at 3b69dbf merged into the review worktree. Re-rendered: the changed files at 5x to 8x, River Walk x 1600, 2240, 2880, City Park tall y 144 x 640, 1280, 2560, the lane riders, car 5 and the baker in game (my still-vehicle hook now reads Rd.RIDER_TOP), colour and greyscale.
+
+Per piece after round 2: road_car1-5 PASS; cyclist_adult1/2 PASS; cargo_bike PASS (legs read at 1x); road_rider1/2 PASS (hands and grip show at RIDER_TOP 178); ferry PASS; gull PASS (loop flows, far wing hidden reads); cat PASS; hint pictures PASS; bones PASS as a piece.
+
+Screens after round 2: River Walk 1600 PASS (bone clear of the wheelhouse). City Park tall 640 FAIL (the bone is now in the duck boat's beak), 1280 PASS with a 1 px touch at the lamp base (2 px right), 2560 FAIL (the lower bone still on the blue bar). Downtown tall 1280 and 1600 FAIL as in round 1 (not moved).
+
+Remaining fixes, all level data: City Park id 128 to y 322 or x 1294; id 172 (the lower bone at 2560) 6 px more up; id 138 2 px more right; the stern-seat bone at 640 6 px up; Downtown 1280 statue bones 8 px out each side and the gold bone 4 px up; Downtown 1600 fountain bones 6 px up. Art: nothing remains.

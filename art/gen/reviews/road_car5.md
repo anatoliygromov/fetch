@@ -24,3 +24,9 @@ Notes: The wheels now match cars 1-4 and the owner's note (wheels need some work
 Fixes: Optional, 0 credits: rebuild car 5 with tools/build_cars_n07.py on its own silhouette (glass ramp, driver, the 1 px bar handles) so the five cars are one family at 5x.
 
 VERDICT (round 1, 7 Nov): PASS
+
+# Round 2 (reviewer, 7 Nov)
+
+Branch day/07nov-chars at 3b69dbf merged into the review worktree. Re-rendered: the changed files at 5x to 8x, River Walk x 1600, 2240, 2880, City Park tall y 144 x 640, 1280, 2560, the lane riders, car 5 and the baker in game (my still-vehicle hook now reads Rd.RIDER_TOP), colour and greyscale.
+
+Rebuilt on the family builder, 252 x 90, 20 colours, script PASS: light glass ramp with one glint per pane, a driver, 1 px bar handles, the family wheel stamped twice, the roof rack, one ink. At 5x beside cars 1-4 it is one of the family; in the lane at 1x and 2x it reads as the silver estate. VERDICT (round 2): PASS

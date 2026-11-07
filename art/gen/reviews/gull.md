@@ -23,3 +23,14 @@ Fixes (0 credits, Aseprite):
 3. Feet: the same 2 orange pixels in all 6 frames, or in none.
 
 VERDICT (round 1, 7 Nov): FAIL (one frame; the still and the size are right)
+
+# Round 2 (reviewer, 7 Nov)
+
+Branch day/07nov-chars at 3b69dbf merged into the review worktree. Re-rendered: the changed files at 5x to 8x, River Walk x 1600, 2240, 2880, City Park tall y 144 x 640, 1280, 2560, the lane riders, car 5 and the baker in game (my still-vehicle hook now reads Rd.RIDER_TOP), colour and greyscale.
+
+Loop: PASS. Frame-to-frame change is now 146, 145, 111, 156, 136, 120 px: no twin, no pop; frame 5 is a wings-level frame with the wing behind the body, so the flap goes up, half, level, down, level, up. Feet gone from every frame (5 colours). No colour in one frame only.
+Frames 2 and 6 with the far wing hidden: PASS. In game at 8x (River Walk x 1600, 2240, 2880, frame 2 both ways) it is a gull gliding with the far wing behind the body; nothing reads as missing at 1x.
+Frame 1's far wing: one connected piece (8-connected, 213 px), so nothing floats; at 8x the far wing is still a separate triangle that touches the head only at a corner (x 15-18, y 6-9). At 1x it reads as the wing tip. Optional: 1 px of grey joining it to the near wing's base.
+The script's "size jumps" warning is the wing area changing between strokes; fine for a flap.
+
+VERDICT (round 2): PASS

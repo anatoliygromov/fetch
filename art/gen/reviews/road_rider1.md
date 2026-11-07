@@ -63,3 +63,9 @@ Owner's rider checks at 5x on the whole file: seated PASS (hip on the saddle lin
 On raising the riders 6 px (the open question): no, 6 px is not enough. Rows 0-55 would show the hand's rows 51-55 as 5 px of skin at the very bottom edge and no bar: a hand reaching for nothing. 12 px (RIDER_TOP 178) shows the hand and 7 rows of the bar and basket (rows 55-61), and that is the smallest raise where the hand reads as holding something; 16 px (top 174) shows the whole basket (rows 55-66). Either overlaps Pepper's feet line by 6-10 px, which the 25 Oct rule allows for passing bikes (they ride in front of her). I would take 12 px and check at 1x that the helmet does not cut the kerb awkwardly; the kerb is behind the lane, so it should read as depth.
 
 VERDICT (round 1, 7 Nov): PASS (art); the lane placement is a judgement for the owner, 12 px recommended.
+
+# Round 2 (reviewer, 7 Nov)
+
+Branch day/07nov-chars at 3b69dbf merged into the review worktree. Re-rendered: the changed files at 5x to 8x, River Walk x 1600, 2240, 2880, City Park tall y 144 x 640, 1280, 2560, the lane riders, car 5 and the baker in game (my still-vehicle hook now reads Rd.RIDER_TOP), colour and greyscale.
+
+RIDER_TOP 178: PASS. Rows 0-61 show: helmet, face, shoulders, the arm, the hand on the grip and the basket's top rows at the bottom edge (lane1 shot, 5x crop, colour and grey). She reads as a cyclist passing close, not a bust. The helmet crosses the kerb and Pepper's paws when they line up; the 25 Oct rule allows it for passing bikes. VERDICT (round 2): PASS
