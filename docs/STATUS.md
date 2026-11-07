@@ -11,6 +11,7 @@
 6. `day/07nov-ground`: ground joins by rule, the owner's ground reverts, City Park lawn kit; no kennel (secret KENNEL is now DOORSTEP).
 7. Round 2: `day/07nov-sky` again (3574b3c: Downtown's far city low and simple, 320 x 30).
 8. Round 2: `day/07nov-dt` (ea65d45): the Downtown (tall) low-row rebuild, review round 3 PASS.
+9. Round 3: `day/07nov-bonusdt` (8741743): the Downtown bonus round's square from the rebuilt Downtown (bonusscene.lua only). After it: bonus tests 23/23, all six rounds by autopilot as before, flow 125/125, PEPPER UNCHANGED (trace 3908, lab 1401); the six rounds in `docs/review/07nov/integration/bonus_all_rounds_1x.png`.
 
 **Integration commits:** `check_pepper_files.sh` compares input.lua without the menus' last-used device block (it failed on main since 4afd8d2; Pepper unchanged by the trace and the lab). Two merge fixes for the bigger 15 x 9 bone: City Park tall's leaf-pile bones 143 and 144 moved 11 px left with their pile; Downtown tall bones 157, 158, 159 and 165 nudged 2 to 3 px clear of the statue, the arcade roof and the fountain column (`tools/dt_bone_overlap.py` now reads the bone size: 102 bones, 0 overlap).
 
