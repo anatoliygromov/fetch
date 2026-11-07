@@ -597,6 +597,10 @@ function St:draw(debug)
   if self.night then Nt.drawLights(self, cam) end                  -- [night hook] lanterns, windows
   -- 7 play layer: terrain (pavement art, painted once; see Sc.paintGround)
   local w = self.world
+  local wallOff = style == "town" and self.def.foot and AH.LOW_ROW   -- (day/07nov-dt, round 2b) the tall Downtown's kerb
+  if wallOff and lk and not self.groundRaw then                    -- face and quay wall in the file's own colours: a
+    Look.off(); self.groundRaw = Sc.paintGroundArt(w, style, self.def.foot); use("back")   -- second paint, ungraded
+  end                                                              -- (the street itself stays as it was)
   if not self.ground then
     if style then self.ground = Sc.paintGroundArt(w, style, self.def.foot)
     else self.ground = grey and Sc.paintGroundGrey(w) or Sc.paintGround(w, self.def.props, self.def) end
@@ -605,7 +609,12 @@ function St:draw(debug)
   for _, ps in ipairs(self.def.passages or {}) do Sc.passageBack(ps, cam) end
   lg.setColor(1, 1, 1, 1)
   self.ground:draw(cam, camY)                                      -- (in chunks, the ones on screen: scene.lua)
+  if wallOff and lk then                                           -- the kerb's face and the quay wall as the file has
+    Look.off(); lg.setColor(1, 1, 1, 1)                            -- them: the ground look turns their warm granite
+    self.groundRaw:drawRows(cam, camY, self.def.foot + 18)         -- greys violet (town_ground.png's row 30 down)
+  end
   if style then AH.drawQuayDrains(self, cam) end                   -- (art/dt-audit-06nov) the quay wall's drain arches
+  if wallOff and lk then use("ground") end
   if lk then Look.road(self, cam, Sc) end                          -- the road rows recede (row scrolling)
   if self.def.ground == "quay" then Sc.drawRoadEnds(cam) end      -- (art/rw-ground-06nov) the kerb turns the road's ends
   for _, ps in ipairs(self.def.passages or {}) do Sc.passageFront(ps, cam) end

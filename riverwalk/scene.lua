@@ -463,6 +463,19 @@ function Ground:draw(cam, camY)
     if c.x - cam < 320 and c.x + c.w - cam > 0 and c.y - camY < 240 and c.y + c.h - camY > 0 then lg.draw(c.cv, c.x - cam, c.y) end
   end
 end
+-- (day/07nov-dt, round 2b) the chunks' rows from world y0 down, drawn again: the tall Downtown draws the kerb's face
+-- and the quay wall this way with the look off, in town_ground.png's own granite greys (graded, their darks lean
+-- violet: 83/68/95 on screen for the file's 72/66/64), as the bonus round does (bonusscene.lua)
+function Ground:drawRows(cam, camY, y0)
+  camY = camY or 0
+  for _, c in ipairs(self.chunks) do
+    local r0 = y0 - c.y
+    if r0 < c.h and c.x - cam < 320 and c.x + c.w - cam > 0 and c.y + math.max(0, r0) - camY < 240 and c.y + c.h - camY > 0 then
+      r0 = math.max(0, r0)
+      lg.draw(c.cv, lg.newQuad(0, r0, c.w, c.h - r0, c.w, c.h), c.x - cam, c.y + r0)
+    end
+  end
+end
 function Ground:release() for _, c in ipairs(self.chunks) do c.cv:release() end; self.chunks = {} end
 -- the video memory the ground takes (bytes, RGBA8) and its largest chunk side
 function Ground:bytes() local n, m = 0, 0; for _, c in ipairs(self.chunks) do n = n + c.w * c.h * 4; m = math.max(m, c.w, c.h) end; return n, m end
