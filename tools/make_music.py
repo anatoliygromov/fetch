@@ -159,7 +159,7 @@ def gen_arp(rhythm, spans, lo=62):
     evs = []
     for row, ln, sym in spans:
         _, pcs = chord(sym)
-        tones = sorted(in_range(pc, lo) for pc in pcs[:3])
+        tones = sorted(in_range(pc, lo) for pc in pcs[:4])
         for k in range(ln):
             c = rhythm[(row + k) % 16]
             if c == "x":
@@ -562,18 +562,18 @@ TITLE = {
          "p2": "F#4:3 F#4:3 F#4:2 A4:4 D5:4 | C#5:3 C#5:3 C#5:2 A4:4 E4:4", "p2_vol": 0.75,
          "bass": "D3:3 D3:3 D3:2 A2:4 D3:4 | A2:3 A2:3 A2:2 E2:4 A2:4",
          "drums": "k..k..k.s...s.s. | k..k..k.s.s.ssss", "hats": "c............... | ................"},
-        {"name": "A", "chords": "D | G A | D | A | D | G | Em A | D",
+        {"name": "A", "chords": "D | G A | D | A/C# | Bm7 | G | Em7 A7 | D",
          "lead": "F#4:4 A4:4 D5:6 C#5:2 | B4:4 A4:2 G4:2 A4:8v | F#4:4 A4:4 D5:4 E5:2 F#5:2 | E5:8v C#5:4 A4:4 |"
                  "F#4:4 A4:4 D5:6 C#5:2 | B4:4 D5:2 E5:2 D5:4 B4:4 | G4:2 B4:2 E5:4 C#5:2 E5:2 A5:4 | F#5:2 E5:2 D5:12v",
          "p2": ("echo", 3, 0.4),
          "drums": "k...s...k.k.s...", "hats": "h.h.h.h.h.h.h.h."},
-        {"name": "B", "chords": "Bm | G | Em | A",
+        {"name": "B", "chords": "Bm | Gmaj7 | Em | A",
          "lead": "B4:2 C#5:2 D5:2 F#5:4 r:6 | G4:2 B4:2 D5:2 G5:4 r:6 | E5:2 F#5:2 G5:2 A5:2 B5:4 A5:2 G5:2 |"
                  "E5:4 C#5:2 E5:2 A5:8v",
          "p2": "r:10 F#5:2 E5:2 D5:2 | r:10 G5:2 F#5:2 D5:2 | C#5:2 D5:2 E5:2 F#5:2 G5:4 F#5:2 E5:2 |"
                "C#5:4 A4:2 C#5:2 E5:8", "p2_vol": 0.7,
          "bass": "drive", "drums": "k..ks...k..ks..k", "hats": "h.hhh.hhh.hhh.hh"},
-        {"name": "A'", "chords": "D | C | G | A",
+        {"name": "A'", "chords": "D | C | G/B | A",
          "lead": "F#4:4 A4:4 D5:6 C#5:2 | E5:4 D5:2 C5:2 G4:8v | B4:4 D5:4 G5:4 F#5:2 G5:2 | A5:12v r:4",
          "p2": "D4:4 F#4:4 A4:6 A4:2 | C5:4 B4:2 A4:2 E4:8 | G4:4 B4:4 D5:4 D5:2 D5:2 | C#5:12 r:4", "p2_vol": 0.7,
          "drums": "k...s...k.k.s...", "hats": "c.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h. | h.h.h.h.h.h.h.h."},
@@ -592,12 +592,12 @@ CITYPARK = {
     "name": "citypark", "bpm": 126, "swing": 0.6, "key": "G major (B section E minor)",
     "mood": "playful, bouncy, sneaky moments",
     "sections": [
-        {"name": "Intro", "chords": "G | G | C | D7",
+        {"name": "Intro", "chords": "G | G/B | C | D7",
          "lead": "r:16 | r:16 | r:16 | r:8 A4:2s B4:2s C5:2s C#5:2s",
          "p2": ("arp", "x.x.x...x.x.x...", 0.55),
          "drums": "k.......k....... | k.......k.....k. | k...s...k.k.s... | k...s...k.k.s.ss",
          "hats": "h.h.h.h.h.h.h.h."},
-        {"name": "A", "chords": "G | Em | C | D | G | Em | Am D | G",
+        {"name": "A", "chords": "G | Em | C6 | D | G | Em7 | Am7 D7 | G",
          "lead": "D5:2s r:2 B4:2s D5:2s G5:4 F#5:2s G5:2s | E5:2s G5:2s B5:4 A5:2s G5:2s E5:4 |"
                  "C5:2s r:2 E5:2s G5:2s A5:4 G5:2s E5:2s | A5:4 F#5:2s D5:2s E5:2s F#5:2s D5:4 |"
                  "D5:2s r:2 B4:2s D5:2s G5:4 F#5:2s G5:2s | B5:2s r:2 G5:2s E5:2s B4:4 C5:2 D5:2 |"
@@ -616,7 +616,7 @@ CITYPARK = {
          "drums": "k...s...k.k.s... | k...s...k.k.s... | k...s...k.k.s... | k...s...k.k.s... |"
                   "k...s...k.k.s... | k...s...k.k.s... | k...s...k.k.s... | k...s...s.s.s.s.",
          "hats": "h.h.h.h.h.h.h.h."},
-        {"name": "B (sneaking)", "chords": "Em | Em | C | B7 | Em | Em | Am | B7",
+        {"name": "B (sneaking)", "chords": "Em | Em/D | C | B7 | Em | Em/D | Am/C | B7",
          "lead": "E4:1s r:1 F#4:1s r:1 G4:1s r:3 B4:1s r:1 A4:1s r:1 G4:1s r:3 |"
                  "E4:1s r:1 F#4:1s r:1 G4:1s r:1 G#4:1s r:1 A4:2s r:2 B4:2s r:2 |"
                  "C5:1s r:1 B4:1s r:1 A4:1s r:3 G4:1s r:1 A4:1s r:1 C5:1s r:3 |"
@@ -628,14 +628,14 @@ CITYPARK = {
          "lead_duty": 0.125, "lead_vol": 0.85, "p2": ("echo", 2, 0.3), "p2_duty": 0.125,
          "bass": "pizz", "bass_vol": 0.9,
          "drums": "....t.......t...", "hats": "h...h...h...h...", "drum_vol": 0.7},
-        {"name": "C (geese)", "chords": "C | D | Bm Em | Am D",
+        {"name": "C (geese)", "chords": "C | D | Bm Em | Am D7",
          "lead": "C5:2> r:2 C5:2> r:2 E5:2s G5:2s E5:2s C5:2s | D5:2> r:2 D5:2> r:2 F#5:2s A5:2s F#5:2s D5:2s |"
                  "F#5:2s D5:2s B4:4 G5:2s E5:2s B4:4 | A5:2> r:2 A5:2> r:2 C6:2s B5:2s A5:2s F#5:2s",
          "p2": "G4:2> r:2 G4:2> r:2 r:8 | A4:2> r:2 A4:2> r:2 r:8 | r:4 F#4:2s D4:2s r:4 G4:2s E4:2s |"
                "C5:2> r:2 C5:2> r:2 r:8", "p2_vol": 0.8, "p2_duty": 0.25,
          "bass": "drive",
          "drums": "k.s.k.s.k...s.s.", "hats": "c...h...h...h... | h...h...h...h... | h...h...h...h... | h...h...h...o..."},
-        {"name": "A'", "chords": "G | Em | C | D | G | Em | Am D | G",
+        {"name": "A'", "chords": "G | Em | C6 | D | G | Em7 | Am7 D7 | G",
          "lead": "D5:2s r:2 B4:2s D5:2s G5:4 F#5:2s G5:2s | E5:2s G5:2s B5:4 A5:2s G5:2s E5:4 |"
                  "C5:2s r:2 E5:2s G5:2s A5:4 G5:2s E5:2s | A5:4 F#5:2s D5:2s E5:2s F#5:2s D5:4 |"
                  "D5:2s r:2 B4:2s D5:2s G5:4 F#5:2s G5:2s | B5:2s r:2 G5:2s E5:2s B4:4 C5:2 D5:2 |"
@@ -663,10 +663,10 @@ CLEAR = {
 # drooping down.
 OVER = {
     "name": "jingle_over", "bpm": 100, "key": "D minor", "mood": "sad, gentle (kids play this)", "ring": 0.5,
-    "sections": [{"name": "Fall", "chords": "Dm Bb A Dm",
+    "sections": [{"name": "Fall", "chords": "Dm Dm Bb Bb A Dm Dm Dm",
                   "lead": "A4:4 F4:4 E4:2 D4:6vd",
                   "p2": "F4:4 D4:4 C#4:2 A3:6d", "p2_vol": 0.7,
-                  "bass": "D2:4 A#1:4 A1:4 D2:4", "drums": "k.......k.......", "drum_vol": 0.6}]}
+                  "bass": "D2:4 A#1:4 A1:2 D2:6", "drums": "k.......k.......", "drum_vol": 0.6}]}
 
 # Fetch sting ("GOOD GIRL!"): D major, 160 bpm, 1.5 s: a quick arpeggio up, then two notes like the words.
 FETCH = {
