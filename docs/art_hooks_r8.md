@@ -210,3 +210,10 @@ Built by `tools/build_dt_facades.py` (`--check`) after the producer's concept dt
 | `town_bridge_springer.png` | 14 x 20 | play, outlined: the FOOTBRIDGE's arch feet, on the two house corners, top at the bridge art's row 42; the right one mirrored (arthooks.lua townPiece) |
 | `town_basin_wall.png` | 10 x 56 | ground: under a fountain RIM on the water's side, from the rim's bottom (y 424) down; mirrored on the right (scene.lua RIM) |
 | `town_shelter_tall.png` | 140 x 115 | unchanged slot (decoration, centred on the SHELTER, bottom on y 414), redrawn in green cast iron |
+
+## The sky (day of 7 Nov, look.lua Look.PAINTED; LOOK_SKY=bands is the old band sky)
+
+| File | Size (px) | Facing | Anchor and rules | Replaces |
+| --- | --- | --- | --- | --- |
+| `art/scene/sky_riverwalk.png`, `sky_citypark.png`, `sky_downtown.png` | 960 x 360, opaque | - | Built by `tools/build_sky.py` (`--check`). Row 0 = screen y -120 (a tall level's sky above y 0); a flat level draws rows 120-359 at y 0. Wraps sideways: drawn at 0.05 of the camera plus 2 px a second (Look.SKY_SPEED, Look.SKY_DRIFT), no look shader. 4-6 sky tones + 4 cloud tones (clouds luma 185 or more) | the band sky and the drifting cloud sprites (cloud1-8 are no longer drawn while it is on) |
+| `art/scene/skyline_riverwalk.png`, `skyline_citypark.png`, `skyline_downtown.png` | 320 x 77 | - | Built by `tools/build_sky.py` from the approved `skyline.png` (unchanged): its silhouette in 2 clean tones plus a 1 px warm rim on the lit edges. Bottom at y 138 (River Walk) or 150 (art levels), repeats every 320 px, drawn with the neutral city look (final colours) | `skyline.png` under the city haze |

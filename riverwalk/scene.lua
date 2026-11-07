@@ -34,18 +34,18 @@ Sc.speeds = { clouds = 0.05, city = 0.08, shore = 0.3, water = 0.5 }
 -- level being played, Look.key), no longer one cool grey (200, 210, 222) for every level; the amounts per layer are
 -- the script's `fade` (River Walk's decoration 28 %, as before). The files are untouched: a copy is faded at load,
 -- and every faded image is cached per colour script.
-function Sc.haze(layer) local L = Look.scripts[Look.key].layers; return (L[layer or "back"] or L.back).haze end
+-- (day 7 Nov) the haze and its clean amount come from look.lua (the painted sky's own hazes when Look.PAINTED)
+function Sc.haze(layer) return Look.haze(layer or "back") end
 function Sc.fadeK(layer) return (Look.scripts[Look.key].fade or {})[layer or "back"] or 0 end
--- a colour k of the way to the layer's haze (k: the layer's amount when nil)
+-- a colour k of the way to the layer's haze (k: the layer's amount when nil), its colour given back by the clean
 function Sc.fadeC(c, k, layer)
   local h = Sc.haze(layer); k = k or Sc.fadeK(layer)
-  return { c[1] + (h[1] - c[1]) * k, c[2] + (h[2] - c[2]) * k, c[3] + (h[3] - c[3]) * k }
+  local ck, l = Look.clean(layer or "back") * k, 0.299 * c[1] + 0.587 * c[2] + 0.114 * c[3]
+  return { c[1] + (h[1] - c[1]) * k + ck * (c[1] - l), c[2] + (h[2] - c[2]) * k + ck * (c[2] - l), c[3] + (h[3] - c[3]) * k + ck * (c[3] - l) }
 end
 -- ImageData d, every pixel k of the way to the layer's haze (in place; returns d)
 function Sc.fadeData(d, k, layer)
-  local h = Sc.haze(layer); k = k or Sc.fadeK(layer)
-  if k > 0 then d:mapPixel(function(_, _, r, g, b, a) return r + (h[1] - r) * k, g + (h[2] - g) * k, b + (h[3] - b) * k, a end) end
-  return d
+  return Look.fadeData(d, k or Sc.fadeK(layer), layer or "back")
 end
 
 -- the characters' 1 px dark outline around an image's silhouette, outside the art (the result is 1 px bigger on
@@ -680,17 +680,17 @@ end
 function Sc.drawFar(L, camx, t)
   local A = Sc.art()
   skyGap(); local on = vpush("sky")
-  if Look.on then Look.sky() else                                  -- 1 sky (look.lua: the banded, dithered sky)
+  if Look.on then Look.sky(camx, t) else                           -- 1 sky (look.lua: the painted sky, or the bands)
   for y = 0, 239 do
     local k = math.min(1, y / 170)
     lg.setColor(C.sky1[1] + (C.sky2[1] - C.sky1[1]) * k, C.sky1[2] + (C.sky2[2] - C.sky1[2]) * k, C.sky1[3] + (C.sky2[3] - C.sky1[3]) * k)
     lg.rectangle("fill", 0, y, 320, 1)
   end
   end
-  local o = camx * 0.05 - t * 3                                    -- 2 clouds drift
+  local o = camx * 0.05 - t * 3                                    -- 2 clouds drift (the painted sky has its own)
   Look.use("clouds")
   lg.setColor(1, 1, 1, 1)
-  for _, c in ipairs(L.clouds) do
+  for _, c in ipairs(Look.spriteClouds() and L.clouds or {}) do
     local x = math.floor((c.x - o) % L.cloudSpan - 120)
     if x < 330 and x + c.w > -10 then lg.draw(c.img, x, c.y) end
   end
@@ -699,11 +699,11 @@ function Sc.drawFar(L, camx, t)
   -- level it moves at most 128 px (factor 128 / the camera's range): the strip is followed by its own first 128
   -- columns, which never bring a second City Hall tower on screen. (r5/bugs: the range was fixed at 2880 px, from
   -- when River Walk was 3200 px; at 3840 px the skyline stood still over the last two screens.)
-  Look.use("city")
+  local city = Look.skyline(A.skyline)                             -- (look.lua: the painted far city, or the skyline)
   lg.setColor(1, 1, 1, 1)
-  local sw = A.skyline:getWidth()
+  local sw = city:getWidth()
   local sx = -math.floor(math.min(128, camx * 128 / math.max(320, (L.levelW or 3200) - 320)))
-  lg.draw(A.skyline, sx, 138 - A.skyline:getHeight()); lg.draw(A.skyline, sx + sw, 138 - A.skyline:getHeight())
+  lg.draw(city, sx, 138 - city:getHeight()); lg.draw(city, sx + sw, 138 - city:getHeight())
   lg.setColor(1, 1, 1, 1)
   Look.use("shore")
   lg.draw(A.shore, -math.floor(camx * 0.3), 113)                   -- 4 far shore and bridge: bottom row = waterline
@@ -1291,11 +1291,11 @@ local function skyAndClouds(L, camx, t)
   local v = Sc.vshift
   if v and Look.on then                                            -- a tall art level: the sky rises with the far
     lg.push(); lg.translate(0, v.far)                              -- city (so the warm glow stays behind it) and
-    Look.skyTall()                                                 -- goes on above, deeper blue, with high clouds
+    Look.skyTall(camx, t)                                          -- goes on above, deeper blue, with high clouds
     local o = camx * 0.05 - t * 3
     Look.use("clouds")
     lg.setColor(1, 1, 1, 1)
-    for _, list in ipairs({ L.clouds, L.cloudsHigh }) do
+    for _, list in ipairs(Look.spriteClouds() and { L.clouds, L.cloudsHigh } or {}) do
       for _, c in ipairs(list) do
         local x = math.floor((c.x - o) % L.cloudSpan - 120)
         if x < 330 and x + c.w > -10 and c.y + v.far < 240 and c.y + v.far + 60 > 0 then lg.draw(c.img, x, c.y) end
@@ -1305,7 +1305,7 @@ local function skyAndClouds(L, camx, t)
     return
   end
   skyGap(); local on = vpush("sky")
-  if Look.on then Look.sky() else                                  -- (look.lua: the level's banded, dithered sky)
+  if Look.on then Look.sky(camx, t) else                           -- (look.lua: the level's painted sky, or the bands)
   for y = 0, 239 do
     local k = math.min(1, y / 170)
     lg.setColor(C.sky1[1] + (C.sky2[1] - C.sky1[1]) * k, C.sky1[2] + (C.sky2[2] - C.sky1[2]) * k, C.sky1[3] + (C.sky2[3] - C.sky1[3]) * k)
@@ -1315,7 +1315,7 @@ local function skyAndClouds(L, camx, t)
   local o = camx * 0.05 - t * 3
   Look.use("clouds")
   lg.setColor(1, 1, 1, 1)
-  for _, c in ipairs(L.clouds) do
+  for _, c in ipairs(Look.spriteClouds() and L.clouds or {}) do
     local x = math.floor((c.x - o) % L.cloudSpan - 120)
     if x < 330 and x + c.w > -10 then lg.draw(c.img, x, c.y) end
   end
@@ -1558,10 +1558,10 @@ function Sc.drawFarArt(L, camx, t, w, def)
   local T, A = Sc.townArt(L.style), Sc.art()
   skyAndClouds(L, camx, t)
   local on = vpush("far")
-  Look.use("city")
+  local city = Look.skyline(A.skyline)                            -- (look.lua: the painted far city, or the skyline)
   lg.setColor(1, 1, 1, 1)                                         -- 3 far city: River Walk's skyline, moved at
   local sx = -math.floor(math.min(128, camx * 128 / math.max(1, w.width - 320)))   -- most 128 px (one City Hall)
-  lg.draw(A.skyline, sx, 150 - A.skyline:getHeight()); lg.draw(A.skyline, sx + A.skyline:getWidth(), 150 - A.skyline:getHeight())
+  lg.draw(city, sx, 150 - city:getHeight()); lg.draw(city, sx + city:getWidth(), 150 - city:getHeight())
   if L.style == "park" then
     Look.use("shore")
     strip(T.treeline, camx, 0.25, 177)                            -- 4 the far tree line

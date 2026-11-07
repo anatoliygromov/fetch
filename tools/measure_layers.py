@@ -32,6 +32,23 @@ S = {
             mid=L(0.7,1.3,1.15,"b2c3d9",0.18), water=L(0.4,1.2,1.35,"7fb0d8",0.05), back=L(0.8,1.2,1.25,"efe6da",0.08),
             ground=L(0.9,0.7,1.10,"000000",0), play=L(0.7,0.8,1.15,"000000",0), front=L(0.0,1.8,1.10,"141a26",0.40)),
 }
+# (day 7 Nov) the painted sky (look.lua Look.PAINTED, default on; LOOK_SKY=bands is the old path): each level's
+# script.paint.layers override the layers above (read from look.lua, so they cannot drift), the far city is
+# skyline_<level>.png under a neutral look, the sky and its clouds are sky_<level>.png (tools/build_sky.py)
+PAINT = os.environ.get("LOOK_SKY") != "bands"
+KEYS = {"rw": "riverwalk", "cp": "citypark", "dt": "downtown"}
+def _paint_layers():
+    import re
+    src = open(os.path.join(ROOT, "riverwalk/look.lua")).read()
+    out = {}
+    for lvl, key in KEYS.items():
+        blk = src.split("\n  " + key + " = {", 1)[1].split("paint = {", 1)[1].split("} },", 1)[0]
+        out[lvl] = {m[0]: dict(warm=float(m[1]), cool=float(m[2]), sat=float(m[3]), haze=hx(m[4]), k=float(m[5]),
+                               clean=float(m[6] or 0))
+                    for m in re.findall(r'(\w+) = L\(([\d.]+), ([\d.]+), ([\d.]+), "([0-9a-f]{6})", ([\d.]+)(?:, ([\d.]+))?\)', blk)}
+    return out
+if PAINT:
+    for _l, _d in _paint_layers().items(): S[_l].update(_d)
 # the load-time fade amounts per level and layer (look.lua Look.scripts[...].fade); layers not listed are not faded
 FADE = {"rw": dict(back=0.28), "cp": dict(shore=0.40, mid=0.38, back=0.20), "dt": dict(shore=0.70, mid=0.10, back=0.28)}
 # pieces with their own amount (scene.lua park gate and winch keeper, arthooks.lua tram and spire); the haze is the level's
@@ -51,16 +68,24 @@ def fade_in(name, lvl, layer, fade=None):
     if name in OWN: return OWN[name]
     return FADE[lvl].get(layer, 0.0)
 
+def clean_of(lvl, layer):
+    return S[lvl].get(layer or "back", S[lvl]["back"]).get("clean", 0.0)
+
 def fade_to(rgb, fade, lvl, layer):
-    """RGB 0-1 after the load-time fade (k of the way to the level's haze for the layer)"""
-    return rgb + (haze(lvl, layer) - rgb) * fade if fade else rgb
+    """RGB 0-1 after the load-time fade (k of the way to the level's haze for the layer, the colour given back by
+    the layer's clean: look.lua Look.fadeData)"""
+    if not fade: return rgb
+    l = (rgb @ W)[..., None]
+    return rgb + (haze(lvl, layer) - rgb) * fade + clean_of(lvl, layer) * fade * (rgb - l)
 
 def shade(rgb, p):
     l = rgb @ W
     rgb = l[:, None] + (rgb - l[:, None]) * p["sat"]
     rgb = rgb + p["warm"] * (l * l)[:, None] * np.array([0.080, 0.032, -0.048])
     rgb = rgb + p["cool"] * ((1 - l) ** 2)[:, None] * np.array([-0.030, -0.045, 0.085])
+    pre = rgb
     rgb = rgb * (1 - p["k"]) + p["haze"] * p["k"]
+    rgb = rgb + p.get("clean", 0.0) * p["k"] * (pre - (pre @ W)[:, None])
     return np.clip(rgb, 0, 1)
 
 def stats(path, lvl, layer, fade=0.0, shader=True):
@@ -205,8 +230,12 @@ add(["mia_throw"], "rw", None, base=R8, group="Batch 1 (rejected)")
 # and the far city of all three), and the sky's horizon (its painted bands from y 76 down, behind the far layers).
 # Batch 1 (not in the game) and the characters are left out.
 LADDER_LAYERS = ("clouds", "city", "shore", "mid", "back", "play")
+SKY_ROW0 = 120                                                    # build_sky.py: row 0 is screen y -120
 def sky_luma(lvl):
     key = {"rw": "riverwalk", "cp": "citypark", "dt": "downtown"}[lvl]
+    f = os.path.join(ART, "scene", f"sky_{key}.png")
+    if PAINT and os.path.exists(f):                                  # the painted sky's rows from y 76 down
+        return (np.array(Image.open(f).convert("RGB")).astype(float)[SKY_ROW0 + 76:] / 255 @ W * 255).ravel()
     src = open(os.path.join(ROOT, "riverwalk/look.lua")).read()
     blk = src.split(key + " = {", 1)[1].split("bands = {", 1)[1].split("fg = ", 1)[0].split("above = ", 1)[0]
     import re
@@ -227,7 +256,13 @@ def ladder():
     for lvl, grp in LEVELS.items():
         pools = {"horizon": [sky_luma(lvl)]}
         for g, n, p, l, layer, fade in A:
-            if n == "skyline": pools.setdefault("city", []).append(drawn_luma(p, lvl, "city", 0.0))
+            key = KEYS[lvl]
+            pc, js = os.path.join(ART, "scene", f"skyline_{key}.png"), os.path.join(ROOT, f"art/source/sky/{key}.json")
+            if n == "skyline": pools.setdefault("city", []).append(drawn_luma(pc if PAINT and os.path.exists(pc) else p, lvl, "city", 0.0))
+            elif n.startswith("cloud") and PAINT and os.path.exists(js):     # the painted banks (no look on top)
+                if n == "cloud1":
+                    d = json.load(open(js))
+                    pools.setdefault("clouds", []).append(np.concatenate([np.full(d["counts"][h], hx(h) @ W * 255) for h in d["roles"]["cloud"]]))
             elif n.startswith("cloud"): pools.setdefault("clouds", []).append(drawn_luma(p, lvl, "clouds", 0.0))
             elif g == grp and layer in LADDER_LAYERS and os.path.exists(p): pools.setdefault(layer, []).append(drawn_luma(p, lvl, layer, fade))
         out[lvl] = {k: (round(float(np.median(np.concatenate(v)))), round(float(np.percentile(np.concatenate(v), 10))))

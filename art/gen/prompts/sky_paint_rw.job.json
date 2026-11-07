@@ -1,0 +1,23 @@
+{
+ "name": "sky_paint_rw",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/concepts/base07sky/rw_ferry_4x.png"
+ ],
+ "prompt_file": "art/gen/prompts/sky_paint_rw.txt",
+ "tool": "artlist",
+ "family": "sky_07nov",
+ "asset": "sky_paint",
+ "slot": {
+  "file": "riverwalk/look.lua sky bands and clouds layer (design)",
+  "where": "River Walk sky, far city and far shore, summer morning"
+ },
+ "credits": 320,
+ "ledger_job": "sky_paint_rw@1107-111027"
+}
