@@ -1,0 +1,23 @@
+{
+ "ground": 200,
+ "pepper_x": 6,
+ "riders": {
+  "A": [
+   46,
+   "right"
+  ],
+  "B": [
+   104,
+   "right"
+  ],
+  "C": [
+   154,
+   "left"
+  ]
+ },
+ "rider_image": [
+  88,
+  87
+ ],
+ "image_ground_row": 86
+}

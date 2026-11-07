@@ -2,6 +2,9 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `day/07nov-chars`: vehicles, animals, bones and hint pictures after the owner's board of 7 Nov (track chars)
+- **Render jobs prepared (0 credits until the producer runs them):** `art/gen/jobs/rw_riders_n07.json` (three riders at 46 px/m on one 256 frame: the promenade woman, the promenade man, the Downtown baker; GPT 2.5 Sunburst 1K, 2 variants, 3 references: 64), `rw_lane_riders_n07.json` (the two lane riders at 55 px/m, 64), `rw_gull_n07.json` (the gull at the owner's 24 px wingspan, Pixel Engine Image 24 x 16, 4 variants, 24). Only the living parts are drawn; the bikes are built by rule and the legs keyed per pedal frame. Blockouts in `art/gen/blockouts/*_n07.py`, style reference `art/gen/upload/style_rw_rower_girl_4x.png` (the approved rower and girl). preflight --dry PASS each.
+
 
 ## v0.7 (7 Nov 2026): River Walk, City Park and Downtown at finished quality
 Main moves from v0.6 (23 Oct) to `prod/integrate-f`: everything integrated since (prod/integrate-c and -d, the 5 Nov and 6 Nov art families, the hint bubbles, the speech bubbles and bikes in front, the night of 6-7 Nov tracks). Every check green, every screen of the three levels passed an independent review. Owner's yes, 6 Nov 20:10, on that condition. The sections below are the detail.

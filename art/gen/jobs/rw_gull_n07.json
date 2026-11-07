@@ -1,0 +1,31 @@
+{
+ "name": "rw_gull_n07",
+ "level": "riverwalk",
+ "layer": "char",
+ "kind": "animal",
+ "target_px": [
+  24,
+  16
+ ],
+ "owner_size": {
+  "px": 16,
+  "words": "owner, board 7 Nov, gull_size_n0607: '24' (option C, 24 px wingspan). Height 16 = that span with the wings raised in a V and the feet tucked, as option C is drawn",
+  "sheet": "docs/review/06nov-night/rw/size_sheets/gull_sizes_4x.png"
+ },
+ "checks_px": {
+  "wingspan": 24,
+  "body": 13,
+  "cell": "26 x 26 (critters.lua)"
+ },
+ "subject": "a herring gull flying, seen from the side, facing LEFT: both long wings raised in a V above its back with black wing tips and a small white spot on each tip, a light silver-grey back and wings, a pure white round head and white body, a yellow bill with a small red spot, a short white tail, the feet tucked under the belly. A clear bird silhouette: head, bill, two wings, tail. Solid shapes with no holes and no gaps between the feathers",
+ "part_map": "the two grey bars rising in a V are the wings with their dark tips, the white oval is the body, the white round shape on the left is the head with the yellow bill, the white wedge on the right the tail, the yellow dash under the body the tucked feet.",
+ "size_sentence": "a small gull: its wingspan is about half the dog's length.",
+ "model": "sc_pe",
+ "variants": 4,
+ "tier": "A",
+ "family": "chars_07nov",
+ "slot": {
+  "file": "riverwalk/art/gull.png",
+  "where": "River Walk (the gull that swoops at Pepper, critters.lua Cr.draw) and the rooftop gull (Cr.drawBird): 6 flap frames of 26 x 26; the flap loop is animated from this still at 1x (a second job)"
+ }
+}

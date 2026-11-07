@@ -1,0 +1,34 @@
+{
+ "name": "rw_lane_riders_n07",
+ "level": "riverwalk",
+ "layer": "lane",
+ "kind": "character",
+ "real_height_m": 1.85,
+ "target_px": [
+  126,
+  98
+ ],
+ "checks_px": {
+  "helmet_top_to_shoe": 98,
+  "head": 13,
+  "shown_rows": "0-49 (head, body, arms, hands)"
+ },
+ "subject": "two grown-up people riding bicycles, seen exactly from the side, both facing RIGHT, each sitting upright on an invisible bicycle seat (the bicycles are added later, do not draw them), hands forward on invisible handlebar grips. LEFT person: a woman of about 35, a red wool coat to mid thigh with a dark collar and two buttons, dark grey trousers, brown ankle boots, a white cycling helmet, brown hair in a short ponytail, a friendly face. RIGHT person: a man of about 40, a short dark green jacket, blue jeans, dark brown boots, a grey cycling helmet, short dark hair and a short dark beard, a small brown canvas backpack. Clean flat shading in 3 to 4 tones per colour, clear faces with one dark eye, a small nose and a mouth",
+ "part_map": "each figure: the light skin oval is the head (exactly that size), the cap on top is the helmet, the big coloured block is the coat or jacket (the woman's goes to mid thigh, the man's ends at the hips), the thin coloured bar reaching forward is the near arm and the skin dot at its end the hand on the grip, the two dark bars going down are the legs, the small brown box the shoe; the man's brown block on his back is the backpack.",
+ "size_sentence": "each rider's helmet top is about two and a half times as high as the dog's head: they ride in the road lane nearer to us than the dog; full-grown adults, not children.",
+ "model": "sc_gpt25",
+ "variants": 2,
+ "references": 3,
+ "tier": "A",
+ "family": "chars_07nov",
+ "slot": {
+  "file": "riverwalk/art/scene/road_rider1.png, road_rider2.png",
+  "where": "River Walk road bike lane (road.lua art.lane, top row at y 190, rows 0-49 show); the bike built by tools/build_bikes_n07.py at 55 px/m"
+ },
+ "extra": "Image 2 shows approved sprites from this game at 4x: match their pixel size, outline and flat shading. Image 3 shows two approved characters from this game at 4x (a seated rower and a girl): match their faces, their clean 1 px outline and their flat shading. Draw nothing else: no bicycle, no seat, no ground, no shadow.",
+ "references_files": [
+  "art/gen/upload/rw_lane_riders_n07_blockout.png",
+  "art/gen/style_card_riverwalk.png",
+  "art/gen/upload/style_rw_rower_girl_4x.png"
+ ]
+}
