@@ -9,14 +9,14 @@
 4. `day/07nov-chars`: built cars, bikes and riders, the 24 px gull, the ferry, bones 15 x 9, hint pictures, the cat_r2.
 5. `day/07nov-bonusscene`: each bonus round in its level's own place.
 6. `day/07nov-ground`: ground joins by rule, the owner's ground reverts, City Park lawn kit; no kennel (secret KENNEL is now DOORSTEP).
+7. Round 2: `day/07nov-sky` again (3574b3c: Downtown's far city low and simple, 320 x 30).
+8. Round 2: `day/07nov-dt` (ea65d45): the Downtown (tall) low-row rebuild, review round 3 PASS.
 
-Not on it: `day/07nov-dt` (Downtown still in review).
+**Integration commits:** `check_pepper_files.sh` compares input.lua without the menus' last-used device block (it failed on main since 4afd8d2; Pepper unchanged by the trace and the lab). Two merge fixes for the bigger 15 x 9 bone: City Park tall's leaf-pile bones 143 and 144 moved 11 px left with their pile; Downtown tall bones 157, 158, 159 and 165 nudged 2 to 3 px clear of the statue, the arcade roof and the fountain column (`tools/dt_bone_overlap.py` now reads the bone size: 102 bones, 0 overlap).
 
-**Integration commits:** `check_pepper_files.sh` compares input.lua without the menus' last-used device block (it failed on main since 4afd8d2; Pepper unchanged by the trace and the lab). One merge fix: City Park tall's leaf-pile bones 143 and 144 moved 11 px left with their pile (cplog moved the pile, chars made bones wider, one knob showed).
+**Checks on the branch (after round 2):** PEPPER UNCHANGED (trace 3908, lab 1401), PEPPER FILES UNCHANGED, flow 125/125, Tiled PASSED, BACKDROP OK, APPROVED ALL MERGED; physics River Walk 56/56, City Park 85/85, City Park tall 99/99, Downtown tall 109/109 (the bark-drop goose test on the street included), Rooftops 139/139, Söder 29/29, Night 40/40; qa 0 problems (River Walk, City Park tall, Downtown tall); bonus tests 23/23 and every level's round by autopilot as before; the build tools' `--check` all OK (build_dt_rooftops 54 files). Curve T1 PASS, T2 FAIL (as on main: River Walk screen 13 at 36 %, Söder 9 Cafe tables at 50 %, unchanged), T3 PASS, T4 PASS. DI kids/parents as main on every level except Downtown tall, 13.7/16.1 on main to 13.3/19.1 (the low row's new route, as the dt review intended; lost runs 1.9 % to 2.5 %).
 
-**Checks on the branch:** PEPPER UNCHANGED (trace 3908, lab 1401), PEPPER FILES UNCHANGED, flow 125/125, Tiled PASSED, BACKDROP OK, APPROVED ALL MERGED; physics River Walk 56/56, City Park 85/85, City Park tall 99/99, Downtown tall 109/109, Rooftops 139/139, Söder 29/29, Night 40/40; qa 0 problems (River Walk, City Park tall, Downtown tall); bonus tests 23/23 and every level's round by autopilot as before; the build tools' `--check` all OK. Curve T1 PASS, T2 FAIL (as on main: River Walk screen 13 at 36 %, Söder 9 Cafe tables at 50 %, unchanged), T3 PASS, T4 PASS; DI within 0.1 of main on every level.
-
-**Look at:** `docs/review/07nov/integration/` (2x sheets of every screen of River Walk, City Park tall and Downtown tall, the hollow log crawl, the riders, the bone fix).
+**Look at:** `docs/review/07nov/integration/` (2x sheets of every screen of River Walk, City Park tall and Downtown tall, the hollow log crawl, the riders, the cargo bike at the gate, the bone fix, the Downtown bonus round).
 
 **Waiting for the owner:** merge `day/07nov-integration` into `main` after the board.
 
