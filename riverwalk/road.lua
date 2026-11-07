@@ -73,7 +73,8 @@ function Rd.drawBike(still, dist, x, y, flip)
   lg.draw(r.im, r.q[math.floor(dist / r.px) % (r.n or 4)], x + ox, y, 0, sx, 1)
 end
 Rd.art = load
-Rd.CAR_TOP, Rd.RIDER_TOP = 192, 190                                -- below Pepper's feet (y 184)
+Rd.CAR_TOP, Rd.RIDER_TOP = 192, 178                                -- cars below Pepper's feet (y 184); (chars round 2,
+-- 7 Nov) the lane riders 12 px higher so their hand and bar show (rows 0-61), not a gliding bust
 
 function Rd.new(world)
   load()

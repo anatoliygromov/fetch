@@ -141,7 +141,82 @@ def build():
                 log.append([k, int(xx), int(yy), list(f[yy, xx, :3]), list(s[y, x, :3])]); f[yy, xx] = s[y, x]
         f = fix_rules(f, log, k)
         frames.append(f[0:26, 1:27][:, ::-1].copy())   # (rows 26-27 and columns 0, 27 are empty: checked below)
+    frames = round2(frames, log)
     return np.concatenate(frames, axis=1), frames, log
+
+
+# ---- round 2 (review art/gen/reviews/gull.md, 7 Nov), by rule on the six game frames (facing right) ----
+WHITE, BILL, DARK, MID = (227, 231, 236), (229, 186, 65), (45, 45, 54), (73, 76, 88)
+WINGC = {WING, DARK, MID}
+
+
+def outline_close(f):
+    """ink on every transparent pixel 4-next to a coloured (non-ink) pixel; ink with no coloured 8-neighbour goes"""
+    H, W = f.shape[:2]; m = f[..., 3] > 0
+    col = m & ~np.all(f[..., :3] == INK, -1)
+    for y in range(H):
+        for x in range(W):
+            if m[y, x] and not col[y, x]:
+                if not any(col[yy, xx] for yy in range(max(0, y - 1), min(H, y + 2)) for xx in range(max(0, x - 1), min(W, x + 2))):
+                    f[y, x] = 0
+    m = f[..., 3] > 0; col = m & ~np.all(f[..., :3] == INK, -1); add = []
+    for y in range(H):
+        for x in range(W):
+            if m[y, x]: continue
+            if any(0 <= y + dy < H and 0 <= x + dx < W and col[y + dy, x + dx] for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1))): add.append((y, x))
+    for y, x in add: f[y, x] = (*INK, 255)
+    return f
+
+
+def round2(frames, log):
+    out = [f.copy() for f in frames]
+    # 1 feet in none: the 2 orange pixels go from every frame (they showed in 1-3 only: a flicker)
+    for k, f in enumerate(out):
+        mm = (f[..., 3] > 0) & np.all(f[..., :3] == FEET, -1)
+        for y, x in zip(*np.nonzero(mm)): log.append(['r2', k, int(x), int(y), 'feet', 'off'])
+        f[mm] = 0
+        out[k] = outline_close(f)
+    # 2 frames 1, 2, 6 (wings up): 1 px of sky between the head's top outline (row 14, x 17-20) and the far wing
+    for k in (0, 1, 5):
+        f = out[k]
+        for x in range(14, 23):                                   # the wing's pixels on row 12 over the head: its ink
+            if f[12, x, 3] and tuple(f[12, x, :3]) != INK and f[13, x, 3]: log.append(['r2', k, x, 12, 'wing edge', 'ink']); f[12, x, :3] = INK
+        for x in range(14, 23):                                   # row 13 over the head: sky
+            if f[13, x, 3]: log.append(['r2', k, x, 13, 'gap', 'off']); f[13, x] = 0
+        for y, x in ((14, 15), (14, 16)):
+            if f[y, x, 3] and tuple(f[y, x, :3]) != INK: log.append(['r2', k, x, y, 'gap', 'off']); f[y, x] = 0
+        out[k] = outline_close(f)
+    # frame 2 (half up): its far wing sat wholly on the head, so with the sky under it it floats: it goes behind the
+    # body (not drawn), as a far wing at half stroke is in side view
+    f = out[1]
+    for y in range(0, 14):
+        for x in range(14, 26):
+            if f[y, x, 3]: log.append(['r2', 1, x, y, 'far wing behind the body', 'off']); f[y, x] = 0
+    out[1] = outline_close(f)
+    # 3 frame 5: wings level and rising, frame 3's body with its wing 2 px higher, the tips (x <= 4) 1 px higher still
+    src = out[2]; H, W = src.shape[:2]; nf = np.zeros_like(src)
+    wb = (src[..., 3] > 0) & (np.all(src[..., :3] == WHITE, -1) | np.all(src[..., :3] == BILL, -1))
+    body = np.zeros_like(wb); st = [(16, 22)]                       # the body: the white piece that holds the head
+    while st:
+        y, x = st.pop()
+        if 0 <= y < H and 0 <= x < W and wb[y, x] and not body[y, x]:
+            body[y, x] = True; st += [(y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)]
+    nf[body] = src[body]
+    for y in range(1, H - 1):                                      # the eye: an ink pixel inside the white
+        for x in range(1, W - 1):
+            if src[y, x, 3] and tuple(src[y, x, :3]) == INK and all(body[y + dy, x + dx] for dy, dx in ((0, 1), (0, -1))):
+                nf[y, x] = src[y, x]
+    for y in range(H):
+        for x in range(W):
+            if src[y, x, 3] and (tuple(src[y, x, :3]) in WINGC or (wb[y, x] and not body[y, x])):   # wing, its white underside
+                ny = y - 2 - (1 if x <= 3 else 0)
+                if ny >= 0: nf[ny, x] = src[y, x]
+    out[4] = outline_close(nf)
+    log.append(['r2', 4, 'frame 5 rebuilt from frame 3: wing +2 px, tips +3 px'])
+    for k, f in enumerate(out):                                    # the stray mid shade (1-3 px, one frame): the dark
+        mm = (f[..., 3] > 0) & np.all(f[..., :3] == MID, -1); f[mm, :3] = DARK
+        for y, x in zip(*np.nonzero(mm)): log.append(['r2', k, int(x), int(y), 'mid shade', 'dark'])
+    return out
 
 
 if __name__ == '__main__':

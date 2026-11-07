@@ -1,0 +1,191 @@
+[
+ {
+  "name": "cargo_bike",
+  "verdict": "WARN",
+  "file": "riverwalk/art/scene/cargo_bike.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 116,
+  "h": 88,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 19,
+   "lone": 1.9,
+   "p10": 20,
+   "median": 97,
+   "p90": 207,
+   "noise": 0.4,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": [
+   {
+    "id": "noise",
+    "sev": "warn",
+    "msg": "15 dirt pixels (0.4 %): single pixels a shade off the fill around them",
+    "pixels": [
+     [
+      78,
+      5
+     ],
+     [
+      85,
+      6
+     ],
+     [
+      86,
+      14
+     ],
+     [
+      93,
+      27
+     ],
+     [
+      86,
+      29
+     ],
+     [
+      87,
+      37
+     ],
+     [
+      94,
+      38
+     ],
+     [
+      76,
+      40
+     ],
+     [
+      71,
+      42
+     ],
+     [
+      93,
+      43
+     ],
+     [
+      60,
+      57
+     ],
+     [
+      63,
+      64
+     ],
+     [
+      64,
+      66
+     ],
+     [
+      65,
+      68
+     ],
+     [
+      66,
+      71
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "name": "cargo_bike_pedal",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/cargo_bike_pedal.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 928,
+  "h": 88,
+  "building": false,
+  "frames": [
+   116,
+   88
+  ],
+  "info": {
+   "colours": 19,
+   "lone": 1.8,
+   "p10": 20,
+   "median": 97,
+   "p90": 207,
+   "noise": 0.3,
+   "blotches": 0,
+   "frames": {
+    "fw": 116,
+    "fh": 88,
+    "count": 8
+   },
+   "outline_min": 100
+  },
+  "checks": []
+ },
+ {
+  "name": "gull",
+  "verdict": "WARN",
+  "file": "riverwalk/art/gull.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 156,
+  "h": 26,
+  "building": false,
+  "frames": [
+   26,
+   26
+  ],
+  "info": {
+   "colours": 5,
+   "lone": 0.8,
+   "p10": 2,
+   "median": 166,
+   "p90": 236,
+   "noise": 0.0,
+   "blotches": 0,
+   "frames": {
+    "fw": 26,
+    "fh": 26,
+    "count": 6
+   },
+   "outline_min": 100
+  },
+  "checks": [
+   {
+    "id": "frames",
+    "sev": "warn",
+    "msg": "feet not anchored (fine in a jump or flight): row 1: lowest pixel moves 5 px",
+    "pixels": []
+   },
+   {
+    "id": "frames",
+    "sev": "warn",
+    "msg": "size jumps between frames: row 1: col 1 -> 2 size 213 -> 156 px; row 1: col 4 -> 5 size 170 -> 121 px; row 1: col 5 -> 6 size 121 -> 169 px",
+    "pixels": []
+   }
+  ]
+ },
+ {
+  "name": "road_car5",
+  "verdict": "PASS",
+  "file": "riverwalk/art/scene/road_car5.png",
+  "level": "rw",
+  "layer": "play",
+  "fade": 0.0,
+  "w": 252,
+  "h": 90,
+  "building": false,
+  "frames": null,
+  "info": {
+   "colours": 20,
+   "lone": 0.2,
+   "p10": 33,
+   "median": 122,
+   "p90": 219,
+   "noise": 0.0,
+   "blotches": 0,
+   "outline": 100
+  },
+  "checks": []
+ }
+]

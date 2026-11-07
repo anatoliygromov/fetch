@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """build_cars_n07.py: the River Walk road cars BUILT by rule (track chars, 7 Nov 2026).
 
-  python3 -I tools/build_cars_n07.py           build riverwalk/art/scene/road_car1-4.png (+ .aseprite sources)
+  python3 -I tools/build_cars_n07.py           build riverwalk/art/scene/road_car1-5.png (+ .aseprite sources)
   python3 -I tools/build_cars_n07.py --check   fail if a file on disk differs from what this script builds
 
 Owner, board 7 Nov: road_car1 and road_car4 "redraw"; road_car2 and road_car3 "needs clean up in details" (redraw).
@@ -50,6 +50,7 @@ PAINTS = {   # hi, light, mid, shade, dark
     'white':  [hexc('#ffffff'), hexc('#f2f0ea'), hexc('#dedcd5'), hexc('#bdbcb7'), hexc('#97979a')],
     'yellow': [hexc('#fff0a0'), hexc('#f8d462'), hexc('#ecb944'), hexc('#c98f2c'), hexc('#97661f')],
     'red':    [hexc('#f2856f'), hexc('#d84a3e'), hexc('#b8332f'), hexc('#8f2428'), hexc('#661a1f')],
+    'silver': [hexc('#f4f6f8'), hexc('#d3d7dd'), hexc('#b5bac2'), hexc('#959aa4'), hexc('#6e737d')],
 }
 
 
@@ -298,6 +299,25 @@ CARS = {
     plastic=[[(0, 59), (15, 59), (16, 64), (3, 64), (0, 60)], [(164, 58), (184, 58), (184, 60), (181, 64), (164, 64)]],
     drivers=[(96, 16)],
     mirror=[[(58, 28), (65, 25), (68, 26), (67, 32), (59, 32)]]),
+ # (round 2, review road_car5.md: "the body is the old render and the odd one out at 5x") a boxy estate (a Volvo
+ # 240), silver, 4.5 m, on the 5 Nov car's own silhouette: the family's glass, driver, handles, wheel and paint rules
+ 'road_car5': dict(W=250, H=89, R=19, paint='silver', wheels=[43, 194], belt=37, crease=59, crease_x=(70, 238), sill=76,
+    body=[(3, 76), (0, 73), (0, 58), (2, 48), (6, 42), (20, 39), (40, 37), (60, 35), (66, 32), (84, 14), (92, 8),
+          (98, 6), (236, 6), (240, 8), (243, 14), (246, 40), (248, 58), (248, 73), (245, 76)],
+    glass=[(70, 37), (70, 32), (86, 15), (94, 10), (100, 10), (234, 10), (237, 13), (240, 37)],
+    glass_dark_to=13,
+    pillars=[[(76, 37), (92, 15), (96, 15), (81, 37)], [(132, 10), (136, 10), (136, 37), (132, 37)],
+             [(173, 10), (177, 10), (177, 37), (173, 37)]],
+    paint_pillars=[([(232, 10), (238, 10), (241, 37), (235, 37)], 2)],
+    glints=[(102, 32, 14), (146, 32, 14), (192, 32, 14)],
+    seams=[[(75, 39), (75, 74)], [(134, 39), (134, 74)], [(175, 39), (175, 62), (172, 68)]],
+    handles=[(122, 44), (165, 44)],
+    lamps=[([(1, 46), (8, 46), (8, 55), (1, 55)], 'head'), ([(1, 56), (7, 56), (7, 58), (1, 58)], 'amber'),
+           ([(242, 38), (247, 40), (247, 61), (242, 61)], 'tail')],
+    plastic=[[(0, 62), (28, 62), (30, 76), (3, 76), (0, 73)], [(222, 64), (248, 64), (248, 73), (245, 76), (222, 76)]],
+    drivers=[(110, 22)],
+    mirror=[[(74, 34), (82, 30), (85, 31), (84, 38), (75, 38)]],
+    rails=[(124, 1, 222, 5)]),
 }
 
 

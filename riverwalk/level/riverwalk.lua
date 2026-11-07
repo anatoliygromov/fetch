@@ -201,7 +201,8 @@ L.bones = {
   { x = 1140, y = 152 }, { x = 1164, y = 152 }, { x = 1188, y = 152 }, { x = 1248, y = 184 },
   -- steps, pontoon, ferry
   { x = 1298, y = 194 }, { x = 1340, y = 216 }, { x = 1436, y = 192 }, { x = 1472, y = 180 }, { x = 1508, y = 192 },
-  { x = FX + 18, y = 206 }, { x = FX + 90, y = 184 }, { x = FX + 132, y = 154, super = true }, { x = FX + 215, y = 206 },
+  { x = FX + 18, y = 206 }, { x = FX + 84, y = 184 },   -- (chars r2: 6 px left, clear of the wheelhouse wall)
+  { x = FX + 132, y = 154, super = true }, { x = FX + 215, y = 206 },
   -- far quay, under the bridge
   { x = 1872, y = 216 }, { x = 1962, y = 216 }, { x = 2004, y = 216 }, { x = 2046, y = 216 },
   -- the harbour: over the boats, the jetty (gold high above it), the far quay
