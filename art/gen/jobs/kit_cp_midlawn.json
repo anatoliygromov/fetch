@@ -1,0 +1,17 @@
+{
+ "level": "citypark_tall",
+ "layer": "mid",
+ "kind": "tile",
+ "tier": "C",
+ "target_px": [
+  240,
+  96
+ ],
+ "built_by": "tools/make_ground_kit.py",
+ "slot": {
+  "file": "riverwalk/art/scene/kit_cp_midlawn.png",
+  "where": "City Park tall: under the mid row (y 176, scroll 0.5) and the far tree line (faded as the shore, y 175, scroll 0.25), scene.lua Sc.drawFarArt"
+ },
+ "name": "kit_cp_midlawn",
+ "family": "rw_ground_07nov"
+}

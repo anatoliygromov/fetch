@@ -1,0 +1,18 @@
+{
+ "name": "pontoon",
+ "family": "rw_ground_07nov",
+ "tier": "C",
+ "steps": {
+  "spec": {
+   "time": "2026-11-07 11:26"
+  },
+  "built": {
+   "build": "tools/revert_ground_07nov.py",
+   "time": "2026-11-07 11:26"
+  },
+  "ingame": {
+   "frame": "docs/review/07nov/ground/reverts/ingame_pontoon_1x.png",
+   "time": "2026-11-07 11:26"
+  }
+ }
+}

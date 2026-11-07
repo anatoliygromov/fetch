@@ -2,5 +2,14 @@
 "name": "pontoon",
 "06nov_audit": {
 "rule": "built by tools/fix_rw_audit_06nov.py pontoon(): 54 x 19 (was 54 x 12), timber deck on floats in the water, horn cleats; drawn at the mover y0 - 5 (was - 2)"
+},
+"07nov_revert": {
+"from": "pontoon_before_06nov_audit.png",
+"size": [
+54,
+12
+],
+"why": "owner 7 Nov: \"previous pontoon was better\" (the 6 Nov mahogany deck rejected)",
+"kept": "pontoon_06nov_rejected.png (the rejected 6 Nov file)"
 }
 }

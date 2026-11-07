@@ -78,7 +78,7 @@ SHARED = {"skyline": ("rw", "cp", "dt"), "water": ("rw", "cp"), "bench": ("rw", 
           "lamp_post": ("rw", "cp", "dt"), "park_log": ("rw", "cp"),
           **{f"cloud{i}": ("rw", "cp", "dt") for i in range(1, 9)}}
 # pieces cut into tiles: their left and right columns are joins, not silhouette
-TILES = {"rail_bg_left", "rail_bg_unit", "rail_bg_end", "pavement", "road", "park_ground", "town_ground", "water"}
+TILES = {"rail_bg_left", "rail_bg_unit", "rail_bg_end", "pavement", "road", "park_ground", "town_ground", "water", "kit_cp_midlawn", "kit_cp_tufts"}
 # (art/cp-audit-06nov) pieces drawn joined to another of the same build on one side: that end column is a join, not
 # silhouette (a City Park walk's deck and its tree landing are one deck, no outline between them)
 JOINS = {"cp_walk704_deck": "left", "cp_walk1968_deck": "left", "cp_walk704_landing608": "right", "cp_walk1968_landing1888": "right"}
@@ -86,7 +86,7 @@ JOINS = {"cp_walk704_deck": "left", "cp_walk1968_deck": "left", "cp_walk704_land
 # from their hooks: HOOK says which game file each one becomes
 SLOTS = {**{f"sky_{k}": (960, 360, 0, 0) for k in ("riverwalk", "citypark", "downtown")},      # (day 7 Nov) tools/build_sky.py
          **{f"skyline_{k}": (320, 77, 0, 0) for k in ("riverwalk", "citypark", "downtown")},
-         "rw_rowboat": (185, 62, 0, 0), "rw_rower": (644, 62, 0, 0), "kennel": (44, 44, 0, 0), "rw_jetty": (48, 51, 0, 0),   # (night/06nov-rw) 4.0 m eka; 7 x 92 x 62 loop; kennel; built jetty
+         "rw_rowboat": (185, 62, 0, 0), "rw_rower": (644, 62, 0, 0), "rw_jetty": (48, 51, 0, 0),   # (night/06nov-rw) 4.0 m eka; 7 x 92 x 62 loop; kennel; built jetty
          "cargobike": (96, 76, 0, 0), "cargobike_pedal": (768, 76, 0, 0), "mia_throw": (528, 66, 0, 0),
          "cyclist_a_84": (76, 76, 8, 8), "cyclist_b_84": (76, 76, 8, 8), "cyclist_a_92": (76, 76, 8, 8), "cyclist_b_92": (76, 76, 8, 8),
          "roof_gable": (122, 80, 0, 20), "roof_loggia": (122, 48, 0, 12), "roof_gallery88": (90, 32, 0, 8),
@@ -153,7 +153,9 @@ SLOTS = {**{f"sky_{k}": (960, 360, 0, 0) for k in ("riverwalk", "citypark", "dow
          # art/dt-audit-06nov (tools/build_dt_audit.py): the quay wall's drain, the footbridge's piers, the parasols' boat,
          # the wall lantern's bracket
          "town_quaydrain": (20, 22, 0, 0), "town_bridge_pier": (14, 113, 0, 0), "town_punt": (52, 14, 0, 0),
-         "town_lantern_bracket": (18, 12, 0, 0)}
+         "town_lantern_bracket": (18, 12, 0, 0),
+         # day/07nov-ground: the ground kit (tools/make_ground_kit.py)
+         "kit_cp_midlawn": (240, 96, 0, 0), "kit_cp_tufts": (240, 5, 0, 0), "kit_cp_roots": (48, 5, 0, 0)}
 HOOK = {"cargobike": "cargo_bike", "cargobike_pedal": "cargo_bike_pedal", "mia_throw": "girl_throw",
         "cyclist_a_84": "cyclist_adult1", "cyclist_b_84": "cyclist_adult2", "roof_gable": "town_roof_gable",
         "roof_loggia": "town_roof_loggia", "roof_gallery88": "town_roof_gallery88", "roof_gallery72": "town_roof_gallery72",

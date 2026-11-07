@@ -4,6 +4,7 @@
 local F = require("bigfont")
 local Look = require("look")
 local Sc = {}
+local Jn = require("joins")                                          -- (day/07nov-ground) the ground's transitions
 local lg = love.graphics
 local function hex(h) return { tonumber(h:sub(1, 2), 16) / 255, tonumber(h:sub(3, 4), 16) / 255, tonumber(h:sub(5, 6), 16) / 255 } end
 
@@ -423,6 +424,7 @@ local function columnRuns(w, x, which)
   memo[x] = merged
   return merged
 end
+Sc.columnRuns = columnRuns
 
 local Ground = {}
 Ground.__index = Ground
@@ -471,6 +473,7 @@ Sc.Ground = Ground
 -- the greybox ground: every terrain column flat grey with a 1 px edge on top; the pond's water as a flat box
 -- with a light surface line. Painted once, in chunks (Sc.CHUNK).
 function Sc.paintGroundGrey(w)
+  Sc.quayEdge = nil
   return chunked(w, function(xa, xb)                              -- (painted once per chunk: Sc.CHUNK)
   for _, r in ipairs(w.water) do
     box(C.pond, r.x0, r.y0, r.x1 - r.x0, r.y1 - r.y0)
@@ -714,6 +717,7 @@ function Sc.drawFar(L, camx, t)
   vpop(on); on = vpush("mid")
   Look.use("water")
   Sc.drawWater(camx, t)                                            -- 5 river
+  Sc.drawQuayEdge(camx)                                            -- (round 2) its wet row against the quay's coping
   Look.off()
   vpop(on)
 end
@@ -759,11 +763,13 @@ end
 -- (owner, 6 Nov) the road runs only under the level promenade (feet y 184, as the traffic's spans and look.lua's
 -- receding road rows); a ramp or the lower quay stands on the granite quay wall instead
 Sc.PROMENADE, Sc.QUAY_Y0, Sc.QUAY_JOINT = 184, 196, { 72 / 255, 82 / 255, 107 / 255 }
+Sc.STEP_RW = 8                                                    -- (day/07nov-ground) River Walk's ramps: 8 px stone steps (0.17 m)
 local function columnTop(w, x)                                      -- the first walkable top at or under y 150, or nil
   if x < 0 or x >= w.width then return nil end
   for _, m in ipairs(columnRuns(w, x, "all")) do if m[1] >= 150 then return m[1] end end
 end
 function Sc.paintGround(w, props, def)
+  Sc.quayEdge = nil                                                 -- (round 2: only River Walk's quay sets it)
   if def and def.ground == "quay" then return Sc.paintQuay(w, props, def) end
   local art = Sc.art()
   local pave = art.pavement
@@ -879,17 +885,109 @@ end
 -- the road's end: its kerb turns the corner towards us (8 columns; dir 1: the road is on the left, -1: on the right).
 -- Rows from the kerb top's first row (t + 8); returns a colour or nil (leave what is there)
 local function cornerColour(c, row)
-  -- c: 0 .. 7 from the road's side; row: 0 = t + 8 (the kerb top), 2 = the face's first row, 7 = the road's first
-  if c >= 5 then if row >= 2 then return c == 7 and Q.top2 or Q.top1 end return nil end
-  if c == 4 then
-    if row == 2 then return Q.top1 elseif row <= 7 then return Q.kf2 elseif row >= 8 then return Q.kf3 end
-    return nil
-  end
-  if c == 3 then
-    if row == 2 then return Q.kf1 elseif row >= 3 and row <= 6 then return Q.kf2 elseif row == 7 or row == 8 then return Q.kf3 end
-    return nil
-  end
+  -- c: 0 .. 7 from the road's side (7 = the column against the wall's corner); row: 0 = t + 8 (the kerb top),
+  -- 2 = the face's first row, 7 = the road's first.
+  -- (day/07nov-ground, audit RW1/RW10: the kerb return ran down to the screen's bottom as a light strip) the kerb
+  -- ends in an end stone against the wall (its end joint); the asphalt runs on to the wall's quoins, with a soft
+  -- shadow at its foot (Sc.roadEnds, drawn over look.lua's road)
+  -- the kerb's return down the road's end: 3 px of granite face (lit, mid, shade) with a rounded top corner,
+  -- then the shadow row against the wall's quoins
+  if c == 7 then return row <= 1 and Q.tj or Q.sh end
+  if c == 6 then if row == 0 then return nil end return row <= 2 and Q.kf2 or Q.kf3 end
+  if c == 5 then if row <= 1 then return Q.top2 end return row == 2 and Q.kf1 or Q.kf2 end
+  if c == 4 then if row <= 1 then return nil end return (row <= 7) and nil or Q.kf1 end
   return nil
+end
+-- the shadow on the asphalt beside the wall's corner (alpha, 0 = none); c as above, row from the road's first row.
+-- dir 1 (the wall on the road's right, the sun upper left): a 2 px contact line. dir -1 (the wall on its left):
+-- the wall's cast shadow, 5 px at the kerb widening 1 px every 6 rows nearer the camera, its edge 1 px softer
+local function roadShade(c, row, dir)
+  local i = 3 - c                                                  -- columns out from the kerb return (c 4 .. 7)
+  if i < 0 then return 0 end
+  if dir == 1 then return (i == 0) and 0.35 or ((i == 1) and 0.15 or 0) end
+  local w = 4 + math.floor(row / 8)                                -- the wall's cast shadow (wall on the road's left)
+  if i < w - 1 then return 0.34 elseif i == w - 1 then return 0.17 end
+  return 0
+end
+-- (day/07nov-ground) Pepper's front garden (a GARDEN prop with garden = true: x0-x1, its door path path0-path1):
+-- owner 7 Nov, "Kennel like this would never be on the street": the kennel stood on a lawn in front of her house.
+-- (Since 7 Nov 12:45 River Walk has no kennel and no GARDEN prop; the painter stays for a level that wants one.)
+-- Painted by rule over the paving rows (t - 12 .. t + 7) of each column; the kerb and the road under it stay.
+--   lawn: a dark row where it meets the house (its contact shadow), a shade row, then flat grass with v-shaped
+--         tufts on a 6 px grid (three bands, offset 0 / 3 / 1), a lit lip on its front row, a tuft over the
+--         kerb's top every 5 px (a lip, so lawn and kerb do not meet in a hard line)
+--   joins: the paving next to the lawn (the door path, the garden's end) takes grass over its edge, 2 px deep,
+--          on a fixed row rule (a worn edge, never a straight seam)
+--   picket edging: low white pickets along the kerb on both sides of the path, rows t .. t + 7 (under her
+--          line: it never covers her), 2 px pickets every 4 px with a pointed top, two rails, a post at each end
+--          and by the path; decoration (no outline, edges a darker shade), a shadow under each picket on the kerb.
+local G = { dark = rgb(68, 110, 72), shade = rgb(86, 132, 66), base = rgb(109, 144, 46), lit = rgb(148, 172, 57),
+            tip = rgb(148, 172, 57), pick = rgb(240, 236, 224), pickD = rgb(211, 195, 180), rail = rgb(192, 172, 142),
+            post = rgb(226, 209, 196), postD = rgb(170, 162, 158) }
+local function gardenAt(gs, x)
+  for _, g in ipairs(gs) do
+    if x >= g.x0 and x < g.x1 then return g, (g.path0 and x >= g.path0 and x < g.path1) end
+  end
+end
+Sc.G = G
+-- the columns of an art file's bottom row that are opaque (its foot), cached: { x0, x1 } or false
+local FOOT = {}
+function Sc.footCols(name)
+  if FOOT[name] == nil then
+    FOOT[name] = false
+    local ok, d = pcall(love.image.newImageData, "art/scene/" .. name .. ".png")
+    if ok then
+      local h = d:getHeight()
+      local x0, x1
+      for x = 0, d:getWidth() - 1 do local _, _, _, a = d:getPixel(x, h - 1); if a > 0 then x0 = x0 or x; x1 = x end end
+      if x0 then FOOT[name] = { x0 = x0, x1 = x1 } end
+    end
+  end
+  return FOOT[name]
+end
+function Sc.paintGarden(gs, x, t, px)
+  local g, onPath = gardenAt(gs, x)
+  local function lawnAt(u) local h, p = gardenAt(gs, u); return h and not p end
+  if g and not onPath then
+    for y = t - 12, t + 7 do
+      local r = y - (t - 12)
+      local c = G.base
+      if r == 0 then c = G.dark elseif r == 1 then c = G.shade
+      elseif y == t + 7 then c = G.lit
+      else
+        local band = math.floor((r - 2) / 6)                        -- three bands of tufts
+        local by = (t - 12) + 2 + band * 6 + 2
+        local u = (x + ({ 0, 3, 1 })[band % 3 + 1]) % 6
+        if y == by and (u == 0 or u == 2) then c = G.lit
+        elseif y == by + 1 and u == 1 then c = G.shade end
+      end
+      px(c, x, y)
+    end
+    if x % 5 == 0 then px(G.tip, x, t + 8) end                       -- a tuft over the kerb's top
+  elseif lawnAt(x - 1) or lawnAt(x + 1) or lawnAt(x - 2) or lawnAt(x + 2) then
+    local d = (lawnAt(x - 1) or lawnAt(x + 1)) and 1 or 2           -- paving beside the lawn: grass over its edge
+    for y = t - 10, t + 6 do
+      if (d == 1 and y % 3 ~= 0) or (d == 2 and y % 4 == 1) then px(d == 1 and G.base or G.lit, x, y) end
+    end
+  end
+  -- the picket edging (not on the path)
+  if g and not onPath then
+    local e0 = (x - g.x0 < 3) or (g.path0 and x >= g.path0 - 3 and x < g.path0) or (g.path1 and x >= g.path1 and x < g.path1 + 3) or (x >= g.x1 - 3)
+    if e0 then                                                      -- a post: 3 px, lit left, shaded right
+      local k = (x - g.x0 < 3) and (x - g.x0) or ((x >= g.x1 - 3) and (x - (g.x1 - 3)) or ((x < (g.path0 or 0)) and (x - (g.path0 - 3)) or (x - g.path1)))
+      for y = t, t + 7 do px(k == 2 and G.postD or G.post, x, y) end
+      px(G.postD, x, t + 8)
+    else
+      local u = x % 4
+      if u == 0 or u == 1 then                                      -- a picket
+        if u == 0 then px(G.pick, x, t + 1) end                       -- the point
+        for y = t + 2, t + 7 do px(u == 0 and G.pick or G.pickD, x, y) end
+        px(Q.tj, x, t + 8)                                          -- its shadow on the kerb top
+      else
+        px(G.rail, x, t + 3); px(G.rail, x, t + 6)                   -- the rails between the pickets
+      end
+    end
+  end
 end
 Sc.roadEnds = {}
 function Sc.paintQuay(w, props, def)
@@ -930,47 +1028,100 @@ function Sc.paintQuay(w, props, def)
     if kind[x - 1] == "road" and kind[x] == "ramp" then ends[#ends + 1] = { x0 = x - 8, dir = 1 } end
     if kind[x - 1] == "ramp" and kind[x] == "road" then ends[#ends + 1] = { x0 = x, dir = -1 } end
   end
+  -- (day/07nov-ground, audit RW1/RW10) beside a road's end the wall's corner is dressed in quoins (its distance
+  -- from the road, as at the water's corners), instead of a light kerb strip running down to the screen's bottom
+  local dRoad = {}
+  for _, e in ipairs(ends) do
+    for i = 0, 29 do
+      local x = e.dir == 1 and (e.x0 + 8 + i) or (e.x0 - 1 - i)
+      if kind[x] == "ramp" or kind[x] == "quay" then dRoad[x] = i end
+    end
+  end
   local function cornerAt(x)                                         -- (corner column c from the road's side, or nil)
     for _, e in ipairs(ends) do
       if x >= e.x0 and x < e.x0 + 8 then return e.dir == 1 and (x - e.x0) or (7 - (x - e.x0)) end
     end
   end
+  local gardens = {}                                                -- (day/07nov-ground) the front garden
+  for _, p in ipairs(def.props or {}) do if p.garden then gardens[#gardens + 1] = p end end
+  -- (day/07nov-ground) the transitions this painter stamps, marked for the joins check (joins.lua)
+  Jn.reset()
+  for _, g in ipairs(gardens) do
+    Jn.mark(g.x1, "garden>road")
+    if g.path0 then Jn.mark(g.path0, "garden>path"); Jn.mark(g.path1, "path>garden") end
+  end
+  for _, e in ipairs(ends) do Jn.mark(e.dir == 1 and e.x0 + 8 or e.x0, e.dir == 1 and "road>ramp" or "ramp>road") end
+  for x = 1, W - 1 do
+    if kind[x - 1] == "ramp" and kind[x] == "quay" then Jn.mark(x, "ramp>quay") end
+    if kind[x - 1] == "quay" and kind[x] == "ramp" then Jn.mark(x, "quay>ramp") end
+    if kind[x - 1] == "quay" and not top[x] then Jn.mark(x, "quay>water") end
+    if not top[x - 1] and kind[x] == "quay" then Jn.mark(x, "water>quay") end
+  end
   local under = {}                                                  -- the columns under the bridge (its shadow)
-  for _, ps in ipairs(def.passages or {}) do for x = ps.vx0 or ps.x0, (ps.vx1 or ps.x1) - 1 do under[x] = true end end
+  local spans = {}                                                  -- (day/07nov-ground, audit RW6: the shadow's ends
+  for _, ps in ipairs(def.passages or {}) do                        -- were vertical cuts) its spans, for the slant
+    spans[#spans + 1] = { ps.vx0 or ps.x0, ps.vx1 or ps.x1 }
+    for x = (ps.vx0 or ps.x0) - 2, (ps.vx1 or ps.x1) + 22 do under[x] = true end
+  end
+  local function courseCol(x)                                       -- under the pier's bottom course (round 2)
+    for _, sp in ipairs(spans) do if x >= sp[1] and x < sp[2] then return true end end
+  end
+  -- the bridge's shadow at (x, paving row r): the sun is upper left, so each row's shadow is shifted 1 px right per
+  -- row nearer the camera (a parallelogram, its ends slanting), and the darkest band is the narrowest (1 px in)
+  local function shadeAt(x, r)
+    for _, sp in ipairs(spans) do
+      local a, b = sp[1] + math.floor(r / 2), sp[2] + math.floor(r / 2)
+      if x >= a and x < b then
+        local e = math.min(x - a, b - 1 - x)                          -- columns from the shadow's slanted ends
+        if e == 0 then return 0.86 end                                -- a 1 px penumbra at each end
+        if r < 7 then return 0.62 elseif r < 14 then return 0.74 else return 0.86 end
+      end
+    end
+  end
   local SHADE = { { 7, 0.62 }, { 14, 0.74 }, { 22, 0.86 } }           -- the bridge's shadow: three flat bands, back to front
   local function px(c, x, y) lg.setColor(c); lg.rectangle("fill", x, y, 1, 1) end
   local function run(c, x, y0, y1) if y1 > y0 then lg.setColor(c); lg.rectangle("fill", x, y0, 1, y1 - y0) end end
+  -- (day/07nov-ground, audit RW2/RW3/RW9: the ramp was the flat recipe sheared per column, with a seam at each
+  -- end) the ramp as stone steps, a slope tile of STEP px rise per STEP px run (Sc.STEP_RW): each step one granite
+  -- tread, its courses level, a joint at its edge, the coping nosing along its front, its face and the wall's
+  -- courses under it on the world grid; the first and last steps are the landings into the flat paving
+  local function stepTop(x)
+    local t0 = top[x]
+    local S = Sc.STEP_RW
+    return Sc.PROMENADE + math.floor((t0 - Sc.PROMENADE) / S + 0.5) * S
+  end
   local function column(x, bottom)
     local t, k = top[x], kind[x]
-    local first = kind[x - 1] ~= "ramp" and k == "ramp"
-    local last = kind[x + 1] ~= "ramp" and k == "ramp"
+    if k == "ramp" then t = stepTop(x) end
     -- 1 the paving (rows 0-21 from t - 12)
     if k == "ramp" then
+      local edge = kind[x - 1] ~= "ramp" or stepTop(x - 1) ~= t     -- a step's first column: the joint
+      local si = math.floor(x / Sc.STEP_RW)
       for r = 0, 19 do
         local c
-        if first or last then c = Q.pj
-        elseif r == 0 then c = Q.pb
+        if r == 0 then c = Q.pb
+        elseif edge then c = Q.pj
         elseif r % 5 == 0 then c = Q.pj
-        else
-          local cr = math.floor(r / 5)
-          local u = x + cr * 6
-          if u % 12 == 0 then c = Q.pj else c = Q.ps[(math.floor(u / 12) * 7 + cr * 3) % 3 + 1] end
-        end
+        else c = Q.ps[(si * 2 + math.floor(r / 5)) % 3 + 1] end
         px(c, x, t - 12 + r)
       end
-      px((first or last) and Q.tj or Q.top1, x, t + 8); px((first or last) and Q.tj or Q.top2, x, t + 9)
+      px(edge and Q.tj or Q.top1, x, t + 8); px(edge and Q.tj or Q.top2, x, t + 9)
     else
       if under[x] then
-        local r0 = 0
-        for _, b in ipairs(SHADE) do
-          clip(x, t - 12 + r0, 1, b[1] - r0)
-          lg.setColor(b[2], b[2], b[2] * 1.06, 1); lg.draw(pave, q[x % pw], x, t - 12)
-          r0 = b[1]
+        for r = 0, 21 do
+          local k = shadeAt(x, r) or 1
+          clip(x, t - 12 + r, 1, 1)
+          lg.setColor(k, k, k * (k < 1 and 1.06 or 1), 1); lg.draw(pave, q[x % pw], x, t - 12)
         end
         clip()
       else
         lg.setColor(1, 1, 1, 1); lg.draw(pave, q[x % pw], x, t - 12)
+        -- (day/07nov-ground round 2, review RW-j: the paving's top row met the water as one straight cream row) the
+        -- quay's coping along its back edge: one row of the paving's darkest stone, a joint every 16 px; the wet
+        -- row above it is drawn with the river (Sc.drawQuayEdge), behind the railing, lamps and trees
+        px((x % 16 == 0) and Q.kf3 or Q.pb, x, t - 12)
       end
+      if under[x] then px(courseCol(x) and Q.sh or Q.pb, x, t - 12) end   -- (round 2) the course's contact row, or the coping
       local d = dR[x] or dL[x]
       if d and d <= 3 then                                           -- the coping stone along the water's edge
         local c = (d == 3) and Q.pj or (d == 0 and Q.top2 or Q.top1)
@@ -978,7 +1129,7 @@ function Sc.paintQuay(w, props, def)
       end
     end
     -- 2 the granite kerb / coping face (rows t + 10 .. t + 14)
-    local joint = k ~= "ramp" and (x % 16 == 0) or (k == "ramp" and (first or last))
+    local joint = k ~= "ramp" and (x % 16 == 0) or (k == "ramp" and (kind[x - 1] ~= "ramp" or stepTop(x - 1) ~= t))
     local edge = (dR[x] == 0 or dL[x] == 0)
     for r = 0, 4 do
       local c = (r == 0) and Q.kf1 or (r == 4 and Q.kf3 or Q.kf2)
@@ -990,14 +1141,17 @@ function Sc.paintQuay(w, props, def)
       lg.setColor(1, 1, 1, 1)
       clip(x, t + 15, 1, bottom - t - 15); lg.draw(road, rq[x % rw], x, t + 15); clip()
     else
-      local d = dR[x] or dL[x]
+      local d = dR[x] or dL[x] or dRoad[x]
       px(Q.sh, x, t + 15)
       for y = t + 16, bottom - 1 do px(wallColour(x, y, d), x, y) end
     end
+    if #gardens > 0 and k == "road" then Sc.paintGarden(gardens, x, t, px) end
     -- 4 the road's end: the kerb turns the corner
     local c = cornerAt(x)
     if c then for row = 0, bottom - (t + 8) - 1 do local col = cornerColour(c, row); if col then px(col, x, t + 8 + row) end end end
   end
+  Sc.quayEdge = {}                                                  -- (round 2) each column's paving top, for the wet row
+  for x = 0, W - 1 do if top[x] then Sc.quayEdge[x] = (kind[x] == "ramp" and stepTop(x) or top[x]) - 12 end end
   local g = chunked(w, function(xa, xb)
     for x = xa, xb - 1 do
       if top[x] then
@@ -1006,6 +1160,49 @@ function Sc.paintQuay(w, props, def)
         column(x, bottom)
       end
     end
+    -- (day/07nov-ground, audit RW4/5/7/8: the quay ended in one vertical line to the screen's bottom, no waterline)
+    -- the quay-end cap: the coping overhangs the wall's end by 2 px with its shadow under it, the arris wet and dark
+    -- from the river's surface (y 224) down, a ripple along the waterline, the wall's dark reflection in the water
+    for x = xa, xb - 1 do
+      local side = (dR[x] == 0 and 1) or (dL[x] == 0 and -1) or nil
+      if side and top[x] then
+        local t = top[x]
+        for i = 1, 2 do                                             -- the overhang
+          local ox = x + side * i
+          run(i == 1 and Q.top1 or Q.top2, ox, t - 11, t + 10); px(Q.pj, ox, t - 12)
+          for r = 0, 4 do px(i == 2 and Q.kj or (r == 0 and Q.kf1 or Q.kf2), ox, t + 10 + r) end
+          lg.setColor(0.04, 0.06, 0.16, i == 1 and 0.5 or 0.35); lg.rectangle("fill", ox, t + 15, 1, 2)   -- its shadow
+        end
+        local wl = Sc.WATER_Y or 224
+        for i = 0, 1 do lg.setColor(0.08, 0.10, 0.16, i == 0 and 0.5 or 0.25); lg.rectangle("fill", x - side * i, wl, 1, 240 - wl) end   -- wet stone
+        for i, a in ipairs({ 0.30, 0.22, 0.14, 0.08 }) do           -- the reflection, fading out from the wall
+          lg.setColor(0.04, 0.08, 0.22, a); lg.rectangle("fill", x + side * (2 + i), wl + 1, 1, 240 - wl - 1)
+        end
+        lg.setColor(0.86, 0.94, 0.97, 0.9)                          -- the waterline: a ripple against the stone
+        for i = 1, 6 do if i % 3 ~= 0 then lg.rectangle("fill", x + side * i, wl, 1, 1) end end
+        lg.setColor(1, 1, 1, 1)
+      end
+    end
+    -- (day/07nov-ground, audit RW12-14: things stood on the paving with no contact) the contact pass: under every
+    -- piece of back art that stands on the paving's back edge (y1 174: houses, trees, pots), a soft shadow on the
+    -- paving's first two rows under its bottom row's columns (a tree grate was tried: it read as a bar in front)
+    for _, pr in ipairs(def.props or {}) do
+      if pr.art and pr.layer == "back" and pr.y1 == 174 and not pr.garden then
+        local cols = Sc.footCols(pr.art)
+        local ax = pr.ax or pr.x0
+        if cols and ax + cols.x1 >= xa - 8 and ax + cols.x0 < xb + 8 then
+          local a0, a1 = ax + cols.x0, ax + cols.x1
+          for x = math.max(xa, a0 - 1), math.min(xb - 1, a1 + 1) do
+            if top[x] and not gardenAt(gardens, x) and not under[x] then
+              local t = top[x]
+              lg.setColor(0.10, 0.08, 0.14, 0.30); lg.rectangle("fill", x, t - 12, 1, 1)
+              lg.setColor(0.10, 0.08, 0.14, 0.16); lg.rectangle("fill", x, t - 11, 1, 1)
+            end
+          end
+        end
+      end
+    end
+    lg.setColor(1, 1, 1, 1)
     for x = xa, xb - 1 do                                           -- greybox terrain above y 150 (none is drawn
       for _, m in ipairs(columnRuns(w, x, "all")) do                 -- here: the bridge pier's art covers it)
         if m[1] < 150 then
@@ -1051,22 +1248,40 @@ function Sc.paintQuay(w, props, def)
   for _, e in ipairs(ends) do
     local t = top[e.x0] or 184
     local y0, bottom = t + 8, (w.height or 240)
-    local cv = lg.newCanvas(8, bottom - y0)
+    local W8 = 16                                                     -- (the cast shadow can reach 12 columns out)
+    local ox = e.dir == 1 and (8 - W8) or 0                           -- the canvas's left, from e.x0
+    local cv = lg.newCanvas(W8, bottom - y0)
     cv:setFilter("nearest", "nearest")
     lg.push("all"); lg.setCanvas(cv); lg.clear(0, 0, 0, 0); lg.origin()
-    for i = 0, 7 do
-      local c = e.dir == 1 and i or (7 - i)
-      for row = 0, bottom - y0 - 1 do
-        local col = cornerColour(c, row)
-        if col and row >= 7 then lg.setColor(col); lg.rectangle("fill", i, row, 1, 1) end
+    for i = 0, W8 - 1 do
+      local c = e.dir == 1 and (i + ox) or (7 - i)                    -- c may run below 0 (further out on the road)
+      for row = 7, bottom - y0 - 1 do
+        local col = (c >= 0 and c <= 7) and cornerColour(c, row) or nil
+        local a = roadShade(c, row - 7, e.dir)
+        if col then lg.setColor(col); lg.rectangle("fill", i, row, 1, 1)
+        elseif a > 0 then lg.setColor(0.04, 0.05, 0.10, a); lg.rectangle("fill", i, row, 1, 1) end
       end
     end
     lg.pop()
-    Sc.roadEnds[#Sc.roadEnds + 1] = { cv = cv, x = e.x0, y = y0 }
+    Sc.roadEnds[#Sc.roadEnds + 1] = { cv = cv, x = e.x0 + ox, y = y0 }
   end
   return g
 end
 -- the road ends' corner pieces over look.lua's road (stage.lua, right after Look.road)
+-- (round 2, review RW-j) the wet row where the river meets the quay's coping: 1 px of the quay ends' arris colour
+-- on the water, the whole length of the paving's back edge, drawn right after the river (so behind everything that
+-- stands on the paving's back edge)
+function Sc.drawQuayEdge(cam)
+  local E = Sc.quayEdge
+  if not E then return end
+  lg.setColor(Q.wj)
+  local c0 = math.floor(cam)
+  for sx = 0, 319 do
+    local y = E[c0 + sx]
+    if y then lg.rectangle("fill", sx, y - 1, 1, 1) end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
 function Sc.drawRoadEnds(cam)
   lg.setColor(1, 1, 1, 1)
   for _, e in ipairs(Sc.roadEnds or {}) do
@@ -1157,32 +1372,25 @@ local PASS1, PASS2 = { 21 / 255, 20 / 255, 31 / 255 }, { 38 / 255, 40 / 255, 56 
 local ARCH = { lit = rgb(201, 180, 177), joint = rgb(166, 146, 146), shade = rgb(128, 112, 117), dark = rgb(97, 83, 88),
                ring = rgb(219, 199, 195), ringJ = rgb(158, 138, 140),
                vault = { rgb(52, 44, 52), rgb(66, 55, 62), rgb(80, 67, 73) }, vaultJ = rgb(58, 48, 56) }
+-- (day/07nov-ground round 2, review RW-n: the segmental arch's dark vault read as a lens, the pier standing on a
+-- cushion of shade) the pier's foot is a plain bottom course of its own stone, straight down to the paving: the
+-- plinth's shadow row on top, one course of 24 px blocks like the pier's (in bond with it), the arrises at both
+-- ends; the paving under it takes a 1 px dark contact row (Sc.paintQuay) and the
+-- slanted shadow. Pepper still crawls under the plinth's box (y 192), in front of the course.
 local function archBack(p, camx)
   local X0, X1 = p.vx0 or p.x0, p.vx1 or p.x1                     -- (drawn under the art's plinth)
   if X1 - camx < -2 or X0 - camx > 322 then return end
-  local J, R = 6, 6                                               -- jamb width, the arch's rise
-  local a, b = X0 + J, X1 - J                                     -- the opening between the jambs (world x)
   for wx = X0, X1 - 1 do
     local sx = wx - camx
     if sx >= -1 and sx <= 321 then
       for y = p.y0, p.y1 - 1 do
+        local r = y - p.y0
         local c
-        if wx < a or wx >= b then                                  -- the jambs: lit stone, a joint every 6 rows
-          local inner = (wx == a - 1) or (wx == b)
-          c = inner and ARCH.shade or (((y - p.y0) % 6 == 5) and ARCH.joint or ARCH.lit)
-        else
-          local u = (wx - a + 0.5) / (b - a) * 2 - 1
-          local yt = p.y0 + math.floor(R * u * u + 0.5)            -- the opening's top (the arch's intrados)
-          if y < yt - 2 then c = ARCH.lit                          -- spandrel
-          elseif y < yt then                                      -- the ring: voussoirs, a joint every 8 px
-            c = ((wx - a) % 8 == 0) and ARCH.ringJ or ARCH.ring
-          else
-            local dpt = y - yt                                     -- inside the vault: bands, darkest under the arch
-            c = ARCH.vault[math.min(3, 1 + math.floor(dpt / 3))]
-            local k = math.floor((y - p.y0) / 5)
-            if dpt >= 3 and ((y - p.y0) % 5 == 4 or (wx + (k % 2) * 9) % 18 == 0) then c = ARCH.vaultJ end
-          end
-        end
+        if r == 0 then c = ARCH.dark                               -- the plinth's shadow on the course
+        elseif r == 1 then c = ARCH.shade
+        elseif wx == X0 or wx == X1 - 1 then c = ARCH.joint        -- the arrises
+        elseif (wx - X0 + 12) % 24 == 0 then c = ARCH.joint         -- head joints, the pier's 24 px blocks
+        else c = ARCH.lit end
         lg.setColor(c); lg.rectangle("fill", sx, y, 1, 1)
       end
     end
@@ -1252,6 +1460,12 @@ function Sc.townArt(style)
     if love.filesystem.getInfo("art/scene/cp_mid_lime.png") then
       T.cpmid = {}
       for _, n in ipairs({ "cp_mid_lime", "cp_mid_maple", "cp_mid_birch" }) do T.cpmid[#T.cpmid + 1] = fadeImg(n, nil, "mid") end
+      -- (day/07nov-ground, audit CP9 / CP6) the mid row's own lawn and a tuft row over its feet (tools/make_ground_kit.py)
+      if love.filesystem.getInfo("art/scene/kit_cp_midlawn.png") then
+        T.midLawn, T.midTufts = fadeImg("kit_cp_midlawn", nil, "mid"), fadeImg("kit_cp_tufts", nil, "mid")
+        T.shoreLawn = fadeImg("kit_cp_midlawn", nil, "shore")      -- (and the far tree line's, faded as the shore)
+        T.shoreTufts = fadeImg("kit_cp_tufts", nil, "shore")       -- (round 2: over the tree line's feet too)
+      end
     end
     for _, n in ipairs({ "swings", "oak", "willow", "willow_tall", "winch" }) do T[n] = fadeImg("park_" .. n) end
     T.gate = fadeImg("park_gate", 0.28)                           -- (its own amount: dark ironwork, ladder darkest 80)
@@ -1573,7 +1787,10 @@ function Sc.drawFarArt(L, camx, t, w, def)
   lg.draw(city, sx, 150 - city:getHeight()); lg.draw(city, sx + city:getWidth(), 150 - city:getHeight())
   if L.style == "park" then
     Look.use("shore")
+    if def and def.foot and T.shoreLawn then strip(T.shoreLawn, camx, 0.25, 175 + T.shoreLawn:getHeight()) end   -- (day/07nov-
+    -- ground, audit CP9: up in the trees, the rows behind ended straight over the sky) the tree line's own lawn
     strip(T.treeline, camx, 0.25, 177)                            -- 4 the far tree line
+    if def and def.foot and T.shoreTufts then strip(T.shoreTufts, camx, 0.25, 178) end   -- its feet in the grass
     if def and def.foot and hasProp(def, "BIG OAK") then          -- the big oak's silhouette on it (a tall park's finale)
       local oi = farOakImg(T)
       local x = math.floor((w.width - 320) * 0.25 + 100) - math.floor(camx * 0.25) - oi:getWidth() / 2
@@ -1582,11 +1799,14 @@ function Sc.drawFarArt(L, camx, t, w, def)
     vpop(on); on = vpush("mid")
     Look.use("mid")
     local ox = math.floor(camx * 0.5)                             -- 5 near trees (faded)
+    local tall = def and def.foot and T.midLawn
+    if tall then strip(T.midLawn, camx, 0.5, 176 + T.midLawn:getHeight()) end   -- (day/07nov-ground) its own lawn
     for k, tr in ipairs(L.trees) do
       local im = (def and def.foot and T.cpmid) and T.cpmid[1 + (k - 1) % #T.cpmid] or T["tree" .. tr.i]
       local x = tr.x - ox
       if x < 330 and x + im:getWidth() > -10 then lg.draw(im, x, 180 - im:getHeight()) end
     end
+    if tall then strip(T.midTufts, camx, 0.5, 181) end            -- tufts over the row's feet
   else
     Look.use("shore")
     strip(T.roofs, camx, 0.25, 160)                               -- 4 far roofs and spires
@@ -1694,6 +1914,7 @@ local function qc(c) lg.setColor(c[1] / 255, c[2] / 255, c[3] / 255) end
 -- above Pepper's line), dark edges on the cut faces (the pond's banks); Downtown's river stairs as stone steps.
 function Sc.paintGroundArt(w, style, foot)
   foot = foot or 184                                              -- (the path line: a tall level's def.foot)
+  Jn.reset(); Sc.quayEdge = nil                                   -- (day/07nov-ground: the joins check's marks)
   local T = Sc.townArt(style)
   local gw, gh = T.ground:getDimensions()
   return chunked(w, function(xa, xb)                              -- (painted once per chunk: Sc.CHUNK)
@@ -1751,7 +1972,73 @@ function Sc.paintGroundArt(w, style, foot)
     end
   end
   if style == "town" then Sc.quayEnds(w, xa, xb, foot, solid) end
+  if style == "park" then Sc.nearBanks(w, xa, xb, foot, T) end
   end)
+end
+
+-- (day/07nov-ground, audit CP2-CP5: the path, its verge and every earth band ended in a straight vertical cut at
+-- each end of a pond) the near bank, a transition stamped by rule at both ends of every pond, into the pond's first
+-- NEAR_R columns (drawn with the ground, so in front of the water): the ground's own column (path, verge, strata)
+-- with its silhouette going down into the water: a rounded shoulder (6 px), then NEAR_STEP px down per column (a
+-- slope tile of 2 px per step: the strata step back 1 px every 2 rows, the bank slopes away) to the world's bottom,
+-- on its lower half a 2 px level step every 8 rows (round 2); the path's sand edge lit above the water, 2 px of wet
+-- earth along the edge under it, 4 ripple dashes on the water against it.
+Sc.NEAR_R, Sc.NEAR_STEP = 40, 2
+function Sc.nearBanks(w, xa, xb, foot, T)
+  local gw = T.ground:getWidth()
+  local top0 = foot - 12 + 9                                       -- the path's top row (the tile's row 9)
+  local H = w.height - top0
+  local R = Sc.NEAR_R
+  local K, S = 6, Sc.NEAR_STEP                                     -- a rounded shoulder, then S px down per column
+  -- (round 2, review CP-f: "a trapezoid of water cut into the ground") the drop per column: the shoulder, the 2 px
+  -- slope tile, and on its lower half a 2 px wide step every 8 rows, so the strata read as banked earth
+  local D, last = {}, nil
+  local hold = 0
+  for i = 0, R - 1 do
+    local d
+    if i < K then d = math.floor(S * i * i / (2 * K) + 0.5)
+    elseif hold > 0 then d = D[i - 1]; hold = hold - 1
+    else
+      d = D[i - 1] + S
+      if d >= H / 2 then
+        last = last or d
+        if d - last >= 8 then last = d; hold = 1 end               -- this column and the next: a level step
+      end
+    end
+    D[i] = d
+  end
+  local RIP = { [K + 5] = true, [K + 13] = true, [K + 22] = true, [K + 31] = true }   -- 4 ripple dashes against it
+  for _, p in ipairs(pools(w)) do
+    local wt = p.y0 - Sc.POND_RISE
+    Jn.mark(p.x0, "path>pond"); Jn.mark(p.x1, "pond>path")
+    for _, e in ipairs({ { p.x0, 1 }, { p.x1 - 1, -1 } }) do
+      for i = 0, R - 1 do
+        local x = e[1] + e[2] * i
+        local d, dp = D[i], (i > 0) and D[i - 1] or 0
+        local ys = top0 + d
+        if x >= xa and x < xb and x >= p.x0 and x < p.x1 and ys < w.height then
+          clip(x, ys, 1, w.height - ys)
+          lg.setColor(1, 1, 1, 1); lg.draw(T.ground, T.groundQ[x % gw], x, foot - 12)
+          clip()
+          if d > dp + 1 then                                         -- the step's side face, a shade darker
+            lg.setColor(0.10, 0.06, 0.04, 0.28); lg.rectangle("fill", x, top0 + dp + 1, 1, math.max(0, ys - (top0 + dp + 1)))
+          end
+          if ys < wt then                                            -- above the water: the path's sand edge, lit
+            lg.setColor(BANK.lit); lg.rectangle("fill", x, ys, 1, 1)
+            lg.setColor(0.10, 0.06, 0.04, 0.18); lg.rectangle("fill", x, ys + 1, 1, math.min(2, w.height - ys - 1))
+          else                                                       -- under the water's edge: 2 px of wet earth
+            lg.setColor(0.05, 0.05, 0.12, 0.6); lg.rectangle("fill", x, ys, 1, 1)    -- (over the strata's own colour:
+            lg.setColor(0.05, 0.05, 0.12, 0.35); lg.rectangle("fill", x, ys + 1, 1, math.min(1, w.height - ys - 1))   -- always darker)
+          end
+          if RIP[i] and ys - 1 >= wt then                            -- a ripple dash on the water against the bank
+            lg.setColor(BANK.rip[1], BANK.rip[2], BANK.rip[3], 0.85)
+            for k = 1, 3 do lg.rectangle("fill", x + e[2] * k, ys - 1, 1, 1) end
+          end
+        end
+      end
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
 end
 
 -- (art/dt-audit-06nov) the audit: "the cobbles end in a hard vertical cut at every canal gap". Where the street (its
@@ -2369,6 +2656,28 @@ end
 
 -- a faded trunk from y top down to the path: bark lines, a lit left edge, a shaded right edge, roots that flare
 local CPBT = {}                                                    -- (6 Nov) the trunk art, faded as the back, per script
+-- (day/07nov-ground, audit CP8: the root flares ended in a straight line on the lawn) grass over a trunk's foot:
+-- the kit's root tuft strip (tools/make_ground_kit.py kit_cp_roots, 48 x 5, faded as the back), stamped across the
+-- foot, 4 px past it each side
+local ROOTS = {}
+local function rootTufts(xa, xb, foot, ox)
+  if ROOTS[Look.key] == nil then
+    local f = "art/scene/kit_cp_roots.png"
+    ROOTS[Look.key] = love.filesystem.getInfo(f) and newImg(Sc.fadeData(love.image.newImageData(f))) or false
+  end
+  local im = ROOTS[Look.key]
+  if not im then return end
+  lg.setColor(1, 1, 1, 1)
+  local a, b = math.floor(xa) - 4, math.floor(xb) + 4
+  local W = im:getWidth()                                          -- (round 2: a 48 px pattern in no regular order,
+  local x = a                                                      -- anchored in the world: ox is the camera)
+  while x < b do
+    local u = (x + (ox or 0)) % W
+    local w = math.min(W - u, b - x)
+    lg.draw(im, lg.newQuad(u, 0, w, 5, W, 5), x, foot - 5)
+    x = x + w
+  end
+end
 local function drawTrunk(t, top, foot, ox, big)
   local x0, w = t.x0 - ox, t.x1 - t.x0
   local h = foot - top
@@ -2401,6 +2710,7 @@ local function drawTrunk(t, top, foot, ox, big)
           y = y - s
         end
       end
+      rootTufts(ix + d.x0, ix + d.x0 + d.tw, foot, ox)
       return
     end
   end
@@ -2680,13 +2990,44 @@ Sc.built = built
 -- are rope bridges: a pylon at each end on dry ground, a cable sagging between their tops, hangers to the deck
 -- (tools/build_cp_built.py); the pylons' legs are drawn here with the walk, unfaded and in front of the willows,
 -- so each pylon is one post from the ground to its cap. Nothing stands in the water.
+-- (day/07nov-ground round 2, review CP-j: the rope bridge's post ended on the path in a straight cut) a stone footing
+-- under every post foot of a built walk's legs: the runs of opaque columns in the legs art's bottom row, each given
+-- a granite block 2 px wider than the post and 2 rows high over its last rows, and a 1 px dark contact row under it
+local FOOTRUNS = {}
+local function postFootings(li, x, y)
+  local runs = FOOTRUNS[li]
+  if not runs then
+    runs = {}
+    local ok, d = pcall(function() return li:getData() end)
+    if not ok or not d then
+      local cv = lg.newCanvas(li:getWidth(), li:getHeight())
+      lg.push("all"); lg.setCanvas(cv); lg.clear(0, 0, 0, 0); lg.origin(); lg.setColor(1, 1, 1, 1); lg.draw(li, 0, 0); lg.pop()
+      d = cv:newImageData()
+    end
+    local h, s0 = d:getHeight(), nil
+    for i = 0, d:getWidth() do
+      local a = 0
+      if i < d:getWidth() then _, _, _, a = d:getPixel(i, h - 1) end
+      if a > 0 and not s0 then s0 = i elseif a == 0 and s0 then runs[#runs + 1] = { s0, i - 1 }; s0 = nil end
+    end
+    FOOTRUNS[li] = runs
+  end
+  local fy = y + li:getHeight()                                   -- the row under the posts' feet
+  for _, r in ipairs(runs) do
+    local a, b = x + r[1] - 1, x + r[2] + 1
+    lg.setColor(0.64, 0.61, 0.56); lg.rectangle("fill", a, fy - 2, b - a + 1, 1)          -- the block's lit top
+    lg.setColor(0.50, 0.47, 0.44); lg.rectangle("fill", a, fy - 1, b - a + 1, 1)
+    lg.setColor(0.18, 0.14, 0.12); lg.rectangle("fill", a, fy, b - a + 1, 1)              -- the contact row
+  end
+  lg.setColor(1, 1, 1, 1)
+end
 local function drawWalk(p, ox)
   local ri, rx, ry = built(p, "rail")
   local di, dx, dy_ = built(p, "deck")
   if ri and di then
     local li, lx_, ly = built(p, "legs")
     lg.setColor(1, 1, 1, 1)
-    if li then lg.draw(li, lx_ - ox, ly) end
+    if li then lg.draw(li, lx_ - ox, ly); postFootings(li, lx_ - ox, ly) end
     lg.draw(ri, rx - ox, ry); lg.draw(di, dx - ox, dy_)
     return
   end
@@ -3493,13 +3834,17 @@ function Sc.drawTreeFeet(def, camx)
       end
       lg.setColor(FC[1]); lg.rectangle("fill", x0 - 3, yb + 1, x1 - x0 + 7, 1)
       lg.setColor(FC[2]); lg.rectangle("fill", x0 - 1, yb + 2, x1 - x0 + 3, 1)
+      rootTufts(x0, x1, yb + 3, ox)                                       -- (day/07nov-ground) grass over the foot's line
     end
   end
   lg.setColor(1, 1, 1, 1)
 end
 function Sc.drawTerrainArt(def, camx, t)
   local T = Sc.townArt(def.art)
-  if def.art == "park" and Sc.world then Sc.drawPondShoulders(Sc.world, camx) end
+  -- (day/07nov-ground round 2, review CP-f: the olive lawn wedge on the path at the creek read as a green blob,
+  -- the ponds' as sand) the near banks (Sc.nearBanks) carry one sand shoulder at every pond end; the old olive
+  -- shoulders are no longer drawn (Sc.drawPondShoulders stays for a level without near banks)
+  if def.art == "park" and Sc.world and not Sc.NEAR_R then Sc.drawPondShoulders(Sc.world, camx) end
   if def.art == "park" then Sc.drawTreeFeet(def, camx) end
   if def.art == "park" then
     local s = named(def, "SLIDE")

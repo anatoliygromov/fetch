@@ -674,9 +674,9 @@ function St:draw(debug)
     elseif m.lift then Lf.draw(m, cam, Sc, self.t)                     -- a lift (lift.lua)
     elseif grey then                                                   -- greybox level: labelled boxes (the duck boat)
       Sc.outlined(C.prop, C.propEdge, m.x0 - cam, m.y0, m.x1 - m.x0, m.y1 - m.y0); Sc.label(m.name or "PONTOON", (m.x0 + m.x1) / 2 - cam, m.y0 + 8)
-    else                                                           -- the pontoon (art 54 x 19, 6 Nov audit: cleats in rows
-      if m.name == "ROWBOAT" then Sp.drawRowboat(m, cam, self.t)        -- 0-2, its deck ink at row 3 = y0 - 2, floats in the river)
-      else lg.setColor(1, 1, 1, 1); lg.draw(art.pontoon, math.floor(m.x0 - cam + 0.5) - 3, m.y0 - 5); Sp.pontoonWater(m, cam) end
+    else                                                           -- the pontoon (day/07nov-ground: the owner's previous
+      if m.name == "ROWBOAT" then Sp.drawRowboat(m, cam, self.t)        -- 54 x 12 art again, its deck top row = y0 - 2)
+      else lg.setColor(1, 1, 1, 1); lg.draw(art.pontoon, math.floor(m.x0 - cam + 0.5) - 3, m.y0 - Sp.PONT_DY); Sp.pontoonWater(m, cam) end
     end
   end
   if lk then Look.off() end                                        -- the bones, the girl, the ball, Pepper: as drawn
@@ -697,7 +697,7 @@ function St:draw(debug)
     end
   end
   use("play")
-  Sp.drawPlay(self, cam)                                           -- code-drawn obstacles (kennel, hollow log, awnings)
+  Sp.drawPlay(self, cam)                                           -- code-drawn obstacles (hollow log, awnings)
   Rf.drawPlay(self, cam, Sc)                                       -- vent hoods, loose tiles
   use("ground")
   -- shadows of the girl, the ball and Pepper: on the floor right under them (smaller the higher they are)

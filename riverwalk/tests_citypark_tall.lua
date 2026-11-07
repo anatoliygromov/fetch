@@ -89,6 +89,12 @@ return function(mode, api)
       { wait = 0.6 }, { act = function() love.keypressed("space") end }, { wait = 0.3 },
       -- 0 the world and the camera
       { act = function(p, s)
+          local Jn, Sc = require("joins"), require("scene")              -- (day/07nov-ground) the ground's joins
+          if not s.ground then s.ground = Sc.paintGroundArt(s.world, "park", s.def.foot) end
+          local ok, n, bad = Jn.check(Jn.kinds(s.world, s.def, Sc.columnRuns), s.world.width)
+          report("ground joins: every change of ground has its transition", ok and n > 0, ("%d changes%s"):format(n, ok and "" or ": " .. table.concat(bad, "; ")))
+        end },
+      { act = function(p, s)
           report("a tall map: 2880 x 384 px (360 x 48 cells)", s.world.width == 2880 and s.world.height == 384, ("%d x %d"):format(s.world.width, s.world.height))
           report("on the path (y 328) the camera rests at the bottom of the world", near(p.y, PATH) and s.camY == s.camYMax and s.camYMax == 144,
             ("feet %.0f, camY %.0f of %d: the path is at screen y %.0f, as in City Park"):format(p.y, s.camY, s.camYMax, p.y - s.camY))

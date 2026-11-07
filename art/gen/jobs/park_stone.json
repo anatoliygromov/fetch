@@ -1,0 +1,17 @@
+{
+ "level": "citypark_tall",
+ "layer": "play",
+ "kind": "prop",
+ "tier": "C",
+ "target_px": [
+  26,
+  21
+ ],
+ "built_by": "tools/revert_ground_07nov.py (the owner's previous stone restored)",
+ "slot": {
+  "file": "riverwalk/art/scene/park_stone.png",
+  "where": "City Park STONE props in the ponds (scene.lua drawPropArt)"
+ },
+ "name": "park_stone",
+ "family": "rw_ground_07nov"
+}

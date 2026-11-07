@@ -217,3 +217,15 @@ Built by `tools/build_dt_facades.py` (`--check`) after the producer's concept dt
 | --- | --- | --- | --- | --- |
 | `art/scene/sky_riverwalk.png`, `sky_citypark.png`, `sky_downtown.png` | 960 x 360, opaque | - | Built by `tools/build_sky.py` (`--check`). Row 0 = screen y -120 (a tall level's sky above y 0); a flat level draws rows 120-359 at y 0. Wraps sideways: drawn at 0.05 of the camera plus 2 px a second (Look.SKY_SPEED, Look.SKY_DRIFT), no look shader. 4-6 sky tones + 4 cloud tones (clouds luma 185 or more) | the band sky and the drifting cloud sprites (cloud1-8 are no longer drawn while it is on) |
 | `art/scene/skyline_riverwalk.png`, `skyline_citypark.png`, `skyline_downtown.png` | 320 x 77 | - | Built by `tools/build_sky.py` from the approved `skyline.png` (unchanged): its silhouette in 2 clean tones plus a 1 px warm rim on the lit edges. Bottom at y 138 (River Walk) or 150 (art levels), repeats every 320 px, drawn with the neutral city look (final colours) | `skyline.png` under the city haze |
+
+## River Walk and City Park ground, the owner's reverts, the kennel garden (day/07nov-ground, 0 credits)
+| File | Size | Where the game draws it |
+| --- | --- | --- |
+| `kennel.png` | (removed) | owner 7 Nov 12:45: "I don't think we need kennel really, let's assume the dog lives at home". The file, its boxes, its piece and the GARDEN prop are out of River Walk; `tools/build_rw_kennel.py` can rebuild the round 3 low gable. The gold bone stays at x 16 on her doorstep (secret DOORSTEP) |
+| `gritbox_front.png` | 88 x 32 | unchanged slot; the front-on build in the old box's greens (`tools/fix_gritbox_07nov.py`) |
+| `pontoon.png` | 54 x 12 | the previous pontoon again, drawn at the mover's x0 - 3, y0 - 2 (`Sp.PONT_DY`); the mooring lines tie on under the deck's ends |
+| `park_stone.png` | 26 x 21 | the previous pink granite stone again (as the cp-pond branch drew it) |
+| `park_ground.png`, `road.png` | 240 x 68, 640 x 41 | the previous textured files again (`tools/revert_ground_07nov.py`, `tools/make_road.py`) |
+| `kit_cp_midlawn.png` | 240 x 96 | City Park tall only: under the mid row (top y 176, scroll 0.5, faded as mid) and under the far tree line (top y 175, scroll 0.25, faded as the shore), scene.lua `Sc.drawFarArt` |
+| `kit_cp_tufts.png` | 240 x 5 | City Park tall: over the mid row's feet, rows 176-180, scroll 0.5, faded as mid |
+| `kit_cp_roots.png` | 48 x 5 | City Park tall: over every tree foot (bottom on the foot line), a 48 px pattern anchored in the world, faded as the back (scene.lua `rootTufts`) |

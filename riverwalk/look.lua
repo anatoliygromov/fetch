@@ -53,7 +53,8 @@ Look.scripts = {
               layers = { city = L(0, 0, 1.0, "000000", 0), shore = L(0.5, 1.5, 1.05, "a6c4e2", 0.28, 0.55),
                          mid = L(0.8, 1.3, 1.2, "e6e2d6", 0.15, 0.5) } },
     fg = { dark = hex("161c2c"), mid = hex("1f2b42"), rim = hex("4c5d7c"), warm = hex("9a8174"), warmK = 0.05 },
-    kinds = { hedge = 1 },                                         -- (6 Nov: clipped hedges; the grass spikes and the bollards read as ink and pegs)
+    kinds = { verge = 0.78, bollards = 0.22 },                     -- (day/07nov-ground, owner 7 Nov on the 6 Nov hedges: "Im not
+                                                                   -- sure what that is": the previous grass verges and bollards again)
     fade = { back = 0.28 },                                        -- (as before: decoration, railing, kiosks)
   },
   citypark = {                                                     -- golden autumn afternoon
@@ -295,7 +296,10 @@ function Look.road(stage, cam, Sc)
       end
       for _, dc in ipairs(Sc.decals or {}) do                     -- manhole covers and drains ride with their row
         local f = Look.rowFactor(dc.y)
-        lg.draw(dc.im, math.floor(dc.x - cam * f + 0.5), dc.y)
+        local dx = math.floor(dc.x - cam * f + 0.5)
+        -- (day/07nov-ground round 2: a cover sliding past the road's end was cut by the span's edge into a 6 x 5
+        -- dark blob by the kerb return) only a cover wholly on this stretch of road is drawn
+        if dx >= a and dx + dc.im:getWidth() <= b then lg.draw(dc.im, dx, dc.y) end
       end
       lg.setScissor()
     end

@@ -8,7 +8,7 @@
 -- Level 1 since r6/levels: the tutorial. One control at a time on flat pavement, each with a picture sign
 -- (talk.lua), nothing harmful in the first two screens, every threat shown safely before it can hurt.
 --   1  Home          RUN; the bench: CRAWL under it (or a held jump onto its seat); the fallen branch: TAP: HOP.
---                    Secret: go left and crawl into Pepper's kennel by the house (a gold bone)
+--                    Secret: look back first: a gold bone on her own doorstep, left of where she starts
 --   2  Promenade A   open pavement, the flower box: HOLD: BIG JUMP
 --   3  Promenade A   a bin on its own (HOLD: CLIMB); up there the first bike rides under her (a zone of its
 --                    own: seen safely, doing nothing), then bike zone 1 starts (6.5 s, 115 px/s): the grit box
@@ -35,16 +35,17 @@
 -- things in her way. They stand apart, with clear pavement between them; the gaps vary.
 -- Decoration (the pot, the lamp posts, the trees) stands on the back edge of the pavement by the water, 10 px
 -- behind her line (its box ends at y 174), so it reads as scenery she passes.
--- Code-drawn pieces (L.pieces, setpieces.lua): the kennel and the kiosks' awnings are obstacles (crisp, 1 px dark
+-- Code-drawn pieces (L.pieces, setpieces.lua): the kiosks' awnings are obstacles (crisp, 1 px dark
 -- outline; their collision is a hidden prop with the same box), the kiosks themselves decoration (faded, base
--- y 174). Secrets (L.secrets, counted on the tally): the kennel, the kiosk roofs.
+-- y 174). Secrets (L.secrets, counted on the tally): the doorstep, the kiosk roofs, the jetty jump.
 local L = {}
 L.name = "RIVER WALK"
 L.number = 1
 L.map = "level/riverwalk.map"
 L.ground = "quay"             -- (art/rw-ground-06nov) the ground by rule: kerb, asphalt, quay walls, ramps (Sc.paintQuay)
 L.time = 420
-L.start = { x = 62, y = 184 }           -- (night/06nov-rw: 10 px right of the true-scale kennel, x 0-44)
+L.start = { x = 62, y = 184 }           -- (on the pavement at her front door; the kennel was removed, owner 7 Nov 12:45)
+
 
 -- the ferry's art left x: hull 1562-1797, between the pontoon's far end (1552) and the far quay (1808)
 local FX = 1560
@@ -65,12 +66,9 @@ L.props = {
   -- (LOG) lies by its foot.
   { name = "TREE",     kind = "decor",  layer = "back", x0 = 120,  x1 = 370,  y0 = -77, y1 = 174, art = "rw_lime" },
   { name = "BENCH",    kind = "solid",  layer = "play", x0 = 93,   x1 = 189,  y0 = 156, y1 = 165, art = "bench", ax = 90, ay = 184, depth = 5 },
-  -- Pepper's kennel by the house (night/06nov-rw: rebuilt at true scale, 44 x 44, a pitched roof; art
-  -- art/scene/kennel.png by tools/build_rw_kennel.py): solid down to its doorway's crown (y 165), 19 px to crawl in;
-  -- a gold bone is inside. Two boxes: the ridge cap (x 16-28, y 140) and the eaves (x 0-44, y 158), so wherever she
-  -- stands on it, the roof is under her paws. It ends 1 px left of her box at the start.
-  { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 16,   x1 = 28,   y0 = 140, y1 = 165, hidden = true },
-  { name = "KENNEL",   kind = "solid",  layer = "play", x0 = 0,    x1 = 44,   y0 = 158, y1 = 165, hidden = true },
+  -- (day/07nov-ground, owner 7 Nov 12:45: "I don't think we need kennel really, let's assume the dog lives at
+  -- home") no kennel and no front garden: she starts on the pavement at her own front door; the bench is an
+  -- ordinary public bench on the pavement.
   -- promenade A
   { name = "",         kind = "decor",  layer = "back", x0 = 460,  x1 = 652,  y0 = -76, y1 = 174, art = "rw_birch" },   -- (6 Nov) true-scale birch, trunk where tree_far stood
   { name = "FLOWERS",  kind = "solid",  layer = "play", x0 = 401,  x1 = 503,  y0 = 152, y1 = 184, art = "flowerbox_front", ax = 400, ay = 184 },
@@ -152,7 +150,6 @@ L.ballHomeAtLamps = true
 
 -- code-drawn pieces (setpieces.lua); each matches a hidden collision prop above
 L.pieces = {
-  { kind = "kennel", x0 = 0, x1 = 44, y0 = 140, door = 165 },
   { kind = "kiosk",  x0 = 736, x1 = 824, y0 = 112, bx0 = 748, bx1 = 812 },
   { kind = "kiosk",  x0 = 888, x1 = 968, y0 = 112, bx0 = 900, bx1 = 956 },
   { kind = "jetty",  x0 = 2496, x1 = 2544, y0 = 196 },
@@ -194,7 +191,8 @@ L.bones = {
   { x = 116, y = 156 }, { x = 141, y = 156 }, { x = 166, y = 156 }, { x = 250, y = 184 }, { x = 290, y = 163 }, { x = 340, y = 184 },
   { x = 426, y = 152 }, { x = 452, y = 152 }, { x = 478, y = 152 }, { x = 600, y = 184 }, { x = 658, y = 128 },
   { x = 760, y = 184 },
-  -- the kennel (gold, inside) and the kiosk roofs (gold on the second)
+  -- the doorstep (gold: on the pavement at her front door, left of the start; the kennel's gold bone, where it
+  -- was) and the kiosk roofs (gold on the second)
   { x = 16, y = 184, super = true }, { x = 760, y = 112 }, { x = 800, y = 112 }, { x = 928, y = 112, super = true },
   -- bike zone 1
   { x = 852, y = 152 }, { x = 874, y = 152 }, { x = 896, y = 152 }, { x = 1012, y = 154 },
@@ -232,7 +230,7 @@ L.bikes = {
 
 -- secrets: reaching one (Pepper's feet in its box) counts it; the tally shows how many were found
 L.secrets = {
-  { name = "KENNEL",      x0 = 0,   x1 = 30,  y0 = 176, y1 = 184 },    -- inside the kennel
+  { name = "DOORSTEP",    x0 = 0,   x1 = 30,  y0 = 176, y1 = 184 },    -- her own doorstep: look back before you run
   { name = "KIOSK ROOFS", x0 = 876, x1 = 980, y0 = 100, y1 = 112 },    -- the second kiosk's awning
   { name = "JETTY JUMP",  x0 = 2496, x1 = 2544, y0 = 140, y1 = 152 },  -- a held jump from the jetty (gold)
 }
