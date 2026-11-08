@@ -553,8 +553,8 @@ def stretch_houses(b, a, z, si):
         free = [bi for bi in free if bi not in special]
         if k >= 4 and (si + gi) % 3 == 0 and free:
             special[free[h32(si, gi, 2) % len(free)]] = "shop"
-        for p in PROPS:                                                # behind the arch: plain wall (the gateway's wall)
-            if p["name"] == "ARCH":
+        for p in PROPS:                                                # behind the arch, a sign's bracket or the awning's
+            if p["name"] in ("ARCH", "SIGN", "AWNING"):                # arm: plain wall (their plates go into plaster)
                 for bi in range(k):
                     if p["x0"] - 20 < bay_x(bi) + 24 and p["x1"] + 20 > bay_x(bi) - 24: special[bi] = "none"
         for (bx0, bx1, by) in RAISED:                                  # a raised balcony on this house: a door onto it
@@ -634,6 +634,10 @@ def build_back():
     b.paste(up, cl, stairs["y0"] - 4 - up.h)
     railing_run(b, cl, stairs["x0"], stairs["y0"])
     mia_stair(b, stairs["x0"], stairs["x1"], stairs["y0"], stairs["y1"])
+    for x in range(stairs["x1"], W):                                  # the quay's far edge against the harbour: a coping
+        base = street_top(x) - 12
+        b.px(x, base - 3, "kerb_lit"); b.px(x, base - 2, "kerb_1"); b.px(x, base - 1, "kerb_3")
+        if (x - stairs["x1"]) % 46 == 0: b.px(x, base - 2, "kerb_j"); b.px(x, base - 1, "kerb_j")
     return b
 
 
