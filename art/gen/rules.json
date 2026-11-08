@@ -58,6 +58,18 @@
   "downtown": {
    "light": "Downtown, a bright midday: high white sun from the upper left, crisp short shadows, clean saturated colours",
    "style_card": "art/gen/style_card_riverwalk.png"
+  },
+  "rooftops": {
+   "light": "Rooftops, a warm late afternoon: low golden sun from the left, long soft-edged shadows drawn as flat shade shapes, warm clear sky",
+   "style_card": "art/gen/style_card_riverwalk.png"
+  },
+  "soder": {
+   "light": "Söder Hill, golden early evening: warm low sun from the right, rich ochre and rust colours, clear amber sky toward the horizon",
+   "style_card": "art/gen/style_card_riverwalk.png"
+  },
+  "night": {
+   "light": "Night Harbour, a clear cosy night: deep blue and violet darks (never pure black), warm amber lantern and window light in flat pools, a bright moon",
+   "style_card": "art/gen/style_card_riverwalk.png"
   }
  },
  "models": {

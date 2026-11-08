@@ -1,0 +1,23 @@
+{
+ "name": "nh_home_concept",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/concepts/base/nh_home_x4160.png"
+ ],
+ "prompt_file": "art/gen/prompts/nh_home_concept.txt",
+ "tool": "artlist",
+ "family": "nh_concept_08nov",
+ "asset": "nh_key_screen",
+ "slot": {
+  "file": "riverwalk/levelart/night.lua (quay, Mia house, light model, backdrop)",
+  "where": "Night Harbour, the end at Mia home, camera x 4160"
+ },
+ "credits": 320,
+ "ledger_job": "nh_home_concept@1108-091831"
+}

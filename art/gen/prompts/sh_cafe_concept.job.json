@@ -1,0 +1,23 @@
+{
+ "name": "sh_cafe_concept",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/concepts/base/sh_cafe_x2560.png"
+ ],
+ "prompt_file": "art/gen/prompts/sh_cafe_concept.txt",
+ "tool": "artlist",
+ "family": "sh_concept_08nov",
+ "asset": "sh_key_screen",
+ "slot": {
+  "file": "riverwalk/levelart/soder.lua (street, houses, cafe props)",
+  "where": "S\u00f6der Hill, the cafe terraces, camera x 2560"
+ },
+ "credits": 320,
+ "ledger_job": "sh_cafe_concept@1108-091831"
+}

@@ -1,0 +1,16 @@
+{
+ "name": "sh_cafe_concept",
+ "purpose": "concept",
+ "asset": "sh_key_screen",
+ "family": "sh_concept_08nov",
+ "level": "soder",
+ "model": "nbpro_1k",
+ "variants": 2,
+ "base_frame": "art/gen/concepts/base/sh_cafe_x2560.png",
+ "subject": "make this grey hill street on Södermalm in Stockholm lovely and finished. The grey ground becomes a cobbled street with a granite kerb, the slope on the left a stepped cobble rise; the two grey platforms marked PARASOL become striped cafe parasols on poles and the bars marked TABLE become small round cafe tables with iron legs standing on the cobbles, without letters; the grey post on the left becomes an old iron street lamp; the light grey blocks behind become a row of front-on old houses in ochre, rust red and salmon plaster with evenly spaced windows with white frames, a green front door, iron balconies and a hanging shop sign with a picture of a coffee cup; nothing floats",
+ "slot": {
+  "file": "riverwalk/levelart/soder.lua (street, houses, cafe props)",
+  "where": "Söder Hill, the cafe terraces, camera x 2560"
+ },
+ "extra": "Full local colour and crisp edges, the same flat-shaded pixel style as the dog. Keep the dog, the girl, the goose, the bones and the framing exactly as they are."
+}

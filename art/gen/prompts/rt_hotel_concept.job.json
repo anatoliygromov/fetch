@@ -1,0 +1,23 @@
+{
+ "name": "rt_hotel_concept",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/concepts/base/rt_hotel_y240_x4224.png"
+ ],
+ "prompt_file": "art/gen/prompts/rt_hotel_concept.txt",
+ "tool": "artlist",
+ "family": "rt_concept_08nov",
+ "asset": "rt_key_screen",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops.lua (ground, walls, skylights, backdrop)",
+  "where": "Rooftops, the hotel roof, camera y 240 x 4224"
+ },
+ "credits": 320,
+ "ledger_job": "rt_hotel_concept@1108-091831"
+}
