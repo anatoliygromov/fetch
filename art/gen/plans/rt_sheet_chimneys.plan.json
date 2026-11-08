@@ -1,0 +1,200 @@
+{
+ "name": "rt_sheet_chimneys",
+ "level": "rooftops",
+ "kind": "sheet",
+ "why": "Sheet 1 (test) for Rooftops: every chimney the level needs, as clean separate game sprites in the look of the approved hotel concept, cut 1:1 on the grid. Owner 14:14 asked for a sprite sheet test; the first try (rt_sheet1_chimneys) was rejected because its objects were not taken from the concepts.",
+ "jobs": [
+  "rt_sheet_chimneys"
+ ],
+ "frame": [
+  320,
+  240
+ ],
+ "background": [
+  255,
+  0,
+  255
+ ],
+ "pepper": [
+  200,
+  196
+ ],
+ "style_refs": [
+  "art/gen/concepts/rt_hotel_concept_a.png",
+  "art/gen/concepts/rt_market_concept_a.png",
+  "art/gen/concepts/rt_sauna_concept_b.png"
+ ],
+ "objects": [
+  {
+   "id": "A",
+   "what": "wide chimney stack in the drying yard (the dog climbs loose tiles up to it and stands on its top)",
+   "source": "art/gen/concepts/rt_hotel_concept_a.png (the big chimney right of centre: stucco, slab, marks; here without pots)",
+   "size": [
+    104,
+    96
+   ],
+   "role": "obstacle",
+   "layer": "play",
+   "view": "front",
+   "box": [
+    6,
+    6,
+    104,
+    96
+   ],
+   "detail": "a sandstone slab cap 7 px tall on top, 1 px wider than the body on each side: top row lit #CCAE8B, middle #A28B75, bottom row #7F685F, under it a 2 px dark shadow band #4F4039 across the body; stucco body in the hotel chimney's colours: body #8D6D5A, a lit band 3 to 4 px wide down the left edge #C19674, a shaded band 3 to 4 px wide down the right edge #624742, the right edge itself #4F4039; like the hotel chimney: 6 to 10 short dark horizontal dashes (3 to 6 px long, #624742) scattered as worn brick joints, and one small darker damp blotch near the bottom; no texture noise; the top is flat and clear (no pots, the dog stands there); an unbroken 1 px dark outline #2D2224 all round"
+  },
+  {
+   "id": "B",
+   "what": "the chimney sweep's chimney block on the market hall roof (part of the roof; three pots, piece F, stand on top)",
+   "source": "art/gen/concepts/rt_market_concept_a.png (the tall chimney at the right: grey stucco with a cracked patch showing red brick)",
+   "size": [
+    64,
+    96
+   ],
+   "role": "terrain",
+   "layer": "play",
+   "view": "front",
+   "box": [
+    118,
+    6,
+    64,
+    96
+   ],
+   "detail": "a sandstone slab cap 6 px tall on top, 1 px wider than the body on each side: top row lit #CCAE8B, middle #A28B75, bottom row #7F685F, under it a 2 px dark shadow band #4F4039 across the body; stucco body in the hotel chimney's colours: body #8D6D5A, a lit band 3 to 4 px wide down the left edge #C19674, a shaded band 3 to 4 px wide down the right edge #624742, the right edge itself #4F4039; on the right side, half way down, one patch where the stucco has broken off showing 4 to 6 courses of red brick (#AB503A bricks, #78352D joints) with a ragged stucco edge, as in the market painting; a 3 px soot-darkened band under the slab (#624742); 1 px dark outline #2D2224 all round"
+  },
+  {
+   "id": "C",
+   "what": "the hotel chimney block on the hotel roof (part of the roof; three pots, piece G, stand on top)",
+   "source": "art/gen/concepts/rt_hotel_concept_a.png (the big chimney right of centre, exactly its look)",
+   "size": [
+    64,
+    96
+   ],
+   "role": "terrain",
+   "layer": "play",
+   "view": "front",
+   "box": [
+    190,
+    6,
+    64,
+    96
+   ],
+   "detail": "a sandstone slab cap 6 px tall on top, 1 px wider than the body on each side: top row lit #CCAE8B, middle #A28B75, bottom row #7F685F, under it a 2 px dark shadow band #4F4039 across the body; stucco body in the hotel chimney's colours: body #8D6D5A, a lit band 3 to 4 px wide down the left edge #C19674, a shaded band 3 to 4 px wide down the right edge #624742, the right edge itself #4F4039; like the hotel chimney: 6 to 10 short dark horizontal dashes (3 to 6 px long, #624742) scattered as worn brick joints, and one small darker damp blotch near the bottom; no texture noise; 1 px dark outline #2D2224 all round"
+  },
+  {
+   "id": "D",
+   "what": "the nest chimney: the tallest, slimmest chimney of the old town; the gull nest (piece H) sits on its slab",
+   "source": "art/gen/concepts/rt_sauna_concept_b.png (the tall chimney at the right with the nest)",
+   "size": [
+    32,
+    96
+   ],
+   "role": "terrain",
+   "layer": "play",
+   "view": "front",
+   "box": [
+    262,
+    6,
+    32,
+    96
+   ],
+   "detail": "a sandstone slab cap 5 px tall on top, 1 px wider than the body on each side: top row lit #CCAE8B, middle #A28B75, bottom row #7F685F, under it a 2 px dark shadow band #4F4039 across the body; stucco body in the hotel chimney's colours: body #8D6D5A, a lit band 3 to 4 px wide down the left edge #C19674, a shaded band 3 to 4 px wide down the right edge #624742, the right edge itself #4F4039 (bands 2 px wide); 3 or 4 short dark joint dashes; 1 px dark outline #2D2224 all round"
+  },
+  {
+   "id": "E",
+   "what": "the chimney stacks on the stacks roof (T6): a wide stack the dog stands on",
+   "source": "art/gen/concepts/rt_hotel_concept_a.png (the big chimney: stucco, slab, marks)",
+   "size": [
+    104,
+    88
+   ],
+   "role": "obstacle",
+   "layer": "play",
+   "view": "front",
+   "box": [
+    6,
+    110,
+    104,
+    88
+   ],
+   "detail": "a sandstone slab cap 7 px tall on top, 1 px wider than the body on each side: top row lit #CCAE8B, middle #A28B75, bottom row #7F685F, under it a 2 px dark shadow band #4F4039 across the body; stucco body in the hotel chimney's colours: body #8D6D5A, a lit band 3 to 4 px wide down the left edge #C19674, a shaded band 3 to 4 px wide down the right edge #624742, the right edge itself #4F4039; like the hotel chimney: 6 to 10 short dark horizontal dashes (3 to 6 px long, #624742) scattered as worn brick joints, and one small darker damp blotch near the bottom; no texture noise; a 4 px soot-darkened band under the slab; the top flat and clear; an unbroken 1 px dark outline #2D2224 all round"
+  },
+  {
+   "id": "F",
+   "what": "the sweep's chimney pots: decoration standing on top of block B",
+   "source": "art/gen/concepts/rt_hotel_concept_a.png (the three clay pots on the big chimney)",
+   "size": [
+    64,
+    24
+   ],
+   "role": "decoration",
+   "layer": "play",
+   "view": "front",
+   "box": [
+    118,
+    110,
+    64,
+    24
+   ],
+   "detail": "three upright terracotta chimney pots on a 4 px brick footing the full width (#AB503A bricks, #78352D joints): heights 16, 20 and 16 px plus footing, evenly spaced, each with a rolled lip 1 px wider each side and a dark opening #46201B, clay #DF7B4D lit left, #AB503A body, #78352D shaded right; no outline, the edges a darker shade of their own clay"
+  },
+  {
+   "id": "G",
+   "what": "the hotel chimney pots: decoration standing on top of block C",
+   "source": "art/gen/concepts/rt_hotel_concept_a.png (the three clay pots on the big chimney, exactly)",
+   "size": [
+    64,
+    24
+   ],
+   "role": "decoration",
+   "layer": "play",
+   "view": "front",
+   "box": [
+    190,
+    110,
+    64,
+    24
+   ],
+   "detail": "exactly the hotel painting's three pots: the middle one tallest (about 22 px), the outer two about 17 px, rolled lips, dark openings, clay #DF7B4D / #AB503A / #78352D / #46201B, standing on a 2 px sandstone strip; no outline"
+  },
+  {
+   "id": "H",
+   "what": "the gull nest on the nest chimney: decoration",
+   "source": "art/gen/concepts/rt_sauna_concept_b.png (the twig nest on the tall chimney)",
+   "size": [
+    40,
+    10
+   ],
+   "role": "decoration",
+   "layer": "play",
+   "view": "front",
+   "box": [
+    262,
+    110,
+    40,
+    10
+   ],
+   "detail": "a shallow bowl of crossed twigs and straw seen from the front, a few twig ends sticking out past the bowl, browns #9A7251 #75523E #623E2C and straw #CCAE8B; empty (the ball is a game sprite); no outline"
+  },
+  {
+   "id": "I",
+   "what": "one tall clay chimney pot the dog can stand on",
+   "source": "art/gen/concepts/rt_hotel_concept_a.png (the clay pots on the big chimney)",
+   "size": [
+    24,
+    48
+   ],
+   "role": "obstacle",
+   "layer": "play",
+   "view": "front",
+   "box": [
+    118,
+    142,
+    24,
+    48
+   ],
+   "detail": "an upright terracotta pot, straight sides, a rolled lip on top 2 px wider each side with a flat top edge, a 3 px base ring; clay #DF7B4D lit band left, #AB503A body, #78352D shaded right, #46201B darkest; an unbroken 1 px dark outline #2D2224 all round"
+  }
+ ]
+}

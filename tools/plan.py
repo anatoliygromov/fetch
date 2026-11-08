@@ -24,7 +24,10 @@ A plan (art/gen/plans/<name>.plan.json) lists every object the job will make:
   python3 -I tools/plan.py approve PLAN --words W --when T   record the owner's yes (his words, quoted) and the hash
   python3 -I tools/plan.py template PLAN                  sheets: draw the template from the plan's boxes
                                                           (art/gen/sheets/<name>_template.png at 4x, + _320.png)
-  python3 -I tools/plan.py page PLAN OUT.md               a readable page of the plan for the owner"""
+  python3 -I tools/plan.py page PLAN OUT.md               a readable page of the plan for the owner
+  python3 -I tools/plan.py job PLAN                       sheets: write art/gen/jobs/<name>.json, its prompt built from the
+                                                          plan itself (every object's box, size, role and look), so
+                                                          the prompt can never say less than the approved plan"""
 import hashlib, json, os, sys
 
 ROLES = ('obstacle', 'decoration', 'terrain', 'backdrop')
@@ -116,6 +119,46 @@ def page(plan):
     return '\n'.join(L) + '\n'
 
 
+def where(o, plan):
+    x, y, w, h = o['box']; fw, fh = plan.get('frame', [320, 240])
+    col = 'left' if x + w / 2 < fw / 3 else ('right' if x + w / 2 > 2 * fw / 3 else 'middle')
+    row = 'top' if y + h / 2 < fh / 2 else 'bottom'
+    return f"the box at {row} {col}, top-left corner at game pixel ({x}, {y})"
+
+
+def job(plan):
+    ROLE = {'obstacle': 'the dog stands on it or bumps into it', 'terrain': 'part of the roof the dog walks on',
+            'decoration': 'decoration only', 'backdrop': 'part of the backdrop behind the play line'}
+    parts = []
+    for o in plan['objects']:
+        parts.append(f"BOX {o['id']} ({where(o, plan)}, exactly {o['size'][0]} x {o['size'][1]} game pixels): {o['what']}; "
+                     f"{ROLE[o['role']]}. Look: {o['detail']}.")
+    subject = ("this is a sprite sheet. Each grey box becomes exactly one game sprite, painted to fill its own box edge to edge "
+               "(its outer edge on the box's edge, nothing outside its box, nothing touching another box); the grey of the box "
+               "is fully replaced. The magenta background stays one flat pure magenta (#FF00FF) everywhere outside the boxes: "
+               "no shadows, no ground, no sky, no glow, no outline on it. " + ' '.join(parts) +
+               " The black dog stays exactly as it is; it only shows the size of one game pixel")
+    extra = ("The other images are the approved concept paintings of this level: copy their materials, colours, outlines, pixel "
+             "size and level of detail exactly; take from them only how each object looks, not their scenes. VIEW: a strict flat "
+             "front elevation, like an architect's front drawing: the viewer looks straight at the front face of every object; "
+             "no top surfaces, no side faces, no 3/4 view, no perspective, no vanishing points, no tilted or converging lines; "
+             "every horizontal edge exactly horizontal, every vertical edge exactly vertical; round things show as flat-fronted "
+             "upright shapes whose roundness is only flat shade bands. Light from the upper left; depth only by flat shade "
+             "bands (lit left edge, shaded right edge, a darker band under every overhang). PIXEL GRID: Image 1 is a "
+             f"{plan['frame'][0]} x {plan['frame'][1]} game frame shown at 4x; the result is reduced back to that size and every "
+             "box is cut out by its rectangle, so draw exactly on Image 1's pixel grid: every pixel square, the size of the "
+             "dog's pixels, aligned to the same grid; one flat colour per pixel; no anti-aliasing, no in-between edge colours, "
+             "no dithering, no texture noise, no lone specks; straight lines exactly straight; nothing smudged or painterly. "
+             "The light described above only shades the inside of each sprite: no sky, clouds or cast shadows are drawn; the "
+             "magenta stays untouched. No text, no labels, no letters, no numbers, no logos anywhere.")
+    j = {'name': plan['jobs'][0], 'purpose': 'concept', 'asset': plan['name'], 'family': plan['name'], 'level': plan['level'],
+         'model': 'nbpro_1k', 'variants': 2, 'base_frame': f"art/gen/sheets/{plan['name']}_template.png",
+         'style_refs': plan.get('style_refs', []), 'plan': f"art/gen/plans/{plan['name']}.plan.json",
+         'subject': subject, 'extra': extra,
+         'slot': {'file': 'see the plan', 'where': f"{plan['level']}: {plan['why'][:120]}"}}
+    path = f"art/gen/jobs/{j['name']}.json"; json.dump(j, open(path, 'w'), indent=1, ensure_ascii=False); return path
+
+
 def main():
     if len(sys.argv) < 3: print(__doc__); sys.exit(2)
     cmd, path = sys.argv[1], sys.argv[2]; plan = load(path)
@@ -133,6 +176,8 @@ def main():
         open('art/gen/plans/approvals.log', 'a').write(f"{when}\t{plan['name']}\t{plan['approval']['sha']}\t{words}\n")
     elif cmd == 'template':
         print(template(plan))
+    elif cmd == 'job':
+        print(job(plan))
     elif cmd == 'page':
         open(sys.argv[3], 'w').write(page(plan)); print(sys.argv[3])
 
