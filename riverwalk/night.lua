@@ -318,7 +318,10 @@ function Nt.drawWorld(s, cam)
   if not s.night.dark then foxAndBall(s, cam, 1) end
 end
 
-local function plankColour(k, a) return { 0.52 * a, 0.40 * a, 0.27 * a } end
+-- (8 Nov, levelart B) an old plank: a 1 px ink outline (Pepper stands on it), weathered wood with a lit top edge,
+-- the grain, a nail at each end and cracks; the piles under it are the level art's (they stay when it falls)
+local PL = { ink = { 0.08, 0.09, 0.19 }, lit = { 0.60, 0.44, 0.32 }, wood = { 0.49, 0.35, 0.26 }, grain = { 0.39, 0.27, 0.21 },
+             crack = { 0.29, 0.20, 0.19 }, nail = { 0.21, 0.24, 0.35 } }
 local function drawPlanks(s, cam)
   for _, k in ipairs(s.night.planks) do
     local p = k.p
@@ -328,10 +331,14 @@ local function drawPlanks(s, cam)
       if k.st == "shake" then dx = (math.floor(k.t * 30) % 2 == 0) and 1 or -1 end
       if k.st == "gone" then dy = math.min(26, k.t * 80) end
       if not (k.st == "gone" and k.t > 0.4) then                          -- gone: it drops into the water
-        lg.setColor(0.10, 0.08, 0.07); lg.rectangle("fill", math.floor(x + dx), p.y0 + dy, w, p.y1 - p.y0)
-        lg.setColor(plankColour(k, 1)); lg.rectangle("fill", math.floor(x + dx) + 1, p.y0 + dy + 1, w - 2, p.y1 - p.y0 - 2)
-        lg.setColor(0.30, 0.22, 0.15)                                    -- cracks: these planks are old
-        for cx = 6, w - 4, 9 do lg.rectangle("fill", math.floor(x + dx) + cx, p.y0 + dy + 2, 1, 2) end
+        local px, py, h = math.floor(x + dx), math.floor(p.y0 + dy), p.y1 - p.y0
+        lg.setColor(PL.ink); lg.rectangle("fill", px, py, w, h)
+        lg.setColor(PL.wood); lg.rectangle("fill", px + 1, py + 1, w - 2, h - 2)
+        lg.setColor(PL.lit); lg.rectangle("fill", px + 1, py + 1, w - 2, 1)
+        lg.setColor(PL.grain); lg.rectangle("fill", px + 3, py + 3, w - 9, 1)
+        lg.setColor(PL.crack)                                            -- cracks: these planks are old
+        for cx = 6, w - 4, 9 do lg.rectangle("fill", px + cx, py + 2, 1, 2) end
+        lg.setColor(PL.nail); lg.rectangle("fill", px + 2, py + 2, 1, 1); lg.rectangle("fill", px + w - 3, py + 2, 1, 1)
       end
       if k.st == "gone" and k.t > GONE - 0.6 then                        -- coming back: a faint outline first
         lg.setColor(0.6, 0.5, 0.35, 0.5); lg.rectangle("line", math.floor(x) + 0.5, p.y0 + 0.5, w - 1, p.y1 - p.y0 - 1)
@@ -343,9 +350,12 @@ end
 
 -- the lantern posts, ship lights and windows themselves (under the darkness: the light pool shows them)
 function Nt.drawLights(s, cam)
+  local la = s.levelArt                                                  -- (8 Nov) the level art draws its lights
   for _, l in ipairs(s.night.lights) do
     local x = math.floor(l.x - cam)
-    if x > -20 and x < 340 then
+    if la and la.drawLight then
+      if x > -20 and x < 340 then la:drawLight(l, cam) end
+    elseif x > -20 and x < 340 then
       if l.kind == "lantern" or l.kind == "boat" then
         local base = 184
         lg.setColor(0.18, 0.18, 0.22); lg.rectangle("fill", x - 1, l.y + 4, 2, base - l.y - 4)
@@ -362,11 +372,82 @@ function Nt.drawLights(s, cam)
   lg.setColor(1, 1, 1, 1)
 end
 
+-- where a light is drawn (8 Nov: a boat's lantern rides its boat, levelart lightPos); the level's x, y otherwise.
+-- (Drawing only: which bones a light shows still goes by the level's x, y, see lit.)
+function Nt.lightAt(s, l)
+  local la = s.levelArt
+  if la and la.lightPos then local x, y = la:lightPos(l); if x then return x, y end end
+  return l.x, l.y
+end
+
+-- (8 Nov, levelart F) the night light model, when the level art paints the night itself (levelart/night.lua
+-- nightLight = true): no darkness canvas over everything any more (it multiplied the dark away round each light and
+-- brought the pale colours back near white: fog discs, glass lamp posts, a white bubble round Pepper, audit NW1 and
+-- NW4). The art is in the night's own colours; the light is:
+--   pools     flat stepped amber on the paving, slab by slab with hard edges (painted with the ground: levelart)
+--   halos     round each lantern's glass: two flat steps, hard edges, a small radius, added light that stays under
+--             the back layer's luma (it never turns the far town or a shed into a white panel)
+--   water     each light over the water (or near it) reflected as a broken amber column, the moon's as a pale one,
+--             a few glints along the waterline (levelart, with the ground)
+--   Pepper    a small two-step glow round her and a 1 px moonlit rim on her back and head (her sprite drawn again
+--             over its own silhouette in the rim colour, 1 px up and right: her sprite is never changed)
+local rimShader
+local RIM_SRC = [[
+extern vec3 rim; extern float amount;
+vec4 effect(vec4 color, Image tex, vec2 tc, vec2 sc) { float a = Texel(tex, tc).a; return vec4(rim, a * amount); }
+]]
+local function disc(cx, cy, r)                                            -- a crisp filled disc, row by row
+  for dy = -r, r do
+    local hw = math.floor(math.sqrt(math.max(0, (r + 0.5) ^ 2 - dy * dy)))
+    if hw > 0 then lg.rectangle("fill", cx - hw, cy + dy, hw * 2 + 1, 1) end
+  end
+end
+function Nt.drawArtLight(s, cam, cy)
+  local n, la, p = s.night, s.levelArt, s.pepper
+  lg.push("all")
+  lg.translate(0, -cy)
+  lg.setBlendMode("add")
+  for _, l in ipairs(n.lights) do                                        -- the halos: two flat steps
+    local hx, hy, hr = la:halo(l)
+    if hx and hx - cam > -hr and hx - cam < 320 + hr then
+      local x, y = math.floor(hx - cam), math.floor(hy)
+      lg.setColor(0.10, 0.06, 0.02, 1); disc(x, y, hr)
+      lg.setColor(0.14, 0.08, 0.025, 1); disc(x, y, math.floor(hr * 0.55))
+    end
+  end
+  if p.mode ~= "gone" then                                               -- her small glow
+    local x, y = math.floor(p.x - cam + 0.5), math.floor(p.y - 14)
+    lg.setColor(0.025, 0.025, 0.04, 1); disc(x, y, 20)
+    lg.setColor(0.02, 0.02, 0.03, 1); disc(x, y, 14)
+  end
+  lg.setBlendMode("alpha")
+  if p.mode ~= "gone" and p.mode ~= "drown" then                        -- her moonlit rim, then her again over it
+    rimShader = rimShader or lg.newShader(RIM_SRC)
+    rimShader:send("rim", la.P.rim); rimShader:send("amount", 0.85)
+    lg.setShader(rimShader); lg.setColor(1, 1, 1, 1)
+    lg.push(); lg.translate(1, -1); p:draw(cam); lg.pop()
+    lg.setShader(); lg.setColor(1, 1, 1, 1)
+    p:draw(cam)
+    local b = s.ball
+    if b.state == "carried" and p.anim ~= "grab" then lg.draw(ball(), math.floor(b.x - cam - 3 + 0.5), math.floor(b.y - 3 + 0.5)) end
+  end
+  local P = la.P                                                         -- a few glints along the waterline
+  for _, r in ipairs(n.water) do
+    for x = math.max(r.x0, cam - 8), math.min(r.x1, cam + 328) - 3, 7 do
+      if math.sin(x * 0.37 + s.t * 2.2) > 0.55 then lg.setColor(P.w6); lg.rectangle("fill", math.floor(x - cam), r.y, (x % 3 == 0) and 3 or 2, 1) end
+    end
+  end
+  lg.pop()
+  lg.setColor(1, 1, 1, 1)
+end
+
 -- the darkness and everything drawn over it (the stage's draw, at the very end)
 function Nt.draw(s, cam)
   local n = s.night
   local cy = math.floor((s.camY or 0) + 0.5)                            -- (a tall level: the camera's y; 0 here)
-  if n.dark then
+  local la = s.levelArt
+  if n.dark and la and la.nightLight then Nt.drawArtLight(s, cam, cy)    -- (8 Nov, levelart F: the night light model)
+  elseif n.dark then
     if not darkCv then darkCv = lg.newCanvas(320, 240); darkCv:setFilter("nearest", "nearest") end
     lg.push("all")
     lg.setCanvas(darkCv); lg.clear(0, 0, 0, 0); lg.origin(); lg.setBlendMode("alpha", "alphamultiply")
@@ -378,8 +459,9 @@ function Nt.draw(s, cam)
     local p = s.pepper
     local function stamp(x, y, r) local im = lightSprite(r); lg.draw(im, math.floor(x - r), math.floor(y - r)) end
     for _, l in ipairs(n.lights) do
-      local x = l.x - cam
-      if x > -l.r and x < 320 + l.r then stamp(x, l.y - cy, l.r) end
+      local lx, ly = Nt.lightAt(s, l)
+      local x = lx - cam
+      if x > -l.r and x < 320 + l.r then stamp(x, ly - cy, l.r) end
     end
     stamp(p.x - cam, p.y - 20 - cy, 60)                                       -- her own glow: she is never in the dark
     lg.pop()
@@ -387,8 +469,9 @@ function Nt.draw(s, cam)
     lg.setBlendMode("alpha", "premultiplied"); lg.setColor(1, 1, 1, 1); lg.draw(darkCv, 0, 0)
     lg.setBlendMode("add")                                               -- a warm glow round each light
     for _, l in ipairs(n.lights) do
-      local x = l.x - cam
-      if x > -l.r and x < 320 + l.r then local g = glowSprite(math.floor(l.r * 0.6)); lg.draw(g, math.floor(x - l.r * 0.6), math.floor(l.y - cy - l.r * 0.6)) end
+      local lx, ly = Nt.lightAt(s, l)
+      local x = lx - cam
+      if x > -l.r and x < 320 + l.r then local g = glowSprite(math.floor(l.r * 0.6)); lg.draw(g, math.floor(x - l.r * 0.6), math.floor(ly - cy - l.r * 0.6)) end
     end
     lg.pop()
     -- the sky: stars and the moon
