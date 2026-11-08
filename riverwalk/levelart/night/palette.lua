@@ -12,6 +12,7 @@ return {
   w0 = "071039", w1 = "0a1748", w2 = "0d1f56", w3 = "122a63", w4 = "1a3570", w5 = "28457e", w6 = "3a5890",
   refl1 = "f2b14a", refl2 = "b97a3c", refl3 = "6e4a3a",
   -- mid: boat sheds on piles and moored boats (dark blue boards, white trim dimmed)
+  tar1 = "41465e", tar2 = "353a50", tar3 = "292d42",
   shed1 = "24386a", shed2 = "1c2d5c", shed3 = "152350", shedRoof = "131c44", shedTrim = "4a5682", shedDoor = "101a42",
   hull1 = "56607e", hull2 = "434c6a", hull3 = "323a58", mast = "3e4766", tiny = "fdd657",
   -- granite (the quay: paving cap, coping, wall), grey-blue
