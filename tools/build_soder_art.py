@@ -53,8 +53,12 @@ PAL = {
     "cel_1": "4a3a34", "cel_2": "33282a", "cel_3": "231c1e", "cel_step": "5e4c44",
     # iron (rims, railings, pipes, brackets)
     "iron_lit": "6c625e", "iron": "3a3232", "iron_d": "241e1f", "ink": "1c1718",
+    # the back row's ironwork (drain pipes, the cliff's railings): one step lighter (back layer: darkest 80, contrast 120)
+    "bi_lit": "a08e84", "bi": "6c5e5a", "bi_d": "564a48",
     # lid planks (weathered oak)
     "lid_lit": "a0744c", "lid": "84603e", "lid_d": "66482e",
+    # the hatch lids: steel checker plate
+    "steel_lit": "b4aca4", "steel": "8e8680", "steel_d": "68605c",
     # plaster walls: base, pilaster (lighter), shade (darker) per house colour
     "ochre": "cc9454", "ochre_p": "e0ae70", "ochre_d": "b07c44",
     "rust": "a84e36", "rust_p": "c26a4c", "rust_d": "8c3e2a",
@@ -327,31 +331,27 @@ def hatch(g, front, x0, x1, t):
         for y in range(t - 11, t + 12):
             g.px(x, y, "iron" if inner else "iron_d")
         g.px(x, t - 12, "iron_lit")
-    # the lid: a plank door the width of the hole, LID px tall, swung up from the rim's back edge and leaning back
-    # against the house (1 px narrower each side every 8 rows up), vertical oak planks, a Z brace of iron-bound
-    # battens, its edges a darker oak (decoration: no outline)
-    LID = 28
+    # the lid: a steel plate the width of the hole, LID px tall, swung up from the rim's back edge against the house:
+    # we see its underside, an angle-iron frame (2 px) with a cross brace and rivets, a lit left edge and top
+    # (decoration: no outline). Grey steel, so it never reads as one of the wooden crates.
+    LID = 26
     y0 = t - 12 - LID
+    hgt = LID
     for y in range(y0, t - 12):
-        k = (t - 12 - y) // 9
-        a0, a1 = x0 + k, x1 - k
-        for x in range(a0, a1):
+        v = y - y0
+        for x in range(x0, x1):
             u = x - x0
-            if x == a0 or x == a1 - 1 or y == y0: c = "lid_d" if x != a0 else "lid"
-            elif (u % 6) == 0: c = "lid_d"
-            elif (u % 6) == 1: c = "lid_lit"
-            else: c = "lid"
+            if u == 0 or v == 0: c = "steel_lit"
+            elif u == w - 1 or v == hgt - 1: c = "steel_d"
+            elif u <= 2 or v <= 2 or u >= w - 3 or v >= hgt - 3: c = "steel"
+            else:
+                # the cross brace: the two diagonals, 2 px
+                d1 = abs(u * (hgt - 1) - v * (w - 1)) / max(w, hgt)
+                d2 = abs(u * (hgt - 1) - (hgt - 1 - v) * (w - 1)) / max(w, hgt)
+                c = "steel" if min(d1, d2) < 1.3 else "steel_d"
             g.px(x, y, c)
-    for by in (y0 + 3, t - 12 - 5):                                              # the battens
-        k = (t - 12 - by) // 9
-        for x in range(x0 + k + 1, x1 - k - 1):
-            g.px(x, by, "wood_d"); g.px(x, by + 1, "wood")
-    n = (t - 12 - 5) - (y0 + 5)                                                  # the brace, bottom left to top right
-    for i in range(n):
-        y = t - 12 - 6 - i
-        k = (t - 12 - y) // 9
-        x = x0 + k + 2 + int(i * (w - 2 * k - 6) / max(1, n))
-        g.px(x, y, "wood"); g.px(x + 1, y, "wood"); g.px(x + 2, y, "wood_d")
+        for (rx, ry) in ((1, 1), (w - 3, 1), (1, hgt - 3), (w - 3, hgt - 3)):
+            g.px(x0 + rx, y0 + ry, "steel_lit")
     for hx in (x0 + 4, x1 - 7):                                                  # the hinges at the foot
         g.rect(hx, t - 14, 3, 2, "iron_d"); g.px(hx, t - 14, "iron_lit")
 
@@ -362,20 +362,20 @@ def window_part(w=40, h=66):
     (2 px), glass with the sky's reflection in the upper left pane, the reveal's shadow on the top and left (the sun
     is upper left), a stone sill under it"""
     p = Img(w + 4, h + 4)
-    p.rect(0, 0, w + 4, h + 4, "frame_d")                                        # the plaster reveal's edge
+    p.rect(0, 0, w + 4, h + 4, "stone_d")                                        # the plaster reveal's edge
     p.rect(2, 1, w, h, "frame")
     p.rect(2, 1, w, 1, "frame_lit"); p.rect(2, 1, 1, h, "frame_lit")
     gx0, gy0, gw, gh = 5, 4, w - 6, h - 6
     p.rect(gx0, gy0, gw, gh, "glass")
-    p.rect(gx0, gy0, gw, 2, "glass_2"); p.rect(gx0, gy0, 2, gh, "glass_2")      # the reveal's shadow side lit less
+    p.rect(gx0, gy0, gw, 2, "glass"); p.rect(gx0, gy0, 2, gh, "glass")      # the reveal's shadow side lit less
     mx = gx0 + gw // 2 - 1
     ty = gy0 + int(gh * 0.38)
     p.rect(mx, gy0, 2, gh, "frame"); p.rect(mx, gy0, 1, gh, "frame_lit")
     p.rect(gx0, ty, gw, 2, "frame"); p.rect(gx0, ty, gw, 1, "frame_lit")
     for i in range(6):                                                           # the reflection: a short diagonal
         p.rect(gx0 + 4 + i, gy0 + 3 + i * 2, 2, 2, "glass_r")
-    p.rect(0, h + 1, w + 4, 2, "sill"); p.rect(0, h + 1, w + 4, 1, "stone_lit")  # the sill
-    p.rect(1, h + 3, w + 2, 1, "frame_d")
+    p.rect(0, h + 1, w + 4, 2, "stone"); p.rect(0, h + 1, w + 4, 1, "stone_lit")  # the sill
+    p.rect(1, h + 3, w + 2, 1, "stone_d")
     return p
 
 
@@ -392,7 +392,7 @@ def door_part(green=True, w=50, h=104):
     fy = 10
     p.rect(5, fy, w, 12, "frame"); p.rect(7, fy + 2, w - 4, 8, "glass")         # the fanlight
     for i in range(1, 4): p.rect(5 + i * w // 4, fy + 2, 2, 8, "frame")
-    p.rect(7, fy + 2, w - 4, 1, "glass_2")
+    p.rect(7, fy + 2, w - 4, 1, "glass")
     dy = fy + 12
     p.rect(5, dy, w, h + 12 - dy, D)
     lw = (w - 2) // 2
@@ -416,29 +416,29 @@ def shop_part(w=92, h=96):
     three lights over a wooden stall board"""
     p = Img(w + 8, h)
     p.rect(0, 0, w + 8, h, "stone_d"); p.rect(0, 0, w + 7, h, "stone"); p.rect(0, 0, 1, h, "stone_lit"); p.rect(0, 0, w + 7, 1, "stone_lit")
-    p.rect(4, 4, w, 12, "red_d"); p.rect(4, 4, w, 1, "red_lit"); p.rect(5, 5, w - 2, 10, "red")
+    p.rect(4, 4, w, 12, "door_d"); p.rect(4, 4, w, 1, "door_lit"); p.rect(5, 5, w - 2, 10, "door")
     gy = 18
     p.rect(4, gy, w, h - gy - 28, "frame")
     p.rect(6, gy + 2, w - 4, h - gy - 32, "glass")
-    p.rect(6, gy + 2, w - 4, 2, "glass_2")
+    p.rect(6, gy + 2, w - 4, 2, "glass")
     for i in (1, 2):
         mx = 4 + i * w // 3
         p.rect(mx, gy, 3, h - gy - 28, "frame"); p.rect(mx, gy, 1, h - gy - 28, "frame_lit")
     for i in range(8): p.rect(12 + i, gy + 6 + i * 2, 2, 2, "glass_r")
-    p.rect(4, h - 28, w, 28, "wood_d"); p.rect(5, h - 27, w - 2, 26, "wood"); p.rect(5, h - 27, w - 2, 1, "wood_lit")
+    p.rect(4, h - 28, w, 28, "stone_d"); p.rect(5, h - 27, w - 2, 26, "stone"); p.rect(5, h - 27, w - 2, 1, "stone_lit")
     for i in range(3):
         bx = 9 + i * (w - 10) // 3
-        p.rect(bx, h - 23, (w - 10) // 3 - 6, 18, "wood_d"); p.rect(bx + 1, h - 22, (w - 10) // 3 - 8, 16, "wood")
+        p.rect(bx, h - 23, (w - 10) // 3 - 6, 18, "stone_d"); p.rect(bx + 1, h - 22, (w - 10) // 3 - 8, 16, "stone")
     return p
 
 
 def pipe(img, x, y0, y1):
     """a cast-iron drain pipe 4 px (lit left), brackets every 46 px, a shoe at its foot turning to the street"""
     for y in range(y0, y1):
-        img.px(x, y, "iron_lit"); img.px(x + 1, y, "iron"); img.px(x + 2, y, "iron"); img.px(x + 3, y, "iron_d")
+        img.px(x, y, "bi_lit"); img.px(x + 1, y, "bi"); img.px(x + 2, y, "bi"); img.px(x + 3, y, "bi_d")
     for y in range(y1 - 20, y0, -MPX):
-        img.rect(x - 1, y, 6, 2, "iron_d")
-    img.rect(x, y1 - 4, 7, 4, "iron"); img.rect(x, y1 - 4, 7, 1, "iron_lit"); img.rect(x + 6, y1 - 3, 1, 3, "iron_d")
+        img.rect(x - 1, y, 6, 2, "bi_d")
+    img.rect(x, y1 - 4, 7, 4, "bi"); img.rect(x, y1 - 4, 7, 1, "bi_lit"); img.rect(x + 6, y1 - 3, 1, 3, "bi_d")
 
 
 # ------------------------------------------------------------------------------------------------ the back row
@@ -494,8 +494,8 @@ def house(nbays, colour, special, seed, ml=EDGE, mr=EDGE):
         else:
             img.paste(win, cx - ww // 2, base - SOCLE - 41 - win.h + 3)
             # a cellar vent in the socle under it
-            img.rect(cx - 6, base - SOCLE + 3, 12, 6, "socle_d"); img.rect(cx - 5, base - SOCLE + 4, 10, 4, "cel_2")
-            for vx in range(cx - 4, cx + 5, 3): img.rect(vx, base - SOCLE + 4, 1, 4, "iron")
+            img.rect(cx - 6, base - SOCLE + 3, 12, 6, "socle_d"); img.rect(cx - 5, base - SOCLE + 4, 10, 4, "socle_d")
+            for vx in range(cx - 4, cx + 5, 3): img.rect(vx, base - SOCLE + 4, 1, 4, "bi_d")
     return img
 
 
@@ -511,6 +511,9 @@ def alley(img, x0, x1):
         img.px(x, top_y - 3, "kerb_lit"); img.px(x, top_y - 2, "kerb_1"); img.px(x, top_y - 1, "kerb_3")
     for x in (x0, x1 - 1):                                             # the houses' shadowed returns beside it
         pass
+
+
+HOUSE_COLOURS = []                     # each house's colour count (the back layer allows 20 per piece): --check
 
 
 def stretch_houses(b, a, z, si):
@@ -535,15 +538,31 @@ def stretch_houses(b, a, z, si):
         extra = spare // len(groups) + (1 if gi < spare % len(groups) else 0)
         colour = COLOURS[(si * 2 + gi + 1) % len(COLOURS)]
         special = {}
-        if k >= 3: special[h32(si, gi, 1) % k] = "green" if (si + gi) % 2 == 0 else "door"
-        if k >= 4 and (si + gi) % 3 == 0:
-            sb = h32(si, gi, 2) % k
-            if sb not in special: special[sb] = "shop"
+        ml = EDGE + extra // 2
+
+        def bay_x(bi): return x + ml + bi * BAY + BAY // 2
+
+        def blocked(bi, half=34):
+            """a door or shop window here would stand behind a piece in the street (hidden or crowded)"""
+            cx = bay_x(bi)
+            return any(p["layer"] == "play" and p["name"] not in ("BALCONY",) and p["x0"] < cx + half and p["x1"] > cx - half
+                       for p in PROPS) or any(h[0] < cx + half and h[1] > cx - half for h in HATCHES)
+        free = [bi for bi in range(k) if not blocked(bi)]
+        if k >= 3 and free:
+            special[free[h32(si, gi, 1) % len(free)]] = "green" if (si + gi) % 2 == 0 else "door"
+        free = [bi for bi in free if bi not in special]
+        if k >= 4 and (si + gi) % 3 == 0 and free:
+            special[free[h32(si, gi, 2) % len(free)]] = "shop"
+        for p in PROPS:                                                # behind the arch: plain wall (the gateway's wall)
+            if p["name"] == "ARCH":
+                for bi in range(k):
+                    if p["x0"] - 20 < bay_x(bi) + 24 and p["x1"] + 20 > bay_x(bi) - 24: special[bi] = "none"
         for (bx0, bx1, by) in RAISED:                                  # a raised balcony on this house: a door onto it
             for bi in range(k):
                 cx = x + EDGE + extra // 2 + bi * BAY + BAY // 2
                 if bx0 <= cx < bx1: special[bi] = ("high_door", by - base + 300 + 0)
         hs = house(k, colour, special, h32(si, gi), EDGE + extra // 2, EDGE + extra - extra // 2)
+        HOUSE_COLOURS.append(len(np.unique(hs.a[hs.a[..., 3] > 0][:, :3], axis=0)))
         b.paste(hs, x, base - hs.h)
         wpx = hs.w
         if gi < len(groups) - 1: pipe(b, x + wpx - 3, 0, base)
@@ -565,12 +584,12 @@ def railing_run(b, x0, x1, top):
     rails (decoration: no outline, its edges a darker iron)"""
     y0 = top - MPX
     for x in range(x0, x1):
-        b.px(x, y0, "iron_lit"); b.px(x, y0 + 1, "iron"); b.px(x, y0 + 2, "iron_d")
-        b.px(x, top - 4, "iron"); b.px(x, top - 3, "iron_d")
+        b.px(x, y0, "bi_lit"); b.px(x, y0 + 1, "bi"); b.px(x, y0 + 2, "bi_d")
+        b.px(x, top - 4, "bi"); b.px(x, top - 3, "bi_d")
         if (x - x0) % 6 == 3:
-            for y in range(y0 + 3, top - 4): b.px(x, y, "iron")
+            for y in range(y0 + 3, top - 4): b.px(x, y, "bi")
         if (x - x0) % MPX == 2 or x == x1 - 3:
-            for y in range(y0 - 2, top): b.px(x, y, "iron_lit"); b.px(x + 1, y, "iron"); b.px(x + 2, y, "iron_d")
+            for y in range(y0 - 2, top): b.px(x, y, "bi_lit"); b.px(x + 1, y, "bi"); b.px(x + 2, y, "bi_d")
 
 
 def mia_stair(b, x0, x1, ytop, ybot):
@@ -589,11 +608,11 @@ def mia_stair(b, x0, x1, ytop, ybot):
     for i in range(0, n, 2):
         px0 = x0 + int(round(i * run)) + 2
         ty = ytop + i * 8
-        for y in range(ty - 38, ty): b.px(px0, y, "iron"); b.px(px0 + 1, y, "iron_d")
+        for y in range(ty - 38, ty): b.px(px0, y, "bi"); b.px(px0 + 1, y, "bi_d")
     for x in range(x0, x1):
         i = min(n - 1, int((x - x0) / run))
         y = ytop + int((x - x0) * 8 / run) - 40
-        b.px(x, y, "iron_lit"); b.px(x, y + 1, "iron"); b.px(x, y + 2, "iron_d")
+        b.px(x, y, "bi_lit"); b.px(x, y + 1, "bi"); b.px(x, y + 2, "bi_d")
 
 
 def build_back():
@@ -818,6 +837,7 @@ def railing_end():
                     c = "cream" if int(ang // 90) % 2 else "red"
                     if c == "red" and y < -1 and x < 0: c = "red_lit"
                 r.px(12 + x, 12 + y, c)
+    outline(r)
     return r
 
 
@@ -880,6 +900,83 @@ def build_props():
     return P
 
 
+# ------------------------------------------------------------------------------------------------ E: the backdrop
+# The sky is built by tools/build_sky.py's own rules (flat tones with stepped wavy joins, streaks, stamped cumulus
+# lobes), given Söder's golden evening; the far city is build_sky's skyline recoloured (one clean warm shape, a rim).
+SKY = dict(
+    seed=508, light=(-0.78, -0.62), camymax=0,
+    tones=[("e8b274", None, 0), ("efbc76", 30, 4), ("f4c67c", 62, 4), ("f8d28a", 92, 3), ("fadca0", 118, 3)],
+    streaks=[(2, 52, 4, (60, 150), (2, 3)), (3, 82, 4, (70, 180), (2, 3)), (4, 110, 4, (80, 200), (2, 4))],
+    cloud=dict(lit1="fff2d8", lit2="fde0b4", body="f4c89e", under="e8b090"),
+    banks=[dict(x=40, w=210, base=46, h=34, peak=0.40, r=(8, 16), under=(3, 6)),
+           dict(x=520, w=260, base=60, h=30, peak=0.55, r=(8, 14), under=(3, 6))],
+    low=[dict(x=150, w=180, base=100, h=7), dict(x=620, w=200, base=104, h=6)],
+    wisps=[(330, 16, 30, 4), (840, 24, 24, 3)],
+    city=dict(main="dcae98", near="d2a492", rim="fde6b8", rim_edges=("left", "top")),
+)
+
+
+def build_sky_files():
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import build_sky as BS
+    BS.LEVELS["soder"] = SKY
+    rgb, _img, _n, _stats = BS.build_sky("soder")
+    city = BS.build_skyline("soder")
+    sky = np.zeros(rgb.shape[:2] + (4,), np.uint8); sky[..., :3] = rgb; sky[..., 3] = 255
+    return sky[120:], city                                         # a flat level: the screen's rows only
+
+
+def build_far():
+    """the harbour (far layer, below the far city): flat evening water, two tones in long bands, the sun's glints in
+    short flat dashes, 320 wide (it repeats), 120 tall"""
+    f = Img(320, 120)
+    f.rect(0, 0, 320, 120, "water_1")
+    f.rect(0, 0, 320, 2, "water_lit")                              # the far shore's light line
+    for y in range(8, 120, 9):                                     # long darker bands, nearer ones longer
+        for x0 in range(h32(y, 1) % 40, 320, 60 + y // 2):
+            f.rect(x0, y, 24 + y // 3, 1, "water_2")
+    for y in range(4, 60, 5):                                      # the sun's glints, flat dashes
+        for x0 in range(h32(y, 2) % 50, 320, 70):
+            f.rect(x0, y, 6 + (y % 3) * 2, 1, "water_lit")
+    return f
+
+
+MID_W, MID_H = 2400, 240
+
+
+def build_mid():
+    """the roofs down the hill (mid layer, about 23 px a metre): plaster upper storeys with small 4-pane windows and
+    tin roofs with standing seams and chimneys, stepping down left to right; the row ends in a gable at MID_W - 80
+    (the harbour opens beyond it). Row 20 is the ridge line's mean."""
+    m = Img(MID_W, MID_H)
+    x, i = 0, 0
+    walls = ("mid_wall_a", "mid_wall_b", "mid_wall_c")
+    end = MID_W - 80
+    while x < end:
+        w = min(end - x, 70 + h32(i, 1) % 60)
+        if end - x - w < 50: w = end - x
+        ridge = 20 + (h32(i, 2) % 3 - 1) * 6
+        eave = ridge + 14
+        col = walls[i % 3]
+        m.rect(x, eave, w, MID_H - eave, col)
+        m.rect(x, eave, 1, MID_H - eave, "mid_chim")                # the house's lit corner
+        for wy in (eave + 8, eave + 42, eave + 76):                 # windows: 12 x 18, stamped on a 22 px grid
+            for wx in range(x + 8, x + w - 14, 22):
+                m.rect(wx, wy, 12, 18, "mid_win"); m.rect(wx, wy, 12, 1, "mid_chim")
+                m.rect(wx + 5, wy, 2, 18, col); m.rect(wx, wy + 7, 12, 2, col)
+        for y in range(ridge, eave):                                # the roof: a front-on slope, seams every 4 px
+            k = y - ridge
+            for xx in range(x - 2 + 0, x + w + 2):
+                m.px(xx, y, "mid_roof_d" if (xx - x) % 4 == 0 else "mid_roof")
+            m.px(x - 2, y, "mid_roof_d")
+        m.rect(x - 2, ridge, w + 4, 1, "mid_chim")                  # the ridge, lit
+        if w > 60:                                                  # a chimney
+            cx = x + 12 + h32(i, 3) % (w - 30)
+            m.rect(cx, ridge - 10, 6, 11, "mid_chim"); m.rect(cx - 1, ridge - 11, 8, 2, "mid_roof_d")
+        x += w; i += 1
+    return m
+
+
 # ------------------------------------------------------------------------------------------------ output
 def tiles(img, name, files):
     for i in range(0, W, TILE):
@@ -919,7 +1016,12 @@ def main():
     tiles(front, "front", files)
     tiles(back, "back", files)
     for n, im in build_props().items(): files["props/" + n + ".png"] = im.a
+    sky, city = build_sky_files()
+    files["sky.png"], files["skyline.png"] = sky, city
+    files["far.png"], files["mid.png"] = build_far().a, build_mid().a
     fails = []
+    if max(HOUSE_COLOURS) > 20: fails.append(f"a house has {max(HOUSE_COLOURS)} colours (back layer: 20)")
+    print("houses:", len(HOUSE_COLOURS), "colours per house", min(HOUSE_COLOURS), "to", max(HOUSE_COLOURS))
     if check:
         for n, arr in files.items():
             p = os.path.join(OUT, n)

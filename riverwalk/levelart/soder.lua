@@ -158,11 +158,79 @@ function M:drawFront(cam, camY, t)
   lg.setColor(1, 1, 1, 1)
 end
 
+-- E: the backdrop (screen space; replaces the greybox far town). Back to front: the painted sky (build_sky.py's
+-- rules in Söder's golden evening, 0.05 of the camera plus a drift), the far city across the water (its skyline
+-- moved at most 128 px over the level), the harbour's water under it, and a row of roofs down the hill (0.5). The
+-- whole backdrop sinks with the street (DY px over the level): the street drops 96 px from the top to the quay, so
+-- the roofs and the far city stay just over the alleys' walls, and at the bottom the view opens on the harbour.
+-- Each layer has its own ground: the city stands on the water, the water runs down to the screen's bottom, the
+-- roofs' walls run down past the alleys' walls (they end before the harbour opens, at mid x 2320, in a gable).
+M.Y_MID, M.Y_CITY, M.DY = 32, 46, 96
+local skyQ = {}
+function M:drawFar(cam, camY, t)
+  local W = self.world.width
+  local dy = math.floor(M.DY * math.min(1, cam / math.max(1, W - 320)) + 0.5)
+  local sky = img("sky")
+  if sky then
+    local sw, sh = sky:getDimensions()
+    local o = math.floor(cam * 0.05 + t * 2) % sw
+    skyQ[1] = skyQ[1] or lg.newQuad(0, 0, 1, 1, sw, sh); skyQ[2] = skyQ[2] or lg.newQuad(0, 0, 1, 1, sw, sh)
+    local n = math.min(320, sw - o)
+    skyQ[1]:setViewport(o, 0, n, sh, sw, sh); lg.setColor(1, 1, 1, 1); lg.draw(sky, skyQ[1], 0, 0)
+    if n < 320 then skyQ[2]:setViewport(0, 0, 320 - n, sh, sw, sh); lg.draw(sky, skyQ[2], n, 0) end
+  end
+  local lk = Look.on and self.look
+  local cy = M.Y_CITY + dy                                            -- the far shore's line
+  local city = img("skyline")
+  if city then
+    if lk then Look.use("city") end
+    local sx = -math.floor(math.min(128, cam * 128 / math.max(1, W - 320)))
+    lg.setColor(1, 1, 1, 1)
+    lg.draw(city, sx, cy - city:getHeight()); lg.draw(city, sx + city:getWidth(), cy - city:getHeight())
+  end
+  local far = img("far")
+  if far then
+    if lk then Look.use("shore") end
+    local fw, fh = far:getDimensions()
+    local ox = math.floor(cam * 0.25) % fw
+    lg.setColor(1, 1, 1, 1)
+    for x = -ox, 320, fw do lg.draw(far, x, cy) end
+    if cy + fh < 240 then lg.setColor(M.pal().water_1); lg.rectangle("fill", 0, cy + fh, 320, 240 - cy - fh) end
+  end
+  local mid = img("mid")
+  if mid then
+    if lk then Look.use("mid") end
+    lg.setColor(1, 1, 1, 1); lg.draw(mid, -math.floor(cam * 0.5), M.Y_MID + dy - 20)
+  end
+  if lk then Look.off() end
+  lg.setColor(1, 1, 1, 1)
+end
+
+-- the colour script (look.lua format): golden early evening, a low warm sun from the upper left. The art comes in
+-- its final colours, so the look is mild: a little warmth on the lights, a little violet in the darks, and each far
+-- layer one clean step towards the evening air (its haze a tint of the sky's horizon).
+local function hexc(h) return { tonumber(h:sub(1, 2), 16) / 255, tonumber(h:sub(3, 4), 16) / 255, tonumber(h:sub(5, 6), 16) / 255 } end
+local function L(warm, cool, sat, haze, k, clean) return { warm = warm, cool = cool, sat = sat, haze = hexc(haze), k = k, clean = clean or 0 } end
+M.look = {
+  layers = { clouds = L(0, 0, 1.0, "fadca0", 0), city = L(0, 0, 1.0, "000000", 0),
+             shore = L(0.2, 0.6, 1.0, "f6d2a2", 0.10, 0.4), mid = L(0.3, 0.8, 1.0, "f4cc98", 0.22, 0.45),
+             water = L(0.2, 0.6, 1.0, "f6d2a2", 0.05), back = L(0.25, 0.7, 1.0, "f4cc98", 0.04),
+             ground = L(0.2, 0.6, 1.0, "000000", 0), play = L(0.3, 0.7, 1.05, "000000", 0),
+             front = L(0.0, 1.8, 1.10, "241a24", 0.40) },
+  bands = { { 0, "e8b274" }, { 30, "efbc76" }, { 62, "f4c67c" }, { 92, "f8d28a" }, { 118, "fadca0" } },
+  fg = { dark = hexc("241a24"), mid = hexc("33262e"), rim = hexc("6a4e4a"), warm = hexc("c08850"), warmK = 0.2 },
+  kinds = {},
+  fade = { back = 0.12 },
+}
+
 local PAL
 function M.pal() PAL = PAL or require("levelart.soder.palette"); return PAL end
 
--- behind Pepper's line: the balconies' railings (so she, the bones and the ball are always in front of them)
+-- behind Pepper's line: the house fronts (E), then the balconies' railings (so she, the bones and the ball are
+-- always in front of them)
 function M:drawBack(cam, camY, t)
+  self.back = self.back or tiles("back", self.world.width)
+  self.back:draw(cam, camY)
   for _, pr in ipairs(self.def.props) do
     if pr.name == "BALCONY" and pr.x1 - cam > -10 and pr.x0 - cam < 330 then
       local im = img("props/balcony" .. (pr.x1 - pr.x0))
