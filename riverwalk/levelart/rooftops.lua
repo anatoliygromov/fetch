@@ -28,8 +28,8 @@ local function L(warm, cool, sat, haze, k, clean) return { warm = warm, cool = c
 M.look = {                                                       -- (sky, far and mid: as built, neutral)
   layers = { clouds = L(0, 0, 1.0, "000000", 0), city = L(0, 0, 1.0, "000000", 0),
              shore = L(0, 0, 1.0, "000000", 0), mid = L(0, 0, 1.0, "000000", 0),
-             water = L(0.4, 1.2, 1.2, "8fb4d8", 0.05), back = L(0.3, 0.6, 1.05, "f6d8ac", 0.06),
-             ground = L(0.3, 0.5, 1.05, "000000", 0), play = L(0.5, 0.7, 1.12, "000000", 0),
+             water = L(0.4, 1.2, 1.2, "8fb4d8", 0.05), back = L(0.1, 0.3, 1.0, "f6e0c0", 0.04),
+             ground = L(0.1, 0.4, 1.10, "000000", 0), play = L(0.3, 0.6, 1.12, "000000", 0),
              front = L(0.0, 1.6, 1.10, "1e1620", 0.40) },
   bands = { { 0, "f0c79c" }, { 60, "f6d2a6" }, { 120, "fbdcac" }, { 180, "fde6b6" } },
   fg = { dark = hex("1e1620"), mid = hex("2c2030"), rim = hex("5a4250"), warm = hex("b07848"), warmK = 0.1 },
@@ -187,33 +187,50 @@ function M:holders()
   self.hold = H
   return H
 end
+-- (round 2, producer 8 Nov: "no thin 1 px line drawings over walls") the frames are solid: tubes and planks 3 px
+-- with a 1 px ink outline and a lit edge, diagonal braces 2 px with ink, a foot plate on the floor, brackets as solid
+-- iron knees. Drawn in two passes, ink first, so crossing parts join into one frame.
+local function tube(pass, x, y0, y1, timber)                     -- a vertical pole, x its left column
+  if pass == 1 then rect("ink", x - 1, y0, 5, y1 - y0 + 1); rect("ink", x - 3, y1 - 3, 9, 4); return end
+  rect(timber and "wd_hi" or "iron_hi", x, y0, 1, y1 - y0); rect(timber and "wd" or "tin_sh", x + 1, y0, 1, y1 - y0)
+  rect(timber and "wd_sh" or "iron", x + 2, y0, 1, y1 - y0)
+  rect(timber and "wd_sh" or "iron", x - 2, y1 - 2, 7, 2); rect(timber and "wd_hi" or "iron_hi", x - 2, y1 - 2, 7, 1)
+end
+local function plank(pass, x0, x1, y, timber)                    -- a horizontal plank or tube, top row y
+  if pass == 1 then rect("ink", x0, y - 1, x1 - x0, 5); return end
+  rect(timber and "wd_hi" or "iron_hi", x0, y, x1 - x0, 1); rect(timber and "wd" or "tin_sh", x0, y + 1, x1 - x0, 1)
+  rect(timber and "wd_sh" or "iron", x0, y + 2, x1 - x0, 1)
+end
+local function brace(pass, x0, y0, x1, y1, timber)               -- a diagonal brace, 2 px
+  local n = math.max(1, math.abs(x1 - x0))
+  for i = 0, n - 1 do
+    local x, y = x0 + (x1 > x0 and i or -i), math.floor(y0 + (y1 - y0) * i / n)
+    if pass == 1 then rect("ink", x, y - 1, 1, 4) else rect(timber and "wd" or "tin_sh", x, y, 1, 1); rect(timber and "wd_sh" or "iron", x, y + 1, 1, 1) end
+  end
+end
+local function knee(pass, x, y, dir)                              -- a solid iron bracket: a knee under the slab's end
+  local L = 18
+  for r = 0, L - 1 do
+    local w = L - r
+    local x0 = dir > 0 and x or x - w
+    if pass == 1 then rect("ink", x0 - 1, y + r, w + 2, 1)
+    else rect(r == 0 and "iron_hi" or "tin_sh", x0, y + r, math.max(0, w - 1), 1); rect("iron", dir > 0 and x0 + w - 1 or x0, y + r, 1, 1) end
+  end
+  if pass == 1 then rect("ink", dir > 0 and x - 1 or x - 4, y - 1, 5, L + 6); rect("ink", x - L - 1, y + L, 1, 0)
+  else rect("iron", dir > 0 and x or x - 3, y, 3, L + 4); rect("iron_hi", dir > 0 and x or x - 3, y, 1, L + 4) end
+end
+M.tube, M.plank, M.brace = tube, plank, brace
 function M:drawBack(cam, camY, t)
   if not self:palette() then return end
-  for _, h in ipairs(self:holders()) do
-    if h.k == "post" and h.x - cam > -8 and h.x - cam < 328 then
-      local x = h.x - cam
-      local a, b, c = h.iron and "iron_hi" or "wd_hi", h.iron and "tin_sh" or "wd", h.iron and "iron" or "wd_sh"
-      rect(a, x, h.y0, 1, h.y1 - h.y0); rect(b, x + 1, h.y0, 1, h.y1 - h.y0); rect(c, x + 2, h.y0, 1, h.y1 - h.y0)
-      rect(c, x - 1, h.y1 - 2, 5, 2); rect(a, x - 1, h.y1 - 2, 5, 1)                -- its foot plate on the floor
-    elseif (h.k == "tie" or h.k == "brace") and h.x1 - cam > -4 and h.x0 - cam < 324 then
-      local a, c = h.iron and "iron_hi" or "wd_hi", h.iron and "iron" or "wd_sh"
-      if h.k == "tie" then rect(a, h.x0 - cam, h.y, h.x1 - h.x0, 1); rect(c, h.x0 - cam, h.y + 1, h.x1 - h.x0, 1)
-      else
-        local n = h.x1 - h.x0
-        for i = 0, n - 1 do rect(c, h.x0 - cam + i, math.floor(h.y0 + (h.y1 - h.y0) * i / n), 1, 2) end
+  local H = self:holders()
+  for pass = 1, 2 do
+    for _, h in ipairs(H) do
+      if h.k == "post" and h.x - cam > -8 and h.x - cam < 328 then tube(pass, h.x - cam, h.y0, h.y1, not h.iron)
+      elseif h.k == "tie" and h.x1 - cam > -4 and h.x0 - cam < 324 then plank(pass, h.x0 - cam - 1, h.x1 - cam + 1, h.y, not h.iron)
+      elseif h.k == "brace" and h.x1 - cam > -4 and h.x0 - cam < 324 then brace(pass, h.x0 - cam, h.y0 + 3, h.x1 - cam, h.y1, not h.iron)
+      elseif h.k == "bracket" and math.abs(h.x - cam - 160) < 200 then knee(pass, h.x - cam, h.y, h.dir)
+      elseif h.k == "rail" and h.x1 - cam > -4 and h.x0 - cam < 324 then plank(pass, h.x0 - cam, h.x1 - cam, h.y + 1, false)
       end
-    elseif h.k == "bracket" and math.abs(h.x - cam - 160) < 200 then
-      local x = h.x - cam                                         -- a bar under the slab and a strut to the wall
-      local L = 22
-      for i = 0, L - 1 do
-        local xx = h.dir > 0 and x + i or x - 1 - i
-        rect("iron", xx, h.y, 1, 2)
-        if i < 16 then rect("iron", xx, h.y + 16 - i, 1, 2); rect("iron_hi", xx, h.y + 16 - i, 1, 1) end
-      end
-      rect("iron", h.dir > 0 and x or x - 3, h.y, 3, 20)            -- the plate on the wall
-    elseif h.k == "rail" and h.x1 - cam > -4 and h.x0 - cam < 324 then
-      rect("iron_hi", h.x0 - cam, h.y, h.x1 - h.x0, 1); rect("iron", h.x0 - cam, h.y + 1, h.x1 - h.x0, 1)
-      for x = h.x0 + 4, h.x1 - 4, 16 do rect("iron", x - cam, h.y + 2, 1, 2) end   -- its clips
     end
   end
   lg.setColor(1, 1, 1, 1)
@@ -288,11 +305,14 @@ M.STAND = {                                                       -- built stand
       rect(k == 1 and "cre_hi" or "canvas", x + sx, sy, 12, 11); rect("cap_top", x + sx + 10, sy, 2, 11)
     end
   end,
-  SCAFFOLD = function(pr, x)                                      -- poles from the gap's floor, a top rail, a brace
+  SCAFFOLD = function(pr, x)                                      -- poles from the gap's floor, rails, a brace
     local w = pr.x1 - pr.x0
-    for _, px in ipairs({ 3, math.floor(w / 2), w - 5 }) do rect("iron_hi", x + px, 250, 1, 70); rect("iron", x + px + 1, 250, 1, 70) end
-    rect("iron_hi", x + 3, 252, w - 6, 1); rect("iron", x + 3, 253, w - 6, 1)
-    for i = 0, math.floor(w / 2) - 4 do rect("iron", x + 4 + i, 318 - math.floor(i * 64 / (w / 2)), 1, 2) end
+    local px = { 2, math.floor(w / 2) - 1, w - 5 }
+    for pass = 1, 2 do
+      for _, p in ipairs(px) do tube(pass, x + p, 246, 319) end
+      plank(pass, x + 1, x + w - 1, 248); plank(pass, x + 1, x + w - 1, 300)
+      brace(pass, x + px[1] + 3, 298, x + px[2], 252)
+    end
   end,
   NEST = function(pr, x)                                          -- a bowl of twigs on the chimney
     local w = pr.x1 - pr.x0

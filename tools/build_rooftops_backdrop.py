@@ -33,16 +33,16 @@ import build_rooftops_art as A          # the map, the houses, the palette, the 
 import build_sky as BS                  # the painted sky's painter
 
 OUT = A.OUT
-HAZE = (250, 222, 176)                  # the sky's horizon: the back row is mixed 25 % towards it
-BACK_K = 0.25
+HAZE = (250, 226, 190)                  # the sky's horizon: the back row is mixed 32 % towards it and 18 % greyer
+BACK_K, BACK_GREY = 0.32, 0.18          # (round 2, producer 8 Nov: clearly lighter and less saturated than the play row)
 CAMY_MAX = 960
 
 SKY = dict(                                                  # warm late afternoon: peach above, amber at the horizon
     seed=4808, light=(-0.80, -0.60), camymax=96,             # (camymax 96: the sky rises 0.03 x 960 = 29 rows)
-    tones=[("efc4a6", None, 0), ("f2cca8", -30, 5), ("f5d4a8", 30, 5),
-           ("f8dca6", 70, 4, dict(jit=1, extra=3, tl=(60, 180))), ("fae2aa", 98, 3, dict(jit=1, extra=2, tl=(60, 180)))],
+    tones=[("f4d2b8", None, 0), ("f6d8b8", -30, 5), ("f8dcb6", 30, 5),
+           ("fae0b2", 70, 4, dict(jit=1, extra=3, tl=(60, 180))), ("fce4b0", 98, 3, dict(jit=1, extra=2, tl=(60, 180)))],
     streaks=[(3, 64, 4, (70, 180), (2, 3)), (4, 92, 4, (80, 200), (2, 3)), (2, 20, 3, (60, 140), (1, 2))],
-    cloud=dict(lit1="fff6e6", lit2="fde6cc", body="f4d2bc", under="e8bea8"),
+    cloud=dict(lit1="fffaee", lit2="fff0dc", body="fae2cc", under="f0d4c0"),
     banks=[dict(x=40, w=210, base=40, h=30, peak=0.42, r=(8, 14), under=(3, 6)),
            dict(x=500, w=240, base=52, h=32, peak=0.55, r=(8, 15), under=(3, 6)),
            dict(x=780, w=120, base=6, h=18, peak=0.45, r=(6, 10), under=(2, 4))],
@@ -50,10 +50,10 @@ SKY = dict(                                                  # warm late afterno
     wisps=[(300, 18, 28, 4), (640, 10, 24, 3), (900, 30, 26, 4), (180, -40, 24, 3)],
 )
 
-FAR = {"rim": "fae0c0", "main": "ecc8ae", "near": "e2bca4"}
-MID = {"wa": "dca478", "wb": "e4c084", "wc": "dca48c", "wd": "e6cca4", "wsh": "c4946c", "cap": "eed6b2",
-       "tile_hi": "d88c6a", "tile": "c8785a", "tile_sh": "b46a52", "frame": "9a7c6e", "glass": "8c9aa2",
-       "glass_hi": "b4c0c4", "ch": "a88472"}
+FAR = {"rim": "f6dcc4", "main": "e8c8b0", "near": "e2c0aa"}
+MID = {"wa": "e8c098", "wb": "ecd09c", "wc": "e6bca4", "wd": "ecd6b8", "wsh": "d8ac8c", "cap": "f2dec4",
+       "tile_hi": "eab296", "tile": "e0a084", "tile_sh": "d6967a", "frame": "b89c8e", "glass": "a8b4bc",
+       "glass_hi": "ccd4d8", "ch": "c49c88"}
 
 
 def hexc(h): return np.array([int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)], np.uint8)
@@ -170,7 +170,11 @@ def mid():
 def back_rgb():
     """the front row's palette, 25 % towards the horizon"""
     rgb = A.RGB.astype(float).copy()
-    rgb[1:, :3] = rgb[1:, :3] + (np.array(HAZE) - rgb[1:, :3]) * BACK_K
+    k = np.full((len(rgb), 1), BACK_K); gk = np.full((len(rgb), 1), BACK_GREY)
+    for n in ("crt_hi", "crt", "crt_sh", "crt_dk"): k[A.IDX[n]], gk[A.IDX[n]] = 0.15, 0.15   # the light court: in shade
+    rgb[1:, :3] = rgb[1:, :3] + (np.array(HAZE) - rgb[1:, :3]) * k[1:]
+    l = rgb[1:, :3] @ BS.W601
+    rgb[1:, :3] = rgb[1:, :3] + (l[:, None] - rgb[1:, :3]) * gk[1:]
     return np.round(rgb).astype(np.uint8)
 
 
@@ -186,7 +190,7 @@ def back_blocks():
 def back(top, W, H):
     cv = A.Canvas(W, H)
     blocks = back_blocks()
-    rotate = {"ochre": "salmon", "yellow": "ochre", "salmon": "yellow", "cream": "salmon", "court": "court"}   # 4 ramps (20 colours)
+    rotate = {"ochre": "salmon", "yellow": "ochre", "salmon": "yellow", "cream": "salmon", "rust": "yellow", "court": "court"}   # 4 ramps (20 colours)
     house_at = {}
     for h in A.HOUSES:
         for x in range(h[0], h[1]): house_at[x] = h

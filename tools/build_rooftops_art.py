@@ -41,25 +41,27 @@ STOREY0, STOREY = 88, 96            # storey lines: y = 88 + 96 k (all the map's
 PAL = {
     "ink": "2a1c1e",
     # sandstone parapet cap (concept: a48c74 / ccac84 / 7c645c)
-    "cap_hi": "e6cea6", "cap_top": "d2b68e", "cap": "b49a7c", "cap_sh": "927a66", "cap_jt": "6e5a50",
+    "cap_hi": "ecd6ae", "cap_top": "d6ba90", "cap": "b89c7c", "cap_sh": "8c7462", "cap_jt": "6a5648",
     # copper (green patina, standing seams; concept 7ca474 / 547c6c)
     "cu_hi": "a8cc9c", "cu_top": "88b48a", "cu": "6c9a78", "cu_sh": "527c6a", "cu_jt": "3e5e56",
     # tin flashing, pipes, the court's floor
     "tin_hi": "d6d8d8", "tin": "a8acb2", "tin_sh": "7a808a",
-    # plaster, four houses' colours (lit, wall, shade band, deep) and the recessed court
-    "och_hi": "e4a666", "och": "d48c4e", "och_sh": "b87446", "och_dk": "9a5c3c",
-    "yel_hi": "f0d08e", "yel": "e2ba72", "yel_sh": "c89c5a", "yel_dk": "a47e46",
-    "sal_hi": "e8ae88", "sal": "d6906c", "sal_sh": "b87458", "sal_dk": "945a48",
-    "cre_hi": "f2dcb2", "cre": "e2c69a", "cre_sh": "c6a67e", "cre_dk": "a28868",
-    "crt_hi": "c48a5a", "crt": "b07648", "crt_sh": "96603e", "crt_dk": "7a4c34",
-    # windows and doors
-    "frame": "6e4c40", "glass": "5a6a72", "glass_hi": "90a2a8", "wood": "7a4a34", "wood_sh": "76493a",
+    # plaster at the concept's full saturation, five houses' colours (lit, wall, shade, deep) and the shaded court
+    # (round 2, producer 8 Nov: "washed out": the walls Pepper's roofs sit on are the play layer, the darkest and
+    # richest buildings on screen; the back row, mid and far towns are lighter and greyer, the sky lightest)
+    "och_hi": "e0a058", "och": "d08844", "och_sh": "ac6a34", "och_dk": "84502a",
+    "yel_hi": "eebe62", "yel": "deaa4c", "yel_sh": "bc8838", "yel_dk": "92682a",
+    "sal_hi": "e49a74", "sal": "d4805a", "sal_sh": "b06444", "sal_dk": "884a34",
+    "cre_hi": "eed2a2", "cre": "dcbc88", "cre_sh": "b8966a", "cre_dk": "8e7250",
+    "crt_hi": "b07a52", "crt": "9a6440", "crt_sh": "7e4e32", "crt_dk": "603a26",
+    # windows and doors: dark brown frames, blue-grey panes with a lit corner
+    "frame": "4a2e2a", "glass": "56687a", "glass_hi": "9cb4c4", "wood": "7a4430", "wood_sh": "5a3020",
     # red clay tiles (concept ac543c / d46c44)
-    "tile_hi": "e8875a", "tile": "c8603e", "tile_sh": "a24a34", "tile_dk": "7c3a2c",
+    "tile_hi": "e47e52", "tile": "c45a3a", "tile_sh": "9e4430", "tile_dk": "6e2e22",
     # glass roof: iron frame, panes
     "iron": "3e3a44", "iron_hi": "6a6672", "gl": "a2bac2", "gl_hi": "d2e0e0", "gl_sh": "7e98a4",
-    # stucco chimney in brick courses (concept 8c6c5c / 644c44)
-    "ch_hi": "aa8c78", "ch": "8e6e5e", "ch_sh": "70564a", "ch_jt": "5c463e",
+    # brick chimneys: red-brown bricks 8 x 4, light mortar
+    "ch_hi": "b46a4e", "ch": "9a5440", "ch_sh": "783e30", "ch_jt": "d2b096",
     # the street: granite paving, kerb, cobbles
     "gr_hi": "cfc6bc", "gr": "aea69c", "gr_sh": "8a827a", "gr_jt": "6e6662", "cob": "8e847a", "cob_hi": "a49a8e",
     "cob_sh": "6e665f",
@@ -67,39 +69,47 @@ PAL = {
     # planters' greenery, awning canvas
     "wd_hi": "c8925e", "wd": "a06c44", "wd_sh": "7a5034", "leaf_hi": "8aac5a", "leaf": "62884a", "leaf_sh": "48683c",
     "canvas": "f2e2c4",
+    "rust_hi": "cc7452", "rust": "b85c3c", "rust_sh": "94462e", "rust_dk": "6e3424",
 }
 NAMES = list(PAL)
 IDX = {n: i + 1 for i, n in enumerate(NAMES)}            # 0 = transparent
 RGB = np.zeros((len(NAMES) + 1, 4), np.uint8)
 for n, h in PAL.items(): RGB[IDX[n]] = (int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16), 255)
-PLASTER = {"ochre": "och", "yellow": "yel", "salmon": "sal", "cream": "cre", "court": "crt"}
+PLASTER = {"ochre": "och", "yellow": "yel", "salmon": "sal", "cream": "cre", "court": "crt", "rust": "rust"}
 CAPS = {"sand": ("cap_hi", "cap_top", "cap", "cap_sh", "cap_jt"), "copper": ("cu_hi", "cu_top", "cu", "cu_sh", "cu_jt"),
         "tin": ("tin_hi", "tin_hi", "tin", "tin_sh", "tin_sh")}
 
 # ------------------------------------------------------------------------------------------------ the level's plan
 # (x0, x1, plaster, cap): the buildings left to right (docs/rooftops_beatsheet.md). The street (0-576) has none.
-HOUSES = [
+HOUSES = [                             # (round 2: the wide ones split so neighbours differ; art only)
     (576, 768, "yellow", "sand"),      # stairwell A: the steps up its front
-    (768, 1280, "ochre", "sand"),      # the bakery, pitched roof R1
-    (1280, 1568, "yellow", "sand"),    # T1b
+    (768, 1152, "ochre", "sand"),      # the bakery, pitched roof R1
+    (1152, 1280, "rust", "sand"),
+    (1280, 1568, "cream", "sand"),     # T1b
     (1568, 1664, "court", "sand"),     # the light well (a recessed bay)
     (1664, 2048, "salmon", "sand"),    # pitched roof R2
-    (2048, 2688, "cream", "sand"),     # the market hall: glass roof R3, the sweep's chimneys, the skylight dip
-    (2688, 3328, "ochre", "sand"),     # the laundry
-    (3328, 3872, "yellow", "sand"),    # the roof bar, the drying yard
-    (3872, 4048, "salmon", "sand"),    # the roof bar's terrace
-    (4048, 4800, "cream", "copper"),   # the hotel: two skylights, its chimney block
+    (2048, 2304, "cream", "sand"),     # the market hall: glass roof R3
+    (2304, 2688, "ochre", "sand"),     # the sweep's chimneys, the skylight dip
+    (2688, 3008, "rust", "sand"),      # the laundry
+    (3008, 3328, "yellow", "sand"),
+    (3328, 3600, "salmon", "sand"),    # the roof bar, the drying yard
+    (3600, 3872, "cream", "sand"),
+    (3872, 4048, "rust", "sand"),      # the roof bar's terrace
+    (4048, 4352, "ochre", "copper"),   # the hotel: two skylights, its chimney block
+    (4352, 4576, "yellow", "copper"),
+    (4576, 4800, "salmon", "copper"),
     (4800, 5200, "court", "tin"),      # the light court's floor (the lobby's roof)
     (5200, 5424, "ochre", "sand"),     # the tall block
-    (5424, 5568, "yellow", "sand"),    # the scaffold house
-    (5568, 5696, "salmon", "sand"),    # the cafe awning's house
-    (5696, 6104, "cream", "sand"),     # the chimney stacks
+    (5424, 5568, "cream", "sand"),     # the scaffold house
+    (5568, 5696, "rust", "sand"),      # the cafe awning's house
+    (5696, 5856, "yellow", "sand"),    # the chimney stacks
+    (5856, 6104, "salmon", "sand"),
     (6104, 6400, "ochre", "sand"),     # the sauna roof
-    (6400, 6656, "salmon", "sand"),    # the nest chimney, the long roof's first pitch
-    (6656, 6848, "yellow", "sand"),
-    (6848, 7040, "ochre", "sand"),
-    (7040, 7136, "cream", "sand"),
-    (7136, 7472, "salmon", "sand"),    # the roof cafe
+    (6400, 6656, "rust", "sand"),      # the nest chimney, the long roof's first pitch
+    (6656, 6848, "cream", "sand"),
+    (6848, 7040, "yellow", "sand"),
+    (7040, 7136, "salmon", "sand"),
+    (7136, 7472, "ochre", "sand"),     # the roof cafe
 ]
 CHIMNEYS = [(2400, 2464), (4608, 4672), (6000, 6104), (6400, 6432)]   # stucco stacks on the roof line
 GABLES = [(896, 1024, "tile"), (1792, 1920, "tile"), (2112, 2240, "glass")]
@@ -238,11 +248,16 @@ def build():
     for x in range(STAIRS[0], W):
         h = house_at[x]; p = PLASTER[h[2]]
         cv.fill(x, roof[x], x + 1, STREET, p)
-        if kind[x] == "flat" or x in chim_at: cv.fill(x, roof[x] + 8, x + 1, roof[x] + 12, p + "_sh")
+        if kind[x] == "flat" or x in chim_at:                    # the cap's shadow on the wall: a deep row, then shade
+            cv.fill(x, roof[x] + 8, x + 1, roof[x] + 9, p + "_dk"); cv.fill(x, roof[x] + 9, x + 1, roof[x] + 13, p + "_sh")
+        for L in range(STOREY0, STREET, STOREY):                  # a storey band on every storey line under the roof
+            if L - 4 >= roof[x] + 16 and x not in gab_at:
+                for k, n in enumerate(("_hi", "_hi", "", "_sh", "_dk")): cv.put(x, L - 4 + k, p + n)
     # 2 windows on the storey grid (one grid for the level), doors and shop windows in the ground storey
     WIN, DOOR, SHOP, OCU = window(), door(), shopwindow(), oculus()
     def clear(x0, x1, y):                                       # the wall above a window is free of roofs
         return max(roof[max(0, x0 - 2):x1 + 2]) <= y - 14
+    pipes = []
     for (x0, x1, pl, capm) in HOUSES:
         w = x1 - x0
         n = max(1, (w - 2 * MARGIN - WIN_W) // PITCH + 1)
@@ -251,18 +266,22 @@ def build():
         for L in range(STOREY0, STREET - STOREY, STOREY):
             y = L + WIN_TOP
             for wx in xs:
-                if clear(wx, wx + WIN_W, y): cv.sprite(WIN, wx - 2, y)
+                if clear(wx, wx + WIN_W, y):
+                    cv.sprite(WIN, wx - 2, y)
+                    cv.fill(wx - 3, y - 3, wx + WIN_W + 3, y - 2, "cap_hi"); cv.fill(wx - 3, y - 2, wx + WIN_W + 3, y, "cap_sh")   # lintel
         mid = n // 2
         for i, wx in enumerate(xs):                              # the ground storey: a door in the middle
             cx = wx + WIN_W // 2
             if i == mid: cv.sprite(DOOR, cx - 11, STREET - 8 - 36)
             else: cv.sprite(SHOP, cx - 16, STREET - 8 - 32 - 4)
+        if w >= 256 and n >= 2:                                  # a wide house: one more downpipe between windows
+            px = xs[mid - 1] + WIN_W + (PITCH - WIN_W) // 2
+            pipes.append((px, max(roof[px - 1], roof[px + 1]) + 14))
         cv.fill(x0, STREET - 8, x1, STREET - 7, "gr_hi"); cv.fill(x0, STREET - 7, x1, STREET, "gr")   # the plinth
         cv.fill(x0, STREET - 1, x1, STREET, "gr_sh")
     # 3 party walls: a downpipe with a hopper head on every join between two houses
-    for (x0, x1, pl, capm) in HOUSES[1:]:
-        y0 = max(roof[x0 - 1], roof[x0]) + 12
-        cv.fill(x0 - 1, y0, x0, STREET - 8, "tin_hi"); cv.fill(x0, y0, x0 + 1, STREET - 8, "tin_sh")
+    for x0, y0 in [(h[0], max(roof[h[0] - 1], roof[h[0]]) + 12) for h in HOUSES[1:]] + pipes:
+        cv.fill(x0 - 1, y0, x0, STREET - 8, "tin"); cv.fill(x0, y0, x0 + 1, STREET - 8, "tin_sh")
         cv.fill(x0 - 2, y0 - 3, x0 + 2, y0, "tin"); cv.fill(x0 - 2, y0 - 3, x0 + 2, y0 - 2, "tin_hi")
         for yy in range(y0 + 40, STREET - 16, 48): cv.fill(x0 - 2, yy, x0 + 2, yy + 1, "tin_sh")   # pipe clips
     # 4 caps on every flat run (and under chimneys, along the eaves of a pitched roof)
@@ -284,7 +303,7 @@ def build():
             cv.put(xx, y, hi); cv.put(xx, y + 1, tp)
             for r in range(2, 6): cv.put(xx, y + r, jt if xx in joints else (tp if seam else mid_))
             if seam: cv.put(xx + 1, y + 2, sh); cv.put(xx + 1, y + 3, sh); cv.put(xx + 1, y + 4, sh); cv.put(xx + 1, y + 5, sh)
-            cv.put(xx, y + 6, sh); cv.put(xx, y + 7, jt)
+            cv.put(xx, y + 6, sh); cv.put(xx, y + 7, "ink")         # (round 2) the cap's ink under it
         if lo < a: cv.fill(lo, y + 1, lo + 1, y + 7, tp)                     # the lit left end
         if hi_ > b: cv.fill(hi_ - 1, y + 1, hi_, y + 7, sh)                   # the shaded right end
         # an end against a taller wall: tin flashing up the wall's foot
@@ -292,16 +311,16 @@ def build():
             cv.fill(a - 2, y - 6, a - 1, y + 8, "tin_hi"); cv.fill(a - 1, y - 6, a, y + 8, "tin")
         if b < W and (roof[b] < y and kind[b] == "flat" or (capped(b) and capY(b) < y)):
             cv.fill(b, y - 6, b + 1, y + 8, "tin"); cv.fill(b + 1, y - 6, b + 2, y + 8, "tin_sh")
-    # 5 chimney blocks: stucco in brick courses, a stone slab on top, a tin apron on the cap line
+    # 5 chimney blocks: red-brown brick 8 x 4 in running bond, light mortar, a stone slab on top, a tin apron
     for c0, c1 in CHIMNEYS:
         t, base = top[c0], chim_at[c0][3]
         for yy in range(t + 6, base):
-            course = (yy - t - 6) // 6
+            course = (yy - t - 6) // 4
             for xx in range(c0, c1):
-                if (yy - t - 6) % 6 == 5: n = "ch_jt"
-                elif (xx - c0 + (course % 2) * 8) % 16 == 0: n = "ch_jt"
-                elif xx - c0 < 2: n = "ch_hi"
+                if (yy - t - 6) % 4 == 3: n = "ch_jt"
+                elif (xx - c0 + (course % 2) * 4) % 8 == 0: n = "ch_jt"
                 elif c1 - xx <= 2: n = "ch_sh"
+                elif (yy - t - 6) % 4 == 0: n = "ch_hi"
                 else: n = "ch"
                 cv.put(xx, yy, n)
         cv.fill(c0 - 2, t, c1 + 2, t + 1, "cap_hi"); cv.fill(c0 - 2, t + 1, c1 + 2, t + 4, "cap")
@@ -309,19 +328,24 @@ def build():
         cv.fill(c0 - 2, t + 1, c0 - 1, t + 5, "cap_top"); cv.fill(c1 + 1, t + 1, c1 + 2, t + 5, "cap_sh")
         cv.fill(c0, base - 3, c1, base - 2, "tin_hi"); cv.fill(c0, base - 2, c1, base, "tin")
     # 6 pitched roofs: the band along the slope, the ridge cap, the gable face with its attic window
+    BAND = {"tile": 13, "glass": 9}                               # rows under the slope's surface
     def band(x, mat):
+        """red clay: three courses of 4 rows (a lit row, the tile, a dark course line with the scallop), the joints
+        in running bond; glass: an iron frame and panes"""
         t, d_ = top[x], kind[x]
         u = x if d_ == "up" else -x
-        for d in range(9):
+        for d in range(BAND[mat]):
             y = t + d
             if mat == "tile":
                 if d == 0: n = "tile_hi"
-                elif d in (1, 2): n = "tile_sh" if u % 8 == 7 else "tile"
-                elif d == 3: n = "tile" if u % 8 in (3, 4) else "tile_sh"
-                elif d == 4: n = "tile_hi" if u % 8 in (5, 6, 7) else "tile"
-                elif d in (5, 6): n = "tile_sh" if u % 8 == 3 else "tile"
-                elif d == 7: n = "tile" if u % 8 in (7, 0) else "tile_sh"
-                else: n = "tile_dk"
+                elif d == 12: n = "tile_dk"
+                else:
+                    c, r = (d - 1) // 4, (d - 1) % 4
+                    j = (u + c * 4) % 8
+                    if r == 3: n = "tile" if j in (3, 4) else "tile_dk"     # the course line, scalloped
+                    elif j == 0: n = "tile_sh"                              # the joint
+                    elif r == 0: n = "tile_hi" if j in (1, 2, 3) else "tile"
+                    else: n = "tile"
             else:
                 if d == 0: n = "iron_hi"
                 elif d in (7, 8): n = "iron"
@@ -332,20 +356,22 @@ def build():
         base = top[a - 1]; peak = (a + b) // 2
         for x in range(a, b):
             if mat == "glass":                                    # the market hall's glazed end
-                for y in range(top[x] + 9, base):
+                for y in range(top[x] + BAND["glass"], base):
                     if (x - a) % 16 == 0 or (y - base) % 16 == 0: n = "iron"
                     else: n = "gl_hi" if ((x - a) % 16 + (y - base) % 16) in (6, 7, 20, 21) else ("gl" if ((base - y) // 16) % 2 else "gl_sh")
                     cv.put(x, y, n)
             else:
-                cv.fill(x, top[x] + 9, x + 1, base, PLASTER[house_at[x][2]] + "_hi")
+                cv.fill(x, top[x] + BAND["tile"], x + 1, base, PLASTER[house_at[x][2]] + "_hi")
             band(x, mat)
         if mat == "tile":
-            for x in range(peak - 3, peak + 3):                   # the ridge cap
-                cv.put(x, top[x], "tile_hi"); cv.put(x, top[x] + 1, "tile_sh"); cv.put(x, top[x] + 2, "tile_dk")
+            for x in range(peak - 4, peak + 4):                   # the ridge cap: a rounded ridge tile
+                cv.put(x, top[x], "tile_hi"); cv.put(x, top[x] + 1, "tile_hi" if abs(x - peak + 0.5) < 2 else "tile")
+                cv.put(x, top[x] + 2, "tile_sh"); cv.put(x, top[x] + 3, "tile_dk")
             cv.sprite(OCU, peak - 6, (top[peak] + base) // 2 - 2)
     for x in range(STAIRS[1], W):                                 # the long roof's pitches (mono-pitch, tiles)
         if kind[x] == "down" and x not in gab_at:
-            cv.fill(x, top[x] + 9, x + 1, top[x] + 12, PLASTER[house_at[x][2]] + "_sh")
+            cv.fill(x, top[x] + 13, x + 1, top[x] + 14, PLASTER[house_at[x][2]] + "_dk")
+            cv.fill(x, top[x] + 14, x + 1, top[x] + 17, PLASTER[house_at[x][2]] + "_sh")
             band(x, "tile")
     # 7 stairs: 8 px steps, treads centred on the walking line, a stone stringer under them
     s0, s1 = STAIRS
