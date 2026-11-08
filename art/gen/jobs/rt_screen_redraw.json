@@ -1,0 +1,5 @@
+{"name": "rt_screen_redraw", "purpose": "redraw", "asset": "rt_kit", "family": "rt_redraw_08nov", "level": "rooftops",
+ "model": "sc_nb21", "variants": 2, "source": "art/gen/concepts/rt_hotel_concept_a.png", "target_px": [320, 240],
+ "subject": "this whole rooftop screen (the ochre plaster walls with their 4-pane windows, the sandstone parapet blocks, the glass skylights in iron frames with the loose clay tiles, the green copper roof edge and the cream hotel front, the red clay tile roofs, the brick chimney stacks with clay pots, the church spire, the warm sky; leave out the dog, the goose and the bones: plain wall where they were)",
+ "slot": {"file": "riverwalk/levelart/rooftops/kit/ (parts cut 1:1 from this screen)", "where": "Rooftops, the hotel roof y240 x4224: the probe that gives the kit"},
+ "extra": "Every pixel one game pixel on an even grid. Windows on one storey identical and evenly spaced. Flat fills shaded in 3 to 4 shades per material, hard edges."}

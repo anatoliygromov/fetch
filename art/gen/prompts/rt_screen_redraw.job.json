@@ -1,0 +1,25 @@
+{
+ "name": "rt_screen_redraw",
+ "purpose": "redraw",
+ "model": "SpriteCook Nano Banana 2.1 1K, pixel on",
+ "tool": "spritecook",
+ "spritecook": {
+  "model": "gemini-nano-banana-2.1",
+  "pixel": true,
+  "resolution": "1K",
+  "width": 320,
+  "height": 240
+ },
+ "inputs": [
+  "art/gen/concepts/rt_hotel_concept_a.png"
+ ],
+ "prompt_file": "art/gen/prompts/rt_screen_redraw.txt",
+ "family": "rt_redraw_08nov",
+ "asset": "rt_kit",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops/kit/ (parts cut 1:1 from this screen)",
+  "where": "Rooftops, the hotel roof y240 x4224: the probe that gives the kit"
+ },
+ "credits": 24,
+ "ledger_job": "rt_screen_redraw@1108-101711"
+}

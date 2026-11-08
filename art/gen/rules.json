@@ -338,5 +338,12 @@
    "tree_far"
   ],
   "max_top_y": -1
+ },
+ "redraw": {
+  "rooftops": {
+   "words": "Owner 8 Nov 10:14-10:15, pointing at rt_hotel_concept_a.png: \"this one\", then picked \"Redraw from the painting\" (SpriteCook redraws walls, roofs and props at game size from the concept, then grid cut and clean; replaces \"a concept is reference only\" for Rooftops)",
+   "concept": "art/gen/concepts/rt_hotel_concept_a.png"
+  },
+  "_note": "Levels where the owner allowed game pixels redrawn FROM a concept painting (purpose \"redraw\" in tools/preflight.py). SpriteCook only; Artlist still never makes game pixels."
  }
 }

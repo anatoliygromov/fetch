@@ -158,6 +158,52 @@ def check(path):
     return job
 
 
+
+def check_redraw(path):
+    """(8 Nov) purpose "redraw": SpriteCook redraws a part of an owner-approved concept painting at game size (rules
+    'redraw' lists the levels and the owner's words). Checked: the level is listed, the source is that level's concept
+    or a crop of it, SpriteCook, target size, slot, no forbidden words, caps or the owner's words, a ledger plan row."""
+    J = json.load(open(path)); n = J['name']; bad = []
+    rd = R.get('redraw', {}).get(J.get('level'))
+    if not rd: bad.append(f"level '{J.get('level')}' has no owner yes for redrawing from a concept (rules.json redraw)")
+    model = R['models'].get(J.get('model', 'sc_nb21'))
+    if not model or model['tool'] != 'spritecook': bad.append("a redraw job uses a SpriteCook model")
+    src = J.get('source', '')
+    if not src.startswith('art/gen/concepts/') or not os.path.exists(src): bad.append(f"source {src} must be the concept or a crop of it under art/gen/concepts/")
+    for f in ('asset', 'family', 'subject', 'target_px'):
+        if not J.get(f): bad.append(f"'{f}' missing")
+    sl = J.get('slot') or {}
+    if not sl.get('file') or not sl.get('where'): bad.append("slot missing: the game file and spot")
+    words = ' '.join(str(J.get(f, '')) for f in ('subject', 'extra')).lower()
+    hit = [w for w in R['forbidden_words'] if w in words]
+    if hit: bad.append(f"forbidden look words in the job text: {', '.join(hit)}")
+    cost = 0
+    if model:
+        cost = (model['credits'] + model.get('credits_per_reference', 0) * J.get('references', 0)) * J.get('variants', 1)
+        spent = ledger.today('spritecook') + PLANNED.get('spritecook', 0)
+        if spent + cost > R['caps']['daily_credits']['spritecook'] and not OWNER_OK:
+            bad.append(f"spritecook today {spent} + {cost} > daily cap {R['caps']['daily_credits']['spritecook']}: --owner-ok")
+    if bad:
+        print(f"PREFLIGHT FAIL {n} (redraw):"); [print('  -', x) for x in bad]; return None
+    lev = R['levels'].get(J['level'], {})
+    tw, th = J['target_px']
+    prompt = (f"Image 1 is a painted concept for a 320x240 pixel-art side-scrolling game. Redraw {J['subject']} as crisp "
+              f"pixel art at exactly {tw} x {th} game pixels: keep its shapes, materials and colours, front-on side view. "
+              f"{R['art_direction'].split(' Image 2 ')[0]}. {lev.get('light', '')}. No text, no logos."
+              + (f"\n{J['extra']}" if J.get('extra') else ''))
+    open(f'art/gen/prompts/{n}.txt', 'w').write(prompt)
+    import datetime as _dt
+    job = {'name': n, 'purpose': 'redraw', 'model': model['name'], 'tool': 'spritecook', 'spritecook': dict(model['spritecook'], width=tw, height=th),
+           'inputs': [src], 'prompt_file': f'art/gen/prompts/{n}.txt', 'family': J['family'], 'asset': J['asset'], 'slot': sl,
+           'credits': cost, 'ledger_job': f"{n}@{_dt.datetime.now().strftime('%m%d-%H%M%S')}"}
+    json.dump(job, open(f'art/gen/prompts/{n}.job.json', 'w'), indent=1)
+    PLANNED['spritecook'] = PLANNED.get('spritecook', 0) + cost
+    if WRITE:
+        ledger.add(kind='plan', job=job['ledger_job'], asset=J['asset'], family=J['family'], tool='spritecook',
+                   model=model['name'], credits=cost, status='planned', note=('redraw from concept. ' + rd['words'][:80] + ' ' + OWNER_OK).strip())
+    print(f"PREFLIGHT PASS {n} (redraw from concept): {model['name']}, {tw}x{th}, {cost} credits, ledger job {job['ledger_job']}")
+    return job
+
 def check_concept(path):
     J = json.load(open(path)); n = J['name']; bad = []
     model = R['models'].get(J.get('model', 'nbpro_1k'))
@@ -209,7 +255,7 @@ PLANNED = {}
 
 if __name__ == '__main__':
     args = [a for i, a in enumerate(sys.argv[1:], 1) if a not in ('--dry', '--owner-ok') and sys.argv[i - 1] != '--owner-ok']
-    jobs = [check_concept(p) if json.load(open(p)).get('purpose') == 'concept' else check(p) for p in args]
+    jobs = [check_concept(p) if json.load(open(p)).get('purpose') == 'concept' else check_redraw(p) if json.load(open(p)).get('purpose') == 'redraw' else check(p) for p in args]
     ok = [j for j in jobs if j]
     print(f"\n{'Rulebook check passed' if len(ok) == len(jobs) else 'BLOCKED'}: {len(ok)}/{len(jobs)} jobs, "
           f"{sum(j['credits'] for j in ok)} credits")
