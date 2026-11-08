@@ -47,6 +47,26 @@ def find_pepper(img):
     return False
 
 
+def plan_problems(J):
+    """(8 Nov, owner 14:20) no approved plan, no credits: the job names its plan (art/gen/plans/), the plan covers this job,
+    every object in it is specified, the owner approved it in his own words and it has not changed since (tools/plan.py).
+    A sheet's template must be the one drawn from the approved plan."""
+    import plan as P
+    pp = J.get('plan')
+    if not pp: return ["no plan: every paid job needs an owner-approved plan (art/gen/plans/<name>.plan.json, "
+                       "tools/plan.py); write it, show it to the owner, approve it with his words"]
+    if not os.path.exists(pp): return [f"plan {pp} missing"]
+    pl = P.load(pp); bad = [f"plan: {b}" for b in P.problems(pl)]
+    if J.get('name') not in pl.get('jobs', []): bad.append(f"plan {pp} does not list job {J.get('name')}")
+    if pl.get('kind') == 'sheet':
+        tj = f"art/gen/sheets/{pl['name']}_template.json"
+        if J.get('base_frame') != f"art/gen/sheets/{pl['name']}_template.png":
+            bad.append(f"a sheet job's base_frame must be the plan's template art/gen/sheets/{pl['name']}_template.png")
+        if not os.path.exists(tj) or json.load(open(tj)).get('plan_sha') != P.sha(pl):
+            bad.append("the sheet template was not drawn from this plan: python3 -I tools/plan.py template " + pp)
+    return bad
+
+
 def plan_tag(J):
     """the plan and its approved hash on every ledger plan row, so the credit audit can match each charge to a plan"""
     import plan as P
