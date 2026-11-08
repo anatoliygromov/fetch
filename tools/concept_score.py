@@ -11,7 +11,7 @@ def grid_strength(a, n):
     return min(res)
 for f in sys.argv[1:]:
     a = np.asarray(Image.open(f).convert('RGB'))
-    out = subprocess.run(['python3', '/home/claude/tools/concept_cut.py', f, '/tmp/_c.png', '320', '240'], capture_output=True, text=True).stdout
+    out = subprocess.run(['python3', 'tools/concept_cut.py', f, '/tmp/_c.png', '320', '240'], capture_output=True, text=True).stdout
     clear = float(re.search(r': ([\d.]+)%', out).group(1))
     cut = Image.open('/tmp/_c.png'); box = Image.fromarray(a).resize((320, 240), Image.BOX)
     lab = lambda im: cv2.cvtColor(np.asarray(im).astype(np.float32)/255, cv2.COLOR_RGB2LAB)
