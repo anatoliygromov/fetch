@@ -2,6 +2,9 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `lv/08nov-night` (on lv/08nov-base): Night Harbour from greybox toward finished, phase 1 (0 credits, by rule)
+- **A, labels off (levelart/night.lua):** every prop and boat is drawn by the level's art module without its greybox name (TARP, CRATES, NET SHED, ROOF, STACK, POST, LOW JETTY, TOWER, HOME, DOOR, BOAT, ROWBOAT); the debug view still shows the boxes. The palette is one table, `levelart/night/palette.lua`, sampled from the picked concept (nh_home_concept_b). Audit NW3.
+
 
 ## Branch `lv/08nov-base` (on sfx/07nov-r2): one art module per level for levels 4 to 6 (owner 8 Nov: "finish levels 4-6")
 - `riverwalk/levelart.lua` and `riverwalk/levelart/{rooftops,soder,night}.lua`: a level sets `L.levelart` and its module draws the parts it has (far layers, ground, back, props, lamps, movers, front, screen, its colour script). stage.lua draws the greybox for every part a module does not have, so each level can be finished piece by piece and the three tracks never edit the same file.
