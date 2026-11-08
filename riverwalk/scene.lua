@@ -781,6 +781,7 @@ Sc.ROAD_RUNS_ON = true                                            -- (owner, 7 N
 Sc.SLOPE_SHADE = os.getenv("SLOPE_SHADE") or "face"            -- (owner, 7 Nov, picked B) "face": the steps' side in shade; "slope"
 Sc.HILL_SHADE = tonumber(os.getenv("HILL_SHADE") or "0.11")       -- (owner, 8 Nov) the road down the slope, shaded
 Sc.STAIRS = os.getenv("STAIRS") or "cut"                          -- (owner, 8 Nov) "cut": steps cut into the quay; "blocks": the old
+Sc.STAIR_WALL = os.getenv("STAIR_WALL") == "1"                    -- (owner, 8 Nov) the wall behind the steps: off
 Sc.ROAD_Y, Sc.ROAD_END_W = 199, 6                                 -- front of the steps and the lower quay to the water (paintQuay)
 local function columnTop(w, x)                                      -- the first walkable top at or under y 150, or nil
   if x < 0 or x >= w.width then return nil end
@@ -1132,7 +1133,7 @@ function Sc.paintQuay(w, props, def)
   -- end) the ramp as stone steps, a slope tile of STEP px rise per STEP px run (Sc.STEP_RW): each step one granite
   -- tread, its courses level, a joint at its edge, the coping nosing along its front, its face and the wall's
   -- courses under it on the world grid; the first and last steps are the landings into the flat paving
-  local cheekTop
+  local cheekTop, stairFull
   local function stepTop(x)
     local t0 = top[x]
     local S = Sc.STEP_RW
@@ -1141,6 +1142,11 @@ function Sc.paintQuay(w, props, def)
   -- (owner, 7 Nov) where the road runs on, the steps' side is one face with a diagonal foot: its kerb line (the
   -- row the flat kerbs' faces start on) follows the slope itself, from the promenade's (y 194) to the quay's
   local function cheekOn(x) return roadOn[x] and not ((dR[x] or dL[x] or 99) < Sc.ROAD_END_W) end
+  -- (owner, 8 Nov) the cut stairs' top and bottom steps are level with a walk: drawn full depth, as the walk
+  function stairFull(x)
+    local t = stepTop(x)
+    return t <= Sc.PROMENADE or (roadOn[x] and t >= roadOn[x])
+  end
   function cheekTop(x)
     return math.max(Sc.PROMENADE + 10, math.min(roadOn[x] + 10, math.floor(top[x] + 0.5) + 10))
   end
@@ -1157,23 +1163,26 @@ function Sc.paintQuay(w, props, def)
       -- sun (left), in shade when it faces right, with a 1 px shadow on the lower tread under a right-facing drop
       local tp = Sc.PROMENADE
       lg.setColor(1, 1, 1, 1)
-      if t <= tp then                                                           -- the top step: the walk itself
+      if stairFull(x) then                                                      -- the top or bottom step: the walk itself
         lg.draw(pave, q[x % pw], x, t - 12); px(Q.pb, x, t - 12)
       else
-      clip(x, tp - 12, 1, 4); lg.draw(pave, q[x % pw], x, tp - 12); clip()       -- the back strip
-      px(Q.pb, x, tp - 12)
-      px(Q.kf1, x, tp - 8)                                                      -- its front edge, lit
-      for y = tp - 7, t - 5 do px(wallColour(x, y, nil), x, y) end              -- the retaining wall
+      if Sc.STAIR_WALL then
+        clip(x, tp - 12, 1, 4); lg.draw(pave, q[x % pw], x, tp - 12); clip()     -- the back strip
+        px(Q.pb, x, tp - 12)
+        px(Q.kf1, x, tp - 8)                                                    -- its front edge, lit
+        for y = tp - 7, t - 5 do px(wallColour(x, y, nil), x, y) end            -- the retaining wall
+      end
+      -- (owner, 8 Nov: "what is this concrete thing?") no wall: the river shows behind the shallow treads
       lg.setColor(1, 1, 1, 1)
       clip(x, t - 4, 1, 14); lg.draw(pave, q[x % pw], x, t - 12); clip()        -- the tread
-      px(Q.sh, x, t - 4)                                                        -- the wall's foot
+      px(Sc.STAIR_WALL and Q.sh or Q.pb, x, t - 4)                              -- its back edge (the walks' coping row)
       local lt = (kind[x - 1] == "ramp") and stepTop(x - 1) or top[x - 1]
       local rt = (kind[x + 1] == "ramp") and stepTop(x + 1) or top[x + 1]
       if lt and lt > t + 2 then for y = t - 3, t + 9 do px(Q.top1, x, y) end end   -- riser edge facing left: lit
       if rt and rt > t + 2 then for y = t - 3, t + 9 do px(Q.pj, x, y) end end     -- facing right: in shade
       if lt and lt < t - 2 then for y = t - 3, t + 7 do px(Q.ps[3], x, y) end end  -- under a right-facing drop
       -- the wall's end against the lower quay: a quoined end stone, lit
-      if kind[x - 1] == "quay" or kind[x + 1] == "quay" then
+      if Sc.STAIR_WALL and (kind[x - 1] == "quay" or kind[x + 1] == "quay") then
         for y = tp - 7, t - 5 do px((y % 6 == 0) and Q.wj or Q.we, x, y) end
       end
       end
@@ -1265,6 +1274,12 @@ function Sc.paintQuay(w, props, def)
   end
   Sc.quayEdge = {}                                                  -- (round 2) each column's paving top, for the wet row
   for x = 0, W - 1 do if top[x] then Sc.quayEdge[x] = (kind[x] == "ramp" and stepTop(x) or top[x]) - 12 end end
+  -- (owner, 8 Nov) the cut stairs' shallow treads: the wet row sits on the tread's own back edge
+  if Sc.STAIRS == "cut" and not Sc.STAIR_WALL then
+    for x = 0, W - 1 do
+      if kind[x] == "ramp" and cheekOn(x) and not stairFull(x) then Sc.quayEdge[x] = stepTop(x) - 4 end
+    end
+  end
   local g = chunked(w, function(xa, xb)
     for x = xa, xb - 1 do
       if top[x] then
