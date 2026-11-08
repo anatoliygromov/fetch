@@ -201,14 +201,53 @@ function Ch.drawBack(s, cam)
   lg.setColor(1, 1, 1, 1)
 end
 
--- the barrels, stacked or rolling (14 x 14, wooden staves and two hoops)
+-- the barrels, stacked or rolling (14 x 14; drawing only, the size and the hit are unchanged). (8 Nov, Söder's art,
+-- audit SW8: the 14 px box with two stripes read as "small crates that slide") A barrel lying on its side, rolling down
+-- the street, is seen end-on: its round head (oak planks, lit upper left, a bung) inside its iron chime hoop and a 1 px
+-- dark outline (an obstacle). Rolling, the head turns: 4 frames, 45 degrees apart. Colours from the level's palette
+-- (levelart/soder/palette.lua) when there is one.
+local barrelImgs
+local function barrelFrames()
+  if barrelImgs then return barrelImgs end
+  local ok, P = pcall(require, "levelart.soder.palette")
+  if not ok then P = nil end
+  local function c(n, r, g, b) return P and P[n] or { r, g, b } end
+  local ink, hoop, hoopL = c("ink", 0.11, 0.09, 0.09), c("hoop", 0.29, 0.26, 0.25), c("hoop_lit", 0.54, 0.50, 0.47)
+  local oakL, oak, oakD = c("oak_lit", 0.69, 0.49, 0.30), c("oak", 0.55, 0.37, 0.21), c("oak_d", 0.42, 0.27, 0.16)
+  barrelImgs = {}
+  for f = 0, 3 do
+    local d = love.image.newImageData(14, 14)
+    local a = f * math.pi / 4
+    local nx, ny = math.cos(a), math.sin(a)                      -- the planks' joints run across this direction
+    for y = 0, 13 do
+      for x = 0, 13 do
+        local dx, dy = x - 6.5, y - 6.5
+        local r2 = dx * dx + dy * dy
+        local col
+        if r2 <= 49 then
+          if r2 > 36 then col = ink                                -- the outline
+          elseif r2 > 25 then col = (dx + dy < -2) and hoopL or hoop   -- the chime hoop
+          else
+            local u = dx * nx + dy * ny                            -- across the planks
+            local j = math.floor(u + 0.5)
+            if j % 4 == 0 and j ~= 0 then col = oakD
+            elseif dx + dy < -3 then col = oakL else col = oak end
+            local bx, by = 2.5 * nx, 2.5 * ny                      -- the bung, on one plank, turning with it
+            if math.abs(dx - bx) < 1 and math.abs(dy - by) < 1 then col = oakD end
+          end
+        end
+        if col then d:setPixel(x, y, col[1], col[2], col[3], 1) end
+      end
+    end
+    local im = lg.newImage(d); im:setFilter("nearest", "nearest")
+    barrelImgs[f] = im
+  end
+  return barrelImgs
+end
 local function barrel(x, y, rolling, t)
   x, y = math.floor(x + 0.5), math.floor(y + 0.5)
-  Sc.outlined({ 0.55, 0.37, 0.22 }, { 0.18, 0.12, 0.08 }, x - 7, y - 14, 14, 14)
-  lg.setColor(0.32, 0.30, 0.30)
-  local k = rolling and math.floor(t * 10) % 2 or 0               -- the hoops turn as it rolls
-  lg.rectangle("fill", x - 6, y - 11 + k, 12, 1); lg.rectangle("fill", x - 6, y - 5 - k, 12, 1)
-  lg.setColor(1, 1, 1, 1)
+  local f = rolling and math.floor(t * 8) % 4 or 0
+  lg.setColor(1, 1, 1, 1); lg.draw(barrelFrames()[f], x - 7, y - 14)
 end
 function Ch.draw(s, cam)
   local c = s.chase
