@@ -1,5 +1,38 @@
 # FETCH! Status
 
+## Night of 8 Nov: audit of main (unattended run, 0 credits, no art or level changes)
+
+Base: `main` at e560cb4 (v0.7, sound pass, plan gate tooling). STATUS "Next 7 days" and the board have nothing open for night work, so this run audited and changed no game files. No track branches were made. This STATUS carries forward the 7 Nov one below.
+
+**Checks on main:** PEPPER UNCHANGED (3908 steps). Flow 125/125. Tiled PASSED. check_approved ALL MERGED. BACKDROP OK. check_curve (`riverwalk,citypark_tall,downtown_tall,rooftops,soder,night`, 20 seeds x 8 personas): T1, T3, T4 PASS, **T2 FAIL**.
+
+**Finding (S2, same as 7 Nov):** River Walk screen 13 takes 36% of failures, limit 35%. Soder Hill screen 9 shows 50% but is under the 20-failure rule. Unchanged since last night, so the plan gate commits did not affect it. Not fixed: it is a level change and needs your yes plus a Pepper trace re-record.
+
+**Board read:** 178 decisions (55 approve, 31 fix, 82 redraw, 10 empty). Nothing new to act on without credits or new scope.
+
+**Decision waiting:** fix River Walk screen 13 (level change, Pepper trace re-record), or accept 1 point over the limit?
+
+**Problems:** none besides T2. check_curve could not draw its chart (no matplotlib in the sandbox); the numbers are fine. Shallow clone note from check_approved.
+
+**Branches:** `ops/night-08nov` only (this STATUS). No night/* branches.
+
+## Night of 7 Nov: audit of main (unattended run, 0 credits, no art or level changes)
+
+Base: `main` at 57440ca (v0.7 plus the sound pass). Nothing in STATUS "Next 7 days" or on the board was open for night work, so this run audited and changed no game files. No track branches were made.
+
+**Checks on main:**
+- PEPPER UNCHANGED (3908 steps identical). Flow 125/125. check_approved: ALL MERGED.
+- Tiled PASSED. (It failed at first only because the sandbox's system Pillow was broken; a clean venv fixed it. Not a game bug.)
+- check_curve with `riverwalk,citypark_tall,downtown_tall,rooftops,soder,night`: T1, T3, T4 PASS, **T2 FAIL**.
+
+**The one finding (S2): T2 spot share.** River Walk screen 13 takes 36.2% of failures (75 of 207); the limit is 35%. Soder Hill screen 9 shows 50%, but only 10 failures, so it is under the 20-failure rule and passes. The result is identical on 2c04160 (v0.7 merge, before the sound pass), so the sound pass did not cause it. The 7 Nov STATUS said T1-T4 PASS on prod/integrate-f; I could not reproduce that, possibly the later River Walk commits (e133677: rowers, jetty, ferry) shifted it. I did not bisect further.
+
+**Decision waiting:** fix screen 13 of River Walk (a level change, needs your yes and a Pepper trace re-record), or accept 1.2 points over the limit?
+
+**Still waiting from before:** the board cards, gull and cat size picks, open or closed street, the leaf front.
+
+**Branches:** `ops/night-07nov` only (this STATUS). No night/* branches.
+
 ## Night of 6-7 Nov: the three levels brought to finished quality (live session, owner asleep)
 
 **Owner, 20:01 to 20:19:** a proper lift in assets and game design tonight, 3 levels ready with full visual QA by the morning; use Fable and several agents; repo should feel mature and up to date; coordinate with the other sessions; the "Game porting and launch plan" rowboat was terrible, make it work. Picks: SpriteCook up to 900, Artlist up to 3,000 for concepts, merge to main as v0.7 if every check and the independent review pass, prune merged branches with an archive list, repo stays public, this session owns the rowboat and the "FETCH level asset plan" session's work.
