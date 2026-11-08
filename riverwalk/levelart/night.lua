@@ -10,6 +10,10 @@
 --      lantern on a mast (it rides with the boat), the lanterns on posts, the lamp posts on the paving, the house's
 --      lantern on a bracket, a contact shadow under everything that stands on the quay.
 --   C+D the quay and the water by rule, every join designed (M:paintGround, below)
+--   E  the backdrop by rule: sky, far town, the bay's far shore, each on its own ground (M:drawFar)
+--   F  the night light model: stepped amber pools on the paving, small two-step halos, the lights and the moon
+--      reflected in the water, a small glow and a moonlit rim on Pepper (with night.lua Nt.drawArtLight); the
+--      level's colour script (M.look)
 local Sc = require("scene")
 local lg = love.graphics
 local M = {}
@@ -278,6 +282,7 @@ end
 -- the pass the ground draws after its paving and water: the old jetty's piles, the back pieces on the quay, the nets
 -- and the lanterns (everything behind Pepper that stands on the paving or in the water)
 function M:drawStanding(cam)
+  self:drawReflections(cam, self.stage.t)
   self:drawPiles(cam)
   for _, pr in ipairs(self.def.props) do if BACK[self.K[pr]] then self:art(pr, cam) end end
   self:drawNets(cam)
@@ -285,6 +290,53 @@ function M:drawStanding(cam)
     local x = l.x - cam
     if x > -20 and x < 340 then self:lightArt(l, cam) end
   end
+end
+
+-- E: the backdrop by rule (screen space). Each layer stands on its own ground, never on the quay's top line:
+--   sky       flat steps of the palette's navy (sky0 at the top to the violet-blue glow sky8 at the horizon), the
+--             stars and the moon over it (they are behind everything now: no star over a mast or a roof)
+--   far town far_town.png, the old town on the far shore with its spire and lit windows, scrolling 128 px over the
+--             whole level (capped, never repeated), its foot on the far quay, under the bay's top row
+--   shore    shore.png at 0.3: the boat sheds on their pier and the moored boats, standing in the bay (their own
+--             water, water.png's top rows recoloured), their lights reflected in it; the bay runs down to the
+--             paving's back edge (y 171), where the quay's wet row meets it
+M.SKY = { { 0, "sky0" }, { 16, "sky1" }, { 31, "sky2" }, { 45, "sky3" }, { 58, "sky4" }, { 70, "sky5" }, { 81, "sky6" },
+          { 91, "sky7" }, { 100, "sky8" } }
+M.FAR_Y, M.SHORE_Y, M.SHORE_K, M.FAR_MAX = 40, 40, 0.3, 128
+local MOON = {                                                        -- 13 x 13: a crescent, lit from the right
+  "....mmmm.....", "..mmmmmm.....", ".mmmmmd......", ".mmmmd.......", "mmmmd........", "mmmmd........",
+  "mmmmd........", "mmmmd........", "mmmmmd.......", ".mmmmd.......", ".mmmmmd......", "..mmmmmmd....", "....mmmm.....",
+}
+M.MOON_X, M.MOON_Y = 252, 18
+function M:drawSky(t)
+  for i, b in ipairs(M.SKY) do
+    local y1 = M.SKY[i + 1] and M.SKY[i + 1][1] or 172
+    box(P[b[2]], 0, b[1], 320, y1 - b[1])
+  end
+  local n = self.stage.night
+  for i, st in ipairs(n and n.stars or {}) do                           -- (night.lua's stars, behind the town now)
+    local x = math.floor((st.x - (self.stage.cam or 0) * 0.02) % 330) - 5
+    if st.y < 100 and math.sin(t * 2 + st.ph) > -0.6 then box((i % 5 == 0) and P.star or P.moonHalo, x, st.y, 1, 1) end
+    if i % 9 == 0 and st.y < 60 then box(P.star, x, st.y, 1, 1) end
+  end
+  for r, line in ipairs(MOON) do                                        -- the moon: a halo ring a step off the sky
+    for c = 1, #line do
+      local ch = line:sub(c, c)
+      if ch == "m" then box(P.moon, M.MOON_X + c - 1, M.MOON_Y + r - 1, 1, 1)
+      elseif ch == "d" then box(P.moonD, M.MOON_X + c - 1, M.MOON_Y + r - 1, 1, 1) end
+    end
+  end
+end
+function M:drawFar(cam, camY, t)
+  self:drawSky(t)
+  local W = self.world.width
+  local fo = math.floor(cam * M.FAR_MAX / math.max(1, W - 320) + 0.5)
+  at(img("far_town"), -fo, M.FAR_Y)
+  local so = math.floor(cam * M.SHORE_K + 0.5)
+  local sh = img("shore")
+  at(sh, -so, M.SHORE_Y)
+  self:drawBayMoon(t)
+  lg.setColor(1, 1, 1, 1)
 end
 
 -- C+D: the quay and the water, painted once into chunks by rule (ImageData, one palette colour per pixel).
@@ -336,6 +388,7 @@ function M:paintGround(w)
   local Jn = require("joins")
   local W, H = w.width, 240
   local top, kind, dL, dR = self:groundMap()
+  self.kind = kind
   local wn = love.image.newImageData("levelart/night/water_near.png")
   local WN = wn:getWidth()
   local data = love.image.newImageData(W, H)
@@ -438,6 +491,42 @@ function M:paintGround(w)
     end
     if i % 8 == 0 then set(x, yt + 1, P.g6) end                         -- its stones' joints
   end
+
+  -- F: the light pools on the paving, slab by slab: each slab takes the step of the nearest light by its middle's
+  -- distance (inner, middle, outer: pool1, pool2, pool3 with the step above on its lit top row), so a pool has the
+  -- slabs' own hard edges, as in the concept. The front course is lit a little less far than the back course
+  -- (the lamps stand on the back course). Joints in a lit slab go dark amber; the coping's lit arris takes the step
+  -- of the slab above it.
+  local pools = self:pools()
+  local STEP = { { P.poolHi, P.pool1 }, { P.pool1, P.pool2 }, { P.pool2, P.pool3 } }
+  local function stepAt(cx, k)
+    local best
+    for _, pl in ipairs(pools) do
+      local d = math.abs(cx - pl.x) / (pl.r * k)
+      local st = (d < 0.4 and 1) or (d < 0.7 and 2) or (d < 1 and 3) or nil
+      if st and (not best or st < best) then best = st end
+    end
+    return best
+  end
+  for x = 0, W - 1 do
+    if top[x] then
+      local sb = stepAt(math.floor(x / 24) * 24 + 12, 1)
+      local sf = stepAt(math.floor((x + 12) / 32) * 32 + 4, 0.85)
+      if sb then
+        for y = PAVE0 + 1, FRONT0 - 2 do
+          local joint = x % 24 == 0
+          set(x, y, joint and (sb < 3 and P.pool3 or P.g6) or STEP[sb][(y == PAVE0 + 1) and 1 or 2])
+        end
+      end
+      if sf then
+        for y = FRONT0, CAP0 - 2 do
+          local joint = (x + 12) % 32 == 0
+          set(x, y, joint and (sf < 3 and P.pool3 or P.g6) or STEP[sf][(y == FRONT0) and 1 or 2])
+        end
+        if sf < 3 then set(x, CAP0 - 1, P.pool3); set(x, CAP0, sf == 1 and P.pool2 or P.pool3) end
+      end
+    end
+  end
   -- bollards on the back course (6 x 8), every 192 px where nothing stands within 28 px
   local B = { { 0, 1, 4, P.iron1 }, { 0, 0, 6, nil } }
   local function free(x)
@@ -489,5 +578,83 @@ function M:paintGround(w)
   end
   return g
 end
+
+-- F: the night light model (night.lua Nt.drawArtLight draws the halos, Pepper's glow and rim; the pools are painted
+-- with the ground; the reflections are drawn with it, over the water)
+M.nightLight = true
+-- the lights that fall on the paving: { x, r } (lamps, the lanterns on the quay, the house's window, door, lantern)
+function M:pools()
+  local top = self:groundMap()
+  local out = {}
+  for _, l in ipairs(self.def.lamps) do out[#out + 1] = { x = l.x, r = 44 } end
+  for _, l in ipairs(self.def.lights or {}) do
+    if l.kind == "lantern" and top[math.floor(l.x)] then
+      local onPost = false
+      for _, p in ipairs(self.def.props) do if self.K[p] == "post" and l.x >= p.x0 and l.x < p.x1 then onPost = true end end
+      if not onPost then out[#out + 1] = { x = l.x, r = 34 } end
+    elseif l.kind == "window" then out[#out + 1] = { x = l.x, r = (l.x == 4344) and 30 or 26 }
+    elseif l.kind == "porch" then out[#out + 1] = { x = l.x, r = 40 } end
+  end
+  return out
+end
+-- a light's halo round its glass as drawn: x, y, radius (nil: none, the house's window and door are their art)
+function M:halo(l)
+  local x, y = self:lightPos(l)
+  if x then return x, y, 8 end
+  if l.kind == "lamp" then return l.x, 84, 12 end
+  if l.kind == "lantern" then return l.x, l.y, 8 end
+  if l.kind == "window" and l.x == 4344 then return l.x, l.y - 2, 9 end
+end
+-- the reflections in the water of the gaps: under each light (as drawn) a broken column of amber dashes that
+-- widens and darkens with depth and shimmers sideways; under the moon's screen x a pale one. Only on water columns.
+local function column(self, sx, cols, t, seed)
+  local kind = self.kind or {}
+  local cam = math.floor(self.stage.cam + 0.5)
+  for i = 0, 9 do
+    local y = WATERLINE + 2 + i * 3
+    if y > 238 then break end
+    local w = 1 + math.floor(i / 2)
+    local off = math.floor(math.sin(t * 2.5 + i * 1.7 + seed) * 1.5 + 0.5)
+    local c = cols[math.min(#cols, 1 + math.floor(i / 3))]
+    for xx = sx - math.floor(w / 2) + off, sx - math.floor(w / 2) + off + w - 1 do
+      if kind[xx + cam] == "water" then box(c, xx, y, 1, 1) end
+    end
+  end
+end
+function M:drawReflections(cam, t)
+  local seen = {}
+  for _, l in ipairs(self.stage.night and self.stage.night.lights or {}) do
+    local x = self:lightPos(l) or l.x
+    if l.kind ~= "window" and l.kind ~= "porch" and x - cam > -8 and x - cam < 328 then
+      column(self, math.floor(x - cam), { P.refl1, P.refl2, P.refl3 }, t, x)
+    end
+  end
+  column(self, M.MOON_X + 4, { P.moon, P.moonD, P.w6 }, t, 0)
+end
+-- the moon's reflection on the bay (screen space, under the moon)
+function M:drawBayMoon(t)
+  for i = 0, 6 do
+    local y = 150 + i * 3
+    local w = 2 + i
+    local off = math.floor(math.sin(t * 2 + i * 1.3) * 1.5 + 0.5)
+    box(i < 3 and P.moonD or P.w6, M.MOON_X + 5 - math.floor(w / 2) + off, y, w, 1)
+  end
+end
+
+-- the level's colour script (look.lua format): a still harbour night. The art is painted in its final colours, so
+-- each layer's grade is light: warm lights lean a touch more golden, darks a touch more violet, no haze (the
+-- distance is in the palette: the far layers are lighter steps of the night's blue)
+local function L(warm, cool, sat, haze, k) return { warm = warm, cool = cool, sat = sat, k = k or 0, clean = 0,
+  haze = { tonumber(haze:sub(1, 2), 16) / 255, tonumber(haze:sub(3, 4), 16) / 255, tonumber(haze:sub(5, 6), 16) / 255 } } end
+M.look = {
+  layers = { clouds = L(0, 0, 1, "1d2c66"), city = L(0, 0, 1, "1d2c66"), shore = L(0, 0, 1, "1d2c66"),
+             mid = L(0, 0, 1, "1d2c66"), water = L(0.3, 0.3, 1.0, "000000"), back = L(0.35, 0.3, 1.05, "000000"),
+             ground = L(0.35, 0.3, 1.05, "000000"), play = L(0.35, 0.25, 1.05, "000000"),
+             front = L(0.0, 0.6, 1.0, "0c0e24", 0.2) },
+  bands = { { 0, "061340" }, { 112, "213a72" } },
+  fg = { dark = { 0.05, 0.06, 0.13 }, mid = { 0.08, 0.09, 0.19 }, rim = { 0.3, 0.36, 0.5 }, warm = { 0.5, 0.36, 0.25 }, warmK = 0.05 },
+  kinds = {},
+  fade = {},
+}
 
 return M

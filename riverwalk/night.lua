@@ -380,11 +380,74 @@ function Nt.lightAt(s, l)
   return l.x, l.y
 end
 
+-- (8 Nov, levelart F) the night light model, when the level art paints the night itself (levelart/night.lua
+-- nightLight = true): no darkness canvas over everything any more (it multiplied the dark away round each light and
+-- brought the pale colours back near white: fog discs, glass lamp posts, a white bubble round Pepper, audit NW1 and
+-- NW4). The art is in the night's own colours; the light is:
+--   pools     flat stepped amber on the paving, slab by slab with hard edges (painted with the ground: levelart)
+--   halos     round each lantern's glass: two flat steps, hard edges, a small radius, added light that stays under
+--             the back layer's luma (it never turns the far town or a shed into a white panel)
+--   water     each light over the water (or near it) reflected as a broken amber column, the moon's as a pale one,
+--             a few glints along the waterline (levelart, with the ground)
+--   Pepper    a small two-step glow round her and a 1 px moonlit rim on her back and head (her sprite drawn again
+--             over its own silhouette in the rim colour, 1 px up and right: her sprite is never changed)
+local rimShader
+local RIM_SRC = [[
+extern vec3 rim; extern float amount;
+vec4 effect(vec4 color, Image tex, vec2 tc, vec2 sc) { float a = Texel(tex, tc).a; return vec4(rim, a * amount); }
+]]
+local function disc(cx, cy, r)                                            -- a crisp filled disc, row by row
+  for dy = -r, r do
+    local hw = math.floor(math.sqrt(math.max(0, (r + 0.5) ^ 2 - dy * dy)))
+    if hw > 0 then lg.rectangle("fill", cx - hw, cy + dy, hw * 2 + 1, 1) end
+  end
+end
+function Nt.drawArtLight(s, cam, cy)
+  local n, la, p = s.night, s.levelArt, s.pepper
+  lg.push("all")
+  lg.translate(0, -cy)
+  lg.setBlendMode("add")
+  for _, l in ipairs(n.lights) do                                        -- the halos: two flat steps
+    local hx, hy, hr = la:halo(l)
+    if hx and hx - cam > -hr and hx - cam < 320 + hr then
+      local x, y = math.floor(hx - cam), math.floor(hy)
+      lg.setColor(0.10, 0.06, 0.02, 1); disc(x, y, hr)
+      lg.setColor(0.14, 0.08, 0.025, 1); disc(x, y, math.floor(hr * 0.55))
+    end
+  end
+  if p.mode ~= "gone" then                                               -- her small glow
+    local x, y = math.floor(p.x - cam + 0.5), math.floor(p.y - 14)
+    lg.setColor(0.025, 0.025, 0.04, 1); disc(x, y, 20)
+    lg.setColor(0.02, 0.02, 0.03, 1); disc(x, y, 14)
+  end
+  lg.setBlendMode("alpha")
+  if p.mode ~= "gone" and p.mode ~= "drown" then                        -- her moonlit rim, then her again over it
+    rimShader = rimShader or lg.newShader(RIM_SRC)
+    rimShader:send("rim", la.P.rim); rimShader:send("amount", 0.85)
+    lg.setShader(rimShader); lg.setColor(1, 1, 1, 1)
+    lg.push(); lg.translate(1, -1); p:draw(cam); lg.pop()
+    lg.setShader(); lg.setColor(1, 1, 1, 1)
+    p:draw(cam)
+    local b = s.ball
+    if b.state == "carried" and p.anim ~= "grab" then lg.draw(ball(), math.floor(b.x - cam - 3 + 0.5), math.floor(b.y - 3 + 0.5)) end
+  end
+  local P = la.P                                                         -- a few glints along the waterline
+  for _, r in ipairs(n.water) do
+    for x = math.max(r.x0, cam - 8), math.min(r.x1, cam + 328) - 3, 7 do
+      if math.sin(x * 0.37 + s.t * 2.2) > 0.55 then lg.setColor(P.w6); lg.rectangle("fill", math.floor(x - cam), r.y, (x % 3 == 0) and 3 or 2, 1) end
+    end
+  end
+  lg.pop()
+  lg.setColor(1, 1, 1, 1)
+end
+
 -- the darkness and everything drawn over it (the stage's draw, at the very end)
 function Nt.draw(s, cam)
   local n = s.night
   local cy = math.floor((s.camY or 0) + 0.5)                            -- (a tall level: the camera's y; 0 here)
-  if n.dark then
+  local la = s.levelArt
+  if n.dark and la and la.nightLight then Nt.drawArtLight(s, cam, cy)    -- (8 Nov, levelart F: the night light model)
+  elseif n.dark then
     if not darkCv then darkCv = lg.newCanvas(320, 240); darkCv:setFilter("nearest", "nearest") end
     lg.push("all")
     lg.setCanvas(darkCv); lg.clear(0, 0, 0, 0); lg.origin(); lg.setBlendMode("alpha", "alphamultiply")
