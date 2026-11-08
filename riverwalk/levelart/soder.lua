@@ -90,7 +90,11 @@ function M:drawProp(pr, cam, colour, kicked)
   elseif n == "TABLE" then
     local T = Sc.townArt("town")
     local g = streetAt(self.world, pr.x0 + w / 2) or pr.y1
-    Sc.shadow(x + w / 2, g - 1, w + 4, 5); at(T.table, x - 1, pr.y0)
+    -- (art/08nov-props) the cafe table: walnut top on the box, curly iron legs to the street (tools/build_sh_props.py)
+    Sc.shadow(x + w / 2, g - 1, w + 4, 5); at(img("props/table") or T.table, x - 1, pr.y0)
+  elseif n == "PARASOL" and img("props/parasol") then
+    -- (art/08nov-props) the striped parasol with its pole down to the table top, 66 x 43: its flat top's ink on y0 - 1
+    at(img("props/parasol"), x - 1, pr.y0 - 1)
   elseif n == "PARASOL" then
     local T = Sc.townArt("town")
     local tb

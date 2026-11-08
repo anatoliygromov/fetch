@@ -191,3 +191,12 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-08 09:21,verdict,,sh_key_screen,,,,,reference,sh_cafe_concept: design target; a picked: stepped cobble rise and kerb kept; b drew a road under the street
 2026-11-08 09:21,spent,nh_home_concept@1108-091831,,,,,320,spent,"Artlist concept, reference only. generation 01a1ba3e-aaad-74c2-8b82-f30d74b13e41"
 2026-11-08 09:21,verdict,,nh_key_screen,,,,,reference,"nh_home_concept: design target; b picked: front-on house, Mia kept, stepped light pools; a lost Mia and drew the quay in perspective"
+2026-11-08 10:00,plan,sh_cafe_table@1108-100045,sh_cafe_table,sh_props_08nov,spritecook,SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid),64,planned,"8 Nov 09:20: Yes, up to that total (SpriteCook ~680)"
+2026-11-08 10:02,spent,sh_cafe_table@1108-100045,,,,,64,spent,"job a2fdb1b8-30ad-4733-b95e-2008cd6a62f1; GPT 2.5 Sunburst 1K, 2 variants, edit = blockout, style = style card riverwalk + concept crop; assets 1cca0aa4 (a), 94b38cb1 (b)"
+2026-11-08 10:03,plan,sh_parasol@1108-100327,sh_parasol,sh_props_08nov,spritecook,"SpriteCook Pixel Engine Image (exact 16-128 px, no references)",12,planned,"8 Nov 09:20: Yes, up to that total (SpriteCook ~680)"
+2026-11-08 10:03,plan,sh_table@1108-100327,sh_table,sh_props_08nov,spritecook,"SpriteCook Pixel Engine Image (exact 16-128 px, no references)",12,planned,"8 Nov 09:20: Yes, up to that total (SpriteCook ~680)"
+2026-11-08 10:04,spent,sh_parasol@1108-100327,,,,,12,spent,"job ffc652ee-6fce-462a-9837-9cb6ed2cb8b6; Pixel Engine Image 66x43 (came back 66x44), 2 variants; assets aa6f64da (a), b20658e2 (b)"
+2026-11-08 10:04,spent,sh_table@1108-100327,,,,,12,spent,"job f0b6f96d-4a65-40e8-9ad5-fcd793449c39; Pixel Engine Image 50x26, 2 variants; assets ede56bb6 (a), b28856a1 (b)"
+2026-11-08 10:13,verdict,,sh_cafe_table,,,,,rejected,"pilot try 1 (64): GPT 2.5 drew the parasol 1.65x/1.8x too wide and domed over the flat PARASOL box, the table 64/75 px for 50; kept as design reference only, no pixel in game"
+2026-11-08 10:13,verdict,,sh_parasol,,,,,rejected,pilot try 2 (12): Pixel Engine at exact size domed the canopy again; method changed to BUILT by rule (tools/build_sh_props.py)
+2026-11-08 10:13,verdict,,sh_table,,,,,rejected,pilot try 2 (12): Pixel Engine drew a 12-row top seen from above; its legs read thin at 4x and were replaced by hand-placed ones; built by rule

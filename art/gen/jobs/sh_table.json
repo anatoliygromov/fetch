@@ -1,0 +1,32 @@
+{
+ "level": "soder",
+ "layer": "play",
+ "kind": "obstacle",
+ "model": "sc_pe",
+ "variants": 2,
+ "tier": "A",
+ "family": "sh_props_08nov",
+ "name": "sh_table",
+ "real_height_m": 0.57,
+ "target_px": [
+  50,
+  26
+ ],
+ "checks_px": {
+  "top": "50 x 8 (TABLE box 48 x 7 at y 150, ink 1 px outside left and right)",
+  "legs": "18 rows to the street y 176"
+ },
+ "subject": "Front view of a small round outdoor cafe table: the top 8 px a dark walnut wooden table top seen side-on as a flat slab across the full width with a lit top edge and a thick rim; under it a short black iron column that splits into curly wrought-iron legs curving outward to small scroll feet on the ground",
+ "part_map": "the mid grey slab is the table top, the dark lines under it the iron column and legs",
+ "size_sentence": "the table top is as high as the dog's back and about as wide as the dog is long",
+ "retry": {
+  "n": 1,
+  "previous": "sh_cafe_table@1108-100045 (job a2fdb1b8), renders art/gen/renders/sh_cafe_table_a/b_raw.png",
+  "why": "GPT 2.5 kept Pepper 1:1 but drew the parasol 109 and 119 px wide for 66 (1.65x, 1.8x) and the table 64 and 75 px for 50, and a domed canopy over the flat PARASOL box",
+  "changed": "model: GPT 2.5 on the blockout -> Pixel Engine Image, which draws at exactly the target size; the piece split in two"
+ },
+ "slot": {
+  "file": "riverwalk/levelart/soder/props/table.png",
+  "where": "Söder Hill section 9: TABLE x 2700 and 2780 (solid, y 150-157, 19 px to crawl under), drawn at x0 - 1, y0 by levelart/soder.lua"
+ }
+}

@@ -1,0 +1,31 @@
+{
+ "name": "sh_table",
+ "model": "SpriteCook Pixel Engine Image (exact 16-128 px, no references)",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/sh_table_blockout.png",
+  "art/gen/style_card_riverwalk.png"
+ ],
+ "prompt_file": "art/gen/prompts/sh_table.txt",
+ "k": null,
+ "frame": [
+  256,
+  256
+ ],
+ "credits": 12,
+ "tool": "spritecook",
+ "family": "sh_props_08nov",
+ "tier": "A",
+ "slot": {
+  "file": "riverwalk/levelart/soder/props/table.png",
+  "where": "S\u00f6der Hill section 9: TABLE x 2700 and 2780 (solid, y 150-157, 19 px to crawl under), drawn at x0 - 1, y0 by levelart/soder.lua"
+ },
+ "spritecook": {
+  "model": "pixel-engine-image-v1",
+  "pixel": true,
+  "width": 50,
+  "height": 26
+ },
+ "ledger_job": "sh_table@1108-100327"
+}

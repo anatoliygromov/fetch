@@ -1,0 +1,26 @@
+{
+ "name": "sh_cafe_table",
+ "level": "soder",
+ "layer": "play",
+ "kind": "obstacle",
+ "real_height_m": 1.5,
+ "target_px": [66, 69],
+ "checks_px": {
+  "parasol": "canopy 66 x 14, its top row flat over the whole PARASOL box (x 2692-2756, Pepper stands on y 108)",
+  "pole": "4 px wide incl. ink, x 2722-2725, from the canopy down into the table top",
+  "table": "top 50 x 8 (TABLE box 48 x 7 at y 150 + 1 px ink), legs 18 rows down to the street y 176"
+ },
+ "subject": "a small outdoor cafe table with its cafe parasol above it, on an old town street, seen exactly from the front: the parasol canopy is red and cream striped cloth in vertical panels (alternating deep tomato red and warm cream), a flat top edge, a scalloped valance along its bottom edge, on a thin dark iron pole that goes straight down into the middle of the table; the table top is a round dark walnut-brown wooden top seen side-on as a flat slab with a thick rounded rim, lit along its top edge; under it a short black iron column that splits into curly wrought-iron legs, each leg curving outward and ending in a small scroll curl on the ground",
+ "part_map": "the light grey wide shape at the top is the parasol canopy (exactly that width; its top edge stays flat and level across the whole width, because the dog stands on it), the mid grey scallops along its bottom are the canopy's valance, the dark vertical bar is the parasol pole, the mid grey slab is the round table top seen from the side and the darker band its thick rim, the dark lines under it are the black iron column and the curly iron legs with scroll feet.",
+ "size_sentence": "the table top is exactly as high as the dog's back and about as wide as the dog is long; the parasol canopy is a little wider than the dog and stands one dog height above the table. A real cafe table at true size next to the dog, not a toy.",
+ "extra": "Image 3 is the design target: draw the parasol and the table in its look (the red and cream striped canopy, the dark wood round table top, the curly black iron legs), but at the size of the grey shapes in image 1. Draw them flat front-on, no perspective, no shadow.",
+ "model": "sc_gpt25",
+ "variants": 2,
+ "references": 3,
+ "tier": "A",
+ "family": "sh_props_08nov",
+ "slot": {
+  "file": "riverwalk/levelart/soder/props/parasol.png (66 x 43, with its pole), riverwalk/levelart/soder/props/table.png (50 x 26)",
+  "where": "Söder Hill section 9 (camera x 2560-2880): PARASOL x 2692 and 2772 (oneway, top y 108), TABLE x 2700 and 2780 (solid, y 150-157), drawn by levelart/soder.lua at x0 - 1, y0 - 1 (parasol) and x0 - 1, y0 (table)"
+ }
+}

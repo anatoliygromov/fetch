@@ -1,0 +1,33 @@
+{
+ "name": "sh_cafe_table",
+ "model": "SpriteCook GPT 2.5 Sunburst 1K medium (follows the reference grid)",
+ "modelId": null,
+ "settings": null,
+ "inputs": [
+  "art/gen/upload/sh_cafe_table_blockout.png",
+  "art/gen/style_card_riverwalk.png"
+ ],
+ "prompt_file": "art/gen/prompts/sh_cafe_table.txt",
+ "k": null,
+ "frame": [
+  256,
+  256
+ ],
+ "credits": 64,
+ "tool": "spritecook",
+ "family": "sh_props_08nov",
+ "tier": "A",
+ "slot": {
+  "file": "riverwalk/levelart/soder/props/parasol.png (66 x 43, with its pole), riverwalk/levelart/soder/props/table.png (50 x 26)",
+  "where": "S\u00f6der Hill section 9 (camera x 2560-2880): PARASOL x 2692 and 2772 (oneway, top y 108), TABLE x 2700 and 2780 (solid, y 150-157), drawn by levelart/soder.lua at x0 - 1, y0 - 1 (parasol) and x0 - 1, y0 (table)"
+ },
+ "spritecook": {
+  "model": "gpt-image-2.5-sunburst",
+  "pixel": true,
+  "resolution": "1K",
+  "quality": "medium",
+  "width": 66,
+  "height": 69
+ },
+ "ledger_job": "sh_cafe_table@1108-100045"
+}

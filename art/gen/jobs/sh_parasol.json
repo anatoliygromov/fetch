@@ -1,0 +1,32 @@
+{
+ "level": "soder",
+ "layer": "play",
+ "kind": "obstacle",
+ "model": "sc_pe",
+ "variants": 2,
+ "tier": "A",
+ "family": "sh_props_08nov",
+ "name": "sh_parasol",
+ "real_height_m": 0.93,
+ "target_px": [
+  66,
+  43
+ ],
+ "checks_px": {
+  "canopy": "66 x 14, top row flat over the PARASOL box x 2692-2756 (Pepper stands on y 108)",
+  "pole": "4 px incl. ink, cols 31-34, rows 14-42"
+ },
+ "subject": "Front view of a cafe market parasol: a wide flat-topped canopy of red and cream vertical stripes across the full width, its top edge perfectly straight and level, a scalloped valance along the bottom, the canopy 14 px deep; a thin dark iron pole straight down from its centre to the bottom edge",
+ "part_map": "the light grey slab at the top is the canopy (its top edge flat), the dark bar under it is the pole",
+ "size_sentence": "the canopy is a little wider than the dog; the pole is as long as the dog is tall",
+ "retry": {
+  "n": 1,
+  "previous": "sh_cafe_table@1108-100045 (job a2fdb1b8), renders art/gen/renders/sh_cafe_table_a/b_raw.png",
+  "why": "GPT 2.5 kept Pepper 1:1 but drew the parasol 109 and 119 px wide for 66 (1.65x, 1.8x) and the table 64 and 75 px for 50, and a domed canopy over the flat PARASOL box",
+  "changed": "model: GPT 2.5 on the blockout -> Pixel Engine Image, which draws at exactly the target size; the piece split in two"
+ },
+ "slot": {
+  "file": "riverwalk/levelart/soder/props/parasol.png",
+  "where": "Söder Hill section 9: PARASOL x 2692 and 2772 (oneway, top y 108), drawn at x0 - 1, y0 - 1 by levelart/soder.lua; the pole reaches the table top y 150"
+ }
+}
