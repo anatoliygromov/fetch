@@ -13,7 +13,7 @@ behind ochre houses with a sandstone parapet.
 Layers, back to front (docs/layer_ladder.md: the further back, the lighter; the darkest of each layer measured):
   sky   960 x 360, tools/build_sky.py's painter with this level's tones (row 0 = screen y -120); flat tones with wavy
         stepped joins, cumulus banks of stamped lobes. Rises 0.03 of the camera's climb.
-  far   640 x 200 strip, 3 tones: roofs and gables, the German Church's spire and the Great Church's tower, a warm rim
+  far   640 x 240 strip, 3 tones: roofs and gables, the German Church's spire and the Great Church's tower, a warm rim
         on the lit (left, top) edges. Scroll 0.1, rises 0.03 of the climb; filled to its bottom (it never ends on
         screen). Darkest >= 145, contrast <= 35.
   mid   640 x 240 strip at half scale (storeys 48 px): house fronts with tile roofs, gables, chimneys and 2-pane
@@ -33,8 +33,8 @@ import build_rooftops_art as A          # the map, the houses, the palette, the 
 import build_sky as BS                  # the painted sky's painter
 
 OUT = A.OUT
-HAZE = (250, 226, 190)                  # the sky's horizon: the back row is mixed 32 % towards it and 18 % greyer
-BACK_K, BACK_GREY = 0.32, 0.18          # (round 2, producer 8 Nov: clearly lighter and less saturated than the play row)
+HAZE = (252, 222, 172)                  # the level's warm horizon: the back row is mixed 30 % towards it, never grey
+BACK_K, BACK_GREY = 0.30, 0.0          # (round 3, producer 8 Nov: lighter in value, but keep the colour: one warm haze)
 CAMY_MAX = 960
 
 SKY = dict(                                                  # warm late afternoon: peach above, amber at the horizon
@@ -50,9 +50,9 @@ SKY = dict(                                                  # warm late afterno
     wisps=[(300, 18, 28, 4), (640, 10, 24, 3), (900, 30, 26, 4), (180, -40, 24, 3)],
 )
 
-FAR = {"rim": "f6dcc4", "main": "e8c8b0", "near": "e2c0aa"}
-MID = {"wa": "e8c098", "wb": "ecd09c", "wc": "e6bca4", "wd": "ecd6b8", "wsh": "d8ac8c", "cap": "f2dec4",
-       "tile_hi": "eab296", "tile": "e0a084", "tile_sh": "d6967a", "frame": "b89c8e", "glass": "a8b4bc",
+FAR = {"rim": "f2d8c0", "main": "e8c8b0", "near": "dab69e"}
+MID = {"wa": "ecbe88", "wb": "f0cc8c", "wc": "eab894", "wd": "f0d4aa", "wsh": "dcaa7c", "cap": "f4dcbc",
+       "tile_hi": "eca880", "tile": "e2946a", "tile_sh": "d4845c", "frame": "b89c8e", "glass": "a8b4bc",
        "glass_hi": "ccd4d8", "ch": "c49c88"}
 
 
@@ -71,7 +71,7 @@ def sky():
 
 # ------------------------------------------------------------------------------------------------ far town
 def far():
-    W, H, BASE = 640, 200, 70                    # BASE: the strip row the roofs' eaves stand on
+    W, H, BASE = 640, 240, 110                   # BASE: the strip row the roofs' eaves stand on (room for the spires)
     m = np.zeros((H, W), np.uint8)               # 0 empty, 1 main, 2 near (towers)
     m[BASE:, :] = 1
     r = Rng(4211)
@@ -107,7 +107,8 @@ def far():
                 hw = max(0, int(round((w // 2 - 2) * (1 - d / spire))))
                 m[y - d - 1, cx - hw:cx + hw + 1] = 2
     tower(150, 16, 44, 58)
-    tower(452, 20, 40, 14, cupola=True)
+    tower(300, 20, 40, 14, cupola=True)
+    tower(590, 14, 50, 52)                       # (round 3) the spire in view from the hotel roof (camera x 4224)
     out = np.zeros((H, W, 4), np.uint8)
     out[m == 1] = np.append(hexc(FAR["main"]), 255)
     out[m == 2] = np.append(hexc(FAR["near"]), 255)
@@ -197,7 +198,7 @@ def back(top, W, H):
     yb = []
     for i, (a, b) in enumerate(blocks):
         ref = int(top[max(0, a - 32):min(W, b + 32)].min())
-        lift = 80 if ref >= 600 else 56 if ref >= 376 else 32 if ref >= 184 else None
+        lift = 64 if ref >= 600 else 48 if ref >= 376 else 32 if ref >= 184 else None   # (round 3: lower, as the concept)
         yb.append(None if lift is None else (ref - lift - [0, 16, 8, 24][i % 4]) // 8 * 8)
     for i, (a, b) in enumerate(blocks):
         y = yb[i]
@@ -218,21 +219,30 @@ def back(top, W, H):
         for xx in range(a + 24, b - 8, 24): cv.fill(xx, y + 2, xx + 1, y + 5, "cap_sh")
         # a hipped tile roof behind the parapet, 16 rows, courses of 4 in running bond
         RH = 16
-        for rr in range(RH):
-            yy = y - RH + rr; inset = RH - rr + 4
-            for xx in range(a + inset, b - inset):
-                if rr == 0: n = "tile_hi"
-                elif rr % 4 == 3: n = "tile_sh"
-                elif (xx + (rr // 4) * 4) % 8 == 0: n = "tile_sh"
+        for rr in range(RH):                                    # red clay in rows: a ridge, then courses of 4 rows
+            yy = y - RH + rr; inset = RH - rr + 4                # (a lit row, two tile rows with the joints in
+            for xx in range(a + inset, b - inset):               # running bond, a dark bottom row)
+                c, r = (rr - 1) // 4, (rr - 1) % 4
+                if rr == 0: n = "tile_dk"
+                elif r == 0: n = "tile_hi"
+                elif r == 3: n = "tile_dk"
+                elif (xx + c * 4) % 8 == 0: n = "tile_sh"
                 else: n = "tile"
                 cv.put(xx, yy, n)
-        if i % 2 == 0 and b - a >= 64:                          # a stucco chimney with two clay pots
+        if i % 2 == 0 and b - a >= 64:                          # a brick stack, a stone cap, three clay pots
             cx = a + (b - a) * 2 // 3
-            cv.fill(cx, y - RH - 14, cx + 12, y - 4, "ch"); cv.fill(cx + 10, y - RH - 14, cx + 12, y - 4, "ch_sh")
-            cv.fill(cx - 1, y - RH - 16, cx + 13, y - RH - 14, "cap_hi")
-            for px in (cx + 2, cx + 7):
-                cv.fill(px, y - RH - 21, px + 3, y - RH - 16, "tile"); cv.fill(px + 2, y - RH - 21, px + 3, y - RH - 16, "tile_sh")
-                cv.fill(px - 1, y - RH - 22, px + 4, y - RH - 21, "tile_hi")
+            y0s = y - RH - 16
+            for yy in range(y0s, y - 4):
+                for xx in range(cx, cx + 16):
+                    if (yy - y0s) % 4 == 3 or (xx - cx + ((yy - y0s) // 4 % 2) * 4) % 8 == 0: n = "cap_hi"   # mortar
+                    elif cx + 16 - xx <= 2: n = "ch_sh"
+                    else: n = "ch"
+                    cv.put(xx, yy, n)
+            cv.fill(cx - 2, y0s - 4, cx + 18, y0s - 3, "cap_hi"); cv.fill(cx - 2, y0s - 3, cx + 18, y0s, "cap")
+            cv.fill(cx - 2, y0s - 1, cx + 18, y0s, "cap_sh")
+            for px in (cx + 1, cx + 6, cx + 11):
+                cv.fill(px, y0s - 11, px + 4, y0s - 4, "tile"); cv.fill(px + 3, y0s - 11, px + 4, y0s - 4, "tile_sh")
+                cv.fill(px - 1, y0s - 12, px + 5, y0s - 11, "tile_hi")
         # windows on the front row's storey grid
         win = A.window()
         n = max(1, (b - a - 2 * A.MARGIN - A.WIN_W) // A.PITCH + 1)
@@ -246,7 +256,7 @@ def back(top, W, H):
         if a == 0:                                              # the street cafe: a striped awning over the windows
             ay = A.STREET - 52
             for xx in range(a + 24, a + 216):
-                k = "tile" if ((xx - a) // 8) % 2 == 0 else "cre_hi"
+                k = "tile" if ((xx - a) // 8) % 2 == 0 else "cap_hi"
                 cv.fill(xx, ay, xx + 1, ay + 7, k); cv.put(xx, ay, "tile_hi" if k == "tile" else "cap_hi")
                 if (xx - a) % 8 in (2, 3, 4, 5): cv.put(xx, ay + 7, k)
     return cv
@@ -267,7 +277,7 @@ def back_chunks(cv, W, H):
 def manifest(bc):
     lines = ["-- written by tools/build_rooftops_backdrop.py: the backdrop of the Rooftops art (do not edit)", "return {",
              "  sky = \"sky.png\", far = \"far.png\", mid = \"mid.png\",",
-             "  -- the strips' rows: far roofs' eaves at row 70, mid tops from row 16", "  back = {"]
+             "  -- the strips' rows: far roofs' eaves at row 110, mid tops from row 16", "  back = {"]
     for (x, y), a in sorted(bc.items()):
         lines.append(f'    {{ x = {x}, y = {y}, w = {a.shape[1]}, h = {a.shape[0]}, file = "back_{x}_{y}.png" }},')
     lines += ["  },", "}", ""]
@@ -281,7 +291,7 @@ def main():
     W, H, top, kind, solid = A.terrain(g)
     rgb, img, nsky, stats = sky()
     fa, mi = far(), mid()
-    fails = BS.checks("rooftops", rgb, img, nsky, stats, fa[:77])
+    fails = BS.checks("rooftops", rgb, img, nsky, stats, fa[:117])
     bcv = back(top, W, H)
     brgb = back_rgb()
     bc = back_chunks(bcv, W, H)

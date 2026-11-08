@@ -43,7 +43,7 @@ local function img(f) local i = lg.newImage(DIR .. f); i:setFilter("nearest", "n
 
 -- E: the backdrop (screen space; the back row in world space)
 M.SKY_RISE, M.FAR_RISE, M.MID_RISE = 0.03, 0.03, 0.06           -- of the camera's climb from the bottom of the world
-M.FAR_Y, M.MID_Y = 46, 70                                        -- the strips' top rows on screen at the bottom tier
+M.FAR_Y, M.MID_Y = 6, 70                                         -- the strips' top rows on screen at the bottom tier
 M.FAR_X, M.MID_X, M.SKY_X, M.SKY_DRIFT = 0.1, 0.5, 0.05, 2
 local quads = {}
 local function strip(im, ox, y)                                  -- a wrapping strip, ox px into it, top at screen y
@@ -73,7 +73,7 @@ function M:drawLandmark(cam, camY, t, yf)
   if not m or m.y > camY + 8 then return end
   local sx = math.floor(160 + (m.x - (cam + 160)) * 0.3 + 0.5)
   if sx < -20 or sx > 340 then return end
-  local base = yf + 70                                            -- the far roofs' eaves row
+  local base = yf + 110                                           -- the far roofs' eaves row
   lg.setColor(FARC[1]); lg.rectangle("fill", sx - 4, base - 40, 8, 40)          -- the chimney
   lg.setColor(FARC[2]); lg.rectangle("fill", sx + 2, base - 40, 2, 40)
   lg.setColor(FARC[1]); lg.rectangle("fill", sx - 6, base - 42, 12, 2)
@@ -257,12 +257,12 @@ local function slab(pr, x, t)
   local step = m == "copper" and 8 or (m == "timber" and 16 or 24)
   for i = step, w - 2, step do rect(jt, x + i, pr.y0 + 1, 1, h - 2); if m == "copper" then rect(top, x + i - 1, pr.y0 + 1, 1, h - 2) end end
 end
-local function pots(x, y1, w)                                       -- clay chimney pots on a stack (decoration)
-  local n = math.max(1, math.floor(w / 16))
-  for i = 0, n - 1 do
-    local px = math.floor(x + (w - n * 16) / 2 + i * 16 + 4)
-    rect("tile", px, y1 - 18, 8, 18); rect("tile_hi", px, y1 - 18, 2, 18); rect("tile_sh", px + 6, y1 - 18, 2, 18)
-    rect("tile_hi", px - 1, y1 - 20, 10, 2); rect("tile_dk", px + 1, y1 - 20, 6, 1)
+local function pots(x, y1, w)                                       -- three clay chimney pots on a stack (decoration)
+  for i = 0, 2 do
+    local px = math.floor(x + w / 2 - 28 + i * 20)
+    rect("tile", px + 1, y1 - 16, 8, 16); rect("tile_hi", px + 1, y1 - 16, 2, 16); rect("tile_sh", px + 7, y1 - 16, 2, 16)
+    rect("tile_dk", px + 1, y1 - 10, 8, 1)
+    rect("tile_hi", px, y1 - 19, 10, 3); rect("tile_sh", px, y1 - 17, 10, 1); rect("tile_dk", px + 2, y1 - 19, 6, 1)
   end
 end
 local function brick(x, y0, w, y1)                                  -- stucco in brick courses (the ground's chimneys)

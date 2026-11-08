@@ -69,6 +69,8 @@ PAL = {
     # planters' greenery, awning canvas
     "wd_hi": "c8925e", "wd": "a06c44", "wd_sh": "7a5034", "leaf_hi": "8aac5a", "leaf": "62884a", "leaf_sh": "48683c",
     "canvas": "f2e2c4",
+    # skylight glass (round 3): two blues, a glint, the shadow under the frame's top
+    "sky_a": "a6c6da", "sky_b": "7898b4", "glint": "e4f2f6", "sky_in": "4a6478",
     "rust_hi": "cc7452", "rust": "b85c3c", "rust_sh": "94462e", "rust_dk": "6e3424",
 }
 NAMES = list(PAL)
@@ -248,11 +250,13 @@ def build():
     for x in range(STAIRS[0], W):
         h = house_at[x]; p = PLASTER[h[2]]
         cv.fill(x, roof[x], x + 1, STREET, p)
+        if x in gab_at:                                           # under the eaves' cap too
+            yb = gab_at[x][3]; cv.fill(x, yb + 9, x + 1, yb + 10, p + "_dk"); cv.fill(x, yb + 10, x + 1, yb + 13, p + "_sh")
         if kind[x] == "flat" or x in chim_at:                    # the cap's shadow on the wall: a deep row, then shade
-            cv.fill(x, roof[x] + 8, x + 1, roof[x] + 9, p + "_dk"); cv.fill(x, roof[x] + 9, x + 1, roof[x] + 13, p + "_sh")
+            cv.fill(x, roof[x] + 9, x + 1, roof[x] + 10, p + "_dk"); cv.fill(x, roof[x] + 10, x + 1, roof[x] + 13, p + "_sh")
         for L in range(STOREY0, STREET, STOREY):                  # a storey band on every storey line under the roof
             if L - 4 >= roof[x] + 16 and x not in gab_at:
-                for k, n in enumerate(("_hi", "_hi", "", "_sh", "_dk")): cv.put(x, L - 4 + k, p + n)
+                for k, n in enumerate(("_hi", "_hi", "_sh", "_sh", "_dk")): cv.put(x, L - 4 + k, p + n)
     # 2 windows on the storey grid (one grid for the level), doors and shop windows in the ground storey
     WIN, DOOR, SHOP, OCU = window(), door(), shopwindow(), oculus()
     def clear(x0, x1, y):                                       # the wall above a window is free of roofs
@@ -279,6 +283,17 @@ def build():
             pipes.append((px, max(roof[px - 1], roof[px + 1]) + 14))
         cv.fill(x0, STREET - 8, x1, STREET - 7, "gr_hi"); cv.fill(x0, STREET - 7, x1, STREET, "gr")   # the plinth
         cv.fill(x0, STREET - 1, x1, STREET, "gr_sh")
+    # 2b the low sun from the left (round 3): where the roof steps down to the right by 40 px or more, the taller
+    #    wall's corner casts a hard 45 degree triangle onto the lower wall under its cap (one shade darker, plaster
+    #    only: windows and bands keep their own colours)
+    for x in range(STAIRS[1] + 1, W):
+        D = int(roof[x]) - int(roof[x - 1])
+        if D >= 40 and kind[x] == "flat":
+            T = int(roof[x]) + 13; D = min(D, 96)
+            for xx in range(x, min(W, x + D)):
+                p = PLASTER[house_at[xx][2]]
+                for yy in range(T, T + D - (xx - x)):
+                    if cv.a[yy, xx] in (IDX[p], IDX[p + "_hi"]): cv.a[yy, xx] = IDX[p + "_sh"]
     # 3 party walls: a downpipe with a hopper head on every join between two houses
     for x0, y0 in [(h[0], max(roof[h[0] - 1], roof[h[0]]) + 12) for h in HOUSES[1:]] + pipes:
         cv.fill(x0 - 1, y0, x0, STREET - 8, "tin"); cv.fill(x0, y0, x0 + 1, STREET - 8, "tin_sh")
@@ -294,27 +309,30 @@ def build():
         while x < W and capped(x) and capY(x) == y and house_at[x][3] == hcap: x += 1
         b = x
         hi, tp, mid_, sh, jt = CAPS[hcap]
-        n = max(1, round((b - a) / 24))
+        n = max(1, round((b - a) / 16))                          # (round 3) a block every 14-18 px
         joints = {a + round(i * (b - a) / n) for i in range(1, n)}
         lo = a - 2 if (a > 0 and roof[a - 1] > y and not capped(a - 1) and kind[a - 1] == "flat") else a
         hi_ = b + 2 if (b < W and roof[b] > y and kind[b] == "flat") else b
         for xx in range(lo, hi_):
-            seam = hcap == "copper" and (xx - a) % 8 == 4
             cv.put(xx, y, hi); cv.put(xx, y + 1, tp)
-            for r in range(2, 6): cv.put(xx, y + r, jt if xx in joints else (tp if seam else mid_))
-            if seam: cv.put(xx + 1, y + 2, sh); cv.put(xx + 1, y + 3, sh); cv.put(xx + 1, y + 4, sh); cv.put(xx + 1, y + 5, sh)
-            cv.put(xx, y + 6, sh); cv.put(xx, y + 7, "ink")         # (round 2) the cap's ink under it
-        if lo < a: cv.fill(lo, y + 1, lo + 1, y + 7, tp)                     # the lit left end
-        if hi_ > b: cv.fill(hi_ - 1, y + 1, hi_, y + 7, sh)                   # the shaded right end
+            if hcap == "copper":                                   # standing seams every 8 px: a lit seam row
+                sm = (xx - a) % 8
+                for r in range(2, 7): cv.put(xx, y + r, tp if sm == 4 else (jt if sm == 5 else mid_))
+            else:
+                for r in range(2, 7): cv.put(xx, y + r, jt if xx in joints else (hi if (xx - 1) in joints else mid_))
+                if xx in joints: cv.put(xx, y + 1, jt)
+            cv.put(xx, y + 7, sh); cv.put(xx, y + 8, "ink")         # the dark underside, the ink under it
+        if lo < a: cv.fill(lo, y + 1, lo + 1, y + 8, tp)                     # the lit left end
+        if hi_ > b: cv.fill(hi_ - 1, y + 1, hi_, y + 8, sh)                   # the shaded right end
         # an end against a taller wall: tin flashing up the wall's foot
         if a > 0 and roof[a - 1] < y and kind[a - 1] == "flat" and not capped(a - 1) or (a > 0 and capped(a - 1) and capY(a - 1) < y):
-            cv.fill(a - 2, y - 6, a - 1, y + 8, "tin_hi"); cv.fill(a - 1, y - 6, a, y + 8, "tin")
+            cv.fill(a - 2, y - 6, a - 1, y + 9, "tin_hi"); cv.fill(a - 1, y - 6, a, y + 9, "tin")
         if b < W and (roof[b] < y and kind[b] == "flat" or (capped(b) and capY(b) < y)):
-            cv.fill(b, y - 6, b + 1, y + 8, "tin"); cv.fill(b + 1, y - 6, b + 2, y + 8, "tin_sh")
+            cv.fill(b, y - 6, b + 1, y + 9, "tin"); cv.fill(b + 1, y - 6, b + 2, y + 9, "tin_sh")
     # 5 chimney blocks: red-brown brick 8 x 4 in running bond, light mortar, a stone slab on top, a tin apron
     for c0, c1 in CHIMNEYS:
         t, base = top[c0], chim_at[c0][3]
-        for yy in range(t + 6, base):
+        for yy in range(t + 8, base):
             course = (yy - t - 6) // 4
             for xx in range(c0, c1):
                 if (yy - t - 6) % 4 == 3: n = "ch_jt"
@@ -323,9 +341,10 @@ def build():
                 elif (yy - t - 6) % 4 == 0: n = "ch_hi"
                 else: n = "ch"
                 cv.put(xx, yy, n)
-        cv.fill(c0 - 2, t, c1 + 2, t + 1, "cap_hi"); cv.fill(c0 - 2, t + 1, c1 + 2, t + 4, "cap")
-        cv.fill(c0 - 2, t + 4, c1 + 2, t + 5, "cap_sh"); cv.fill(c0 - 2, t + 5, c1 + 2, t + 6, "cap_jt")
-        cv.fill(c0 - 2, t + 1, c0 - 1, t + 5, "cap_top"); cv.fill(c1 + 1, t + 1, c1 + 2, t + 5, "cap_sh")
+        cv.fill(c0 - 2, t, c1 + 2, t + 1, "cap_hi"); cv.fill(c0 - 2, t + 1, c1 + 2, t + 2, "cap_top")
+        cv.fill(c0 - 2, t + 2, c1 + 2, t + 6, "cap"); cv.fill(c0 - 2, t + 6, c1 + 2, t + 7, "cap_sh")
+        cv.fill(c0 - 2, t + 7, c1 + 2, t + 8, "ink")
+        cv.fill(c0 - 2, t + 1, c0 - 1, t + 6, "cap_top"); cv.fill(c1 + 1, t + 1, c1 + 2, t + 6, "cap_sh")
         cv.fill(c0, base - 3, c1, base - 2, "tin_hi"); cv.fill(c0, base - 2, c1, base, "tin")
     # 6 pitched roofs: the band along the slope, the ridge cap, the gable face with its attic window
     BAND = {"tile": 13, "glass": 9}                               # rows under the slope's surface
@@ -423,16 +442,20 @@ def build():
 
 
 def skylight(cv, a, b, floor):
-    """a glass lantern on the dip's floor: an iron frame, panes 16 px wide, a lit glint in each"""
+    """a glass lantern on the dip's floor (round 3, the concept's): a dark iron frame 2 px with mullions every 16 px and
+    a transom, panes in two blues (light above the transom, deeper below), a diagonal glint across each pane, a dark
+    row of shadow under the frame's top"""
     x0, x1, y0, y1 = a + 3, b - 3, floor - 34, floor - 1
     for y in range(y0, y1):
         for x in range(x0, x1):
             if cv.a[y, x] != 0: continue
-            fr = y in (y0, y0 + 1, y1 - 2, y1 - 1, y0 + 12) or x in (x0, x1 - 1) or (x - x0) % 16 == 0
-            if fr: n = "iron" if y not in (y0,) else "iron_hi"
+            u = (x - x0) % 16
+            fr = y in (y0, y0 + 1, y1 - 2, y1 - 1, y0 + 12, y0 + 13) or x in (x0, x0 + 1, x1 - 2, x1 - 1) or u in (0, 1)
+            if fr: n = "iron_hi" if y == y0 else "iron"
+            elif y in (y0 + 2, y0 + 14) or u == 2: n = "sky_in"             # the shadow under the frame
             else:
-                k = ((x - x0) % 16) + (y - y0)
-                n = "gl_hi" if k in (6, 7, 8, 18, 19) else ("gl" if y < y0 + 12 else "gl_sh")
+                k = u + (y - y0)
+                n = "glint" if k in (13, 14) else ("sky_a" if y < y0 + 12 else "sky_b")
             cv.put(x, y, n)
 
 
