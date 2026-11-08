@@ -47,8 +47,15 @@ def find_pepper(img):
     return False
 
 
+def plan_tag(J):
+    """the plan and its approved hash on every ledger plan row, so the credit audit can match each charge to a plan"""
+    import plan as P
+    try: return f" plan {J['plan']} {P.sha(P.load(J['plan']))}"
+    except Exception: return ''
+
+
 def check(path):
-    J = json.load(open(path)); n = J['name']; bad = []
+    J = json.load(open(path)); n = J['name']; bad = plan_problems(J)
     lay = R['layers'].get(J.get('layer')); lev = R['levels'].get(J.get('level'))
     if not lay: bad.append(f"layer '{J.get('layer')}' not in rules ({', '.join(R['layers'])})")
     if not lev: bad.append(f"level '{J.get('level')}' not in rules")
@@ -151,7 +158,7 @@ def check(path):
     json.dump(job, open(f'art/gen/prompts/{n}.job.json', 'w'), indent=1)
     if WRITE:
         ledger.add(kind='plan', job=job['ledger_job'], asset=n, family=J['family'], tool=model['tool'],
-                   model=model['name'], credits=cost, status='planned', note=OWNER_OK or '')
+                   model=model['name'], credits=cost, status='planned', note=((OWNER_OK or '') + plan_tag(J)).strip())
     print(f"PREFLIGHT PASS {n}: {J['layer']} {lay['px_per_m']} px/m, {tw}x{th} px ({J.get('real_height_m')} m), "
           f"{fw}x{fh} frame, {model['name']}, style card {J['level']}, {job['credits']} credits, ledger job {job['ledger_job']}"
           f" (after the tool charges: tools/ledger.py spent {job['ledger_job']} CREDITS)")
@@ -163,7 +170,7 @@ def check_redraw(path):
     """(8 Nov) purpose "redraw": SpriteCook redraws a part of an owner-approved concept painting at game size (rules
     'redraw' lists the levels and the owner's words). Checked: the level is listed, the source is that level's concept
     or a crop of it, SpriteCook, target size, slot, no forbidden words, caps or the owner's words, a ledger plan row."""
-    J = json.load(open(path)); n = J['name']; bad = []
+    J = json.load(open(path)); n = J['name']; bad = plan_problems(J)
     rd = R.get('redraw', {}).get(J.get('level'))
     if not rd: bad.append(f"level '{J.get('level')}' has no owner yes for redrawing from a concept (rules.json redraw)")
     model = R['models'].get(J.get('model', 'sc_nb21'))
@@ -200,12 +207,12 @@ def check_redraw(path):
     PLANNED['spritecook'] = PLANNED.get('spritecook', 0) + cost
     if WRITE:
         ledger.add(kind='plan', job=job['ledger_job'], asset=J['asset'], family=J['family'], tool='spritecook',
-                   model=model['name'], credits=cost, status='planned', note=('redraw from concept. ' + rd['words'][:80] + ' ' + OWNER_OK).strip())
+                   model=model['name'], credits=cost, status='planned', note=('redraw from concept. ' + rd['words'][:80] + ' ' + OWNER_OK + plan_tag(J)).strip())
     print(f"PREFLIGHT PASS {n} (redraw from concept): {model['name']}, {tw}x{th}, {cost} credits, ledger job {job['ledger_job']}")
     return job
 
 def check_concept(path):
-    J = json.load(open(path)); n = J['name']; bad = []
+    J = json.load(open(path)); n = J['name']; bad = plan_problems(J)
     model = R['models'].get(J.get('model', 'nbpro_1k'))
     if not model or model['tool'] != 'artlist': bad.append("a concept job uses an Artlist model (nbpro_1k, nbpro_2k, nb2)")
     for f in ('asset', 'family', 'subject', 'base_frame'):
@@ -244,7 +251,7 @@ def check_concept(path):
     PLANNED['artlist'] = PLANNED.get('artlist', 0) + cost
     if WRITE:
         ledger.add(kind='plan', job=job['ledger_job'], asset=J['asset'], family=J['family'], tool='artlist',
-                   model=model['name'], credits=cost, status='planned', note=('concept (reference only). ' + OWNER_OK).strip())
+                   model=model['name'], credits=cost, status='planned', note=('concept (reference only). ' + OWNER_OK + plan_tag(J)).strip())
     print(f"PREFLIGHT PASS {n} (concept, reference only): {model['name']}, base {bf}, {cost} credits, ledger job {job['ledger_job']}")
     return job
 
