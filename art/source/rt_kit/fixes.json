@@ -1,0 +1,19 @@
+{
+ "window": {
+  "size": [
+   22,
+   25
+  ],
+  "line_glitches_fixed": 6,
+  "completed_px": 66
+ },
+ "chimney_big": {
+  "size": [
+   46,
+   58
+  ],
+  "line_glitches_fixed": 4,
+  "holes_filled": 3,
+  "completed_px": 380
+ }
+}
