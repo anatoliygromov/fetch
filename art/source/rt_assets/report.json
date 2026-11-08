@@ -1,0 +1,311 @@
+{
+ "source": "art/source/rt_lockfill/final.png",
+ "assets": {
+  "spire": {
+   "layer": "far",
+   "box": [
+    60,
+    10,
+    78,
+    62
+   ],
+   "size": [
+    18,
+    52
+   ],
+   "note": "the church spire over the far town; its foot is behind the roofs",
+   "colours": 14,
+   "cut_out_px": 467,
+   "completed_px": 0,
+   "redrawn_px": 0
+  },
+  "chimney_small": {
+   "layer": "back",
+   "box": [
+    4,
+    50,
+    22,
+    80
+   ],
+   "size": [
+    18,
+    30
+   ],
+   "note": "the plain stucco stack, left",
+   "colours": 24,
+   "cut_out_px": 74,
+   "completed_px": 0,
+   "redrawn_px": 0
+  },
+  "chimney_pots3": {
+   "layer": "back",
+   "box": [
+    82,
+    40,
+    104,
+    80
+   ],
+   "size": [
+    22,
+    40
+   ],
+   "note": "the stack with three clay pots",
+   "colours": 38,
+   "cut_out_px": 225,
+   "completed_px": 0,
+   "redrawn_px": 0
+  },
+  "chimney_big": {
+   "layer": "back",
+   "box": [
+    227,
+    31,
+    269,
+    88
+   ],
+   "size": [
+    42,
+    57
+   ],
+   "note": "the big stack with three pots, on the coping",
+   "colours": 40,
+   "cut_out_px": 482,
+   "completed_px": 0,
+   "redrawn_px": 0
+  },
+  "dormer_small": {
+   "layer": "back",
+   "box": [
+    110,
+    66,
+    132,
+    87
+   ],
+   "size": [
+    22,
+    21
+   ],
+   "note": "the little gable dormer in the left roof",
+   "colours": 25,
+   "cut_out_px": 141,
+   "completed_px": 0,
+   "redrawn_px": 0
+  },
+  "gable_end": {
+   "layer": "back",
+   "box": [
+    157,
+    44,
+    180,
+    87
+   ],
+   "size": [
+    23,
+    43
+   ],
+   "note": "the right roof's gable end with its slit window",
+   "colours": 32,
+   "cut_out_px": 329,
+   "completed_px": 0,
+   "redrawn_px": 0
+  },
+  "roof_left": {
+   "layer": "back",
+   "box": [
+    0,
+    58,
+    160,
+    87
+   ],
+   "size": [
+    160,
+    29
+   ],
+   "note": "the left roof: ridge, tile courses (chimneys and dormer completed)",
+   "colours": 35,
+   "cut_out_px": 74,
+   "completed_px": 781,
+   "redrawn_px": 0
+  },
+  "roof_right": {
+   "layer": "back",
+   "box": [
+    162,
+    43,
+    320,
+    87
+   ],
+   "size": [
+    158,
+    44
+   ],
+   "note": "the right roof: ridge caps, tile courses (big chimney completed)",
+   "colours": 42,
+   "cut_out_px": 302,
+   "completed_px": 1665,
+   "redrawn_px": 0
+  },
+  "coping": {
+   "layer": "play",
+   "box": [
+    0,
+    87,
+    320,
+    101
+   ],
+   "size": [
+    320,
+    14
+   ],
+   "note": "the parapet Pepper walks: stone blocks and the wall shadow under them",
+   "colours": 22,
+   "cut_out_px": 0,
+   "completed_px": 0,
+   "redrawn_px": 0
+  },
+  "ledge": {
+   "layer": "play",
+   "box": [
+    96,
+    136,
+    160,
+    148
+   ],
+   "size": [
+    64,
+    12
+   ],
+   "note": "the lower ledge between the skylights (one block run)",
+   "colours": 15,
+   "cut_out_px": 0,
+   "completed_px": 0,
+   "redrawn_px": 0
+  },
+  "facade_storey": {
+   "layer": "back",
+   "box": [
+    100,
+    101,
+    320,
+    136
+   ],
+   "size": [
+    220,
+    35
+   ],
+   "note": "the plaster storey with its row of windows, under the coping",
+   "colours": 17,
+   "cut_out_px": 0,
+   "completed_px": 0,
+   "redrawn_px": 0
+  },
+  "window": {
+   "layer": "back",
+   "box": [
+    205,
+    113,
+    227,
+    136
+   ],
+   "size": [
+    22,
+    23
+   ],
+   "note": "the upper window (its foot is the ledge)",
+   "colours": 13,
+   "cut_out_px": 0,
+   "completed_px": 0,
+   "redrawn_px": 0
+  },
+  "window_sill": {
+   "layer": "back",
+   "box": [
+    55,
+    197,
+    81,
+    232
+   ],
+   "size": [
+    26,
+    35
+   ],
+   "note": "the lower window with its sill",
+   "colours": 18,
+   "cut_out_px": 88,
+   "completed_px": 0,
+   "redrawn_px": 0
+  },
+  "skylight_left": {
+   "layer": "play",
+   "box": [
+    1,
+    139,
+    96,
+    176
+   ],
+   "size": [
+    95,
+    37
+   ],
+   "note": "the glass lantern, left",
+   "colours": 23,
+   "cut_out_px": 101,
+   "completed_px": 0,
+   "redrawn_px": 0
+  },
+  "skylight_right": {
+   "layer": "play",
+   "box": [
+    160,
+    139,
+    257,
+    176
+   ],
+   "size": [
+    97,
+    37
+   ],
+   "note": "the glass lantern, right",
+   "colours": 20,
+   "cut_out_px": 168,
+   "completed_px": 0,
+   "redrawn_px": 0
+  },
+  "copper_canopy": {
+   "layer": "back",
+   "box": [
+    143,
+    172,
+    320,
+    193
+   ],
+   "size": [
+    177,
+    21
+   ],
+   "note": "the hotel's copper canopy (runs on past the frame)",
+   "colours": 21,
+   "cut_out_px": 164,
+   "completed_px": 0,
+   "redrawn_px": 0
+  },
+  "hotel_front": {
+   "layer": "back",
+   "box": [
+    148,
+    192,
+    320,
+    240
+   ],
+   "size": [
+    172,
+    48
+   ],
+   "note": "the hotel's stone front: cornice, pilasters, tall windows (runs on below the frame)",
+   "colours": 32,
+   "cut_out_px": 0,
+   "completed_px": 0,
+   "redrawn_px": 0
+  }
+ }
+}
