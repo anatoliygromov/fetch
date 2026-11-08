@@ -1,0 +1,16 @@
+{
+ "name": "nh_home_concept",
+ "purpose": "concept",
+ "asset": "nh_key_screen",
+ "family": "nh_concept_08nov",
+ "level": "night",
+ "model": "nbpro_1k",
+ "variants": 2,
+ "base_frame": "art/gen/concepts/base/nh_home_x4160.png",
+ "subject": "make this grey night harbour in Stockholm cosy and finished for a 7 year old. The grey box marked HOME becomes Mia's little red wooden house, front-on, with white window frames, two warmly lit yellow windows, a green front door with a lantern beside it and a small porch step, without letters; the grey ground becomes a granite quay of big cut stones; the dotted white light rings become soft warm amber lamp light drawn as two or three flat stepped pools, no dots; behind, dark blue harbour sheds, boats on moorings with little lights and the old town on the far shore with a few lit windows under the moon; the sky deep blue with stars",
+ "slot": {
+  "file": "riverwalk/levelart/night.lua (quay, Mia house, light model, backdrop)",
+  "where": "Night Harbour, the end at Mia home, camera x 4160"
+ },
+ "extra": "Full local colour and crisp edges, the same flat-shaded pixel style as the dog. Keep the dog, the girl, the goose, the bones and the framing exactly as they are."
+}

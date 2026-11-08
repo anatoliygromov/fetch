@@ -1,0 +1,16 @@
+{
+ "name": "rt_hotel_concept",
+ "purpose": "concept",
+ "asset": "rt_key_screen",
+ "family": "rt_concept_08nov",
+ "level": "rooftops",
+ "model": "nbpro_1k",
+ "variants": 2,
+ "base_frame": "art/gen/concepts/base/rt_hotel_y240_x4224.png",
+ "subject": "make these grey Stockholm old town rooftops lovely and finished. The flat grey slabs become real buildings seen front-on: the long roof Pepper walks on is a flat tar roof with a stone parapet cap and a warm ochre plaster wall below it with evenly spaced windows; the low box marked HOTEL becomes the top floor of a grand hotel with a green copper roof edge and tall windows, without letters; the two sunken gaps are glass skylights in iron frames set into the roof; the orange bars are loose red clay roof tiles resting over the skylights; behind, a row of red tile pitched roofs, chimney stacks with clay pots and a church spire against a warm sky. Every roof is the top of a building whose wall goes down out of the frame; nothing floats",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops.lua (ground, walls, skylights, backdrop)",
+  "where": "Rooftops, the hotel roof, camera y 240 x 4224"
+ },
+ "extra": "Full local colour and crisp edges, the same flat-shaded pixel style as the dog. Keep the dog, the girl, the goose, the bones and the framing exactly as they are."
+}
