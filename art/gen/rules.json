@@ -342,7 +342,8 @@
  "redraw": {
   "rooftops": {
    "words": "Owner 8 Nov 10:14-10:15, pointing at rt_hotel_concept_a.png: \"this one\", then picked \"Redraw from the painting\" (SpriteCook redraws walls, roofs and props at game size from the concept, then grid cut and clean; replaces \"a concept is reference only\" for Rooftops)",
-   "concept": "art/gen/concepts/rt_hotel_concept_a.png"
+   "concept": "art/gen/concepts/rt_hotel_concept_a.png",
+   "lockfill": "Owner 8 Nov 10:50: \"let's work on what you recommend\" (lock and complete): the concept's own pixels cut 1:1 onto the game grid are game pixels for Rooftops; only the parts game sprites covered are completed, from the concept itself (tools/lockfill.py, 0 credits) or, with his yes on the total, by a SpriteCook edit. Artlist still never makes game pixels."
   },
   "_note": "Levels where the owner allowed game pixels redrawn FROM a concept painting (purpose \"redraw\" in tools/preflight.py). SpriteCook only; Artlist still never makes game pixels."
  }

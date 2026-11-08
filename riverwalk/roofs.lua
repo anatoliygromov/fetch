@@ -201,6 +201,8 @@ function Rf.drawPlay(s, cam, Sc)
       if d.bark and v.st == "rest" then lg.setColor(0.85, 0.85, 0.85, 0.8); F.print("?", x + math.floor(w / 2) - 2, d.y0 - 12, 1) end
     end
   end
+  local la = s.levelArt                                            -- (8 Nov) a level may give its own tile picture
+  local tim = la and la.looseTile and la:looseTile()
   for _, k in ipairs(s.tiles or {}) do
     local p = k.p
     local x, w = p.x0 - cam, p.x1 - p.x0
@@ -212,7 +214,9 @@ function Rf.drawPlay(s, cam, Sc)
         dy = math.min((k.fy or p.y1) - p.y1, 0.5 * 560 * k.t * k.t)                       -- it falls with gravity
         if dy >= (k.fy or p.y1) - p.y1 and k.t > 0.1 then show = false end               -- and breaks below
       end
-      if show and not (k.st == "gone" and k.t > 1.2) then
+      if show and not (k.st == "gone" and k.t > 1.2) and tim and p.x1 - p.x0 == tim:getWidth() then
+        lg.setColor(1, 1, 1, 1); lg.draw(tim, math.floor(x + dx), math.floor(p.y0 + dy))
+      elseif show and not (k.st == "gone" and k.t > 1.2) then
         lg.setColor(INK); lg.rectangle("fill", math.floor(x + dx), math.floor(p.y0 + dy), w, p.y1 - p.y0)
         lg.setColor(0.72, 0.36, 0.26); lg.rectangle("fill", math.floor(x + dx) + 1, math.floor(p.y0 + dy) + 1, w - 2, p.y1 - p.y0 - 2)
         lg.setColor(0.85, 0.50, 0.38); lg.rectangle("fill", math.floor(x + dx) + 1, math.floor(p.y0 + dy) + 1, w - 2, 1)

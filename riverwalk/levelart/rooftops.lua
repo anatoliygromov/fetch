@@ -84,6 +84,34 @@ function M:drawLandmark(cam, camY, t, yf)
   lg.setColor(FARC[3])
   lg.rectangle("fill", gx - 3, gy - fl, 3, 1); lg.rectangle("fill", gx + 1, gy - fl, 3, 1); lg.rectangle("fill", gx, gy, 1, 1)
 end
+-- (8 Nov, art/08nov-lockfill) the lock-and-complete pilot: one screen at the concept's camera (x 4224, y 240) cut 1:1
+-- from rt_hotel_concept_a.png, the parts game sprites covered completed from the concept itself (tools/lockfill.py),
+-- windows stamped, palette ramps. pilot_far.png slides at PILOT_FAR of the camera behind pilot_near.png (with the
+-- world). Drawn without the look: the concept's own colours (owner's call pending). Remove the two pngs to turn it off.
+M.PILOT_X, M.PILOT_Y, M.PILOT_FAR = 4224, 240, 0.25
+function M:pilot()
+  if self.pl ~= nil then return self.pl end
+  self.pl = false
+  if love.filesystem.getInfo(DIR .. "pilot_near.png") then self.pl = { far = img("pilot_far.png"), near = img("pilot_near.png") } end
+  return self.pl
+end
+function M:looseTile()                                           -- roofs.lua draws the loose tiles with this (pilot)
+  local pl = self:pilot(); if not pl then return nil end
+  pl.tile = pl.tile or (love.filesystem.getInfo(DIR .. "pilot_tile.png") and img("pilot_tile.png")) or false
+  return pl.tile or nil
+end
+function M:drawPilotFar(cam, camY)
+  local pl = self:pilot(); if not pl then return end
+  local sx = math.floor(-(cam - M.PILOT_X) * M.PILOT_FAR + 0.5)
+  local sy = math.floor((M.PILOT_Y - camY) * M.PILOT_FAR + 0.5)
+  if sx > 320 or sx + 320 < 0 then return end
+  require("look").off(); lg.setColor(1, 1, 1, 1); lg.draw(pl.far, sx, sy)
+end
+function M:drawPilotNear(cam)                                      -- world space (inside the stage's camY translate)
+  local pl = self:pilot(); if not pl then return end
+  if M.PILOT_X - cam > 320 or M.PILOT_X + 320 - cam < 0 then return end
+  require("look").off(); lg.setColor(1, 1, 1, 1); lg.draw(pl.near, M.PILOT_X - cam, M.PILOT_Y)
+end
 function M:drawFar(cam, camY, t)
   local bd = self:backdrop()
   if not bd then return Sc.drawFarGrey(self.stage.layers, cam, t) end
@@ -107,6 +135,7 @@ function M:drawFar(cam, camY, t)
   end
   lg.pop()
   Look.off(); lg.setColor(1, 1, 1, 1)
+  self:drawPilotFar(cam, camY)
 end
 
 -- the decor boxes that name a building the ground and the back row now draw (E): not drawn
@@ -417,6 +446,10 @@ function M:paintGround(w)
   for _, c in ipairs(man.ground) do
     local im = lg.newImage(DIR .. c.file); im:setFilter("nearest", "nearest")
     g.chunks[#g.chunks + 1] = { cv = im, x = c.x, y = c.y, w = c.w, h = c.h }
+  end
+  if self:pilot() then                                             -- the pilot's near layer goes over the built ground
+    local draw, me = g.draw, self
+    g.draw = function(gg, cam, camY) draw(gg, cam, camY); me:drawPilotNear(cam); require("look").use("ground") end
   end
   return g
 end
