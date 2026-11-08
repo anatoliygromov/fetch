@@ -126,6 +126,27 @@ def where(o, plan):
     return f"the box at {row} {col}, top-left corner at game pixel ({x}, {y})"
 
 
+def extra_common(plan, sheet=False):
+    """the view, light and pixel-grid rules every sheet and scene prompt carries"""
+    refs = ("The other images are the approved concept paintings of this level: copy their materials, colours, outlines, pixel "
+            "size and level of detail exactly; take from them only how each object looks, not their scenes. ") if sheet else (
+            "Image 2 is a small crop of the approved painting of this level: take from it ONLY the pixel size, the dark "
+            "outlines, the flat shading and the crispness; not its colours, buildings, roofs, chimneys or layout. ")
+    tail = ("The light described above only shades the inside of each sprite: no sky, clouds or cast shadows are drawn; the "
+            "magenta stays untouched. ") if sheet else ""
+    return (refs + "VIEW: a strict flat front elevation, like an architect's front drawing: the viewer looks straight at the "
+            "front face of every object; no top surfaces, no side faces, no 3/4 view, no perspective, no vanishing points, no "
+            "tilted or converging lines; every horizontal edge exactly horizontal, every vertical edge exactly vertical; round "
+            "things show as flat-fronted upright shapes whose roundness is only flat shade bands; roofs are flat bands or "
+            "triangles with no roof surface going back; steps are a sawtooth outline of risers; the ground is one flat band. "
+            "Light from the upper left; depth only by flat shade bands (lit left edge, shaded right edge, a darker band under "
+            f"every overhang). PIXEL GRID: Image 1 is a {plan['frame'][0]} x {plan['frame'][1]} game frame shown at 4x; the "
+            "result is reduced back to that size, so draw exactly on Image 1's pixel grid: every pixel square, the size of the "
+            "dog's pixels, aligned to the same grid; one flat colour per pixel; no anti-aliasing, no in-between edge colours, "
+            "no dithering, no texture noise, no lone specks; straight lines exactly straight; nothing smudged or painterly. "
+            + tail + "No text, no labels, no letters, no numbers, no logos anywhere.")
+
+
 def job(plan):
     ROLE = {'obstacle': 'the dog stands on it or bumps into it', 'terrain': 'part of the roof the dog walks on',
             'decoration': 'decoration only', 'backdrop': 'part of the backdrop behind the play line'}
@@ -133,24 +154,25 @@ def job(plan):
     for o in plan['objects']:
         parts.append(f"BOX {o['id']} ({where(o, plan)}, exactly {o['size'][0]} x {o['size'][1]} game pixels): {o['what']}; "
                      f"{ROLE[o['role']]}. Look: {o['detail']}.")
+    if plan.get('kind') == 'scene':
+        dx, dy, dw, dh = plan['dog_box']
+        subject = (f"this is one {plan['frame'][0]} x {plan['frame'][1]} game screen of the level. Turn every grey shape into "
+                   "finished art at exactly its position and size: walkable tops stay exactly where the grey tops are, gaps "
+                   "stay gaps, nothing moves, nothing is added in the dog's path. " + ' '.join(parts) +
+                   f" EXACTLY ONE DOG: the black dog stays exactly as it is, unchanged, not mirrored, not moved, in its box "
+                   f"(top-left at game pixel ({dx}, {dy}), {dw} x {dh}); draw no other dog or animal")
+        extra = plan['scene_rules'] + ' ' + extra_common(plan)
+        j = {'name': plan['jobs'][0], 'purpose': 'concept', 'asset': plan['name'], 'family': plan['name'],
+             'level': plan['level'], 'model': 'nbpro_1k', 'variants': 2, 'base_frame': plan['base_frame'],
+             'style_refs': plan.get('style_refs', []), 'plan': f"art/gen/plans/{plan['name']}.plan.json",
+             'subject': subject, 'extra': extra, 'slot': {'file': 'see the plan', 'where': f"{plan['level']}: {plan['why'][:120]}"}}
+        path = f"art/gen/jobs/{j['name']}.json"; json.dump(j, open(path, 'w'), indent=1, ensure_ascii=False); return path
     subject = ("this is a sprite sheet. Each grey box becomes exactly one game sprite, painted to fill its own box edge to edge "
                "(its outer edge on the box's edge, nothing outside its box, nothing touching another box); the grey of the box "
                "is fully replaced. The magenta background stays one flat pure magenta (#FF00FF) everywhere outside the boxes: "
                "no shadows, no ground, no sky, no glow, no outline on it. " + ' '.join(parts) +
                " The black dog stays exactly as it is; it only shows the size of one game pixel")
-    extra = ("The other images are the approved concept paintings of this level: copy their materials, colours, outlines, pixel "
-             "size and level of detail exactly; take from them only how each object looks, not their scenes. VIEW: a strict flat "
-             "front elevation, like an architect's front drawing: the viewer looks straight at the front face of every object; "
-             "no top surfaces, no side faces, no 3/4 view, no perspective, no vanishing points, no tilted or converging lines; "
-             "every horizontal edge exactly horizontal, every vertical edge exactly vertical; round things show as flat-fronted "
-             "upright shapes whose roundness is only flat shade bands. Light from the upper left; depth only by flat shade "
-             "bands (lit left edge, shaded right edge, a darker band under every overhang). PIXEL GRID: Image 1 is a "
-             f"{plan['frame'][0]} x {plan['frame'][1]} game frame shown at 4x; the result is reduced back to that size and every "
-             "box is cut out by its rectangle, so draw exactly on Image 1's pixel grid: every pixel square, the size of the "
-             "dog's pixels, aligned to the same grid; one flat colour per pixel; no anti-aliasing, no in-between edge colours, "
-             "no dithering, no texture noise, no lone specks; straight lines exactly straight; nothing smudged or painterly. "
-             "The light described above only shades the inside of each sprite: no sky, clouds or cast shadows are drawn; the "
-             "magenta stays untouched. No text, no labels, no letters, no numbers, no logos anywhere.")
+    extra = extra_common(plan, sheet=True)
     j = {'name': plan['jobs'][0], 'purpose': 'concept', 'asset': plan['name'], 'family': plan['name'], 'level': plan['level'],
          'model': 'nbpro_1k', 'variants': 2, 'base_frame': f"art/gen/sheets/{plan['name']}_template.png",
          'style_refs': plan.get('style_refs', []), 'plan': f"art/gen/plans/{plan['name']}.plan.json",

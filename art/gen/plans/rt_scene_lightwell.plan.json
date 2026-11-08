@@ -1,0 +1,198 @@
+{
+ "name": "rt_scene_lightwell",
+ "level": "rooftops",
+ "kind": "scene",
+ "why": "Pilot scene for the new concept recipe (owner 17:37 \"ok\"): the light well and pitched roof of Rooftops (camera x 1560, y 688), painted strictly front-on over the real game frame, in its own look (light-yellow house with green shutters, rust-red neighbour, grey-green well wall, dark metal roofs), with nothing copied from the hotel painting. If it passes the checks, its pieces get cut out and the other spots follow the same recipe.",
+ "jobs": [
+  "rt_scene_lightwell"
+ ],
+ "frame": [
+  320,
+  240
+ ],
+ "base_frame": "art/gen/concepts/base/rt_lightwell_y688_x1560.png",
+ "dog_box": [
+  174,
+  36,
+  52,
+  38
+ ],
+ "style_refs": [
+  "art/gen/concepts/rt_materials_swatch.png"
+ ],
+ "scene_rules": "This scene has its own look, different from the rest of the level: a light-yellow house with dark green shutters, a rust-red neighbour, a grey-green light well wall, dark grey metal roofs. Do NOT add: a church spire or tower, glass skylights, a green copper canopy, a stone hotel front, red clay tile roofs, clay chimney pots, bones, a goose, or anything else not listed. Warm late afternoon light from the left, drawn as flat shade shapes.",
+ "checks_after": "grid cut; overlay against the base frame: the dog pixel-identical in its box and only one dog, every walk line and gap within 1 px of the grey shapes, nothing in the dog's path; independent review for front view and copies; then the owner.",
+ "objects": [
+  {
+   "id": "A",
+   "what": "the back wall of the light well: the narrow gap between the two houses, from x 8 to x 104, from the tiles down to the bottom of the screen",
+   "source": "new: no concept shows a light well from the front",
+   "size": [
+    96,
+    72
+   ],
+   "role": "backdrop",
+   "layer": "back",
+   "view": "front",
+   "box": [
+    8,
+    168,
+    96,
+    72
+   ],
+   "detail": "we look straight at the flat back wall of a deeper house between the two front houses: grey-green plaster (#8FA08A lit, #74866F body, #5A6857 shade), two small square windows with dark frames (#3A3840) and dark panes (#2B3038) one above the other, a black downpipe down its right side; the wall gets one shade darker in a flat band below y 200 (a hard step); no side walls of the well visible, only the vertical edges of the two front houses at x 8 and x 104"
+  },
+  {
+   "id": "B",
+   "what": "the corner of the left house, its sandstone parapet cap the dog can stand on at y 168",
+   "source": "new: a rust-red Gamla stan house",
+   "size": [
+    8,
+    72
+   ],
+   "role": "terrain",
+   "layer": "play",
+   "view": "front",
+   "box": [
+    0,
+    168,
+    8,
+    72
+   ],
+   "detail": "rust-red plaster (#B0503E lit, #8E3E32 body, #6B2E28 shade) with a sandstone parapet cap 6 px tall along its top (sandstone #CCAE8B lit top row, #A28B75, #7F685F, #473B39); 1 px dark outline #2D2224 where it meets the sky and the well"
+  },
+  {
+   "id": "C",
+   "what": "three loose roof tiles lying across the well (game pieces the dog jumps on)",
+   "source": "new: game pieces; keep the orange bars exactly",
+   "size": [
+    88,
+    6
+   ],
+   "role": "obstacle",
+   "layer": "play",
+   "view": "front",
+   "box": [
+    12,
+    168,
+    88,
+    6
+   ],
+   "detail": "keep the three orange bars exactly as they are (they are game sprites drawn by the game); under them one thin black iron rail (2 px, #3A3840) spans the well from x 8 to x 104 at y 174, fixed into both house corners"
+  },
+  {
+   "id": "D",
+   "what": "two loose tiles high up at the left, on a rod between two thin iron poles standing in the light well",
+   "source": "new: game pieces; keep the orange bars exactly",
+   "size": [
+    80,
+    6
+   ],
+   "role": "obstacle",
+   "layer": "play",
+   "view": "front",
+   "box": [
+    0,
+    72,
+    80,
+    6
+   ],
+   "detail": "keep the two orange bars exactly; under them a thin black iron rod (2 px) from x 0 to x 76 at y 78, held by two thin black iron poles (2 px wide) at x 6 and x 70 that go straight down into the light well behind the lower tiles; nothing else up there"
+  },
+  {
+   "id": "E",
+   "what": "a timber walkway board above the flat roof (the dog stands on it), on two iron posts standing on the roof",
+   "source": "new: no concept shows it",
+   "size": [
+    96,
+    6
+   ],
+   "role": "obstacle",
+   "layer": "play",
+   "view": "front",
+   "box": [
+    104,
+    72,
+    96,
+    6
+   ],
+   "detail": "a plank of weathered timber 6 px tall (#9A7251 lit top row, #75523E body, #623E2C bottom row, plank joints every 24 px), 1 px dark outline #2D2224; two thin black iron posts (2 px wide, #3A3840) under it at x 112 and x 192 from y 78 down to the roof at y 168; the dog keeps standing on it exactly where it is"
+  },
+  {
+   "id": "F",
+   "what": "a second timber board high up at the right, over the gable, on one iron post",
+   "source": "new: no concept shows it",
+   "size": [
+    64,
+    6
+   ],
+   "role": "obstacle",
+   "layer": "play",
+   "view": "front",
+   "box": [
+    232,
+    40,
+    64,
+    6
+   ],
+   "detail": "the same timber plank as E, 1 px dark outline; one thin black iron post (2 px) under its middle at x 262 from y 46 down to the gable slope"
+  },
+  {
+   "id": "G",
+   "what": "the light-yellow house front under the flat roof (x 104 to 232): its parapet cap is the walk line at y 168",
+   "source": "new: a light-yellow Gamla stan house",
+   "size": [
+    128,
+    72
+   ],
+   "role": "terrain",
+   "layer": "play",
+   "view": "front",
+   "box": [
+    104,
+    168,
+    128,
+    72
+   ],
+   "detail": "a sandstone parapet cap 7 px tall along the top edge (sandstone #CCAE8B lit top row, #A28B75, #7F685F, #473B39), a 2 px darker shadow band under it; light-yellow plaster wall (#EBC86E lit, #D9AE52 body, #B88E3E shade, #8F6B2E darkest); three tall windows evenly spaced, each 14 px wide and 26 px tall with dark green wooden shutters on both sides (#4F7A5A, #3B5C44) and a sandstone sill; 1 px dark outline #2D2224 where the cap meets the sky"
+  },
+  {
+   "id": "H",
+   "what": "the gable end of the same house, facing us: the triangle from x 232 at y 168 up to its peak at x 296, y 104 and down past the right edge",
+   "source": "new: a gable seen exactly from the front",
+   "size": [
+    88,
+    136
+   ],
+   "role": "terrain",
+   "layer": "play",
+   "view": "front",
+   "box": [
+    232,
+    104,
+    88,
+    136
+   ],
+   "detail": "a flat light-yellow plaster triangle (same plaster as G); along its two sloping top edges a 4 px band of dark grey sheet-metal roof seen exactly edge-on (#5A5E68 top row, #4A4E57, #3A3E46), no roof surface visible; one small round attic window (10 px) centred under the peak; the dog walks up the slope, so the slope line stays exactly where the grey slope is; 1 px dark outline #2D2224 along the slopes"
+  },
+  {
+   "id": "I",
+   "what": "the far town behind, in the sky area above the roofs",
+   "source": "new: far roofs for this scene only",
+   "size": [
+    320,
+    60
+   ],
+   "role": "backdrop",
+   "layer": "far",
+   "view": "front",
+   "box": [
+    0,
+    108,
+    320,
+    60
+   ],
+   "detail": "a flat silhouette band of distant rooftops, only where the sky shows: dark grey metal roofs and a few copper-green ones, plain chimneys, NO church spire, NO tower; lighter and less contrasted than the near houses; flat fills, 6 to 8 colours; the sky above in three flat warm bands; the clouds may stay as they are"
+  }
+ ]
+}
