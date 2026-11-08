@@ -1,0 +1,20 @@
+{
+ "purpose": "redraw",
+ "family": "rt_redraw_08nov",
+ "level": "rooftops",
+ "variants": 2,
+ "name": "rt_window_pe",
+ "asset": "rt_window",
+ "model": "sc_pe",
+ "source": "art/gen/concepts/crops/rooftops/wall_windows.png",
+ "target_px": [
+  16,
+  24
+ ],
+ "subject": "one closed window of an old Stockholm house: a 4-pane window (two columns, two rows) with a dark brown wooden frame 1 px wide and a 1 px glazing cross, blue-grey glass panes with a lighter top-left pane, a light stone sill along the bottom, front-on",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops/kit/",
+  "where": "Rooftops, every house front (proof of method, owner 10:25 yes)"
+ },
+ "extra": "Clean pixel art: solid 1 px lines, no anti-aliasing, no stray pixels, at most 8 colours."
+}

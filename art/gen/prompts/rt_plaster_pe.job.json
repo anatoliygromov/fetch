@@ -1,0 +1,24 @@
+{
+ "name": "rt_plaster_pe",
+ "purpose": "redraw",
+ "model": "SpriteCook Pixel Engine Image (exact 16-128 px, no references)",
+ "tool": "spritecook",
+ "spritecook": {
+  "model": "pixel-engine-image-v1",
+  "pixel": true,
+  "width": 64,
+  "height": 64
+ },
+ "inputs": [
+  "art/gen/concepts/crops/rooftops/wall_windows.png"
+ ],
+ "prompt_file": "art/gen/prompts/rt_plaster_pe.txt",
+ "family": "rt_redraw_08nov",
+ "asset": "rt_wall",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops/kit/",
+  "where": "Rooftops, every house front (proof of method, owner 10:25 yes)"
+ },
+ "credits": 12,
+ "ledger_job": "rt_plaster_pe@1108-102608"
+}

@@ -1,0 +1,20 @@
+{
+ "purpose": "redraw",
+ "family": "rt_redraw_08nov",
+ "level": "rooftops",
+ "variants": 2,
+ "name": "rt_plaster_pe",
+ "asset": "rt_wall",
+ "model": "sc_pe",
+ "source": "art/gen/concepts/crops/rooftops/wall_windows.png",
+ "target_px": [
+  64,
+  64
+ ],
+ "subject": "a seamless square texture of smooth warm ochre plaster wall, front-on, flat colour with two or three large soft-edged shade shapes in one darker ochre and a few faint hairline cracks; it tiles in both directions",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops/kit/",
+  "where": "Rooftops, every house front (proof of method, owner 10:25 yes)"
+ },
+ "extra": "Clean pixel art: solid 1 px lines, no anti-aliasing, no stray pixels, at most 8 colours."
+}
