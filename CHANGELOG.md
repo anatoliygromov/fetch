@@ -2,6 +2,10 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `preview/08nov-levels456`: levels 4 to 6 phase 1 together, for the owner's test (not for main as is)
+- lv/08nov-sn (Söder Hill, Night Harbour, the concepts) + lv/08nov-rooftops (round 3, 630b737).
+- Preview only: `riverwalk/PREVIEW_UNLOCK` opens every level in the level select (flow.lua F.load). Drop the file and that line before any merge to main.
+
 ## Branch `lv/08nov-night` (on lv/08nov-base): Night Harbour from greybox toward finished, phase 1 (0 credits, by rule)
 - **QA pass and review frames:** asset_qa on every new part: the fish shed's door braces no longer leave small patches (blotches), its window glints and life ring are gone (window specks), the front pile's rope is a clear band, the lantern's frame is lit iron. Contact sheets before and after, colour and greyscale, and five 4x crops in `docs/review/08nov/night/`. Checks: PEPPER UNCHANGED (3908), physics 40/40, `--qa` 8037 runs 0 problems, flow 139/139, Tiled passed, joins 16/16.
 - **E, the backdrop by rule (levelart/night.lua `M:drawFar`):** each layer on its own ground, none on the quay's top line any more (audit NH18). The sky in nine flat navy steps to a violet-blue horizon glow, the stars and a built crescent moon behind everything; the old town on the far shore (`far_town.png`: stepped and pointed gables on a 4 px grid, a spire and a tower, lit windows on a grid) scrolling 128 px over the level, never repeated, its foot under the bay; the bay's far side at 0.3 (`shore.png`, 1568 px, never repeated: boat sheds on a pier on piles, moored sailboats and motorboats with masthead lights, every light reflected as a broken amber column, the hulls' dark reflections) standing in its own water, which runs down to the paving's wet back edge.

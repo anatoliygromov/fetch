@@ -47,6 +47,8 @@ function F.load()
   for n in (read("progress.txt") or ""):gmatch("[%w_]+") do F.unlocked[n] = true end
   for _, l in ipairs(F.levels) do if l.was and F.unlocked[l.was] then F.unlocked[l.name] = true end end   -- (D2: a save from
   -- before the tall levels: the flat level it opened opens its tall twin)
+  -- (preview builds only, 8 Nov) the file PREVIEW_UNLOCK in the game folder opens every level for the owner's test
+  if F.save and F.prefix == "" and love.filesystem.getInfo("PREVIEW_UNLOCK") then for _, l in ipairs(F.levels) do F.unlocked[l.name] = true end end
   F.bestRun = tonumber(read("best_run.txt") or "") or 0
   F.hard = (read("hard.txt") or ""):match("1") ~= nil
 end
