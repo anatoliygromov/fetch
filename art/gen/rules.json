@@ -326,5 +326,10 @@
    "tree_far"
   ],
   "max_top_y": -1
+ },
+ "plans_required": {
+  "since": "2026-11-08 14:20",
+  "words": "owner 14:19 'how do we make sure youre not skipping stuff?', 14:20 'yes'",
+  "rule": "every paid job names an owner-approved, unchanged plan (art/gen/plans/, tools/plan.py); preflight refuses otherwise; sheet templates are drawn from the plan; every object is front view"
  }
 }

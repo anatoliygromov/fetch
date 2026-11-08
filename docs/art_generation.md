@@ -9,6 +9,21 @@ them there.
 cyclist read as a child), copied whole scenes from a full game screen used as style, and the render was shrunk by an
 uneven factor with averaging (the batch 1 defect). The steps below make each of those fail before a credit is spent.
 
+## Step 0: an owner-approved plan, or no credits (8 Nov 2026)
+Owner 14:19: "how do we make sure youre not skipping stuff?"; 14:20: "yes" to this gate.
+1. Write the plan first: `art/gen/plans/<name>.plan.json` (format in `tools/plan.py`). Every object: what it is, the
+   concept it comes from (or `new:` and why), its size in game pixels against Pepper, obstacle or decoration, layer,
+   front view, its box on the sheet, and every look requirement in words.
+2. Show it to the owner as a page (`tools/plan.py page`); he reads the plan itself, not a summary.
+3. Only his yes, in his words, approves it: `tools/plan.py approve PLAN --words "..." --when "..."`. The approval stores a
+   hash; any later edit voids it. Every approval is logged in `art/gen/plans/approvals.log`.
+4. Sheets: draw the template from the plan (`tools/plan.py template PLAN`), never by hand.
+5. The job names its plan (`"plan": "art/gen/plans/<name>.plan.json"`); `tools/preflight.py` refuses a job with no plan,
+   an unapproved or changed plan, a plan that does not list the job, or a sheet template not drawn from the plan. The
+   ledger plan row carries the plan's hash, so the credit audit can match every charge to a plan.
+6. After generation: grid cut, checks against the plan, an independent review, the Art Review board. A failed piece is
+   shown as failed, with the reason.
+
 ## Steps
 1. **Job** `art/gen/jobs/NAME.json`: level, layer (char, play, back, mid, front), kind, real height in metres, target
    size in px (= real height x the layer's px per metre), 2-4 check measures, subject, part map, a size sentence
