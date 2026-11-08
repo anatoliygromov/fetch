@@ -211,3 +211,4 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-08 14:07,spent,rt_sauna_concept@1108-135122,,,,,320,spent,"Artlist batch 8 Nov 14:03, generation 01a1bb42-9cfd-7f6e-b114-bd58d80904d6, owner yes 14:02"
 2026-11-08 14:07,spent,rt_longroof_concept@1108-135122,,,,,320,spent,"Artlist batch 8 Nov 14:03, generation 01a1bb42-9d10-75ab-8e03-1cf37bd251b3, owner yes 14:02"
 2026-11-08 14:07,spent,rt_roofcafe_concept@1108-135122,,,,,320,spent,"Artlist batch 8 Nov 14:03, generation 01a1bb42-9cef-7318-ab35-e638213578f1, owner yes 14:02"
+2026-11-08 14:16,plan,rt_sheet1_chimneys@1108-141644,rt_sheet1_chimneys,rt_sheets_08nov,artlist,Nano Banana Pro I2I 1K,320,planned,"concept (reference only). let's try a sprite sheet again then, let's test it (8 Nov 14:14)"

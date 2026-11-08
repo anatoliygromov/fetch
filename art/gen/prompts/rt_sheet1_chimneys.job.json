@@ -1,0 +1,23 @@
+{
+ "name": "rt_sheet1_chimneys",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/sheets/rt_sheet1_template.png"
+ ],
+ "prompt_file": "art/gen/prompts/rt_sheet1_chimneys.txt",
+ "tool": "artlist",
+ "family": "rt_sheets_08nov",
+ "asset": "rt_sheet1_chimneys",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops.lua (chimney stacks, chimney blocks, nest chimney, water tank, pots, nest, back-row chimneys)",
+  "where": "Rooftops, sprite sheet 1 (test): chimneys and roof clutter; boxes in art/gen/sheets/rt_sheet1_template.json"
+ },
+ "credits": 320,
+ "ledger_job": "rt_sheet1_chimneys@1108-141644"
+}
