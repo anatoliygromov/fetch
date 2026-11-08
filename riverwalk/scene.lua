@@ -780,6 +780,7 @@ Sc.STEP_RW = 8                                                    -- (day/07nov-
 Sc.ROAD_RUNS_ON = true                                            -- (owner, 7 Nov: "the asphalt goes on") the road runs on in
 Sc.SLOPE_SHADE = os.getenv("SLOPE_SHADE") or "face"            -- (owner, 7 Nov, picked B) "face": the steps' side in shade; "slope"
 Sc.HILL_SHADE = tonumber(os.getenv("HILL_SHADE") or "0.11")       -- (owner, 8 Nov) the road down the slope, shaded
+Sc.STAIRS = os.getenv("STAIRS") or "cut"                          -- (owner, 8 Nov) "cut": steps cut into the quay; "blocks": the old
 Sc.ROAD_Y, Sc.ROAD_END_W = 199, 6                                 -- front of the steps and the lower quay to the water (paintQuay)
 local function columnTop(w, x)                                      -- the first walkable top at or under y 150, or nil
   if x < 0 or x >= w.width then return nil end
@@ -1147,7 +1148,36 @@ function Sc.paintQuay(w, props, def)
     local t, k = top[x], kind[x]
     if k == "ramp" then t = stepTop(x) end
     -- 1 the paving (rows 0-21 from t - 12)
-    if k == "ramp" then
+    if k == "ramp" and cheekOn(x) and Sc.STAIRS == "cut" then
+      -- (owner, 8 Nov: the steps looked like pillars, had no risers, did not match the walks, and the dark side was
+      -- wrong) stairs cut into the quay: the upper walk's paving runs on along the back as a strip (its own tile rows
+      -- 0-3, so it joins the promenade with no seam), a granite retaining wall behind the steps, and each step a
+      -- shallow tread of the walks' paving (the tile's rows 8-21 with its lit front edge), its back row in the
+      -- wall's contact shadow. Where a step drops, the higher tread's end is its riser edge: lit when it faces the
+      -- sun (left), in shade when it faces right, with a 1 px shadow on the lower tread under a right-facing drop
+      local tp = Sc.PROMENADE
+      lg.setColor(1, 1, 1, 1)
+      if t <= tp then                                                           -- the top step: the walk itself
+        lg.draw(pave, q[x % pw], x, t - 12); px(Q.pb, x, t - 12)
+      else
+      clip(x, tp - 12, 1, 4); lg.draw(pave, q[x % pw], x, tp - 12); clip()       -- the back strip
+      px(Q.pb, x, tp - 12)
+      px(Q.kf1, x, tp - 8)                                                      -- its front edge, lit
+      for y = tp - 7, t - 5 do px(wallColour(x, y, nil), x, y) end              -- the retaining wall
+      lg.setColor(1, 1, 1, 1)
+      clip(x, t - 4, 1, 14); lg.draw(pave, q[x % pw], x, t - 12); clip()        -- the tread
+      px(Q.sh, x, t - 4)                                                        -- the wall's foot
+      local lt = (kind[x - 1] == "ramp") and stepTop(x - 1) or top[x - 1]
+      local rt = (kind[x + 1] == "ramp") and stepTop(x + 1) or top[x + 1]
+      if lt and lt > t + 2 then for y = t - 3, t + 9 do px(Q.top1, x, y) end end   -- riser edge facing left: lit
+      if rt and rt > t + 2 then for y = t - 3, t + 9 do px(Q.pj, x, y) end end     -- facing right: in shade
+      if lt and lt < t - 2 then for y = t - 3, t + 7 do px(Q.ps[3], x, y) end end  -- under a right-facing drop
+      -- the wall's end against the lower quay: a quoined end stone, lit
+      if kind[x - 1] == "quay" or kind[x + 1] == "quay" then
+        for y = tp - 7, t - 5 do px((y % 6 == 0) and Q.wj or Q.we, x, y) end
+      end
+      end
+    elseif k == "ramp" then
       local edge = kind[x - 1] ~= "ramp" or stepTop(x - 1) ~= t     -- a step's first column: the joint
       local si = math.floor(x / Sc.STEP_RW)
       for r = 0, 19 do
@@ -1194,7 +1224,7 @@ function Sc.paintQuay(w, props, def)
       local yk = cheekTop(x)
       for y = t + 10, yk + 4 do
         local c = (y == yk + 4) and Q.kf3 or (y == t + 10 and Q.kf1 or Q.kf2)
-        if Sc.SLOPE_SHADE == "face" and y > t + 10 then c = (y >= yk + 3) and Q.sh or Q.kj end
+        if Sc.SLOPE_SHADE == "face" and y > t + 10 and Sc.STAIRS ~= "cut" then c = (y >= yk + 3) and Q.sh or Q.kj end
         if joint and y > t + 10 and y <= t + 12 and y < yk + 4 then c = Q.kj end
         px(c, x, y)
       end
