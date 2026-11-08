@@ -1,0 +1,25 @@
+{
+ "name": "rt_hotel_redraw",
+ "purpose": "redraw",
+ "model": "SpriteCook Nano Banana 2.1 1K, pixel on",
+ "tool": "spritecook",
+ "spritecook": {
+  "model": "gemini-nano-banana-2.1",
+  "pixel": true,
+  "resolution": "1K",
+  "width": 96,
+  "height": 55
+ },
+ "inputs": [
+  "art/gen/concepts/crops/rooftops/hotel_front_2bays.png"
+ ],
+ "prompt_file": "art/gen/prompts/rt_hotel_redraw.txt",
+ "family": "rt_redraw_08nov",
+ "asset": "rt_hotel_bay",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops/kit/hotel_bay.png",
+  "where": "Rooftops (pilot of the concept-piece method, owner 10:33 ok)"
+ },
+ "credits": 12,
+ "ledger_job": "rt_hotel_redraw@1108-103540"
+}

@@ -1,0 +1,20 @@
+{
+ "name": "rt_chimney_redraw",
+ "purpose": "redraw",
+ "asset": "rt_chimney",
+ "family": "rt_redraw_08nov",
+ "level": "rooftops",
+ "model": "sc_nb21",
+ "variants": 2,
+ "source": "art/gen/concepts/crops/rooftops/chimney_pots.png",
+ "target_px": [
+  45,
+  64
+ ],
+ "subject": "exactly the brick chimney stack in image 1 with its stone cap and its three clay pots, alone on a transparent background, keeping its shape, proportions, brick pattern, colours and light",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops/kit/chimney.png",
+  "where": "Rooftops, every chimney stack (pilot of the concept-piece method, owner 10:33 ok)"
+ },
+ "extra": "Clean pixel art: solid dark outline, no anti-aliasing, no stray pixels, at most 12 colours. Leave out the roof tiles around it."
+}

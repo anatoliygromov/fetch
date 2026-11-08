@@ -1,0 +1,20 @@
+{
+ "name": "rt_hotel_redraw",
+ "purpose": "redraw",
+ "asset": "rt_hotel_bay",
+ "family": "rt_redraw_08nov",
+ "level": "rooftops",
+ "model": "sc_nb21",
+ "variants": 1,
+ "source": "art/gen/concepts/crops/rooftops/hotel_front_2bays.png",
+ "target_px": [
+  96,
+  55
+ ],
+ "subject": "exactly this section of the hotel front in image 1: the green copper roof edge, the dentil cornice, the cream pilasters with capitals and the two tall dark brown windows, keeping its shape, proportions, colours and light, filling the whole image edge to edge so it can repeat sideways",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops/kit/hotel_bay.png",
+  "where": "Rooftops (pilot of the concept-piece method, owner 10:33 ok)"
+ },
+ "extra": "Clean pixel art: solid dark outline, no anti-aliasing, no stray pixels, at most 14 colours."
+}

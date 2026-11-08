@@ -1,0 +1,20 @@
+{
+ "name": "rt_skylight_redraw",
+ "purpose": "redraw",
+ "asset": "rt_skylight",
+ "family": "rt_redraw_08nov",
+ "level": "rooftops",
+ "model": "sc_nb21",
+ "variants": 1,
+ "source": "art/gen/concepts/crops/rooftops/skylight.png",
+ "target_px": [
+  96,
+  40
+ ],
+ "subject": "exactly the glass skylight in image 1: its dark iron frame with mullions and its glass panes with the diagonal glint, alone on a transparent background; leave out the loose red clay tiles and draw the glass and frame where they were, keeping its shape, colours and light",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops/kit/skylight.png",
+  "where": "Rooftops (pilot of the concept-piece method, owner 10:33 ok)"
+ },
+ "extra": "Clean pixel art: solid dark outline, no anti-aliasing, no stray pixels, at most 14 colours."
+}

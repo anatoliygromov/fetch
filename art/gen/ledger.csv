@@ -203,3 +203,12 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-08 10:28,verdict,,rt_window,,,,,pending,"proof: clean (win_b), shown to the owner 8 Nov"
 2026-11-08 10:28,verdict,,rt_cap,,,,,pending,"proof: clean (cap_a), shown to the owner 8 Nov"
 2026-11-08 10:28,verdict,,rt_wall,,,,,rejected,Pixel Engine plaster tile repeats visibly and had a border; flat wall with shade shapes by rule reads better
+2026-11-08 10:33,plan,rt_chimney_redraw@1108-103356,rt_chimney,rt_redraw_08nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",24,planned,"redraw from concept. Owner 8 Nov 10:14-10:15, pointing at rt_hotel_concept_a.png: ""this one"", then pi 8 Nov 10:33: ok lets try (concept-piece pilot: chimney, skylight, hotel front)"
+2026-11-08 10:35,plan,rt_skylight_redraw@1108-103540,rt_skylight,rt_redraw_08nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",12,planned,"redraw from concept. Owner 8 Nov 10:14-10:15, pointing at rt_hotel_concept_a.png: ""this one"", then pi 8 Nov 10:33: ok lets try (concept-piece pilot: chimney, skylight, hotel front)"
+2026-11-08 10:35,plan,rt_hotel_redraw@1108-103540,rt_hotel_bay,rt_redraw_08nov,spritecook,"SpriteCook Nano Banana 2.1 1K, pixel on",12,planned,"redraw from concept. Owner 8 Nov 10:14-10:15, pointing at rt_hotel_concept_a.png: ""this one"", then pi 8 Nov 10:33: ok lets try (concept-piece pilot: chimney, skylight, hotel front)"
+2026-11-08 10:36,spent,rt_chimney_redraw@1108-103356,,,,,24,spent,"job aca775cd-e394-4cd2-9c07-d2e590f5bc6f; edit = crop chimney_pots (54d750ab), style = concept a; 2 variants 56x56 (a used, 41x55 after crop)"
+2026-11-08 10:36,spent,rt_skylight_redraw@1108-103540,,,,,12,spent,"job 492af771-7f82-405d-84bf-92526adfcf55; edit = crop skylight (f171d075); 137x56, glints drawn as dark slashes, bigger than the 96 px slot"
+2026-11-08 10:36,spent,rt_hotel_redraw@1108-103540,,,,,12,spent,"job 882bcd8e-1045-4b83-b0de-7da6eeff7002; edit = crop hotel front 2 bays (be6854f4); 152x85, cleaned to 16 colours"
+2026-11-08 10:36,verdict,,rt_chimney,,,,,pending,pilot: close to the concept crop; shown to the owner
+2026-11-08 10:36,verdict,,rt_hotel_bay,,,,,pending,"pilot: close to the concept crop, 16 colours; shown to the owner"
+2026-11-08 10:36,verdict,,rt_skylight,,,,,fix,"pilot: dark slash glints, jagged frame after cleaning, 137 px for a 96 px slot: build the frame by rule or redo on an exact blockout"
