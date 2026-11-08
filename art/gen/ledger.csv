@@ -214,3 +214,4 @@ time,kind,job,asset,family,tool,model,credits,status,note
 2026-11-08 14:16,plan,rt_sheet1_chimneys@1108-141644,rt_sheet1_chimneys,rt_sheets_08nov,artlist,Nano Banana Pro I2I 1K,320,planned,"concept (reference only). let's try a sprite sheet again then, let's test it (8 Nov 14:14)"
 2026-11-08 14:19,spent,rt_sheet1_chimneys@1108-141644,,,,,320,spent,"Artlist 8 Nov 14:17, generation 01a1bb4e-89cc-775c-833a-f106fd690a44; owner 14:18: random stuff, test rejected"
 2026-11-08 14:19,verdict,,rt_sheet1_chimneys,,,,,rejected,"owner 14:18: 'you are making just some random stuff'; b ignored the layout, a lost the concept look"
+2026-11-08 14:31,plan,rt_sheet_chimneys@1108-143155,rt_sheet_chimneys,rt_sheet_chimneys,artlist,Nano Banana Pro I2I 1K,320,planned,"concept (reference only). yes go (8 Nov 14:31, sheet 1 plan, 320) plan art/gen/plans/rt_sheet_chimneys.plan.json bd144bf18ebdc55f"

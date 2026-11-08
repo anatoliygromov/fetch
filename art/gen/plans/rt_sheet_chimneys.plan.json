@@ -196,5 +196,10 @@
    ],
    "detail": "an upright terracotta pot, straight sides, a rolled lip on top 2 px wider each side with a flat top edge, a 3 px base ring; clay #DF7B4D lit band left, #AB503A body, #78352D shaded right, #46201B darkest; an unbroken 1 px dark outline #2D2224 all round"
   }
- ]
+ ],
+ "approval": {
+  "words": "yes go",
+  "when": "8 Nov 14:31, after reading the plan table and template",
+  "sha": "bd144bf18ebdc55f"
+ }
 }

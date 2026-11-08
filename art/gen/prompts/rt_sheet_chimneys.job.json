@@ -1,0 +1,23 @@
+{
+ "name": "rt_sheet_chimneys",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/sheets/rt_sheet_chimneys_template.png"
+ ],
+ "prompt_file": "art/gen/prompts/rt_sheet_chimneys.txt",
+ "tool": "artlist",
+ "family": "rt_sheet_chimneys",
+ "asset": "rt_sheet_chimneys",
+ "slot": {
+  "file": "see the plan",
+  "where": "rooftops: Sheet 1 (test) for Rooftops: every chimney the level needs, as clean separate game sprites in the look of the approved h"
+ },
+ "credits": 320,
+ "ledger_job": "rt_sheet_chimneys@1108-143155"
+}
