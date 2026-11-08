@@ -63,6 +63,10 @@ PAL = {
     # the street: granite paving, kerb, cobbles
     "gr_hi": "cfc6bc", "gr": "aea69c", "gr_sh": "8a827a", "gr_jt": "6e6662", "cob": "8e847a", "cob_hi": "a49a8e",
     "cob_sh": "6e665f",
+    # the props drawn by the module in code (levelart/rooftops.lua; manifest.lua carries this table to it): timber,
+    # planters' greenery, awning canvas
+    "wd_hi": "c8925e", "wd": "a06c44", "wd_sh": "7a5034", "leaf_hi": "8aac5a", "leaf": "62884a", "leaf_sh": "48683c",
+    "canvas": "f2e2c4",
 }
 NAMES = list(PAL)
 IDX = {n: i + 1 for i, n in enumerate(NAMES)}            # 0 = transparent
@@ -423,7 +427,9 @@ def terrain_key(top):
 def manifest(ch, top):
     lines = ["-- written by tools/build_rooftops_art.py: the ground chunks of the Rooftops art (do not edit)", "return {",
              f'  key = "{terrain_key(top)}",   -- the map surface the art was built for (every 8th column\'s top)',
-             f"  chunk = {CHUNK},", "  ground = {"]
+             f"  chunk = {CHUNK},",
+             "  pal = { " + ", ".join(f'{k} = "{v}"' for k, v in PAL.items()) + " },   -- the palette (PAL)",
+             "  ground = {"]
     for (x, y), a in sorted(ch.items()):
         lines.append(f'    {{ x = {x}, y = {y}, w = {a.shape[1]}, h = {a.shape[0]}, file = "ground_{x}_{y}.png" }},')
     lines += ["  },", "}", ""]

@@ -136,7 +136,8 @@ end
 Rf.blob = blob
 -- behind Pepper's line: the steam column (outlined cloud blobs, 3 frames), the warning's wisps and specks
 function Rf.drawBack(s, cam, t)
-  Rf.drawLandmark(s, cam, t)
+  if not (s.levelArt and s.levelArt.drawLandmark) then Rf.drawLandmark(s, cam, t) end   -- (8 Nov) a level's art module
+  -- draws its own copy on its far layer (levelart/rooftops.lua: on the far town's roofs, behind the mid town)
   for _, v in ipairs(s.vents or {}) do
     local d = v.d
     local cx = (d.x0 + d.x1) / 2 - cam

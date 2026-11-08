@@ -2,6 +2,7 @@
 return {
   key = "b9ba616df07045a23ecb8220a572ef16",   -- the map surface the art was built for (every 8th column's top)
   chunk = 512,
+  pal = { ink = "2a1c1e", cap_hi = "e6cea6", cap_top = "d2b68e", cap = "b49a7c", cap_sh = "927a66", cap_jt = "6e5a50", cu_hi = "a8cc9c", cu_top = "88b48a", cu = "6c9a78", cu_sh = "527c6a", cu_jt = "3e5e56", tin_hi = "d6d8d8", tin = "a8acb2", tin_sh = "7a808a", och_hi = "e4a666", och = "d48c4e", och_sh = "b87446", och_dk = "9a5c3c", yel_hi = "f0d08e", yel = "e2ba72", yel_sh = "c89c5a", yel_dk = "a47e46", sal_hi = "e8ae88", sal = "d6906c", sal_sh = "b87458", sal_dk = "945a48", cre_hi = "f2dcb2", cre = "e2c69a", cre_sh = "c6a67e", cre_dk = "a28868", crt_hi = "c48a5a", crt = "b07648", crt_sh = "96603e", crt_dk = "7a4c34", frame = "6e4c40", glass = "5a6a72", glass_hi = "90a2a8", wood = "7a4a34", wood_sh = "76493a", tile_hi = "e8875a", tile = "c8603e", tile_sh = "a24a34", tile_dk = "7c3a2c", iron = "3e3a44", iron_hi = "6a6672", gl = "a2bac2", gl_hi = "d2e0e0", gl_sh = "7e98a4", ch_hi = "aa8c78", ch = "8e6e5e", ch_sh = "70564a", ch_jt = "5c463e", gr_hi = "cfc6bc", gr = "aea69c", gr_sh = "8a827a", gr_jt = "6e6662", cob = "8e847a", cob_hi = "a49a8e", cob_sh = "6e665f", wd_hi = "c8925e", wd = "a06c44", wd_sh = "7a5034", leaf_hi = "8aac5a", leaf = "62884a", leaf_sh = "48683c", canvas = "f2e2c4" },   -- the palette (PAL)
   ground = {
     { x = 0, y = 1024, w = 512, h = 176, file = "ground_0_1024.png" },
     { x = 512, y = 512, w = 512, h = 512, file = "ground_512_512.png" },
