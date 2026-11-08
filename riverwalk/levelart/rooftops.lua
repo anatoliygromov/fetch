@@ -11,6 +11,9 @@
 --        the far town rise 0.03 of the camera's climb, the mid town 0.06, each strip filled to its bottom, so nothing
 --        hangs over empty sky at any tier; the back row moves with the world. The nest chimney's far copy (the goal
 --        in view from below) stands on the far town's roofs, between the far and the mid town.
+--   B    drawBack, drawProp, drawLamp: holders by rule (posts to the floor below, brackets into a wall, rails under
+--        loose tiles), the slabs as stone, timber, copper or striped canvas, built stand-ins for the decor and the
+--        solid props, the approved lamp post standing on its roof
 --   look the level's colour script (look.lua format): warm late-afternoon light between Downtown's midday and Söder's
 --        evening
 local Sc = require("scene")
@@ -110,13 +113,268 @@ end
 M.BUILT = { CAFE = true, ["STAIRWELL A"] = true, BAKERY = true, ["MARKET HALL"] = true, LAUNDRY = true, ["ROOF BAR"] = true,
   HOTEL = true, ["LIGHT COURT"] = true, ["TALL BLOCK"] = true, ["CHIMNEY STACKS"] = true, ["SAUNA ROOF"] = true,
   ["THE LONG ROOF"] = true }
--- A: a prop as its greybox shape with no label (decor: a flat box in its layer's colour; the rest outlined)
+-- B: holders, contacts and built stand-ins (code, the tool's palette PAL carried by manifest.lua). Every slab is held:
+-- posts down to the floor under it (the terrain or a solid prop, never a loose tile or another slab) at both ends and
+-- at most 64 px apart, or, where a wall stands at its end, an iron bracket into that wall; every run of loose tiles
+-- lies on an iron rail from ledge to ledge (it stays when a tile falls); the light court's post runs up to its balcony.
+-- Slabs Pepper uses are obstacles: an unbroken 1 px ink outline, the top row over the box's top - 1. Holders and
+-- the decor stand-ins are decoration: no outline, their edges a darker shade of their own colour.
+local P = {}                                                      -- the palette, by name (manifest.lua's pal)
+local function col(n) lg.setColor(P[n]) end
+local function rect(n, x, y, w, h) if w > 0 and h > 0 then col(n); lg.rectangle("fill", math.floor(x), math.floor(y), w, h) end end
+function M:palette()
+  if next(P) then return true end
+  local ok, man = pcall(require, "levelart.rooftops.manifest")
+  if not ok then return false end
+  for k, v in pairs(man.pal) do P[k] = hex(v) end
+  return true
+end
+local SLAB = { BALCONY = "stone", ["COPPER ROOF"] = "copper", AWNING = "awning", ["CAFE AWNING"] = "awning" }
+local function material(pr) return SLAB[pr.name] or "timber" end
+-- the first floor at or under y in column x: the terrain's top, or a solid prop's (not a loose tile, not a slab)
+function M:floorBelow(x, y)
+  local best
+  for _, m in ipairs(Sc.columnRuns(self.world, math.floor(x), "all")) do if m[1] >= y and (not best or m[1] < best) then best = m[1] end end
+  for _, q in ipairs(self.def.props) do
+    if q.kind == "solid" and x >= q.x0 and x < q.x1 and q.y0 >= y and (not best or q.y0 < best) then best = q.y0 end
+  end
+  return best
+end
+function M:wallAt(x, y)                                           -- terrain standing up past y in column x
+  local r = Sc.columnRuns(self.world, math.floor(x), "all")[1]
+  return r and r[1] < y
+end
+-- the holders of every slab, worked out once
+function M:holders()
+  if self.hold then return self.hold end
+  local H = {}
+  for _, pr in ipairs(self.def.props) do
+    if pr.kind == "oneway" and not pr.loose and pr.layer == "play" then
+      local iron = material(pr) ~= "timber"
+      local wl = self:wallAt(pr.x0 - 2, pr.y0) and self:wallAt(pr.x0 - 8, pr.y0)
+      local wr = self:wallAt(pr.x1 + 1, pr.y0) and self:wallAt(pr.x1 + 7, pr.y0)
+      local a, b = pr.x0 + 2, pr.x1 - 5
+      if wl then H[#H + 1] = { k = "bracket", x = pr.x0, y = pr.y1, dir = 1 }; a = pr.x0 + 26 end
+      if wr then H[#H + 1] = { k = "bracket", x = pr.x1, y = pr.y1, dir = -1 }; b = pr.x1 - 29 end
+      if b >= a then                                              -- a frame of iron tubes (timber posts under a
+        local xs = { a }                                          -- wooden ledge): posts at the ends (and the
+        if b - a > 160 then xs[#xs + 1] = math.floor((a + b) / 2) end   -- middle of a long slab), ties every 48 px
+        if b > a then xs[#xs + 1] = b end                         -- between them, one brace in the top bay
+        local prev
+        for _, x in ipairs(xs) do
+          local f = self:floorBelow(x + 1, pr.y1)
+          if f and f - pr.y1 < 400 then
+            H[#H + 1] = { k = "post", x = x, y0 = pr.y1, y1 = f, iron = iron }
+            if prev then
+              local low = math.min(prev.y1, f)
+              for y = pr.y1 + 40, low - 12, 48 do H[#H + 1] = { k = "tie", x0 = prev.x + 3, x1 = x, y = y, iron = iron } end
+              if low - pr.y1 > 30 then H[#H + 1] = { k = "brace", x0 = prev.x + 3, x1 = x, y0 = pr.y1 + 2, y1 = math.min(low - 4, pr.y1 + 40), iron = iron } end
+            end
+            prev = { x = x, y1 = f }
+          end
+        end
+      end
+    end
+  end
+  local runs, loose = {}, {}                                      -- loose tiles: one rail per run, ledge to ledge
+  for _, pr in ipairs(self.def.props) do if pr.loose then loose[#loose + 1] = pr end end
+  table.sort(loose, function(p, q) if p.y0 ~= q.y0 then return p.y0 < q.y0 end return p.x0 < q.x0 end)
+  for _, pr in ipairs(loose) do
+    local r = runs[#runs]
+    if r and r.y == pr.y1 and pr.x0 - r.x1 <= 16 then r.x1 = pr.x1 else runs[#runs + 1] = { x0 = pr.x0, x1 = pr.x1, y = pr.y1 } end
+  end
+  for _, r in ipairs(runs) do H[#H + 1] = { k = "rail", x0 = r.x0 - 6, x1 = r.x1 + 6, y = r.y } end
+  self.hold = H
+  return H
+end
+function M:drawBack(cam, camY, t)
+  if not self:palette() then return end
+  for _, h in ipairs(self:holders()) do
+    if h.k == "post" and h.x - cam > -8 and h.x - cam < 328 then
+      local x = h.x - cam
+      local a, b, c = h.iron and "iron_hi" or "wd_hi", h.iron and "tin_sh" or "wd", h.iron and "iron" or "wd_sh"
+      rect(a, x, h.y0, 1, h.y1 - h.y0); rect(b, x + 1, h.y0, 1, h.y1 - h.y0); rect(c, x + 2, h.y0, 1, h.y1 - h.y0)
+      rect(c, x - 1, h.y1 - 2, 5, 2); rect(a, x - 1, h.y1 - 2, 5, 1)                -- its foot plate on the floor
+    elseif (h.k == "tie" or h.k == "brace") and h.x1 - cam > -4 and h.x0 - cam < 324 then
+      local a, c = h.iron and "iron_hi" or "wd_hi", h.iron and "iron" or "wd_sh"
+      if h.k == "tie" then rect(a, h.x0 - cam, h.y, h.x1 - h.x0, 1); rect(c, h.x0 - cam, h.y + 1, h.x1 - h.x0, 1)
+      else
+        local n = h.x1 - h.x0
+        for i = 0, n - 1 do rect(c, h.x0 - cam + i, math.floor(h.y0 + (h.y1 - h.y0) * i / n), 1, 2) end
+      end
+    elseif h.k == "bracket" and math.abs(h.x - cam - 160) < 200 then
+      local x = h.x - cam                                         -- a bar under the slab and a strut to the wall
+      local L = 22
+      for i = 0, L - 1 do
+        local xx = h.dir > 0 and x + i or x - 1 - i
+        rect("iron", xx, h.y, 1, 2)
+        if i < 16 then rect("iron", xx, h.y + 16 - i, 1, 2); rect("iron_hi", xx, h.y + 16 - i, 1, 1) end
+      end
+      rect("iron", h.dir > 0 and x or x - 3, h.y, 3, 20)            -- the plate on the wall
+    elseif h.k == "rail" and h.x1 - cam > -4 and h.x0 - cam < 324 then
+      rect("iron_hi", h.x0 - cam, h.y, h.x1 - h.x0, 1); rect("iron", h.x0 - cam, h.y + 1, h.x1 - h.x0, 1)
+      for x = h.x0 + 4, h.x1 - 4, 16 do rect("iron", x - cam, h.y + 2, 1, 2) end   -- its clips
+    end
+  end
+  lg.setColor(1, 1, 1, 1)
+end
+
+-- a slab Pepper uses: ink outline over its box (its top row at y0 - 1), the material inside
+local function slab(pr, x, t)
+  local w, h = pr.x1 - pr.x0, pr.y1 - pr.y0
+  local m = material(pr)
+  rect("ink", x - 1, pr.y0 - 1, w + 2, h + 2)
+  if m == "awning" then                                           -- striped canvas, a scalloped valance under it
+    for i = 0, w - 1 do
+      local red = math.floor(i / 8) % 2 == 0
+      rect(red and "tile" or "canvas", x + i, pr.y0, 1, h)
+      rect(red and "tile_hi" or "cre_hi", x + i, pr.y0, 1, 1)
+      if i % 8 >= 1 and i % 8 <= 6 then rect(red and "tile_sh" or "cre_sh", x + i, pr.y1 + 1, 1, (i % 8 >= 2 and i % 8 <= 5) and 3 or 2) end
+    end
+    return
+  end
+  local hi, top, body, sh, jt = "cap_hi", "cap_top", "cap", "cap_sh", "cap_jt"
+  if m == "copper" then hi, top, body, sh, jt = "cu_hi", "cu_top", "cu", "cu_sh", "cu_jt"
+  elseif m == "timber" then hi, top, body, sh, jt = "wd_hi", "wd_hi", "wd", "wd_sh", "wd_sh" end
+  rect(hi, x, pr.y0, w, 1); rect(body, x, pr.y0 + 1, w, h - 2); rect(sh, x, pr.y1 - 1, w, 1)
+  local step = m == "copper" and 8 or (m == "timber" and 16 or 24)
+  for i = step, w - 2, step do rect(jt, x + i, pr.y0 + 1, 1, h - 2); if m == "copper" then rect(top, x + i - 1, pr.y0 + 1, 1, h - 2) end end
+end
+local function pots(x, y1, w)                                       -- clay chimney pots on a stack (decoration)
+  local n = math.max(1, math.floor(w / 16))
+  for i = 0, n - 1 do
+    local px = math.floor(x + (w - n * 16) / 2 + i * 16 + 4)
+    rect("tile", px, y1 - 18, 8, 18); rect("tile_hi", px, y1 - 18, 2, 18); rect("tile_sh", px + 6, y1 - 18, 2, 18)
+    rect("tile_hi", px - 1, y1 - 20, 10, 2); rect("tile_dk", px + 1, y1 - 20, 6, 1)
+  end
+end
+local function brick(x, y0, w, y1)                                  -- stucco in brick courses (the ground's chimneys)
+  rect("ch", x, y0, w, y1 - y0); rect("ch_hi", x, y0, 2, y1 - y0); rect("ch_sh", x + w - 2, y0, 2, y1 - y0)
+  local k = 0
+  for y = y0 + 5, y1 - 1, 6 do
+    rect("ch_jt", x, y, w, 1)
+    for xx = x + (k % 2) * 8, x + w - 1, 16 do rect("ch_jt", xx, y - 5, 1, 5) end
+    k = k + 1
+  end
+end
+M.STAND = {                                                       -- built stand-ins until phase 2's renders
+  ["SWEEP'S CHIMNEYS"] = function(pr, x) pots(x, pr.y1, pr.x1 - pr.x0) end,
+  ["HOTEL CHIMNEYS"] = function(pr, x) pots(x, pr.y1, pr.x1 - pr.x0) end,
+  ["ROOF GARDEN"] = function(pr, x)                               -- planter boxes with greenery on the parapet
+    for bx = 4, pr.x1 - pr.x0 - 28, 36 do
+      for i = 0, 27, 4 do rect(i % 8 == 0 and "leaf" or "leaf_sh", x + bx + i, pr.y1 - 14 + (i % 8 == 0 and 0 or 2), 5, 7) end
+      for i = 2, 25, 8 do rect("leaf_hi", x + bx + i, pr.y1 - 14, 2, 1) end
+      rect("wd", x + bx, pr.y1 - 8, 28, 8); rect("wd_hi", x + bx, pr.y1 - 8, 28, 1); rect("wd_sh", x + bx + 26, pr.y1 - 7, 2, 7)
+    end
+  end,
+  ["ROOF BAR TERRACE"] = function(pr, x)                          -- the bar's glazed pavilion under the copper roof
+    local w = pr.x1 - pr.x0
+    rect("gl_sh", x, 290, w, pr.y1 - 300)
+    for gx = 0, w - 1, 20 do rect("gl_hi", x + gx + 6, 296, 2, 10); rect("gl_hi", x + gx + 4, 300, 2, 6) end
+    for cx = 0, w - 4, 40 do rect("cre_hi", x + cx, 286, 2, pr.y1 - 286); rect("cre_sh", x + cx + 2, 286, 2, pr.y1 - 286) end
+    rect("cre_sh", x + w - 4, 286, 4, pr.y1 - 286)
+    rect("wd", x + 8, pr.y1 - 24, w - 16, 14); rect("wd_hi", x + 8, pr.y1 - 24, w - 16, 2)   -- the bar counter
+  end,
+  RAILING = function(pr, x)
+    local im = Sc.railing(pr.x1 - pr.x0, "decor"); lg.setColor(1, 1, 1, 1); lg.draw(im, math.floor(x), pr.y1 - im:getHeight())
+  end,
+  ["DRYING YARD"] = function(pr, x)                               -- a washing line on two posts, three sheets
+    local w = pr.x1 - pr.x0
+    rect("wd", x + 2, pr.y1 - 26, 2, 26); rect("wd", x + w - 4, pr.y1 - 26, 2, 26)
+    for i = 4, w - 5 do rect("iron", x + i, pr.y1 - 25 + math.floor(math.sin((i - 4) / (w - 8) * math.pi) * 3), 1, 1) end
+    for k = 0, 2 do
+      local sx = 10 + k * 20
+      local sy = pr.y1 - 25 + math.floor(math.sin((sx + 6 - 4) / (w - 8) * math.pi) * 3)
+      rect(k == 1 and "cre_hi" or "canvas", x + sx, sy, 12, 11); rect("cap_top", x + sx + 10, sy, 2, 11)
+    end
+  end,
+  SCAFFOLD = function(pr, x)                                      -- poles from the gap's floor, a top rail, a brace
+    local w = pr.x1 - pr.x0
+    for _, px in ipairs({ 3, math.floor(w / 2), w - 5 }) do rect("iron_hi", x + px, 250, 1, 70); rect("iron", x + px + 1, 250, 1, 70) end
+    rect("iron_hi", x + 3, 252, w - 6, 1); rect("iron", x + 3, 253, w - 6, 1)
+    for i = 0, math.floor(w / 2) - 4 do rect("iron", x + 4 + i, 318 - math.floor(i * 64 / (w / 2)), 1, 2) end
+  end,
+  NEST = function(pr, x)                                          -- a bowl of twigs on the chimney
+    local w = pr.x1 - pr.x0
+    for r = 0, 9 do
+      local inset = math.floor(math.abs(r - 3) * 0.8)
+      for i = inset, w - 1 - inset do
+        local c = (i + r * 3) % 7 == 0 and "wd_hi" or ((i + r) % 5 == 0 and "wd_sh" or "wd")
+        rect(c, x + i, pr.y0 + r, 1, 1)
+      end
+    end
+  end,
+  ["ROOF CAFE"] = function(pr, x)                                 -- a parasol over a cafe table
+    local cx = math.floor(x + (pr.x1 - pr.x0) / 2)
+    rect("iron", cx, pr.y0 + 6, 2, pr.y1 - pr.y0 - 6)
+    for r = 0, 9 do
+      local hw = 10 + r * 3
+      for i = -hw, hw - 1 do rect(math.floor((i + 64) / 10) % 2 == 0 and "tile" or "canvas", cx + i, pr.y0 - 4 + r, 1, 1) end
+    end
+    for i = -38, 37 do if (i + 38) % 10 >= 2 and (i + 38) % 10 <= 7 then rect("tile_sh", cx + i, pr.y0 + 6, 1, 2) end end
+    rect("wd", cx - 14, pr.y1 - 18, 30, 3); rect("wd_hi", cx - 14, pr.y1 - 18, 30, 1)
+    rect("wd_sh", cx - 11, pr.y1 - 15, 2, 15); rect("wd_sh", cx + 11, pr.y1 - 15, 2, 15)
+  end,
+  ["STAIRS UP (MIA)"] = function(pr, x)                           -- the stair housing Mia came up: a door, a cap
+    local w = pr.x1 - pr.x0
+    rect("cre", x, pr.y0 + 8, w, pr.y1 - pr.y0 - 8); rect("cre_sh", x, pr.y0 + 14, w, 4)
+    rect("cap_hi", x - 2, pr.y0 + 8, w + 4, 1); rect("cap", x - 2, pr.y0 + 9, w + 4, 4); rect("cap_sh", x - 2, pr.y0 + 13, w + 4, 1)
+    for rr = 0, 7 do rect(rr == 0 and "tile_hi" or (rr % 4 == 3 and "tile_sh" or "tile"), x + 8 - rr, pr.y0 + rr, w - 16 + 2 * rr, 1) end
+    local dx = math.floor(x + w / 2 - 11)
+    rect("frame", dx, pr.y1 - 42, 22, 42); rect("wood", dx + 2, pr.y1 - 40, 18, 40)
+    for i = 4, 17, 4 do rect("wood_sh", dx + 1 + i, pr.y1 - 40, 1, 40) end
+  end,
+}
 function M:drawProp(pr, cam, colour)
   local x, w = pr.x0 - cam, pr.x1 - pr.x0
-  if x > 330 or x + w < -10 or pr.hidden then return true end
-  if pr.kind == "decor" and M.BUILT[pr.name] then return true end
-  if pr.kind == "decor" then Sc.box(colour, x, pr.y0, w, pr.y1 - pr.y0)
-  else Sc.outlined(Sc.C.prop, Sc.C.propEdge, x, pr.y0, w, pr.y1 - pr.y0) end
+  if x > 340 or x + w < -60 or pr.hidden then return true end
+  if not self:palette() then return false end
+  if pr.kind == "decor" then
+    if M.BUILT[pr.name] then return true end
+    local f = M.STAND[pr.name]
+    if f then f(pr, x); lg.setColor(1, 1, 1, 1); return true end
+    Sc.box(colour, x, pr.y0, w, pr.y1 - pr.y0); return true
+  end
+  local h = pr.y1 - pr.y0
+  if pr.kind == "oneway" then slab(pr, x)
+  elseif pr.name == "CAFE TABLE" then                             -- a table on two legs (she crawls under it)
+    rect("wd_sh", x + 3, pr.y1, 2, 20); rect("wd_sh", x + w - 5, pr.y1, 2, 20)
+    rect("ink", x - 1, pr.y0 - 1, w + 2, h + 2); rect("wd_hi", x, pr.y0, w, 1); rect("wd", x, pr.y0 + 1, w, h - 1)
+  elseif pr.name == "WATER TANK" then                             -- a wooden water tank in iron hoops
+    rect("ink", x - 1, pr.y0 - 1, w + 2, h + 1)
+    rect("wd", x, pr.y0, w, h); rect("wd_hi", x, pr.y0, 3, h); rect("wd_sh", x + w - 4, pr.y0, 4, h)
+    for i = 8, w - 6, 8 do rect("wd_sh", x + i, pr.y0 + 4, 1, h - 4) end
+    rect("cap_hi", x, pr.y0, w, 1); rect("cap", x, pr.y0 + 1, w, 3)
+    for y = pr.y0 + 14, pr.y1 - 6, 26 do rect("iron", x, y, w, 2); rect("iron_hi", x, y, w, 1) end
+  elseif pr.name == "CHIMNEY STACK" then                          -- the ground's chimney, as an obstacle
+    rect("ink", x - 3, pr.y0 - 1, w + 6, h + 1)
+    brick(x, pr.y0 + 6, w, pr.y1)
+    rect("cap_hi", x - 2, pr.y0, w + 4, 1); rect("cap", x - 2, pr.y0 + 1, w + 4, 3); rect("cap_sh", x - 2, pr.y0 + 4, w + 4, 1)
+    rect("ink", x - 2, pr.y0 + 5, w + 4, 1)
+  elseif pr.name == "CHIMNEY POT" then                            -- a tall clay chimney pot
+    rect("ink", x - 1, pr.y0 - 1, w + 2, h + 1)
+    rect("tile", x, pr.y0, w, h); rect("tile_hi", x, pr.y0, 4, h); rect("tile_sh", x + w - 5, pr.y0, 5, h)
+    rect("tile_hi", x, pr.y0, w, 2); for y = pr.y0 + 12, pr.y1 - 4, 12 do rect("tile_dk", x, y, w, 1) end
+  elseif pr.name == "POST" then                                   -- an iron post; its column runs up to the balcony
+    local top = pr.y0
+    for _, q in ipairs(self.def.props) do
+      if q.kind == "oneway" and q.x0 <= pr.x0 and q.x1 >= pr.x1 and q.y1 <= pr.y0 and pr.y0 - q.y1 < 80 then top = q.y1 end
+    end
+    rect("iron", x + 2, top, 4, pr.y0 - top); rect("iron_hi", x + 2, top, 1, pr.y0 - top)
+    rect("ink", x - 1, pr.y0 - 1, w + 2, h + 1); rect("iron_hi", x, pr.y0, 2, h); rect("iron", x + 2, pr.y0, w - 2, h)
+  else Sc.outlined(Sc.C.prop, Sc.C.propEdge, x, pr.y0, w, h) end
+  lg.setColor(1, 1, 1, 1)
+  return true
+end
+-- the checkpoint lamps: the approved lamp post, its foot on the roof or ledge it stands on
+function M:drawLamp(l, cam, t)
+  local art = Sc.art()
+  local im = l.lit and art.lamp_lit or art.lamp_post
+  local x = math.floor(l.x - cam - im:getWidth() / 2)
+  local top = l.y + 1 - im:getHeight()
+  Sc.shadow(l.x - cam, l.y - 1, 12)
+  lg.setColor(1, 1, 1, 1); lg.draw(im, x, top)
+  if l.lit then Sc.lampLight(x + im:getWidth() / 2, top + 17, self.stage.t - (l.litAt or -9), t) end
   return true
 end
 
