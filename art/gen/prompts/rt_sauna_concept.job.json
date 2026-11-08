@@ -1,0 +1,23 @@
+{
+ "name": "rt_sauna_concept",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/concepts/base/rt_sauna_y16_x6130.png"
+ ],
+ "prompt_file": "art/gen/prompts/rt_sauna_concept.txt",
+ "tool": "artlist",
+ "family": "rt_concept_08nov_b",
+ "asset": "rt_sauna_screen",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops.lua (ground, walls, props, backdrop)",
+  "where": "Rooftops, the sauna roof and the nest chimney, camera y 16 x 6130"
+ },
+ "credits": 320,
+ "ledger_job": "rt_sauna_concept@1108-135122"
+}

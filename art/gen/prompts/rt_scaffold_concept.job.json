@@ -1,0 +1,23 @@
+{
+ "name": "rt_scaffold_concept",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/concepts/base/rt_scaffold_y112_x5300.png"
+ ],
+ "prompt_file": "art/gen/prompts/rt_scaffold_concept.txt",
+ "tool": "artlist",
+ "family": "rt_concept_08nov_b",
+ "asset": "rt_scaffold_screen",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops.lua (ground, walls, props, backdrop)",
+  "where": "Rooftops, the roof garden and the scaffold, camera y 112 x 5300"
+ },
+ "credits": 320,
+ "ledger_job": "rt_scaffold_concept@1108-135122"
+}

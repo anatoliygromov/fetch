@@ -85,6 +85,14 @@ return function(api)
       if os.getenv("LOOK_XS") then xs = {}; for v in os.getenv("LOOK_XS"):gmatch("%-?%d+") do xs[#xs + 1] = tonumber(v) end end
       if os.getenv("LOOK_YS") then tiers = {}; for v in os.getenv("LOOK_YS"):gmatch("%-?%d+") do tiers[#tiers + 1] = tonumber(v) end end
       s.bikes = {}; s.bikeT = 99
+      if os.getenv("LOOK_CLEAN") then                          -- (8 Nov concepts) base frames: no labels, bones,
+        require("scene").label = function() end               -- critters, girl or nest bird (fewer holes)
+        local Cr = package.loaded.critters or require("critters"); Cr.draw = function() end; Cr.drawBird = function() end
+        require("scene").magpie = function() end
+        for _, bn in ipairs(s.bones or {}) do bn.taken = true end
+        if s.girl then s.girl.x = -99999 end
+        for _, pr in ipairs(s.def.props or {}) do pr.name = "" end
+      end
       -- (day/07nov-dt, round 3) LOOK_CARGO=x in a sweep: a cargo bike standing with its middle at world x, with its
       -- zone's depot (clipped at the gateway's jamb as it rides in), for frames of the shed's gate
       if os.getenv("LOOK_CARGO") and s.def.bikes then

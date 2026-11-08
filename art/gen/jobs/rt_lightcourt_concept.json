@@ -1,0 +1,17 @@
+{
+ "name": "rt_lightcourt_concept",
+ "purpose": "concept",
+ "asset": "rt_lightcourt_screen",
+ "family": "rt_concept_08nov_b",
+ "level": "rooftops",
+ "model": "nbpro_1k",
+ "variants": 2,
+ "base_frame": "art/gen/concepts/base/rt_lightcourt_y440_x4860.png",
+ "subject": "the big grey wall filling the frame is the back wall of an inner courtyard of an old apartment house, seen from inside: warm ochre plaster with rows of windows, a downpipe; the thin grey bars are small stone balconies on carved brackets with black iron railings; the thin upright grey post is an iron post holding up the lower balcony; the floor at the bottom is the courtyard floor of grey flagstones; the orange bars are loose red clay roof tiles on the upper balcony; the small grey boxes stay metal vent hoods",
+ "style_ref": "art/gen/concepts/rt_hotel_concept_a.png",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops.lua (ground, walls, props, backdrop)",
+  "where": "Rooftops, the light court and its balconies, camera y 440 x 4860"
+ },
+ "extra": "Image 2 is the approved painting of the hotel roof in this same level: use exactly its materials, colours, light, dark outlines and pixel size (warm ochre plaster walls, sandstone parapet caps in blocks, red clay roof tiles, green copper, stucco chimney stacks with clay pots, glass lanterns in black iron frames, dark brown window frames); do not copy its buildings or its layout. Replace every grey placeholder shape completely with finished art, nothing see-through, no grey left. Surfaces as flat shapes with 1 px joints, not texture. Behind the near roofs, the far town as its own clean band of red roofs, chimneys and the church spire, lighter and softer in colour than the near roofs; the roofs and edges the dog walks on are the darkest and most contrasted. No stone rows that look like ledges just above the dog's head. Every drop reads as an opening. Keep the dog exactly as it is; keep the small grey metal vent boxes and the orange loose tiles where they are."
+}

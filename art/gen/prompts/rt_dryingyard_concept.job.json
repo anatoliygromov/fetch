@@ -1,0 +1,23 @@
+{
+ "name": "rt_dryingyard_concept",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/concepts/base/rt_dryingyard_y400_x3440.png"
+ ],
+ "prompt_file": "art/gen/prompts/rt_dryingyard_concept.txt",
+ "tool": "artlist",
+ "family": "rt_concept_08nov_b",
+ "asset": "rt_dryingyard_screen",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops.lua (ground, walls, props, backdrop)",
+  "where": "Rooftops, the drying yard, chimney stack and awning, camera y 400 x 3440"
+ },
+ "credits": 320,
+ "ledger_job": "rt_dryingyard_concept@1108-135122"
+}

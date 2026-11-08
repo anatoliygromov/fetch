@@ -1,0 +1,23 @@
+{
+ "name": "rt_market_concept",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/concepts/base/rt_market_y592_x2150.png"
+ ],
+ "prompt_file": "art/gen/prompts/rt_market_concept.txt",
+ "tool": "artlist",
+ "family": "rt_concept_08nov_b",
+ "asset": "rt_market_screen",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops.lua (ground, walls, props, backdrop)",
+  "where": "Rooftops, the market hall glass roof and the sweep's chimney block, camera y 592 x 2150"
+ },
+ "credits": 320,
+ "ledger_job": "rt_market_concept@1108-135122"
+}

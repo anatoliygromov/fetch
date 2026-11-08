@@ -1,0 +1,23 @@
+{
+ "name": "rt_longroof_concept",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/concepts/base/rt_longroof_y160_x6700.png"
+ ],
+ "prompt_file": "art/gen/prompts/rt_longroof_concept.txt",
+ "tool": "artlist",
+ "family": "rt_concept_08nov_b",
+ "asset": "rt_longroof_screen",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops.lua (ground, walls, props, backdrop)",
+  "where": "Rooftops, the long roof down to the cafe, camera y 160 x 6700"
+ },
+ "credits": 320,
+ "ledger_job": "rt_longroof_concept@1108-135122"
+}

@@ -1,0 +1,17 @@
+{
+ "name": "rt_lightwell_concept",
+ "purpose": "concept",
+ "asset": "rt_lightwell_screen",
+ "family": "rt_concept_08nov_b",
+ "level": "rooftops",
+ "model": "nbpro_1k",
+ "variants": 2,
+ "base_frame": "art/gen/concepts/base/rt_lightwell_y688_x1560.png",
+ "subject": "the deep gap at the left is a light well, a narrow courtyard between two buildings: its two walls are plaster with small windows, darker further down; the three orange bars over it are loose red clay roof tiles lying on a thin iron rail across the gap; the two long thin grey bars higher up are timber walkway boards on iron brackets and posts fixed to the walls; the flat dark grey block in the middle is a flat roof with a sandstone parapet cap and an ochre plaster wall with windows below it; the grey triangle at the right is a pitched roof seen from the side: its slope is red clay tiles with a ridge, the triangle face under it a plaster gable with a small round attic window",
+ "style_ref": "art/gen/concepts/rt_hotel_concept_a.png",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops.lua (ground, walls, props, backdrop)",
+  "where": "Rooftops, the light well and pitched roof R2, camera y 688 x 1560"
+ },
+ "extra": "Image 2 is the approved painting of the hotel roof in this same level: use exactly its materials, colours, light, dark outlines and pixel size (warm ochre plaster walls, sandstone parapet caps in blocks, red clay roof tiles, green copper, stucco chimney stacks with clay pots, glass lanterns in black iron frames, dark brown window frames); do not copy its buildings or its layout. Replace every grey placeholder shape completely with finished art, nothing see-through, no grey left. Surfaces as flat shapes with 1 px joints, not texture. Behind the near roofs, the far town as its own clean band of red roofs, chimneys and the church spire, lighter and softer in colour than the near roofs; the roofs and edges the dog walks on are the darkest and most contrasted. No stone rows that look like ledges just above the dog's head. Every drop reads as an opening. Keep the dog exactly as it is; keep the small grey metal vent boxes and the orange loose tiles where they are."
+}

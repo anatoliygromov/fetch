@@ -1,0 +1,23 @@
+{
+ "name": "rt_stairwell_concept",
+ "purpose": "concept",
+ "model": "Nano Banana Pro I2I 1K",
+ "modelId": 2004,
+ "settings": {
+  "aspect_ratio": "4:3",
+  "quality": "1K"
+ },
+ "inputs": [
+  "art/gen/concepts/base/rt_stairwell_y960_x400.png"
+ ],
+ "prompt_file": "art/gen/prompts/rt_stairwell_concept.txt",
+ "tool": "artlist",
+ "family": "rt_concept_08nov_b",
+ "asset": "rt_stairwell_screen",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops.lua (ground, walls, props, backdrop)",
+  "where": "Rooftops, the stairwell steps up from the street, camera y 960 x 400"
+ },
+ "credits": 320,
+ "ledger_job": "rt_stairwell_concept@1108-135122"
+}

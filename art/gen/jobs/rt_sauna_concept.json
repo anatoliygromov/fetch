@@ -1,0 +1,17 @@
+{
+ "name": "rt_sauna_concept",
+ "purpose": "concept",
+ "asset": "rt_sauna_screen",
+ "family": "rt_concept_08nov_b",
+ "level": "rooftops",
+ "model": "nbpro_1k",
+ "variants": 2,
+ "base_frame": "art/gen/concepts/base/rt_sauna_y16_x6130.png",
+ "subject": "the shallow dip at the left with the three orange bars is the roof of a little timber sauna house built on the flat roof: dark wooden planks, a small stove chimney, the three orange bars loose red clay tiles over it; the flat roof has a sandstone parapet cap over an ochre wall; the tall grey tower at the right is the tallest chimney of the old town, a tall stucco chimney stack with a stone slab top and a big twig nest of a gull on top (the small red ball stays where it is), its right side a steep tiled roof falling away",
+ "style_ref": "art/gen/concepts/rt_hotel_concept_a.png",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops.lua (ground, walls, props, backdrop)",
+  "where": "Rooftops, the sauna roof and the nest chimney, camera y 16 x 6130"
+ },
+ "extra": "Image 2 is the approved painting of the hotel roof in this same level: use exactly its materials, colours, light, dark outlines and pixel size (warm ochre plaster walls, sandstone parapet caps in blocks, red clay roof tiles, green copper, stucco chimney stacks with clay pots, glass lanterns in black iron frames, dark brown window frames); do not copy its buildings or its layout. Replace every grey placeholder shape completely with finished art, nothing see-through, no grey left. Surfaces as flat shapes with 1 px joints, not texture. Behind the near roofs, the far town as its own clean band of red roofs, chimneys and the church spire, lighter and softer in colour than the near roofs; the roofs and edges the dog walks on are the darkest and most contrasted. No stone rows that look like ledges just above the dog's head. Every drop reads as an opening. Keep the dog exactly as it is; keep the small grey metal vent boxes and the orange loose tiles where they are."
+}

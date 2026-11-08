@@ -1,0 +1,17 @@
+{
+ "name": "rt_dryingyard_concept",
+ "purpose": "concept",
+ "asset": "rt_dryingyard_screen",
+ "family": "rt_concept_08nov_b",
+ "level": "rooftops",
+ "model": "nbpro_1k",
+ "variants": 2,
+ "base_frame": "art/gen/concepts/base/rt_dryingyard_y400_x3440.png",
+ "subject": "the low dip at the left where the dog stands is a drying yard on a flat roof: washing lines on two wooden posts with white sheets and towels pegged on them; the orange bars stepping up in the air are loose red clay roof tiles lying on thin iron rails; the big grey box in the middle is a wide stucco chimney stack with a stone slab on top; the thin grey bar at the right edge is a striped red and cream canvas awning on iron arms; the long thin grey bar along the top right is the green copper roof edge of the roof bar terrace; the flat roofs have sandstone parapet caps over ochre walls with windows",
+ "style_ref": "art/gen/concepts/rt_hotel_concept_a.png",
+ "slot": {
+  "file": "riverwalk/levelart/rooftops.lua (ground, walls, props, backdrop)",
+  "where": "Rooftops, the drying yard, chimney stack and awning, camera y 400 x 3440"
+ },
+ "extra": "Image 2 is the approved painting of the hotel roof in this same level: use exactly its materials, colours, light, dark outlines and pixel size (warm ochre plaster walls, sandstone parapet caps in blocks, red clay roof tiles, green copper, stucco chimney stacks with clay pots, glass lanterns in black iron frames, dark brown window frames); do not copy its buildings or its layout. Replace every grey placeholder shape completely with finished art, nothing see-through, no grey left. Surfaces as flat shapes with 1 px joints, not texture. Behind the near roofs, the far town as its own clean band of red roofs, chimneys and the church spire, lighter and softer in colour than the near roofs; the roofs and edges the dog walks on are the darkest and most contrasted. No stone rows that look like ledges just above the dog's head. Every drop reads as an opening. Keep the dog exactly as it is; keep the small grey metal vent boxes and the orange loose tiles where they are."
+}
