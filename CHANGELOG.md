@@ -3,6 +3,9 @@
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
 
+## Branch `lv/08nov-rooftops` (on lv/08nov-base): Rooftops (level 4) from greybox toward finished, phase 1 (0 credits, by rule)
+- **A. Labels off (riverwalk/levelart/rooftops.lua drawProp).** The printed names on the boxes (CAFE, STAIRWELL A, HOTEL, LIGHT COURT, BALCONY ...) no longer show in play (audit RW1); the boxes stay until their art lands. Checks: PEPPER UNCHANGED (3908), physics 139/139, qa 0 problems.
+
 ## Branch `lv/08nov-base` (on sfx/07nov-r2): one art module per level for levels 4 to 6 (owner 8 Nov: "finish levels 4-6")
 - `riverwalk/levelart.lua` and `riverwalk/levelart/{rooftops,soder,night}.lua`: a level sets `L.levelart` and its module draws the parts it has (far layers, ground, back, props, lamps, movers, front, screen, its colour script). stage.lua draws the greybox for every part a module does not have, so each level can be finished piece by piece and the three tracks never edit the same file.
 - stage.lua: 9 hooks, each `if la has it then la draws it`. look.lua: `Look.level` takes the module's script. The modules are empty, so nothing on screen changes yet.
