@@ -86,13 +86,19 @@ function M:drawLandmark(cam, camY, t, yf)
 end
 -- (8 Nov, art/08nov-lockfill) the lock-and-complete pilot: one screen at the concept's camera (x 4224, y 240) cut 1:1
 -- from rt_hotel_concept_a.png, the parts game sprites covered completed from the concept itself (tools/lockfill.py),
--- windows stamped, palette ramps. pilot_far.png slides at PILOT_FAR of the camera behind pilot_near.png (with the
--- world). Drawn without the look: the concept's own colours (owner's call pending). Remove the two pngs to turn it off.
-M.PILOT_X, M.PILOT_Y, M.PILOT_FAR = 4224, 240, 0.25
+-- windows stamped, palette ramps. pilot_far.png slides at PILOT_FAR of the camera behind pilot_back.png and
+-- pilot_terrain.png (with the world). Drawn without the look (the concept's colours) unless RT_PILOT_LOOK=1.
+-- Remove the pilot pngs to turn it off.
+M.PILOT_X, M.PILOT_Y, M.PILOT_FAR, M.PILOT_FAR_Y = 4224, 240, 0.25, 1.0   -- far: sideways parallax only
+M.PILOT_LOOK = os.getenv and os.getenv("RT_PILOT_LOOK") == "1"   -- true: the level's look on the pilot (the ladder);
+                                                                  -- false: the concept's own colours (owner's call)
 function M:pilot()
   if self.pl ~= nil then return self.pl end
   self.pl = false
-  if love.filesystem.getInfo(DIR .. "pilot_near.png") then self.pl = { far = img("pilot_far.png"), near = img("pilot_near.png") } end
+  if love.filesystem.getInfo(DIR .. "pilot_back.png") then
+    self.pl = { far = img("pilot_far.png"), back = img("pilot_back.png"), terrain = img("pilot_terrain.png") }
+    local d = love.image.newImageData(DIR .. "pilot_far.png"); self.pl.top = { d:getPixel(0, 0) }
+  end
   return self.pl
 end
 function M:looseTile()                                           -- roofs.lua draws the loose tiles with this (pilot)
@@ -100,17 +106,29 @@ function M:looseTile()                                           -- roofs.lua dr
   pl.tile = pl.tile or (love.filesystem.getInfo(DIR .. "pilot_tile.png") and img("pilot_tile.png")) or false
   return pl.tile or nil
 end
-function M:drawPilotFar(cam, camY)
-  local pl = self:pilot(); if not pl then return end
-  local sx = math.floor(-(cam - M.PILOT_X) * M.PILOT_FAR + 0.5)
-  local sy = math.floor((M.PILOT_Y - camY) * M.PILOT_FAR + 0.5)
-  if sx > 320 or sx + 320 < 0 then return end
-  require("look").off(); lg.setColor(1, 1, 1, 1); lg.draw(pl.far, sx, sy)
+local function pilotLook(n) local L = require("look"); if M.PILOT_LOOK then L.use(n) else L.off() end end
+function M:pilotSpan(cam)                                        -- the screen columns the pilot covers, or nil
+  local x0, x1 = M.PILOT_X - cam, M.PILOT_X + 320 - cam
+  if x1 <= 0 or x0 >= 320 then return nil end
+  return math.max(0, math.floor(x0)), math.min(320, math.floor(x1))
+end
+function M:drawPilotFar(cam, camY)                               -- (review fix) opaque, wrapping, full height; only
+  local pl = self:pilot(); if not pl then return end              -- behind the pilot's own columns (one seam)
+  local a, b = self:pilotSpan(cam); if not a then return end
+  local sy = math.floor((M.PILOT_Y - camY) * M.PILOT_FAR_Y + 0.5)
+  local sx = math.floor((cam - M.PILOT_X) * M.PILOT_FAR + 0.5)
+  lg.setScissor(a, 0, b - a, 240)                                 -- the game draws on a 320 x 240 canvas
+  pilotLook("city")
+  if sy > 0 then lg.setColor(pl.top); lg.rectangle("fill", 0, 0, 320, sy) end   -- above the strip: its top row
+  lg.setColor(1, 1, 1, 1); strip(pl.far, sx, sy)
+  lg.setScissor(); require("look").off(); lg.setColor(1, 1, 1, 1)
 end
 function M:drawPilotNear(cam)                                      -- world space (inside the stage's camY translate)
   local pl = self:pilot(); if not pl then return end
-  if M.PILOT_X - cam > 320 or M.PILOT_X + 320 - cam < 0 then return end
-  require("look").off(); lg.setColor(1, 1, 1, 1); lg.draw(pl.near, M.PILOT_X - cam, M.PILOT_Y)
+  if not self:pilotSpan(cam) then return end
+  lg.setColor(1, 1, 1, 1)
+  pilotLook("back"); lg.draw(pl.back, M.PILOT_X - cam, M.PILOT_Y)
+  pilotLook("ground"); lg.draw(pl.terrain, M.PILOT_X - cam, M.PILOT_Y)
 end
 function M:drawFar(cam, camY, t)
   local bd = self:backdrop()

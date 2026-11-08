@@ -11,18 +11,37 @@ import sys, numpy as np, cv2
 from PIL import Image
 D = sys.argv[1]
 im = np.asarray(Image.open(f'{D}/filled.png').convert('RGB')).copy()
+holes = np.load(f'{D}/holes.npy')
 H, W, _ = im.shape
 STOREYS = [  # (template left x, rows y0..y1 inclusive, width, the other windows' left x)
     (205, 112, 135, 22, [-9, 34, 77, 120, 163, 248, 291]),     # upper storey, above the ledge line
     (111, 198, 231, 24, [56]),                                 # lower storey (x 2 is in deep shadow: kept)
     (221, 205, 239, 25, [172, 264, 307]),                      # the hotel's tall windows
 ]
-stamped = 0
+stamped = 0; skipped = []
+lum = im.astype(float) @ np.array([.299, .587, .114])
+def wall_luma(x, y0, y1, w):                              # the wall just left and right of a window (2 px each side)
+    cols = [c for c in (x - 3, x - 2, x + w + 1, x + w + 2) if 0 <= c < W]
+    return np.median(lum[y0:y1 + 1, cols]) if cols else None
 for tx, y0, y1, w, others in STOREYS:
-    tpl = im[y0:y1 + 1, tx:tx + w].copy()
+    tpl = im[y0:y1 + 1, tx:tx + w].copy(); ref = wall_luma(tx, y0, y1, w)
     for ox in others:
+        wl = wall_luma(ox, y0, y1, w)
+        if wl is not None and ref is not None and wl < ref - 18:   # (review fix) a cast shadow over this window: keep it
+            skipped.append(ox); continue
         a, b = max(0, ox), min(W, ox + w)
-        im[y0:y1 + 1, a:b] = tpl[:, a - ox:b - ox]; stamped += 1
+        t = tpl[:, a - ox:b - ox]; cur = im[y0:y1 + 1, a:b]
+        lt = t.astype(float) @ np.array([.299, .587, .114]); lc = cur.astype(float) @ np.array([.299, .587, .114])
+        shade = (lc < lt * 0.85) & ~holes[y0:y1 + 1, a:b]  # (review fix) a cast shadow over a concept pixel: keep it
+        im[y0:y1 + 1, a:b] = np.where(shade[..., None], cur, t); stamped += 1
+# (review fix) the upper windows over the skylight dips get a sill: their frame's bottom row, a stone sill 1 px wider
+# each side, its shade under it (colours from the window frame and the coping)
+FRAME = im[124, 205 + 1].copy(); SILL = im[90, 160].copy(); SHADE = (im[100, 160].astype(int) * 0.82).astype(np.uint8)
+for ox in [-9, 34, 77, 163, 205, 248]:
+    for x in range(ox - 1, ox + 23):
+        if 0 <= x < W and (x < 96 or 160 <= x < 256):
+            if ox <= x < ox + 22: im[135, x] = FRAME
+            im[136, x] = SILL; im[137, x] = SHADE
 lab = cv2.cvtColor(im.astype(np.float32) / 255, cv2.COLOR_RGB2LAB)
 Z = lab.reshape(-1, 3)
 _, lbl, cen = cv2.kmeans(Z, 64, None, (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 40, 0.2), 3, cv2.KMEANS_PP_CENTERS)
@@ -53,4 +72,4 @@ for _ in range(2):
 out = rgb[idx]
 Image.fromarray(out).save(f'{D}/final.png')
 np.save(f'{D}/palette.npy', rgb)
-print(f'windows stamped {stamped}; palette {len(C)} colours (from 64, merged under dE 3.5); lone pixels fixed {lone}')
+print(f'windows stamped {stamped} (kept in shadow: {skipped}); palette {len(C)} colours (from 64, merged under dE 3.5); lone pixels fixed {lone}')
