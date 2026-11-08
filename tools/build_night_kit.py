@@ -206,24 +206,15 @@ def fishshed():
     c.rect(dx + dw // 2, dy, 1, dh, "ink")
     for half in (0, 1):                                                 # the Z braces
         x0 = dx + half * dw // 2
-        c.rect(x0 + 1, dy + 6, dw // 2 - 2, 2, "tar1"); c.rect(x0 + 1, dy + dh - 8, dw // 2 - 2, 2, "tar1")
-        for i in range(dh - 16):
-            xx = x0 + 2 + int(i * (dw // 2 - 5) / (dh - 16))
+        c.rect(x0 + 1, dy + 6, dw // 2 - 2, 2, "tar1"); c.rect(x0 + 1, dy + dh - 2, dw // 2 - 2, 2, "tar1")
+        for i in range(dh - 10):
+            xx = x0 + 2 + int(i * (dw // 2 - 5) / (dh - 10))
             c.rect(xx, dy + 8 + i, 2, 1, "tar1")
     # a small dark window with a moon glint (12 x 10), left of the doors
     wx, wy = 10, 30
     c.rect(wx - 1, wy - 1, 14, 12, "shedTrim")
     c.rect(wx, wy, 12, 10, "shedDoor")
     c.rect(wx + 5, wy, 2, 10, "shedTrim"); c.rect(wx, wy + 4, 12, 2, "shedTrim")
-    c.px(wx + 2, wy + 1, "net1"); c.px(wx + 8, wy + 1, "net1")
-    # a life ring on the wall right of the doors (a harbour's), on a peg
-    rx, ry = 76, 34
-    c.rect(rx + 4, ry - 2, 1, 2, "iron3")                               # its peg
-    for y in range(9):
-        for x in range(9):
-            d = (x - 4) ** 2 + (y - 4) ** 2
-            if 7 <= d <= 17:                                            # a ring, red quarters at the four sides
-                c.px(rx + x, ry + y, "red2" if (abs(x - 4) <= 1 or abs(y - 4) <= 1) else "trim2")
     return c
 
 
@@ -324,7 +315,7 @@ def frontpile():
     c.rect(0, 2, 12, 17, "ink")
     c.rect(1, 1, 10, 1, "ink")
     c.rect(1, 1, 10, 1, "pile3"); c.rect(0, 2, 1, 17, "pile3")
-    c.rect(0, 7, 12, 2, "wd5")
+    c.rect(1, 7, 10, 2, "wd4")                                         # the rope round it
     return c
 
 
@@ -356,8 +347,8 @@ def lamp_night():
 def lantern():
     """7 x 10: a harbour lantern's head: an iron cap, warm glass in a frame, a bottom plate"""
     c = Canvas(7, 10)
-    c.rect(1, 0, 5, 1, "iron2"); c.rect(0, 1, 7, 1, "iron2"); c.rect(3, 0, 1, 1, "iron1")
-    c.rect(1, 2, 5, 6, "iron3")
+    c.rect(1, 0, 5, 1, "iron2"); c.rect(0, 1, 7, 1, "iron1")
+    c.rect(1, 2, 5, 6, "iron2")
     c.rect(2, 2, 3, 5, "glass"); c.rect(2, 6, 3, 1, "win2")
     c.rect(1, 8, 5, 1, "iron2"); c.rect(2, 9, 3, 1, "iron3")
     return c
