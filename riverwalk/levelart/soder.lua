@@ -110,6 +110,54 @@ function M:drawProp(pr, cam, colour, kicked)
   return true
 end
 
+-- C + D: the ground, painted by tools/build_soder_art.py into 512 x 240 tiles (ground_NN.png): the setts, the
+-- kerb, the retaining wall, the stair flights as 8 px stone steps between granite landings, the open cellar hatches
+-- with their lids, the harbour quay. The joins it stamps are marked for the joins kit (joins.lua): street>landing,
+-- landing>stair, stair>landing, landing>street (or quay), street>hatch, hatch>street.
+M.drawsHatches = true                                               -- (chase.lua leaves the hatches to this module)
+local TILE = 512
+local Tiles = {}
+Tiles.__index = Tiles
+function Tiles:draw(cam, camY)
+  lg.setColor(1, 1, 1, 1)
+  for i, im in pairs(self.ims) do
+    local x = i * TILE - cam
+    if x < 320 and x + TILE > 0 then lg.draw(im, x, 0) end
+  end
+end
+function Tiles:release() for _, im in pairs(self.ims) do im:release() end; self.ims = {} end
+local function tiles(name, w)
+  local t = setmetatable({ ims = {} }, Tiles)
+  for i = 0, math.ceil(w / TILE) - 1 do
+    local im = img(("%s_%02d"):format(name, i))
+    if im then t.ims[i] = im end
+  end
+  return t
+end
+
+function M:paintGround(w)
+  Sc.quayEdge = nil
+  local Jn = require("joins")
+  Jn.reset()
+  local kind = {}
+  local hatchAt = {}
+  for _, h in ipairs(self.def.hatches or {}) do for x = h[1], h[2] - 1 do hatchAt[x] = true end end
+  for x = 0, w.width - 1 do kind[x] = hatchAt[x] and "hatch" or (w:slopeAt(x) and "stair" or "street") end
+  for x = 1, w.width - 1 do
+    if kind[x] ~= kind[x - 1] then Jn.mark(x, kind[x - 1] .. ">" .. kind[x]) end
+  end
+  self.front = tiles("front", w.width)
+  return tiles("ground", w.width)
+end
+
+-- in front of Pepper: the kerb and the wall in front of each open hatch, so she drops into the cellar behind them
+function M:drawFront(cam, camY, t)
+  if not self.front then return end
+  if Look.on and self.look then Look.use("ground") end
+  self.front:draw(cam, camY)
+  lg.setColor(1, 1, 1, 1)
+end
+
 local PAL
 function M.pal() PAL = PAL or require("levelart.soder.palette"); return PAL end
 

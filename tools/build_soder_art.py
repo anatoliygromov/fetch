@@ -327,20 +327,31 @@ def hatch(g, front, x0, x1, t):
         for y in range(t - 11, t + 12):
             g.px(x, y, "iron" if inner else "iron_d")
         g.px(x, t - 12, "iron_lit")
-    # the lid: oak planks, width of the hole, LID px tall, standing on the rim's back edge against the house
-    LID = 26
+    # the lid: a plank door the width of the hole, LID px tall, swung up from the rim's back edge and leaning back
+    # against the house (1 px narrower each side every 8 rows up), vertical oak planks, a Z brace of iron-bound
+    # battens, its edges a darker oak (decoration: no outline)
+    LID = 28
     y0 = t - 12 - LID
-    for x in range(x0, x1):
-        u = x - x0
-        for y in range(y0, t - 12):
-            if u == 0 or u == w - 1: c = "lid_d"
+    for y in range(y0, t - 12):
+        k = (t - 12 - y) // 9
+        a0, a1 = x0 + k, x1 - k
+        for x in range(a0, a1):
+            u = x - x0
+            if x == a0 or x == a1 - 1 or y == y0: c = "lid_d" if x != a0 else "lid"
             elif (u % 6) == 0: c = "lid_d"
             elif (u % 6) == 1: c = "lid_lit"
             else: c = "lid"
-            if y == y0: c = "lid_lit" if u < w - 1 else "lid_d"
             g.px(x, y, c)
-        for sy in (y0 + 5, t - 12 - 6):                                          # the straps
-            g.px(x, sy, "iron"); g.px(x, sy + 1, "iron_d")
+    for by in (y0 + 3, t - 12 - 5):                                              # the battens
+        k = (t - 12 - by) // 9
+        for x in range(x0 + k + 1, x1 - k - 1):
+            g.px(x, by, "wood_d"); g.px(x, by + 1, "wood")
+    n = (t - 12 - 5) - (y0 + 5)                                                  # the brace, bottom left to top right
+    for i in range(n):
+        y = t - 12 - 6 - i
+        k = (t - 12 - y) // 9
+        x = x0 + k + 2 + int(i * (w - 2 * k - 6) / max(1, n))
+        g.px(x, y, "wood"); g.px(x + 1, y, "wood"); g.px(x + 2, y, "wood_d")
     for hx in (x0 + 4, x1 - 7):                                                  # the hinges at the foot
         g.rect(hx, t - 14, 3, 2, "iron_d"); g.px(hx, t - 14, "iron_lit")
 

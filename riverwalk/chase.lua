@@ -189,6 +189,7 @@ end
 function Ch.drawBack(s, cam)
   local c = s.chase
   if not c then return end
+  if s.levelArt and s.levelArt.drawsHatches then return end       -- (8 Nov) the level's art paints them (levelart/soder.lua)
   for _, h in ipairs(s.def.hatches or {}) do
     local x = h[1] - cam
     if x < 330 and x + (h[2] - h[1]) > -10 then
