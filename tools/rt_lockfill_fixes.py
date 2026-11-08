@@ -51,15 +51,29 @@ for (d0, d1) in ((0, 96), (160, 256)):
             if holes[y, x]:
                 row = [j for j in range(d0, d1) if orig[y, j]]
                 if row: out[y, x] = cut[y, min(row, key=lambda j: abs(j - x))]; edits += 1
-# the bare wall under the coping (y 97-111): filled pixels take the nearest original pixel of the row that is plain
-# wall (close to the row's median), so no wall mark (anchor tick) is copied into the fills
+# the bare wall under the coping (y 97-112): each filled piece takes, row by row, the nearest original pixel whose tone
+# matches the piece's own surroundings (round 2: the row's median put shadow tone into lit wall), never a wall tick
+from scipy import ndimage as nd
 lumc = cut.astype(float) @ np.array([.299, .587, .114])
-for y in range(97, 112):
-    med = np.median(lumc[y][orig[y]]) if orig[y].any() else 0
-    plain = [j for j in range(320) if orig[y, j] and abs(lumc[y, j] - med) < 12]
-    for x in range(320):
-        if holes[y, x] and plain:
-            j = min(plain, key=lambda j: abs(j - x))
-            if abs(j - x) < 60: out[y, x] = cut[y, j]; edits += 1
+band = np.zeros_like(holes); band[97:113] = True
+lb, n = nd.label(holes & band)
+for i in range(1, n + 1):
+    pc = lb == i
+    ring = nd.binary_dilation(pc, iterations=3) & ~holes & band
+    if not ring.any(): continue
+    tone = np.median(lumc[ring])
+    for y, x in zip(*np.nonzero(pc)):
+        ok = [j for j in range(320) if orig[y, j] and abs(lumc[y, j] - tone) < 8]
+        if ok:
+            j = min(ok, key=lambda j: abs(j - x))
+            if abs(j - x) < 80: out[y, x] = cut[y, j]; edits += 1
+# lone pixels inside the fills: a filled pixel unlike all 8 neighbours that agree with each other takes their colour
+lo = out.astype(float) @ np.array([.299, .587, .114])
+for y, x in zip(*np.nonzero(holes)):
+    if 0 < y < 239 and 0 < x < 319:
+        nb = [(y + dy, x + dx) for dy in (-1, 0, 1) for dx in (-1, 0, 1) if dy or dx]
+        nl = np.array([lo[q] for q in nb])
+        if (np.abs(nl - lo[y, x]) > 20).all() and nl.std() < 8:
+            q = nb[int(np.argmin(np.abs(nl - np.median(nl))))]; out[y, x] = out[q]; edits += 1
 assert (out[orig] == cut[orig]).all(); print(f'LOCK OK; hand-pass edits {edits} px')
 Image.fromarray(out).save(f'{D}/filled.png')

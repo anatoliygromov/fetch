@@ -26,8 +26,26 @@ for y in range(FH):
         fl[y, x] = im[y, j] if not far[y, x] else im[y, x]
 back = np.zeros((H, W, 4), np.uint8); back[..., :3] = im
 back[..., 3] = np.where(~far & (np.arange(H)[:, None] < 136), 255, 0)
-storey = im[198:240]
-tall = np.concatenate([im] + [storey] * 3, axis=0)
+storey = im[198:240].copy()
+# (round 2) the lower-left wall's cast shadow is a wedge inside this storey; repeating it made a sawtooth. The run-on
+# storeys are the LIT storey (columns 0-55 taken from the lit window bay one window to the right, x + 55) and every
+# column that is in shadow at the frame's bottom row stays in shadow all the way down: lit colours map to their shadow
+# colours by the pairs the concept itself shows (the shadowed window at x 2 against the lit one at x 56, wall beside).
+lum2 = im.astype(float) @ np.array([.299, .587, .114])
+lit = storey.copy(); lit[:, 0:55] = storey[:, 55:110]
+pairs = {}
+for yy in range(198, 240):
+    for xx in range(0, 54):
+        a = tuple(im[yy, xx + 55]); b = tuple(im[yy, xx])
+        if lum2[yy, xx] < lum2[yy, xx + 55] - 10: pairs.setdefault(a, []).append(b)
+shade_of = {k: max(set(v), key=v.count) for k, v in pairs.items()}
+wall_lit = np.median(lum2[236:240, 56:110])
+in_shadow = [x for x in range(0, 110) if lum2[236:240, x].mean() < wall_lit - 15]
+run = lit.copy()
+for x in in_shadow:
+    for yy in range(run.shape[0]):
+        k = tuple(run[yy, x]); run[yy, x] = shade_of.get(k, (np.array(k) * 0.72).astype(np.uint8))
+tall = np.concatenate([im] + [run] * 3, axis=0)
 ter = np.zeros((tall.shape[0], W, 4), np.uint8); ter[..., :3] = tall
 ter[:136, :, 3] = 0; ter[136:, :, 3] = 255
 Image.fromarray(fl).save(f'{OUT}/pilot_far.png')
