@@ -9,6 +9,7 @@
 --      piles under every crumbling plank (they stay when a plank falls), the boats sitting in the water with their
 --      lantern on a mast (it rides with the boat), the lanterns on posts, the lamp posts on the paving, the house's
 --      lantern on a bracket, a contact shadow under everything that stands on the quay.
+--   C+D the quay and the water by rule, every join designed (M:paintGround, below)
 local Sc = require("scene")
 local lg = love.graphics
 local M = {}
@@ -97,7 +98,17 @@ local function timberPost(x, y0, y1)                                  -- a 4 px 
   box(P.pile2, x, y0, 4, y1 - y0); box(P.pile1, x, y0, 1, y1 - y0); box(P.pile3, x + 3, y0, 1, y1 - y0)
 end
 
+-- the pieces that stand on the quay behind Pepper: drawn by the ground (M:paintGround's draw), after the paving,
+-- since the stage paints the ground after the back props (the paving's back course, y 172-193, would cover them)
+local BACK = { tarp = true, leg = true, fishshed = true, backcrates = true, house = true }
+M.BACK = BACK
+
 function M:drawProp(pr, cam, colour, kicked)
+  if BACK[self.K[pr]] then return true end                             -- (drawn with the ground)
+  return self:art(pr, cam)
+end
+
+function M:art(pr, cam)
   local x, w = pr.x0 - cam, pr.x1 - pr.x0
   if x > 340 or x + w < -150 then return true end
   local k = self.K[pr]
@@ -214,7 +225,8 @@ end
 -- the lights (night.lua asks before it draws one): lanterns on a post down to what holds them (the paving, the
 -- mooring post), a boat's lantern on its boat's mast, the house's brass lantern on a bracket; the house's own
 -- windows and porch are in its art
-function M:drawLight(l, cam)
+function M:drawLight(l, cam) return true end                         -- (drawn with the ground: M:lightArt)
+function M:lightArt(l, cam)
   local x = math.floor(l.x - cam)
   if l.kind == "lantern" then
     local base = 178                                                   -- on the paving
@@ -263,14 +275,219 @@ function M:drawMover(m, cam, t)
   return true
 end
 
--- behind Pepper's line, after the back props: the nets
-function M:drawBack(cam, camY, t)
-  self:drawNets(cam)
-end
--- after the play layer: the old jetty's piles (over the water the ground paints; under her line, so never over her
--- unless she is in the water)
-function M:drawFront(cam, camY, t)
+-- the pass the ground draws after its paving and water: the old jetty's piles, the back pieces on the quay, the nets
+-- and the lanterns (everything behind Pepper that stands on the paving or in the water)
+function M:drawStanding(cam)
   self:drawPiles(cam)
+  for _, pr in ipairs(self.def.props) do if BACK[self.K[pr]] then self:art(pr, cam) end end
+  self:drawNets(cam)
+  for _, l in ipairs(self.def.lights or {}) do
+    local x = l.x - cam
+    if x > -20 and x < 340 then self:lightArt(l, cam) end
+  end
+end
+
+-- C+D: the quay and the water, painted once into chunks by rule (ImageData, one palette colour per pixel).
+-- Front-on, as River Walk's quay: the paving's thin cap above and below Pepper's line (y 172-192: a back course of
+-- 24 px slabs, a front course of 32 px slabs, each slab flat with a lit top row), the granite coping (y 193-198, a
+-- lit arris, joints every 48 px) with its shadow, the wall of ashlar courses (10 px, 40 px blocks, half-bond) down to
+-- the screen's bottom, a wet row where the bay meets the paving's back edge. The water in the gaps: water.png
+-- recoloured whole-pixel (water_near.png), from the paving's back line down.
+-- Joins (every change of kind, marked for joins.lua's check):
+--   quay>water / water>quay   the quay-end cap (River Walk's, in granite): the end stone, the coping 2 px over the
+--                             water with its shadow, quoins (long and short in turn), the arris wet below the
+--                             waterline, a ripple along it, the wall's dark reflection stepping out
+--   the slipway (x 3800)      a stone ramp (2 px run per 1 px drop) from the paving's back course down into the
+--                             water, under it in the water's own colours; no overhang
+--   the pier stub             the cap on both its sides
+-- Bollards stand on the back course every so often (where nothing else stands), as in the concept.
+local SLIPWAY = 3800                                                  -- the level's slipway (beat 13), a quay end
+local PAVE0, FRONT0, CAP0, WALL0 = 172, 182, 193, 200                 -- the rows where each part starts
+local function hash(i) return (i * 2654435761) % 4294967296 end
+
+function M:groundMap()
+  local w = self.world
+  local W = w.width
+  local top, kind = {}, {}
+  for x = 0, W - 1 do
+    for _, m in ipairs(Sc.columnRuns(w, x, "all")) do if m[1] >= 150 then top[x] = m[1]; break end end
+    if top[x] then kind[x] = "quay"
+    else
+      for _, r in ipairs(w.water) do if x >= r.x0 and x < r.x1 then kind[x] = "water" end end
+    end
+  end
+  local dL, dR = {}, {}
+  local n
+  for x = 0, W - 1 do if top[x] then n = (x > 0 and not top[x - 1]) and 0 or (n and n + 1); dL[x] = n else n = nil end end
+  n = nil
+  for x = W - 1, 0, -1 do if top[x] then n = (x < W - 1 and not top[x + 1]) and 0 or (n and n + 1); dR[x] = n else n = nil end end
+  return top, kind, dL, dR
+end
+
+-- the kind map for joins.lua's check (Jn.check): quay and water, with this painter's marks
+function M:joinKinds()
+  local top, kind = self:groundMap()
+  local K = {}
+  for x = 0, self.world.width - 1 do K[x] = { kind = kind[x], top = top[x] } end
+  return K
+end
+
+function M:paintGround(w)
+  local Jn = require("joins")
+  local W, H = w.width, 240
+  local top, kind, dL, dR = self:groundMap()
+  local wn = love.image.newImageData("levelart/night/water_near.png")
+  local WN = wn:getWidth()
+  local data = love.image.newImageData(W, H)
+  local function set(x, y, c, a)
+    if x < 0 or x >= W or y < 0 or y >= H or not c then return end
+    if a then
+      local r, g, b = data:getPixel(x, y)
+      data:setPixel(x, y, r + (c[1] - r) * a, g + (c[2] - g) * a, b + (c[3] - b) * a, 1)
+    else data:setPixel(x, y, c[1], c[2], c[3], 1) end
+  end
+  local function lum(x, y) local r, g, b = data:getPixel(x, y); return 0.299 * r + 0.587 * g + 0.114 * b end
+  -- the paving, coping and wall of a quay column (d: columns from its end, side: 1 = the water on its right)
+  local function quayCol(x, d, side)
+    set(x, PAVE0 - 1, P.wet)                                            -- the wet row along the bay
+    set(x, PAVE0, P.g4)
+    local bi = math.floor(x / 24)                                       -- the back course (y 173-180)
+    for y = PAVE0 + 1, FRONT0 - 2 do
+      local c = (hash(bi) % 3 == 0) and P.g3 or P.g2
+      if y == PAVE0 + 1 then c = P.g1 end
+      if x % 24 == 0 then c = P.g6 end
+      set(x, y, c)
+    end
+    set(x, FRONT0 - 1, P.g6)
+    local fi = math.floor((x + 12) / 32)                                -- the front course (y 182-192)
+    for y = FRONT0, CAP0 - 1 do
+      local c = (hash(fi + 7) % 3 == 1) and P.g3 or P.g2
+      if y == FRONT0 then c = P.g1 elseif y == CAP0 - 1 then c = P.g4 end
+      if (x + 12) % 32 == 0 then c = P.g6 end
+      set(x, y, c)
+    end
+    for y = CAP0, WALL0 - 2 do                                          -- the coping (y 193-198)
+      local c = (y == CAP0) and P.g1 or (y == WALL0 - 2 and P.g5 or P.g4)
+      if x % 48 == 0 and y > CAP0 then c = P.g6 end
+      set(x, y, c)
+    end
+    set(x, WALL0 - 1, P.g8)                                             -- its shadow on the wall
+    for y = WALL0, H - 1 do                                             -- the wall: 10 px courses, 40 px blocks
+      local k, r = math.floor((y - WALL0) / 10), (y - WALL0) % 10
+      local c = (r == 0) and P.g7 or (r == 1 and P.g4 or P.g5)
+      if r > 0 then
+        local head
+        if d and d < 30 then head = d == ((k % 2 == 0) and 13 or 25)   -- quoins: long and short in turn
+        else head = (x + (k % 2) * 20) % 40 == 0 end
+        if head then c = P.g7 end
+      end
+      if d == 0 then c = (side == -1) and P.g4 or P.g7 end              -- the corner's arris: lit on the left end
+      if d and d <= 1 and y >= WATERLINE then c = P.wet end             -- wet below the waterline
+      set(x, y, c)
+    end
+    if d and d <= 3 then                                                -- the end stone of the paving and coping
+      local c = (d == 3) and P.g6 or (d == 0 and ((side == -1) and P.g1 or P.g4) or P.g2)
+      for y = PAVE0 + 1, CAP0 - 1 do set(x, y, c) end
+    end
+  end
+  for x = 0, W - 1 do
+    if kind[x] == "water" then
+      for y = PAVE0, H - 1 do set(x, y, { wn:getPixel(x % WN, y - PAVE0) }) end
+    end
+  end
+  Jn.reset()
+  for x = 0, W - 1 do
+    if top[x] then
+      local d, side = dL[x], -1
+      if dR[x] and (not d or dR[x] < d) then d, side = dR[x], 1 end
+      quayCol(x, d, side)
+    end
+  end
+  -- the quay-end caps
+  for x = 0, W - 1 do
+    local side = (dR[x] == 0 and x + 1 < W and 1) or (dL[x] == 0 and x > 0 and -1) or nil
+    if side then
+      Jn.mark(side == 1 and x + 1 or x, side == 1 and "quay>water" or "water>quay")
+      if not (side == 1 and x + 1 == SLIPWAY) then
+        for i = 1, 2 do                                                 -- the coping over the water, its shadow
+          local ox = x + side * i
+          for y = PAVE0 + 1, CAP0 - 1 do set(ox, y, (i == 1) and P.g2 or P.g3) end
+          set(ox, PAVE0, P.g4)
+          for y = CAP0, WALL0 - 2 do set(ox, y, (y == CAP0) and P.g1 or P.g5) end
+          set(ox, WALL0 - 1, P.w0); set(ox, WALL0, P.w0)
+        end
+      end
+      for i = 2, 5 do                                                   -- the wall's reflection, stepping out
+        local c = (i <= 3) and P.w0 or P.w1
+        for y = WATERLINE + 1, H - 1 do
+          if lum(x + side * i, y) > 0.299 * c[1] + 0.587 * c[2] + 0.114 * c[3] then set(x + side * i, y, c) end
+        end
+      end
+      for i = 1, 6 do if i % 3 ~= 0 then set(x + side * i, WATERLINE, P.w6) end end   -- the ripple
+    end
+  end
+  -- the slipway: a stone ramp from the back course into the water, 2 px run per 1 px drop, 4 px thick
+  for i = 0, 63 do
+    local x, yt = SLIPWAY + i, PAVE0 + 1 + math.floor(i / 2)
+    if yt > WATERLINE - 4 then break end
+    for k = 0, 4 do
+      local y = yt + k
+      local c = (k == 0) and P.g1 or (k == 4 and P.g6 or P.g4)
+      if y >= WATERLINE - 12 then c = (k == 0) and P.w5 or P.w3 end    -- under the water's surface
+      set(x, y, c)
+    end
+    if i % 8 == 0 then set(x, yt + 1, P.g6) end                         -- its stones' joints
+  end
+  -- bollards on the back course (6 x 8), every 192 px where nothing stands within 28 px
+  local B = { { 0, 1, 4, P.iron1 }, { 0, 0, 6, nil } }
+  local function free(x)
+    for _, p in ipairs(self.def.props) do if p.x1 > x - 28 and p.x0 < x + 34 and p.layer ~= "front" then return false end end
+    for _, l in ipairs(self.def.lamps) do if math.abs(l.x - x) < 30 then return false end end
+    for _, l in ipairs(self.def.lights or {}) do if math.abs(l.x - x) < 30 then return false end end
+    for i = -8, 14 do if not top[x + i] then return false end end
+    return true
+  end
+  for bx = 136, W - 40, 192 do
+    if free(bx) then
+      for y = 0, 7 do
+        for i = 0, 5 do
+          local c = P.iron2
+          if y == 0 then c = (i >= 1 and i <= 4) and P.iron1 or nil
+          elseif i == 0 then c = P.iron1 elseif i == 5 then c = P.iron3 end
+          if y == 2 then c = P.iron3 end
+          if y == 7 then c = P.iron3 end
+          set(bx + i, 168 + y, c)
+        end
+      end
+      for i = -1, 6 do set(bx + i, 176, P.g4) end                      -- its contact on the paving
+    end
+  end
+  self.groundImg = data
+  -- the chunks (512 px, as scene.lua's ground)
+  local chunks = {}
+  for cx = 0, W - 1, 512 do
+    local cw = math.min(512, W - cx)
+    local d = love.image.newImageData(cw, H)
+    d:paste(data, 0, 0, cx, 0, cw, H)
+    local im = lg.newImage(d); im:setFilter("nearest", "nearest")
+    chunks[#chunks + 1] = { im = im, x = cx, w = cw }
+  end
+  local art = self
+  local g = { chunks = chunks }
+  function g:draw(cam, camY)
+    lg.setColor(1, 1, 1, 1)
+    for _, c in ipairs(self.chunks) do
+      if c.x - cam < 320 and c.x + c.w - cam > 0 then lg.draw(c.im, c.x - cam, 0) end
+    end
+    art:drawStanding(cam)                                               -- what stands on it, behind Pepper
+    lg.setColor(1, 1, 1, 1)
+  end
+  function g:release() for _, c in ipairs(self.chunks) do c.im:release() end; self.chunks = {} end
+  if os.getenv("NIGHT_JOINS") then
+    local ok, n, bad = Jn.check(self:joinKinds(), W)
+    print(("NIGHT JOINS %s %d changes%s"):format(ok and n > 0 and "PASS" or "FAIL", n, ok and "" or ": " .. table.concat(bad, "; "))); io.stdout:flush()
+  end
+  return g
 end
 
 return M
