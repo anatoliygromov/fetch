@@ -3,6 +3,11 @@
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
 
+## Branch `lv/08nov-base` (on sfx/07nov-r2): one art module per level for levels 4 to 6 (owner 8 Nov: "finish levels 4-6")
+- `riverwalk/levelart.lua` and `riverwalk/levelart/{rooftops,soder,night}.lua`: a level sets `L.levelart` and its module draws the parts it has (far layers, ground, back, props, lamps, movers, front, screen, its colour script). stage.lua draws the greybox for every part a module does not have, so each level can be finished piece by piece and the three tracks never edit the same file.
+- stage.lua: 9 hooks, each `if la has it then la draws it`. look.lua: `Look.level` takes the module's script. The modules are empty, so nothing on screen changes yet.
+- Checks: PEPPER UNCHANGED (3908), physics Rooftops 139/139, Söder 29/29, Night 40/40, River Walk 56/56, Downtown tall 109/109.
+
 ## Branch `sfx/07nov-r2` (on fix/07nov-music): sound effects, round 2 (the 7 Nov audit's open list, 0 credits)
 - **5 new sounds on the same chip (sfx.lua):** `meow` (the cat is startled), `query` (the cat only looks up, "?"), `chatter` (the magpie lands on its next perch), `rustle` (Pepper runs through a leaf pile), `page` (the story card between levels).
 - **Silent events that now sound, one S.play call each:** cat startled (meow with the ball's spring), cat lands and runs off (patter), cat looks up (query), magpie lands (chatter; a gull's nest would squawk), leaf pile (rustle), story card (page), a Söder barrel dropping into a hatch (thud), a lift reaching either end (gate, on screen only; no level has a lift yet).

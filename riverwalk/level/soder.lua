@@ -32,6 +32,7 @@ L.name = "SÖDER HILL"
 L.number = 5
 L.title = "Pepper: Soder Hill"
 L.scenery = "greybox"
+L.levelart = "soder"                       -- (8 Nov) its art: riverwalk/levelart/soder.lua
 L.greyStyle = "town"
 L.map = "level/soder.map"
 L.time = 200

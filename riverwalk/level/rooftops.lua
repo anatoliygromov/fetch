@@ -9,4 +9,6 @@
 -- the copper roof (232); a bark there makes the gull let go of the ball (its nest is on the chimney, y 136) and the
 -- sauna steam up: its puff carries her to the chimney's top. The ball, a step down onto the copper roof, Down + A to
 -- the terrace, and the fetch.
-return require("tiled").load("level/tiled/rooftops.lua")
+local L = require("tiled").load("level/tiled/rooftops.lua")
+L.levelart = "rooftops"                  -- (8 Nov) its art: riverwalk/levelart/rooftops.lua
+return L

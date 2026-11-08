@@ -100,7 +100,11 @@ Look.scripts = {
   },
 }
 Look.key = "riverwalk"
-function Look.level(def) Look.key = ({ park = "citypark", town = "downtown" })[def.art] or "riverwalk" end
+function Look.level(def)
+  -- (8 Nov) a level with its own art module (levelart.lua) brings its own colour script, registered under its name
+  if def.levelart and Look.scripts[def.levelart] then Look.key = def.levelart; return end
+  Look.key = ({ park = "citypark", town = "downtown" })[def.art] or "riverwalk"
+end
 local function S() return Look.scripts[Look.key] end
 -- a layer's look: the painted sky's override (script.paint.layers) when Look.PAINTED, else the script's own
 function Look.layer(name)

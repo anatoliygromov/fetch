@@ -28,6 +28,7 @@ L.name = "NIGHT HARBOUR"
 L.number = 6
 L.title = "Pepper: Night Harbour"
 L.scenery = "greybox"
+L.levelart = "night"                       -- (8 Nov) its art: riverwalk/levelart/night.lua
 L.greyStyle = "town"
 L.map = "level/night.map"
 L.time = 420

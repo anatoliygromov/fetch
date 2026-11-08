@@ -4,6 +4,7 @@ local Pp = require("pepper")
 local Sc = require("scene")
 local Rd = require("road")
 local Look = require("look")
+local LA = require("levelart")
 local S = require("sfx")
 local I = require("input")
 local Ex = require("extras")                  -- visual extras around Pepper (drawing only, E toggles them)
@@ -47,6 +48,7 @@ function St.new(def, carry)
     local mv = m.fromY and Lf.new(m) or { name = m.name, x0 = m.from, x1 = m.from + (m.x1 - m.x0), y0 = m.y0, y1 = m.y1, from = m.from, to = m.to, speed = m.speed, dir = 1, dx = 0, kind = "oneway", pause = m.pause }
     s.world:addMover(mv); s.movers[#s.movers + 1] = mv
   end
+  s.levelArt = LA.new(s)                                           -- (8 Nov) levels 4 to 6: their own art module (levelart.lua), or nil
   Look.level(def)                                                  -- (the colour script first: the art is faded to its haze)
   s.layers = def.scenery == "greybox" and Sc.buildGrey(s.world.width, def.greyStyle) or Sc.build(s.world.width)
   if def.art then s.layers = Sc.buildArt(s.world.width, def.art) end   -- art for a greybox level (City Park, Downtown)
@@ -575,7 +577,9 @@ function St:draw(debug)
   local C = Sc.C
   local style = self.def.art                                      -- "park" / "town": a greybox level with its art
   local grey = self.def.scenery == "greybox" and not style
-  local lk = Look.on and (style or not grey)                       -- the Lion King look (look.lua): the art levels
+  local la = self.levelArt                                         -- (8 Nov) a level's art module (levelart.lua): it draws
+  local function has(f) return la and la[f] end                    -- the parts it has; the greybox draws the rest
+  local lk = Look.on and (style or not grey or (la and la.look))   -- the Lion King look (look.lua): the art levels
   Look.level(self.def)                                             -- (this level's colour script)
   Sc.FOOT = self.def.foot or 184                                   -- the path line the art is placed from (scene.lua)
   Sc.world = self.world                                            -- (art/dt-props-06nov: a parasol's pole stops at the street)
@@ -585,10 +589,12 @@ function St:draw(debug)
   end
   local function use(n) if lk then Look.use(n) end end
   local function prop(pr, c, colour, kicked)
+    if has("drawProp") and la:drawProp(pr, c, colour, kicked) then return end
     if style then Sc.drawPropArt(pr, c, self.def, kicked) else Sc.drawProp(pr, c, colour) end
   end
   Sc.vshift = Vc.parallax(self, camY)                              -- (tall levels: the layers rise slower than the world)
-  if style then Sc.drawFarArt(self.layers, cam, self.t, self.world, self.def)
+  if has("drawFar") then la:drawFar(cam, camY, self.t)
+  elseif style then Sc.drawFarArt(self.layers, cam, self.t, self.world, self.def)
   elseif grey then Sc.drawFarGrey(self.layers, cam, self.t) else Sc.drawFar(self.layers, cam, self.t) end
   Sc.vshift = nil
   lg.push(); lg.translate(0, -camY)                                -- the world, up to the foreground band
@@ -605,6 +611,7 @@ function St:draw(debug)
   Sp.drawBack(self, cam)                                           -- code-drawn decoration (kiosks)
   Rf.drawBack(self, cam, self.t)                                   -- steam columns (behind Pepper)
   if self.chase then Ch.drawBack(self, cam) end                    -- the chase: open cellar hatches
+  if has("drawBack") then use("back"); la:drawBack(cam, camY, self.t) end   -- (levelart.lua) behind Pepper's line
   if self.night then Nt.drawLights(self, cam) end                  -- [night hook] lanterns, windows
   -- 7 play layer: terrain (pavement art, painted once; see Sc.paintGround)
   local w = self.world
@@ -613,7 +620,8 @@ function St:draw(debug)
     Look.off(); self.groundRaw = Sc.paintGroundArt(w, style, self.def.foot); use("back")   -- second paint, ungraded
   end                                                              -- (the street itself stays as it was)
   if not self.ground then
-    if style then self.ground = Sc.paintGroundArt(w, style, self.def.foot)
+    if has("paintGround") then self.ground = la:paintGround(w)
+    elseif style then self.ground = Sc.paintGroundArt(w, style, self.def.foot)
     else self.ground = grey and Sc.paintGroundGrey(w) or Sc.paintGround(w, self.def.props, self.def) end
   end
   use("ground")
@@ -641,7 +649,11 @@ function St:draw(debug)
     end
   end
   if grey then                                                     -- greybox lamp posts on the path
-    for _, l in ipairs(self.lamps) do if l.x - cam > -20 and l.x - cam < 340 then Sc.lampGrey(l.x - cam, l.y, l.lit, self.t - (l.litAt or -9), self.t) end end
+    for _, l in ipairs(self.lamps) do
+      if l.x - cam > -20 and l.x - cam < 340 and not (has("drawLamp") and la:drawLamp(l, cam, self.t)) then
+        Sc.lampGrey(l.x - cam, l.y, l.lit, self.t - (l.litAt or -9), self.t)
+      end
+    end
   else
   -- (art/placement) a lamp on a tall level's high road stands on its ledge (a walk, a branch, a gallery): no
   -- pavement there, so its foot goes on the ledge's top, behind its front edge, not EDGE px above it in the air
@@ -683,7 +695,8 @@ function St:draw(debug)
   use("play")
   Sp.drawRopes(self, cam)                                          -- the ropes the ferries run on
   for _, m in ipairs(self.movers) do
-    if style then Sc.drawMoverArt(m, cam, style)                       -- the duck boat
+    if has("drawMover") and la:drawMover(m, cam, self.t) then          -- (levelart.lua)
+    elseif style then Sc.drawMoverArt(m, cam, style)                       -- the duck boat
     elseif m.lift then Lf.draw(m, cam, Sc, self.t)                     -- a lift (lift.lua)
     elseif grey then                                                   -- greybox level: labelled boxes (the duck boat)
       Sc.outlined(C.prop, C.propEdge, m.x0 - cam, m.y0, m.x1 - m.x0, m.y1 - m.y0); Sc.label(m.name or "PONTOON", (m.x0 + m.x1) / 2 - cam, m.y0 + 8)
@@ -829,9 +842,11 @@ function St:draw(debug)
   for _, pr in ipairs(self.def.props) do
     if pr.layer == "front" then prop(pr, math.floor(cam + (cam + 160 - (pr.x0 + pr.x1) / 2) * 0.3), C.front) end
   end
+  if has("drawFront") then la:drawFront(cam, camY, self.t) end    -- (levelart.lua) in front of Pepper, in the world
   lg.pop()                                                         -- (screen space again)
   if lk then Look.off(); Look.front(self, cam, camY); Look.leaves(self, cam, camY, self.camYMax) end   -- the dark foreground band (1.4x), under Pepper's lines; a tall park's leaf front up in the trees
   if self.night then Nt.draw(self, cam) end                        -- [night hook] the darkness, the trail, the planks
+  if has("drawScreen") then la:drawScreen(cam, camY, self.t) end  -- (levelart.lua) screen space, over everything
   lg.setColor(1, 1, 1, 1)
   if debug then lg.push(); lg.translate(0, -camY); self:drawDebug(cam); lg.pop() end
 end
