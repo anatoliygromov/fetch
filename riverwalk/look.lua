@@ -314,10 +314,15 @@ function Look.road(stage, cam, Sc)
   for _, sg in ipairs(Sc.roadOnSegs or {}) do
     local a, b = math.max(sg[1], cam) - cam, math.min(sg[2], cam + 320) - cam
     if b > a and sg[3] < 240 then
+      -- (owner, 8 Nov) the tile's rows start on the segment's own road line (sg[4]): along the steps' 45 degree
+      -- slope, one column at a time, and at the quay's level under it; each row keeps the speed of the flat road's
+      -- row of the same index, so the slope's lane line and speckles move with the street's
+      local base = sg[4] or Look.ROAD_TOP
       lg.setScissor(a, sg[3], b - a, 240 - sg[3])
-      for r = math.max(0, sg[3] - Look.ROAD_TOP), rh - 1 do
-        local y = Look.ROAD_TOP + r
-        local o = math.floor(cam * Look.rowFactor(y) + 0.5) % rw
+      for r = math.max(0, sg[3] - base), rh - 1 do
+        local y = base + r
+        if y >= 240 then break end
+        local o = math.floor(cam * Look.rowFactor(Look.ROAD_TOP + r) + 0.5) % rw
         lg.draw(road, roadQ[r], -o, y); lg.draw(road, roadQ[r], rw - o, y)
       end
       lg.setScissor()

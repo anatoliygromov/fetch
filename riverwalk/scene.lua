@@ -779,6 +779,7 @@ Sc.PROMENADE, Sc.QUAY_Y0, Sc.QUAY_JOINT = 184, 196, { 72 / 255, 82 / 255, 107 / 
 Sc.STEP_RW = 8                                                    -- (day/07nov-ground) River Walk's ramps: 8 px stone steps (0.17 m)
 Sc.ROAD_RUNS_ON = true                                            -- (owner, 7 Nov: "the asphalt goes on") the road runs on in
 Sc.SLOPE_SHADE = os.getenv("SLOPE_SHADE") or "face"            -- (owner, 7 Nov, picked B) "face": the steps' side in shade; "slope"
+Sc.HILL_SHADE = tonumber(os.getenv("HILL_SHADE") or "0.11")       -- (owner, 8 Nov) the road down the slope, shaded
 Sc.ROAD_Y, Sc.ROAD_END_W = 199, 6                                 -- front of the steps and the lower quay to the water (paintQuay)
 local function columnTop(w, x)                                      -- the first walkable top at or under y 150, or nil
   if x < 0 or x >= w.width then return nil end
@@ -1217,7 +1218,10 @@ function Sc.paintQuay(w, props, def)
       -- diagonal foot (cheekTop + 5); its shadow on the road is an overlay (Sc.roadEnds, over look.lua's road)
       local ry = (k == "ramp") and (cheekTop(x) + 5) or (roadOn[x] + 15)
       lg.setColor(1, 1, 1, 1)
-      clip(x, ry, 1, bottom - ry); lg.draw(road, rq[x % rw], x, Sc.ROAD_Y); clip()
+      -- (owner, 8 Nov: "turn this texture part 45 degrees, so it's clear that it's a hill down") the tile's rows
+      -- start at this column's own road line: under the steps they follow the 45 degree slope (the lane line runs
+      -- down with it), under the quay the road carries on from its own top at the lower level
+      clip(x, ry, 1, bottom - ry); lg.draw(road, rq[x % rw], x, ry); clip()
       px(Q.rg1, x, ry); px(Q.rg2, x, ry + 1)
     else
       local d = dR[x] or dL[x] or dRoad[x]
@@ -1333,8 +1337,9 @@ function Sc.paintQuay(w, props, def)
       y0 = roadOn[x] + 17
       if kind[x] == "ramp" then y0 = cheekTop(x) + 7 end
     end
+    -- { x0, x1, first row under the gutter, the road line its tile's rows start on }
     if seg and (y0 ~= seg[3]) then seg[2] = x; Sc.roadOnSegs[#Sc.roadOnSegs + 1] = seg; seg = nil end
-    if y0 and not seg then seg = { x, nil, y0 } end
+    if y0 and not seg then seg = { x, nil, y0, y0 - 2 } end
   end
   Sc.roadEnds = {}
   for _, e in ipairs(corners) do
@@ -1389,13 +1394,11 @@ function Sc.paintQuay(w, props, def)
         lg.setColor(1, 1, 1, 1)
         g0:setViewport(xx % rw, 0, 1, 1); lg.draw(road, g0, i, ry - y0)
         g1:setViewport(xx % rw, 1, 1, 1); lg.draw(road, g1, i, ry + 1 - y0)
-        if kind[xx] == "ramp" and Sc.SLOPE_SHADE == "slope" then
-          -- the road going down beside the steps: the asphalt between the diagonal and the quay's road line is a
-          -- slope facing away from the light, in shade (a flat tone, its lower edge level with the quay's gutter)
-          local low = roadOn[xx] + 15
-          lg.setColor(0.03, 0.04, 0.10, 0.38)
-          if low > ry + 2 then lg.rectangle("fill", i, ry + 2 - y0, 1, low - ry - 2) end
-          lg.setColor(0.03, 0.04, 0.10, 0.18); lg.rectangle("fill", i, low - y0, 1, 1)
+        if kind[xx] == "ramp" and Sc.HILL_SHADE > 0 then
+          -- (owner, 8 Nov: "so it's clear that it's a hill down") the road going down the slope under the steps is a
+          -- face turned from the light: a light flat shade over it, from the steps' foot to the bottom of the screen
+          lg.setColor(0.03, 0.04, 0.10, Sc.HILL_SHADE)
+          lg.rectangle("fill", i, ry + 2 - y0, 1, 240 - ry - 2)
         end
       end
       lg.pop()
