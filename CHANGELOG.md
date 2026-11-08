@@ -3,6 +3,9 @@
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
 
+## Branch `lv/08nov-soder` (off lv/08nov-base): Söder Hill from greybox toward finished, by rule (0 credits)
+- **A. Labels off (riverwalk/levelart/soder.lua).** Every prop is drawn without its printed name (CRATE, SIGN, BALCONY ...); the names stay in the level data for the debug view. Audit SW1.
+
 ## Branch `lv/08nov-base` (on sfx/07nov-r2): one art module per level for levels 4 to 6 (owner 8 Nov: "finish levels 4-6")
 - `riverwalk/levelart.lua` and `riverwalk/levelart/{rooftops,soder,night}.lua`: a level sets `L.levelart` and its module draws the parts it has (far layers, ground, back, props, lamps, movers, front, screen, its colour script). stage.lua draws the greybox for every part a module does not have, so each level can be finished piece by piece and the three tracks never edit the same file.
 - stage.lua: 9 hooks, each `if la has it then la draws it`. look.lua: `Look.level` takes the module's script. The modules are empty, so nothing on screen changes yet.
