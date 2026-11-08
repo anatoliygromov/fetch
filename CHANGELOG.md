@@ -3,6 +3,11 @@
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
 
+## Branch `art/08nov-concepts` (on lv/08nov-base): one concept screen per level for levels 4 to 6 (Artlist 960, reference only)
+- Owner 8 Nov: "Yes, up to that total" (Artlist about 1,100, SpriteCook about 680). Three concept jobs, preflighted (`art/gen/jobs/{rt_hotel,sh_cafe,nh_home}_concept.json`), 2 variants each, Nano Banana Pro I2I 1K on real game frames. Ledger rows with the generation ids.
+- Picks (design targets, never game pixels): Rooftops a (the parapet ledge between the skylights, the copper hotel below), Söder Hill a (the stepped cobble rise and kerb; b drew a road under the street), Night Harbour b (front-on house, Mia kept, stepped light pools; a lost Mia and drew the quay in perspective).
+- rules.json: the three levels with their light. Side by side: `docs/review/08nov/concepts/`.
+
 ## Branch `lv/08nov-base` (on sfx/07nov-r2): one art module per level for levels 4 to 6 (owner 8 Nov: "finish levels 4-6")
 - `riverwalk/levelart.lua` and `riverwalk/levelart/{rooftops,soder,night}.lua`: a level sets `L.levelart` and its module draws the parts it has (far layers, ground, back, props, lamps, movers, front, screen, its colour script). stage.lua draws the greybox for every part a module does not have, so each level can be finished piece by piece and the three tracks never edit the same file.
 - stage.lua: 9 hooks, each `if la has it then la draws it`. look.lua: `Look.level` takes the module's script. The modules are empty, so nothing on screen changes yet.
