@@ -1,5 +1,19 @@
 # FETCH! Status
 
+## Night of 9 Nov: audit of main (unattended run, 0 credits, no art or level changes)
+
+Base: `main` at e560cb4. STATUS "Next 7 days", "Known, next" and the board have nothing open for night work, and no new owner decisions since 8 Nov. Audit only, no track branches, no game files changed.
+
+**Checks on main:** PEPPER UNCHANGED (3908 steps). Flow 125/125. Tiled PASSED. check_approved ALL MERGED. check_curve (`riverwalk,citypark_tall,downtown_tall,rooftops,soder,night`, 20 seeds x 8 personas): T1, T3, T4 PASS, **T2 FAIL**, identical to 7 and 8 Nov.
+
+**Finding (S2, unchanged):** River Walk screen 13 takes 36% of failures, limit 35%. Soder Hill screen 9 shows 50% but is under the 20-failure rule. Fixing it is a level change and needs your yes plus a Pepper trace re-record.
+
+**Decision waiting:** fix River Walk screen 13, or accept 1 point over the limit?
+
+**Problems:** check_curve cannot draw its chart (no matplotlib). Shallow clone note from check_approved. Sandbox setup: `love` needed `apt-get update` first; pip needed `--cert /root/.ccr/ca-bundle.crt` to finish.
+
+**Branches:** `ops/night-09nov` only (this STATUS). No night/* branches.
+
 ## Night of 8 Nov: audit of main (unattended run, 0 credits, no art or level changes)
 
 Base: `main` at e560cb4 (v0.7, sound pass, plan gate tooling). STATUS "Next 7 days" and the board have nothing open for night work, so this run audited and changed no game files. No track branches were made. This STATUS carries forward the 7 Nov one below.
