@@ -1,5 +1,23 @@
 # FETCH! Status
 
+## Night of 10 Nov: River Walk T2 traced to its cause (unattended run, 0 credits, no game or art changes)
+
+Base: `main` at e560cb4. Board: 178 decisions, none newer than 7 Nov. STATUS and the board have nothing open for night work, so tonight was the S2 check failure and prep for its decision.
+
+**Checks on main:** PEPPER UNCHANGED (3908 steps). Flow 125/125. Tiled PASSED. check_curve T1, T3, T4 PASS, **T2 FAIL** (River Walk screen 13, 36%), same as 7 to 9 Nov.
+
+**Finding:** 73 of the 75 screen 13 failures are the autopilot reaching the girl without the ball. Re-running all 72 runs with logging: in 61 a bike knocked the ball away at x 3680 to 3743 (screen 12, the open pavement between the bin and the last bench; bike zone 2 ends at 3678 but its last bike still rides through). 6 lost it by the girl, 5 in the harbour. The lab logged the miss where it noticed, at the girl.
+
+**Track `night/10nov-curve`** (ba80d2e, off main): lab only. pt_bot.lua records where the ball was lost; check_curve counts such a miss there. The bot plays the same (every DI, Elsa and lost number identical on all six levels). Result: River Walk worst spot screen 12 (30%), **T1 to T4 PASS**. PEPPER UNCHANGED, flow 125/125, Tiled PASSED, check_approved ALL MERGED. Kept: not merged, waits for you.
+
+**Look at:** `docs/review/10nov/rw_t2_options.md` (one page), `rw_ball_lost_where.png` (chart), `rw_screen12.png` (the spot), all on `night/10nov-curve`.
+
+**Decision waiting:** (1) lab fix only, (2) level change (keep bikes out of the bin to bench gap; Pepper trace re-record), (3) both, (4) accept. Recommended: 1.
+
+**Problems:** none new. Sandbox: `love` needed `apt-get update`; system Pillow is broken, a venv fixed it.
+
+**Branches:** `ops/night-10nov` (this STATUS), `night/10nov-curve` (kept, above).
+
 ## Night of 9 Nov: audit of main (unattended run, 0 credits, no art or level changes)
 
 Base: `main` at e560cb4. STATUS "Next 7 days", "Known, next" and the board have nothing open for night work, and no new owner decisions since 8 Nov. Audit only, no track branches, no game files changed.
