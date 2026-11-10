@@ -164,6 +164,7 @@ function Bot.new(api, persona, opts)
   local heldPending = false                                        -- a held jump came out short for want of knowing it
   local lastPos, stillT, idleT = nil, 0, 0
   local offT, offN = 0, {}
+  local dropXY, hadBall = nil, false                        -- where Pepper last lost the ball (for the record only)
   b.done, b.result = false, nil
 
   -- the world's state as the route sees it (recovery v2): the ball (in her mouth, with a critter, loose, given) and
@@ -227,6 +228,13 @@ function Bot.new(api, persona, opts)
       spot = ("%s@%d"):format(spot, math.floor(p.x / 320)); log.spotPos[spot] = { math.floor(p.x), math.floor(p.y) }
     end
     log.fails[#log.fails + 1] = { spot = spot, cause = cause, x = math.floor(p.x), y = math.floor(p.y), t = playT }
+    -- the autopilot came to a step that needs the ball without it (a bike or a gull knocked it away earlier): the
+    -- record also says where it was lost, so check_curve counts the miss there. The bot itself plays the same.
+    local re = nil                                                -- the clean run's step here (past its last step: the last)
+    if route then for k = i, 1, -1 do if route[k] then re = route[k]; break end end end
+    if (cause == "stuck" or cause == "offroute") and dropXY and not p.carrying and re and re.c then
+      log.fails[#log.fails].drop = { dropXY[1], dropXY[2] }
+    end
     log.failCount[spot] = (log.failCount[spot] or 0) + 1
     -- the lab's own check: after 3 failures in a row at one spot, one try with the autopilot's exact inputs. If
     -- that fails too, the bot (not the player) has lost the route here (the ball or a critter is somewhere the
@@ -500,6 +508,11 @@ function Bot.new(api, persona, opts)
     local p = s and s.pepper
     if state == "play" then playT = playT + DT end
     if state == "clear" then finish("clear"); return end
+    if p and state == "play" then
+      local has = p.carrying ~= nil
+      if hadBall and not has then dropXY = { math.floor(p.x), math.floor(p.y) } elseif has then dropXY = nil end
+      hadBall = has
+    end
     if s and s.clearT and not b.clearPT then b.clearPT = playT end
     if T > cap + 60 or playT > cap then finish("session", { spot = spotOf(getI()), xy = p and { math.floor(p.x), math.floor(p.y) } }); return end
     if state == "over" then                                         -- GAME OVER: TRY AGAIN, the level from the start

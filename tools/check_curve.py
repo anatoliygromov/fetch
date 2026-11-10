@@ -17,7 +17,8 @@ Targets (docs/playtest/method.md, "Acceptance test"):
      (b) it climbs: the second half of the order is at least as hard as the first half (mean DI v2; the middle
          level of an odd order counts in neither), and the last level is at least as hard as the first.
   T2 no spot (a screen of the beat sheet, else a 320 px screen) has more than 35% of a level's failures (all personas,
-     runs the lab kept; levels with fewer than 20 failures pass).
+     runs the lab kept; levels with fewer than 20 failures pass). A miss because the ball was lost earlier (a bike or
+     a gull knocked it away) counts where it was lost, not where the autopilot noticed (pt_bot.lua, fails[].drop).
   T3 Elsa (6) clears every level in at least 50% of her playthroughs.
   T4 the lab loses under 5% of the runs on every level (a lost run: the bot, not the player, lost the route).
 
@@ -113,7 +114,7 @@ def analyse(order, out, args):
             if r["result"] in ("lost", "crash"):
                 continue
             for x in r["fails"]:
-                pos = r.get("spot_pos", {}).get(x["spot"], [x["x"], x["y"]])
+                pos = x.get("drop") or r.get("spot_pos", {}).get(x["spot"], [x["x"], x["y"]])   # a ball lost earlier: where
                 spots[beat_name(lv, pos[0])] += 1
         tot = sum(spots.values())
         L["failures"] = tot

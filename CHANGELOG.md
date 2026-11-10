@@ -2,6 +2,11 @@
 
 Each delivered build is a git tag. `git checkout v0.1` goes back to any of them.
 
+## Branch `night/10nov-curve`: check_curve counts a lost ball where it was lost (night of 10 Nov, not merged, waits for the owner)
+- **Why:** T2 failed since 7 Nov at River Walk screen 13 (36%, limit 35%). Re-running all 72 affected runs with logging showed 73 of the 75 "screen 13" failures are the autopilot reaching the girl without the ball. In 61 of the 72 runs a bike in bike zone 2 knocked the ball away at x 3680-3743 (screen 12; no heart lost in 54); 6 dropped it at x 3904 by the girl; 5 lost it in the harbour (screen 8). The lab only noticed at the girl.
+- **Change (lab only):** pt_bot.lua remembers where Pepper last lost the ball; a stuck or offroute at a step where the clean run carries the ball records `drop = {x, y}` in that failure. check_curve counts such a failure at the drop. The bot plays exactly as before (same inputs, same DI, Elsa and lost numbers on all six levels).
+- **Result:** River Walk worst spot screen 12 (30%), T1-T4 PASS. Pepper's files untouched. PEPPER UNCHANGED, flow 125/125, Tiled PASSED.
+
 ## Branch `sfx/07nov-main`: the sound pass after the 7 Nov audit (claude/sfx-audit-07nov.md), owner yes 7 Nov 15:51, onto main
 - **22 new sounds in sfx.lua, same chip (square, triangle, noise), all synthesised at start-up. No logic changes: every edit is one S.play call.**
 - Silent events that now sound: Pepper drops the ball (`drop`, in St:dropBall, so knocks and bark drops too), the ball lands (`boop`), the ball comes back home (`home`), a life lost (`lost`), time up (`timeup`), the level starts after its intro card and the bonus starts after READY (`go`), the ending (`fanfare`), pad Start pause and resume (`tick`, as the keyboard), pinned by the screen edge on Söder Hill (`hurt`), KEEP UP (`hurry`), the goose charges (`charge`), the gull dives (`dive`), steam lifts Pepper (`whoosh`), the fox drops the ball (`yip`), a bonus catch missed (`miss`).
