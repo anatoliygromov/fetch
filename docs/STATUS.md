@@ -1,5 +1,21 @@
 # FETCH! Status
 
+## Night of 11 Nov: audit of main and last night's branch (unattended run, 0 credits, no game or art changes)
+
+Base: `main` at e560cb4, unchanged since 8 Nov. Board: 178 decisions (55 approve, 31 fix, 82 redraw, 10 empty), none newer than 7 Nov. No comments on the night pull requests. STATUS and the board have nothing open for night work that needs no credits and no new scope, and the River Walk T2 pick is still yours, so tonight was an audit. No night/* branches were made.
+
+**Checks on main:** PEPPER UNCHANGED (3908 steps). Flow 125/125. Tiled PASSED. check_approved ALL MERGED. check_curve (`riverwalk,citypark_tall,downtown_tall,rooftops,soder,night`, 20 seeds x 8 personas): T1, T3, T4 PASS, **T2 FAIL** (River Walk screen 13, 36%), same as 7 to 10 Nov.
+
+**Checks on `night/10nov-curve` (ba80d2e):** PEPPER UNCHANGED, flow 125/125, Tiled PASSED, check_approved ALL MERGED, check_curve **T1 to T4 PASS** (River Walk worst spot screen 12, 30%). Every other level's numbers are identical to main. It still sits cleanly on main (main has not moved).
+
+**Look at:** `docs/review/10nov/rw_t2_options.md` on `night/10nov-curve` (one page, four options).
+
+**Decision waiting:** River Walk T2: (1) lab fix only (`night/10nov-curve`), (2) level change, (3) both, (4) accept. Recommended: 1.
+
+**Problems:** none in the game. Sandbox only: `love` postinstall fails on a missing man page (`dpkg --configure -a`, the binary works); system Pillow is broken, a venv fixed Tiled; running two flow checks at once gave false FAILs (123 and 118 of 125), one at a time both pass 125/125.
+
+**Branches:** `ops/night-11nov` (this STATUS). Kept from before: `night/10nov-curve` (waits for your pick). Nothing of tonight is in main, so nothing to delete.
+
 ## Night of 10 Nov: River Walk T2 traced to its cause (unattended run, 0 credits, no game or art changes)
 
 Base: `main` at e560cb4. Board: 178 decisions, none newer than 7 Nov. STATUS and the board have nothing open for night work, so tonight was the S2 check failure and prep for its decision.
