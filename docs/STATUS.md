@@ -1,5 +1,23 @@
 # FETCH! Status
 
+## Night of 12 Nov: audit of main (unattended run, 0 credits, no game or art changes)
+
+Base: `main` at e560cb4, unchanged since 8 Nov. Board: newest decision still 7 Nov. No comments on the night pull requests #16 to #20. Nothing in STATUS or on the board is open for night work without credits, new scope or your River Walk T2 pick, so tonight was an audit. No night/* branches were made.
+
+**Checks on main:** PEPPER UNCHANGED (3908 steps). Flow 125/125. Tiled PASSED. check_approved ALL MERGED. check_curve (`riverwalk,citypark_tall,downtown_tall,rooftops,soder,night`, 20 seeds x 8 personas): T1, T3, T4 PASS, **T2 FAIL** (River Walk screen 13, 75 failures, 36.2%, limit 35%). Identical to 7 to 11 Nov.
+
+**`night/10nov-curve` (ba80d2e):** unchanged, still sits cleanly on main (main has not moved), so last night's result stands: T1 to T4 PASS.
+
+**Housekeeping:** `sfx/07nov-main` (57440ca) is fully in main; added to `docs/branches_archive.md` for you to delete. Five draft STATUS pull requests (#16 to #20) are open; each night only adds a section on top of the last, so #20 and older can be closed once you read this one.
+
+**Look at:** `docs/review/10nov/rw_t2_options.md` on `night/10nov-curve` (one page, four options).
+
+**Decision waiting:** River Walk T2: (1) lab fix only (`night/10nov-curve`), (2) level change, (3) both, (4) accept. Recommended: 1. Until you pick, every night will report the same audit.
+
+**Problems:** none in the game.
+
+**Branches:** `ops/night-12nov` (this STATUS, archive line). Kept: `night/10nov-curve` (waits for your pick). Nothing of tonight is in main, so nothing to delete.
+
 ## Night of 11 Nov: audit of main and last night's branch (unattended run, 0 credits, no game or art changes)
 
 Base: `main` at e560cb4, unchanged since 8 Nov. Board: 178 decisions (55 approve, 31 fix, 82 redraw, 10 empty), none newer than 7 Nov. No comments on the night pull requests. STATUS and the board have nothing open for night work that needs no credits and no new scope, and the River Walk T2 pick is still yours, so tonight was an audit. No night/* branches were made.
