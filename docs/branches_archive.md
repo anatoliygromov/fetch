@@ -77,3 +77,9 @@ These branches can be deleted (owner's yes, 6 Nov 20:10): every commit on them i
 | `ui/review-fixes` | d69c2b4 | 2026-10-24 | UI review fix 7: the HUD score in the 7 px font, smaller than the bone count, right-aligne |
 | `ui/title-regrid` | 867e76e | 2026-10-24 | Title: the regridded picture (composite base, regrid logo and plate, Pepper still, paintin |
 | `ui/umlaut` | 94c9e38 | 2026-10-24 | UI: Ö is a capital O with its dots above the cap line in all three fonts |
+
+Added night of 12 Nov (fully in main at e560cb4, not made by a night run, left for the owner to delete):
+
+| Branch | Last commit | Date | Subject |
+| --- | --- | --- | --- |
+| `sfx/07nov-main` | 57440ca | 2026-11-07 | sfx: crack a little quieter (peak 0.40 to about 0.27, in line with the rest) |
