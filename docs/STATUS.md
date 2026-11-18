@@ -1,5 +1,21 @@
 # FETCH! Status
 
+## Night of 18 Nov: audit of main (unattended run, 0 credits, no game or art changes)
+
+Base: `main` at e560cb4, unchanged since 8 Nov. Board: newest decision still 7 Nov. No comments on the night pull requests #16 to #26. Nothing is open for night work without credits, new scope or your River Walk T2 pick, so tonight was an audit. No night/* branches were made.
+
+**Checks on main:** PEPPER UNCHANGED (3908 steps). Flow 125/125. Tiled PASSED. check_approved ALL MERGED. check_curve (`riverwalk,citypark_tall,downtown_tall,rooftops,soder,night`, 20 seeds x 8 personas): T1, T3, T4 PASS, **T2 FAIL** (River Walk screen 13, 36%). Identical to 7 to 17 Nov.
+
+**`night/10nov-curve` (ba80d2e):** unchanged and still sits on main, so its T1 to T4 PASS stands.
+
+**Look at:** `docs/review/10nov/rw_t2_options.md` on `night/10nov-curve`.
+
+**Decisions waiting:** (1) River Walk T2: lab fix only, level change, both, or accept. Recommended: lab fix only. (2) This is the 11th identical audit. Pause the nightly run until you pick, or keep it? (3) The draft STATUS pull requests #16 to #26 can be closed once you read this one.
+
+**Problems:** none in the game. Sandbox only: `love` postinstall error (binary works), a venv for Pillow.
+
+**Branches:** `ops/night-18nov` (this STATUS). Kept: `night/10nov-curve` (waits for your pick). Nothing of tonight is in main, so nothing to delete.
+
 ## Night of 17 Nov: audit of main (unattended run, 0 credits, no game or art changes)
 
 Base: `main` at e560cb4, unchanged since 8 Nov. Board: newest decision still 7 Nov. No comments on the night pull requests #16 to #25. Nothing is open for night work without credits, new scope or your River Walk T2 pick, so tonight was an audit. No night/* branches were made.
